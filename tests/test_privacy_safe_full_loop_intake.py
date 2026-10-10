@@ -139,3 +139,43 @@ def test_station_only_bundle_is_ready_for_schema_freeze_but_not_full_loop(
     assert report["full_loop_readiness"]["full_loop_protocol_freeze_candidate"] is False
     assert report["full_loop_readiness"]["missing_vehicle_boundary_event_count"] == 3
     assert "vehicle_pressure_mpa" in report["decision"]["next_step"]
+
+
+def test_nonuniform_event_axis_is_rejected_before_full_loop_freeze(tmp_path: Path) -> None:
+    paths = [tmp_path / f"event_{index}.csv" for index in range(3)]
+    for path in paths:
+        _write_event(path)
+    # One event has a large logger-clock jump.  It is still monotonic, but it
+    # cannot be treated as a synchronized sampling grid for a frozen holdout.
+    paths[1].write_text(
+        "elapsed_time_s,station_pressure_mpa,delivered_gas_temperature_c,mass_flow_g_s,protocol_phase,vehicle_pressure_mpa,vehicle_temperature_c\n"
+        "0,45,-35,10,start,5,25\n"
+        "1,46,-34,10,fill,6,28\n"
+        "5,47,-33,10,fill,7,30\n",
+        encoding="utf-8",
+    )
+
+    report = validate_privacy_safe_pilot_bundle(paths)
+
+    assert report["status"] == "READY_FOR_PROTOCOL_FREEZE"
+    assert report["full_loop_readiness"]["common_elapsed_time_axis"] is False
+    assert report["full_loop_readiness"]["common_sample_period_s"] is None
+    assert report["event_reports"][1]["elapsed_time_s"]["sample_period_jitter_ratio"] > 0.05
+
+
+def test_empty_protocol_phase_is_rejected(tmp_path: Path) -> None:
+    path = tmp_path / "event.csv"
+    path.write_text(
+        "elapsed_time_s,station_pressure_mpa,delivered_gas_temperature_c,mass_flow_g_s,protocol_phase\n"
+        "0,45,-35,10,start\n"
+        "1,46,-34,10,\n",
+        encoding="utf-8",
+    )
+
+    report = validate_privacy_safe_pilot_bundle(
+        [path], rules=PilotIntakeRules(minimum_event_count=1)
+    )
+
+    event = report["event_reports"][0]
+    assert event["schema_valid"] is False
+    assert any("protocol_phase at row 3 is empty" in error for error in event["errors"])

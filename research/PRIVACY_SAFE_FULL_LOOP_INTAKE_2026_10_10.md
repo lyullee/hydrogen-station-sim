@@ -31,11 +31,11 @@ python -c "from h2station.privacy_safe_full_loop_intake import validate_privacy_
 
 `READY_FOR_FULL_LOOP_PROTOCOL_FREEZE`가 나오더라도 이는 수용부 채널까지 갖춘 입력 후보라는 뜻이다. `FROZEN_BEFORE_OUTCOME_ACCESS` manifest를 만든 뒤에야 모델 결과를 열어야 하며, 원시 CSV·경로·시설 식별자는 결과 JSON에 남기지 않는다.
 
-기본 검사는 비식별 이벤트 3건, **각 이벤트가 0초에서 시작하는 공통 경과시간 축**, 단조 증가 시간축, 유한한 수치, 음수 질량유량, 누적질량 역전, 필수 열 누락을 검사한다. 이벤트가 서로 다른 기준 시각에서 시작하면 `elapsed_time_does_not_start_at_zero`로 거부한다. 결과에는 event_001 형식의 가상 ID, 행 수, 시간 범위, 채널 존재 여부, SHA-256만 남고 `full_loop_readiness.common_elapsed_time_axis`에 공통 축 검사 결과가 기록된다.
+기본 검사는 비식별 이벤트 3건, **각 이벤트가 0초에서 시작하는 공통 경과시간 축**, 단조 증가 시간축, 유한한 수치, 음수 질량유량, 누적질량 역전, 필수 열 누락을 검사한다. 이벤트가 서로 다른 기준 시각에서 시작하면 `elapsed_time_does_not_start_at_zero`로 거부한다. 각 파일의 샘플 간격 평균·최소·최대와 변동률도 계산하고, 기본 변동률 5%를 넘거나 이벤트 간 공통 샘플 간격을 만들 수 없으면 full-loop 프로토콜 동결 후보에서 제외한다. `protocol_phase`가 빈 행도 거부한다. 결과에는 event_001 형식의 가상 ID, 행 수, 시간 범위, 채널 존재 여부, SHA-256만 남고 `full_loop_readiness.common_elapsed_time_axis`와 `common_sample_period_s`에 동기화 검사 결과가 기록된다.
 
 `READY_FOR_PROTOCOL_FREEZE`는 station 경계 입력의 형식과 품질이 준비되었다는 뜻이다. 차량 압력·온도 두 열이 모든 이벤트에 있지 않으면 이 상태만 부여되며, station-to-vehicle full-loop 후보가 아니다. 이 경우에도 모델 점수나 안전성 검증 결과를 의미하지 않는다.
 
-세 이벤트 모두에 `vehicle_pressure_mpa`와 `vehicle_temperature_c`가 있고 다른 입력 검사를 통과하면 상태가 `READY_FOR_FULL_LOOP_PROTOCOL_FREEZE`로 표시된다. 이것은 full-loop 평가를 시작할 수 있는 **자료 계약 후보**라는 의미일 뿐이다. 실제 freeze manifest가 full-loop 후보로 표시되려면 두 차량 채널의 역할 확인서도 있어야 한다. 프로토콜·모델·평가기를 결과를 보기 전에 해시 고정하고, 사전 선언된 독립 평가를 통과하기 전에는 full-loop 검증이나 안전성 주장을 하지 않는다. 보고서의 `full_loop_readiness.claim_supported`는 항상 `false`로 남는다.
+세 이벤트 모두에 `vehicle_pressure_mpa`와 `vehicle_temperature_c`가 있고, 동기화 축과 공통 샘플 간격 검사를 통과하면 상태가 `READY_FOR_FULL_LOOP_PROTOCOL_FREEZE`로 표시된다. 차량 채널만 있고 시간축 품질이 맞지 않으면 `READY_FOR_PROTOCOL_FREEZE`에 머물러 full-loop 후보로 승격되지 않는다. 이것은 full-loop 평가를 시작할 수 있는 **자료 계약 후보**라는 의미일 뿐이다. 실제 freeze manifest가 full-loop 후보로 표시되려면 두 차량 채널의 역할 확인서도 있어야 한다. 프로토콜·모델·평가기를 결과를 보기 전에 해시 고정하고, 사전 선언된 독립 평가를 통과하기 전에는 full-loop 검증이나 안전성 주장을 하지 않는다. 보고서의 `full_loop_readiness.claim_supported`는 항상 `false`로 남는다.
 
 사전 동결 manifest 생성 절차는 [PRIVACY_SAFE_FULL_LOOP_FREEZE_2026_10_10.md](PRIVACY_SAFE_FULL_LOOP_FREEZE_2026_10_10.md)에 있다. 이 단계는 코드·프로토콜·이벤트 해시와 채널 역할만 잠그며, 결과를 보거나 모델을 조정하지 않는다.
 

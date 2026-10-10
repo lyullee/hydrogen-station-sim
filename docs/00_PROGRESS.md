@@ -1,5 +1,18 @@
 # Development Progress
 
+## 2026-10-10 - High-impact full-loop intake gate tightened
+
+- Prioritized the gate that directly determines whether the station-to-vehicle
+  validation can be opened: privacy-safe event intake now checks non-empty
+  `protocol_phase` values, per-event sample-period jitter, and a common sample
+  interval across events before marking a full-loop protocol-freeze candidate.
+- A bundle with vehicle channels but a broken or mismatched time axis now stays
+  at `READY_FOR_PROTOCOL_FREEZE`; it cannot silently advance to
+  `READY_FOR_FULL_LOOP_PROTOCOL_FREEZE`.
+- This is a fail-closed data-quality improvement only. It does not change model
+  parameters or claim readiness; the independent full-loop and human-review
+  gates remain open.
+
 ## 2026-10-10 - Source-geometry-resolved Type-III follow-up candidate
 
 - Connected the published Dickens inlet geometry (5 mm internal diameter,

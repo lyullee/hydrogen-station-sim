@@ -53,10 +53,17 @@ class PilotIntakeRules:
     minimum_event_count: int = 3
     minimum_rows_per_event: int = 2
     require_vehicle_boundary: bool = False
+    # A station and receiving-vessel trace may use different logger clocks,
+    # but the event-relative axes must still be sampled on a comparable grid
+    # before a full-loop protocol can be frozen.  Keep this as a quality gate,
+    # not a model-performance threshold.
+    maximum_sample_period_jitter_ratio: float = 0.05
 
     def __post_init__(self) -> None:
         if self.minimum_event_count <= 0 or self.minimum_rows_per_event < 2:
             raise ValueError("Pilot intake counts must be positive")
+        if not 0.0 <= self.maximum_sample_period_jitter_ratio < 1.0:
+            raise ValueError("Sample-period jitter ratio must be in [0, 1)")
 
 
 def _sha256(path: Path) -> str:
@@ -111,9 +118,14 @@ def _read_event(path: Path, rules: PilotIntakeRules) -> dict[str, Any]:
     time_end: float | None = None
     time_strictly_increasing = True
     previous_time: float | None = None
+    delta_count = 0
+    delta_sum = 0.0
+    delta_min: float | None = None
+    delta_max: float | None = None
     mass_previous: float | None = None
     mass_nonnegative = True
     mass_monotonic = True
+    protocol_phase_nonempty_count = 0
     if not missing_required and not identity_columns:
         by_lower = {header.lower(): header for header in headers}
         parse_error: str | None = None
@@ -132,6 +144,12 @@ def _read_event(path: Path, rules: PilotIntakeRules) -> dict[str, Any]:
                             time_start = current_time
                         if previous_time is not None and current_time <= previous_time:
                             time_strictly_increasing = False
+                        if previous_time is not None and current_time > previous_time:
+                            delta = current_time - previous_time
+                            delta_count += 1
+                            delta_sum += delta
+                            delta_min = delta if delta_min is None else min(delta_min, delta)
+                            delta_max = delta if delta_max is None else max(delta_max, delta)
                         previous_time = current_time
                         time_end = current_time
                     if "mass_flow_g_s" in normalized:
@@ -165,6 +183,13 @@ def _read_event(path: Path, rules: PilotIntakeRules) -> dict[str, Any]:
                                 row.get(by_lower[column], ""),
                                 column=column, row_number=row_number,
                             )
+                    if "protocol_phase" in normalized:
+                        phase = str(row.get(by_lower["protocol_phase"], "") or "").strip()
+                        if not phase:
+                            raise ValueError(
+                                f"protocol_phase at row {row_number} is empty"
+                            )
+                        protocol_phase_nonempty_count += 1
                 except ValueError as exc:
                     if parse_error is None:
                         parse_error = str(exc)
@@ -202,7 +227,19 @@ def _read_event(path: Path, rules: PilotIntakeRules) -> dict[str, Any]:
             "starts_at_zero": bool(
                 time_start is not None and math.isclose(time_start, 0.0, abs_tol=1.0e-9)
             ),
+            "sample_period_s": (
+                float(delta_sum / delta_count) if delta_count else None
+            ),
+            "sample_period_min_s": delta_min,
+            "sample_period_max_s": delta_max,
+            "sample_period_jitter_ratio": (
+                float((delta_max - delta_min) / (delta_sum / delta_count))
+                if delta_count and delta_min is not None and delta_max is not None
+                and delta_sum > 0.0 else None
+            ),
+            "sample_period_count": delta_count,
         },
+        "protocol_phase_nonempty_count": protocol_phase_nonempty_count,
         "channel_presence": {
             "pilot_required": sorted(
                 set(PILOT_REQUIRED_COLUMNS).intersection(normalized)
@@ -237,17 +274,39 @@ def validate_privacy_safe_pilot_bundle(
         len(report["channel_presence"]["vehicle_boundary"]) == len(VEHICLE_COLUMNS)
         for report in event_reports
     )
-    vehicle_boundary_complete = (
-        pilot_ready
-        and vehicle_complete_count == len(event_reports)
-    )
     common_elapsed_time_axis = bool(
         event_reports
         and all(
             report["elapsed_time_s"]["starts_at_zero"]
             and report["elapsed_time_s"]["strictly_increasing"]
+            and (
+                report["elapsed_time_s"]["sample_period_jitter_ratio"] is None
+                or report["elapsed_time_s"]["sample_period_jitter_ratio"]
+                <= selected.maximum_sample_period_jitter_ratio
+            )
+            and report["protocol_phase_nonempty_count"] == report["row_count"]
             for report in event_reports
         )
+    )
+    sample_periods = [
+        report["elapsed_time_s"]["sample_period_s"]
+        for report in event_reports
+        if report["elapsed_time_s"]["sample_period_s"] is not None
+    ]
+    common_sample_period_s: float | None = None
+    if sample_periods:
+        reference_period = sum(sample_periods) / len(sample_periods)
+        if reference_period > 0.0 and all(
+            abs(period - reference_period) / reference_period
+            <= selected.maximum_sample_period_jitter_ratio
+            for period in sample_periods
+        ):
+            common_sample_period_s = float(reference_period)
+    vehicle_boundary_complete = (
+        pilot_ready
+        and vehicle_complete_count == len(event_reports)
+        and common_elapsed_time_axis
+        and common_sample_period_s is not None
     )
     if not pilot_ready:
         readiness_status = "SCHEMA_INCOMPLETE"
@@ -272,6 +331,10 @@ def validate_privacy_safe_pilot_bundle(
         "full_loop_readiness": {
             "station_boundary_ready": pilot_ready,
             "common_elapsed_time_axis": common_elapsed_time_axis,
+            "common_sample_period_s": common_sample_period_s,
+            "sample_period_jitter_ratio_limit": (
+                selected.maximum_sample_period_jitter_ratio
+            ),
             "vehicle_boundary_required_for_full_loop": True,
             "vehicle_boundary_complete": vehicle_boundary_complete,
             "missing_vehicle_boundary_event_count": max(
