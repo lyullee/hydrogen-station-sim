@@ -152,6 +152,20 @@ spatial-response and NREL HDVS tank screens remain negative. These are
 post-outcome development diagnostics; they do not revise any frozen holdout,
 change production parameters or increase the readiness percentage.
 
+## Local archive recheck (2026-10-10)
+
+The owner-controlled archive was re-read outside the repository instead of
+being treated as missing data. It contains 33 CSV exports and 59,272,300 rows
+(4.749 GiB; 32 unique payloads after duplicate exclusion). The archive is
+substantial for station-side pressure/cascade/flow/temperature/controller
+analysis, but the header-level screen found no vehicle or receptacle channel.
+The result is recorded in
+`research/local_confidential_station_data_utilization_2026_10_10.json` and
+`research/private_station_pressure_lifecycle_audit_2026_10_10.json`. This
+narrows the remaining high-impact request to synchronized receiving-vessel
+channels and custodian unit/timebase attestation; it does not justify a
+full-loop or safety-distance claim.
+
 ## Source records
 
 - `research/DATA_COVERAGE_SUMMARY_2026_10_09.md`
