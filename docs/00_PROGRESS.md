@@ -585,3 +585,26 @@ Verification:
 - Focused scenario, API, runner and readiness-integrity tests passed.
 - The complete repository regression suite passed: 1,011 tests, 18 dependency
   warnings, no failures.
+
+## 2026-10-10 - Privacy-bounded local schema screening made fault tolerant
+
+Status: implemented; schema screening remains an intake aid and does not
+promote any local file to an external-validation result.
+
+Completed:
+
+- Made the aggregate CSV schema scanner treat oversized or malformed fields as
+  unreadable tables instead of aborting the entire local inventory.
+- Prevented alternate-codec retries from classifying binary or malformed bytes
+  as a false header after a CSV parser error.
+- Re-screened the local `HRS_sim` material: 5 supported tabular files and 17
+  tables were inspected, with no full-loop, station-recharge, vehicle-fill or
+  synchronized full-loop candidate. The result contains aggregate counts only;
+  source paths, headers, timestamps and rows are not persisted.
+
+Verification:
+
+- Controlled-schema tests passed (21 tests).
+- This broad screen confirms that the current P0 blocker is still a missing
+  synchronized, attested receiving-vessel/controller cohort rather than a
+  scanner failure or lack of station-side files.

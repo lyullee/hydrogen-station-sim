@@ -377,6 +377,12 @@ def _csv_header_file(path: Path) -> tuple[tuple[str, ...], int, bool, bool] | No
         try:
             with path.open("r", encoding=encoding, newline="") as handle:
                 return _screen_rows(csv.reader(handle))
+        except csv.Error:
+            # A valid encoding was selected from the byte prefix, but the
+            # bounded record contains an oversized/malformed field. Do not
+            # retry alternate codecs and accidentally classify binary bytes
+            # as a different header.
+            return None
         except UnicodeError:
             continue
         except OSError:
@@ -494,6 +500,8 @@ def _csv_time_axis_window(
                     )
                 ]
             decoded_tail = tail.decode(_tail_decode_encoding(encoding, prefix))
+        except csv.Error:
+            return None
         except (UnicodeError, OSError):
             continue
         selected = _best_header(head_rows[:HEADER_SEARCH_MAX_ROWS])

@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "artifact_type": "privacy_bounded_local_hrs_sim_schema_screen",
+  "generated_at": "2026-10-10",
+  "purpose": "Screen the locally staged HRS_sim material for an undiscovered synchronized full-loop cohort without publishing source identity, headers, timestamps or rows.",
+  "privacy": {
+    "source_paths_published": false,
+    "source_filenames_published": false,
+    "source_headers_published": false,
+    "absolute_timestamps_published": false,
+    "raw_rows_persisted": false,
+    "measurement_values_persisted": false
+  },
+  "inventory": {
+    "supported_tabular_files_scanned": 5,
+    "tables_scanned": 17,
+    "measurement_like_tables": 3,
+    "unreadable_tables": 0,
+    "full_loop_candidate_count": 0,
+    "co_located_full_loop_candidate_count": 0,
+    "synchronized_flat_full_loop_candidate_count": 0,
+    "time_overlap_full_loop_candidate_count": 0,
+    "station_recharge_candidate_count": 0,
+    "vehicle_fill_candidate_count": 0,
+    "path_assisted_full_loop_candidate_count": 0
+  },
+  "decision": {
+    "new_full_loop_measured_cohort_found": false,
+    "full_loop_external_validation_supported": false,
+    "station_side_or_component_replay_may_still_be_supported": true,
+    "primary_gap": "synchronized and attested receiving-vessel or vehicle channels with controller/protocol state"
+  },
+  "claim_boundary": "Header-level semantic screening plus bounded record-shape and monotonic-time checks only. Zero candidates does not prove that no qualifying data exist elsewhere; it records only this screened local material and does not validate model accuracy, safety distance or emergency response effectiveness."
+}

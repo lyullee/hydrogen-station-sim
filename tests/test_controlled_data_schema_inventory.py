@@ -185,6 +185,24 @@ def test_schema_inventory_streams_csv_schema_without_whole_file_read(
     assert report["raw_rows_persisted"] is False
 
 
+def test_schema_inventory_skips_csv_fields_over_parser_limit_without_aborting(
+    tmp_path: Path,
+):
+    source = tmp_path / "oversized-private-field.csv"
+    source.write_text(
+        "time,pressure,controller_state\n"
+        + "0," + ("x" * 200_000) + ",run\n",
+        encoding="utf-8",
+    )
+
+    report = inventory_schema([tmp_path])
+
+    assert report["source_files_scanned"] == 1
+    assert report["source_tables_scanned"] == 0
+    assert report["unreadable_tables"] == 1
+    assert report["raw_rows_persisted"] is False
+
+
 def test_inventory_groups_aligned_flat_files_without_publishing_clock_or_names(
     tmp_path: Path,
 ):
