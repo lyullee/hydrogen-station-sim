@@ -133,6 +133,7 @@ def test_direct_qa_calculates_impact_for_alarm_and_explicit_hypothesis(monkeypat
             assert len(json.dumps(llm_prompts[-1]["context"], default=str)) < 12000
             assert llm_prompts[-1]["kind"] == "user_query"
             assert received[-1] == [impact]
+            command_prompt_count = len(llm_prompts)
             command = client.post(f"/api/simulations/{job_id}/saga-analysis/direct",
                                   json={"direct": False, "question": "ESD를 가동해줘"}).json()
             assert command["virtual_action_proposals"] == [{
@@ -140,6 +141,8 @@ def test_direct_qa_calculates_impact_for_alarm_and_explicit_hypothesis(monkeypat
                 "label_ko": "가상 ESD 차단", "label_en": "Virtual ESD trip",
                 "requires_confirmation": True, "source": "explicit_operator_command",
             }]
+            assert len(llm_prompts) == command_prompt_count
+            assert "요청한 가상 조치" in command["answer"]
             streamed = client.post(f"/api/simulations/{job_id}/saga-analysis/direct/stream",
                                    json={"direct": False, "scenario_mode": True,
                                          "question": "고압 저장 가정 누출 피해영향"})

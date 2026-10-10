@@ -2371,6 +2371,10 @@ _VIRTUAL_COMMAND_PATTERNS: tuple[tuple[tuple[str, ...], tuple[tuple[str, str, st
 )
 
 
+class _SkipDirectAssistant(Exception):
+    """Internal sentinel for an already-resolved operator command."""
+
+
 def _requested_virtual_actions(question: str, *, language: str = "ko") -> list[dict[str, Any]]:
     """Return reviewed virtual action buttons for an explicit operator command.
 
@@ -3008,6 +3012,12 @@ async def saga_analysis(job_id: str, request: SagaAnalysisInput) -> dict[str, An
                 "virtual_action_proposals": virtual_action_proposals,
             }
             try:
+                if virtual_action_proposals:
+                    # An explicit operator command is already resolved by the
+                    # reviewed proposal layer. Do not make the operator wait
+                    # for a generative status narrative before showing the
+                    # confirmation buttons.
+                    raise _SkipDirectAssistant
                 reply = await _invoke_main_assistant_selected(
                     request.question, prompt_data, request.history, request.provider,
                     "user_query" if request.trigger == "manual" else "automatic_analysis",
@@ -3035,11 +3045,18 @@ async def saga_analysis(job_id: str, request: SagaAnalysisInput) -> dict[str, An
                     llm_model = str(reply.get("model") or "SAGA 단일 답변")
                 else:
                     llm_error = "직답 LLM이 빈 응답을 반환했습니다."
+            except _SkipDirectAssistant:
+                llm_error = None
             except (URLError, HTTPError, TimeoutError, OSError, ValueError) as exc:
                 llm_error = ("SAGA 직답 LLM에 연결하지 못했습니다. SAGA 서버의 직답 API와 선택한 제공자 설정을 "
                              f"확인하세요. ({exc})")
             if llm_error:
                 answer = f"**{llm_error}**\n\n" + answer
+        if virtual_action_proposals:
+            labels = ", ".join(str(item.get("label") or item.get("target"))
+                                for item in virtual_action_proposals)
+            answer = (f"요청한 가상 조치를 인식했습니다: **{labels}**. "
+                      "아래 버튼을 눌러 모의 공정에 반영하고 완료 피드백을 확인하세요.")
         evidence = _direct_question_evidence(frame, catalog, request.question, mentioned_nodes)
         if evidence and request.language == "ko":
             answer = answer + "\n\n" + evidence if request.one_pass else evidence + "\n\n" + answer
@@ -3962,6 +3979,8 @@ async def analyze_simulation_sensor(job_id: str, sensor_id: str,
                 "virtual_action_proposals": virtual_action_proposals,
             }
             try:
+                if virtual_action_proposals:
+                    raise _SkipDirectAssistant
                 reply = await _invoke_sensor_assistant_selected(
                     sensor_id, request.question, prompt_data, request.provider,
                     "user_query" if request.question.strip() else "automatic_analysis",
@@ -3990,11 +4009,18 @@ async def analyze_simulation_sensor(job_id: str, sensor_id: str,
                     llm_model = str(reply.get("model") or "SAGA 단일 답변")
                 else:
                     llm_error = "직답 LLM이 빈 응답을 반환했습니다."
+            except _SkipDirectAssistant:
+                llm_error = None
             except (URLError, HTTPError, TimeoutError, OSError, ValueError) as exc:
                 llm_error = ("SAGA 직답 LLM에 연결하지 못했습니다. SAGA 서버의 직답 API와 선택한 제공자 설정을 "
                              f"확인하세요. ({exc})")
             if llm_error:
                 answer = f"**{llm_error}**\n\n" + answer
+        if virtual_action_proposals:
+            labels = ", ".join(str(item.get("label") or item.get("target"))
+                                for item in virtual_action_proposals)
+            answer = (f"요청한 가상 조치를 인식했습니다: **{labels}**. "
+                      "아래 버튼을 눌러 모의 공정에 반영하고 완료 피드백을 확인하세요.")
         if response_markdown and request.language == "ko":
             answer = answer.rstrip() + "\n\n---\n\n" + response_markdown
         return {"sensor_id": sensor_id, "time_s": payload["time_s"],

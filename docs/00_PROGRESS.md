@@ -10,6 +10,10 @@
   from natural language. The existing virtual safety endpoint performs the
   command, actuator movement and feedback verification after the operator
   clicks the rendered action button.
+- Explicit command turns bypass the generative completion wait after the
+  deterministic snapshot is ready, so the buttons appear without waiting for
+  the slower LLM narrative. Ordinary questions still use the selected direct
+  assistant and emergency impact assessment path.
 - Status questions do not produce command candidates. Main and sensor panels
   render the same action buttons and report the resulting command/feedback in
   the existing safety log.
