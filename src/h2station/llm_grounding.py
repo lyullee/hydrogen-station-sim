@@ -9831,6 +9831,7 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
         summary["confidential_full_loop_bundle"] = {
             "evidence_role": full_loop_bundle.get("evidence_role"),
             "status": full_loop_bundle.get("status"),
+            "availability_reason": full_loop_bundle.get("availability_reason"),
             "rows": full_loop_bundle.get("rows"),
             "time_duration_s": full_loop_bundle.get("time_duration_s"),
             "evaluation_scope": full_loop_bundle.get("evaluation_scope"),
@@ -9843,7 +9844,9 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
             "full_loop_trace_ready": full_loop_bundle.get("full_loop_trace_ready") is True,
             "evaluation_input_ready": full_loop_bundle.get("evaluation_input_ready") is True,
             "frozen_evaluation_required": True,
+            "full_loop_holdout_eligible": False,
             "full_loop_external_validation_supported": False,
+            "required_input_groups": full_loop_bundle.get("required_input_groups") or [],
             "frozen_evaluation_result": full_loop_bundle.get(
                 "frozen_evaluation_result"
             ),
@@ -10844,31 +10847,45 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
             } if component_bundle else {}),
             **({
                 "confidential_full_loop_bundle": {
-                    "evidence_role": full_loop_bundle.get("evidence_role"),
-                    "status": full_loop_bundle.get("status"),
-                    "rows": full_loop_bundle.get("rows"),
-                    "time_duration_s": full_loop_bundle.get("time_duration_s"),
-                    "evaluation_scope": full_loop_bundle.get("evaluation_scope"),
-                    "station_to_vehicle_trace_ready": full_loop_bundle.get(
-                        "station_to_vehicle_trace_ready"
-                    ) is True,
-                    "cascade_dispatch_evaluable": full_loop_bundle.get(
-                        "cascade_dispatch_evaluable"
-                    ) is True,
-                    "full_loop_trace_ready": full_loop_bundle.get(
-                        "full_loop_trace_ready"
-                    ) is True,
-                    "evaluation_input_ready": full_loop_bundle.get(
-                        "evaluation_input_ready"
-                    ) is True,
-                    "frozen_evaluation_required": True,
-                    "full_loop_external_validation_supported": False,
-                    "frozen_evaluation_result": full_loop_bundle.get(
-                        "frozen_evaluation_result"
-                    ),
-                    "claim_limit": short(full_loop_bundle.get("claim_limit"), 320),
+                    **({
+                        "evidence_role": full_loop_bundle.get("evidence_role"),
+                        "status": full_loop_bundle.get("status"),
+                        "availability_reason": full_loop_bundle.get("availability_reason"),
+                        "rows": full_loop_bundle.get("rows"),
+                        "time_duration_s": full_loop_bundle.get("time_duration_s"),
+                        "evaluation_scope": full_loop_bundle.get("evaluation_scope"),
+                        "station_to_vehicle_trace_ready": full_loop_bundle.get(
+                            "station_to_vehicle_trace_ready"
+                        ) is True,
+                        "cascade_dispatch_evaluable": full_loop_bundle.get(
+                            "cascade_dispatch_evaluable"
+                        ) is True,
+                        "full_loop_trace_ready": full_loop_bundle.get(
+                            "full_loop_trace_ready"
+                        ) is True,
+                        "evaluation_input_ready": full_loop_bundle.get(
+                            "evaluation_input_ready"
+                        ) is True,
+                        "frozen_evaluation_required": True,
+                        "full_loop_holdout_eligible": False,
+                        "full_loop_external_validation_supported": False,
+                        "required_input_groups": full_loop_bundle.get("required_input_groups") or [],
+                        "frozen_evaluation_result": full_loop_bundle.get(
+                            "frozen_evaluation_result"
+                        ),
+                        "claim_limit": short(full_loop_bundle.get("claim_limit"), 320),
+                    } if full_loop_bundle.get("status") == "available" else {
+                        "status": "unavailable",
+                        "availability_reason": full_loop_bundle.get("availability_reason"),
+                        "full_loop_holdout_eligible": False,
+                        "full_loop_external_validation_supported": False,
+                        "required_input_group_count": len(
+                            full_loop_bundle.get("required_input_groups") or []
+                        ),
+                        "claim_limit": short(full_loop_bundle.get("claim_limit"), 220),
+                    })
                 }
-            } if full_loop_bundle else {}),
+            } if full_loop_bundle and full_loop_bundle.get("status") == "available" else {}),
             **({
                 "local_actionable_data_scope": {
                     "evidence_role": actionable_data_scope.get("evidence_role"),
@@ -12879,6 +12896,7 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
         "confidential_full_loop_bundle": {
             "evidence_role": full_loop_bundle.get("evidence_role"),
             "status": full_loop_bundle.get("status"),
+            "availability_reason": full_loop_bundle.get("availability_reason"),
             "rows": full_loop_bundle.get("rows"),
             "time_duration_s": full_loop_bundle.get("time_duration_s"),
             "evaluation_scope": full_loop_bundle.get("evaluation_scope"),
@@ -12891,7 +12909,9 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
             "full_loop_trace_ready": full_loop_bundle.get("full_loop_trace_ready") is True,
             "evaluation_input_ready": full_loop_bundle.get("evaluation_input_ready") is True,
             "frozen_evaluation_required": True,
+            "full_loop_holdout_eligible": False,
             "full_loop_external_validation_supported": False,
+            "required_input_groups": full_loop_bundle.get("required_input_groups") or [],
             "frozen_evaluation_result": full_loop_bundle.get(
                 "frozen_evaluation_result"
             ),

@@ -35,6 +35,17 @@ _RESULT_CLAIM_LIMIT = (
     "This bounded result is not a safety certification and does not by itself "
     "close the independent full-loop or IJHE readiness gates."
 )
+_UNAVAILABLE_CLAIM_LIMIT = (
+    "현재 승인된 외부 station-to-vehicle 원시 묶음이 연결되지 않았습니다. "
+    "따라서 full-loop 정확도·현장 안전성·런타임 보정 주장을 할 수 없습니다."
+)
+_REQUIRED_INPUT_GROUPS = (
+    "공통 상대시간축과 이벤트 경계",
+    "충전기/호스 상류 압력·온도·질량유량",
+    "차량 리셉터클 압력·온도·전달질량 또는 질량수지",
+    "프로토콜 단계·초기조건·용기 용량·단위",
+    "비식별화·접근권한·재사용 범위 확인",
+)
 
 
 def _read(path: Path) -> dict[str, Any] | None:
@@ -185,6 +196,34 @@ def _safe_result(record: dict[str, Any]) -> dict[str, Any] | None:
     }
 
 
+def _unavailable() -> dict[str, Any]:
+    """Return an explicit closed-world boundary when no receipt is connected.
+
+    Returning a bounded sentinel instead of omitting the evidence section keeps
+    both interactive assistants from treating an absent receipt as an unknown
+    or silently upgrading station-side evidence to full-loop validation.
+    """
+
+    return {
+        "evidence_role": "controlled de-identified station-to-vehicle bundle",
+        "status": "unavailable",
+        "availability_reason": "NO_AUTHORIZED_EXTERNAL_RECEIPT",
+        "rows": 0,
+        "time_duration_s": 0.0,
+        "evaluation_scope": None,
+        "station_to_vehicle_trace_ready": False,
+        "cascade_dispatch_evaluable": False,
+        "full_loop_trace_ready": False,
+        "evaluation_input_ready": False,
+        "frozen_evaluation_required": True,
+        "full_loop_holdout_eligible": False,
+        "full_loop_external_validation_supported": False,
+        "runtime_parameter_application": False,
+        "required_input_groups": list(_REQUIRED_INPUT_GROUPS),
+        "claim_limit": _UNAVAILABLE_CLAIM_LIMIT,
+    }
+
+
 def full_loop_bundle_evidence(frame: dict[str, Any] | None = None) -> dict[str, Any] | None:
     """Return a sanitized controlled full-loop receipt and optional result."""
 
@@ -201,7 +240,7 @@ def full_loop_bundle_evidence(frame: dict[str, Any] | None = None) -> dict[str, 
 
     raw_path = frame.get("full_loop_receipt_path") or os.environ.get(ENVIRONMENT_VARIABLE)
     if not isinstance(raw_path, str) or not raw_path.strip():
-        return None
+        return _unavailable()
     path = Path(raw_path).expanduser().resolve()
     try:
         path.relative_to(ROOT.resolve())

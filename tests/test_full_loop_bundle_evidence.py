@@ -93,3 +93,19 @@ def test_full_loop_receipt_fails_closed_without_privacy_attestation() -> None:
     receipt = _receipt()
     receipt["raw_rows_persisted_in_repository"] = True
     assert full_loop_bundle_evidence({"full_loop_receipt": receipt}) is None
+
+
+def test_missing_receipt_is_explicitly_bounded_for_llm() -> None:
+    evidence = full_loop_bundle_evidence({})
+    assert evidence is not None
+    assert evidence["status"] == "unavailable"
+    assert evidence["availability_reason"] == "NO_AUTHORIZED_EXTERNAL_RECEIPT"
+    assert evidence["full_loop_holdout_eligible"] is False
+    assert evidence["full_loop_external_validation_supported"] is False
+    assert len(evidence["required_input_groups"]) >= 4
+
+    manifest = build_evidence_manifest({"time_s": 1.0}, {}, [], False)
+    bounded = prompt_evidence_summary(manifest)["confidential_full_loop_bundle"]
+    assert bounded["status"] == "unavailable"
+    assert bounded["full_loop_holdout_eligible"] is False
+    assert bounded["required_input_groups"]
