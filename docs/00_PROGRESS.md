@@ -946,3 +946,22 @@ Verification:
 
 - Node UI suites: 16 passed, including a regression for the no-preference
   default.
+
+## 2026-10-10 - Throttle live monitor repaint and stop canvas resets
+
+Status: implemented; JavaScript syntax and UI regression suites passed.
+
+- The wall monitor and selected-node trend renderer no longer redraw on every
+  28–35 ms simulation frame. They coalesce updates to a 120 ms presentation
+  cadence while keeping resize and explicit selection updates immediate.
+- Trend canvases retain their backing buffer when their pixel dimensions have
+  not changed. Repeatedly assigning `canvas.width`/`height` had been clearing
+  the drawing surface during playback, which caused visible flicker and extra
+  raster work.
+- This is presentation throttling only; the simulation frame index, stored
+  telemetry and safety calculations are unchanged.
+
+Verification:
+
+- `node --check web/monitor-wall.js` and `web/node-monitor.js` passed.
+- Node UI suites: 16 passed.

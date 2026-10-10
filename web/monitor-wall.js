@@ -44,7 +44,16 @@
     analysis.tabIndex=0;analysis.setAttribute('role','button');analysis.setAttribute('aria-label','현재 경보와 센서 분석 보기');analysis.addEventListener('click',()=>window.navigateMonitor?.(document.body.dataset.alertState==='incident'?'hazop':'alarms'));analysis.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();analysis.click();}});
     // Stop controls belong to the remote; the overview remains read-only.
     selection.setAttribute('aria-label','선택 설비 정보');surface.setAttribute('aria-label','3D와 공정 흐름 공통 화면');
-    window.addEventListener('station-frame',render);window.addEventListener('wall-resize',drawTrends);render();fit();
+    let renderTimer=null,renderPending=false,lastRenderAt=0;
+    const scheduleRender=(immediate=false)=>{
+      const now=performance.now(),wait=Math.max(0,120-(now-lastRenderAt));
+      if(immediate||wait===0){if(renderTimer){clearTimeout(renderTimer);renderTimer=null;}renderPending=false;lastRenderAt=now;render();return;}
+      if(renderPending)return;
+      renderPending=true;renderTimer=setTimeout(()=>{renderTimer=null;renderPending=false;lastRenderAt=performance.now();render();},wait);
+    };
+    window.addEventListener('station-frame',()=>scheduleRender());
+    window.addEventListener('wall-resize',()=>scheduleRender(true));
+    render();lastRenderAt=performance.now();fit();
     window.dispatchEvent(new Event('wall-mounted'));
   }
   function render() {
@@ -87,7 +96,9 @@
     const definitions=[['vehicle_pressure_mpa','vehicle_2_pressure_mpa'],['vehicle_temperature_c','vehicle_2_temperature_c'],['nozzle_1_flow_g_s','nozzle_2_flow_g_s']];
     definitions.forEach((keys,n)=>{
       const canvas=$(`wallTrend${n}`),rect=canvas.getBoundingClientRect(),w=canvas.clientWidth,h=canvas.clientHeight;if(!w||!h)return;
-      canvas.width=Math.max(1,Math.round(rect.width*devicePixelRatio));canvas.height=Math.max(1,Math.round(rect.height*devicePixelRatio));const c=canvas.getContext('2d');c.scale(canvas.width/w,canvas.height/h);
+      const pixelWidth=Math.max(1,Math.round(rect.width*devicePixelRatio)),pixelHeight=Math.max(1,Math.round(rect.height*devicePixelRatio));
+      if(canvas.width!==pixelWidth||canvas.height!==pixelHeight){canvas.width=pixelWidth;canvas.height=pixelHeight;}
+      const c=canvas.getContext('2d');c.setTransform(canvas.width/w,0,0,canvas.height/h,0,0);
       let start=0;while(start<index&&times[start]<end-120)start++;const values=keys.map(k=>s?.[k]||[]);let lo=Infinity,hi=-Infinity;
       for(const arr of values)for(let j=start;j<=index;j++)if(Number.isFinite(arr[j])){lo=Math.min(lo,arr[j]);hi=Math.max(hi,arr[j]);}
       if(!Number.isFinite(lo)){lo=0;hi=1;}const pad=Math.max(1,(hi-lo)*.15);lo-=pad;hi+=pad;

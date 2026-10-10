@@ -14,7 +14,9 @@
   }
   function draw(canvas,values,times,index){
     const w=canvas.clientWidth,h=canvas.clientHeight;if(w<2||h<2)return;
-    const scale=Math.min(devicePixelRatio||1,2);canvas.width=w*scale;canvas.height=h*scale;const ctx=canvas.getContext('2d');ctx.scale(scale,scale);
+    const scale=Math.min(devicePixelRatio||1,2),pixelWidth=Math.max(1,Math.round(w*scale)),pixelHeight=Math.max(1,Math.round(h*scale));
+    if(canvas.width!==pixelWidth||canvas.height!==pixelHeight){canvas.width=pixelWidth;canvas.height=pixelHeight;}
+    const ctx=canvas.getContext('2d');ctx.setTransform(canvas.width/w,0,0,canvas.height/h,0,0);
     const end=times[index]||0;let start=0;while(start<index&&times[start]<end-120)start++;
     const valid=values.slice(start,index+1).filter(Number.isFinite);if(!valid.length)return;
     const low=Math.min(...valid),high=Math.max(...valid),pad=Math.max(.1,(high-low)*.2),lo=low-pad,hi=high+pad;
@@ -44,7 +46,16 @@
       select.value=selected;detailSelect.value=selected;render();
     }).catch(()=>{select.add(new Option('센서 목록 연결 실패',''));});
     for(const input of [select,detailSelect])input.addEventListener('change',()=>{selected=input.value;select.value=selected;detailSelect.value=selected;render();window.drawStationTrend?.();});
-    window.addEventListener('station-frame',render);window.addEventListener('wall-resize',render);
+    let renderTimer=null,renderPending=false,lastRenderAt=0;
+    const scheduleRender=(immediate=false)=>{
+      const now=performance.now(),wait=Math.max(0,120-(now-lastRenderAt));
+      if(immediate||wait===0){if(renderTimer){clearTimeout(renderTimer);renderTimer=null;}renderPending=false;lastRenderAt=now;render();return;}
+      if(renderPending)return;
+      renderPending=true;renderTimer=setTimeout(()=>{renderTimer=null;renderPending=false;lastRenderAt=performance.now();render();},wait);
+    };
+    window.addEventListener('station-frame',()=>scheduleRender());
+    window.addEventListener('wall-resize',()=>scheduleRender(true));
+    lastRenderAt=performance.now();
   }
   window.nodeMonitor={series,get selectedNode(){return selected;},get catalog(){return catalog;},selectNode(id){if(catalog?.nodes?.some(n=>n.node_id===id)){selected=id;if($('wallNodeSelect'))$('wallNodeSelect').value=id;render();}}};
   window.addEventListener('station-layout-ready',mount,{once:true});
