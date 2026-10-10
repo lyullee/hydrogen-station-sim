@@ -2030,6 +2030,17 @@ Verification:
 - Critical fast lane: software PASS; scientific screen remains FAIL on the
   three existing negative diagnostics and readiness remains BLOCKED.
 
+## 2026-10-11 - Full regression and readiness refresh
+
+The complete Python regression suite was rerun after the sustained-bank-leak
+test isolation fix: **1,350 passed / 20 warnings**.  The warnings are the
+existing Starlette/httpx, HyRAM physics, and workbook-reader deprecations; no
+test failures remain.  The IJHE readiness audit and goal snapshot were also
+regenerated from the current repository.  They remain **127 PASS / 10 FAIL /
+7 PENDING (88.2% gate closure)**, with bounded submission, full objective, and
+goal-completion flags still false.  The refresh changes timestamps and source
+hashes only; it does not promote a failed or pending external-validation gate.
+
 ## 2026-10-10 - Isolate MC mass-boundary error without changing the frozen gate
 
 Status: implemented as a post-outcome diagnostic only. The MC public traces
