@@ -910,3 +910,22 @@ changed.
 Verification:
 
 - The new diagnostic-boundary regression and readiness/data-summary checks pass.
+
+## 2026-10-10 - Ground calibrated diagnostics without promoting claims
+
+Status: implemented; provider-grounding and full regression suites passed.
+
+- The LLM evidence manifest now exposes the 11-case calibrated closed-loop
+  comparison as a compact development diagnostic with its aggregate metrics.
+- The manifest carries explicit `claim_supported=false` and
+  `promotion_prohibited=true` flags plus the original claim boundary, so the
+  provider can use the result as context without calling it an independent
+  holdout, field-safety validation, SAE conformance result or production
+  parameter change.
+- The existing frozen station-to-vehicle holdout boundary and readiness gates
+  are unchanged.
+
+Verification:
+
+- Focused LLM-grounding suite: 28 passed.
+- Full regression suite: 1276 passed, 20 warnings.

@@ -3166,6 +3166,68 @@ def _public_real_station_context() -> dict[str, Any] | None:
     }
 
 
+def _closed_loop_calibrated_confirmatory_diagnostic_evidence() -> dict[str, Any] | None:
+    """Expose the latest calibrated comparison with an explicit claim fence.
+
+    This artifact is useful context for an LLM because it records where the
+    development model improved on an already-consumed comparison set.  It is
+    deliberately kept separate from the frozen external holdout boundary: the
+    run was post-outcome, did not fit parameters, and cannot support a release
+    or safety claim.  Returning ``None`` on a malformed artifact keeps the
+    provider envelope conservative.
+    """
+
+    root = Path(__file__).resolve().parents[2]
+    path = root / "research/closed_loop_calibrated_confirmatory_diagnostic_2026_10_10.json"
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError, json.JSONDecodeError):
+        return None
+
+    claim_boundary = str(record.get("claim_boundary") or "")
+    aggregate = record.get("diagnostic_aggregate") or {}
+    metrics = aggregate.get("metrics_mean") or {}
+    required = (
+        record.get("artifact_type")
+        == "post_outcome_closed_loop_calibrated_confirmatory_diagnostic",
+        record.get("evidence_role") == "model-development diagnostic only",
+        record.get("post_outcome") is True,
+        record.get("parameter_fitting") is False,
+        record.get("production_default_changed") is False,
+        record.get("validation_gate_effect") == "none",
+        aggregate.get("case_count") == 11,
+        isinstance(record.get("claim_boundary"), str),
+        "not a new independent holdout" in claim_boundary.lower(),
+    )
+    if not all(required):
+        return None
+
+    return {
+        "artifact": "research/closed_loop_calibrated_confirmatory_diagnostic_2026_10_10.json",
+        "evidence_role": record.get("evidence_role"),
+        "case_count": aggregate.get("case_count"),
+        "screening_pass_count": aggregate.get("screening_pass_count"),
+        "screening_pass_fraction": _finite_number(
+            aggregate.get("screening_pass_fraction")
+        ),
+        "mean_metrics": {
+            key: _finite_number(metrics.get(key))
+            for key in (
+                "pressure_rmse_mpa",
+                "temperature_rmse_c",
+                "soc_rmse_percentage_points",
+            )
+        },
+        "post_outcome": True,
+        "parameter_fitting": False,
+        "production_default_changed": False,
+        "validation_gate_effect": "none",
+        "claim_supported": False,
+        "promotion_prohibited": True,
+        "claim_limit": claim_boundary,
+    }
+
+
 def _public_station_operation_practice_reference() -> dict[str, Any] | None:
     """Expose qualitative public-facility operating practice with hard limits.
 
@@ -8049,6 +8111,11 @@ def build_evidence_manifest(
         envelope["response_evidence"][
             "closed_loop_validation_boundary"
         ] = closed_loop
+    calibrated_confirmation = _closed_loop_calibrated_confirmatory_diagnostic_evidence()
+    if calibrated_confirmation is not None:
+        envelope["response_evidence"][
+            "closed_loop_calibrated_confirmatory_diagnostic"
+        ] = calibrated_confirmation
     thermal_observation = _temperature_observation_semantic_boundary()
     if thermal_observation is not None:
         envelope["response_evidence"][
@@ -8674,6 +8741,34 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
             ),
             "claim_supported": closed_loop.get("claim_supported"),
             "claim_limit": short(closed_loop.get("claim_limit")),
+        }
+    calibrated_confirmation = evidence.get(
+        "closed_loop_calibrated_confirmatory_diagnostic"
+    )
+    if isinstance(calibrated_confirmation, dict):
+        summary["closed_loop_calibrated_confirmatory_diagnostic"] = {
+            "evidence_role": calibrated_confirmation.get("evidence_role"),
+            "case_count": calibrated_confirmation.get("case_count"),
+            "screening_pass_count": calibrated_confirmation.get(
+                "screening_pass_count"
+            ),
+            "screening_pass_fraction": calibrated_confirmation.get(
+                "screening_pass_fraction"
+            ),
+            "mean_metrics": calibrated_confirmation.get("mean_metrics") or {},
+            "post_outcome": calibrated_confirmation.get("post_outcome"),
+            "parameter_fitting": calibrated_confirmation.get("parameter_fitting"),
+            "production_default_changed": calibrated_confirmation.get(
+                "production_default_changed"
+            ),
+            "validation_gate_effect": calibrated_confirmation.get(
+                "validation_gate_effect"
+            ),
+            "claim_supported": calibrated_confirmation.get("claim_supported"),
+            "promotion_prohibited": calibrated_confirmation.get(
+                "promotion_prohibited"
+            ),
+            "claim_limit": short(calibrated_confirmation.get("claim_limit")),
         }
     multisource = evidence.get("confidential_multisource_mapping_feasibility")
     if isinstance(multisource, dict):
