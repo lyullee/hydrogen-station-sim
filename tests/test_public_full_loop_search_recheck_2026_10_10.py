@@ -34,3 +34,8 @@ def test_public_full_loop_recheck_is_explicitly_claim_limited() -> None:
         item["raw_synchronized_archive_located"] is False
         for item in additions["new_public_leads"]
     )
+    protocol = record["additional_protocol_recheck"]
+    assert len(protocol["sources"]) == 2
+    assert all(item["full_loop_external_holdout_eligible"] is False for item in protocol["sources"])
+    assert protocol["sources"][0]["decision"] == "ENDPOINT_TABLES_ONLY"
+    assert protocol["sources"][1]["decision"] == "REPORT_FIGURE_ONLY"

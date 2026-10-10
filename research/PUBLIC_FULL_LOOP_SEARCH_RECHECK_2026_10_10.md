@@ -14,3 +14,13 @@ The project therefore stops broad public-data searching at this stage. The next 
 The same recheck also examined the FCH2Rail station-and-vehicle measurement paper ([10.1016/j.ijhydene.2025.04.040](https://doi.org/10.1016/j.ijhydene.2025.04.040)) and the UCI operational measurement study ([10.1016/j.ijhydene.2020.08.251](https://doi.org/10.1016/j.ijhydene.2020.08.251)). They provide credible measured-operation context, but no rights-cleared synchronized raw archive was located. The documented European HRS status API was retained for layout/status context only.
 
 No private path, facility identity, tag, date or raw measurement was added.
+
+## Additional protocol recheck
+
+The 35/70 MPa dispenser-performance article was checked again because its page
+exposes four CSV ZIP links.  The files are endpoint tables only: they contain
+initial/final conditions and no common time axis, so they remain a diagnostic
+and protocol reference rather than a full-loop holdout.  The official DOE H2IQ
+heavy-duty report was also checked; its synchronized-looking plot is embedded
+in a PDF and is not accompanied by a downloadable raw logger cohort.  These
+findings do not change the full-loop gate.

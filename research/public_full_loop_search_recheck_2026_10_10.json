@@ -135,6 +135,29 @@
       "claim_limit": "Operational status/layout feeds cannot validate thermodynamic behavior or vehicle boundary response."
     }
   ],
+  "additional_protocol_recheck": {
+    "recorded_at": "2026-10-10",
+    "sources": [
+      {
+        "id": "cip_2020_dispenser_endpoint_tables",
+        "doi": "10.19799/j.cnki.2095-4239.2020.0049",
+        "url": "https://esst.cip.com.cn/article/2020/2095-4239/2095-4239-2020-9-3-702.shtml",
+        "decision": "ENDPOINT_TABLES_ONLY",
+        "finding": "Four public CSV ZIP links are downloadable, but T1-T4 contain initial/final tables without a synchronized time axis or raw station-to-vehicle pressure-temperature-flow trace.",
+        "eligible_use": "endpoint operating-range diagnostic and protocol context",
+        "full_loop_external_holdout_eligible": false
+      },
+      {
+        "id": "doe_h2iq_2024_hd_fueling_protocol_report",
+        "url": "https://www.energy.gov/sites/default/files/2024-04/h2iqhour-03262024.pdf",
+        "decision": "REPORT_FIGURE_ONLY",
+        "finding": "The official report exposes a heavy-duty fueling chart and aggregate pressure, temperature, mass-flow and fill-time values, but no downloadable synchronized raw logger cohort or reuse terms.",
+        "eligible_use": "high-flow protocol and operating-envelope context",
+        "full_loop_external_holdout_eligible": false
+      }
+    ],
+    "decision": "No additional public raw full-loop cohort was admitted; existing endpoint/component boundaries remain unchanged."
+  },
   "gate_impact": "full_loop_external_validation_remains_open",
   "minimum_next_input": {
     "event_count": 3,
