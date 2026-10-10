@@ -65,6 +65,7 @@ for the full-loop IJHE gate.
 The controlled exporter is [`scripts/export_confidential_component_bundle.py`](../scripts/export_confidential_component_bundle.py),
 and its frozen intake contract is
 [`research/external_hrs_component_intake_protocol.json`](external_hrs_component_intake_protocol.json).
+The ready-to-send custodian wording is [`FULL_LOOP_CUSTODIAN_REQUEST_TEMPLATE.md`](FULL_LOOP_CUSTODIAN_REQUEST_TEMPLATE.md).
 The exporter writes generic event files only to an output directory outside the
 repository and records hashes and aggregate quality metadata without publishing
 source filenames, headers, absolute timestamps, or raw rows.
