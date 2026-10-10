@@ -41,6 +41,9 @@ _CARB_BENCHMARK = _ROOT / "research/carb_2024_hrs_inuse_field_benchmark_2026_10_
 _STRIEDNIG_DIAGNOSTIC = _ROOT / "research/striednig_hyddown_diagnostic_result_2026_10_10.json"
 _NREL_HDVS_BOUNDARY = _ROOT / "research/nrel_hdvs_raw_trace_boundary_2026_10_05.json"
 _NREL_HDVS_RESULT = _ROOT / "research/nrel_hdvs_boundary_screen_2026_10_10.json"
+_NREL_NFCTEC_ACCESS_BOUNDARY = _ROOT / (
+    "research/nrel_nfctec_public_access_boundary_2026_10_11.json"
+)
 _H2SAFE_SPATIAL_DIAGNOSTIC = _ROOT / (
     "research/h2safe_spatial_response_diagnostic_2026_10_08.json"
 )
@@ -1240,6 +1243,20 @@ def public_evidence_inventory_summary() -> dict[str, Any]:
             "pressure_final_error_mpa": None,
             "parameter_tuning": None,
         },
+        "public_nrel_access_boundary": {
+            "status": "unavailable",
+            "evidence_role": "official_public_access_boundary",
+            "source_count": 0,
+            "raw_public_full_loop_holdout": False,
+            "partial_station_to_tank_boundary": False,
+            "saga_effectiveness_evaluation": False,
+            "runtime_parameter_application": False,
+            "gate_impact": "full_loop_external_validation_remains_open",
+            "next_required_input": None,
+            "claim_supported": False,
+            "claim_limit": None,
+            "sources": [],
+        },
         "local_scientific_container_discovery": {
             "status": "unavailable",
             "scientific_headers_screened_total": 0,
@@ -1334,6 +1351,50 @@ def public_evidence_inventory_summary() -> dict[str, Any]:
                 "full_loop_holdout_eligible": eligibility.get(
                     "full_loop_station_vehicle_holdout_eligible"
                 ) is True,
+            }
+    except (OSError, KeyError, TypeError, ValueError, json.JSONDecodeError):
+        pass
+    try:
+        record = _read_json(_NREL_NFCTEC_ACCESS_BOUNDARY)
+        sources = record.get("sources") or []
+        eligibility = record.get("eligibility") or {}
+        source_rows = []
+        for source in sources:
+            if not isinstance(source, dict):
+                continue
+            source_rows.append({
+                key: source.get(key)
+                for key in (
+                    "id", "title", "url", "doi", "decision",
+                    "raw_synchronized_public_archive",
+                    "machine_readable_public_raw_rows",
+                    "full_loop_external_holdout_eligible",
+                )
+                if source.get(key) is not None
+            })
+        if (
+            record.get("artifact_type") == "nrel_nfctec_public_access_boundary"
+            and record.get("status") == "PUBLIC_COMPOSITE_ONLY_RAW_CUSTODIAN_REQUEST_REQUIRED"
+            and eligibility.get("raw_public_full_loop_holdout") is False
+            and eligibility.get("partial_station_to_tank_boundary") is True
+            and record.get("runtime_parameter_application") is False
+            and source_rows
+        ):
+            result["public_nrel_access_boundary"] = {
+                "status": "available",
+                "evidence_role": "official_public_access_boundary",
+                "source_count": len(source_rows),
+                "raw_public_full_loop_holdout": False,
+                "partial_station_to_tank_boundary": True,
+                "saga_effectiveness_evaluation": (
+                    eligibility.get("saga_effectiveness_evaluation") is True
+                ),
+                "runtime_parameter_application": False,
+                "gate_impact": str(record.get("gate_impact") or ""),
+                "next_required_input": str(eligibility.get("next_required_input") or ""),
+                "claim_supported": False,
+                "claim_limit": str(record.get("claim_boundary") or ""),
+                "sources": source_rows,
             }
     except (OSError, KeyError, TypeError, ValueError, json.JSONDecodeError):
         pass

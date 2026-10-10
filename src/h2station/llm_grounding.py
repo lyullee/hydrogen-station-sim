@@ -8749,6 +8749,11 @@ def build_evidence_manifest(
         if isinstance(public_inventory, dict)
         else None
     )
+    nrel_access = (
+        public_inventory.get("public_nrel_access_boundary")
+        if isinstance(public_inventory, dict)
+        else None
+    )
     if isinstance(nrel_screen, dict) and nrel_screen.get("screening_status") not in {
         None,
         "unavailable",
@@ -8777,6 +8782,20 @@ def build_evidence_manifest(
                 "압력 screen은 통과하지 않았고 충전소-차량 full-loop 검증이 아님"
             ),
         })
+    if isinstance(nrel_access, dict) and nrel_access.get("status") == "available":
+        envelope["response_evidence"]["public_nrel_access_boundary"] = {
+            key: nrel_access.get(key)
+            for key in (
+                "status", "evidence_role", "source_count",
+                "raw_public_full_loop_holdout",
+                "partial_station_to_tank_boundary",
+                "saga_effectiveness_evaluation",
+                "runtime_parameter_application", "gate_impact",
+                "next_required_input", "claim_supported", "claim_limit",
+                "sources",
+            )
+            if nrel_access.get(key) is not None
+        }
     public_measurement = _public_measurement_instrumentation_evidence()
     if public_measurement is not None:
         envelope["response_evidence"][
@@ -9405,6 +9424,21 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
                 "claim_supported", "claim_limit",
             )
             if nrel_screen.get(key) is not None
+        }
+    nrel_access = evidence.get("public_nrel_access_boundary")
+    if isinstance(nrel_access, dict):
+        summary["public_nrel_access_boundary"] = {
+            key: nrel_access.get(key)
+            for key in (
+                "status", "evidence_role", "source_count",
+                "raw_public_full_loop_holdout",
+                "partial_station_to_tank_boundary",
+                "saga_effectiveness_evaluation",
+                "runtime_parameter_application", "gate_impact",
+                "next_required_input", "claim_supported", "claim_limit",
+                "sources",
+            )
+            if nrel_access.get(key) is not None
         }
     h2safe_spatial = evidence.get("public_h2safe_spatial_diagnostic")
     if isinstance(h2safe_spatial, dict):
@@ -10948,6 +10982,7 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
     local_public_catalog = response.get("local_public_validation_catalog") or {}
     local_public_candidate_scan = response.get("local_public_candidate_scan") or {}
     nrel_screen = response.get("public_nrel_boundary_screen") or {}
+    nrel_access = response.get("public_nrel_access_boundary") or {}
     public_h2protocol_validation = response.get(
         "public_h2protocol_validation_boundary"
     ) or {}
@@ -11787,6 +11822,21 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                     if nrel_screen.get(key) is not None
                 },
             } if nrel_screen and public_catalog_relevant else {}),
+            **({
+                "public_nrel_access_boundary": {
+                    key: nrel_access.get(key)
+                    for key in (
+                        "status", "evidence_role", "source_count",
+                        "raw_public_full_loop_holdout",
+                        "partial_station_to_tank_boundary",
+                        "saga_effectiveness_evaluation",
+                        "runtime_parameter_application", "gate_impact",
+                        "next_required_input", "claim_supported", "claim_limit",
+                        "sources",
+                    )
+                    if nrel_access.get(key) is not None
+                },
+            } if nrel_access and public_catalog_relevant else {}),
             **({
                 "public_h2protocol_validation_boundary": {
                     key: public_h2protocol_validation.get(key)
@@ -13925,6 +13975,20 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
                 "claim_supported", "claim_limit",
             )
             if (evidence.get("public_nrel_boundary_screen") or {}).get(key)
+            is not None
+        },
+        "public_nrel_access_boundary": {
+            key: (evidence.get("public_nrel_access_boundary") or {}).get(key)
+            for key in (
+                "status", "evidence_role", "source_count",
+                "raw_public_full_loop_holdout",
+                "partial_station_to_tank_boundary",
+                "saga_effectiveness_evaluation",
+                "runtime_parameter_application", "gate_impact",
+                "next_required_input", "claim_supported", "claim_limit",
+                "sources",
+            )
+            if (evidence.get("public_nrel_access_boundary") or {}).get(key)
             is not None
         },
         "public_geometry_sensitivity": {

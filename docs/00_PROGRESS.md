@@ -1,5 +1,16 @@
 # Development Progress
 
+## 2026-10-11 - Ground the NREL/NFCTEC access boundary in LLM evidence
+
+The official NLR/NFCTEC access boundary is now included in the privacy-bounded
+LLM evidence envelope. Interactive answers can distinguish the available
+partial station-to-tank trace from the unavailable rights-cleared raw
+station-to-vehicle full-loop cohort, and are told that the access route is a
+custodian request rather than a validation result. The boundary cannot change
+runtime parameters, close the full-loop gate, or support a SAGA effectiveness
+claim. Focused LLM, NREL boundary, event-unit and public-search tests pass (31
+tests).
+
 ## 2026-10-11 - Impact-first verification triage
 
 To avoid spending time on low-impact details before the scientific blockers are

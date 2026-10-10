@@ -1799,6 +1799,36 @@ def test_nrel_boundary_screen_reaches_evidence_prompt_without_full_loop_claim():
     ]
 
 
+def test_nrel_official_access_boundary_is_grounded_without_promoting_full_loop_data():
+    manifest = build_evidence_manifest(
+        {"time_s": 12.5},
+        {},
+        [],
+        False,
+        question="공개 원자료와 full-loop 검증 데이터가 있나?",
+    )
+
+    access = manifest["response_evidence"]["public_nrel_access_boundary"]
+    assert access["status"] == "available"
+    assert access["raw_public_full_loop_holdout"] is False
+    assert access["partial_station_to_tank_boundary"] is True
+    assert access["saga_effectiveness_evaluation"] is False
+    assert access["runtime_parameter_application"] is False
+    assert access["claim_supported"] is False
+    assert access["source_count"] == 3
+    assert "custodian-approved" in access["next_required_input"]
+
+    summary = prompt_evidence_summary(manifest)["public_nrel_access_boundary"]
+    assert summary["raw_public_full_loop_holdout"] is False
+    assert summary["runtime_parameter_application"] is False
+    header = prompt_evidence_header(manifest)["public_nrel_access_boundary"]
+    assert header["claim_supported"] is False
+    decision = prompt_decision_evidence(manifest)["decision_support_evidence"]
+    assert decision["public_nrel_access_boundary"]["gate_impact"] == (
+        "full_loop_external_validation_remains_open"
+    )
+
+
 def test_manifest_separates_opt_in_recharge_dynamics_from_boundary_calibration():
     manifest = build_evidence_manifest(
         {
