@@ -2086,3 +2086,8 @@ headers, identifiers, calendar dates, and raw rows remain excluded.
 
 Verification: the new aggregate audit test and the existing local-data and
 coverage tests pass (5 passed).
+
+The same-day public-source recheck also screened official H2FillS/FCEV data
+routes and a real-fill report. These remain software, aggregate-chart, or
+custodian-request leads rather than an eligible raw full-loop cohort; the
+exclusion is recorded in `research/public_full_loop_search_addendum_2026_10_11.json`.

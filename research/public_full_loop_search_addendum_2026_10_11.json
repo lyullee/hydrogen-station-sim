@@ -1,0 +1,92 @@
+{
+  "schema_version": 1,
+  "artifact_type": "public_full_loop_search_addendum",
+  "recorded_at": "2026-10-11",
+  "decision": "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET_IDENTIFIED",
+  "search_focus": "official NREL/NLR H2FillS and FCEV data routes, DOE H2IQ real-fill reports, and open HRS data contracts",
+  "eligibility_rule": {
+    "required": [
+      "machine-readable synchronized station or dispenser pressure",
+      "vehicle or receiving-vessel pressure and temperature",
+      "mass flow or transferred mass on a common clock",
+      "engineering units, initial conditions and source checksum",
+      "controller, valve, cascade or ESD states",
+      "rights-cleared independent reuse"
+    ],
+    "excluded_substitutes": [
+      "composite aggregate charts",
+      "software installers and example files without raw test provenance",
+      "station inventory or availability APIs",
+      "published figures without machine-readable synchronized rows"
+    ]
+  },
+  "screened_sources": [
+    {
+      "id": "nrel_h2fills_official_route",
+      "title": "NREL/NLR H2FillS",
+      "url": "https://www.nrel.gov/hydrogen/h2fills",
+      "observed_scope": [
+        "full-station and partial-station fueling simulation",
+        "vehicle pressure, temperature and mass-flow outputs",
+        "empirical fueling data used in model development"
+      ],
+      "raw_synchronized_public_archive": false,
+      "controller_or_esd_channels": false,
+      "decision": "SOFTWARE_AND_CUSTODIAN_REQUEST_LEAD_ONLY",
+      "claim_limit": "The public route describes a validated software model and requires registration for the package; it does not expose a rights-cleared raw station-to-vehicle cohort suitable for an independent holdout."
+    },
+    {
+      "id": "nrel_fcev_composite_data_products",
+      "title": "NREL/NLR FCEV composite data products",
+      "url": "https://www.nrel.gov/hydrogen/fuel-cell-electric-vehicle-cdps",
+      "observed_scope": [
+        "fueling duration and fill amount aggregates",
+        "vehicle tank pressure and temperature summary products",
+        "SAE J2601 comparison charts"
+      ],
+      "raw_synchronized_public_archive": false,
+      "controller_or_esd_channels": false,
+      "decision": "AGGREGATE_BENCHMARK_ONLY",
+      "claim_limit": "Composite products are useful operating-envelope context, but they do not provide event-level common-clock station, dispenser and vehicle rows."
+    },
+    {
+      "id": "doe_h2iq_hd_fill_report",
+      "title": "DOE H2IQ Hour: Hydrogen Fuel Dispensing for Medium- and Heavy-Duty Vehicles",
+      "url": "https://www.energy.gov/sites/default/files/2024-04/h2iqhour-03262024.pdf",
+      "observed_scope": [
+        "real-fill pressure, temperature and mass-flow figures",
+        "station, hose, receptacle and vehicle-tank channels shown in charts",
+        "high-throughput fill operating context"
+      ],
+      "machine_readable_rows": false,
+      "raw_synchronized_public_archive": false,
+      "decision": "FIGURE_LEVEL_CUSTODIAN_REQUEST_LEAD_ONLY",
+      "claim_limit": "The report contains valuable real-fill figures but no machine-readable raw archive was located, so it cannot be scored as an independent holdout."
+    },
+    {
+      "id": "h2_stations_api_v2",
+      "title": "H2-Stations API v2",
+      "url": "https://docs.h2-stations.eu/for-data-users/api-v2/",
+      "observed_scope": [
+        "station layout",
+        "dispenser and nozzle availability/usage",
+        "storage and pricing signals"
+      ],
+      "raw_synchronized_public_archive": false,
+      "vehicle_pressure_temperature_channels": false,
+      "decision": "INVENTORY_AND_STATUS_CONTEXT_ONLY",
+      "claim_limit": "The public contract does not expose synchronized process telemetry or vehicle-side fill traces."
+    }
+  ],
+  "privacy": {
+    "local_source_paths_published": false,
+    "private_raw_rows_persisted": false,
+    "site_or_company_identity_added": false
+  },
+  "gate_impact": "full_loop_external_validation_remains_open",
+  "runtime_parameter_application": false,
+  "prospective_holdout_eligible": false,
+  "claim_supported": false,
+  "next_action": "Send the prepared three-event schema request to the H2FillS/HITRF and real-station custodians, then freeze the exact files and scoring before numerical access.",
+  "claim_boundary": "This is a public-access search and exclusion record. It adds no numerical validation and does not support an IJHE full-loop, field-safety or regulatory claim."
+}
