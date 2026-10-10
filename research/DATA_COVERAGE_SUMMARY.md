@@ -5,6 +5,7 @@
 - IJHE 게이트: PASS 127 / FAIL 10 / PENDING 7
 - 데이터 양이 주된 병목인가: 아니오
 - 현재 주된 공백: synchronized and attested receiving-vessel/vehicle channels
+- 현실적인 최소 데이터 요청: [DATA_ACQUISITION_MINIMUM_2026_10_10.md](DATA_ACQUISITION_MINIMUM_2026_10_10.md)
 
 ## 현재 사용 가능한 검증 범위
 

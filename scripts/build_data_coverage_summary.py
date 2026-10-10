@@ -482,6 +482,7 @@ def _markdown(summary: dict[str, Any]) -> str:
         f"- IJHE 게이트: PASS {counts['PASS']} / FAIL {counts['FAIL']} / PENDING {counts['PENDING']}",
         f"- 데이터 양이 주된 병목인가: {'아니오' if not summary['decision']['data_volume_is_primary_blocker'] else '예'}",
         f"- 현재 주된 공백: {summary['decision']['current_primary_gap']}",
+        "- 현실적인 최소 데이터 요청: [DATA_ACQUISITION_MINIMUM_2026_10_10.md](DATA_ACQUISITION_MINIMUM_2026_10_10.md)",
         "",
         "## 현재 사용 가능한 검증 범위",
         "",
