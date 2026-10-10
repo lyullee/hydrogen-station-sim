@@ -887,3 +887,26 @@ Status: evidence lead recorded; no validation gate promoted.
 - Added the lead to
   `research/public_full_loop_search_recheck_2026_10_10.json` with its claim
   limit and privacy-safe channel list.
+
+## 2026-10-10 - Calibrated J2601 confirmation diagnostic recorded
+
+Status: development diagnostic recorded; no readiness gate or production default
+changed.
+
+- Replayed 11 already-consumed public J2601 cases with the existing tank, flow
+  and thermal development calibrations, capacity-EOS geometry and mixed-
+  convection vehicle model.
+- Compared with the same 11-case internal baseline, mean pressure RMSE changed
+  4.530 → 4.190 MPa and mean final-SOC RMSE 4.625 → 4.282 percentage points;
+  mean temperature RMSE changed 7.819 → 7.710 °C.
+- The engineering screen passed 1/11 cases, so the result is retained as a
+  repair signal and explicitly cannot be promoted to an independent holdout,
+  field-safety claim, SAE conformance or production-parameter change.
+- The boundary and source hashes are recorded in
+  `research/closed_loop_calibrated_confirmatory_diagnostic_2026_10_10.json`;
+  the detailed report is
+  `research/CLOSED_LOOP_CALIBRATED_CONFIRMATORY_DIAGNOSTIC_2026_10_10.md`.
+
+Verification:
+
+- The new diagnostic-boundary regression and readiness/data-summary checks pass.

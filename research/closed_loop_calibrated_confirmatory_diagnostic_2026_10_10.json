@@ -1,0 +1,192 @@
+{
+  "schema_version": 1,
+  "generated_at_utc": "2026-10-10T04:30:48.828503+00:00",
+  "artifact_type": "post_outcome_closed_loop_calibrated_confirmatory_diagnostic",
+  "evidence_role": "model-development diagnostic only",
+  "post_outcome": true,
+  "parameter_fitting": false,
+  "production_default_changed": false,
+  "validation_gate_effect": "none",
+  "source_commit": "65b401e5551c1817f41b4a603711acb798c4120b",
+  "source_worktree_dirty_during_execution": true,
+  "runner": {
+    "artifact": "research/closed_loop_calibrated_confirmatory_diagnostic_2026_10_10/validation.json",
+    "sha256": "6e3d6761df0ba4b07589fdca68949b8b513471fc0e4e9ccdd293f0e2c6b9e991"
+  },
+  "baseline": {
+    "artifact": "research/closed_loop_internal_comparison_v2.json",
+    "sha256": "7e9bfb3afc869e9ec79c211a2688a6d0e84e834487db31aeaa6389414d2c2d8d",
+    "case_count": 11,
+    "screening_pass_count": 2,
+    "metrics_mean": {
+      "pressure_rmse_mpa": 4.529542460901497,
+      "temperature_rmse_c": 7.819001473367806,
+      "soc_rmse_percentage_points": 4.625272093704332
+    }
+  },
+  "configuration": {
+    "case_ids": [
+      "H2P-L03",
+      "H2P-L09",
+      "H2P-L12",
+      "H2P-L15",
+      "H2P-L18",
+      "H2P-L21",
+      "H2P-L24",
+      "H2P-L27",
+      "H2P-L30",
+      "H2P-L33",
+      "H2P-L36"
+    ],
+    "case_count": 11,
+    "tank_fit": {
+      "effective_volume_multiplier": 1.052729261198358,
+      "gas_liner_ua_multiplier": 31.460656519273492
+    },
+    "geometry_basis": "capacity_eos",
+    "vehicle_tank_thermal_model": "mixed_convection",
+    "equivalent_capsule_aspect_ratio": 5.0,
+    "inlet_nozzle_diameter_m": 0.003,
+    "dispenser_flow_area_multiplier": 2.0,
+    "precooler_duty_multiplier": 8.0
+  },
+  "diagnostic_aggregate": {
+    "case_count": 11,
+    "screening_pass_count": 1,
+    "screening_pass_fraction": 0.09090909090909091,
+    "metrics_mean": {
+      "pressure_rmse_mpa": 4.190430944003755,
+      "temperature_rmse_c": 7.709696005971652,
+      "soc_rmse_percentage_points": 4.2820905053765195
+    },
+    "final_stop_reason_counts": {
+      "none": 8,
+      "gas-temperature-limit": 1,
+      "vehicle-target": 2
+    }
+  },
+  "case_summary": [
+    {
+      "case_id": "H2P-L03",
+      "screening_pass": false,
+      "pressure_rmse_mpa": 3.029195172632341,
+      "temperature_rmse_c": 7.49905328369124,
+      "soc_rmse_percentage_points": 2.9016507851075892,
+      "final_stop_reason": null,
+      "baseline_pressure_rmse_mpa": 2.989775494026516,
+      "baseline_temperature_rmse_c": 7.150089456085436,
+      "baseline_soc_rmse_percentage_points": 2.711510953623737
+    },
+    {
+      "case_id": "H2P-L09",
+      "screening_pass": false,
+      "pressure_rmse_mpa": 4.219739612270785,
+      "temperature_rmse_c": 4.913053920275833,
+      "soc_rmse_percentage_points": 3.684182484330179,
+      "final_stop_reason": null,
+      "baseline_pressure_rmse_mpa": 4.4065451475648585,
+      "baseline_temperature_rmse_c": 6.637171555225489,
+      "baseline_soc_rmse_percentage_points": 3.572503328909617
+    },
+    {
+      "case_id": "H2P-L12",
+      "screening_pass": false,
+      "pressure_rmse_mpa": 3.6925960200495074,
+      "temperature_rmse_c": 6.6003951716719085,
+      "soc_rmse_percentage_points": 3.5629597117618195,
+      "final_stop_reason": null,
+      "baseline_pressure_rmse_mpa": 3.947204993770827,
+      "baseline_temperature_rmse_c": 5.310042223281695,
+      "baseline_soc_rmse_percentage_points": 3.7206386251458707
+    },
+    {
+      "case_id": "H2P-L15",
+      "screening_pass": false,
+      "pressure_rmse_mpa": 4.880678618841866,
+      "temperature_rmse_c": 12.87916139045959,
+      "soc_rmse_percentage_points": 5.604546689381135,
+      "final_stop_reason": "gas-temperature-limit",
+      "baseline_pressure_rmse_mpa": 6.2634236278705595,
+      "baseline_temperature_rmse_c": 12.316872564763484,
+      "baseline_soc_rmse_percentage_points": 7.1240364648242895
+    },
+    {
+      "case_id": "H2P-L18",
+      "screening_pass": false,
+      "pressure_rmse_mpa": 2.6473974196743844,
+      "temperature_rmse_c": 3.14907749129631,
+      "soc_rmse_percentage_points": 2.899610048150818,
+      "final_stop_reason": null,
+      "baseline_pressure_rmse_mpa": 2.768741230873666,
+      "baseline_temperature_rmse_c": 5.118233306175256,
+      "baseline_soc_rmse_percentage_points": 2.5986492977881555
+    },
+    {
+      "case_id": "H2P-L21",
+      "screening_pass": true,
+      "pressure_rmse_mpa": 1.3463883939205608,
+      "temperature_rmse_c": 6.519611585355557,
+      "soc_rmse_percentage_points": 2.4934114293667156,
+      "final_stop_reason": "vehicle-target",
+      "baseline_pressure_rmse_mpa": 2.642789272214115,
+      "baseline_temperature_rmse_c": 6.063363287701044,
+      "baseline_soc_rmse_percentage_points": 4.832002403459241
+    },
+    {
+      "case_id": "H2P-L24",
+      "screening_pass": false,
+      "pressure_rmse_mpa": 2.8585179638157823,
+      "temperature_rmse_c": 7.2674401048644,
+      "soc_rmse_percentage_points": 2.9486138619649687,
+      "final_stop_reason": null,
+      "baseline_pressure_rmse_mpa": 2.8576110069354197,
+      "baseline_temperature_rmse_c": 6.609454926281005,
+      "baseline_soc_rmse_percentage_points": 2.780027701756135
+    },
+    {
+      "case_id": "H2P-L27",
+      "screening_pass": false,
+      "pressure_rmse_mpa": 8.852057663607948,
+      "temperature_rmse_c": 8.363212174352986,
+      "soc_rmse_percentage_points": 7.923559890872798,
+      "final_stop_reason": null,
+      "baseline_pressure_rmse_mpa": 9.15315595130953,
+      "baseline_temperature_rmse_c": 8.652209251610826,
+      "baseline_soc_rmse_percentage_points": 7.944533454175986
+    },
+    {
+      "case_id": "H2P-L30",
+      "screening_pass": false,
+      "pressure_rmse_mpa": 2.738720398255747,
+      "temperature_rmse_c": 14.582140693143954,
+      "soc_rmse_percentage_points": 1.6437044506540428,
+      "final_stop_reason": null,
+      "baseline_pressure_rmse_mpa": 2.837820033436683,
+      "baseline_temperature_rmse_c": 15.509129840299702,
+      "baseline_soc_rmse_percentage_points": 1.7143752719040286
+    },
+    {
+      "case_id": "H2P-L33",
+      "screening_pass": false,
+      "pressure_rmse_mpa": 6.085219866164494,
+      "temperature_rmse_c": 5.359507232434192,
+      "soc_rmse_percentage_points": 5.894048786930456,
+      "final_stop_reason": null,
+      "baseline_pressure_rmse_mpa": 6.108380921090984,
+      "baseline_temperature_rmse_c": 5.050112190157262,
+      "baseline_soc_rmse_percentage_points": 5.9833643378810315
+    },
+    {
+      "case_id": "H2P-L36",
+      "screening_pass": false,
+      "pressure_rmse_mpa": 5.744229254807893,
+      "temperature_rmse_c": 7.6740030181422,
+      "soc_rmse_percentage_points": 7.546707420621199,
+      "final_stop_reason": "vehicle-target",
+      "baseline_pressure_rmse_mpa": 5.849519390823312,
+      "baseline_temperature_rmse_c": 7.5923376054646745,
+      "baseline_soc_rmse_percentage_points": 7.896351191279558
+    }
+  ],
+  "claim_boundary": "These cases were already consumed during development and are not a new independent holdout. The result cannot revise the frozen external gate, establish SAE conformance, validate field safety, or justify a production parameter change."
+}
