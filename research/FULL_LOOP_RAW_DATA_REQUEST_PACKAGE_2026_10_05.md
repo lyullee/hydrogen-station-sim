@@ -128,8 +128,17 @@ incident markers), but the public report does not provide a reuse-cleared,
 synchronized raw archive. It is therefore a request route only; no numerical
 rows or validation result are admitted from this record.
 
+The [DOE/NREL heavy-duty fast-flow report](https://www.energy.gov/sites/default/files/2024-04/h2iqhour-03262024.pdf)
+is the highest-priority technical request route. It documents a real H70
+experiment with station, hose, receptacle, vehicle-manifold, vehicle-tank and
+mass-flow channels shown together, but the public artifact contains plots and
+aggregate values rather than a reusable synchronized logger export. The
+request below therefore asks for the original rows and controller metadata;
+the report itself remains protocol and operating-envelope context only.
+
 | Custodian route | Public lead | Requested scope |
 | --- | --- | --- |
+| DOE/NREL heavy-duty fast-flow custodian | [H2IQ Hour report](https://www.energy.gov/sites/default/files/2024-04/h2iqhour-03262024.pdf) | Original synchronized station, hose, receptacle and vehicle logger rows; mass flow/totalizer, bank switching, precooler, stop/fault/ESD state and J2601-5 controller inputs |
 | GTI station-evaluation custodian | [OSTI report](https://www.osti.gov/biblio/1824631) | De-identified station acquisition and fueling-log traces, vehicle start/end pressure-temperature, mass/flow, compressor/precooler state and safety markers |
 | NREL NFCTEC station-data custodian | [NFCTEC programme](https://www.nrel.gov/hydrogen/nfctec) | Custodian-run de-identified fueling events with hose/vehicle pressure-temperature, dispensed mass, ambient temperature and station/fault state |
 | NLR/NREL HITRF | [HITRF programme](https://www.nrel.gov/hydrogen/hitrf-animation) | H70/H35 station, dispenser, protocol and vehicle logger rows |

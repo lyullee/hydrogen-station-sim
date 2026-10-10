@@ -51,6 +51,17 @@ The NREL HDVS work also moved from a generic search lead to a bounded,
 hash-identified station-to-tank diagnostic and a separate custodian-data lead.
 Its result is retained as a model-repair signal, not as a new holdout.
 
+## P0 request route sharpened
+
+The DOE/NREL heavy-duty fast-flow report is now marked as the highest-priority
+custodian route in `research/full_loop_raw_data_request_package_2026_10_05.json`.
+The report shows the required station, hose, receptacle, vehicle and mass-flow
+channel family in one real H70 experiment, but it does not publish synchronized
+rows or reuse terms. The request package now asks specifically for those rows,
+bank/precooler/ESD state, J2601-5 inputs, calibration metadata and permission
+for derived metrics. This improves the path to the missing P0 evidence without
+changing the full-loop gate or the 88.2% headline.
+
 ## Local workspace recheck
 
 An expanded privacy-bounded scan of the available ProjectData and DocuData

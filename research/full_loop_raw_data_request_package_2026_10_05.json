@@ -9,6 +9,30 @@
     "raw_trace_obtained": false,
     "full_loop_external_validation_supported": false
   },
+  "priority_lead_2026_10_10": {
+    "id": "doe_nrel_h2iq_heavy_duty_fast_flow",
+    "url": "https://www.energy.gov/sites/default/files/2024-04/h2iqhour-03262024.pdf",
+    "source_boundary": "Official report and aggregate plotted channels only; no raw logger rows or reuse licence admitted.",
+    "reported_channel_scope": [
+      "station pressure",
+      "hose target and measured pressure",
+      "receptacle pressure",
+      "vehicle manifold and tank pressure",
+      "mass flow",
+      "fuel-cell vehicle simulator temperature"
+    ],
+    "requested_custodian_package": [
+      "synchronized station/hose/receptacle/vehicle logger rows",
+      "mass-flow and cumulative-mass units",
+      "tank geometry, sensor locations and calibration uncertainty",
+      "bank-switching, valve, precooler, stop, fault and ESD states",
+      "SAE J2601-5 controller inputs and protocol phase",
+      "written permission for derived metrics and journal publication"
+    ],
+    "raw_trace_obtained": false,
+    "full_loop_external_validation_supported": false,
+    "priority": "P0"
+  },
   "minimum_channels": [
     "common elapsed time or timestamp",
     "vehicle_or_receptacle_pressure",
@@ -73,6 +97,11 @@
     "rationale": "A small de-identified bundle can close a useful component-evidence gap without asking the custodian for the full historian. It is intentionally below the eight-event full-loop requirement."
   },
   "custodian_routes": [
+    {
+      "id": "doe_nrel_h2iq_heavy_duty_fast_flow",
+      "url": "https://www.energy.gov/sites/default/files/2024-04/h2iqhour-03262024.pdf",
+      "requested_scope": "Original synchronized H70 station, hose, receptacle, vehicle-manifold and vehicle-tank logger rows with mass flow, bank switching, precooler, stop/fault/ESD state, J2601-5 controller inputs, calibration metadata and permission for derived metrics."
+    },
     {
       "id": "gti_hrs_station_evaluation_osti",
       "url": "https://www.osti.gov/biblio/1824631",
