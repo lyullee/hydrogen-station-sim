@@ -16,21 +16,24 @@
     "path_keyword_candidates": 375,
     "csv_tsv_headers_screened": 14989,
     "header_parse_errors": 0,
+    "spreadsheet_headers_screened": 232,
+    "spreadsheet_header_parse_errors": 0,
+    "spreadsheet_inspection_enabled": true,
     "header_family_candidate_counts": {
-      "flow_or_mass": 2055,
-      "pressure": 1490,
-      "protocol_or_control": 424,
-      "temperature": 1998,
-      "vehicle_or_dispenser": 1282
+      "flow_or_mass": 2133,
+      "pressure": 1596,
+      "protocol_or_control": 444,
+      "temperature": 2137,
+      "vehicle_or_dispenser": 1358
     },
     "coarse_candidate_classes": {
-      "control_or_protocol_candidate": 665,
-      "flow_or_mass_candidate": 1757,
-      "pressure_candidate": 367,
-      "release_rig_experiment_candidate": 139,
-      "temperature_candidate": 324,
-      "unclassified_machine_readable": 42323,
-      "vehicle_or_dispenser_candidate": 1487
+      "control_or_protocol_candidate": 680,
+      "flow_or_mass_candidate": 1770,
+      "pressure_candidate": 389,
+      "release_rig_experiment_candidate": 198,
+      "temperature_candidate": 368,
+      "unclassified_machine_readable": 42151,
+      "vehicle_or_dispenser_candidate": 1506
     },
     "split_pair_candidate_count": 0
   },

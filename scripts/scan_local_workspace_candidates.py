@@ -19,6 +19,11 @@ from datetime import date
 from pathlib import Path
 from typing import Iterable
 
+try:  # Optional: spreadsheet inspection is opt-in and must not block CSV scans.
+    import openpyxl
+except ImportError:  # pragma: no cover - exercised only in minimal environments.
+    openpyxl = None
+
 
 SKIP_DIRS = {
     ".git",
@@ -85,6 +90,15 @@ SPLIT_ROLE_TOKENS = re.compile(
     r"탱크|수용부|디스펜서|노즐)(?=$|[_\- .])",
     re.IGNORECASE,
 )
+RECEIVING_BOUNDARY = re.compile(
+    r"vehicle|car|receptacle|vehicle[_ -]?tank|fuel[_ -]?cell|차량|수용부|차량탱크",
+    re.IGNORECASE,
+)
+STATION_BOUNDARY = re.compile(
+    r"station|hrs|disp(?:enser)?|cascade|precool(?:er)?|supply|compressor|"
+    r"충전소|디스펜서|뱅크|압축기|공급|프리쿨",
+    re.IGNORECASE,
+)
 
 
 def _iter_files(roots: Iterable[Path]) -> Iterable[Path]:
@@ -101,9 +115,37 @@ def _iter_files(roots: Iterable[Path]) -> Iterable[Path]:
             yield path
 
 
-def _read_header(path: Path) -> list[str]:
-    if path.suffix.lower() not in {".csv", ".tsv"}:
+def _read_header(path: Path, *, inspect_spreadsheets: bool = False) -> list[str]:
+    suffix = path.suffix.lower()
+    if suffix not in {".csv", ".tsv", ".xlsx"}:
         return []
+    if suffix == ".xlsx":
+        if not inspect_spreadsheets or openpyxl is None:
+            return []
+        # Read only a small header window.  Values are used in memory for
+        # classification and are never returned or persisted.
+        try:
+            workbook = openpyxl.load_workbook(
+                path, read_only=True, data_only=True, keep_links=False
+            )
+            headers: list[str] = []
+            for worksheet in workbook.worksheets[:8]:
+                candidates: list[list[str]] = []
+                for row in worksheet.iter_rows(max_row=32, max_col=256, values_only=True):
+                    values = [str(value).strip() for value in row if value is not None and str(value).strip()]
+                    if len(values) >= 2:
+                        candidates.append(values)
+                if candidates:
+                    # Prefer the row that exposes the most channel families;
+                    # this handles a short title row before the real header.
+                    headers.extend(max(candidates, key=lambda values: sum(
+                        bool(pattern.search(" ".join(values)))
+                        for pattern in HEADER_FAMILIES.values()
+                    )))
+            workbook.close()
+            return headers
+        except (OSError, ValueError, KeyError, RuntimeError):
+            return []
     for encoding in ("utf-8-sig", "cp949", "utf-16"):
         try:
             with path.open("r", encoding=encoding, newline="") as stream:
@@ -130,6 +172,20 @@ def _classify_candidate(path: Path, header: list[str]) -> str:
     has_pressure = bool(HEADER_FAMILIES["pressure"].search(text))
     has_temperature = bool(HEADER_FAMILIES["temperature"].search(text))
     has_flow = bool(HEADER_FAMILIES["flow_or_mass"].search(text))
+    has_protocol = bool(HEADER_FAMILIES["protocol_or_control"].search(text))
+    # A single synchronized export can contain both sides of the boundary;
+    # classify it before the broader vehicle/dispenser bucket so it becomes a
+    # useful P0 lead without persisting any headers or values.
+    if (
+        has_time
+        and has_pressure
+        and has_temperature
+        and has_flow
+        and has_protocol
+        and RECEIVING_BOUNDARY.search(text)
+        and STATION_BOUNDARY.search(text)
+    ):
+        return "full_loop_timeseries_candidate"
     if HEADER_FAMILIES["vehicle_or_dispenser"].search(text):
         # A synchronized vehicle candidate needs a time axis and a flow/mass
         # field in addition to pressure and temperature.  Static QRA result
@@ -187,20 +243,25 @@ def _split_pair_signature(path: Path, header: list[str]) -> tuple[str, bool, boo
     return key, bool(has_flow and not explicit_vehicle), explicit_vehicle
 
 
-def scan_workspace(roots: Iterable[Path]) -> dict:
+def scan_workspace(
+    roots: Iterable[Path], *, inspect_spreadsheets: bool = False
+) -> dict:
     files = 0
     path_keyword_candidates = 0
     header_screened = 0
     header_family_counts: Counter[str] = Counter()
     coarse_classes: Counter[str] = Counter()
     parse_errors = 0
+    spreadsheet_headers_screened = 0
+    spreadsheet_parse_errors = 0
     split_groups: dict[str, tuple[bool, bool, int]] = {}
+    full_loop_candidates = 0
 
     for path in _iter_files(roots):
         files += 1
         if PATH_KEYWORDS.search(path.stem):
             path_keyword_candidates += 1
-        header = _read_header(path)
+        header = _read_header(path, inspect_spreadsheets=inspect_spreadsheets)
         if path.suffix.lower() in {".csv", ".tsv"}:
             header_screened += 1
             if not header:
@@ -208,7 +269,17 @@ def scan_workspace(roots: Iterable[Path]) -> dict:
             for family, pattern in HEADER_FAMILIES.items():
                 if any(pattern.search(str(column)) for column in header):
                     header_family_counts[family] += 1
-        coarse_classes[_classify_candidate(path, header)] += 1
+        elif path.suffix.lower() == ".xlsx" and inspect_spreadsheets:
+            spreadsheet_headers_screened += 1
+            if not header:
+                spreadsheet_parse_errors += 1
+            for family, pattern in HEADER_FAMILIES.items():
+                if any(pattern.search(str(column)) for column in header):
+                    header_family_counts[family] += 1
+        candidate_class = _classify_candidate(path, header)
+        coarse_classes[candidate_class] += 1
+        if candidate_class == "full_loop_timeseries_candidate":
+            full_loop_candidates += 1
         split = _split_pair_signature(path, header)
         if split is not None:
             key, station_like, receiving_like = split
@@ -245,12 +316,15 @@ def scan_workspace(roots: Iterable[Path]) -> dict:
             "path_keyword_candidates": path_keyword_candidates,
             "csv_tsv_headers_screened": header_screened,
             "header_parse_errors": parse_errors,
+            "spreadsheet_headers_screened": spreadsheet_headers_screened,
+            "spreadsheet_header_parse_errors": spreadsheet_parse_errors,
+            "spreadsheet_inspection_enabled": inspect_spreadsheets,
             "header_family_candidate_counts": dict(sorted(header_family_counts.items())),
             "coarse_candidate_classes": dict(sorted(coarse_classes.items())),
             "split_pair_candidate_count": split_pair_candidates,
         },
         "eligibility": {
-            "full_loop_candidate_count": 0,
+            "full_loop_candidate_count": full_loop_candidates,
             "split_pair_candidates_require_attestation": split_pair_candidates,
             "decision": "DISCOVERY_ONLY_UNTIL_ATTESTED",
             "required_attestation": [
@@ -271,8 +345,13 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--root", action="append", required=True, type=Path)
     parser.add_argument("--output", required=True, type=Path)
+    parser.add_argument(
+        "--inspect-spreadsheets",
+        action="store_true",
+        help="Inspect only XLSX header windows; never persist workbook values",
+    )
     args = parser.parse_args()
-    result = scan_workspace(args.root)
+    result = scan_workspace(args.root, inspect_spreadsheets=args.inspect_spreadsheets)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(
         json.dumps(result, ensure_ascii=False, indent=2) + "\n",

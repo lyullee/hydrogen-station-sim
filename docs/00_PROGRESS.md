@@ -1259,3 +1259,25 @@ Verification:
 - `/api/health` returned `content-encoding: gzip` for the JSON response.
 - API/integration/Hazop/header/initial-fill suite: 72 passed.
 - Public Type-IV runtime calibration audit: `runtime_match=true`.
+## 2026-10-10 - Close the local spreadsheet/full-loop discovery gap
+
+Status: implemented; privacy-bounded scanner regression passed.
+
+- The local candidate scanner can now inspect a bounded header window from XLSX
+  files when `--inspect-spreadsheets` is explicitly enabled. Workbook values,
+  paths, filenames and headers remain in-memory only and are never persisted.
+- A single export containing synchronized station/dispenser and receiving-vessel
+  channels is now counted as a `full_loop_timeseries_candidate`; this was
+  previously hard-coded to zero, so a valid combined export could be silently
+  missed. Split-file candidates remain attestation-only.
+- The opt-in scan of the HRS project (84 machine-readable files) and the local
+  document folder (47,062 files, including 232 XLSX files) found zero
+  synchronized full-loop candidates and zero station/vehicle split pairs. The
+  P0 data gate therefore remains open for the same reason: no attested
+  station/vehicle/controller time-aligned trace has been supplied.
+
+Verification:
+
+- `tests/test_local_workspace_candidate_scan.py`: 7 passed.
+- Both privacy-safe scan artifacts were regenerated with spreadsheet inspection
+  enabled; no source path, filename, header or measurement value was emitted.
