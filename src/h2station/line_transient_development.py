@@ -91,6 +91,10 @@ def simulate_line_transient(
     evaluation_time_s: np.ndarray,
     *,
     parameters: LineTransientParameters,
+    solver_rtol: float = 2.0e-7,
+    solver_atol: tuple[float, float, float, float] =
+    (1.0e-10, 1.0e-2, 1.0e-12, 1.0e-2),
+    solver_max_step: float | None = None,
 ) -> LineTransientResult:
     """Integrate source and line inventories without outcome fitting.
 
@@ -110,6 +114,16 @@ def simulate_line_transient(
     ):
         raise ValueError("evaluation times must be finite, non-negative and strictly increasing")
     p = parameters
+    if not np.isfinite(solver_rtol) or solver_rtol <= 0.0:
+        raise ValueError("solver_rtol must be positive and finite")
+    if len(solver_atol) != 4 or any(
+        not np.isfinite(value) or value <= 0.0 for value in solver_atol
+    ):
+        raise ValueError("solver_atol must contain four positive finite values")
+    if solver_max_step is not None and (
+        not np.isfinite(solver_max_step) or solver_max_step <= 0.0
+    ):
+        raise ValueError("solver_max_step must be positive and finite when supplied")
     if p.source_volume_m3 <= 0.0 or p.line_volume_m3 <= 0.0:
         raise ValueError("source and line volumes must be positive")
     if p.line_inner_diameter_m <= 0.0 or p.outlet_inner_diameter_m <= 0.0:
@@ -193,6 +207,12 @@ def simulate_line_transient(
         if value > 0.0
     ]
     transient_step = min(valve_time_constants) / 20.0 if valve_time_constants else 0.05
+    max_step = max(
+        1.0e-5,
+        min(0.05, float(requested[-1]) / 1500.0, transient_step),
+    )
+    if solver_max_step is not None:
+        max_step = max(1.0e-5, float(solver_max_step))
     solution = solve_ivp(
         derivative,
         (0.0, float(requested[-1])),
@@ -201,12 +221,9 @@ def simulate_line_transient(
         # layer. BDF avoids the nonphysical trial states that LSODA can produce
         # while calling the real-gas EOS during that layer.
         method="BDF" if valve_time_constants else "LSODA",
-        rtol=2.0e-7,
-        atol=(1.0e-10, 1.0e-2, 1.0e-12, 1.0e-2),
-        max_step=max(
-            1.0e-5,
-            min(0.05, float(requested[-1]) / 1500.0, transient_step),
-        ),
+        rtol=solver_rtol,
+        atol=solver_atol,
+        max_step=max_step,
     )
     if not solution.success:
         raise RuntimeError(f"line transient integration failed: {solution.message}")

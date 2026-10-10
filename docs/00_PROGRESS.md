@@ -1,5 +1,26 @@
 # Development Progress
 
+## 2026-10-10 - Run high-impact diagnostics concurrently
+
+Status: implemented; bounded P0/P1 development diagnostics now have a parallel
+fast lane.
+
+- Added `scripts/run_priority_diagnostics.py` to run the measured-boundary MC
+  tank replay and independent P1 physics diagnostics concurrently. A slow
+  release or spatial diagnostic no longer blocks unrelated model work.
+- The runner records only process status, duration and sanitized output tails.
+  It does not promote a readiness gate, change runtime parameters, or persist
+  raw measurements.
+- The Schefer line-transient sensitivity uses a diagnostic-only solver profile;
+  its baseline metrics stay within 0.04 percentage points of the prior strict
+  run while reducing that five-case diagnostic from about 101 s to about 17 s.
+- Use `--priority P0` or `--priority P1` when focusing on the highest-impact
+  track, or `--list` to inspect the queue without running it.
+
+Verification:
+
+- `tests/test_priority_diagnostics.py`: 2 passed.
+
 ## 2026-10-10 - Add split-log discovery and template exclusion
 
 Status: implemented; split candidates remain zero in the scanned archives.

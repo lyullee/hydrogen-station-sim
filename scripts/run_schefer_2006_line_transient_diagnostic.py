@@ -29,6 +29,16 @@ DATA = ROOT / "data/public_validation/raw/hyram-v6.1/tests/hyram/validation/data
 PROTOCOL = ROOT / "research/schefer_2006_holdout_protocol.json"
 OUTPUT = ROOT / "research/schefer_2006_line_transient_diagnostic_2026_10_09.json"
 
+# This is a post-outcome sensitivity, not a release gate.  A relaxed numerical
+# tolerance is sufficient for the bounded comparison and avoids spending most
+# of the priority run on five repeat integrations.  The production/default
+# line-transient solver remains unchanged.
+DIAGNOSTIC_SOLVER = {
+    "solver_rtol": 1.0e-5,
+    "solver_atol": (1.0e-8, 1.0, 1.0e-10, 1.0),
+    "solver_max_step": 1.0,
+}
+
 
 def _sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
@@ -61,7 +71,9 @@ def main() -> None:
         source_to_line_discharge_coefficient=1.0,
         outlet_discharge_coefficient=1.0,
     )
-    result = simulate_line_transient(trace.time_s, parameters=parameters)
+    result = simulate_line_transient(
+        trace.time_s, parameters=parameters, **DIAGNOSTIC_SOLVER
+    )
     measured = trace.measured_mass_flow_g_s
     valve_sensitivity = []
     # The two very short values are intentionally left for a future stiff
@@ -73,7 +85,7 @@ def main() -> None:
             source_valve_time_constant_s=time_constant_s,
         )
         candidate_result = simulate_line_transient(
-            trace.time_s, parameters=candidate
+            trace.time_s, parameters=candidate, **DIAGNOSTIC_SOLVER
         )
         valve_sensitivity.append(
             {
@@ -108,6 +120,7 @@ def main() -> None:
                 "source_to_line": parameters.source_valve_time_constant_s,
                 "outlet": parameters.outlet_valve_time_constant_s,
             },
+            "diagnostic_solver": DIAGNOSTIC_SOLVER,
         },
         "instrument_boundary_views": {
             "source_flow": _metrics(measured, result.source_flow_kg_s * 1000.0),
