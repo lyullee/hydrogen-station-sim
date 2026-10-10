@@ -1308,6 +1308,25 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert calculated["evidence_digest"] != idle["evidence_digest"]
 
 
+def test_full_loop_candidate_leads_are_grounded_without_being_admitted():
+    manifest = build_evidence_manifest(
+        {"time_s": 1.0},
+        {},
+        [],
+        False,
+        question="공개 충전소 데이터와 차량 full-loop 검증 자료를 알려줘",
+    )
+    leads = manifest["response_evidence"]["public_full_loop_candidate_leads"]
+    assert leads["decision"]["new_full_loop_dataset_admitted"] is False
+    assert leads["decision"]["goal_completion_permitted"] is False
+    assert leads["privacy"]["raw_rows_persisted"] is False
+
+    projected = prompt_decision_evidence(manifest)["decision_support_evidence"]
+    candidate = projected["public_full_loop_candidate_leads"]["candidates"][0]
+    assert candidate["admission_status"] == "CONTACT_REQUEST_CANDIDATE_ONLY"
+    assert candidate["full_loop_external_holdout_eligible"] is False
+
+
 def test_prompt_projection_carries_consequence_risk_screening_boundary():
     manifest = build_evidence_manifest(
         {"time_s": 4.0},

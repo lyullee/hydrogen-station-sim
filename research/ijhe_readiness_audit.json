@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-09T22:51:34.287222+00:00",
+  "generated_at": "2026-10-10T00:16:29.344044+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -6424,7 +6424,8 @@
           "minimum_unique_points_met": true,
           "measured_half_pressure_time_observed": false,
           "minimum_requirements_met": false,
-          "reason": "The accessible publisher raster separates the valve trace only in the 0-0.01 s startup panel; the overlapping inset does not support a trace-specific half-pressure time."
+          "full_raw_holdout_eligible": false,
+          "reason": "The digitized Figure 2 measured curve never reaches half of its initial pressure; the timing endpoint is therefore unavailable and the holdout claim remains closed."
         },
         "result": {
           "points": 51,
@@ -6446,7 +6447,7 @@
           "raw_trace_found": false,
           "full_raw_holdout_eligible": false
         },
-        "claim_boundary": "One 20 MPa, 0.37 L, 4 mm pressure-decay trace; no flame, ignition, dispersion, radiation, station control or safety-distance claim."
+        "claim_boundary": "One 20 MPa, 0.37 L, 4 mm pressure-decay trace; no flame, ignition, dispersion, radiation, station control or safety-distance claim. The digitized measured curve does not provide the required half-pressure crossing, so no validation claim is made."
       }
     },
     {

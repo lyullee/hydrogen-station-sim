@@ -3685,6 +3685,83 @@ def _public_operational_evidence_lead_recheck() -> dict[str, Any] | None:
     }
 
 
+def _public_full_loop_candidate_leads() -> dict[str, Any] | None:
+    """Expose contact-only full-loop data leads without treating them as evidence.
+
+    Candidate leads are useful when the operator asks what data could close the
+    remaining validation gap.  They must remain separate from admitted
+    validation evidence: no raw rows, channel attestation or reuse permission
+    is implied by a lead record.
+    """
+
+    path = Path(__file__).resolve().parents[2] / (
+        "research/public_full_loop_candidate_leads_2026_10_10.json"
+    )
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, json.JSONDecodeError):
+        return None
+    decision = record.get("decision") or {}
+    privacy = record.get("privacy") or {}
+    candidates = record.get("candidates") or []
+    if (
+        record.get("artifact_type") != "public_full_loop_candidate_leads"
+        or not isinstance(decision, dict)
+        or decision.get("new_full_loop_dataset_admitted") is not False
+        or decision.get("runtime_parameter_application") is not False
+        or decision.get("goal_completion_permitted") is not False
+        or not isinstance(privacy, dict)
+        or not privacy
+        or not all(value is False for value in privacy.values())
+        or not isinstance(candidates, list)
+        or not candidates
+        or any(
+            not isinstance(candidate, dict)
+            or candidate.get("full_loop_external_holdout_eligible") is not False
+            for candidate in candidates
+        )
+    ):
+        return None
+
+    compact_candidates: list[dict[str, Any]] = []
+    for candidate in candidates:
+        compact_candidates.append({
+            key: candidate.get(key)
+            for key in (
+                "id", "title", "persistent_identifier", "article_url",
+                "landing_page", "reported_measurements", "reported_scope",
+                "raw_data_status", "channel_dictionary_status",
+                "license_status", "admission_status",
+                "full_loop_external_holdout_eligible", "next_action",
+                "claim_boundary",
+            )
+            if candidate.get(key) is not None
+        })
+    return {
+        "artifact": "research/public_full_loop_candidate_leads_2026_10_10.json",
+        "evidence_role": (
+            "public full-loop data-access leads; contact/request context only"
+        ),
+        "candidates": compact_candidates,
+        "decision": {
+            key: decision.get(key)
+            for key in (
+                "new_full_loop_dataset_admitted",
+                "reason",
+                "minimum_next_input",
+                "runtime_parameter_application",
+                "goal_completion_permitted",
+            )
+            if decision.get(key) is not None
+        },
+        "privacy": privacy,
+        "claim_limit": str(
+            "No candidate is a validation result. Raw rows, channel semantics, "
+            "reuse terms and independent holdout status must be verified before use."
+        ),
+    }
+
+
 def _public_type_i_filling_diagnostic() -> dict[str, Any] | None:
     """Expose the aggregate Type-I filling diagnostic with a strict boundary."""
 
@@ -7860,6 +7937,11 @@ def build_evidence_manifest(
         envelope["response_evidence"][
             "public_operational_evidence_leads"
         ] = operational_evidence_leads
+    full_loop_candidate_leads = _public_full_loop_candidate_leads()
+    if full_loop_candidate_leads is not None:
+        envelope["response_evidence"][
+            "public_full_loop_candidate_leads"
+        ] = full_loop_candidate_leads
     type_i_filling = _public_type_i_filling_diagnostic()
     if type_i_filling is not None:
         envelope["response_evidence"][
@@ -8656,6 +8738,16 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
             "full_loop_external_validation_supported": False,
             "dynamic_model_parameter_calibration_eligible": False,
             "claim_limit": short(operational_evidence_leads.get("claim_limit")),
+        }
+    full_loop_candidate_leads = evidence.get("public_full_loop_candidate_leads")
+    if isinstance(full_loop_candidate_leads, dict):
+        summary["public_full_loop_candidate_leads"] = {
+            "evidence_role": full_loop_candidate_leads.get("evidence_role"),
+            "candidates": full_loop_candidate_leads.get("candidates") or [],
+            "decision": full_loop_candidate_leads.get("decision") or {},
+            "full_loop_external_validation_supported": False,
+            "runtime_parameter_application": False,
+            "claim_limit": short(full_loop_candidate_leads.get("claim_limit")),
         }
     type_i_filling = evidence.get("public_type_i_filling_diagnostic")
     if isinstance(type_i_filling, dict):
@@ -9679,6 +9771,9 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
     operational_evidence_leads = response.get(
         "public_operational_evidence_leads"
     ) or {}
+    full_loop_candidate_leads = response.get(
+        "public_full_loop_candidate_leads"
+    ) or {}
     vehicle_side_leads = response.get(
         "public_vehicle_side_h2_measurement_leads"
     ) or {}
@@ -9714,6 +9809,15 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                 "운영", "충전소", "계측", "프로토콜", "품질",
                 "operation", "station", "instrumentation", "protocol",
             ))
+        )
+    )
+    full_loop_candidate_leads_relevant = bool(
+        full_loop_candidate_leads
+        and (
+            operational_evidence_relevant
+            or public_catalog_relevant
+            or public_hrs_leads_relevant
+            or vehicle_side_leads_relevant
         )
     )
     station_signal_relevant = any(token in lead_context for token in (
@@ -9961,6 +10065,17 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
             "claim_limit": short(operational_evidence_leads.get("claim_limit")),
         }
 
+    full_loop_candidate_projection = None
+    if full_loop_candidate_leads_relevant:
+        full_loop_candidate_projection = {
+            "evidence_role": full_loop_candidate_leads.get("evidence_role"),
+            "candidates": full_loop_candidate_leads.get("candidates") or [],
+            "decision": full_loop_candidate_leads.get("decision") or {},
+            "full_loop_external_validation_supported": False,
+            "runtime_parameter_application": False,
+            "claim_limit": short(full_loop_candidate_leads.get("claim_limit")),
+        }
+
     station_side_data_scope = None
     if actionable_data_scope and (
         station_signal_relevant
@@ -10097,6 +10212,9 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
             "public_operational_evidence_leads": operational_evidence_projection,
         } if operational_evidence_projection is not None else {}),
         **({
+            "public_full_loop_candidate_leads": full_loop_candidate_projection,
+        } if full_loop_candidate_projection is not None else {}),
+        **({
             "public_h2iq_aggregate_reference": public_h2iq_aggregate,
         } if h2iq_aggregate_relevant else {}),
         **({
@@ -10121,6 +10239,9 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
             **({
                 "public_operational_evidence_leads": operational_evidence_projection,
             } if operational_evidence_projection is not None else {}),
+            **({
+                "public_full_loop_candidate_leads": full_loop_candidate_projection,
+            } if full_loop_candidate_projection is not None else {}),
             **({
                 "public_h2iq_aggregate_reference": public_h2iq_aggregate,
             } if h2iq_aggregate_relevant else {}),
