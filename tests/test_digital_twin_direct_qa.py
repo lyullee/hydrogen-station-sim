@@ -34,6 +34,30 @@ def test_explicit_operator_commands_are_exposed_as_confirmed_virtual_actions():
     assert english[0]["label"] == "Stop all operations"
 
 
+def test_common_korean_command_variants_are_not_downgraded_to_status_answers():
+    """Imperative Korean variants used by operators resolve to proposal buttons."""
+    assert [(row["kind"], row["target"]) for row in
+            api._requested_virtual_actions("압력보완을 멈춰줘")] == [
+                ("operation.stop", "pressure_recharge")
+            ]
+    assert [(row["kind"], row["target"]) for row in
+            api._requested_virtual_actions("ESD를 작동시켜줘")] == [
+                ("esd.trip", "station")
+            ]
+    assert [(row["kind"], row["target"]) for row in
+            api._requested_virtual_actions("저장구역에서 대피시켜줘")] == [
+                ("access.restrict", "storage"), ("personnel.evacuate", "storage")
+            ]
+    assert [(row["kind"], row["target"]) for row in
+            api._requested_virtual_actions("차량2 충전을 중단해줘")] == [
+                ("operation.stop", "vehicle_2"), ("valve.close", "dispenser.2")
+            ]
+    # The broader equipment aliases must still be gated by an imperative;
+    # ordinary status questions cannot create a safety action proposal.
+    assert api._requested_virtual_actions("트레일러 공급 상태") == []
+    assert api._requested_virtual_actions("전체 공정 상태를 알려줘") == []
+
+
 def test_main_assistant_uses_bounded_budget_and_compact_plan_projection(monkeypatch):
     captured = {}
 

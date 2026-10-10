@@ -2818,12 +2818,15 @@ def _should_call_direct_hazop(
 _VIRTUAL_COMMAND_PATTERNS: tuple[tuple[tuple[str, ...], tuple[tuple[str, str, str, str], ...]], ...] = (
     (("esd", "비상정지", "비상 정지", "긴급정지", "긴급 정지", "esd trip"),
      (("esd.trip", "station", "가상 ESD 차단", "Virtual ESD trip"),)),
-    (("전체 공정 정지", "충전·공급·압축 정지", "충전 공급 압축 정지", "모든 공정 정지",
+    (("전체 공정 정지", "전체 공정", "충전·공급·압축 정지", "충전 공급 압축 정지", "모든 공정 정지",
+      "모든 공정", "공정 전체",
       "all operations stop", "stop all operations"),
      (("operation.stop", "all", "전체 공정 정지", "Stop all operations"),)),
-    (("트레일러 공급", "트레일러 공급 정지", "트레일러 공급 중지", "stop trailer supply", "trailer supply stop"),
+    (("트레일러 공급", "트레일러", "트레일러 공급 정지", "트레일러 공급 중지", "트레일러 공급 차단",
+      "stop trailer supply", "trailer supply stop"),
      (("operation.stop", "trailer_supply", "트레일러 공급 정지", "Stop trailer supply"),)),
-    (("압력 보완", "압력보완", "압력 보완 정지", "압력 보완 중지", "stop pressure recharge", "pressure recharge stop"),
+    (("압력 보완", "압력보완", "압력 보완 정지", "압력 보완 중지", "압력 보완 차단",
+      "stop pressure recharge", "pressure recharge stop"),
      (("operation.stop", "pressure_recharge", "압력 보완 정지", "Stop pressure recharge"),)),
     (("차량 1", "차량1", "차량 1 충전 정지", "차량1 충전 정지", "차량 1 충전 중지", "차량1 충전 중지", "stop vehicle 1", "vehicle 1 stop"),
      (("operation.stop", "vehicle_1", "차량 1 충전 정지", "Stop vehicle 1 fueling"),
@@ -2831,10 +2834,12 @@ _VIRTUAL_COMMAND_PATTERNS: tuple[tuple[tuple[str, ...], tuple[tuple[str, str, st
     (("차량 2", "차량2", "차량 2 충전 정지", "차량2 충전 정지", "차량 2 충전 중지", "차량2 충전 중지", "stop vehicle 2", "vehicle 2 stop"),
      (("operation.stop", "vehicle_2", "차량 2 충전 정지", "Stop vehicle 2 fueling"),
       ("valve.close", "dispenser.2", "차량 2 충전라인 차단", "Close vehicle 2 fueling line"))),
-    (("저장구역 대피", "저장 구역 대피", "저장구역 인원 대피", "evacuate storage", "storage evacuation"),
+    (("저장구역 대피", "저장 구역 대피", "저장구역 인원 대피", "저장구역에서 대피", "저장 구역에서 대피",
+      "저장구역 출입 통제", "evacuate storage", "storage evacuation"),
      (("access.restrict", "storage", "저장구역 출입 통제", "Restrict storage access"),
       ("personnel.evacuate", "storage", "저장구역 인원 대피", "Evacuate storage personnel"))),
-    (("압축기 구역 대피", "압축기구역 대피", "evacuate compressor", "compressor evacuation"),
+    (("압축기 구역 대피", "압축기구역 대피", "압축기 구역에서 대피", "압축기구역에서 대피",
+      "evacuate compressor", "compressor evacuation"),
      (("access.restrict", "compressor", "압축기 구역 출입 통제", "Restrict compressor access"),
       ("personnel.evacuate", "compressor", "압축기 구역 인원 대피", "Evacuate compressor personnel"))),
     (("환기 가동", "환기 켜", "환기 켜줘", "ventilation on", "start ventilation"),
@@ -2863,11 +2868,20 @@ def _requested_virtual_actions(question: str, *, language: str = "ko") -> list[d
         # Phrases such as "ESD 가동 여부를 확인해줘" are still questions,
         # even though they contain the polite imperative suffix.
         return []
+    # Conditional/interrogative phrasing such as "멈추려면?" asks for
+    # instructions; it must go to the answer path instead of creating a
+    # control proposal merely because it contains an action verb.  Explicit
+    # operator commands are normally declarative/polite imperatives ("해줘",
+    # "중단해", "작동시켜") and remain eligible below.
+    if re.search(r"(?:\?|려면|어떻게|할까|할까요|해야\s*(?:하나|해|돼))", compact):
+        return []
     # Do not turn a status question ("ESD 상태?", "현재 정지인가?") into a
     # command.  A phrase must contain an imperative marker or an English
     # command verb before any reviewed action is proposed.
     if not re.search(
-        r"(?:해\s*줘|해주세요|하라|해라|실행|가동|작동|차단|정지해|정지하|중지해|중지하|대피해|켜\s*줘|꺼\s*줘|"
+        r"(?:해\s*줘|해주세요|하라|해라|실행|가동|가동시켜|작동|작동시켜|시작해|시작시켜|차단|차단해|"
+        r"정지해|정지하|중지해|중지하|중단해|중단하|멈춰|멈추|대피해|대피시켜|닫아|닫아줘|열어|열어줘|"
+        r"켜\s*줘|꺼\s*줘|꺼줘|"
         r"\b(?:stop|start|trip|evacuate|close|open|isolate)\b)",
         compact,
     ):
