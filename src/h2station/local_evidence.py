@@ -10,6 +10,7 @@ or equipment metadata.
 from __future__ import annotations
 
 import json
+from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
@@ -1034,6 +1035,7 @@ def validation_evidence_summary() -> dict[str, Any]:
         }
 
 
+@lru_cache(maxsize=1)
 def public_evidence_inventory_summary() -> dict[str, Any]:
     """Return counts and claim-bounded roles for public evidence sources.
 

@@ -1415,8 +1415,15 @@ def test_manifest_preserves_opt_in_capacity_eos_geometry_basis():
             "vehicle_2_inlet_nozzle_diameter_m": None,
         },
         "thermal_geometry_complete": False,
+        "geometry_uncertainty": manifest["runtime_geometry"]["geometry_uncertainty"],
         "claim_limit": manifest["runtime_geometry"]["claim_limit"],
     }
+    uncertainty = manifest["runtime_geometry"]["geometry_uncertainty"]
+    assert uncertainty["status"] == "diagnostic_only"
+    assert uncertainty["alternate_basis_available"] is True
+    assert uncertainty["runtime_parameter_application"] is True
+    assert uncertainty["selection_prohibited"] is True
+    assert uncertainty["public_screen"]["capacity_eos"]["screening_pass_count"] == 7
     assert prompt_evidence_summary(manifest)["runtime_geometry"]["basis"] == (
         "capacity_eos"
     )

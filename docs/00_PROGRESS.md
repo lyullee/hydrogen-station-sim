@@ -1823,3 +1823,25 @@ Verification:
 - Readiness audit regenerated after refreshing integrity hashes: 127 PASS /
   10 FAIL / 7 PENDING; `bounded_ijhe_submission_ready=false` and
   `full_user_objective_ready=false` remain unchanged.
+
+## 2026-10-10 - Add a bounded vehicle-geometry uncertainty envelope and cache static evidence
+
+Status: implemented; the runtime keeps the frozen geometry default while
+exposing the available capacity/EOS alternative and the retained public
+sensitivity result in one compact envelope.
+
+- `runtime_geometry.geometry_uncertainty` now reports the active basis,
+  whether both vehicle capacities make the opt-in alternative available, and
+  the reference-versus-capacity/EOS screen counts and pressure RMSE.
+- The envelope is explicitly diagnostic-only: the comparison is from the
+  post-access NREL seven-tank sensitivity, cannot select a runtime rule or
+  safety distance, and `capacity_eos` is applied only when explicitly chosen.
+- Static public-evidence inventories and the geometry sensitivity projection
+  are cached per process. Rebuilding a manifest no longer rereads the same
+  aggregate JSON files for every UI/LLM request, while dynamic frame values
+  remain uncached.
+
+Verification:
+
+- LLM grounding, closed-loop grounding, validation-evidence and geometry
+  diagnostic suites: 36 passed.

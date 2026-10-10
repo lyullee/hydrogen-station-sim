@@ -8,6 +8,7 @@ measurement or make a consequence result more authoritative than its source.
 from __future__ import annotations
 
 from hashlib import sha256
+from functools import lru_cache
 import json
 import math
 import re
@@ -414,6 +415,44 @@ def _runtime_geometry_profile(frame: dict[str, Any]) -> dict[str, Any]:
     )
     if thermal_model not in {"constant_ua", "mixed_convection"}:
         thermal_model = "constant_ua"
+    sensitivity = _public_geometry_sensitivity_evidence()
+    variants = (sensitivity or {}).get("variants") or {}
+    source = (sensitivity or {}).get("source") or {}
+    reference_variant = variants.get("legacy_frozen") or {}
+    capacity_variant = variants.get("capacity_eos_no_volume_fit") or {}
+    geometry_uncertainty = {
+        "status": "diagnostic_only",
+        "active_basis": basis,
+        "alternate_basis": "capacity_eos",
+        "alternate_basis_available": all(
+            isinstance(frame.get(key), (int, float))
+            and not isinstance(frame.get(key), bool)
+            and float(frame[key]) > 0.0
+            for key in ("vehicle_capacity_kg", "vehicle_2_capacity_kg")
+        ),
+        "public_screen": {
+            "source_tank_count": source.get("tank_count"),
+            "reference": {
+                "screening_pass_count": reference_variant.get("screening_pass_count"),
+                "pressure_rmse_mean_mpa": reference_variant.get(
+                    "pressure_rmse_mean_mpa"
+                ),
+            },
+            "capacity_eos": {
+                "screening_pass_count": capacity_variant.get("screening_pass_count"),
+                "pressure_rmse_mean_mpa": capacity_variant.get(
+                    "pressure_rmse_mean_mpa"
+                ),
+            },
+        },
+        "runtime_parameter_application": basis == "capacity_eos",
+        "selection_prohibited": True,
+        "claim_limit": (
+            "차량 용량/EOS와 기존 형상 후보 비교는 공개 NREL 7탱크의 사후 민감도 "
+            "진단입니다. 현재 런타임 후보를 독립 검증값이나 안전거리로 선택하지 않으며, "
+            "capacity_eos도 명시적으로 요청한 경우에만 적용합니다."
+        ),
+    }
     thermal_geometry = {
         key: frame.get(key)
         for key in (
@@ -445,6 +484,7 @@ def _runtime_geometry_profile(frame: dict[str, Any]) -> dict[str, Any]:
         "thermal_geometry_complete": all(
             value is not None for value in thermal_geometry.values()
         ),
+        "geometry_uncertainty": geometry_uncertainty,
         "claim_limit": (
             "capacity/EOS 형상은 선언 용량으로 기체 체적을 한 번만 산정하는 "
             "공개 탱크 민감도 진단 기반 선택 옵션이며 "
@@ -2034,6 +2074,7 @@ def _public_h2protocol_validation_evidence() -> dict[str, Any] | None:
     }
 
 
+@lru_cache(maxsize=1)
 def _public_geometry_sensitivity_evidence() -> dict[str, Any] | None:
     """Expose the public capacity/EOS geometry sensitivity as diagnostic evidence.
 
