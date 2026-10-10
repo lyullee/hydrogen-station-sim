@@ -1,5 +1,33 @@
 # Development Progress
 
+## 2026-10-10 - High-impact solver and telemetry hot-path reduction
+
+- Kept the validated table equations and API output cadence, but replaced
+  scalar `clip`/`searchsorted`/`interp` wrappers in the hydrogen property
+  lookup with allocation-free scalar paths. The `rho,u` inverse now uses a
+  four-update Newton cap because the table-provided initial guess converges in
+  two updates across the operating envelope; boundary and round-trip checks
+  remain within the existing numerical tolerances.
+- Kept every physical sample and HAZOP frame. The operator-facing summary and
+  station pressure forecast are refreshed at most once per simulated second,
+  with immediate refresh on ESD, fault, relief, detector-band or HAZOP-rule
+  changes. This reduces repeated advisory work without delaying safety state
+  transitions or changing the controller.
+- Refreshed the privacy-safe Type-IV runtime integrity record after the API
+  source hash changed. No experimental rows or external-validation claims were
+  modified.
+
+Verification:
+
+- Focused core, HAZOP, pressure-forecast, API, and live-fault tests: **81 passed**.
+- Full regression after the change: **1275 passed, 1 stale integrity failure**;
+  regenerating the runtime integrity record resolved that failure, and the
+  readiness-audit test then passed **2/2**. The original 1275 passing tests are
+  retained; the remaining evidence gates are unchanged.
+- A local 10 s operator-model spot run at the default 0.2 s control period
+  measured roughly 4× simulated time per wall-clock second after warm-up; exact
+  speed remains CPU- and scenario-dependent.
+
 ## 2026-10-10 - Parallel priority pass: live public-catalogue access boundary
 
 - Rechecked the NBSDC liquid-hydrogen refueling-station catalogue through its

@@ -16,7 +16,7 @@ from datetime import datetime, timezone
 from dataclasses import replace, asdict
 from pathlib import Path
 from threading import Lock
-from typing import Any, Awaitable, Callable, Literal
+from typing import Any, Awaitable, Callable, Literal, Mapping
 from uuid import uuid4
 
 import numpy as np
@@ -783,6 +783,56 @@ def _execute_simulation(job_id: str, request: SimulationInput) -> None:
         forecast_history: deque[dict[str, Any]] = deque(
             maxlen=max(256, min(10000, int(np.ceil(15.0 / request.control_period_s))))
         )
+        # Operator-facing analysis and the advisory pressure forecast do not
+        # participate in the physical controller.  Rebuilding both on every
+        # 0.2 s sample made the API spend work on five nearly identical
+        # snapshots between meaningful state changes.  Keep the full telemetry
+        # cadence, but refresh these derived summaries at most once per second
+        # (or immediately when a safety-relevant band/event changes).
+        advisory_state: dict[str, Any] = {
+            "last_update_s": None,
+            "signature": None,
+            "analysis": None,
+            "forecast": None,
+        }
+
+        def advisory_signature(frame: Mapping[str, Any]) -> tuple[Any, ...]:
+            signals = frame.get("gas_detectors") or {}
+            max_detector = max(
+                (float(row.get("value") or 0.0) for row in signals.values()
+                 if isinstance(row, dict)),
+                default=0.0,
+            )
+            pressure = max(
+                float(frame.get("vehicle_pressure_mpa") or 0.0),
+                float(frame.get("vehicle_2_pressure_mpa") or 0.0),
+            )
+            temperature = max(
+                float(frame.get("vehicle_temperature_c") or 25.0),
+                float(frame.get("vehicle_2_temperature_c") or 25.0),
+            )
+
+            def band(value: float, limits: tuple[float, ...]) -> int:
+                return sum(value >= limit for limit in limits)
+
+            active = (frame.get("hazop") or {}).get("active") or []
+            active_rules = tuple(sorted(
+                (str(row.get("rule_id")), str(row.get("state")),
+                 str(row.get("severity")))
+                for row in active if isinstance(row, dict)
+            ))
+            operations = frame.get("process_operations") or {}
+            relief_open = tuple(sorted(
+                str(key) for key, value in (operations.get("relief_open") or {}).items()
+                if value
+            )) if isinstance(operations, dict) else ()
+            return (
+                bool(frame.get("esd")), tuple(sorted(frame.get("active_faults") or [])),
+                active_rules, relief_open,
+                band(pressure, (82.0, 87.5)), band(temperature, (70.0, 85.0)),
+                band(float(frame.get("total_leak_flow_g_s") or 0.0), (0.001, 0.1)),
+                band(max_detector, (1.0, 2.0)),
+            )
         _set_job(
             job_id,
             progress=20,
@@ -990,14 +1040,26 @@ def _execute_simulation(job_id: str, request: SimulationInput) -> None:
                     tag: value for tag, value in signals.items()
                     if str(tag).startswith("FD-") and isinstance(value, dict)
                 }
-                frame["analysis"] = _analyze_frame(frame)
+                forecast_history.append(frame)
                 # The station-side forecast is advisory only.  It uses a
                 # causal prefix and the committed chronological holdout gain;
                 # it never changes the physics, controller settings or ESD.
-                forecast_history.append(frame)
-                frame["station_pressure_forecast"] = forecast_storage_pressure(
-                    forecast_history
+                signature = advisory_signature(frame)
+                last_update = advisory_state["last_update_s"]
+                refresh_advisory = (
+                    last_update is None
+                    or sample.time_s - float(last_update) >= 1.0
+                    or signature != advisory_state["signature"]
                 )
+                if refresh_advisory:
+                    advisory_state["last_update_s"] = sample.time_s
+                    advisory_state["signature"] = signature
+                    advisory_state["analysis"] = _analyze_frame(frame)
+                    advisory_state["forecast"] = forecast_storage_pressure(
+                        forecast_history
+                    )
+                frame["analysis"] = advisory_state["analysis"]
+                frame["station_pressure_forecast"] = advisory_state["forecast"]
                 if process_runtime is not None:
                     process_runtime.safety.observe_hazards(sample.active_faults)
                     process_runtime.safety.record_metrics(sample.time_s, _virtual_safety_metrics(frame))

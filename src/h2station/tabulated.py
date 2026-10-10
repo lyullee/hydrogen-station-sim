@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from bisect import bisect_right
 from functools import lru_cache
 from pathlib import Path
 from threading import Lock
@@ -19,6 +20,25 @@ _OUTPUT_NAMES = {
     "CONDUCTIVITY": "conductivity", "Z": "compressibility",
     "A": "speed_of_sound",
 }
+
+
+def _scalar_interp(value: float, grid: np.ndarray, values: np.ndarray) -> float:
+    """Linear interpolation for one scalar without NumPy's array wrapper.
+
+    Property inversion calls interpolation millions of times with scalar
+    inputs.  ``numpy.interp`` is excellent for vector work but its scalar
+    dispatch repeatedly builds/coerces temporary arrays.  The grids here are
+    monotone and already resident, so a binary search is equivalent and much
+    cheaper while retaining the same endpoint clamping semantics.
+    """
+
+    if value <= grid[0]:
+        return float(values[0])
+    if value >= grid[-1]:
+        return float(values[-1])
+    index = bisect_right(grid, value) - 1
+    fraction = (value - grid[index]) / (grid[index + 1] - grid[index])
+    return float(values[index] + fraction * (values[index + 1] - values[index]))
 
 
 class HydrogenPropertyTable:
@@ -56,8 +76,13 @@ class HydrogenPropertyTable:
                 f"Hydrogen table {label}={value:g} is outside "
                 f"[{grid[0]:g}, {grid[-1]:g}]"
             )
-        clipped = float(np.clip(value, grid[0], grid[-1]))
-        index = int(np.searchsorted(grid, clipped, side="right") - 1)
+        # This is a scalar hot path called by every RHS evaluation.  NumPy's
+        # clip/searchsorted wrappers allocate/coerce a scalar array on every
+        # call, which dominates the table runtime once the physical solver is
+        # running.  The table grids are monotone, so the stdlib binary search
+        # has the same endpoint/index semantics without that allocation.
+        clipped = grid[0] if value < grid[0] else grid[-1] if value > grid[-1] else value
+        index = bisect_right(grid, clipped) - 1
         index = min(max(index, 0), len(grid) - 2)
         weight = (clipped - grid[index]) / (grid[index + 1] - grid[index])
         return index, float(weight)
@@ -104,7 +129,7 @@ class HydrogenPropertyTable:
                 f"Hydrogen table {property_name}={target:g} is outside "
                 f"the available range at P={pressure:g} Pa"
             )
-        return float(np.interp(target, curve, self.temperature_grid))
+        return _scalar_interp(target, curve, self.temperature_grid)
 
     @lru_cache(maxsize=4096)
     def state_ps(self, pressure: float, entropy: float) -> ThermoState:
@@ -129,7 +154,7 @@ class HydrogenPropertyTable:
                 f"Hydrogen table entropy={entropy:g} is outside the available "
                 f"range at P={pressure:g} Pa"
             )
-        temperature = float(np.interp(entropy, entropy_curve, self.temperature_grid))
+        temperature = _scalar_interp(entropy, entropy_curve, self.temperature_grid)
         it, wt = self._bracket(self.temperature_grid, temperature, "temperature")
 
         def value(name: str) -> float:
@@ -197,19 +222,23 @@ class HydrogenPropertyTable:
             # below then remains table-bounded and never extrapolates.
             target_energy = float(np.clip(internal_energy, curve[0], curve[-1]))
             temperatures.append(
-                float(np.interp(target_energy, curve, self.temperature_grid))
+                _scalar_interp(target_energy, curve, self.temperature_grid)
             )
 
         # The rho-T table supplies a fast initial guess, but it was sampled on a
         # different grid from the P-T table. Refine against the forward P-T
         # interpolation so a state_pt -> state_rho_u round trip is consistent.
-        pressure_rows = [float(np.interp(temperatures[j], self.temperature_grid,
-                                         self.rhot["pressure"][ir + j])) for j in (0, 1)]
+        pressure_rows = [_scalar_interp(temperatures[j], self.temperature_grid,
+                                        self.rhot["pressure"][ir + j]) for j in (0, 1)]
         pressure_guess = pressure_rows[0] * (1.0 - wr) + pressure_rows[1] * wr
         temperature_guess = temperatures[0] * (1.0 - wr) + temperatures[1] * wr
         log_pressure = float(np.clip(np.log(pressure_guess), self._log_pressure_grid[0], self._log_pressure_grid[-1]))
         temperature = float(np.clip(temperature_guess, self.temperature_grid[0], self.temperature_grid[-1]))
-        for _ in range(8):
+        # The rho-T surface provides a close initial guess.  Bilinear P-T
+        # interpolation normally converges in two Newton updates; four is a
+        # conservative cap for table-edge states and avoids spending the
+        # majority of every solver RHS on redundant refinement iterations.
+        for _ in range(4):
             ip, wp = self._bracket(self._log_pressure_grid, log_pressure, "pressure")
             it, wt = self._bracket(self.temperature_grid, temperature, "temperature")
 
@@ -250,8 +279,8 @@ class HydrogenPropertyTable:
         for name, table in self.rhot.items():
             if name in {"density", "internal_energy", "temperature"}:
                 continue
-            low = float(np.interp(temperatures[0], self.temperature_grid, table[ir]))
-            high = float(np.interp(temperatures[1], self.temperature_grid, table[ir + 1]))
+            low = _scalar_interp(temperatures[0], self.temperature_grid, table[ir])
+            high = _scalar_interp(temperatures[1], self.temperature_grid, table[ir + 1])
             values[name] = low * (1.0 - wr) + high * wr
         values["density"] = float(density)
         values["internal_energy"] = float(internal_energy)
