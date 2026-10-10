@@ -1,5 +1,23 @@
 # Development Progress
 
+## 2026-10-10 - Repair readiness evidence digests after fast-lane changes
+
+Status: implemented; the two stale source-hash records found by the readiness
+audit were regenerated from the current code without changing any numerical
+result, fit parameter, threshold or claim boundary.
+
+- Refreshed the public Type-IV runtime calibration audit digest.
+- Refreshed the public KHK accident-precedent routing audit digest.
+- The authoritative audit is back to **127 PASS / 10 FAIL / 7 PENDING**;
+  `bounded_ijhe_submission_ready=false` and
+  `full_user_objective_ready=false` remain unchanged.
+
+Verification:
+
+- `tests/test_public_tank_runtime_calibration_audit.py`
+- `tests/test_runtime_public_accident_precedents.py`
+- `tests/test_ijhe_readiness_audit.py`: **5 passed**.
+
 ## 2026-10-10 - Make the fast-lane readiness result fail closed
 
 Status: implemented; a completed diagnostic process is no longer presented as
