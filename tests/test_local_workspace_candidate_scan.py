@@ -133,3 +133,22 @@ def test_single_file_full_loop_candidate_is_counted_without_publishing_headers(
     serialized = json.dumps(result, ensure_ascii=False)
     assert "synchronized_export.csv" not in serialized
     assert "station_pressure_mpa" not in serialized
+
+
+def test_source_and_receiving_channels_without_protocol_are_partial_only(
+    tmp_path: Path,
+) -> None:
+    (tmp_path / "bench_trace.csv").write_text(
+        "time_s,pressure_mpa,source_pressure_1_mpa,temperature_c,flow_g_s\n"
+        "0,5,85,20,1\n"
+        "1,6,84,21,2\n",
+        encoding="utf-8",
+    )
+
+    result = scan_workspace([tmp_path])
+
+    assert result["eligibility"]["partial_loop_candidate_count"] == 1
+    assert result["eligibility"]["full_loop_candidate_count"] == 0
+    assert result["scan"]["coarse_candidate_classes"][
+        "boundary_bundle_missing_protocol_candidate"
+    ] == 1

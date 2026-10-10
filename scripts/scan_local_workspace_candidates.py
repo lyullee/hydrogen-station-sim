@@ -99,6 +99,12 @@ STATION_BOUNDARY = re.compile(
     r"충전소|디스펜서|뱅크|압축기|공급|프리쿨",
     re.IGNORECASE,
 )
+SOURCE_PRESSURE_CHANNEL = re.compile(
+    r"source[_ -]?pressure|supply[_ -]?pressure|psupply|p[_ -]?supply|"
+    r"station[_ -]?pressure|dispenser[_ -]?pressure|bank[_ -]?pressure|"
+    r"공급압력|소스압력|뱅크압력",
+    re.IGNORECASE,
+)
 
 
 def _iter_files(roots: Iterable[Path]) -> Iterable[Path]:
@@ -186,6 +192,19 @@ def _classify_candidate(path: Path, header: list[str]) -> str:
         and STATION_BOUNDARY.search(text)
     ):
         return "full_loop_timeseries_candidate"
+    # Public bench exports can contain source-side pressure plus receiving
+    # vessel pressure/temperature and flow, but no controller phase channel.
+    # Keep this separate from a full-loop candidate: it is useful for model
+    # development, yet cannot open the protocol-provenance gate.
+    if (
+        has_time
+        and has_pressure
+        and has_temperature
+        and has_flow
+        and SOURCE_PRESSURE_CHANNEL.search(text)
+        and not has_protocol
+    ):
+        return "boundary_bundle_missing_protocol_candidate"
     if HEADER_FAMILIES["vehicle_or_dispenser"].search(text):
         # A synchronized vehicle candidate needs a time axis and a flow/mass
         # field in addition to pressure and temperature.  Static QRA result
@@ -256,6 +275,7 @@ def scan_workspace(
     spreadsheet_parse_errors = 0
     split_groups: dict[str, tuple[bool, bool, int]] = {}
     full_loop_candidates = 0
+    partial_loop_candidates = 0
 
     for path in _iter_files(roots):
         files += 1
@@ -280,6 +300,8 @@ def scan_workspace(
         coarse_classes[candidate_class] += 1
         if candidate_class == "full_loop_timeseries_candidate":
             full_loop_candidates += 1
+        elif candidate_class == "boundary_bundle_missing_protocol_candidate":
+            partial_loop_candidates += 1
         split = _split_pair_signature(path, header)
         if split is not None:
             key, station_like, receiving_like = split
@@ -325,6 +347,7 @@ def scan_workspace(
         },
         "eligibility": {
             "full_loop_candidate_count": full_loop_candidates,
+            "partial_loop_candidate_count": partial_loop_candidates,
             "split_pair_candidates_require_attestation": split_pair_candidates,
             "decision": "DISCOVERY_ONLY_UNTIL_ATTESTED",
             "required_attestation": [

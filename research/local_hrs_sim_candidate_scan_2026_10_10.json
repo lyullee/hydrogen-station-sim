@@ -37,6 +37,7 @@
   },
   "eligibility": {
     "full_loop_candidate_count": 0,
+    "partial_loop_candidate_count": 0,
     "split_pair_candidates_require_attestation": 0,
     "decision": "DISCOVERY_ONLY_UNTIL_ATTESTED",
     "required_attestation": [

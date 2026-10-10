@@ -1281,3 +1281,25 @@ Verification:
 - `tests/test_local_workspace_candidate_scan.py`: 7 passed.
 - Both privacy-safe scan artifacts were regenerated with spreadsheet inspection
   enabled; no source path, filename, header or measurement value was emitted.
+
+## 2026-10-10 - Separate public partial-loop evidence from protocol-complete data
+
+Status: implemented; public-data discovery now narrows the P0 request.
+
+- The scanner now recognizes a single export that contains source/supply
+  pressure, receiving-vessel pressure/temperature and flow but lacks a
+  controller phase channel as `boundary_bundle_missing_protocol_candidate`.
+- The repository’s public-data scan found 8 such candidates, corresponding to
+  the downloaded MC bench traces. These traces are useful for source-to-tank
+  process development, but they remain below the full-loop gate because the
+  controller phase transitions and independent protocol provenance are absent.
+- The full-loop count remains 0 by design; no claim is promoted from a partial
+  boundary bundle. The next data request is now narrowly defined as the phase
+  transition/controller log aligned to those public traces, or three new
+  events containing that channel.
+
+Verification:
+
+- `tests/test_local_workspace_candidate_scan.py`: 8 passed.
+- Privacy-safe repository scan: 2,084 machine-readable files, 8 partial-loop
+  candidates, 0 full-loop candidates, and 0 split-file pairs.
