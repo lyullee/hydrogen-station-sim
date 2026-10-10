@@ -4129,6 +4129,42 @@ def _public_hytunnel_failure_diagnostic_evidence() -> dict[str, Any] | None:
             "claim_supported": False,
             "claim_limit": str(two_zone_record.get("claim_boundary") or ""),
         }
+    spatial_candidate_path = Path(__file__).resolve().parents[2] / (
+        "research/hytunnel_spatial_candidate_sensitivity_2026_10_11.json"
+    )
+    try:
+        spatial_candidate_record = json.loads(
+            spatial_candidate_path.read_text(encoding="utf-8")
+        )
+    except (OSError, ValueError, json.JSONDecodeError):
+        spatial_candidate_record = {}
+    spatial_candidate = None
+    if (
+        spatial_candidate_record.get("artifact_type")
+        == "post_outcome_hytunnel_spatial_rank_candidate_sensitivity"
+        and spatial_candidate_record.get("post_outcome_development_only") is True
+        and (spatial_candidate_record.get("decision") or {}).get(
+            "runtime_application"
+        ) is False
+        and (spatial_candidate_record.get("selection") or {}).get(
+            "outcomes_seen_before_selection"
+        ) is True
+    ):
+        selection = spatial_candidate_record.get("selection") or {}
+        baseline = spatial_candidate_record.get("baseline") or {}
+        candidate = spatial_candidate_record.get("candidate") or {}
+        spatial_candidate = {
+            "artifact": "research/hytunnel_spatial_candidate_sensitivity_2026_10_11.json",
+            "candidate_parameters": selection.get("candidate_parameters"),
+            "baseline_mean_top5_recall": baseline.get("mean_top5_recall"),
+            "candidate_mean_top5_recall": candidate.get("mean_top5_recall"),
+            "baseline_joint_screen_pass": baseline.get("joint_screen_pass") is True,
+            "candidate_joint_screen_pass": candidate.get("joint_screen_pass") is True,
+            "outcomes_seen_before_selection": True,
+            "runtime_application": False,
+            "claim_supported": False,
+            "claim_limit": str(spatial_candidate_record.get("claim_boundary") or ""),
+        }
     return {
         "artifact": "research/hytunnel_carpark_failure_regime_diagnostic_2026_10_09.json",
         "evidence_role": "public actual-hydrogen holdout failure and regime diagnostic",
@@ -4166,6 +4202,7 @@ def _public_hytunnel_failure_diagnostic_evidence() -> dict[str, Any] | None:
         "claim_supported": False,
         "claim_limit": str(record.get("claim_boundary") or result.get("claim_boundary") or ""),
         "two_zone_development": two_zone_development,
+        "spatial_rank_candidate": spatial_candidate,
     }
 
 

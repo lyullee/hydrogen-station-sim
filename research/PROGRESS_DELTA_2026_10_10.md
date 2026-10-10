@@ -228,3 +228,13 @@ The LLM evidence manifest now exposes this negative development diagnostic as a
 separate, explicitly non-calibrating field. This prevents a future assistant
 response from presenting the two-zone experiment as a validated HRS dispersion
 model while still making the model-form finding available for grounded answers.
+
+## Spatial-rank candidate sensitivity (2026-10-11)
+
+A declared post-outcome sensitivity grid over the 18 public actual-hydrogen
+HyTunnel spatial cases identified a candidate rank formula with mean top-five
+recall **0.744** versus **0.578** for the frozen formula and a same-cohort joint
+screen pass. Because the responses were already visible, this does not alter the
+frozen gate or runtime routing. The candidate is recorded solely to make the
+next independent spatial holdout precise rather than continuing unbounded
+coefficient experimentation (`research/hytunnel_spatial_candidate_sensitivity_2026_10_11.json`).

@@ -35,6 +35,9 @@ def test_hytunnel_failure_diagnostic_is_grounded_without_runtime_calibration():
     assert evidence["two_zone_development"]["claim_supported"] is False
     assert evidence["two_zone_development"]["pass_count"] == 4
     assert evidence["two_zone_development"]["runtime_parameter_application"] is False
+    assert evidence["spatial_rank_candidate"]["claim_supported"] is False
+    assert evidence["spatial_rank_candidate"]["runtime_application"] is False
+    assert evidence["spatial_rank_candidate"]["candidate_joint_screen_pass"] is True
 
     summary = prompt_evidence_summary(manifest)["public_hytunnel_failure_diagnostic"]
     assert summary["claim_supported"] is False
