@@ -1863,6 +1863,8 @@ function buildStation() {
     }
   }
   let lastEffectRangePaint=0;
+  let lastDomPaint=0;
+  let lastDomSignature='';
   function readLive() {
     const runtime=window.getStation3DState?.();const result=runtime?.result;const s=result?.series;const index=runtime?.index;
     if(!s?.time_s?.length||index===undefined){
@@ -1887,8 +1889,25 @@ function buildStation() {
     if(rangeNow-lastEffectRangePaint>=350){lastEffectRangePaint=rangeNow;updateEffectRanges(result?.hazop?.frames?.[index]);}
     refreshRiskZones();
     esdBanner.hidden=!live.esd;stage.classList.toggle('esd-active',Boolean(live.esd));
-    const badge=$('s3Live');badge.classList.toggle('active',!live.esd&&!live.activeFaults.length);badge.querySelector('span').textContent=live.esd?`ESD · ${live.time.toFixed(1)} s`:live.activeFaults.length?`사고 시각화 · ${live.activeFaults.length}건`:`운전 데이터 연결 · ${live.time.toFixed(1)} s`;drawInstruments(live,true);updateCard();refreshCctv();
-    updateMonitorCards();
+    // Simulation effects remain frame-accurate, but the accompanying DOM and
+    // canvas cards do not need to repaint at the solver cadence. Repainting
+    // them on every frame caused visible flicker during recordings and spent
+    // more time in layout/raster work than in the 3D scene itself. Transition
+    // signatures still force an immediate paint for ESD, faults, reliefs and
+    // fueling-route changes.
+    const domSignature=[
+      live.esd?'esd':'run',
+      live.activeFaults.join(','),
+      live.reliefOpen.join(','),
+      live.flow1>.01?'v1':'',live.flow2>.01?'v2':'',
+      live.dispatch||'',live.dispatch2||'',live.recharge||''
+    ].join('|');
+    const domDue=domSignature!==lastDomSignature||rangeNow-lastDomPaint>=120;
+    if(domDue){
+      lastDomPaint=rangeNow;lastDomSignature=domSignature;
+      const badge=$('s3Live');badge.classList.toggle('active',!live.esd&&!live.activeFaults.length);badge.querySelector('span').textContent=live.esd?`ESD · ${live.time.toFixed(1)} s`:live.activeFaults.length?`사고 시각화 · ${live.activeFaults.length}건`:`운전 데이터 연결 · ${live.time.toFixed(1)} s`;
+      drawInstruments(live,true);updateCard();refreshCctv();updateMonitorCards();
+    }
   }
   function updateMonitorCards() {
     const runtime=window.getStation3DState?.(), hasData=Boolean(runtime?.result?.series?.time_s?.length);

@@ -1081,6 +1081,24 @@ Verification:
 - `node --check web/monitor-wall.js` and `web/node-monitor.js` passed.
 - Node UI suites: 16 passed.
 
+## 2026-10-10 - Throttle 3D operator-card repaints without slowing physics
+
+Status: implemented; 3D module syntax and UI regression passed.
+
+- The 3D scene, animated routes, accident effects, hose state and risk-range
+  updates remain frame-driven.
+- Operator cards, instrument canvases, CCTV labels and monitor summaries now
+  repaint at most every 120 ms, with immediate repaint on ESD, fault, relief,
+  recharge and vehicle-flow transitions.
+- This removes repeated layout/raster work that caused visible flicker in
+  recordings while preserving the underlying simulation frame and safety
+  state.
+
+Verification:
+
+- `node --check web/station3d.js` passed.
+- Node UI suites: 16 passed.
+
 ## 2026-10-10 - Compress large result snapshots without buffering streams
 
 Status: implemented; API regression suite passed.
