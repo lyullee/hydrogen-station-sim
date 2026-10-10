@@ -1,5 +1,16 @@
 # Development Progress
 
+## 2026-10-11 - Decompose the MC tank blocker across all declared temperature operators
+
+The MC tank boundary blocker now has a dedicated post-outcome joint-screen
+diagnostic. It reuses the frozen co-located Pinlet/Tinlet_G replay and combines
+its pressure and final-SOC errors with each declared gas, liner, shell, and
+liner/shell-mean temperature observation operator. Every candidate remains at
+0/8 joint passes, so temperature-label ambiguity alone cannot explain the
+failure. This does not select an operator, change runtime parameters, promote
+the replay to validation, or alter the readiness count; it prevents a semantic
+reinterpretation from masking the remaining pressure/SOC problem.
+
 ## 2026-10-11 - Require resolved vessel geometry and thermal observation semantics
 
 The controlled full-loop evaluator now fails closed unless the frozen protocol
