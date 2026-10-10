@@ -4252,6 +4252,69 @@ def _public_hytunnel_failure_diagnostic_evidence() -> dict[str, Any] | None:
     }
 
 
+def _public_usn_actual_h2_spatial_diagnostic_evidence() -> dict[str, Any] | None:
+    """Expose the bounded actual-H2 USN spatial diagnostic to decision support.
+
+    The raw archives were accessed before a new holdout protocol was frozen.
+    Only aggregate, claim-bounded values are exposed; this evidence must never
+    be interpreted as runtime detector calibration or independent validation.
+    """
+
+    root = Path(__file__).resolve().parents[2]
+    path = root / "research/usn_actual_h2_spatial_response_diagnostic_2026_10_11.json"
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError, json.JSONDecodeError):
+        return None
+    source = record.get("source") or {}
+    method = record.get("method") or {}
+    results = record.get("results") or {}
+    inverse = results.get("inverse_distance") or {}
+    aggregate = inverse.get("aggregate") or {}
+    decision = record.get("decision") or {}
+    if (
+        record.get("schema_version") != 1
+        or record.get("artifact_type") != "post_access_usn_actual_h2_spatial_response_diagnostic"
+        or method.get("status") != "POST_ACCESS_DEVELOPMENT_DIAGNOSTIC_NOT_VALIDATION"
+        or source.get("test_gas") != "actual hydrogen"
+        or source.get("archive_count") != 22
+        or inverse.get("cases") is None
+        or aggregate.get("joint_pass") is not False
+        or decision.get("runtime_use") is not False
+        or decision.get("holdout_gate_effect") is not False
+    ):
+        return None
+    return {
+        "artifact": "research/usn_actual_h2_spatial_response_diagnostic_2026_10_11.json",
+        "evidence_role": "post_access_actual_hydrogen_spatial_development_diagnostic",
+        "source": {
+            "dataset_doi": source.get("dataset_doi"),
+            "article_doi": source.get("article_doi"),
+            "test_gas": source.get("test_gas"),
+            "archive_count": source.get("archive_count"),
+        },
+        "method": {
+            "coordinate_frame": method.get("coordinate_frame"),
+            "response": method.get("response"),
+            "source_origin_m": method.get("source_origin_m"),
+        },
+        "inverse_distance_aggregate": {
+            "experiment_count": aggregate.get("experiment_count"),
+            "median_spearman": aggregate.get("median_spearman"),
+            "mean_top5_recall": aggregate.get("mean_top5_recall"),
+            "nearest_sensor_in_response_quartile_fraction": aggregate.get(
+                "nearest_in_response_quartile_fraction"
+            ),
+            "screens": aggregate.get("screens") or {},
+            "joint_screen_pass": aggregate.get("joint_pass") is True,
+        },
+        "runtime_parameter_application": False,
+        "independent_holdout": False,
+        "claim_supported": False,
+        "claim_limit": str(record.get("claim_boundary") or ""),
+    }
+
+
 def _public_source_links(evidence: dict[str, Any]) -> list[dict[str, Any]]:
     """Return a tiny, inspectable index of public sources used for grounding.
 
@@ -4288,6 +4351,27 @@ def _public_source_links(evidence: dict[str, Any]) -> list[dict[str, Any]]:
             "HyTunnel-CS actual-hydrogen mechanically ventilated enclosure dataset",
             f"https://doi.org/{hytunnel_doi}",
             "공개 실제 수소 시계열 holdout 및 모델 한계 진단",
+        )
+
+    usn_actual_h2_spatial = evidence.get(
+        "public_usn_actual_h2_spatial_diagnostic"
+    ) or {}
+    usn_source = usn_actual_h2_spatial.get("source") or {}
+    usn_dataset_doi = str(usn_source.get("dataset_doi") or "").strip()
+    usn_article_doi = str(usn_source.get("article_doi") or "").strip()
+    if usn_dataset_doi:
+        add(
+            "PUBLIC_USN_ACTUAL_H2_OPEN_CHANNEL_DATA",
+            "USN actual-hydrogen open-channel dispersion dataset",
+            f"https://doi.org/{usn_dataset_doi}",
+            "공개 실제 수소 공간 검지 개발 진단(독립 holdout 아님)",
+        )
+    if usn_article_doi:
+        add(
+            "PUBLIC_USN_ACTUAL_H2_OPEN_CHANNEL_ARTICLE",
+            "Hydrogen dispersion in an open-ended rectangular channel",
+            f"https://doi.org/{usn_article_doi}",
+            "센서 좌표·실험 배치 출처(안전거리·충전소 검증 아님)",
         )
 
     benchmarks = evidence.get("public_experimental_benchmarks") or {}
@@ -8409,6 +8493,11 @@ def build_evidence_manifest(
         envelope["response_evidence"][
             "public_hytunnel_failure_diagnostic"
         ] = hytunnel_diagnostic
+    usn_actual_h2_spatial = _public_usn_actual_h2_spatial_diagnostic_evidence()
+    if usn_actual_h2_spatial is not None:
+        envelope["response_evidence"][
+            "public_usn_actual_h2_spatial_diagnostic"
+        ] = usn_actual_h2_spatial
     methytrucks_tank = _methytrucks_tank_diagnostic_evidence()
     if methytrucks_tank is not None:
         envelope["response_evidence"][
@@ -8987,6 +9076,26 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
             ) is True,
             "claim_supported": hytunnel_diagnostic.get("claim_supported") is True,
             "claim_limit": short(hytunnel_diagnostic.get("claim_limit"), 320),
+        }
+    usn_actual_h2_spatial = evidence.get(
+        "public_usn_actual_h2_spatial_diagnostic"
+    )
+    if isinstance(usn_actual_h2_spatial, dict):
+        summary["public_usn_actual_h2_spatial_diagnostic"] = {
+            "evidence_role": usn_actual_h2_spatial.get("evidence_role"),
+            "source": usn_actual_h2_spatial.get("source") or {},
+            "method": usn_actual_h2_spatial.get("method") or {},
+            "inverse_distance_aggregate": usn_actual_h2_spatial.get(
+                "inverse_distance_aggregate"
+            ) or {},
+            "runtime_parameter_application": usn_actual_h2_spatial.get(
+                "runtime_parameter_application"
+            ) is True,
+            "independent_holdout": usn_actual_h2_spatial.get(
+                "independent_holdout"
+            ) is True,
+            "claim_supported": usn_actual_h2_spatial.get("claim_supported") is True,
+            "claim_limit": short(usn_actual_h2_spatial.get("claim_limit"), 320),
         }
     methytrucks_tank = evidence.get("methytrucks_tank_diagnostic_boundary")
     if isinstance(methytrucks_tank, dict):
@@ -10454,6 +10563,9 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
     hytunnel_diagnostic = response.get(
         "public_hytunnel_failure_diagnostic"
     ) or {}
+    usn_actual_h2_spatial = response.get(
+        "public_usn_actual_h2_spatial_diagnostic"
+    ) or {}
     public_hrs_leads = response.get("public_hrs_measurement_leads") or {}
     operational_evidence_leads = response.get(
         "public_operational_evidence_leads"
@@ -10561,6 +10673,9 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
         "공개", "실측", "원자료", "검증", "데이터", "피해영향", "안전거리",
         "public", "measurement", "raw", "validation", "dataset", "dispersion",
         "consequence", "safety distance",
+    ))
+    usn_actual_h2_spatial_relevant = hytunnel_relevant or any(token in lead_context for token in (
+        "검지기", "검지", "센서 위치", "공간", "detector", "sensor placement",
     ))
     spatial_stratification = response.get(
         "public_actual_hydrogen_spatial_stratification_evidence"
@@ -12176,6 +12291,35 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                 },
             } if hytunnel_diagnostic and hytunnel_relevant
             and not (impact.get("calculation_attempted") is True) else {}),
+            **({
+                "public_usn_actual_h2_spatial": {
+                    "claim_supported": usn_actual_h2_spatial.get(
+                        "claim_supported"
+                    ) is True,
+                    "experiment_count": (
+                        usn_actual_h2_spatial.get("inverse_distance_aggregate") or {}
+                    ).get("experiment_count"),
+                    "median_spearman": (
+                        usn_actual_h2_spatial.get("inverse_distance_aggregate") or {}
+                    ).get("median_spearman"),
+                    "mean_top5_recall": (
+                        usn_actual_h2_spatial.get("inverse_distance_aggregate") or {}
+                    ).get("mean_top5_recall"),
+                    "joint_screen_pass": (
+                        usn_actual_h2_spatial.get("inverse_distance_aggregate") or {}
+                    ).get("joint_screen_pass") is True,
+                    "independent_holdout": usn_actual_h2_spatial.get(
+                        "independent_holdout"
+                    ) is True,
+                    "runtime_parameter_application": usn_actual_h2_spatial.get(
+                        "runtime_parameter_application"
+                    ) is True,
+                    "claim_limit": short(
+                        usn_actual_h2_spatial.get("claim_limit"), 220
+                    ),
+                },
+            } if usn_actual_h2_spatial and usn_actual_h2_spatial_relevant
+            and not (impact.get("calculation_attempted") is True) else {}),
             # The compact prompt already carries several validation limits.
             # Preserve the controlled-data boundary in one token-cheap status
             # field; the detailed header and audit envelope retain the counts.
@@ -12813,6 +12957,9 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
     hytunnel_diagnostic = evidence.get(
         "public_hytunnel_failure_diagnostic"
     ) or {}
+    usn_actual_h2_spatial = evidence.get(
+        "public_usn_actual_h2_spatial_diagnostic"
+    ) or {}
     methytrucks_tank = evidence.get("methytrucks_tank_diagnostic_boundary") or {}
     qra_multimethod = evidence.get("qra_multimethod_comparison") or {}
     preslhy = evidence.get("preslhy_validation_boundary") or {}
@@ -13126,6 +13273,22 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
             ) is True,
             "claim_supported": hytunnel_diagnostic.get("claim_supported") is True,
             "claim_limit": hytunnel_diagnostic.get("claim_limit"),
+        },
+        "public_usn_actual_h2_spatial_diagnostic": {
+            "evidence_role": usn_actual_h2_spatial.get("evidence_role"),
+            "source": usn_actual_h2_spatial.get("source") or {},
+            "method": usn_actual_h2_spatial.get("method") or {},
+            "inverse_distance_aggregate": usn_actual_h2_spatial.get(
+                "inverse_distance_aggregate"
+            ) or {},
+            "runtime_parameter_application": usn_actual_h2_spatial.get(
+                "runtime_parameter_application"
+            ) is True,
+            "independent_holdout": usn_actual_h2_spatial.get(
+                "independent_holdout"
+            ) is True,
+            "claim_supported": usn_actual_h2_spatial.get("claim_supported") is True,
+            "claim_limit": usn_actual_h2_spatial.get("claim_limit"),
         },
         "qra_multimethod_comparison": {
             key: qra_multimethod.get(key)

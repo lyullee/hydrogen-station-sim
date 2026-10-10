@@ -47,6 +47,14 @@ def test_hytunnel_failure_diagnostic_is_grounded_without_runtime_calibration():
         "candidate_nearest_sensor_fraction"
     ] == 0.2
 
+    usn = manifest["response_evidence"]["public_usn_actual_h2_spatial_diagnostic"]
+    assert usn["source"]["test_gas"] == "actual hydrogen"
+    assert usn["source"]["archive_count"] == 22
+    assert usn["inverse_distance_aggregate"]["experiment_count"] == 22
+    assert usn["inverse_distance_aggregate"]["joint_screen_pass"] is False
+    assert usn["independent_holdout"] is False
+    assert usn["runtime_parameter_application"] is False
+
     summary = prompt_evidence_summary(manifest)["public_hytunnel_failure_diagnostic"]
     assert summary["claim_supported"] is False
     assert summary["regimes"]["long_blowdown_cases"]["case_count"] == 6
@@ -56,9 +64,14 @@ def test_hytunnel_failure_diagnostic_is_grounded_without_runtime_calibration():
     assert boundary["claim_supported"] is False
     assert boundary["dispersion_joint_screen_pass"] is False
     assert boundary["runtime_parameter_application"] is False
+    usn_decision = decision["validation_boundaries"]["public_usn_actual_h2_spatial"]
+    assert usn_decision["claim_supported"] is False
+    assert usn_decision["joint_screen_pass"] is False
+    assert usn_decision["runtime_parameter_application"] is False
 
     header = prompt_evidence_header(manifest)
     assert header["public_hytunnel_failure_diagnostic"]["claim_supported"] is False
+    assert header["public_usn_actual_h2_spatial_diagnostic"]["claim_supported"] is False
     assert any(
         link["id"] == "PUBLIC_HYTUNNEL_CARPARK_RAW_TIMESERIES"
         for link in header["public_source_links"]

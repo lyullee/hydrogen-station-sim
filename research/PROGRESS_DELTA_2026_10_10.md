@@ -328,3 +328,15 @@ parameter is replaced, and no readiness gate is promoted. The result is stored
 in `research/usn_actual_h2_spatial_response_diagnostic_2026_10_11.json` and
 will be used to freeze the candidate features for a future untouched spatial
 holdout.
+
+## Actual-H2 evidence routing (2026-10-11)
+
+The USN diagnostic is now exposed to the LLM evidence manifest, compact
+decision projection, provenance summary, and public-source links. The exposed
+record is aggregate-only and carries `independent_holdout=false`,
+`runtime_parameter_application=false`, and `claim_supported=false`, so an
+answer can use the 22-case actual-H2 result as context without presenting it as
+detector calibration, safety-distance validation, or station-runtime evidence.
+The public tank and accident-precedent hash audits were refreshed after the
+grounding change, and the full regression suite remained **1,345 passed / 19
+warnings**.
