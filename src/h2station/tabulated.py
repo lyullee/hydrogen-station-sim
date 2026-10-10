@@ -113,6 +113,7 @@ class HydrogenPropertyTable:
             self._temperature_from_pt_property(pressure, entropy, "entropy"),
         )
 
+    @lru_cache(maxsize=16384)
     def flow_properties_ps(self, pressure: float, entropy: float) -> tuple[float, float]:
         """Return density and enthalpy on an isentrope without building a full state.
 

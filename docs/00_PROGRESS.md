@@ -856,3 +856,20 @@ Verification:
 
 - Core, integration, process-operation, virtual-safety and emergency-response
   suites: 57 passed.
+
+## 2026-10-10 - Cache repeated isentropic property queries
+
+Status: implemented; public, HyRAM and safety regressions passed.
+
+- The tabulated EOS now caches the deterministic `(pressure, entropy)` flow
+  property pair used repeatedly by the nozzle/choking calculation. It avoids
+  recomputing the same interpolation during solver stages without changing
+  the table, interpolation rule or physical output.
+- In a 10-second nominal replay, the measured wall time dropped from 3.107 s
+  to 2.426 s. A 60-second API smoke run completed in 12.91 s after both
+  runtime optimizations.
+
+Verification:
+
+- Core, API integration, HyRAM adapter parity, public validation, virtual
+  safety and emergency-response suites: 60 passed.
