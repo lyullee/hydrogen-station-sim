@@ -74,6 +74,30 @@ _SENSOR_ASSESSMENT_CACHE_MAX = 96
 _sensor_assessment_cache: dict[tuple[Any, ...], tuple[float, list[dict[str, Any]]]] = {}
 _sensor_assessment_cache_lock = Lock()
 
+# HyRAM import/adapter construction is relatively expensive on the first
+# request.  Keep one process-local instance and serialize the first load so
+# simultaneous monitor, sensor, and alarm requests do not all initialize the
+# same backend independently.
+_hyram_backend_cache: dict[tuple[str, Any], Any] = {}
+_hyram_backend_cache_lock = Lock()
+
+
+def _load_hyram_backend_cached(specification: str | None = None) -> Any:
+    # Include the loader identity so test/integration overrides are isolated
+    # from a backend cached by the normal process path.
+    loader = load_hyram_backend
+    key = (
+        str(specification or os.getenv("H2STATION_HYRAM_EVALUATOR") or "__native__"),
+        loader,
+    )
+    with _hyram_backend_cache_lock:
+        cached = _hyram_backend_cache.get(key)
+        if cached is not None:
+            return cached
+        backend = (loader() if specification is None else loader(specification))
+        _hyram_backend_cache[key] = backend
+        return backend
+
 
 def _sensor_assessment_cache_key(
     frame: Mapping[str, Any], node_ids: list[str], backend: Any,
@@ -121,6 +145,11 @@ def _sensor_assessment_cache_key(
         frame.get("time_s"),
         tuple(str(node) for node in node_ids),
         int(max_cases),
+        # A test/integration assessor can intentionally return a different
+        # evaluator for the same telemetry.  The normal process path keeps
+        # this function stable, while the identity fence prevents a stale
+        # result from crossing an injected evaluator boundary.
+        id(assess_sensor_cases),
         bool(getattr(backend, "available", False)),
         str(getattr(backend, "reason", "")),
         state,
@@ -144,9 +173,16 @@ def _assess_sensor_cases_cached(
         if len(_sensor_assessment_cache) >= _SENSOR_ASSESSMENT_CACHE_MAX:
             oldest = min(_sensor_assessment_cache, key=lambda item: _sensor_assessment_cache[item][0])
             _sensor_assessment_cache.pop(oldest, None)
-    result = assess_sensor_cases(
-        frame, catalog, backend, node_ids, max_cases=max_cases, proposals=proposals
-    )
+    try:
+        result = assess_sensor_cases(
+            frame, catalog, backend, node_ids, max_cases=max_cases, proposals=proposals
+        )
+    except TypeError as exc:
+        # Keep the cache compatible with small integration/test evaluators
+        # that implement the original four-positional-argument contract.
+        if "unexpected keyword argument" not in str(exc):
+            raise
+        result = assess_sensor_cases(frame, catalog, backend, node_ids)
     with _sensor_assessment_cache_lock:
         _sensor_assessment_cache[key] = (time.monotonic(), deepcopy(result))
     return result
@@ -613,6 +649,40 @@ _risk_zone_locks: dict[tuple[int, str], asyncio.Lock] = {}
 _executor = ThreadPoolExecutor(max_workers=2, thread_name_prefix="h2station")
 _saga_token_sink: ContextVar[Callable[[str], None] | None] = ContextVar("saga_token_sink", default=None)
 
+# The direct HAZOP bridge is an optional companion service.  When it is down,
+# waiting for a TCP timeout on every alarm/question made the local deterministic
+# path look slow.  Remember a failed endpoint briefly and fall back immediately
+# until the cooldown expires; a successful call clears the breaker.
+_saga_direct_failure_until: dict[str, float] = {}
+_saga_direct_failure_lock = Lock()
+_SAGA_DIRECT_FAILURE_COOLDOWN_S = 6.0
+_SAGA_DIRECT_TIMEOUT_S = 1.25
+_saga_assistant_failure_until: dict[str, float] = {}
+_saga_assistant_failure_lock = Lock()
+_SAGA_ASSISTANT_FAILURE_COOLDOWN_S = 6.0
+_SAGA_ASSISTANT_TIMEOUT_S = 12.0
+
+
+def _open_saga_assistant(request: Request, *, endpoint_key: str):
+    """Open an optional 8090 assistant request with a short failure circuit."""
+    failure_key = f"{endpoint_key}|transport:{id(urlopen)}"
+    now = time.monotonic()
+    with _saga_assistant_failure_lock:
+        blocked_until = _saga_assistant_failure_until.get(failure_key, 0.0)
+        if blocked_until > now:
+            raise URLError("SAGA assistant cooldown: local deterministic fallback")
+    try:
+        response = urlopen(request, timeout=_SAGA_ASSISTANT_TIMEOUT_S)
+    except (URLError, TimeoutError, OSError) as exc:
+        with _saga_assistant_failure_lock:
+            _saga_assistant_failure_until[failure_key] = (
+                time.monotonic() + _SAGA_ASSISTANT_FAILURE_COOLDOWN_S
+            )
+        raise exc
+    with _saga_assistant_failure_lock:
+        _saga_assistant_failure_until.pop(failure_key, None)
+    return response
+
 # The main monitor already renders deterministic consequence cards and the
 # complete staged response plan below the conversational answer. Bound only
 # that generated headline; selected-sensor analysis retains its larger budget.
@@ -738,7 +808,7 @@ def _execute_simulation(job_id: str, request: SimulationInput) -> None:
             solver_step=0,
             total_steps=int(np.ceil(request.duration_s / request.control_period_s)),
         )
-        backend = load_hyram_backend()
+        backend = _load_hyram_backend_cached()
         process_settings = request.process_settings
         measured_profile = (
             load_measured_boundary_calibration()
@@ -1663,7 +1733,7 @@ def _serialize_frame_result(
 
 @app.get("/api/health")
 def health() -> dict[str, Any]:
-    backend = load_hyram_backend()
+    backend = _load_hyram_backend_cached()
     try:
         catalog = load_catalog()
         hazop_status = {"status":"ready", "rule_count":len(catalog["rules"]),
@@ -1919,7 +1989,7 @@ async def _simulation_risk_zones_locked(job_id: str) -> dict[str, Any]:
     if (cached and cached.get("bucket") == bucket
             and cached.get("state_signature") == state_signature):
         return cached["payload"]
-    backend = await asyncio.to_thread(load_hyram_backend)
+    backend = await asyncio.to_thread(_load_hyram_backend_cached)
     catalog = load_catalog()
     cases = await asyncio.to_thread(
         assess_sensor_cases, frame, catalog, backend, list(_RISK_ZONE_NODES),
@@ -2475,13 +2545,14 @@ def _invoke_isolated_twin_assistant(channel: Literal["main", "sensor"], payload:
         endpoint += "/stream"
     body = json.dumps(payload, ensure_ascii=False, default=str).encode("utf-8")
     request = Request(base + endpoint, data=body, headers={"Content-Type": "application/json"})
+    endpoint_key = base + f"/api/integrations/digital-twin/{channel}"
     if on_token is None:
-        with urlopen(request, timeout=35) as response:
+        with _open_saga_assistant(request, endpoint_key=endpoint_key) as response:
             return json.load(response)
     final: dict[str, Any] | None = None
     event_name = ""
     data_lines: list[str] = []
-    with urlopen(request, timeout=35) as response:
+    with _open_saga_assistant(request, endpoint_key=endpoint_key) as response:
         for raw_line in response:
             line = raw_line.decode("utf-8").rstrip("\r\n")
             if line.startswith("event:"):
@@ -2664,12 +2735,26 @@ def _invoke_saga_hazop_direct(
     saga_url = os.getenv("H2STATION_SAGA_DIRECT_URL")
     if not saga_url:
         saga_url = os.getenv("H2STATION_SAGA_URL", "http://127.0.0.1:8090").rstrip("/") + "/api/digital-twin/hazop/direct"
+    # Include the transport identity so an injected/restarted client is not
+    # held behind a breaker opened by a previous transport instance.
+    failure_key = f"{saga_url}|transport:{id(urlopen)}"
+    now = time.monotonic()
+    with _saga_direct_failure_lock:
+        blocked_until = _saga_direct_failure_until.get(failure_key, 0.0)
+        if blocked_until > now:
+            return None
     try:
-        with urlopen(Request(saga_url, data=body, headers={"Content-Type": "application/json"}), timeout=3) as response:
+        with urlopen(Request(saga_url, data=body, headers={"Content-Type": "application/json"}), timeout=_SAGA_DIRECT_TIMEOUT_S) as response:
             result = json.load(response)
+        with _saga_direct_failure_lock:
+            _saga_direct_failure_until.pop(failure_key, None)
         return result if isinstance(result, dict) else None
     except (URLError, HTTPError, TimeoutError, OSError, ValueError):
         # A stopped or older SAGA process must not make the digital twin unavailable.
+        with _saga_direct_failure_lock:
+            _saga_direct_failure_until[failure_key] = (
+                time.monotonic() + _SAGA_DIRECT_FAILURE_COOLDOWN_S
+            )
         return None
 
 
@@ -3240,7 +3325,7 @@ async def saga_analysis(job_id: str, request: SagaAnalysisInput) -> dict[str, An
     show_impact_results = (emergency_context or request.scenario_mode
                            or (request.trigger == "manual" and _impact_requested(request.question)))
     if not request.direct and _scenario_requested(request):
-        backend = await asyncio.to_thread(load_hyram_backend)
+        backend = await asyncio.to_thread(_load_hyram_backend_cached)
         return await _run_saga_scenario_analysis(frame, catalog, backend, request, active,
                                                  mentioned_ids, len(sensor_values))
     response_plans = response_selection(frame, catalog, request.question, request.trigger)
@@ -3249,7 +3334,7 @@ async def saga_analysis(job_id: str, request: SagaAnalysisInput) -> dict[str, An
     sensor_impacts = []
     backend = None
     if show_impact_results:
-        backend = await asyncio.to_thread(load_hyram_backend)
+        backend = await asyncio.to_thread(_load_hyram_backend_cached)
         active_nodes = [str(row.get("node_id")) for row in active if isinstance(row, dict) and row.get("node_id")]
         release_nodes = [node["node_id"] for release in releases if isinstance(release, dict)
             for node in catalog["nodes"] if node.get("누출_target") == release.get("component_id")]
@@ -4234,7 +4319,7 @@ async def analyze_simulation_sensor(job_id: str, sensor_id: str,
     impact_results: list[dict[str, Any]] = []
     current_triggers = [rule for rule in active_rules + related_rules if rule.get("state") == "TRIGGER"]
     if current_triggers or _impact_requested(request.question):
-        backend = await asyncio.to_thread(load_hyram_backend)
+        backend = await asyncio.to_thread(_load_hyram_backend_cached)
         assessed = await asyncio.to_thread(
             _assess_sensor_cases_cached, frame, catalog, backend,
             [payload["sensor"]["node_id"]]

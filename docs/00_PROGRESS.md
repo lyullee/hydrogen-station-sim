@@ -1869,3 +1869,38 @@ only: no physical model, validation gate, or default geometry was changed.
 Verification:
 
 - Cache invalidation/deep-copy tests plus SAGA/API/grounding tests: 52 passed.
+
+## 2026-10-10 - Remove repeated companion-service and HyRAM startup waits
+
+Status: implemented; the high-impact latency paths are now shared and fail
+fast while preserving the same deterministic consequence calculations.
+
+- HyRAM backend construction is cached per process and serialized on the first
+  load. Monitor, sensor, risk-zone, and simulation paths now share that
+  instance instead of racing separate imports when requests arrive together.
+- The optional SAGA 8090 direct HAZOP bridge now uses a 1.25 s bounded call and
+  a six-second per-endpoint circuit breaker. If 8090 is stopped or restarting,
+  the local sensor/HAZOP answer returns immediately after the first failed
+  probe; a successful probe clears the breaker. This does not suppress the
+  required local impact calculation or alter its result.
+- The isolated main/sensor assistant bridge has the same endpoint-scoped
+  failure circuit and a 12 s upper bound for a stalled request. Once a failed
+  8090 transport is known, repeated periodic or manual calls do not each wait
+  through the former 35 s timeout; the deterministic answer is returned while
+  the cooldown is active.
+- The cache key includes the loader/transport identity, so an explicit
+  provider restart or test/integration override is never hidden behind stale
+  state.
+
+Observed local timings: the first native HyRAM load was about 1.68 s and the
+next call about 6 microseconds; repeated consequence requests remain below a
+millisecond after the existing snapshot cache. The actual LLM provider/network
+round trip remains an external latency and is not hidden by these numbers.
+
+Verification:
+
+- SAGA/API/sensor workbench and latency-guard suites: 40 passed.
+- Parallel P0 focus run: software PASS in 1.63 s, total 3.91 s; scientific
+  screen still has the pre-existing MC tank-boundary failure (0/8 joint).
+- Parallel critical focus run: software PASS in 5.71 s, total 5.71 s; the
+  three pre-existing negative scientific screens remain explicitly reported.
