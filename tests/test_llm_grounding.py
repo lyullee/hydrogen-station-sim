@@ -1339,6 +1339,14 @@ def test_full_loop_candidate_leads_are_grounded_without_being_admitted():
     assert leads["privacy"]["raw_rows_persisted"] is False
     assert leads["search_recheck"]["checked_at"] == "2026-10-10"
     assert "synchronized" in leads["search_recheck"]["finding"]
+    assert leads["latest_search_recheck"]["recorded_at"] == "2026-10-11"
+    assert leads["latest_search_recheck"]["decision"] == (
+        "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET_IDENTIFIED"
+    )
+    assert leads["latest_search_recheck"][
+        "full_loop_external_validation_supported"
+    ] is False
+    assert leads["latest_search_recheck"]["runtime_parameter_application"] is False
 
     projected = prompt_decision_evidence(manifest)["decision_support_evidence"]
     candidate = projected["public_full_loop_candidate_leads"]["candidates"][0]
@@ -1367,6 +1375,12 @@ def test_full_loop_candidate_leads_are_grounded_without_being_admitted():
     assert projected["public_full_loop_candidate_leads"]["search_recheck"][
         "checked_at"
     ] == "2026-10-10"
+    assert projected["public_full_loop_candidate_leads"]["latest_search_recheck"][
+        "recorded_at"
+    ] == "2026-10-11"
+    assert prompt_evidence_summary(manifest)["public_full_loop_candidate_leads"][
+        "latest_search_recheck"
+    ]["claim_supported"] is False
 
 
 def test_prompt_projection_carries_consequence_risk_screening_boundary():

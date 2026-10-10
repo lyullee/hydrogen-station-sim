@@ -3997,6 +3997,59 @@ def _public_full_loop_candidate_leads() -> dict[str, Any] | None:
             for key in ("checked_at", "scope", "finding", "evidence_urls", "action")
             if search_recheck.get(key) is not None
         }
+
+    # Keep the contact-lead record stable for existing prompt contracts while
+    # also exposing the newest official-source recheck.  The latest record is a
+    # negative access decision, not an admitted dataset, so only claim-bounded
+    # source metadata are projected into the evidence envelope.
+    latest_path = Path(__file__).resolve().parents[2] / (
+        "research/public_full_loop_search_recheck_2026_10_11.json"
+    )
+    latest_search_recheck: dict[str, Any] | None = None
+    try:
+        latest_record = json.loads(latest_path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, json.JSONDecodeError):
+        latest_record = None
+    if (
+        isinstance(latest_record, dict)
+        and latest_record.get("artifact_type") == "public_full_loop_search_recheck"
+        and latest_record.get("decision")
+        == "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET_IDENTIFIED"
+        and latest_record.get("gate_impact")
+        == "full_loop_external_validation_remains_open"
+        and latest_record.get("prospective_holdout_eligible") is False
+        and latest_record.get("runtime_parameter_application") is False
+        and latest_record.get("claim_supported") is False
+        and (latest_record.get("privacy") or {}).get("private_raw_rows_persisted")
+        is False
+    ):
+        latest_sources: list[dict[str, Any]] = []
+        for source in latest_record.get("screened_sources") or []:
+            if not isinstance(source, dict) or not source.get("id"):
+                continue
+            latest_sources.append({
+                key: source.get(key)
+                for key in (
+                    "id", "title", "doi", "url", "decision",
+                    "raw_synchronized_archive_located",
+                    "vehicle_pressure_temperature_channels",
+                    "controller_or_esd_channels", "claim_limit",
+                )
+                if source.get(key) is not None
+            })
+        latest_search_recheck = {
+            "artifact": "research/public_full_loop_search_recheck_2026_10_11.json",
+            "recorded_at": latest_record.get("recorded_at"),
+            "decision": latest_record.get("decision"),
+            "sources": latest_sources,
+            "minimum_next_input": latest_record.get("minimum_next_input") or {},
+            "gate_impact": latest_record.get("gate_impact"),
+            "full_loop_external_validation_supported": False,
+            "prospective_holdout_eligible": False,
+            "runtime_parameter_application": False,
+            "claim_supported": False,
+            "claim_limit": str(latest_record.get("claim_boundary") or ""),
+        }
     return {
         "artifact": "research/public_full_loop_candidate_leads_2026_10_10.json",
         "evidence_role": (
@@ -4016,6 +4069,7 @@ def _public_full_loop_candidate_leads() -> dict[str, Any] | None:
         },
         "privacy": privacy,
         "search_recheck": compact_search_recheck,
+        "latest_search_recheck": latest_search_recheck,
         "claim_limit": str(
             "No candidate is a validation result. Raw rows, channel semantics, "
             "reuse terms and independent holdout status must be verified before use."
@@ -9600,6 +9654,9 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
             "candidates": full_loop_candidate_leads.get("candidates") or [],
             "decision": full_loop_candidate_leads.get("decision") or {},
             "search_recheck": full_loop_candidate_leads.get("search_recheck") or {},
+            "latest_search_recheck": (
+                full_loop_candidate_leads.get("latest_search_recheck") or {}
+            ),
             "full_loop_external_validation_supported": False,
             "runtime_parameter_application": False,
             "claim_limit": short(full_loop_candidate_leads.get("claim_limit")),
@@ -10973,6 +11030,9 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
             "candidates": full_loop_candidate_leads.get("candidates") or [],
             "decision": full_loop_candidate_leads.get("decision") or {},
             "search_recheck": full_loop_candidate_leads.get("search_recheck") or {},
+            "latest_search_recheck": (
+                full_loop_candidate_leads.get("latest_search_recheck") or {}
+            ),
             "full_loop_external_validation_supported": False,
             "runtime_parameter_application": False,
             "claim_limit": short(full_loop_candidate_leads.get("claim_limit")),
