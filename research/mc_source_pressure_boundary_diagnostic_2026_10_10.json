@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-10-10T00:00:00+00:00",
+  "source_commit": "0e5d5de67b7eca1e21c275a6e2011787fb286aec",
+  "artifact_type": "mc_source_pressure_boundary_diagnostic",
+  "evidence_role": "development_diagnostic_only",
+  "post_outcome": true,
+  "parameter_fitting": false,
+  "runtime_parameter_updated": false,
+  "case_count": 8,
+  "screening_limits": {
+    "pressure_rmse_mpa": 5.0,
+    "temperature_rmse_c": 10.0,
+    "soc_final_abs_error_percentage_points": 5.0
+  },
+  "fixed_boundaries": [
+    "MC Default public vehicle-side traces",
+    "measured inlet-gas temperature profile",
+    "frozen development fit and Type-IV scaling",
+    "85 C gas-temperature controller stop"
+  ],
+  "runs": [
+    {
+      "boundary_label": "constant_supply_pressure",
+      "boundary_source": "constant_90_mpa",
+      "case_count": 8,
+      "screening_pass_count": 0,
+      "aggregate": {
+        "pressure_rmse_mpa": 3.482329259395155,
+        "temperature_rmse_c": 7.8322811664154806,
+        "soc_rmse_percentage_points": 4.393079133933055,
+        "simulation_coverage_fraction": 0.5949097437711439
+      }
+    },
+    {
+      "boundary_label": "measured_source_pressure_1",
+      "boundary_source": "source_pressure_1_mpa",
+      "case_count": 8,
+      "screening_pass_count": 0,
+      "aggregate": {
+        "pressure_rmse_mpa": 3.7892333457992313,
+        "temperature_rmse_c": 7.806027494688102,
+        "soc_rmse_percentage_points": 4.749816728005905,
+        "simulation_coverage_fraction": 0.6114526301686805
+      }
+    },
+    {
+      "boundary_label": "measured_source_pressure_3",
+      "boundary_source": "source_pressure_3_mpa",
+      "case_count": 8,
+      "screening_pass_count": 0,
+      "aggregate": {
+        "pressure_rmse_mpa": 3.5211888166633596,
+        "temperature_rmse_c": 7.816586888026997,
+        "soc_rmse_percentage_points": 4.453937432446471,
+        "simulation_coverage_fraction": 0.5981154683408799
+      }
+    }
+  ],
+  "interpretation": "Replacing the constant upstream pressure with either published source-pressure channel changes the partial-station trajectory but does not produce a screening pass. The source_pressure_1_mpa run has slightly higher pressure and SOC RMSE than the constant boundary while improving coverage and temperature RMSE; source_pressure_3_mpa remains close to baseline. This identifies upstream boundary/controller coupling as a high-impact unresolved model boundary, not a basis for selecting new runtime parameters.",
+  "claim_boundary": "Post-outcome development diagnostic only. It is a bounded PCV/precooler/hose/vehicle-tank comparison, not independent external full-station validation, not a new holdout, and cannot support an IJHE full digital-twin performance claim."
+}

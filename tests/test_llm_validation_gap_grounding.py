@@ -34,3 +34,11 @@ def test_llm_receives_privacy_bounded_validation_gap_next_actions() -> None:
     header = prompt_evidence_header(manifest)["validation_gap_triage"]
     assert header["open_gate_count"] == 17
     assert "\\research\\" not in str(header)
+
+    source_pressure = manifest["response_evidence"][
+        "public_mc_source_pressure_boundary_diagnostic"
+    ]
+    assert source_pressure["status"] == "diagnostic_only"
+    assert len(source_pressure["runs"]) == 3
+    assert source_pressure["promotion_prohibited"] is True
+    assert "not independent external" in source_pressure["claim_limit"].lower()

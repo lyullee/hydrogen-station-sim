@@ -8086,6 +8086,18 @@ def build_evidence_manifest(
         envelope["response_evidence"][
             "public_mc_soc_boundary_diagnostic"
         ] = soc_boundary
+    source_pressure_boundary = (
+        public_inventory.get("public_mc_source_pressure_boundary_diagnostic")
+        if isinstance(public_inventory, dict)
+        else None
+    )
+    if (
+        isinstance(source_pressure_boundary, dict)
+        and source_pressure_boundary.get("status") == "diagnostic_only"
+    ):
+        envelope["response_evidence"][
+            "public_mc_source_pressure_boundary_diagnostic"
+        ] = source_pressure_boundary
     dickens_followup = (
         public_inventory.get("public_dickens_geometry_followup_candidate")
         if isinstance(public_inventory, dict)

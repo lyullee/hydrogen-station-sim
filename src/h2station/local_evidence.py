@@ -46,6 +46,9 @@ _MC_GEOMETRY_TRANSFER_DIAGNOSTIC = _ROOT / (
 _MC_SOC_BOUNDARY_DIAGNOSTIC = _ROOT / (
     "research/mc_soc_boundary_diagnostic_2026_10_10.json"
 )
+_MC_SOURCE_PRESSURE_BOUNDARY_DIAGNOSTIC = _ROOT / (
+    "research/mc_source_pressure_boundary_diagnostic_2026_10_10.json"
+)
 _DICKENS_GEOMETRY_FOLLOWUP = _ROOT / (
     "research/dickens_typeiii_geometry_resolved_followup_2026_10_10.json"
 )
@@ -297,6 +300,74 @@ def _mc_soc_boundary_diagnostic_summary() -> dict[str, Any] | None:
             ),
             "runtime_parameter_application": False,
             "full_loop_external_validation_ready": False,
+            "claim_limit": str(record["claim_boundary"]),
+        }
+    except (OSError, KeyError, TypeError, ValueError, json.JSONDecodeError):
+        return None
+
+
+def _mc_source_pressure_boundary_diagnostic_summary() -> dict[str, Any] | None:
+    """Expose source-pressure boundary sensitivity without trace rows."""
+
+    try:
+        record = _read_json(_MC_SOURCE_PRESSURE_BOUNDARY_DIAGNOSTIC)
+        runs = record.get("runs") or []
+        required = (
+            record.get("schema_version") == 1,
+            record.get("artifact_type") == "mc_source_pressure_boundary_diagnostic",
+            record.get("evidence_role") == "development_diagnostic_only",
+            record.get("post_outcome") is True,
+            record.get("parameter_fitting") is False,
+            record.get("runtime_parameter_updated") is False,
+            record.get("case_count") == 8,
+            len(runs) == 3,
+            isinstance(record.get("interpretation"), str),
+            isinstance(record.get("claim_boundary"), str),
+            all(
+                isinstance(item, dict)
+                and isinstance(item.get("boundary_label"), str)
+                and isinstance(item.get("boundary_source"), str)
+                and item.get("case_count") == 8
+                and item.get("screening_pass_count") == 0
+                and isinstance(item.get("aggregate"), dict)
+                for item in runs
+            ),
+        )
+        if not all(required):
+            return None
+        metric_keys = (
+            "pressure_rmse_mpa",
+            "temperature_rmse_c",
+            "soc_rmse_percentage_points",
+            "simulation_coverage_fraction",
+        )
+        safe_runs = []
+        for item in runs:
+            aggregate = item["aggregate"]
+            if not all(
+                isinstance(aggregate.get(key), (int, float))
+                and not isinstance(aggregate.get(key), bool)
+                for key in metric_keys
+            ):
+                return None
+            safe_runs.append({
+                "boundary_label": item["boundary_label"],
+                "boundary_source": item["boundary_source"],
+                "case_count": 8,
+                "screening_pass_count": 0,
+                "aggregate": {
+                    key: float(aggregate[key]) for key in metric_keys
+                },
+            })
+        return {
+            "status": "diagnostic_only",
+            "evidence_role": str(record["evidence_role"]),
+            "case_count": 8,
+            "runs": safe_runs,
+            "runtime_parameter_application": False,
+            "full_loop_external_validation_ready": False,
+            "promotion_prohibited": True,
+            "interpretation": str(record["interpretation"]),
             "claim_limit": str(record["claim_boundary"]),
         }
     except (OSError, KeyError, TypeError, ValueError, json.JSONDecodeError):
@@ -964,6 +1035,14 @@ def public_evidence_inventory_summary() -> dict[str, Any]:
             "runtime_parameter_application": False,
             "full_loop_external_validation_ready": False,
         },
+        "public_mc_source_pressure_boundary_diagnostic": {
+            "status": "unavailable",
+            "case_count": 0,
+            "runs": [],
+            "runtime_parameter_application": False,
+            "full_loop_external_validation_ready": False,
+            "promotion_prohibited": True,
+        },
         "public_dickens_geometry_followup_candidate": {
             "status": "unavailable",
             "runtime_parameter_application": False,
@@ -1270,6 +1349,9 @@ def public_evidence_inventory_summary() -> dict[str, Any]:
     soc_boundary = _mc_soc_boundary_diagnostic_summary()
     if soc_boundary is not None:
         result["public_mc_soc_boundary_diagnostic"] = soc_boundary
+    source_pressure_boundary = _mc_source_pressure_boundary_diagnostic_summary()
+    if source_pressure_boundary is not None:
+        result["public_mc_source_pressure_boundary_diagnostic"] = source_pressure_boundary
     dickens = _dickens_geometry_followup_summary()
     if dickens is not None:
         result["public_dickens_geometry_followup_candidate"] = dickens

@@ -93,6 +93,15 @@ def test_validation_evidence_surface_is_privacy_bounded_and_claim_limited() -> N
     assert soc_boundary["soc_definition_screen_pass_count"] == 8
     assert soc_boundary["runtime_parameter_application"] is False
     assert soc_boundary["full_loop_external_validation_ready"] is False
+    source_pressure = inventory["public_mc_source_pressure_boundary_diagnostic"]
+    assert source_pressure["status"] == "diagnostic_only"
+    assert source_pressure["case_count"] == 8
+    assert len(source_pressure["runs"]) == 3
+    assert all(item["screening_pass_count"] == 0 for item in source_pressure["runs"])
+    assert source_pressure["runtime_parameter_application"] is False
+    assert source_pressure["full_loop_external_validation_ready"] is False
+    assert source_pressure["promotion_prohibited"] is True
+    assert "not independent external" in source_pressure["claim_limit"].lower()
     dickens = inventory["public_dickens_geometry_followup_candidate"]
     assert dickens["status"] == "followup_candidate_only"
     assert dickens["source_reference"]["doi"] == "10.1016/J.JPOWSOUR.2006.11.077"

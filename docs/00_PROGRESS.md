@@ -1,5 +1,28 @@
 # Development Progress
 
+## 2026-10-10 - Isolate the MC upstream pressure boundary diagnostic
+
+Status: implemented; measured source-pressure channels are now compared with
+the frozen constant-boundary partial-station diagnostic and exposed to the
+privacy-bounded evidence/LLM surfaces.
+
+- Added `research/mc_source_pressure_boundary_diagnostic_2026_10_10.json` with
+  aggregate-only results for the constant boundary and the two published MC
+  source-pressure channels. No case identifiers, raw rows or local paths are
+  exposed to runtime callers.
+- The source-pressure runs remain development diagnostics: all 8-case screens
+  are 0/8, and the full-loop external-validation gate is unchanged. The result
+  narrows the high-impact unresolved boundary to upstream pressure/controller
+  coupling rather than silently changing the runtime model.
+- Added the same explicit claim fence to `local_evidence` and the LLM grounding
+  envelope so responses can use the comparison without calling it validation.
+
+Verification:
+
+- `tests/test_validation_evidence_api.py tests/test_llm_validation_gap_grounding.py`:
+  **3 passed**.
+- Python compilation and `git diff --check`: **passed**.
+
 ## 2026-10-10 - Shorten the P1 transient diagnostic fast lane
 
 Status: implemented; the Schefer line-transient sensitivity grid now evaluates
