@@ -31,6 +31,12 @@ _CARB_BENCHMARK = _ROOT / "research/carb_2024_hrs_inuse_field_benchmark_2026_10_
 _STRIEDNIG_DIAGNOSTIC = _ROOT / "research/striednig_hyddown_diagnostic_result_2026_10_10.json"
 _NREL_HDVS_BOUNDARY = _ROOT / "research/nrel_hdvs_raw_trace_boundary_2026_10_05.json"
 _NREL_HDVS_RESULT = _ROOT / "research/nrel_hdvs_boundary_screen_2026_10_10.json"
+_LOCAL_HRS_CANDIDATE_SCAN = _ROOT / (
+    "research/local_hydrogen_station_sim_candidate_scan_2026_10_10.json"
+)
+_LOCAL_DOCUDATA_CANDIDATE_SCAN = _ROOT / (
+    "research/local_docudata_candidate_scan_2026_10_10.json"
+)
 
 
 def _read_json(path: Path) -> dict[str, Any]:
@@ -39,6 +45,77 @@ def _read_json(path: Path) -> dict[str, Any]:
     if not isinstance(value, dict):
         raise ValueError("aggregate evidence artifact must contain an object")
     return value
+
+
+def _scientific_container_discovery_summary() -> dict[str, Any] | None:
+    """Expose only aggregate MAT/HDF5 screening counts to the LLM.
+
+    The scanner deliberately persists no paths, filenames, headers, values or
+    identifiers.  This projection keeps that privacy boundary while making it
+    explicit that scientific containers were checked and did not yield a
+    promotable synchronized station-to-vehicle cohort.
+    """
+
+    archives = (
+        ("project_archive", _LOCAL_HRS_CANDIDATE_SCAN),
+        ("adjacent_document_archive", _LOCAL_DOCUDATA_CANDIDATE_SCAN),
+    )
+    safe_archives: list[dict[str, Any]] = []
+    try:
+        for scope, path in archives:
+            record = _read_json(path)
+            privacy = record.get("privacy") or {}
+            scan = record.get("scan") or {}
+            eligibility = record.get("eligibility") or {}
+            if (
+                record.get("artifact_type")
+                != "privacy_bounded_local_workspace_candidate_scan"
+                or record.get("status") != "discovery_only"
+                or not privacy
+                or not all(value is False for value in privacy.values())
+                or scan.get("scientific_inspection_enabled") is not True
+                or not isinstance(scan.get("scientific_headers_screened"), int)
+                or not isinstance(scan.get("scientific_header_parse_errors"), int)
+                or not isinstance(eligibility.get("full_loop_candidate_count"), int)
+                or not isinstance(eligibility.get("partial_loop_candidate_count"), int)
+            ):
+                return None
+            safe_archives.append({
+                "scope": scope,
+                "machine_readable_files": int(scan.get("machine_readable_files") or 0),
+                "scientific_headers_screened": int(
+                    scan.get("scientific_headers_screened") or 0
+                ),
+                "scientific_header_parse_errors": int(
+                    scan.get("scientific_header_parse_errors") or 0
+                ),
+                "full_loop_candidate_count": int(
+                    eligibility.get("full_loop_candidate_count") or 0
+                ),
+                "partial_loop_candidate_count": int(
+                    eligibility.get("partial_loop_candidate_count") or 0
+                ),
+            })
+    except (OSError, KeyError, TypeError, ValueError, json.JSONDecodeError):
+        return None
+
+    full_loop_count = sum(item["full_loop_candidate_count"] for item in safe_archives)
+    partial_count = sum(item["partial_loop_candidate_count"] for item in safe_archives)
+    return {
+        "evidence_role": "privacy-bounded scientific-container discovery",
+        "archives": safe_archives,
+        "scientific_container_count": sum(
+            item["scientific_headers_screened"] for item in safe_archives
+        ),
+        "full_loop_candidate_count": full_loop_count,
+        "partial_loop_candidate_count": partial_count,
+        "runtime_parameter_application": False,
+        "full_loop_external_validation_ready": False,
+        "claim_limit": (
+            "MAT/HDF5 헤더와 제한된 메타데이터를 집계한 발견 결과입니다. "
+            "동기화·경계·권리 확인 전에는 실측 full-loop 검증이나 런타임 보정으로 사용할 수 없습니다."
+        ),
+    }
 
 
 def _privacy_boundary() -> dict[str, bool]:
@@ -602,6 +679,14 @@ def public_evidence_inventory_summary() -> dict[str, Any]:
             "pressure_final_error_mpa": None,
             "parameter_tuning": None,
         },
+        "local_scientific_container_discovery": {
+            "status": "unavailable",
+            "scientific_container_count": 0,
+            "full_loop_candidate_count": 0,
+            "partial_loop_candidate_count": 0,
+            "runtime_parameter_application": False,
+            "full_loop_external_validation_ready": False,
+        },
     }
     try:
         record = _read_json(_KHK_ACCIDENTS)
@@ -887,4 +972,10 @@ def public_evidence_inventory_summary() -> dict[str, Any]:
                 pass
     except (OSError, KeyError, TypeError, ValueError, json.JSONDecodeError):
         pass
+    scientific = _scientific_container_discovery_summary()
+    if scientific is not None:
+        result["local_scientific_container_discovery"] = {
+            "status": "available",
+            **scientific,
+        }
     return result

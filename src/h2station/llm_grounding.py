@@ -8047,6 +8047,21 @@ def build_evidence_manifest(
     # the negative result visible prevents an LLM from describing a partial
     # tank-boundary diagnostic as full-loop station validation.
     public_inventory = public_evidence_inventory_summary()
+    scientific_discovery = (
+        public_inventory.get("local_scientific_container_discovery")
+        if isinstance(public_inventory, dict)
+        else None
+    )
+    if (
+        isinstance(scientific_discovery, dict)
+        and scientific_discovery.get("status") == "available"
+    ):
+        # Keep the discovery result in the same evidence envelope as the
+        # other bounded sources.  This tells the provider that scientific
+        # containers were screened while preserving the no-raw-data boundary.
+        envelope["response_evidence"][
+            "local_scientific_container_discovery"
+        ] = scientific_discovery
     nrel_screen = (
         public_inventory.get("public_station_tank_boundary")
         if isinstance(public_inventory, dict)

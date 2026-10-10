@@ -1344,3 +1344,19 @@ Verification:
 - `tests/test_local_workspace_candidate_scan.py`: 8 passed.
 - Privacy-safe repository scan: 2,084 machine-readable files, 8 partial-loop
   candidates, 0 full-loop candidates, and 0 split-file pairs.
+
+## 2026-10-10 - Feed scientific-container discovery into LLM evidence
+
+Status: implemented; evidence and grounding regressions passed.
+
+- The MATLAB/HDF5 header scan is now surfaced through the same privacy-bounded
+  evidence envelope used by LLM responses. It reports aggregate screening only:
+  1,409 scientific containers screened across the two local archives, 8 partial
+  boundary candidates, and 0 full-loop candidates.
+- No paths, filenames, headers, identifiers, raw rows or measurement values are
+  exposed, and the evidence explicitly prevents runtime calibration or a
+  full-loop validation claim.
+
+Verification:
+
+- Local evidence, validation API and LLM grounding suites: 31 passed.

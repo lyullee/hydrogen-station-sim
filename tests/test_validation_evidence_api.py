@@ -61,6 +61,24 @@ def test_validation_evidence_surface_is_privacy_bounded_and_claim_limited() -> N
     assert all("C:\\" not in str(item) for item in context)
     assert inventory["public_field_benchmark"]["stations_tested"] == 22
     assert inventory["public_field_benchmark"]["full_loop_holdout_eligible"] is False
+    scientific = inventory["local_scientific_container_discovery"]
+    assert scientific["status"] == "available"
+    assert scientific["scientific_container_count"] == 1409
+    assert scientific["full_loop_candidate_count"] == 0
+    assert scientific["partial_loop_candidate_count"] == 8
+    assert scientific["runtime_parameter_application"] is False
+    assert scientific["full_loop_external_validation_ready"] is False
+    assert all(
+        set(archive) == {
+            "scope",
+            "machine_readable_files",
+            "scientific_headers_screened",
+            "scientific_header_parse_errors",
+            "full_loop_candidate_count",
+            "partial_loop_candidate_count",
+        }
+        for archive in scientific["archives"]
+    )
     assert all(value is False for value in summary["privacy"].values())
     rendered = str(summary)
     assert "C:\\" not in rendered
