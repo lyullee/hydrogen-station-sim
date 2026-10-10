@@ -205,6 +205,16 @@ def run_case(
         initial_vehicle_temperature_k=float(exp_temperature[0] + 273.15),
         vehicle_internal_volume_m3=tank_volume,
         vehicle_nominal_working_pressure_pa=nominal_pressure_mpa * 1.0e6,
+        # Keep the validation runner's declared geometry basis aligned with
+        # the scenario builder.  Previously the runner labelled a case
+        # ``capacity_eos`` but left the scenario in ``reference`` mode, which
+        # made the provenance of the volume rule ambiguous and could apply a
+        # fitted volume multiplier a second time unless it was explicit.
+        vehicle_geometry_basis=(
+            "capacity_eos" if geometry_basis == "capacity_eos" else "reference"
+        ),
+        vehicle_capacity_kg=(tank_capacity if geometry_basis == "capacity_eos" else None),
+        vehicle_2_capacity_kg=(tank_capacity if geometry_basis == "capacity_eos" else None),
         vehicle_effective_volume_multiplier=float(tank_fit["effective_volume_multiplier"]),
         vehicle_gas_liner_ua_multiplier=float(tank_fit["gas_liner_ua_multiplier"]),
         vehicle_tank_thermal_model=vehicle_tank_thermal_model,

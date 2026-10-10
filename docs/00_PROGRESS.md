@@ -782,3 +782,21 @@ Status: diagnostic evidence recorded; no production or readiness promotion.
 - A privacy-safe summary is stored in
   `research/h2protocol_capacity_eos_sensitivity_2026_10_10.json` with the
   corresponding Markdown report.
+
+## 2026-10-10 - Validation geometry provenance aligned with runtime builder
+
+Status: implemented and smoke-tested.
+
+- The SAE J2601 validation runner now passes `vehicle_geometry_basis` and both
+  declared vehicle capacities into `ReferenceScenario` when the command uses
+  `--geometry-basis capacity_eos`. The report label and the scenario builder
+  therefore use the same geometry rule.
+- This removes an ambiguity where a capacity-EOS volume was calculated by the
+  runner but the builder remained in reference-volume mode. Explicit fitted
+  multipliers remain explicit and are not silently changed.
+
+Verification:
+
+- One public H2P-L03 capacity-EOS smoke replay completed successfully.
+- The NREL validation, public-validation and priority-runner suites passed:
+  33 tests.
