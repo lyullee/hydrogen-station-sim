@@ -5,6 +5,7 @@ from pathlib import Path
 import sys
 
 import pytest
+from openpyxl import Workbook
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 
@@ -134,3 +135,48 @@ def test_cli_builder_accepts_paired_station_vehicle_exports(tmp_path: Path) -> N
     assert manifest["bundle"]["event_count"] == 3
     assert manifest["eligibility"]["full_loop_protocol_freeze_candidate"] is True
     assert str(tmp_path) not in str(manifest)
+
+
+def test_cli_builder_accepts_combined_xlsx_events(tmp_path: Path) -> None:
+    events = []
+    for index in range(3):
+        event = tmp_path / f"private-event-{index}.xlsx"
+        workbook = Workbook()
+        sheet = workbook.active
+        sheet.title = "trace"
+        sheet.append([
+            "elapsed_time_s", "station_pressure_mpa",
+            "delivered_gas_temperature_c", "mass_flow_g_s", "protocol_phase",
+            "vehicle_pressure_mpa", "vehicle_temperature_c",
+        ])
+        sheet.append([0, 20, 20, 1, "start", 5, 25])
+        sheet.append([1, 21, 21, 1.2, "fill", 6, 28])
+        workbook.save(event)
+        events.append(event)
+    protocol = tmp_path / "protocol.json"
+    model = tmp_path / "model.py"
+    evaluator = tmp_path / "evaluator.py"
+    roles = tmp_path / "roles.json"
+    for path in (protocol, model, evaluator):
+        path.write_text("locked", encoding="utf-8")
+    roles.write_text(json.dumps({
+        "elapsed_time_s": "event-relative logger time",
+        "station_pressure_mpa": "station boundary pressure",
+        "delivered_gas_temperature_c": "delivery gas temperature",
+        "protocol_phase": "controller phase",
+        "mass_or_transferred_mass": "calibrated mass-flow channel",
+        "vehicle_pressure_mpa": "receiving-vessel pressure",
+        "vehicle_temperature_c": "receiving-vessel temperature",
+    }), encoding="utf-8")
+
+    manifest = build_manifest(
+        events,
+        protocol_path=protocol,
+        model_path=model,
+        evaluator_path=evaluator,
+        channel_roles_path=roles,
+        xlsx_worksheet="trace",
+    )
+
+    assert manifest["bundle"]["event_count"] == 3
+    assert manifest["eligibility"]["full_loop_protocol_freeze_candidate"] is True

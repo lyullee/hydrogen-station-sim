@@ -5,6 +5,9 @@
 ## 최소 파일 형식
 
 이벤트마다 CSV 하나를 사용한다. 시간은 달력 시각이 아닌 이벤트 시작을 0초로 둔 경과 시간이다.
+CSV와 같은 열 구조의 XLSX/XLSM 워크북도 사용할 수 있으며, 기본 active
+worksheet 또는 `--xlsx-worksheet`로 지정한 시트를 행 단위로 읽는다. 원본
+워크북의 셀과 행은 결과 JSON에 기록하지 않는다.
 
 | 열 | 단위 | 필수 | 의미 |
 | --- | --- | --- | --- |
@@ -41,6 +44,10 @@ python scripts/freeze_privacy_safe_full_loop.py `
   --protocol protocol.json --model model.py --evaluator evaluator.py `
   --channel-roles roles.json --output freeze_manifest.json
 ~~~
+
+결합형 워크북을 쓰는 경우에는 `--events event_*.xlsx --xlsx-worksheet trace`
+처럼 지정한다. 분리형 station/차량 워크북은 먼저 CSV로 비식별 export하거나
+분리 채널 API를 사용해 두 채널의 시간축을 명시적으로 대조한다.
 
 두 목록의 위치가 서로 다른 이벤트를 가리키지 않도록 제출 전에 파일명·순서를
 보관자 측에서 고정하고, 결과의 `event_###` ID와 digest만 평가 담당자에게

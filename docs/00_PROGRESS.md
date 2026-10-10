@@ -1,5 +1,15 @@
 # Development Progress
 
+## 2026-10-10 - Workbook intake for controlled full-loop files
+
+- Added XLSX/XLSM support to the privacy-safe pilot and freeze workflow. The
+  selected worksheet is read row by row, with the same numeric, time-axis,
+  sampling and protocol-phase gates as CSV input.
+- The workbook path, sheet rows and cell contents are not emitted; only the
+  aggregate report and SHA-256 digest reach the freeze manifest.
+- Combined-workbook and split-channel paths now have focused coverage; **13**
+  intake/CLI tests pass. No external-validation gate was promoted.
+
 ## 2026-10-10 - Split-channel freeze workflow exposed in CLI
 
 - Extended `freeze_privacy_safe_full_loop.py` with paired

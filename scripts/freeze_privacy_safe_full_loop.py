@@ -43,6 +43,7 @@ def build_manifest(
     channel_roles_path: Path,
     minimum_event_count: int = 3,
     require_vehicle_boundary: bool = False,
+    xlsx_worksheet: str | None = None,
 ) -> dict[str, Any]:
     """Build the pre-access manifest without exposing input paths."""
 
@@ -56,6 +57,7 @@ def build_manifest(
             minimum_event_count=minimum_event_count,
             require_vehicle_boundary=require_vehicle_boundary,
         ),
+        xlsx_worksheet=xlsx_worksheet,
     )
 
 
@@ -101,6 +103,10 @@ def main() -> int:
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--minimum-event-count", type=int, default=3)
     parser.add_argument(
+        "--xlsx-worksheet", type=str,
+        help="Worksheet name for combined XLSX event files (default: active sheet)",
+    )
+    parser.add_argument(
         "--require-vehicle-boundary", action="store_true",
         help="Fail single-file intake unless every event contains vehicle channels",
     )
@@ -128,6 +134,7 @@ def main() -> int:
             channel_roles_path=args.channel_roles,
             minimum_event_count=args.minimum_event_count,
             require_vehicle_boundary=args.require_vehicle_boundary,
+            xlsx_worksheet=args.xlsx_worksheet,
         )
     output = args.output if args.output.is_absolute() else ROOT / args.output
     output.parent.mkdir(parents=True, exist_ok=True)

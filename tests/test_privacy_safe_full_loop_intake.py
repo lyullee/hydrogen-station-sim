@@ -3,6 +3,8 @@ from __future__ import annotations
 import csv
 from pathlib import Path
 
+from openpyxl import Workbook
+
 from h2station.privacy_safe_full_loop_intake import (
     PilotIntakeRules,
     validate_privacy_safe_split_event_bundle,
@@ -236,3 +238,27 @@ def test_split_station_vehicle_time_mismatch_fails_closed(tmp_path: Path) -> Non
     assert report["status"] == "SCHEMA_INCOMPLETE"
     assert report["event_reports"][1]["schema_valid"] is False
     assert "channel_time_axis_mismatch" in report["event_reports"][1]["errors"]
+
+
+def test_combined_xlsx_event_is_streamed_through_same_gate(tmp_path: Path) -> None:
+    paths = []
+    for index in range(3):
+        path = tmp_path / f"event_{index}.xlsx"
+        workbook = Workbook()
+        sheet = workbook.active
+        sheet.title = "event"
+        sheet.append([
+            "elapsed_time_s", "station_pressure_mpa",
+            "delivered_gas_temperature_c", "mass_flow_g_s", "protocol_phase",
+            "vehicle_pressure_mpa", "vehicle_temperature_c",
+        ])
+        sheet.append([0, 20, 20, 1, "start", 5, 25])
+        sheet.append([1, 21, 21, 1.2, "fill", 6, 28])
+        workbook.save(path)
+        paths.append(path)
+
+    report = validate_privacy_safe_pilot_bundle(paths, xlsx_worksheet="event")
+
+    assert report["status"] == "READY_FOR_FULL_LOOP_PROTOCOL_FREEZE"
+    assert report["valid_event_count"] == 3
+    assert report["full_loop_readiness"]["common_elapsed_time_axis"] is True

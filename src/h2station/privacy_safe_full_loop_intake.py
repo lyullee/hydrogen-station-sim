@@ -18,7 +18,7 @@ import hashlib
 from itertools import zip_longest
 import math
 from pathlib import Path
-from typing import Any, Mapping, Sequence
+from typing import Any, Iterable, Mapping, Sequence
 
 
 PILOT_REQUIRED_COLUMNS = (
@@ -88,14 +88,17 @@ def _finite_float(value: str, *, column: str, row_number: int) -> float:
     return number
 
 
-def _read_event(path: Path, rules: PilotIntakeRules) -> dict[str, Any]:
-    """Inspect one event without returning its filename or rows."""
+def _inspect_event_rows(
+    headers: Sequence[str],
+    rows: Iterable[Mapping[str, Any]],
+    rules: PilotIntakeRules,
+    *,
+    source_sha256: str,
+) -> dict[str, Any]:
+    """Inspect a row iterator from CSV or XLSX without retaining raw rows."""
 
-    with path.open("r", encoding="utf-8-sig", newline="") as handle:
-        reader = csv.DictReader(handle)
-        headers = tuple(str(value or "").strip() for value in (reader.fieldnames or ()))
-        normalized = {header.lower() for header in headers if header}
-
+    headers = tuple(str(value or "").strip() for value in headers)
+    normalized = {header.lower() for header in headers if header}
     identity_columns = sorted(
         header for header in headers
         if any(token in header.lower() for token in FORBIDDEN_IDENTITY_TOKENS)
@@ -133,75 +136,70 @@ def _read_event(path: Path, rules: PilotIntakeRules) -> dict[str, Any]:
     if not missing_required and not identity_columns:
         by_lower = {header.lower(): header for header in headers}
         parse_error: str | None = None
-        with path.open("r", encoding="utf-8-sig", newline="") as handle:
-            reader = csv.DictReader(handle)
-            for row_number, row in enumerate(reader, start=2):
-                row_count += 1
-                try:
-                    if "elapsed_time_s" in normalized:
-                        current_time = _finite_float(
-                            row.get(by_lower["elapsed_time_s"], ""),
-                            column="elapsed_time_s", row_number=row_number,
+        for row_number, row in enumerate(rows, start=2):
+            row_count += 1
+            try:
+                if "elapsed_time_s" in normalized:
+                    current_time = _finite_float(
+                        row.get(by_lower["elapsed_time_s"], ""),
+                        column="elapsed_time_s", row_number=row_number,
+                    )
+                    time_count += 1
+                    if time_start is None:
+                        time_start = current_time
+                    if previous_time is not None and current_time <= previous_time:
+                        time_strictly_increasing = False
+                    if previous_time is not None and current_time > previous_time:
+                        delta = current_time - previous_time
+                        delta_count += 1
+                        delta_sum += delta
+                        delta_min = delta if delta_min is None else min(delta_min, delta)
+                        delta_max = delta if delta_max is None else max(delta_max, delta)
+                    previous_time = current_time
+                    time_end = current_time
+                if "mass_flow_g_s" in normalized:
+                    mass_column = "mass_flow_g_s"
+                    current_mass = _finite_float(
+                        row.get(by_lower[mass_column], ""),
+                        column=mass_column, row_number=row_number,
+                    )
+                    if current_mass < 0.0:
+                        mass_nonnegative = False
+                elif "transferred_mass_kg" in normalized:
+                    mass_column = "transferred_mass_kg"
+                    current_mass = _finite_float(
+                        row.get(by_lower[mass_column], ""),
+                        column=mass_column, row_number=row_number,
+                    )
+                    if mass_previous is not None and current_mass < mass_previous:
+                        mass_monotonic = False
+                else:
+                    current_mass = None
+                if current_mass is not None:
+                    mass_previous = current_mass
+                for column in (
+                    "station_pressure_mpa",
+                    "delivered_gas_temperature_c",
+                    "vehicle_pressure_mpa",
+                    "vehicle_temperature_c",
+                ):
+                    if column in normalized:
+                        _finite_float(
+                            row.get(by_lower[column], ""),
+                            column=column, row_number=row_number,
                         )
-                        time_count += 1
-                        if time_start is None:
-                            time_start = current_time
-                        if previous_time is not None and current_time <= previous_time:
-                            time_strictly_increasing = False
-                        if previous_time is not None and current_time > previous_time:
-                            delta = current_time - previous_time
-                            delta_count += 1
-                            delta_sum += delta
-                            delta_min = delta if delta_min is None else min(delta_min, delta)
-                            delta_max = delta if delta_max is None else max(delta_max, delta)
-                        previous_time = current_time
-                        time_end = current_time
-                    if "mass_flow_g_s" in normalized:
-                        mass_column = "mass_flow_g_s"
-                        current_mass = _finite_float(
-                            row.get(by_lower[mass_column], ""),
-                            column=mass_column, row_number=row_number,
-                        )
-                        if current_mass < 0.0:
-                            mass_nonnegative = False
-                    elif "transferred_mass_kg" in normalized:
-                        mass_column = "transferred_mass_kg"
-                        current_mass = _finite_float(
-                            row.get(by_lower[mass_column], ""),
-                            column=mass_column, row_number=row_number,
-                        )
-                        if mass_previous is not None and current_mass < mass_previous:
-                            mass_monotonic = False
-                    else:
-                        current_mass = None
-                    if current_mass is not None:
-                        mass_previous = current_mass
-                    for column in (
-                        "station_pressure_mpa",
-                        "delivered_gas_temperature_c",
-                        "vehicle_pressure_mpa",
-                        "vehicle_temperature_c",
-                    ):
-                        if column in normalized:
-                            _finite_float(
-                                row.get(by_lower[column], ""),
-                                column=column, row_number=row_number,
-                            )
-                    if "protocol_phase" in normalized:
-                        phase = str(row.get(by_lower["protocol_phase"], "") or "").strip()
-                        if not phase:
-                            raise ValueError(
-                                f"protocol_phase at row {row_number} is empty"
-                            )
-                        protocol_phase_nonempty_count += 1
-                except ValueError as exc:
-                    if parse_error is None:
-                        parse_error = str(exc)
+                if "protocol_phase" in normalized:
+                    phase = str(row.get(by_lower["protocol_phase"], "") or "").strip()
+                    if not phase:
+                        raise ValueError(f"protocol_phase at row {row_number} is empty")
+                    protocol_phase_nonempty_count += 1
+            except ValueError as exc:
+                if parse_error is None:
+                    parse_error = str(exc)
         if parse_error is not None:
             errors.append(parse_error)
     else:
-        with path.open("r", encoding="utf-8-sig", newline="") as handle:
-            row_count = sum(1 for _ in csv.DictReader(handle))
+        row_count = sum(1 for _ in rows)
 
     if row_count < rules.minimum_rows_per_event:
         errors.append("too_few_rows")
@@ -255,8 +253,59 @@ def _read_event(path: Path, rules: PilotIntakeRules) -> dict[str, Any]:
         "forbidden_identity_columns_detected": bool(identity_columns),
         "forbidden_identity_column_count": len(identity_columns),
         "errors": errors,
-        "source_sha256": _sha256(path),
+        "source_sha256": source_sha256,
     }
+
+
+def _read_event(path: Path, rules: PilotIntakeRules) -> dict[str, Any]:
+    """Inspect one CSV event without returning its filename or rows."""
+
+    with path.open("r", encoding="utf-8-sig", newline="") as handle:
+        reader = csv.DictReader(handle)
+        headers = tuple(str(value or "").strip() for value in (reader.fieldnames or ()))
+        # DictReader is lazy after its header is read, so rows are still streamed.
+        return _inspect_event_rows(
+            headers, reader, rules, source_sha256=_sha256(path)
+        )
+
+
+def _read_xlsx_event(
+    path: Path,
+    rules: PilotIntakeRules,
+    *,
+    worksheet: str | None = None,
+) -> dict[str, Any]:
+    """Inspect the first (or selected) XLSX worksheet without storing rows."""
+
+    try:
+        from openpyxl import load_workbook
+    except ImportError as exc:  # pragma: no cover - dependency is project-pinned
+        raise RuntimeError("openpyxl is required for XLSX full-loop intake") from exc
+    workbook = load_workbook(path, read_only=True, data_only=True)
+    try:
+        if worksheet is None:
+            sheet = workbook.active
+        else:
+            if worksheet not in workbook.sheetnames:
+                raise ValueError(f"worksheet not found: {worksheet}")
+            sheet = workbook[worksheet]
+        row_iterator = sheet.iter_rows(values_only=True)
+        header_row = next(row_iterator, None)
+        headers = tuple(str(value or "").strip() for value in (header_row or ()))
+
+        def records() -> Iterable[Mapping[str, Any]]:
+            for values in row_iterator:
+                yield {
+                    headers[index]: value
+                    for index, value in enumerate(values)
+                    if index < len(headers) and headers[index]
+                }
+
+        return _inspect_event_rows(
+            headers, records(), rules, source_sha256=_sha256(path)
+        )
+    finally:
+        workbook.close()
 
 
 def _read_split_event(
@@ -586,16 +635,21 @@ def validate_privacy_safe_pilot_bundle(
     paths: Sequence[Path | str],
     *,
     rules: PilotIntakeRules | None = None,
+    xlsx_worksheet: str | None = None,
 ) -> dict[str, Any]:
     """Return an aggregate, raw-row-free intake report for event CSV files."""
 
     selected = rules or PilotIntakeRules()
     if not paths:
         raise ValueError("At least one event CSV is required")
-    return _aggregate_event_reports(
-        [_read_event(Path(path), selected) for path in paths],
-        selected,
-    )
+    reports = []
+    for path_value in paths:
+        path = Path(path_value)
+        if path.suffix.casefold() in {".xlsx", ".xlsm"}:
+            reports.append(_read_xlsx_event(path, selected, worksheet=xlsx_worksheet))
+        else:
+            reports.append(_read_event(path, selected))
+    return _aggregate_event_reports(reports, selected)
 
 
 def validate_privacy_safe_split_event_bundle(
@@ -698,6 +752,7 @@ def build_privacy_safe_freeze_manifest(
     evaluator_path: Path | str,
     channel_roles: Mapping[str, str],
     rules: PilotIntakeRules | None = None,
+    xlsx_worksheet: str | None = None,
 ) -> dict[str, Any]:
     """Create a hash-only pre-access freeze record for an intake bundle.
 
@@ -708,7 +763,9 @@ def build_privacy_safe_freeze_manifest(
     """
 
     selected = rules or PilotIntakeRules()
-    intake = validate_privacy_safe_pilot_bundle(paths, rules=selected)
+    intake = validate_privacy_safe_pilot_bundle(
+        paths, rules=selected, xlsx_worksheet=xlsx_worksheet
+    )
     return _build_freeze_manifest_from_intake(
         intake,
         protocol_path=protocol_path,
