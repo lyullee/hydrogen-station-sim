@@ -5,7 +5,7 @@ import sys
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 
-from run_priority_validation import DEFAULT_CHECKS, priority_status  # noqa: E402
+from run_priority_validation import DEFAULT_CHECKS, _test_python, priority_status  # noqa: E402
 
 
 def test_priority_status_exposes_p0_before_lower_tracks() -> None:
@@ -22,3 +22,11 @@ def test_default_checks_are_focused_and_parallelizable() -> None:
     assert {check.priority for check in DEFAULT_CHECKS} == {"P0", "P1"}
     assert all("pytest" in check.command for check in DEFAULT_CHECKS)
     assert all("test_" in " ".join(check.command) for check in DEFAULT_CHECKS)
+
+
+def test_priority_runner_prefers_repository_virtual_environment() -> None:
+    interpreter = Path(_test_python())
+    if (Path(__file__).resolve().parents[1] / ".venv").exists():
+        assert interpreter.resolve() == (
+            Path(__file__).resolve().parents[1] / ".venv" / "Scripts" / "python.exe"
+        ).resolve()

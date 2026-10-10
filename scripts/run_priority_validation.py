@@ -27,6 +27,30 @@ READINESS = ROOT / "research" / "ijhe_readiness_audit.json"
 TRIAGE = ROOT / "research" / "validation_gap_triage_2026_10_10.json"
 
 
+def _test_python() -> str:
+    """Return the repository's dependency-complete Python interpreter.
+
+    The status command is often started from a global ``python`` on Windows,
+    while this repository keeps its API/test dependencies in ``.venv``.  In
+    that case launching pytest with ``sys.executable`` makes every focused
+    check fail during collection (for example ``fastapi`` and ``fluids`` are
+    missing) even though the project environment is healthy.  Prefer the
+    checked-out virtual environment and fall back to the active interpreter
+    when no local environment exists.
+    """
+
+    candidates = (
+        ROOT / ".venv" / "Scripts" / "python.exe",
+        ROOT / "venv" / "Scripts" / "python.exe",
+        ROOT / ".venv" / "bin" / "python",
+        ROOT / "venv" / "bin" / "python",
+    )
+    for candidate in candidates:
+        if candidate.is_file():
+            return str(candidate)
+    return sys.executable
+
+
 @dataclass(frozen=True)
 class PriorityCheck:
     name: str
@@ -95,7 +119,7 @@ def _run_check(check: PriorityCheck, *, timeout_s: float) -> dict[str, Any]:
         str(ROOT / "src")
         + (os.pathsep + current_pythonpath if current_pythonpath else "")
     )
-    command = (sys.executable, *check.command)
+    command = (_test_python(), *check.command)
     try:
         completed = subprocess.run(
             command,

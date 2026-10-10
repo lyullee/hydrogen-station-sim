@@ -1,5 +1,21 @@
 # Development Progress
 
+## 2026-10-10 - Focused validation now uses the repository environment
+
+- The priority runner now prefers `.venv`/`venv` before the process-wide
+  Python interpreter. This prevents false collection failures when the global
+  interpreter lacks the project's `fastapi`, `fluids` or `openpyxl` packages.
+- The three high-impact tracks remain concurrent: P0 full-loop intake, P0 LLM
+  evidence boundary, and P1 virtual safety/emergency response.
+- A clean run now completes all 41 focused tests in about 8 seconds on this
+  workspace; this is a software-verification result and does not promote any
+  external-data gate.
+
+Verification:
+
+- `python scripts/run_priority_validation.py`: 41 passed, 2 dependency
+  deprecation warnings, no collection errors.
+
 ## 2026-10-10 - Mixed-format split-channel full-loop intake
 
 - The P0 intake now accepts station/vehicle pairs as CSV, XLSX, XLSM, or a
