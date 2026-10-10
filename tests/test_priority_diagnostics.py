@@ -44,6 +44,11 @@ def test_scientific_screen_is_separate_from_process_completion() -> None:
         {"cases": [{"joint_primary_screen_pass": True}, {"joint_primary_screen_pass": False}]}
     )["status"] == "FAIL"
     assert _scientific_screen({"case_count": 8})["status"] == "NOT_REPORTED"
+    nrel_negative = _scientific_screen(
+        {"tank_count": 7, "screening_pass_count": 0, "screening_pass_fraction": 0.0}
+    )
+    assert nrel_negative["status"] == "FAIL"
+    assert nrel_negative["case_count"] == 7
 
 
 def test_readiness_status_does_not_promote_negative_or_missing_science() -> None:

@@ -1737,3 +1737,24 @@ Verification:
 - P0 priority focus: process PASS, scientific screen BLOCKED only for
   `mc_tank_boundary`, approximately 3.4 s.
 - Priority and readiness regression suites: 10 passed.
+
+## 2026-10-10 - Include the NREL HDVS boundary screen in the priority lane
+
+Status: implemented; a fast-lane reporting bug was corrected and the existing
+NREL H2FillS physical tank screen is now visible in the P1 result.
+
+- Added `run_nrel_h2fills_hdvs_validation.py` to the P1 diagnostic queue. The
+  local H2FillS workbook remains ignored and is not redistributed.
+- Extended the scientific-screen parser to understand explicit
+  `screening_pass_count`/`screening_pass_fraction` results. Previously the
+  NREL result (0/7) was treated as unreported, so the P1 lane could appear
+  ready even though its physical screen was negative.
+- The corrected P1 run completes in parallel in about 16 s, reports
+  `nrel_h2fills_hdvs_tank` as the scientific failure, and leaves all runtime
+  parameters and validation gates unchanged.
+
+Verification:
+
+- Priority parser and focus tests: 5 passed.
+- P1 lane: process PASS, scientific screen FAIL only for the NREL 0/7 tank
+  screen; readiness is correctly `BLOCKED`.

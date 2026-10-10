@@ -78,6 +78,12 @@ DEFAULT_DIAGNOSTICS: tuple[Diagnostic, ...] = (
         "scripts/run_h2safe_spatial_response_diagnostic.py",
         "Hydrogen detector spatial-response diagnostic",
     ),
+    Diagnostic(
+        "nrel_h2fills_hdvs_tank",
+        "P1",
+        "scripts/run_nrel_h2fills_hdvs_validation.py",
+        "NREL H2FillS HDVS Type-IV tank boundary screen",
+    ),
 )
 
 
@@ -129,6 +135,32 @@ def _scientific_screen(payload: dict[str, object] | None) -> dict[str, object]:
             "status": status,
             "case_count": case_count,
             "joint_screening_pass_fraction": float(joint_fraction),
+        }
+    # Some bounded external screens report a tank/trace count rather than a
+    # generic case_count.  Treat that explicit fraction as scientific evidence
+    # too; otherwise a completed negative screen could incorrectly make an
+    # entire priority lane look ready.
+    screening_fraction = payload.get("screening_pass_fraction")
+    screening_count = payload.get("screening_pass_count")
+    screening_total = payload.get("tank_count") or payload.get("case_count")
+    if isinstance(screening_fraction, (int, float)) and isinstance(screening_total, int):
+        return {
+            "status": "PASS" if float(screening_fraction) >= 0.8 else "FAIL",
+            "case_count": screening_total,
+            "screen_pass_count": (
+                int(screening_count)
+                if isinstance(screening_count, int)
+                else round(float(screening_fraction) * screening_total)
+            ),
+            "screen_pass_fraction": float(screening_fraction),
+        }
+    if isinstance(screening_count, int) and isinstance(screening_total, int):
+        fraction = screening_count / screening_total if screening_total else 0.0
+        return {
+            "status": "PASS" if fraction >= 0.8 else "FAIL",
+            "case_count": screening_total,
+            "screen_pass_count": screening_count,
+            "screen_pass_fraction": fraction,
         }
     pass_count = payload.get("soc_definition_screen_pass_count")
     if isinstance(pass_count, int) and isinstance(case_count, int):
