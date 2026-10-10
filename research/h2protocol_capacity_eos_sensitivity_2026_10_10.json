@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "generated_at_utc": "2026-10-10T03:39:55.629825+00:00",
+  "evidence_role": "post_access_public_protocol_component_sensitivity",
+  "source": {
+    "protocol_source": "Powertech Labs SAE J2601 Tables Method validation data",
+    "source_commit": "8f07367734d8b60d51f1512ab8872f0738a88af4",
+    "case_count": 36,
+    "geometry_basis": "capacity_eos",
+    "tank_fit_source": null,
+    "bank_internal_volume_m3": [
+      0.35,
+      0.35,
+      0.35
+    ]
+  },
+  "screening_limits": {
+    "pressure_rmse_mpa": 5.0,
+    "temperature_rmse_c": 10.0,
+    "soc_final_abs_error_percentage_points": 5.0
+  },
+  "aggregate": {
+    "screening_pass_count": 0,
+    "screening_pass_fraction": 0.0,
+    "pressure_rmse_mpa_mean": 25.33939774786527,
+    "temperature_rmse_c_mean": 17.58860824337219,
+    "soc_rmse_percentage_points_mean": 32.04869620976212,
+    "final_stop_reason_counts": {
+      "gas-temperature-limit": 34,
+      "none": 2
+    }
+  },
+  "interpretation": {
+    "finding": "Capacity-EOS geometry alone does not reproduce the 36 public J2601 traces under the uncalibrated station and thermal boundaries.",
+    "claim_boundary": "This is a post-access sensitivity result. It is not SAE certification, field-safety validation, full-loop validation, or a production-default recommendation.",
+    "repair_priority": [
+      "protocol pressure-ramp/controller boundary",
+      "dispenser flow and precooler calibration",
+      "thermal boundary and stop-condition semantics"
+    ]
+  }
+}

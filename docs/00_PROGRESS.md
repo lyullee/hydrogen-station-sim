@@ -766,3 +766,19 @@ Next independent action:
 - Freeze a new capacity-EOS geometry protocol before outcome access, then test
   it on a disjoint tank cohort and a synchronized station-to-receiving-vessel
   cohort before changing the runtime default.
+
+## 2026-10-10 - SAE J2601 capacity-EOS sensitivity boundary
+
+Status: diagnostic evidence recorded; no production or readiness promotion.
+
+- Replayed all 36 public Powertech Labs SAE J2601 Tables Method traces with
+  capacity-EOS geometry and uncalibrated station/thermal boundaries.
+- The replay produced 0/36 engineering-screening passes: mean pressure RMSE
+  25.339 MPa, temperature RMSE 17.589 °C and SOC RMSE 32.049 percentage
+  points. Most traces stopped on the declared gas-temperature limit.
+- This separates the next P1 repair work into protocol pressure-ramp/controller
+  semantics, dispenser/precooler calibration and thermal stop-boundary handling.
+  Capacity geometry alone is not promoted as a system fix.
+- A privacy-safe summary is stored in
+  `research/h2protocol_capacity_eos_sensitivity_2026_10_10.json` with the
+  corresponding Markdown report.
