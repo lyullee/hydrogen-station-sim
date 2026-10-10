@@ -1,0 +1,235 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-10T02:12:17.451396+00:00",
+  "artifact_type": "figshare_open_channel_hydrogen_dispersion_intake",
+  "source": {
+    "article_id": 26117989,
+    "doi": "10.23642/usn.26117989.v2",
+    "api_url": "https://api.figshare.com/v2/articles/26117989",
+    "dataset_url": "https://figshare.com/articles/dataset/Experimental_Data_of_Hydrogen_Dispersion_in_an_Open-ended_Rectangular_Channel/26117989",
+    "title": "Experimental Data of Hydrogen Dispersion in an Open-ended Rectangular Channel",
+    "license": "CC BY 4.0",
+    "published_date": "2025-05-26T12:45:44Z",
+    "file_count": 23,
+    "files": [
+      {
+        "id": 54824036,
+        "name": "23_FFI_P101_T00003.zip",
+        "size_bytes": 2001430,
+        "md5": null,
+        "download_url": "https://ndownloader.figshare.com/files/54824036"
+      },
+      {
+        "id": 54824039,
+        "name": "23_FFI_P101_T00004.zip",
+        "size_bytes": 2369546,
+        "md5": null,
+        "download_url": "https://ndownloader.figshare.com/files/54824039"
+      },
+      {
+        "id": 54824042,
+        "name": "23_FFI_P101_T00005.zip",
+        "size_bytes": 1893720,
+        "md5": null,
+        "download_url": "https://ndownloader.figshare.com/files/54824042"
+      },
+      {
+        "id": 54824045,
+        "name": "23_FFI_P101_T00006.zip",
+        "size_bytes": 2060025,
+        "md5": null,
+        "download_url": "https://ndownloader.figshare.com/files/54824045"
+      },
+      {
+        "id": 54824048,
+        "name": "23_FFI_P101_T00007.zip",
+        "size_bytes": 2116367,
+        "md5": null,
+        "download_url": "https://ndownloader.figshare.com/files/54824048"
+      },
+      {
+        "id": 54824051,
+        "name": "23_FFI_P101_T00008.zip",
+        "size_bytes": 2183474,
+        "md5": null,
+        "download_url": "https://ndownloader.figshare.com/files/54824051"
+      },
+      {
+        "id": 54824054,
+        "name": "23_FFI_P101_T00009.zip",
+        "size_bytes": 2160984,
+        "md5": null,
+        "download_url": "https://ndownloader.figshare.com/files/54824054"
+      },
+      {
+        "id": 54824057,
+        "name": "23_FFI_P101_T00012.zip",
+        "size_bytes": 2081982,
+        "md5": null,
+        "download_url": "https://ndownloader.figshare.com/files/54824057"
+      },
+      {
+        "id": 54824060,
+        "name": "23_FFI_P101_T00011.zip",
+        "size_bytes": 2133066,
+        "md5": null,
+        "download_url": "https://ndownloader.figshare.com/files/54824060"
+      },
+      {
+        "id": 54824063,
+        "name": "23_FFI_P101_T00014.zip",
+        "size_bytes": 2084607,
+        "md5": null,
+        "download_url": "https://ndownloader.figshare.com/files/54824063"
+      },
+      {
+        "id": 54824066,
+        "name": "23_FFI_P101_T00013.zip",
+        "size_bytes": 2140030,
+        "md5": null,
+        "download_url": "https://ndownloader.figshare.com/files/54824066"
+      },
+      {
+        "id": 54824069,
+        "name": "23_FFI_P101_T00027.zip",
+        "size_bytes": 2034963,
+        "md5": null,
+        "download_url": "https://ndownloader.figshare.com/files/54824069"
+      },
+      {
+        "id": 54824072,
+        "name": "23_FFI_P101_T00026.zip",
+        "size_bytes": 2199349,
+        "md5": null,
+        "download_url": "https://ndownloader.figshare.com/files/54824072"
+      },
+      {
+        "id": 54824075,
+        "name": "23_FFI_P101_T00028.zip",
+        "size_bytes": 2045248,
+        "md5": null,
+        "download_url": "https://ndownloader.figshare.com/files/54824075"
+      },
+      {
+        "id": 54824078,
+        "name": "23_FFI_P101_T00029.zip",
+        "size_bytes": 2275908,
+        "md5": null,
+        "download_url": "https://ndownloader.figshare.com/files/54824078"
+      },
+      {
+        "id": 54824081,
+        "name": "23_FFI_P101_T00030.zip",
+        "size_bytes": 2426741,
+        "md5": null,
+        "download_url": "https://ndownloader.figshare.com/files/54824081"
+      },
+      {
+        "id": 54824084,
+        "name": "23_FFI_P101_T00031.zip",
+        "size_bytes": 2248254,
+        "md5": null,
+        "download_url": "https://ndownloader.figshare.com/files/54824084"
+      },
+      {
+        "id": 54824087,
+        "name": "23_FFI_P101_T00040.zip",
+        "size_bytes": 2428526,
+        "md5": null,
+        "download_url": "https://ndownloader.figshare.com/files/54824087"
+      },
+      {
+        "id": 54824090,
+        "name": "23_FFI_P101_T00041.zip",
+        "size_bytes": 2287912,
+        "md5": null,
+        "download_url": "https://ndownloader.figshare.com/files/54824090"
+      },
+      {
+        "id": 54824093,
+        "name": "23_FFI_P101_T00042.zip",
+        "size_bytes": 2926567,
+        "md5": null,
+        "download_url": "https://ndownloader.figshare.com/files/54824093"
+      },
+      {
+        "id": 54824096,
+        "name": "23_FFI_P101_T00044.zip",
+        "size_bytes": 2840050,
+        "md5": null,
+        "download_url": "https://ndownloader.figshare.com/files/54824096"
+      },
+      {
+        "id": 54825911,
+        "name": "ReadMe.txt",
+        "size_bytes": 2499,
+        "md5": null,
+        "download_url": "https://ndownloader.figshare.com/files/54825911"
+      },
+      {
+        "id": 54824099,
+        "name": "23_FFI_P101_T00045.zip",
+        "size_bytes": 2302256,
+        "md5": null,
+        "download_url": "https://ndownloader.figshare.com/files/54824099"
+      }
+    ]
+  },
+  "geometry": {
+    "source": "10.1016/j.ijhydene.2024.10.038",
+    "channel_length_m": 5.8,
+    "channel_width_m": 0.9,
+    "channel_height_m": 0.8,
+    "volume_m3": 4.176,
+    "sensor_count": 29,
+    "inlet_diameter_mm": 4.6,
+    "inlet_location": "ceiling, 0.5 m from closed end and 0.45 m from side wall"
+  },
+  "eligibility": {
+    "classification": "DISPERSION_COMPONENT_HOLDOUT_CANDIDATE",
+    "full_loop_external_holdout_eligible": false,
+    "raw_files_committed": false,
+    "claim_boundary": "Open-ended channel dispersion and detector/spatial proxy evidence only; not an HRS controller, cascade, dispenser, vehicle, ESD or outdoor-distance holdout.",
+    "screen_rule": "Descriptive schema, timing, concentration and mass-flow audit; no fitting or post-outcome tuning."
+  },
+  "local_file_audit": {
+    "raw_dir_supplied": true,
+    "audited_zip_count": 1,
+    "files": [
+      {
+        "local_name": "T00014.zip",
+        "size_bytes": 2084607,
+        "md5": "53af91744c24d544cfddbe47b985d540",
+        "sha256": "c571ba54c3d61faf467b9a85c5707b1983344335d3cd460705759c43ca2eac03",
+        "zip_members": 6,
+        "csv_members": [
+          "23_FFI_P101_T00014/23_FFI_P101_T00014.csv"
+        ],
+        "readme_members": [],
+        "csv_schema": {
+          "header_found": true,
+          "header_row_index": 0,
+          "row_count": 18800,
+          "column_count": 37,
+          "flow_time_column": "flow time [s]",
+          "sensor_time_column": "h2 sensor time",
+          "sensor_column_count": 29,
+          "numeric_flow_rows": 18799,
+          "numeric_sensor_rows": 505,
+          "flow_time_monotonic": true,
+          "sensor_time_monotonic": true,
+          "flow_time_end_s": 187.90481465,
+          "filling_pressure_max_bar": 6.3917632792276615,
+          "mass_flow_max_g_s": 0.0415568346018979
+        },
+        "api_md5_available": false,
+        "api_md5_matches": null
+      }
+    ]
+  },
+  "decision": {
+    "admit_to_full_loop_gate": false,
+    "runtime_parameter_application": false,
+    "next_action": "Freeze a spatial-dispersion screen before scoring all locally available cases."
+  }
+}
