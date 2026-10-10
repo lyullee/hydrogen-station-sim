@@ -1605,6 +1605,46 @@ def _risk_zone_state_signature(frame: Mapping[str, Any]) -> tuple[Any, ...]:
     )
 
 
+def _stream_transition_signature(frame: Mapping[str, Any]) -> tuple[Any, ...]:
+    """Capture state changes that must remain visible in a live display."""
+    operations = frame.get("process_operations") or {}
+    activity = frame.get("process_activity") or {}
+    activity_states = tuple(sorted(
+        (str(key), str(value.get("state")), str(value.get("reason")))
+        for key, value in activity.items() if isinstance(value, dict)
+    )) if isinstance(activity, dict) else ()
+    return (
+        bool(frame.get("esd")),
+        tuple(sorted(str(item) for item in frame.get("active_faults") or [])),
+        tuple(sorted(str(item) for item in frame.get("relief_valves_open") or [])),
+        frame.get("dispatch_bank"), frame.get("dispatch_bank_2"),
+        frame.get("recharge_bank"),
+        str((frame.get("analysis") or {}).get("status")),
+        activity_states,
+    )
+
+
+def _stream_display_frames(frames: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Coalesce quiet continuous telemetry while preserving transitions.
+
+    Physical frames remain in the server replay buffer and the final result.
+    This helper only selects what a live browser needs to paint; it keeps the
+    first frame, every transition frame, and the newest frame in order.
+    """
+    if len(frames) <= 2:
+        return frames
+    selected: list[dict[str, Any]] = [frames[0]]
+    previous = _stream_transition_signature(frames[0])
+    for frame in frames[1:-1]:
+        signature = _stream_transition_signature(frame)
+        if signature != previous:
+            selected.append(frame)
+        previous = signature
+    if selected[-1].get("sequence") != frames[-1].get("sequence"):
+        selected.append(frames[-1])
+    return selected
+
+
 @app.get("/api/simulations/{job_id}/risk-zones")
 async def simulation_risk_zones(job_id: str) -> dict[str, Any]:
     """Rate-limited current-state screening risk for the spatial overlay."""
@@ -3467,9 +3507,16 @@ async def simulation_stream(websocket: WebSocket, job_id: str) -> None:
                 await websocket.send_json({"type": "status", "job": status})
                 last_status_signature = signature
 
-            for frame in frames:
+            display_frames = (
+                _stream_display_frames(frames)
+                if status.get("continuous") else frames
+            )
+            for frame in display_frames:
                 await websocket.send_json({"type": "frame", "frame": frame})
-                cursor = max(cursor, int(frame.get("sequence", cursor)))
+            # Advance over all retained frames, including quiet frames that
+            # were coalesced for this live display tick.
+            if frames:
+                cursor = max(cursor, int(frames[-1].get("sequence", cursor)))
 
             if status["status"] == "failed":
                 await websocket.send_json(

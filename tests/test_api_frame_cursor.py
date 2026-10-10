@@ -1,4 +1,8 @@
-from h2station.api import _frames_after_cursor, _risk_zone_state_signature
+from h2station.api import (
+    _frames_after_cursor,
+    _risk_zone_state_signature,
+    _stream_display_frames,
+)
 
 
 def _frames(count: int, start: int = 0):
@@ -34,3 +38,23 @@ def test_risk_zone_signature_invalidates_on_safety_state_changes_only():
 
     assert _risk_zone_state_signature(frame) == _risk_zone_state_signature(same)
     assert _risk_zone_state_signature(frame) != _risk_zone_state_signature(esd)
+
+
+def test_live_stream_coalesces_quiet_frames_but_keeps_transitions():
+    frames = []
+    for sequence in range(6):
+        frames.append({
+            "sequence": sequence,
+            "esd": sequence >= 3,
+            "active_faults": ["hydrogen-leak:cascade.high"] if sequence >= 3 else [],
+            "relief_valves_open": [],
+            "dispatch_bank": "low",
+            "dispatch_bank_2": None,
+            "recharge_bank": None,
+            "analysis": {"status": "CRITICAL" if sequence >= 3 else "NORMAL"},
+            "process_activity": {},
+        })
+
+    selected = _stream_display_frames(frames)
+
+    assert [frame["sequence"] for frame in selected] == [0, 3, 5]
