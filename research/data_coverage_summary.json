@@ -89,6 +89,40 @@
       "not_allowed": "충전소 제어기·캐스케이드·ESD·노즐/리셉터클을 포함한 full-loop 검증"
     },
     {
+      "id": "owner_station_side_integrated_validation",
+      "status": "VALIDATED_STATION_SIDE",
+      "evidence": "research/confidential_station_side_integrated_validation_2026_10_09.json",
+      "coverage": {
+        "pressure_boundary_holdout_supported": true,
+        "pressure_boundary_holdout_points": 30,
+        "cascade_sequence_holdout_supported": true,
+        "cascade_sequence_holdout_pairs": 3664,
+        "recharge_pressure_forecast_supported": true,
+        "recharge_pressure_forecast_holdout_cases": 394,
+        "lifecycle_counter_alignment_supported": false,
+        "runtime_parameter_application": false,
+        "vehicle_fill_validation": false,
+        "full_loop_external_validation_supported": false
+      },
+      "allowed_claim": "hash-linked same-site station-side pressure-boundary, cascade-sequence and recharge-pressure holdout integration",
+      "not_allowed": "vehicle-side accuracy, full station-to-vehicle validation, safety-distance or field certification; the retained lifecycle-counter result is negative"
+    },
+    {
+      "id": "nbsdc_liquid_hrs_catalogue",
+      "status": "REQUEST_CANDIDATE",
+      "evidence": "research/nbsdc_liquid_hrs_public_access_recheck_2026_10_10.json",
+      "coverage": {
+        "catalogue_record_verified": true,
+        "monitoring_window_hours": 16,
+        "sample_interval_s": 1,
+        "file_count": 7,
+        "raw_synchronized_archive_located": false,
+        "numerical_file_access": "application_required"
+      },
+      "allowed_claim": "real liquid-hydrogen refueling-station operating-range and data-access lead for station-side schema/context and LLM claim-boundary grounding",
+      "not_allowed": "numerical model calibration, independent holdout scoring, full station-to-vehicle validation, safety-distance calculation, or response-effectiveness claim before custodian approval and channel attestation"
+    },
+    {
       "id": "public_component_measurements",
       "status": "DIAGNOSTIC_ONLY",
       "evidence": "research/methytrucks_2026_public_measurement_intake.json",
