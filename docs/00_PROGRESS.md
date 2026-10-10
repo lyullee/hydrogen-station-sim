@@ -1,5 +1,24 @@
 # Development Progress
 
+## 2026-10-11 - Close the operator-command and leak-pressure feedback gaps
+
+Status: implemented; deterministic operator commands now reach the reviewed
+virtual-safety proposal layer, and a bank leak regression checks physical
+pressure/inventory response.
+
+- Korean and English-equivalent command phrases now map to explicit targets for
+  trailer inlet/outlet, compressor suction/discharge, low/medium/high-bank
+  inlet/outlet and dispenser 1/2 isolation. Each proposal remains confirmation
+  gated and status/conditional questions are not converted into actions.
+- A sustained high-bank leak integration test now requires positive release,
+  falling bank inventory and falling bank pressure. This protects the impact
+  calculation from a release flag that leaves the source pressure frozen.
+- Direct, sensor-workbench, safety-runtime, HAZOP and readiness-audit focused
+  tests pass after the change. The research readiness count is unchanged until
+  a new independent external holdout or human review closes a scientific gate.
+
+Commits: `31ec1d7`, `5d93580`.
+
 ## 2026-10-10 - Shorten the solver hot path with scalar table lookups
 
 Status: implemented; the numerical table and governing equations are unchanged.
