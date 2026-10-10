@@ -1,0 +1,83 @@
+{
+  "schema_version": 1,
+  "protocol_id": "ESST-2020-DISPENSER-FULL-LOOP-2601",
+  "status": "FROZEN_BEFORE_RAW_OUTCOME_ACCESS",
+  "frozen_at_utc": "2026-10-10T22:27:00Z",
+  "frozen_model_commit": "7573f3f399b7b87c7b79ccc3002bc284a0ffc5a0",
+  "purpose": "Prospectively screen a public 35/70 MPa hydrogen-dispenser vehicle-refueling experiment for synchronized station/dispenser/vehicle boundary channels before any numerical outcome is used.",
+  "source": {
+    "title": "Study on comprehensive evaluation of 35 MPa/70 MPa hydrogen dispenser refueling performance",
+    "article_url": "https://esst.cip.com.cn/article/2020/2095-4239/2095-4239-2020-9-3-702.shtml",
+    "doi": "10.19799/j.cnki.2095-4239.2020.0049",
+    "publisher": "Energy Storage Science and Technology",
+    "published_year": 2020,
+    "public_access_path": "Article page exposes downloadable CSV ZIP supplementary tables.",
+    "candidate_files": [
+      {
+        "table": "T1",
+        "url": "https://esst.cip.com.cn/article/2020/2095-4239/2095-4239-2020-9-3-702/T1.csv.zip",
+        "role": "35 MPa initial-state table"
+      },
+      {
+        "table": "T2",
+        "url": "https://esst.cip.com.cn/article/2020/2095-4239/2095-4239-2020-9-3-702/T2.csv.zip",
+        "role": "35 MPa final-state table"
+      },
+      {
+        "table": "T3",
+        "url": "https://esst.cip.com.cn/article/2020/2095-4239/2095-4239-2020-9-3-702/T3.csv.zip",
+        "role": "70 MPa initial-state table"
+      },
+      {
+        "table": "T4",
+        "url": "https://esst.cip.com.cn/article/2020/2095-4239/2095-4239-2020-9-3-702/T4.csv.zip",
+        "role": "70 MPa final-state table"
+      }
+    ]
+  },
+  "pre_access_statement": {
+    "raw_archives_downloaded": false,
+    "raw_csv_opened": false,
+    "numerical_outcomes_seen": false,
+    "article_description_seen": true,
+    "known_before_freeze": [
+      "The article reports 35 MPa logistics-vehicle and 70 MPa passenger-vehicle refueling tests.",
+      "The article describes pressure, temperature and mass-flow recording for the 70 MPa test.",
+      "The article describes vehicle tank volume, pressure, temperature, transferred mass and elapsed time summaries.",
+      "The article page exposes four downloadable CSV ZIP links labelled T1 through T4."
+    ]
+  },
+  "eligibility_contract": {
+    "minimum_experiments": 1,
+    "requires_common_time_axis": true,
+    "requires_vehicle_pressure": true,
+    "requires_vehicle_temperature": true,
+    "requires_station_or_dispenser_pressure": true,
+    "requires_mass_flow_or_transferred_mass": true,
+    "requires_vehicle_tank_geometry": true,
+    "requires_engineering_units_or_publisher_crosswalk": true,
+    "requires_protocol_context": true,
+    "requires_independent_source_hashes": true,
+    "exclusion_rules": [
+      "Do not infer a channel role from a plotted curve when the CSV lacks a publisher crosswalk.",
+      "Do not convert a summary table into a time series.",
+      "Do not score a case unless all required channels share a declared time base or the publisher explicitly crosswalks them.",
+      "Do not fit geometry, thresholds or model parameters to the candidate outcome.",
+      "Retain an ineligible result as a negative intake result rather than substituting another case."
+    ]
+  },
+  "frozen_primary_screens": {
+    "pressure_rmse_mpa_max": 5.0,
+    "temperature_rmse_c_max": 10.0,
+    "final_soc_abs_error_percentage_points_max": 5.0,
+    "mass_closure_relative_error_max": 0.05,
+    "joint_pass_requires_all_declared_screens": true,
+    "minimum_case_count_for_full_loop_gate": 8
+  },
+  "claim_boundary": "This protocol is an outcome-free intake and scoring plan. It does not claim that the article's CSV files are full-loop, machine-readable, licensed for redistribution, or sufficient for validation until the exact archives, headers, units, time base, geometry and rights are inspected. A passing single case cannot by itself close the repository full-loop gate requiring an independent cohort.",
+  "raw_data_policy": {
+    "raw_rows_committed": false,
+    "raw_archives_committed": false,
+    "only_hashes_and_aggregate_metrics_may_be_committed": true
+  }
+}

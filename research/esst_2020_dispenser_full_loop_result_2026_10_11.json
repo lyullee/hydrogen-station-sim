@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "protocol": "research/esst_2020_dispenser_full_loop_protocol_2026_10_11.json",
+  "status": "SCREENED_INELIGIBLE_SUMMARY_ONLY",
+  "screened_at_utc": "2026-10-10T22:28:00Z",
+  "source": {
+    "doi": "10.19799/j.cnki.2095-4239.2020.0049",
+    "article_url": "https://esst.cip.com.cn/article/2020/2095-4239/2095-4239-2020-9-3-702.shtml",
+    "raw_archive_access": "public article supplementary links",
+    "raw_rows_committed": false
+  },
+  "intake": {
+    "archive_count": 4,
+    "all_archives_are_valid_zip": true,
+    "archive_total_bytes": 1005,
+    "extracted_csv_total_bytes": 635,
+    "tables": [
+      {
+        "table": "T1",
+        "archive_url": "https://esst.cip.com.cn/article/2020/2095-4239/2095-4239-2020-9-3-702/T1.csv.zip",
+        "archive_bytes": 250,
+        "archive_sha256": "b98ac67fcf751801a86228dd8ee8779e50c2832ba5a78ed3c187654dc7725ac3",
+        "extracted_rows": 3,
+        "semantic_role": "35 MPa initial state summary"
+      },
+      {
+        "table": "T2",
+        "archive_url": "https://esst.cip.com.cn/article/2020/2095-4239/2095-4239-2020-9-3-702/T2.csv.zip",
+        "archive_bytes": 262,
+        "archive_sha256": "06beb809e4021e3aee9e641e07ac4cdef98a9ae71a2abfa2ab7009a8ae28ecd0",
+        "extracted_rows": 3,
+        "semantic_role": "35 MPa final state summary"
+      },
+      {
+        "table": "T3",
+        "archive_url": "https://esst.cip.com.cn/article/2020/2095-4239/2095-4239-2020-9-3-702/T3.csv.zip",
+        "archive_bytes": 246,
+        "archive_sha256": "33d2eeddd627260044b1be28f209372bd4283058afd5837ec95a029ce6bdde02",
+        "extracted_rows": 3,
+        "semantic_role": "70 MPa initial state summary"
+      },
+      {
+        "table": "T4",
+        "archive_url": "https://esst.cip.com.cn/article/2020/2095-4239/2095-4239-2020-9-3-702/T4.csv.zip",
+        "archive_bytes": 247,
+        "archive_sha256": "44c6fc612715ef018ecde9e4a734eee86fa75640b5b91614e21b2bd035537a2e",
+        "extracted_rows": 3,
+        "semantic_role": "70 MPa final state summary"
+      }
+    ]
+  },
+  "eligibility": {
+    "public_real_refueling_context": true,
+    "vehicle_geometry_summary": true,
+    "initial_final_pressure_temperature_mass_summary": true,
+    "time_resolved_machine_readable_trace": false,
+    "common_time_axis": false,
+    "station_dispenser_vehicle_channel_crosswalk": false,
+    "engineering_unit_dictionary": false,
+    "full_loop_external_validation_eligible": false,
+    "bounded_benchmark_eligible": true
+  },
+  "decision": {
+    "full_loop_gate_effect": "none",
+    "runtime_parameter_application": false,
+    "use": "Retain as a bounded public operating benchmark only; do not score the simulator against four summary tables.",
+    "next_request": "Request the article authors' original time-resolved logger export and channel/unit crosswalk if a full-loop validation contribution is desired."
+  },
+  "claim_boundary": "The four public CSV files are summary tables with three rows each, not synchronized time-series logger traces. They support reported operating-range context but cannot validate station-to-vehicle pressure, temperature, mass flow, controller behavior, safety distance or the full digital twin."
+}
