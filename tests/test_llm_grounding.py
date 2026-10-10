@@ -1325,6 +1325,20 @@ def test_full_loop_candidate_leads_are_grounded_without_being_admitted():
     candidate = projected["public_full_loop_candidate_leads"]["candidates"][0]
     assert candidate["admission_status"] == "CONTACT_REQUEST_CANDIDATE_ONLY"
     assert candidate["full_loop_external_holdout_eligible"] is False
+    projected_by_id = {
+        item["id"]: item
+        for item in projected["public_full_loop_candidate_leads"]["candidates"]
+    }
+    assert projected_by_id["dlr_rail_h2_refueling_measurement_2025"][
+        "admission_status"
+    ] == "CONTACT_REQUEST_CANDIDATE_ONLY"
+    assert projected_by_id["european_hydrogen_observatory_hrs_inventory_2026"][
+        "admission_status"
+    ] == "INVENTORY_CONTEXT_ONLY"
+    assert all(
+        item["full_loop_external_holdout_eligible"] is False
+        for item in projected_by_id.values()
+    )
 
 
 def test_prompt_projection_carries_consequence_risk_screening_boundary():

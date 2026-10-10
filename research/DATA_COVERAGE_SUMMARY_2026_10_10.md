@@ -24,6 +24,8 @@
 | `public_hytf_tank_boundary` | DIAGNOSTIC_ONLY | 공개 70 MPa 탱크 압력·열 응답의 구성품 경계 진단 | 질량유량, 차량 수용부, 충전소 제어기·ESD를 포함한 full-loop 검증 |
 | `public_h2safe_indoor_surrogate` | DIAGNOSTIC_ONLY | 헬륨 대체가스의 실내 센서 응답·좌표 진단 | 수소 농도 환산, 충전소 외부 확산, ESD 효과 또는 안전거리 검증 |
 | `public_accident_precedents` | ROUTED_FOR_GROUNDING | traceable scenario and response-plan grounding | historical frequency or response-effectiveness estimation |
+| `public_dlr_rail_refuelling_lead` | CONTACT_REQUEST_CANDIDATE | figure-level pressure, temperature and mass-flow channel context | full-loop scoring until a synchronized raw/de-identified export is released |
+| `public_eho_station_inventory` | INVENTORY_CONTEXT_ONLY | station pressure-class and layout context | process dynamics, safety-distance or LLM performance validation |
 
 ## 다음 최소 입력
 
