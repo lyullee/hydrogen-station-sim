@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-10T02:04:35.168844+00:00",
+  "generated_at": "2026-10-10T02:13:00.949702+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -3242,12 +3242,14 @@
       "id": "open_channel_concentration_proxy_integrity",
       "status": "PASS",
       "claim": "The virtual detector concentration scale is derived from public measured concentration/flow traces instead of an unexplained saturation constant.",
-      "evidence": "research\\dispersion_concentration_proxy_calibration_2026_10_06.json",
-      "requirement": "22 CC BY 4.0 cases, robust per-case P90/flow statistic, bounded runtime formula and explicit open-channel claim boundary.",
+      "evidence": "research\\dispersion_concentration_proxy_calibration_2026_10_06.json; research\\figshare_h2_dispersion_intake_2026_10_10.json",
+      "requirement": "22 CC BY 4.0 cases, a hash-audited Figshare 23-file intake manifest, robust per-case P90/flow statistic, bounded runtime formula and explicit open-channel claim boundary.",
       "observed": {
         "doi": "10.23642/usn.26117989.v2",
         "license": "CC BY 4.0",
         "case_count": 22,
+        "intake_file_count": 23,
+        "intake_classification": "DISPERSION_COMPONENT_HOLDOUT_CANDIDATE",
         "coefficient_volpct_per_g_s": 28.449493830243835,
         "runtime_formula": "clip(release_mass_flow_g_s * coefficient_volpct_per_g_s * ventilation_multiplier, 0, 100)",
         "claim_boundary": "This coefficient is a bounded advisory virtual-detector proxy derived from an open-ended channel concentration dataset. It does not validate outdoor station dispersion, detector placement, detector response dynamics, ESD effectiveness, consequence distances, or the complete hydrogen-refuelling process model. A site-specific CFD or detector calibration study remains required for engineering or regulatory decisions."
