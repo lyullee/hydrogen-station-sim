@@ -238,3 +238,15 @@ screen pass. Because the responses were already visible, this does not alter the
 frozen gate or runtime routing. The candidate is recorded solely to make the
 next independent spatial holdout precise rather than continuing unbounded
 coefficient experimentation (`research/hytunnel_spatial_candidate_sensitivity_2026_10_11.json`).
+
+## Critical-lane rerun (2026-10-11)
+
+The impact-first diagnostic lane completed in **2.727 s** after the latest
+grounding refresh (`research/priority_diagnostic_run_2026_10_11.json`). The
+processes all completed successfully, and the Type-III mixed-convection
+diagnostic passed its three declared internal cases. The MC SOC/EOS mass
+closure diagnostic also passed all eight cases. The scientific screen still
+fails the MC vehicle-tank boundary replay (0/8), H2SAFE spatial-response
+diagnostic (0/1), and NREL HDVS tank screen (0/7). These are negative,
+post-outcome development results only: they do not alter the frozen holdout,
+production parameters, readiness gates, or the 88.2% gate-closure value.
