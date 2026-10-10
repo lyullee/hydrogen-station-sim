@@ -10,6 +10,7 @@ No new public machine-readable station-to-sink trace was identified. The full-lo
 - ZBT/NPL sampling campaign: dispenser and sink data were logged at a real HRS, but the article states that raw data are available from the authors on request.
 - NREL H2IQ heavy-duty fast-flow briefing: useful pressure, hose, receptacle and flow context is shown, but no raw trace is published.
 - KIT/PRESLHY DISCHA release archives: openly downloadable CC-BY component blow-down and jet-fire files exist, but they are rigid-vessel release experiments rather than a synchronized station-to-vehicle fueling loop. They are therefore usable for component external checks only.
+- H2-Stations Europe API v2: the current public registry exposes station layout plus availability, usage, storage and pricing signal types, but no vehicle-tank pressure/temperature trace, common station-to-vehicle clock or raw controller/ESD sequence. It is station-registry context only.
 
 ## Eligibility boundary
 

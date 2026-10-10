@@ -24,6 +24,7 @@ def test_recheck_preserves_full_loop_gate_boundary():
         "kit_preslhy_e31_part_a_open_data",
         "kit_preslhy_e31_part_b_open_data",
         "kit_preslhy_e51_ignited_open_data",
+        "h2_stations_europe_api_v2",
     } <= candidates.keys()
     assert {
         item["decision"] for item in record["candidates"]
@@ -31,6 +32,7 @@ def test_recheck_preserves_full_loop_gate_boundary():
         "REQUEST_RAW_TRACE",
         "REPORT_SUMMARY_ONLY",
         "COMPONENT_ONLY_NOT_FULL_LOOP",
+        "STATION_REGISTRY_ONLY_NOT_FULL_LOOP",
     }
     for candidate in record["candidates"]:
         observed = candidate["observed"]

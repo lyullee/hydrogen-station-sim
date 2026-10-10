@@ -9,6 +9,7 @@
 | [NREL H2FillS](https://www.nrel.gov/hydrogen/h2fills) | 완전 충전소/차량 모델과 실험 데이터가 있다는 설명 | 등록·제공기관 승인 전 원시 파일 미확인 |
 | [JRC reference data](https://www.researchgate.net/publication/262017374_JRC_reference_data_from_experiments_of_on-board_hydrogen_tanks_fast_filling) | 다수 충전 사이클과 압력/온도 trace 설명 | 공개 재사용 가능한 동기화 station-side 파일 미확인 |
 | [ESST 2020 dispenser study](https://esst.cip.com.cn/article/2020/2095-4239/2095-4239-2020-9-3-702.shtml) | 35/70 MPa 실험 요약과 보충 표 | 3행 요약표만 확인, full-loop 원자료 아님 |
+| [H2-Stations API v2](https://docs.h2-stations.eu/for-data-users/api-v2/) | 유럽 충전소 배치·디스펜서·노즐·저장장치와 availability/usage/storage/pricing 신호 | 차량 탱크 압력·온도, 공통 시각축, 원시 제어기·ESD trace가 없어 station registry context만 가능 |
 
 ## 결론
 

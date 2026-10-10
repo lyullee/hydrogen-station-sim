@@ -121,6 +121,24 @@
       },
       "decision": "COMPONENT_ONLY_NOT_FULL_LOOP",
       "claim_boundary": "The dataset can inform release/ignition consequence checks but cannot close the synchronized station-to-vehicle gate."
+    },
+    {
+      "id": "h2_stations_europe_api_v2",
+      "title": "H2-Stations Europe API v2",
+      "source_url": "https://docs.h2-stations.eu/for-data-users/api-v2/",
+      "source_role": "current public station layout and operational signal registry",
+      "observed": {
+        "physical_experiment": false,
+        "station_layout_public": true,
+        "dispenser_nozzle_storage_entities_public": true,
+        "real_time_signal_types": ["availability", "usage", "hydrogen_storage", "pricing"],
+        "vehicle_tank_pressure_temperature_public": false,
+        "machine_readable_common_timebase_public": false,
+        "raw_controller_or_esd_trace_public": false,
+        "authentication_required_for_api_v2": true
+      },
+      "decision": "STATION_REGISTRY_ONLY_NOT_FULL_LOOP",
+      "claim_boundary": "The API is useful for station inventory and operational-context metadata, but it does not publish a synchronized dispenser-to-vehicle measurement trace or a vehicle-tank pressure/temperature holdout."
     }
   ],
   "outcome": {
