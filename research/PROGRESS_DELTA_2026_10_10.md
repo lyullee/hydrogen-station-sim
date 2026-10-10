@@ -176,6 +176,16 @@ PENDING** (88.2% gate closure). The count is unchanged because this closes an
 evidence-freshness gap only; it does not promote station-side data to
 full-loop validation or change runtime parameters.
 
+## Regression health check (2026-10-10)
+
+The complete repository regression suite passed **1,336 tests** in 219.56 s
+with 19 dependency deprecation/physics warnings and no test failures. The
+impact-first diagnostic lane remains separate: its five critical processes
+complete in about 2.7 s, but the scientific screen still retains the three
+negative physics/spatial results described above. This keeps fast diagnosis
+available without mistaking a full green software suite for scientific
+validation.
+
 ## Source records
 
 - `research/DATA_COVERAGE_SUMMARY_2026_10_09.md`
