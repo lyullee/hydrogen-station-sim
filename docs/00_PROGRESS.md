@@ -1,5 +1,24 @@
 # Development Progress
 
+## 2026-10-10 - Refresh readiness audit after runtime integrity update
+
+Status: implemented; the audit is current and still fail-closed.
+
+- Regenerated the runtime Type-IV calibration integrity record after the
+  explicit full-loop channel-alias change. This removes a stale source-hash
+  mismatch that made the readiness audit report a false `FAIL`.
+- The current readiness remains **127 PASS / 10 FAIL / 7 PENDING**. The open
+  P0 gate is still the absence of three independently sourced,
+  synchronized station-to-receiving-vessel/controller events; no scientific
+  claim was promoted by refreshing the audit.
+- The full audit is retained in `docs/IJHE_READINESS_AUDIT.md` and the
+  machine-readable result in `research/ijhe_readiness_audit.json`.
+
+Verification:
+
+- IJHE audit regression: **2 passed**.
+- Priority validation: **44 focused tests passed** in about **5 s**.
+
 ## 2026-10-10 - Remove full-loop intake naming friction on the P0 path
 
 Status: implemented; safety and validation gates remain fail-closed.
