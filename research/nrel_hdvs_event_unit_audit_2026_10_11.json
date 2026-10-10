@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-10-10T15:50:28.366849+00:00",
+  "artifact_type": "nrel_hdvs_independent_event_unit_audit",
+  "evidence_role": "privacy_bounded_structural_audit",
+  "source": {
+    "boundary_record": "research/nrel_hdvs_raw_trace_boundary_2026_10_05.json",
+    "workbook_sha256": "1a3fbe64a50c1c97266bfe0372998513ad3ccec5600fab7bc4b9fc68ad4d9d0c",
+    "raw_workbook_retained_locally_only": true
+  },
+  "experiment": {
+    "independent_event_count": 1,
+    "analysis_unit": "one common-clock multi-tank fill",
+    "shared_clock_group_count": 1,
+    "parallel_tank_channel_count": 7,
+    "tank_ids": [
+      1,
+      2,
+      3,
+      5,
+      7,
+      8,
+      9
+    ],
+    "timed_row_count": 351,
+    "time_range_s": [
+      0.0,
+      350.0
+    ],
+    "independence_rule": "Parallel tanks sharing one time axis and one fill boundary are not independent events; they remain correlated channels of one event."
+  },
+  "claim_boundary": "This audit prevents seven parallel tank channels from being reported as seven independent charging events. It does not validate the station controller, safety response, full-loop accuracy, or runtime parameters."
+}

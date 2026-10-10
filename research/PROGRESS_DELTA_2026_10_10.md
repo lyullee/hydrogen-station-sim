@@ -278,3 +278,13 @@ tank screen (0/7). MC SOC/EOS closure (8/8) and the Dickens mixed-convection
 diagnostic (3/3) passed. This is the impact-first execution path: independent
 checks run together, while negative post-outcome diagnostics remain excluded
 from runtime promotion and do not change the readiness percentage.
+
+## Receiving-vessel event-unit audit (2026-10-11)
+
+The local NREL HDVS workbook was rechecked for statistical independence. Its
+seven tank channels share one clock and one fill boundary, so they are **one
+independent multi-tank event**, not seven independent charging events. The
+privacy-bounded result is recorded in
+`research/nrel_hdvs_event_unit_audit_2026_10_11.json` and is now exposed to the
+LLM evidence summary as `independent_event_count=1`. This tightens claim
+wording without changing the negative tank screen or the 88.2% readiness value.

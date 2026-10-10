@@ -8334,6 +8334,8 @@ def build_evidence_manifest(
             key: nrel_screen.get(key)
             for key in (
                 "status", "sample_count", "duration_s", "tank_count",
+                "independent_event_count", "analysis_unit",
+                "shared_clock_group_count",
                 "partial_station_to_tank_boundary_eligible",
                 "full_loop_holdout_eligible", "rights_limited",
                 "screening_status", "screening_pass_count",
@@ -8870,6 +8872,8 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
             key: nrel_screen.get(key)
             for key in (
                 "status", "sample_count", "duration_s", "tank_count",
+                "independent_event_count", "analysis_unit",
+                "shared_clock_group_count",
                 "partial_station_to_tank_boundary_eligible",
                 "full_loop_holdout_eligible", "rights_limited",
                 "screening_status", "screening_pass_count",
