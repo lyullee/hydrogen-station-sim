@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "artifact_type": "public_mhc_compressor_component_protocol",
+  "recorded_at": "2026-10-10",
+  "status": "protocol_frozen_diagnostic_only",
+  "source": {
+    "doi": "10.5281/zenodo.18213166",
+    "version": "v1.1",
+    "repository": "https://github.com/LukasFleming/MHC-Dataset/tree/v1.1",
+    "license": "CC BY 4.0",
+    "experiment_count": 29
+  },
+  "boundary": {
+    "included": [
+      "two-stage metal-hydride compressor stage pressure response",
+      "hydrogen mass-flow response",
+      "stage/vessel thermal response"
+    ],
+    "excluded": [
+      "HRS cascade and storage-bank response",
+      "dispenser and vehicle/receptacle response",
+      "SAE J2601 protocol conformance",
+      "ESD, leak, fire or consequence-distance validation"
+    ]
+  },
+  "protocol": {
+    "candidate_holdout": "one untouched experiment selected by identifier before row access",
+    "calibration": "no coefficient fitting from the holdout; use the existing compressor model and declared boundary assumptions",
+    "required_channels": [
+      "elapsed time",
+      "stage or discharge pressure",
+      "stage/vessel temperature",
+      "hydrogen mass flow"
+    ],
+    "primary_metrics": [
+      "pressure RMSE",
+      "temperature RMSE",
+      "integrated mass-flow relative error",
+      "peak-flow relative error"
+    ],
+    "acceptance": "diagnostic only; no readiness gate promotion or runtime parameter update",
+    "raw_rows_persisted": false
+  },
+  "claim_boundary": "This protocol can support a component plausibility diagnostic only. It cannot validate an HRS full loop, vehicle filling, safety response, HyRAM consequence distance or LLM effectiveness."
+}

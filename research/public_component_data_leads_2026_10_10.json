@@ -94,6 +94,29 @@
       "admission_status": "ROBOTICS_DESIGN_TABLES_ONLY",
       "reason": "Public files contain robot geometry/path and trajectory tables, not synchronized station pressure-temperature-flow, vehicle boundary or controller event logs.",
       "next_action": "Use only for future 3D hose/nozzle motion context; do not use for fueling physics, safety-distance or LLM-response validation."
+    },
+    {
+      "id": "zenodo_mhc_compressor_v1_1_18213166",
+      "title": "Experimental Dataset for a Two-Stage Metal Hydride Hydrogen Compressor",
+      "persistent_identifier": "doi:10.5281/zenodo.18213166",
+      "source_url": "https://zenodo.org/records/18213166",
+      "repository_url": "https://github.com/LukasFleming/MHC-Dataset/tree/v1.1",
+      "license": "CC BY 4.0",
+      "release_version": "v1.1",
+      "experiment_count": 29,
+      "archive_bytes": 300873031,
+      "file_scope": [
+        "two-stage metal-hydride compressor pressure measurements",
+        "hydrogen mass-flow measurements",
+        "stage and vessel temperature measurements",
+        "metadata and component CAD/STEP files"
+      ],
+      "system_boundary": "laboratory two-stage metal-hydride compressor",
+      "full_loop_external_holdout_eligible": false,
+      "admission_status": "COMPRESSOR_COMPONENT_VALIDATION_LEAD",
+      "reason": "The public release has pressure, temperature and hydrogen mass-flow measurements for a compressor component, but it has no station cascade/dispenser/vehicle receiving-vessel boundary or HRS controller event trace.",
+      "runtime_parameter_application": false,
+      "next_action": "Freeze a component-only compatibility protocol before reading experiment rows; use it for compressor flow/thermal plausibility screening only, never for full-loop or safety-distance claims."
     }
   ],
   "decision": {
