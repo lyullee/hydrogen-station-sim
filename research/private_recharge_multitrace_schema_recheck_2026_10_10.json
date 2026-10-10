@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "artifact_type": "private_full_loop_schema_recheck",
-  "generated_at": "2026-10-10T12:36:48.404212+00:00",
-  "source_label": "authorized-private-recharge-multitrace",
+  "generated_at": "2026-10-10T12:38:40.701021+00:00",
+  "source_label": "private-station-side-recharge-multitrace-schema-recheck",
   "scope": {
     "file_type": "csv",
     "raw_rows_persisted": false,
@@ -15,12 +15,34 @@
     "csv_files_seen": 8,
     "readable_csv_files": 8,
     "files_with_all_required_full_loop_groups": 0,
+    "files_with_full_loop_contract_groups": 0,
     "observed_semantic_groups": [
       "controller_state",
       "mass_flow",
       "pressure",
       "temperature",
       "time"
+    ],
+    "observed_full_loop_contract_groups": [
+      "common_time",
+      "controller_state",
+      "mass_flow"
+    ],
+    "missing_full_loop_contract_groups": [
+      "cascade_or_storage",
+      "delivered_temperature",
+      "station_pressure",
+      "vehicle_identity",
+      "vehicle_pressure",
+      "vehicle_temperature"
+    ],
+    "contract_groups_missing_from_every_scanned_header": [
+      "cascade_or_storage",
+      "delivered_temperature",
+      "station_pressure",
+      "vehicle_identity",
+      "vehicle_pressure",
+      "vehicle_temperature"
     ],
     "monotonic_numeric_time_files": 8,
     "duplicate_numeric_time_files": 0

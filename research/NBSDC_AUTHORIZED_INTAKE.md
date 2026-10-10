@@ -16,12 +16,14 @@ outside this repository:
 ```
 
 The receipt contains the file hash, format, aggregate semantic-channel counts,
-and the checks still required before a numerical holdout can be admitted. It
-does not retain raw rows, original headers, worksheet names, absolute
-timestamps, or the source path. Schema presence alone never promotes the data
-to the external full-loop holdout; a custodian must attest units, calibration,
-common-clock station/dispenser/vehicle linkage, reviewer access, and a frozen
-outcome-free split first.
+and a stricter role-aware contract check. That contract requires explicit
+vehicle pressure/temperature and identity columns together with station or
+dispenser pressure, delivered-gas temperature, flow, storage-bank and control
+state channels in one logical table. It does not retain raw rows, original
+headers, worksheet names, absolute timestamps, or the source path. Schema
+presence alone never promotes the data to the external full-loop holdout; a
+custodian must attest units, calibration, common-clock station/dispenser/vehicle
+linkage, reviewer access, and a frozen outcome-free split first.
 
 The public record is [NBSDC 35/70 MPa fixed HRS demonstration](https://www.nbsdc.cn/general/dataDetail?id=64f08267bb16e06dfdc78c57&type=1).
 The page displays [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/deed.zh-hans),

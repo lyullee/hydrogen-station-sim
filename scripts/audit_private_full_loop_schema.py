@@ -16,6 +16,8 @@ from pathlib import Path
 import re
 from typing import Iterable
 
+from full_loop_schema_contract import CONTRACT_REQUIRED, contract_coverage
+
 ROOT = Path(__file__).resolve().parents[1]
 MAX_HEADER_BYTES = 512 * 1024
 HEADER_ROWS = 40
@@ -58,6 +60,7 @@ class Header:
     columns: tuple[str, ...]
     delimiter: str
     coverage: frozenset[str]
+    contract_coverage: frozenset[str]
     row_index: int
 
 
@@ -122,7 +125,13 @@ def _read_header(path: Path) -> Header | None:
     if not candidates:
         return None
     _, index, row, coverage = max(candidates, key=lambda item: item[0])
-    return Header(tuple(str(value or "") for value in row), delimiter, coverage, index)
+    return Header(
+        tuple(str(value or "") for value in row),
+        delimiter,
+        coverage,
+        contract_coverage(row),
+        index,
+    )
 
 
 def _iter_csv_files(root: Path):
@@ -142,7 +151,10 @@ def audit(root: Path, *, source_label: str) -> dict[str, object]:
     files = 0
     readable = 0
     header_full_loop = 0
+    header_full_loop_contract = 0
     header_groups: set[str] = set()
+    contract_groups: set[str] = set()
+    contract_missing_union: set[str] = set(CONTRACT_REQUIRED)
     monotonic_time_files = 0
     duplicate_time_files = 0
     for path in _iter_csv_files(root):
@@ -152,8 +164,12 @@ def audit(root: Path, *, source_label: str) -> dict[str, object]:
             continue
         readable += 1
         header_groups.update(header.coverage)
+        contract_groups.update(header.contract_coverage)
+        contract_missing_union.intersection_update(CONTRACT_REQUIRED - set(header.contract_coverage))
         if REQUIRED <= header.coverage:
             header_full_loop += 1
+        if CONTRACT_REQUIRED <= header.contract_coverage:
+            header_full_loop_contract += 1
         # The time checks are aggregate integrity hints only.  Values are never
         # retained in the receipt, and a passing check is not validation.
         time_index = next(
@@ -200,7 +216,11 @@ def audit(root: Path, *, source_label: str) -> dict[str, object]:
             "csv_files_seen": files,
             "readable_csv_files": readable,
             "files_with_all_required_full_loop_groups": header_full_loop,
+            "files_with_full_loop_contract_groups": header_full_loop_contract,
             "observed_semantic_groups": sorted(header_groups),
+            "observed_full_loop_contract_groups": sorted(contract_groups),
+            "missing_full_loop_contract_groups": sorted(CONTRACT_REQUIRED - contract_groups),
+            "contract_groups_missing_from_every_scanned_header": sorted(contract_missing_union),
             "monotonic_numeric_time_files": monotonic_time_files,
             "duplicate_numeric_time_files": duplicate_time_files,
         },

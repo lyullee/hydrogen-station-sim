@@ -18,6 +18,8 @@ import re
 from typing import Iterable, Iterator
 from zipfile import BadZipFile, ZipFile
 
+from full_loop_schema_contract import CONTRACT_REQUIRED, contract_coverage
+
 ROOT = Path(__file__).resolve().parents[1]
 SUPPORTED = {".csv", ".xlsx", ".xlsm", ".zip"}
 MAX_MEMBER_BYTES = 250 * 1024 * 1024
@@ -39,6 +41,7 @@ FULL_LOOP_REQUIRED = frozenset({"time", "pressure", "temperature", "mass_flow", 
 @dataclass(frozen=True)
 class TableSchema:
     coverage: frozenset[str]
+    contract_coverage: frozenset[str]
     row_count: int
 
 
@@ -87,12 +90,12 @@ def _table_schema(rows: Iterator[list[object]]) -> TableSchema:
         if len(buffered) >= HEADER_SCAN_ROWS:
             break
     if not buffered:
-        return TableSchema(frozenset(), 0)
+        return TableSchema(frozenset(), frozenset(), 0)
     best = max(buffered, key=lambda row: (len(_classify(row)), sum(bool(str(v or '').strip()) for v in row)))
     coverage = _classify(best)
     # Count only the rows we can safely inspect in streaming mode; the count is
     # intentionally a lower bound and is not used as validation evidence.
-    return TableSchema(coverage, max(0, len(buffered) - 1))
+    return TableSchema(coverage, contract_coverage(best), max(0, len(buffered) - 1))
 
 
 def _sha256(path: Path) -> str:
@@ -156,7 +159,9 @@ def build_receipt(
     schemas, table_count = _inspect(source)
     observed = set().union(*(set(schema.coverage) for schema in schemas)) if schemas else set()
     co_located = any(FULL_LOOP_REQUIRED <= schema.coverage for schema in schemas)
+    strict_co_located = any(CONTRACT_REQUIRED <= schema.contract_coverage for schema in schemas)
     missing = sorted(FULL_LOOP_REQUIRED - observed)
+    contract_observed = set().union(*(set(schema.contract_coverage) for schema in schemas)) if schemas else set()
     receipt: dict[str, object] = {
         "schema_version": 1,
         "artifact_type": "nbsdc_authorized_hrs_schema_intake",
@@ -181,6 +186,9 @@ def build_receipt(
             "observed_semantic_groups": sorted(observed),
             "missing_full_loop_semantic_groups": missing,
             "full_loop_channels_co_located_in_one_table": co_located,
+            "full_loop_contract_channels_co_located_in_one_table": strict_co_located,
+            "observed_full_loop_contract_groups": sorted(contract_observed),
+            "missing_full_loop_contract_groups": sorted(CONTRACT_REQUIRED - contract_observed),
         },
         "admission": {
             "full_loop_external_holdout_eligible": False,
