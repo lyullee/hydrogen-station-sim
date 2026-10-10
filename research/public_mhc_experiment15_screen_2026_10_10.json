@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "artifact_type": "public_mhc_component_channel_screen",
+  "recorded_at": "2026-10-10",
+  "status": "screened_component_only_not_runtime_admitted",
+  "source": {
+    "doi": "10.5281/zenodo.18213166",
+    "version": "v1.1",
+    "repository_path": "Dataset/Experiment 15.xlsx",
+    "source_sha256": "a44c35b7391512395d7001a2c8040dacafe25247d2fa75242c26614139b74eb7",
+    "source_bytes": 13622003,
+    "license": "CC BY 4.0"
+  },
+  "protocol": {
+    "protocol_artifact": "research/public_mhc_compressor_component_protocol_2026_10_10.json",
+    "holdout_accessed_after_protocol_freeze": true,
+    "raw_file_persisted_in_repository": false
+  },
+  "screen": {
+    "experiment_type": "single_tank_compression",
+    "sheets_present": [
+      "Cycle Data Exp.15",
+      "H2 Mass Balance Exp.15",
+      "Heat Balance Exp.15",
+      "Efficiency Exp.15",
+      "Summary Exp.15"
+    ],
+    "cycle_data_rows_including_header": 3612,
+    "elapsed_time_span_s": 1200,
+    "channel_families_present": [
+      "elapsed time",
+      "stage pressure",
+      "mass-flow meter",
+      "heat-transfer-fluid temperature",
+      "stage temperature"
+    ],
+    "reported_unit_families": [
+      "bar and barg",
+      "L/min",
+      "degC"
+    ],
+    "schema_screen_pass": true,
+    "direct_runtime_model_compatibility": false,
+    "reason": "The trace is a laboratory metal-hydride compressor experiment. Its flow channel is reported as volumetric L/min and its thermal/adsorption boundary is not the station compressor boundary represented by the runtime model; unit and boundary conversion would require a separately attested model."
+  },
+  "decision": {
+    "component_validation_score": null,
+    "runtime_parameter_application": false,
+    "full_loop_external_holdout_eligible": false,
+    "use": "schema and boundary compatibility evidence only",
+    "next_action": "Do not fit or change compressor defaults from this screen. A separate component model and preregistered conversion for standard volumetric flow are required before a numerical diagnostic."
+  },
+  "privacy": {
+    "site_identity_published": false,
+    "company_or_manufacturer_published": false,
+    "raw_rows_persisted": false
+  }
+}

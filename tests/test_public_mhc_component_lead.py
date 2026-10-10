@@ -26,3 +26,12 @@ def test_public_mhc_component_lead_is_explicitly_bounded() -> None:
     assert protocol["status"] == "protocol_frozen_diagnostic_only"
     assert protocol["protocol"]["raw_rows_persisted"] is False
     assert "dispenser and vehicle/receptacle response" in protocol["boundary"]["excluded"]
+
+    screen = json.loads(
+        (root / "research/public_mhc_experiment15_screen_2026_10_10.json")
+        .read_text(encoding="utf-8")
+    )
+    assert screen["protocol"]["holdout_accessed_after_protocol_freeze"] is True
+    assert screen["screen"]["schema_screen_pass"] is True
+    assert screen["screen"]["direct_runtime_model_compatibility"] is False
+    assert screen["decision"]["runtime_parameter_application"] is False
