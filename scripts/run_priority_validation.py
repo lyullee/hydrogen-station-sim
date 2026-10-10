@@ -198,6 +198,8 @@ def _sanitize_output(output: str) -> str:
 
 
 def main() -> int:
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--timeout-s", type=float, default=180.0)
     parser.add_argument("--no-tests", action="store_true", help="Only print current P0/P1/P2 status")
