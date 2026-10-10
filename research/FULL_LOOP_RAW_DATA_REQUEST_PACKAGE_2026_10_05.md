@@ -76,6 +76,15 @@ variable. The LLM receives only the sanitized event count, aggregate quality
 summary, and claim boundary; it cannot read the exported CSV rows through this
 path.
 
+For a station-to-vehicle export that passes the stronger trace screen, set
+`H2STATION_FULL_LOOP_RECEIPT` to its controlled `receipt.json`. If the frozen
+evaluator has also produced a result outside the repository, set
+`H2STATION_FULL_LOOP_RESULT` to that result JSON. The LLM then receives only
+row count, duration, scope, quality flags, and bounded metric aggregates. A
+`full_loop_trace_ready` receipt or a single passing frozen evaluation remains
+an evaluator input; it does not by itself promote the repository-level
+full-loop gate or the IJHE claim.
+
 Run the bounded runtime replay before using the bundle as evidence:
 
 ```powershell

@@ -28,6 +28,7 @@ from .local_evidence import (
     public_evidence_inventory_summary,
 )
 from .component_bundle_evidence import component_bundle_evidence
+from .full_loop_bundle_evidence import full_loop_bundle_evidence
 
 
 def _ijhe_readiness_ledger() -> dict[str, Any]:
@@ -8456,6 +8457,9 @@ def build_evidence_manifest(
     component_bundle = component_bundle_evidence(frame)
     if component_bundle is not None:
         envelope["response_evidence"]["confidential_component_bundle"] = component_bundle
+    full_loop_bundle = full_loop_bundle_evidence(frame)
+    if full_loop_bundle is not None:
+        envelope["response_evidence"]["confidential_full_loop_bundle"] = full_loop_bundle
     # Expose only the aggregate readiness state so the LLM cannot infer that
     # passing station-side checks imply full-loop or journal-ready validation.
     envelope["response_evidence"][
@@ -9822,6 +9826,29 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
             "replay_diagnostic": component_bundle.get("replay_diagnostic"),
             "claim_limit": short(component_bundle.get("claim_limit"), 320),
         }
+    full_loop_bundle = evidence.get("confidential_full_loop_bundle")
+    if isinstance(full_loop_bundle, dict):
+        summary["confidential_full_loop_bundle"] = {
+            "evidence_role": full_loop_bundle.get("evidence_role"),
+            "status": full_loop_bundle.get("status"),
+            "rows": full_loop_bundle.get("rows"),
+            "time_duration_s": full_loop_bundle.get("time_duration_s"),
+            "evaluation_scope": full_loop_bundle.get("evaluation_scope"),
+            "station_to_vehicle_trace_ready": full_loop_bundle.get(
+                "station_to_vehicle_trace_ready"
+            ) is True,
+            "cascade_dispatch_evaluable": full_loop_bundle.get(
+                "cascade_dispatch_evaluable"
+            ) is True,
+            "full_loop_trace_ready": full_loop_bundle.get("full_loop_trace_ready") is True,
+            "evaluation_input_ready": full_loop_bundle.get("evaluation_input_ready") is True,
+            "frozen_evaluation_required": True,
+            "full_loop_external_validation_supported": False,
+            "frozen_evaluation_result": full_loop_bundle.get(
+                "frozen_evaluation_result"
+            ),
+            "claim_limit": short(full_loop_bundle.get("claim_limit"), 320),
+        }
     readiness = evidence.get("validation_readiness")
     if isinstance(readiness, dict):
         summary["validation_readiness"] = {
@@ -10220,6 +10247,7 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
     ) or {}
     local_revalidation = response.get("local_station_data_revalidation") or {}
     component_bundle = response.get("confidential_component_bundle") or {}
+    full_loop_bundle = response.get("confidential_full_loop_bundle") or {}
     readiness = response.get("validation_readiness") or {}
     local_station_asset_screen = response.get(
         "confidential_local_station_asset_screen"
@@ -10814,6 +10842,33 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                     "claim_limit": short(component_bundle.get("claim_limit"), 320),
                 }
             } if component_bundle else {}),
+            **({
+                "confidential_full_loop_bundle": {
+                    "evidence_role": full_loop_bundle.get("evidence_role"),
+                    "status": full_loop_bundle.get("status"),
+                    "rows": full_loop_bundle.get("rows"),
+                    "time_duration_s": full_loop_bundle.get("time_duration_s"),
+                    "evaluation_scope": full_loop_bundle.get("evaluation_scope"),
+                    "station_to_vehicle_trace_ready": full_loop_bundle.get(
+                        "station_to_vehicle_trace_ready"
+                    ) is True,
+                    "cascade_dispatch_evaluable": full_loop_bundle.get(
+                        "cascade_dispatch_evaluable"
+                    ) is True,
+                    "full_loop_trace_ready": full_loop_bundle.get(
+                        "full_loop_trace_ready"
+                    ) is True,
+                    "evaluation_input_ready": full_loop_bundle.get(
+                        "evaluation_input_ready"
+                    ) is True,
+                    "frozen_evaluation_required": True,
+                    "full_loop_external_validation_supported": False,
+                    "frozen_evaluation_result": full_loop_bundle.get(
+                        "frozen_evaluation_result"
+                    ),
+                    "claim_limit": short(full_loop_bundle.get("claim_limit"), 320),
+                }
+            } if full_loop_bundle else {}),
             **({
                 "local_actionable_data_scope": {
                     "evidence_role": actionable_data_scope.get("evidence_role"),
@@ -12515,6 +12570,7 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
     ) or {}
     local_revalidation = evidence.get("local_station_data_revalidation") or {}
     component_bundle = evidence.get("confidential_component_bundle") or {}
+    full_loop_bundle = evidence.get("confidential_full_loop_bundle") or {}
     readiness = evidence.get("validation_readiness") or {}
     local_station_asset_screen = evidence.get(
         "confidential_local_station_asset_screen"
@@ -12819,6 +12875,27 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
             "runtime_parameter_application": False,
             "replay_diagnostic": component_bundle.get("replay_diagnostic"),
             "claim_limit": component_bundle.get("claim_limit"),
+        },
+        "confidential_full_loop_bundle": {
+            "evidence_role": full_loop_bundle.get("evidence_role"),
+            "status": full_loop_bundle.get("status"),
+            "rows": full_loop_bundle.get("rows"),
+            "time_duration_s": full_loop_bundle.get("time_duration_s"),
+            "evaluation_scope": full_loop_bundle.get("evaluation_scope"),
+            "station_to_vehicle_trace_ready": full_loop_bundle.get(
+                "station_to_vehicle_trace_ready"
+            ) is True,
+            "cascade_dispatch_evaluable": full_loop_bundle.get(
+                "cascade_dispatch_evaluable"
+            ) is True,
+            "full_loop_trace_ready": full_loop_bundle.get("full_loop_trace_ready") is True,
+            "evaluation_input_ready": full_loop_bundle.get("evaluation_input_ready") is True,
+            "frozen_evaluation_required": True,
+            "full_loop_external_validation_supported": False,
+            "frozen_evaluation_result": full_loop_bundle.get(
+                "frozen_evaluation_result"
+            ),
+            "claim_limit": full_loop_bundle.get("claim_limit"),
         },
         "confidential_local_station_attestation_request": {
             "evidence_artifact": local_attestation_request.get("artifact"),

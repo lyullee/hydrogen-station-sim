@@ -32,3 +32,5 @@ def test_request_markdown_mentions_hashes_and_holdout_freeze():
     assert "three-event" in text
     assert "export_confidential_component_bundle.py" in text
     assert "H2STATION_COMPONENT_BUNDLE_RECEIPT" in text
+    assert "H2STATION_FULL_LOOP_RECEIPT" in text
+    assert "H2STATION_FULL_LOOP_RESULT" in text
