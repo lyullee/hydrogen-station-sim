@@ -31,6 +31,11 @@ development result.
   it cannot be treated as an independent holdout, runtime calibration, or safety
   validation.
 
+- The same evidence surface now exposes the MC Type-IV geometry sensitivity:
+  capacity-EOS reached 4/8 joint screens versus 0/8 for the frozen Tables-Method
+  volume. Rule selection remains prohibited until an untouched vessel-geometry
+  holdout is available.
+
 ## 2026-10-10 - Inspect scientific containers in local data discovery
 
 Status: implemented; MATLAB/HDF5 channel-name screening completed without

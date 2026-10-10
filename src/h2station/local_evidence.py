@@ -40,6 +40,9 @@ _LOCAL_DOCUDATA_CANDIDATE_SCAN = _ROOT / (
 _CLOSED_LOOP_CALIBRATED_DIAGNOSTIC = _ROOT / (
     "research/closed_loop_calibrated_confirmatory_diagnostic_2026_10_10.json"
 )
+_MC_GEOMETRY_TRANSFER_DIAGNOSTIC = _ROOT / (
+    "research/mc_geometry_transfer_diagnostic_2026_10_08.json"
+)
 
 
 def _read_json(path: Path) -> dict[str, Any]:
@@ -170,6 +173,79 @@ def _closed_loop_calibrated_diagnostic_summary() -> dict[str, Any] | None:
             "runtime_parameter_application": False,
             "full_loop_external_validation_ready": False,
             "promotion_prohibited": True,
+            "claim_limit": str(record["claim_boundary"]),
+        }
+    except (OSError, KeyError, TypeError, ValueError, json.JSONDecodeError):
+        return None
+
+
+def _mc_geometry_transfer_diagnostic_summary() -> dict[str, Any] | None:
+    """Expose aggregate MC geometry sensitivity without selecting a rule."""
+
+    try:
+        record = _read_json(_MC_GEOMETRY_TRANSFER_DIAGNOSTIC)
+        runs = record.get("runs") or []
+        required = (
+            record.get("schema_version") == 1,
+            record.get("diagnostic_type")
+            == "MC Default Type-IV geometry-transfer sensitivity",
+            record.get("post_outcome") is True,
+            record.get("parameter_fitting") is False,
+            record.get("runtime_geometry_changed") is False,
+            record.get("geometry_rule_selection_prohibited") is True,
+            len(runs) == 3,
+            all(
+                isinstance(item, dict)
+                and isinstance(item.get("geometry_rule"), str)
+                and item.get("case_count") == 8
+                and isinstance(item.get("joint_screening_pass_count"), int)
+                and isinstance(item.get("aggregate"), dict)
+                for item in runs
+            ),
+            isinstance(record.get("claim_boundary"), str),
+        )
+        if not all(required):
+            return None
+        safe_runs = []
+        for item in runs:
+            aggregate = item["aggregate"]
+            safe_runs.append({
+                "geometry_rule": item["geometry_rule"],
+                "effective_volume_multiplier": float(
+                    item["effective_volume_multiplier"]
+                ),
+                "case_count": 8,
+                "joint_screening_pass_count": int(
+                    item["joint_screening_pass_count"]
+                ),
+                "aggregate": {
+                    key: float(aggregate[key])
+                    for key in (
+                        "pressure_rmse_mpa_mean",
+                        "temperature_rmse_c_mean",
+                        "soc_rmse_percentage_points_mean",
+                        "soc_final_abs_error_percentage_points_mean",
+                    )
+                },
+            })
+        identifiability = record.get("outcome_derived_identifiability") or {}
+        return {
+            "status": "diagnostic_only",
+            "evidence_role": str(record.get("evidence_role") or ""),
+            "runs": safe_runs,
+            "outcome_derived_identifiability": {
+                key: identifiability.get(key)
+                for key in (
+                    "case_count",
+                    "effective_volume_ratio_min",
+                    "effective_volume_ratio_median",
+                    "effective_volume_ratio_max",
+                    "use_for_parameter_selection_prohibited",
+                )
+            },
+            "runtime_geometry_changed": False,
+            "geometry_rule_selection_prohibited": True,
+            "full_loop_external_validation_ready": False,
             "claim_limit": str(record["claim_boundary"]),
         }
     except (OSError, KeyError, TypeError, ValueError, json.JSONDecodeError):
@@ -755,6 +831,13 @@ def public_evidence_inventory_summary() -> dict[str, Any]:
             "full_loop_external_validation_ready": False,
             "promotion_prohibited": True,
         },
+        "public_mc_geometry_transfer_diagnostic": {
+            "status": "unavailable",
+            "runs": [],
+            "runtime_geometry_changed": False,
+            "geometry_rule_selection_prohibited": True,
+            "full_loop_external_validation_ready": False,
+        },
     }
     try:
         record = _read_json(_KHK_ACCIDENTS)
@@ -1049,4 +1132,7 @@ def public_evidence_inventory_summary() -> dict[str, Any]:
     calibrated = _closed_loop_calibrated_diagnostic_summary()
     if calibrated is not None:
         result["public_closed_loop_calibrated_diagnostic"] = calibrated
+    geometry = _mc_geometry_transfer_diagnostic_summary()
+    if geometry is not None:
+        result["public_mc_geometry_transfer_diagnostic"] = geometry
     return result

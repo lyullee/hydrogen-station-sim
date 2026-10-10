@@ -20,3 +20,15 @@ def test_calibrated_confirmatory_diagnostic_is_grounded_as_non_validation():
     ]
     assert compact["mean_metrics"]["pressure_rmse_mpa"] == 4.190430944003755
     assert "not a new independent holdout" in compact["claim_limit"]
+
+
+def test_mc_geometry_transfer_diagnostic_is_grounded_without_rule_promotion():
+    manifest = build_evidence_manifest(
+        {"time_s": 1.0}, {}, [], False, question="탱크 모델 검증 상태"
+    )
+    evidence = manifest["response_evidence"][
+        "public_mc_geometry_transfer_diagnostic"
+    ]
+    assert evidence["status"] == "diagnostic_only"
+    assert evidence["geometry_rule_selection_prohibited"] is True
+    assert evidence["full_loop_external_validation_ready"] is False

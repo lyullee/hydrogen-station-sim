@@ -76,6 +76,17 @@ def test_validation_evidence_surface_is_privacy_bounded_and_claim_limited() -> N
     assert calibrated["full_loop_external_validation_ready"] is False
     assert calibrated["promotion_prohibited"] is True
     assert "not a new independent holdout" in calibrated["claim_limit"].lower()
+    geometry = inventory["public_mc_geometry_transfer_diagnostic"]
+    assert geometry["status"] == "diagnostic_only"
+    assert len(geometry["runs"]) == 3
+    capacity_eos = next(
+        item for item in geometry["runs"]
+        if item["geometry_rule"] == "capacity_eos_volume"
+    )
+    assert capacity_eos["joint_screening_pass_count"] == 4
+    assert geometry["runtime_geometry_changed"] is False
+    assert geometry["geometry_rule_selection_prohibited"] is True
+    assert geometry["full_loop_external_validation_ready"] is False
     assert all(
         set(archive) == {
             "scope",

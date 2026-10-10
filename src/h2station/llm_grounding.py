@@ -8062,6 +8062,18 @@ def build_evidence_manifest(
         envelope["response_evidence"][
             "local_scientific_container_discovery"
         ] = scientific_discovery
+    geometry_diagnostic = (
+        public_inventory.get("public_mc_geometry_transfer_diagnostic")
+        if isinstance(public_inventory, dict)
+        else None
+    )
+    if (
+        isinstance(geometry_diagnostic, dict)
+        and geometry_diagnostic.get("status") == "diagnostic_only"
+    ):
+        envelope["response_evidence"][
+            "public_mc_geometry_transfer_diagnostic"
+        ] = geometry_diagnostic
     nrel_screen = (
         public_inventory.get("public_station_tank_boundary")
         if isinstance(public_inventory, dict)
