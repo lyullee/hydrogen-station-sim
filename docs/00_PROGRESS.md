@@ -1,5 +1,18 @@
 # Development Progress
 
+## 2026-10-10 - Split-channel full-loop intake for real exports
+
+- Added a streaming intake path for events delivered as separate station and
+  vehicle CSV exports. It compares the two relative time axes row by row,
+  rejects row-count/time mismatches, and preserves only aggregate quality flags
+  and a combined digest.
+- This removes a practical data-ingestion bottleneck without combining
+  unrelated station and vehicle traces. A split bundle still needs common
+  sampling, non-empty protocol phases, channel-role attestation and a frozen
+  pre-access protocol before any full-loop claim can be made.
+- Focused privacy-safe intake tests now pass **12 tests**; no readiness gate was
+  promoted by this change.
+
 ## 2026-10-10 - High-impact full-loop intake gate tightened
 
 - Prioritized the gate that directly determines whether the station-to-vehicle

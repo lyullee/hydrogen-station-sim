@@ -5,6 +5,7 @@ from pathlib import Path
 
 from h2station.privacy_safe_full_loop_intake import (
     PilotIntakeRules,
+    validate_privacy_safe_split_event_bundle,
     validate_privacy_safe_pilot_bundle,
 )
 
@@ -179,3 +180,59 @@ def test_empty_protocol_phase_is_rejected(tmp_path: Path) -> None:
     event = report["event_reports"][0]
     assert event["schema_valid"] is False
     assert any("protocol_phase at row 3 is empty" in error for error in event["errors"])
+
+
+def test_split_station_vehicle_exports_are_checked_without_merging_raw_rows(
+    tmp_path: Path,
+) -> None:
+    pairs = []
+    for index in range(3):
+        station = tmp_path / f"station_{index}.csv"
+        vehicle = tmp_path / f"vehicle_{index}.csv"
+        station.write_text(
+            "elapsed_time_s,station_pressure_mpa,delivered_gas_temperature_c,mass_flow_g_s,protocol_phase\n"
+            "0,45,-35,10,start\n"
+            "1,46,-34,10,fill\n",
+            encoding="utf-8",
+        )
+        vehicle.write_text(
+            "elapsed_time_s,vehicle_pressure_mpa,vehicle_temperature_c\n"
+            "0,5,25\n"
+            "1,6,28\n",
+            encoding="utf-8",
+        )
+        pairs.append((station, vehicle))
+
+    report = validate_privacy_safe_split_event_bundle(pairs)
+
+    assert report["status"] == "READY_FOR_FULL_LOOP_PROTOCOL_FREEZE"
+    assert report["full_loop_readiness"]["common_elapsed_time_axis"] is True
+    assert report["vehicle_boundary_complete_event_count"] == 3
+    assert "station_0.csv" not in str(report)
+    assert "vehicle_0.csv" not in str(report)
+
+
+def test_split_station_vehicle_time_mismatch_fails_closed(tmp_path: Path) -> None:
+    pairs = []
+    for index in range(3):
+        station = tmp_path / f"station_{index}.csv"
+        vehicle = tmp_path / f"vehicle_{index}.csv"
+        station.write_text(
+            "elapsed_time_s,station_pressure_mpa,delivered_gas_temperature_c,mass_flow_g_s,protocol_phase\n"
+            "0,45,-35,10,start\n"
+            "1,46,-34,10,fill\n",
+            encoding="utf-8",
+        )
+        vehicle_time = "1.01" if index == 1 else "1"
+        vehicle.write_text(
+            "elapsed_time_s,vehicle_pressure_mpa,vehicle_temperature_c\n"
+            f"0,5,25\n{vehicle_time},6,28\n",
+            encoding="utf-8",
+        )
+        pairs.append((station, vehicle))
+
+    report = validate_privacy_safe_split_event_bundle(pairs)
+
+    assert report["status"] == "SCHEMA_INCOMPLETE"
+    assert report["event_reports"][1]["schema_valid"] is False
+    assert "channel_time_axis_mismatch" in report["event_reports"][1]["errors"]

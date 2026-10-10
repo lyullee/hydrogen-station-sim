@@ -21,6 +21,17 @@
 
 사이트명, 회사명, 제조사, 시리얼, 주소, 달력 날짜와 실제 타임스탬프 열은 포함하지 않는다. 이벤트 파일명도 결과에는 기록되지 않는다.
 
+station과 차량 로그가 별도 export로 제공되는 경우에는 파일을 임의로 합치지
+않고 `validate_privacy_safe_split_event_bundle`에 `(station_csv, vehicle_csv)`
+쌍으로 전달한다. 검사기는 두 파일을 행 단위로 스트리밍하며 `elapsed_time_s`
+축을 기본 1 µs 허용오차로 대조한다. 행 수가 다르거나 시간축이 어긋나면
+`channel_row_count_mismatch` 또는 `channel_time_axis_mismatch`로 해당 이벤트를
+실패 처리하고, 원시 행은 저장하지 않는다. 이 경로도 공통 샘플 간격과 공정단계
+검사를 통과해야 full-loop 프로토콜 동결 후보가 된다.
+역할 확인서와 프로토콜·모델·평가기 해시까지 준비된 경우에는 같은 쌍을
+`build_privacy_safe_split_freeze_manifest`에 전달해 분리된 원자료를 합치지
+않은 채 pre-access freeze manifest를 만들 수 있다.
+
 ## 제출 전 자동 검사
 
 보관자에게는 [빈 이벤트 템플릿](privacy_safe_full_loop_event_template.csv)과 [채널 역할 예시](privacy_safe_full_loop_channel_roles.example.json)를 함께 전달한다. 템플릿은 헤더만 포함하며 실제 행·시설명·파일명 규칙을 저장소에 추가하지 않는다. 이벤트별 원본은 보관자가 보관하고, 평가 담당자에게는 아래 사전검사 결과와 해시만 전달한다.
