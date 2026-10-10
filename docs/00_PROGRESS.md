@@ -803,3 +803,22 @@ Verification:
 - After the wiring change, all three parallel priority tracks passed again in
   7.053 seconds; the run is captured in
   `research/priority_validation_run_2026_10_10_after_geometry_wiring.json`.
+
+## 2026-10-10 - Continuous-monitoring forecast cost bounded
+
+Status: implemented; focused regression passed.
+
+- The live API keeps the complete frame history for replay, but the causal
+  station-pressure advisory now receives a bounded recent window sized from
+  the requested solver step. This removes the previous repeated full-history
+  scan that made long continuous runs grow toward O(n²) forecast work.
+- The bound is an internal performance guard only. It does not alter process
+  states, controller commands, safety limits, ESD behavior, or the forecast
+  claim boundary.
+
+Verification:
+
+- `tests/test_station_pressure_forecast.py`, `tests/test_integration.py` and
+  `tests/test_priority_validation.py`: 8 passed.
+- The three independent priority tracks remain concurrent and pass in 6.857 s;
+  no readiness gate was promoted by this optimization.

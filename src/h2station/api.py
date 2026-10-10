@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import asyncio
+from collections import deque
 from contextvars import ContextVar
 from copy import deepcopy
 import json
@@ -772,6 +773,16 @@ def _execute_simulation(job_id: str, request: SimulationInput) -> None:
                 built.simulator.fault_injector.schedule = FaultSchedule(tuple(registry.values()))
         hazop_monitor = HazopMonitor(run_id=job_id, store=EventStore(), virtual_detectors=True)
         built.simulator.hazop_monitor = hazop_monitor
+        # The causal pressure forecast only consumes a ten-second prefix, but
+        # the monitor retains the complete run for operators and replay.  Do
+        # not pass that unbounded list into the forecast on every sample: that
+        # turns a long continuous run into an O(n²) workload.  Keep a bounded
+        # causal window sized from the requested step (with a hard cap for
+        # pathological sub-millisecond requests), so forecast cost stays
+        # constant while the operator-facing replay remains complete.
+        forecast_history: deque[dict[str, Any]] = deque(
+            maxlen=max(256, min(10000, int(np.ceil(15.0 / request.control_period_s))))
+        )
         _set_job(
             job_id,
             progress=20,
@@ -983,8 +994,9 @@ def _execute_simulation(job_id: str, request: SimulationInput) -> None:
                 # The station-side forecast is advisory only.  It uses a
                 # causal prefix and the committed chronological holdout gain;
                 # it never changes the physics, controller settings or ESD.
+                forecast_history.append(frame)
                 frame["station_pressure_forecast"] = forecast_storage_pressure(
-                    [*frames, frame]
+                    forecast_history
                 )
                 if process_runtime is not None:
                     process_runtime.safety.observe_hazards(sample.active_faults)
