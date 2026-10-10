@@ -1749,6 +1749,9 @@ NREL H2FillS physical tank screen is now visible in the P1 result.
   `screening_pass_count`/`screening_pass_fraction` results. Previously the
   NREL result (0/7) was treated as unreported, so the P1 lane could appear
   ready even though its physical screen was negative.
+- The same parser now recognizes nested `joint_pass` results, so the H2SAFE
+  spatial diagnostic is also reported as a negative scientific screen instead
+  of silently remaining `NOT_REPORTED`.
 - The corrected P1 run completes in parallel in about 16 s, reports
   `nrel_h2fills_hdvs_tank` as the scientific failure, and leaves all runtime
   parameters and validation gates unchanged.
@@ -1756,5 +1759,5 @@ NREL H2FillS physical tank screen is now visible in the P1 result.
 Verification:
 
 - Priority parser and focus tests: 5 passed.
-- P1 lane: process PASS, scientific screen FAIL only for the NREL 0/7 tank
-  screen; readiness is correctly `BLOCKED`.
+- P1 lane: process PASS, scientific screen FAIL for the H2SAFE spatial screen
+  and the NREL 0/7 tank screen; readiness is correctly `BLOCKED`.

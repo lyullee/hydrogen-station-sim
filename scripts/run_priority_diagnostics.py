@@ -175,7 +175,7 @@ def _scientific_screen(payload: dict[str, object] | None) -> dict[str, object]:
 
     def collect(value: object) -> None:
         if isinstance(value, dict):
-            for key in ("joint_primary_screen_pass", "screening_pass"):
+            for key in ("joint_primary_screen_pass", "screening_pass", "joint_pass"):
                 flag = value.get(key)
                 if isinstance(flag, bool):
                     flags.append(flag)
