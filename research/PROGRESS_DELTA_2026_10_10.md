@@ -198,3 +198,14 @@ validation.
 - `research/h2protocol_capacity_eos_sensitivity_2026_10_10.json`
 - `research/ijhe_readiness_audit_2026_10_11.json`
 - `research/ijhe_readiness_audit_2026_10_11.md`
+
+## Evidence freshness wiring (2026-10-11)
+
+The latest privacy-bounded local-station inventory is now selected first by both
+LLM grounding and runtime coverage loading, with the 2026-10-08 artifact retained
+as a fallback for older checkouts. A new coverage snapshot was generated without
+raw rows or identifying paths and passed the privacy scan. The targeted grounding,
+coverage and evidence-API lane passed 32 tests. Re-running the source-hash audits
+restored the integrity gates; the readiness audit remains **127 PASS / 10 FAIL / 7
+PENDING (88.2% gate closure)**, with bounded and full objective readiness still
+false.

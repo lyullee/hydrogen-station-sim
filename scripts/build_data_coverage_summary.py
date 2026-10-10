@@ -21,11 +21,24 @@ def _read(root: Path, relative: str) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+def _read_first_existing(root: Path, relatives: tuple[str, ...]) -> tuple[dict[str, Any], str]:
+    """Read the newest privacy-bounded artifact while keeping an old fallback."""
+
+    for relative in relatives:
+        path = root / relative
+        if path.is_file():
+            return json.loads(path.read_text(encoding="utf-8")), relative
+    return _read(root, relatives[-1]), relatives[-1]
+
+
 def build_summary(root: Path) -> dict[str, Any]:
     readiness = _read(root, "research/ijhe_readiness_audit.json")
-    local = _read(
+    local, local_artifact = _read_first_existing(
         root,
-        "research/local_confidential_station_data_utilization_2026_10_08.json",
+        (
+            "research/local_confidential_station_data_utilization_2026_10_10.json",
+            "research/local_confidential_station_data_utilization_2026_10_08.json",
+        ),
     )
     replay = _read(root, "research/local_station_runtime_profile_integration_2026_10_09.json")
     tank = _read(root, "research/public_type_iv_tank_runtime_calibration_2026_10_07.json")
@@ -148,7 +161,7 @@ def build_summary(root: Path) -> dict[str, Any]:
             {
                 "id": "owner_station_side_dynamics",
                 "status": "ACTIONABLE",
-                "evidence": "research/local_confidential_station_data_utilization_2026_10_08.json",
+                "evidence": local_artifact,
                 "coverage": {
                     "deduplicated_rows": inventory["deduplicated_data_rows"],
                     "ordered_high_bank_pressure_cycles": utilization["ordered_high_bank_pressure_cycles"],

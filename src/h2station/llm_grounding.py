@@ -5943,9 +5943,12 @@ def _confidential_local_station_utilization_evidence() -> dict[str, Any] | None:
     row is allowed through this function.
     """
 
-    path = Path(__file__).resolve().parents[2] / (
-        "research/local_confidential_station_data_utilization_2026_10_08.json"
+    root = Path(__file__).resolve().parents[2]
+    candidates = (
+        root / "research/local_confidential_station_data_utilization_2026_10_10.json",
+        root / "research/local_confidential_station_data_utilization_2026_10_08.json",
     )
+    path = next((candidate for candidate in candidates if candidate.is_file()), candidates[-1])
     try:
         record = json.loads(path.read_text(encoding="utf-8"))
     except (OSError, ValueError, json.JSONDecodeError):
@@ -5978,7 +5981,7 @@ def _confidential_local_station_utilization_evidence() -> dict[str, Any] | None:
     ):
         return None
     return {
-        "artifact": "research/local_confidential_station_data_utilization_2026_10_08.json",
+        "artifact": path.relative_to(root).as_posix(),
         "evidence_role": "privacy-bounded aggregate local station-data utilization",
         "inventory": {
             key: inventory.get(key)

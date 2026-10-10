@@ -23,7 +23,14 @@ _ADJACENT_PROCESS = _ROOT / "research/local_adjacent_hydrogen_data_discovery_202
 _DOCUDATA_DISCOVERY = _ROOT / "research/local_docudata_full_discovery_2026_10_09.json"
 _ASSET_SCREEN = _ROOT / "research/local_station_asset_screen_2026_10_09.json"
 _REVALIDATION = _ROOT / "research/local_station_data_revalidation_2026_10_09.json"
-_DATA_COVERAGE = _ROOT / "research/data_coverage_summary_2026_10_10.json"
+_DATA_COVERAGE_CANDIDATES = (
+    _ROOT / "research/data_coverage_summary_2026_10_11.json",
+    _ROOT / "research/data_coverage_summary_2026_10_10.json",
+)
+_DATA_COVERAGE = next(
+    (path for path in _DATA_COVERAGE_CANDIDATES if path.is_file()),
+    _DATA_COVERAGE_CANDIDATES[-1],
+)
 _VALIDATION_GAP_TRIAGE = _ROOT / "research/validation_gap_triage_2026_10_10.json"
 _PRIVATE_FULL_LOOP_SCHEMA = _ROOT / "research/private_full_loop_schema_recheck_2026_10_10.json"
 _PRIVATE_RECHARGE_SCHEMA = _ROOT / "research/private_recharge_multitrace_schema_recheck_2026_10_10.json"
