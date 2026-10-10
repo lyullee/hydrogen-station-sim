@@ -800,3 +800,6 @@ Verification:
 - One public H2P-L03 capacity-EOS smoke replay completed successfully.
 - The NREL validation, public-validation and priority-runner suites passed:
   33 tests.
+- After the wiring change, all three parallel priority tracks passed again in
+  7.053 seconds; the run is captured in
+  `research/priority_validation_run_2026_10_10_after_geometry_wiring.json`.
