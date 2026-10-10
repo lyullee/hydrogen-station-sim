@@ -1,5 +1,24 @@
 # Development Progress
 
+## 2026-10-10 - Prepare the accident-casebook review packet
+
+Status: machine preparation complete; human gates remain intentionally open.
+
+- Rebuilt the 24-case HIAD holdout coordinator packet and verified that the
+  same casebook hash, case count, prescreen CSV, HTML review form and machine
+  preflight are carried through the handoff.
+- The machine prescreen flags 16 high, 6 medium and 2 low hindsight-leakage
+  candidates and suggests 37 sentence removals. These are advisory only; the
+  source casebook was not modified automatically.
+- The packet is ready for a qualified non-rating coordinator. Response
+  collection remains fail-closed until the coordinator review and institutional
+  ethics/exemption determination are recorded.
+
+Verification:
+
+- Reviewer packet audit: **all machine checks passed**.
+- Human review status: **ready for handoff; response collection blocked**.
+
 ## 2026-10-10 - Refresh readiness audit after runtime integrity update
 
 Status: implemented; the audit is current and still fail-closed.
