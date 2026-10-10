@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "artifact_type": "external_full_loop_data_recheck",
+  "rechecked_at": "2026-10-11",
+  "gate": "new untouched external full-loop fueling validation",
+  "status": "NO_NEW_ELIGIBLE_PUBLIC_RAW_SET_IDENTIFIED",
+  "purpose": "Record newly located public evidence and preserve the distinction between an experiment described in a publication and an eligible machine-readable holdout.",
+  "eligibility_boundary": {
+    "required": [
+      "independent physical fueling experiment",
+      "common-time-base vehicle or receptacle pressure",
+      "mass flow or transferred mass",
+      "units and initial conditions",
+      "protocol or pressure-ramp metadata",
+      "reuse terms permitting derived results"
+    ],
+    "not_sufficient": [
+      "plot-only measurements",
+      "aggregate fill summaries",
+      "raw data available only on request",
+      "simulator-generated traces"
+    ]
+  },
+  "candidates": [
+    {
+      "id": "fch2rail_2025_dispenser_measurement",
+      "title": "Development, application and optimization of hydrogen refueling processes for railway vehicles",
+      "source_url": "https://elib.dlr.de/213625/1/manuscript_final_published_version.pdf",
+      "source_role": "independent real refueling experiment and model-validation lead",
+      "observed": {
+        "physical_experiment": true,
+        "station_and_vehicle_measurements_described": true,
+        "vehicle_tank_pressure_and_temperature_described": true,
+        "dispenser_pressure_temperature_mass_flow_described": true,
+        "machine_readable_common_timebase_public": false,
+        "reuse_terms_for_raw_or_derived_trace": "not stated on the publication page"
+      },
+      "decision": "REQUEST_RAW_TRACE",
+      "claim_boundary": "The paper supports a data request and operating-range context; its plotted example cannot close the primary full-loop holdout gate."
+    },
+    {
+      "id": "zbt_2026_hrs_sampling_experiment",
+      "title": "Representative Hydrogen Sampling at Hydrogen Refuelling Stations: Interplay of Sampling Strategy and Station Parameters",
+      "doi": "10.3390/cleantechnol8030091",
+      "source_url": "https://www.mdpi.com/2571-8797/8/3/91",
+      "source_role": "independent HRS dispenser/tank instrumentation and cascade-selection lead",
+      "observed": {
+        "physical_experiment": true,
+        "dispenser_and_tank_data_logged": true,
+        "vehicle_or_sink": "portable 70 MPa Type-IV tank and a 55 L sampling-device tank",
+        "station_storage_and_protocol_context": true,
+        "machine_readable_common_timebase_public": false,
+        "data_availability": "raw data available from authors on request"
+      },
+      "decision": "REQUEST_RAW_TRACE",
+      "claim_boundary": "The article supports a data request and cascade/protocol context; no public raw trace is promoted to validation."
+    },
+    {
+      "id": "nrel_h2iq_2024_hd_fast_flow_summary",
+      "title": "Hydrogen Fuel Dispensing for Medium- and Heavy-Duty Vehicles",
+      "source_url": "https://www.energy.gov/sites/default/files/2024-04/h2iqhour-03262024.pdf",
+      "source_role": "independent heavy-duty operating-range context",
+      "observed": {
+        "physical_experiment": true,
+        "pressure_temperature_flow_channels_shown": true,
+        "machine_readable_common_timebase_public": false,
+        "raw_trace_public": false
+      },
+      "decision": "REPORT_SUMMARY_ONLY",
+      "claim_boundary": "The public briefing supports face-validity ranges and a data-request lead, but its plots and aggregate endpoints cannot close the full-loop gate."
+    }
+  ],
+  "outcome": {
+    "new_eligible_public_raw_set": false,
+    "full_loop_gate_status_unchanged": "FAIL",
+    "next_action": "Send the existing de-identified trace request package to the FCH2RAIL, ZBT and NREL data custodians; quarantine and hash any response before protocol freeze and model evaluation."
+  }
+}
