@@ -1,5 +1,24 @@
 # Development Progress
 
+## 2026-10-10 - Add split-log discovery and template exclusion
+
+Status: implemented; split candidates remain zero in the scanned archives.
+
+- The local discovery scanner now checks for matching station/vehicle file
+  pairs in the same directory using only an in-memory normalized stem. It
+  reports an aggregate lead count without emitting paths, filenames or
+  headers.
+- Static `template`, `schema` and `example` files are excluded from measured
+  trace candidates so an input template cannot inflate the apparent data
+  inventory.
+- Re-running both local archives found **0 split-pair leads** and **0 eligible
+  full-loop candidates**. The result remains discovery-only until a custodian
+  attests units, clock alignment, boundary roles and reuse rights.
+
+Verification:
+
+- Workspace scanner tests: **5 passed**.
+
 ## 2026-10-10 - Broaden explicit full-loop logger aliases
 
 Status: implemented; ambiguity and unitless boundary guessing remain blocked.

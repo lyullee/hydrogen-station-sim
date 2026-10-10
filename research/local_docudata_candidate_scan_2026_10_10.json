@@ -12,7 +12,7 @@
     "candidate_values_persisted": false
   },
   "scan": {
-    "machine_readable_files": 47061,
+    "machine_readable_files": 47062,
     "path_keyword_candidates": 375,
     "csv_tsv_headers_screened": 14989,
     "header_parse_errors": 0,
@@ -24,17 +24,19 @@
       "vehicle_or_dispenser": 1282
     },
     "coarse_candidate_classes": {
-      "control_or_protocol_candidate": 667,
-      "flow_or_mass_candidate": 1776,
-      "pressure_candidate": 368,
+      "control_or_protocol_candidate": 665,
+      "flow_or_mass_candidate": 1757,
+      "pressure_candidate": 367,
       "release_rig_experiment_candidate": 139,
-      "temperature_candidate": 396,
-      "unclassified_machine_readable": 42225,
-      "vehicle_or_dispenser_candidate": 1490
-    }
+      "temperature_candidate": 324,
+      "unclassified_machine_readable": 42323,
+      "vehicle_or_dispenser_candidate": 1487
+    },
+    "split_pair_candidate_count": 0
   },
   "eligibility": {
     "full_loop_candidate_count": 0,
+    "split_pair_candidates_require_attestation": 0,
     "decision": "DISCOVERY_ONLY_UNTIL_ATTESTED",
     "required_attestation": [
       "common time base and units",

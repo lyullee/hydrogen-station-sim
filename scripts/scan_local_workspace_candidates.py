@@ -70,7 +70,21 @@ HEADER_FAMILIES = {
 RELEASE_RIG_PATTERN = re.compile(
     r"release|rig|jet|aperture|누출|분출", re.IGNORECASE
 )
-TIME_PATTERN = re.compile(r"^time$|timestamp|datetime|zeit|시간|시각", re.IGNORECASE)
+STATIC_TEMPLATE_PATTERN = re.compile(
+    r"(?:^|[_\- .])(?:template|schema|example)(?:$|[_\- .])",
+    re.IGNORECASE,
+)
+TIME_PATTERN = re.compile(
+    r"^time(?:\s*\([^)]*\)|\s*\[[^]]+\]|_s)?$|"
+    r"timestamp|datetime|zeit|시간|시각",
+    re.IGNORECASE,
+)
+SPLIT_ROLE_TOKENS = re.compile(
+    r"(?:^|[_\- .])(?:station|hrs|vehicle|car|tank|receiving|receptacle|"
+    r"disp(?:enser)?|nozzle|source|station-side|vehicle-side|충전소|차량|"
+    r"탱크|수용부|디스펜서|노즐)(?=$|[_\- .])",
+    re.IGNORECASE,
+)
 
 
 def _iter_files(roots: Iterable[Path]) -> Iterable[Path]:
@@ -102,6 +116,11 @@ def _read_header(path: Path) -> list[str]:
 
 def _classify_candidate(path: Path, header: list[str]) -> str:
     text = " ".join([path.stem, *header])
+    # A schema/template is useful for intake documentation but cannot be
+    # treated as an observed trace merely because it contains all channel
+    # names.  Keep it in the aggregate file count and out of data candidates.
+    if STATIC_TEMPLATE_PATTERN.search(path.stem):
+        return "unclassified_machine_readable"
     # ELVHYS-style release-rig traces often contain ``nozzle`` and pressure
     # labels.  Keep them separate from vehicle/dispenser candidates so a
     # keyword hit cannot be mistaken for a full-loop fueling record.
@@ -130,6 +149,44 @@ def _classify_candidate(path: Path, header: list[str]) -> str:
     return "unclassified_machine_readable"
 
 
+def _split_pair_signature(path: Path, header: list[str]) -> tuple[str, bool, bool] | None:
+    """Return a private grouping key and station/receiving role flags.
+
+    A split pair is only an *attestable lead*.  The key is retained in memory
+    for the duration of the scan and is never returned.  Requiring a shared
+    parent directory and a non-empty stem after removing explicit role words
+    avoids pairing unrelated files that merely contain ``pressure`` and
+    ``temperature`` in their headers.
+    """
+
+    if (
+        path.suffix.lower() not in {".csv", ".tsv"}
+        or STATIC_TEMPLATE_PATTERN.search(path.stem)
+    ):
+        return None
+    text = " ".join(str(column) for column in header)
+    has_time = any(TIME_PATTERN.search(str(column)) for column in header)
+    has_pressure = bool(HEADER_FAMILIES["pressure"].search(text))
+    has_temperature = bool(HEADER_FAMILIES["temperature"].search(text))
+    has_flow = bool(HEADER_FAMILIES["flow_or_mass"].search(text))
+    if not (has_time and has_pressure and has_temperature):
+        return None
+    stem = re.sub(r"\d{4}[-_]?\d{2}[-_]?\d{2}", "", path.stem.casefold())
+    stem = SPLIT_ROLE_TOKENS.sub(" ", stem)
+    stem = re.sub(r"(?:^|[_\- .])(?:trace|data|log|export|measurement)(?=$|[_\- .])", " ", stem)
+    stem = re.sub(r"[^a-z0-9가-힣]+", " ", stem).strip()
+    if not stem:
+        return None
+    # The parent path is an in-memory namespace only.  It prevents two
+    # unrelated folders with the same event stem from being paired.
+    key = f"{path.parent}\x1f{stem}"
+    explicit_vehicle = bool(
+        HEADER_FAMILIES["vehicle_or_dispenser"].search(path.stem)
+        or HEADER_FAMILIES["vehicle_or_dispenser"].search(text)
+    )
+    return key, bool(has_flow and not explicit_vehicle), explicit_vehicle
+
+
 def scan_workspace(roots: Iterable[Path]) -> dict:
     files = 0
     path_keyword_candidates = 0
@@ -137,6 +194,7 @@ def scan_workspace(roots: Iterable[Path]) -> dict:
     header_family_counts: Counter[str] = Counter()
     coarse_classes: Counter[str] = Counter()
     parse_errors = 0
+    split_groups: dict[str, tuple[bool, bool, int]] = {}
 
     for path in _iter_files(roots):
         files += 1
@@ -151,6 +209,23 @@ def scan_workspace(roots: Iterable[Path]) -> dict:
                 if any(pattern.search(str(column)) for column in header):
                     header_family_counts[family] += 1
         coarse_classes[_classify_candidate(path, header)] += 1
+        split = _split_pair_signature(path, header)
+        if split is not None:
+            key, station_like, receiving_like = split
+            old_station, old_receiving, old_count = split_groups.get(
+                key, (False, False, 0)
+            )
+            split_groups[key] = (
+                old_station or station_like,
+                old_receiving or receiving_like,
+                old_count + 1,
+            )
+
+    split_pair_candidates = sum(
+        1
+        for station_like, receiving_like, file_count in split_groups.values()
+        if station_like and receiving_like and file_count >= 2
+    )
 
     return {
         "schema_version": 1,
@@ -172,9 +247,11 @@ def scan_workspace(roots: Iterable[Path]) -> dict:
             "header_parse_errors": parse_errors,
             "header_family_candidate_counts": dict(sorted(header_family_counts.items())),
             "coarse_candidate_classes": dict(sorted(coarse_classes.items())),
+            "split_pair_candidate_count": split_pair_candidates,
         },
         "eligibility": {
             "full_loop_candidate_count": 0,
+            "split_pair_candidates_require_attestation": split_pair_candidates,
             "decision": "DISCOVERY_ONLY_UNTIL_ATTESTED",
             "required_attestation": [
                 "common time base and units",

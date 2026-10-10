@@ -53,3 +53,40 @@ def test_release_rig_nozzle_trace_is_not_classified_as_vehicle_loop(tmp_path: Pa
     classes = result["scan"]["coarse_candidate_classes"]
     assert classes["release_rig_experiment_candidate"] == 1
     assert classes.get("vehicle_pressure_temperature_candidate", 0) == 0
+
+
+def test_split_station_vehicle_pair_is_only_reported_as_an_attestable_lead(
+    tmp_path: Path,
+) -> None:
+    (tmp_path / "event01_station.csv").write_text(
+        "time (s),station_pressure_mpa,gas_temperature_c,flow_g_s,operation_state\n"
+        "0,45,-35,10,start\n1,46,-34,10,fill\n",
+        encoding="utf-8",
+    )
+    (tmp_path / "event01_vehicle.csv").write_text(
+        "time (s),vehicle_pressure_mpa,vehicle_temperature_c\n"
+        "0,5,25\n1,6,28\n",
+        encoding="utf-8",
+    )
+
+    result = scan_workspace([tmp_path])
+
+    assert result["scan"]["split_pair_candidate_count"] == 1
+    assert result["eligibility"]["split_pair_candidates_require_attestation"] == 1
+    assert result["eligibility"]["full_loop_candidate_count"] == 0
+    serialized = json.dumps(result, ensure_ascii=False)
+    assert str(tmp_path) not in serialized
+    assert "event01_station.csv" not in serialized
+
+
+def test_schema_template_is_not_treated_as_measured_vehicle_trace(tmp_path: Path) -> None:
+    (tmp_path / "discharge_timeseries_template.csv").write_text(
+        "time_s,tank_pressure_pa,tank_temperature_k,measured_mass_flow_kg_s\n",
+        encoding="utf-8",
+    )
+
+    result = scan_workspace([tmp_path])
+
+    classes = result["scan"]["coarse_candidate_classes"]
+    assert classes.get("vehicle_pressure_temperature_candidate", 0) == 0
+    assert result["scan"]["split_pair_candidate_count"] == 0

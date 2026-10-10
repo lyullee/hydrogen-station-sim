@@ -24,13 +24,15 @@
     "coarse_candidate_classes": {
       "flow_or_mass_candidate": 3,
       "release_rig_experiment_candidate": 1,
-      "temperature_candidate": 7,
-      "unclassified_machine_readable": 72,
+      "temperature_candidate": 3,
+      "unclassified_machine_readable": 76,
       "vehicle_or_dispenser_candidate": 1
-    }
+    },
+    "split_pair_candidate_count": 0
   },
   "eligibility": {
     "full_loop_candidate_count": 0,
+    "split_pair_candidates_require_attestation": 0,
     "decision": "DISCOVERY_ONLY_UNTIL_ATTESTED",
     "required_attestation": [
       "common time base and units",
