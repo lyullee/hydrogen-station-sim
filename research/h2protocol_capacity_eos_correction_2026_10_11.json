@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-10-10T16:08:19.231432+00:00",
+  "artifact_type": "h2protocol_capacity_eos_duplicate_fit_correction",
+  "status": "development_diagnostic_only",
+  "evidence_role": "post_access_replay_no_validation_promotion",
+  "correction": {
+    "issue": "The validation runner passed the historical effective-volume fit into a capacity_eos scenario, applying a legacy volume correction twice.",
+    "fixed_behavior": "capacity_eos uses declared capacity / rho_H2(P_nominal, 288.15 K) once and sets effective_volume_multiplier to 1.0; capacity_scaled retains the frozen historical fit.",
+    "production_defaults_changed": false
+  },
+  "protocol": {
+    "geometry_basis": "capacity_eos",
+    "selected_lab_test_numbers": [
+      1,
+      4,
+      11,
+      13,
+      19,
+      22,
+      29,
+      31
+    ],
+    "tank_fit_source": "research\\tank_model_validation_v2.json",
+    "flow_calibration_source": "research\\closed_loop_flow_calibration_v2.json",
+    "thermal_calibration_source": "research\\closed_loop_thermal_calibration_v2.json",
+    "effective_volume_multiplier_applied": 1.0,
+    "command": "python scripts/run_h2protocol_validation.py --geometry-basis capacity_eos --lab-test-numbers 1,4,11,13,19,22,29,31 --tank-validation-json research/tank_model_validation_v2.json --flow-calibration-json research/closed_loop_flow_calibration_v2.json --thermal-calibration-json research/closed_loop_thermal_calibration_v2.json --output data/public_validation/results/geometry_capacity_eos_diagnostic/selected_v3 --jobs 4"
+  },
+  "aggregate": {
+    "case_count": 8,
+    "screening_pass_count": 0,
+    "screening_pass_fraction": 0.0,
+    "final_stop_reason_counts": {
+      "none": 3,
+      "gas-temperature-limit": 4,
+      "vehicle-target": 1
+    },
+    "metrics": {
+      "pressure_rmse_mpa": {
+        "mean": 6.320049320673414,
+        "median": 3.6178532167756545,
+        "standard_deviation": 7.982513848546869,
+        "mean_bootstrap_95_ci": [
+          2.7988868075806246,
+          12.109844465774286
+        ]
+      },
+      "pressure_mae_mpa": {
+        "mean": 4.554435644339982,
+        "median": 2.5305879246604235,
+        "standard_deviation": 5.89699864211695,
+        "mean_bootstrap_95_ci": [
+          2.0047762289435416,
+          8.843644161080542
+        ]
+      },
+      "temperature_rmse_c": {
+        "mean": 11.23354905799523,
+        "median": 8.550041971866637,
+        "standard_deviation": 6.865227625955862,
+        "mean_bootstrap_95_ci": [
+          7.203740480586273,
+          15.879740066108237
+        ]
+      },
+      "temperature_mae_c": {
+        "mean": 9.711742636386191,
+        "median": 7.321072778187144,
+        "standard_deviation": 6.276941951727869,
+        "mean_bootstrap_95_ci": [
+          5.92529353645204,
+          13.922665310575034
+        ]
+      },
+      "soc_rmse_percentage_points": {
+        "mean": 6.82677304984877,
+        "median": 3.588157878557068,
+        "standard_deviation": 8.73095031808991,
+        "mean_bootstrap_95_ci": [
+          3.0236226530984247,
+          13.154879642652126
+        ]
+      }
+    }
+  },
+  "claim_boundary": "This replays eight previously inspected public H2Protocol cases after correcting a validation-runner geometry contract. It is not a prospective holdout, does not validate a station-to-vehicle closed loop, and does not close an IJHE gate.",
+  "decision": "retain_external_validation_gate_open; temperature and SOC errors remain above the joint screen in 8/8 cases",
+  "source": {
+    "runner": "scripts/run_h2protocol_validation.py",
+    "runner_sha256": "6f139397138279b15ad1e45c55832c4e675ad05ecd009f6440ff1b289e19f342",
+    "source_commit": "0a2a13648fb55330b46ced2e2475f9e1be6dcfb8",
+    "result_artifact": "data/public_validation/results/geometry_capacity_eos_diagnostic/selected_v3/validation.json"
+  }
+}
