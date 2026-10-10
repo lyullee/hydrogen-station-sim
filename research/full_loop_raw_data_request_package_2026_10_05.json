@@ -78,6 +78,16 @@
       "requested_scope": "Light-duty station events with vehicle pressure/temperature/mass-flow channels"
     },
     {
+      "id": "uci_nfcrc_geniv",
+      "url": "https://doi.org/10.1016/j.ijhydene.2020.08.251",
+      "requested_scope": "De-identified Gen-IV station fueling events with hose/vehicle pressure-temperature endpoints, dispensed mass and equipment state"
+    },
+    {
+      "id": "cal_state_la_back_to_back_study",
+      "url": "https://doi.org/10.1016/j.jclepro.2021.129737",
+      "requested_scope": "De-identified back-to-back station-to-vehicle events with pressure, cooling, vehicle SOC and protocol chronology"
+    },
+    {
       "id": "kgs_oh",
       "url": "https://doi.org/10.1007/s11814-025-00551-9",
       "requested_scope": "Six reported real-HRS scenarios and their synchronized logger export"
