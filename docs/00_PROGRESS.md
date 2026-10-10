@@ -608,3 +608,25 @@ Verification:
 - This broad screen confirms that the current P0 blocker is still a missing
   synchronized, attested receiving-vessel/controller cohort rather than a
   scanner failure or lack of station-side files.
+
+## 2026-10-10 - Public full-loop lead recheck expanded
+
+Status: contact-only leads recorded; no unverified article or aggregate table
+was promoted to a validation gate.
+
+Completed:
+
+- Rechecked public records for the UCI Gen-IV station and the Cal State LA
+  back-to-back fueling study, both of which report real station/vehicle
+  measurement channels and operator-log context.
+- Added both records to the bounded lead catalogue with DOI, requested channel
+  attestation, reuse-status and the minimum three-event intake request.
+- Kept `full_loop_external_holdout_eligible=false` for both leads because no
+  downloadable synchronized raw logger, channel dictionary and independent
+  reuse terms were found.
+
+Verification:
+
+- Public-lead and validation-boundary tests passed (8 tests).
+- The P0 gate remains correctly closed; the search produced better custodian
+  targets, not a scientific validation result.

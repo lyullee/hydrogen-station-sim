@@ -8,13 +8,19 @@
       "Kuroki et al. 2021 article and author/institutional landing pages",
       "DLR 2025 railway-refuelling manuscript and repository record",
       "DOI and supplementary-data web search results",
-      "Kuroki et al. 2023 Energy Technology article and Wiley data-availability statement"
+      "Kuroki et al. 2023 Energy Technology article and Wiley data-availability statement",
+      "UCI Gen IV HRS performance article and data-access notes",
+      "Cal State LA back-to-back fueling article and data-access notes",
+      "NIST Transient Flow Facility public technical page"
     ],
-    "finding": "The public records confirm measurement-based validation context, but no downloadable synchronized station-to-vehicle raw logger, channel dictionary, or independent reuse terms were located.",
+    "finding": "Public records now include real UCI and Cal State LA fueling-log leads, but no downloadable synchronized station-to-vehicle raw logger, channel dictionary, or independent reuse terms were located.",
     "evidence_urls": [
       "https://doi.org/10.1016/j.ijhydene.2021.04.037",
       "https://elib.dlr.de/213625/",
-      "https://elib.dlr.de/213625/1/manuscript_final_published_version.pdf"
+      "https://elib.dlr.de/213625/1/manuscript_final_published_version.pdf",
+      "https://doi.org/10.1016/j.ijhydene.2020.08.251",
+      "https://doi.org/10.1016/j.jclepro.2021.129737",
+      "https://www.nist.gov/programs-projects/transient-flow-facility"
     ],
     "action": "Do not admit either lead as an external holdout. If needed, send the staged privacy-safe custodian request instead of repeatedly searching for a file that is not publicly exposed."
   },
@@ -140,11 +146,49 @@
       "admission_status": "CONTACT_REQUEST_CANDIDATE_ONLY",
       "next_action": "Request a de-identified common-clock trace, channel dictionary, calibration metadata and independent-scoring permission from the data custodian; keep article figures and endpoint values as context only.",
       "claim_boundary": "The article provides a high-value real-station tank thermal measurement lead. Its explicit data-availability statement says the research data are not shared, so it cannot be admitted as a reproducible full-loop holdout or used for parameter fitting."
+    },
+    {
+      "id": "uci_geniv_hrs_performance_2020",
+      "title": "Performance of a hydrogen refueling station in the early years of commercial fuel cell vehicle deployment",
+      "persistent_identifier": "10.1016/j.ijhydene.2020.08.251",
+      "article_url": "https://doi.org/10.1016/j.ijhydene.2020.08.251",
+      "reported_measurements": [
+        "fueling start/end and amount dispensed",
+        "hose and vehicle-tank pressure/temperature endpoints",
+        "ambient temperature",
+        "compressor, chiller, dispenser and auxiliary electricity"
+      ],
+      "raw_data_status": "article_reports_operator_logs; downloadable synchronized raw logger not located",
+      "channel_dictionary_status": "article-level channel roles only",
+      "license_status": "raw-data reuse terms not resolved",
+      "full_loop_external_holdout_eligible": false,
+      "admission_status": "CONTACT_REQUEST_CANDIDATE_ONLY",
+      "next_action": "Request a de-identified common-clock event export, channel dictionary, unit/calibration attestation and independent-scoring permission.",
+      "claim_boundary": "The article documents real station operation and endpoint channels, but the public article alone is not a reproducible full-loop holdout."
+    },
+    {
+      "id": "calstate_la_back_to_back_fueling_2021",
+      "title": "Hydrogen station in situ back-to-back fueling data for design and modeling",
+      "persistent_identifier": "10.1016/j.jclepro.2021.129737",
+      "article_url": "https://doi.org/10.1016/j.jclepro.2021.129737",
+      "reported_measurements": [
+        "station pressure levels during fueling",
+        "dynamic cooling response",
+        "vehicle state of charge",
+        "back-to-back fueling event chronology"
+      ],
+      "raw_data_status": "article_reports_multi-year_operator_logs; downloadable synchronized raw logger not located",
+      "channel_dictionary_status": "article-level station and vehicle roles only",
+      "license_status": "raw-data reuse terms not resolved",
+      "full_loop_external_holdout_eligible": false,
+      "admission_status": "CONTACT_REQUEST_CANDIDATE_ONLY",
+      "next_action": "Request three privacy-safe common-clock station-to-vehicle events and a frozen channel-role/unit attestation before any scoring.",
+      "claim_boundary": "The study supplies high-value real-operation context and potential data provenance, but aggregate article results cannot validate the digital twin or emergency response."
     }
   ],
   "decision": {
     "new_full_loop_dataset_admitted": false,
-    "reason": "No newly found candidate currently exposes a reproducible, licensed, synchronized station-to-vehicle raw trace with channel provenance.",
+    "reason": "No newly found candidate currently exposes a reproducible, licensed, synchronized station-to-vehicle raw trace with channel provenance; the UCI and Cal State LA records remain contact-only leads.",
     "minimum_next_input": "Use the privacy-safe three-event intake contract rather than publishing confidential raw logs.",
     "runtime_parameter_application": false,
     "goal_completion_permitted": false
