@@ -17,6 +17,7 @@
 - MC Default 탱크 경계의 동결 모델은 **0/8** 공동 화면 통과다. 용량-EOS 사후 비교는 **4/8**이지만, 체적 규칙을 결과를 본 뒤 선택할 수 없으므로 공식 결과를 대체하지 않는다.
 - Dickens Type-III의 고정 결과는 온도 화면 실패를 유지한다. 5 mm 유입관과 온도 관측 연산자에 대한 후속 진단은 원인 후보를 좁혔지만 사후 선택이므로 검증 게이트를 닫지 않는다.
 - 비식별 private station-side 재검은 CSV 8개를 모두 읽었고 수치·행·헤더·경로는 보존하지 않았다. 공통시각·제어상태·질량/유량·압력·온도 후보는 있었지만 cascade/storage, 수용용기 식별·압력·온도, delivered-temperature와 단위·역할 attestation이 없어 full-loop holdout으로 승격하지 않았다. 상세 판정은 `research/local_private_full_loop_schema_recheck_2026_10_11.json`에 기록했다.
+- HRS 작업영역과 controlled export를 CSV/XLSX 스키마 인벤토리로 다시 훑어 13개 파일·25개 테이블을 확인했다. 압력·온도·유량·제어상태 후보는 있었지만 full-loop, station-recharge, vehicle-fill 후보가 모두 0건이었다. 이 결과는 행·헤더·경로를 저장하지 않는 [비식별 인벤토리](local_full_loop_schema_inventory_2026_10_11.json)에 기록했다.
 
 ## 현재 사용할 수 있는 주장 범위
 

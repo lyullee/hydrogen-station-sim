@@ -1,0 +1,84 @@
+{
+  "schema_version": 4,
+  "artifact_type": "controlled_hrs_schema_inventory",
+  "source_identifiers_published": false,
+  "original_headers_published": false,
+  "schema_search_max_rows_per_table": 40,
+  "data_likeness_sample_rows_per_table": 3,
+  "schema_search_rows_examined": 820,
+  "sample_data_rows_structurally_inspected_in_memory": true,
+  "measurement_rows_persisted": false,
+  "raw_rows_persisted": false,
+  "absolute_timestamps_published": false,
+  "source_files_scanned": 13,
+  "source_tables_scanned": 25,
+  "measurement_like_tables": 11,
+  "unreadable_tables": 0,
+  "source_container_format_counts": {
+    "csv": 11,
+    "xlsx": 2
+  },
+  "tabular_content_format_counts": {
+    "csv": 11,
+    "xlsx": 14
+  },
+  "archive_members_scanned": 0,
+  "oversized_archive_members_skipped": 0,
+  "semantic_channel_table_counts": {
+    "cascade_or_storage": 3,
+    "controller_state": 8,
+    "mass_flow": 11,
+    "pressure": 11,
+    "temperature": 11,
+    "time": 11
+  },
+  "flat_time_axis_candidate_summary": {
+    "candidate_groups": 1,
+    "tables_in_candidate_groups": 6,
+    "largest_candidate_group_tables": 6,
+    "fingerprints_published": false,
+    "absolute_time_samples_published": false
+  },
+  "time_overlap_candidate_summary": {
+    "usable_table_count": 8,
+    "absolute_clock_table_count": 8,
+    "relative_clock_table_count": 0,
+    "multi_table_cluster_count": 0,
+    "tables_in_clusters": 0,
+    "largest_cluster_tables": 0,
+    "exact_full_loop_cluster_count": 0,
+    "header_only_missing_family_histogram": {},
+    "path_assisted_candidate_count": 0,
+    "path_assisted_missing_family_histogram": {},
+    "minimum_shorter_interval_overlap_fraction": 0.8,
+    "maximum_cadence_ratio": 10.0,
+    "path_semantics_are_unattested": true,
+    "source_identifiers_published": false,
+    "original_headers_published": false,
+    "absolute_time_samples_published": false
+  },
+  "candidate_schema_counts": {
+    "full_loop_candidate": 0,
+    "co_located_full_loop_candidate": 0,
+    "near_full_loop_missing_one_semantic_group": 0,
+    "station_recharge_candidate": 0,
+    "vehicle_fill_candidate": 0,
+    "synchronized_flat_full_loop_candidate": 0,
+    "synchronized_flat_station_recharge_candidate": 0,
+    "synchronized_flat_vehicle_fill_candidate": 0,
+    "time_overlap_full_loop_candidate": 0,
+    "time_overlap_path_assisted_full_loop_candidate": 0,
+    "rejected_nonmeasurement_candidate_container": 1
+  },
+  "claim_boundary": "Header-level semantic screening plus in-memory record-shape and strictly-monotonic-time checks only. A co-located candidate means only that separate measurement-like tables in one workbook or archive have complementary labels. A synchronized-flat candidate means that separate CSV files have matching bounded head/tail clock-shape samples and complementary labels. A time-overlap candidate requires compatible bounded absolute intervals, or an exact relative-clock fingerprint. Path-assisted coverage is an unattested review hint only and cannot map a tag or measured quantity. No candidate class attests that the complete records can be joined. Candidate counts do not attest a tag mapping, units, calibration, time synchronization, event integrity, model accuracy, safety, or full-loop validation.",
+  "generated_at_utc": "2026-10-10T21:43:03.433845+00:00",
+  "source_label": "authorized-private-hrs-roots-and-controlled-export",
+  "privacy_boundary": {
+    "source_paths_published": false,
+    "source_identifiers_published": false,
+    "original_headers_published": false,
+    "raw_rows_persisted": false,
+    "measurement_values_persisted": false,
+    "absolute_timestamps_persisted": false
+  }
+}
