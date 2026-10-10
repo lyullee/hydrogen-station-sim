@@ -4,7 +4,8 @@
 
 ## 현재 판정
 
-- IJHE 내부 게이트: **PASS 125 / FAIL 12 / PENDING 7**.
+- IJHE 내부 게이트: **PASS 127 / FAIL 10 / PENDING 7**.
+- 게이트 충족률: **127 / 144 = 88.2%** (게재 확률이 아닌 검증 게이트 비율).
 - 제한된 투고 준비: **아직 불가**.
 - 사용자 목표(독립 full-loop 포함): **아직 미달**.
 
@@ -14,12 +15,14 @@
 - 같은 자료의 시간순 holdout: 압력 경계 30점, cascade 3,664쌍, 재충전 예측 394건. 차량 충전 정확도나 현장 안전한계로 확대하지 않습니다.
 - 공개 Type-IV 탱크 경계 검증: 12건, 탱크 경계 구성요소 검증으로 유지합니다.
 - 사고 전례·대응 플레이북·가상 조치 실행은 시나리오와 단계별 대응 근거로 사용하며, 사고 빈도나 현장 대응 효과를 추정하지 않습니다.
+- 공식 NBSDC 35/70 MPa 고정식 충전소 기록은 메타데이터와 파일 목록까지 확인했습니다. 운영 XLSX는 비인증 다운로드가 로그인으로 리디렉션되어 원자료 행·단위·시각을 확인하지 못했으므로 full-loop 검증 자료로 승격하지 않았습니다.
 
 ## 실패 또는 제한된 결과도 그대로 유지
 
 - 공개 MC Default full-loop holdout: 0 / 8 통과. 평균 압력 RMSE 15.862 MPa, 온도 RMSE 13.230 °C, SOC RMSE 18.082%p. 이 결과는 숨기거나 재평가로 대체하지 않습니다.
 - NREL 탱크 경계 자료: 압력 RMSE 6.164 MPa로 현재 스크리닝을 통과하지 못해 진단용으로만 유지합니다.
 - 새 full-loop 측정 코호트: **확인되지 않음**. 현재 주된 공백은 동기화된 차량·수용용기 측 채널입니다.
+- 최신 전체 테스트: **1,335 passed, 19 warnings**. 경고는 의도된 물리 경계·수치 경고이며 검증 게이트 승격으로 해석하지 않습니다.
 
 ## 추가 자료 없이 진행 가능한 작업
 
@@ -39,6 +42,8 @@
 
 - `research/data_coverage_summary_2026_10_10.json`
 - `research/ijhe_readiness_audit.json`
+- `research/goal_progress_snapshot_2026_10_10.json`
+- `research/PROGRESS_DELTA_2026_10_10.md`
 - `research/local_candidate_full_loop_screen_2026_10_09.json`
 - `data/public_validation/results/closed_loop_external_holdout/validation.json`
 
