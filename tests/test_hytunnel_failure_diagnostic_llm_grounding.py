@@ -32,6 +32,9 @@ def test_hytunnel_failure_diagnostic_is_grounded_without_runtime_calibration():
     assert evidence["runtime_parameter_application"] is False
     assert evidence["default_model_parameters_changed"] is False
     assert evidence["regimes"]["short_release_cases"]["case_count"] == 12
+    assert evidence["two_zone_development"]["claim_supported"] is False
+    assert evidence["two_zone_development"]["pass_count"] == 4
+    assert evidence["two_zone_development"]["runtime_parameter_application"] is False
 
     summary = prompt_evidence_summary(manifest)["public_hytunnel_failure_diagnostic"]
     assert summary["claim_supported"] is False

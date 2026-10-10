@@ -4085,6 +4085,50 @@ def _public_hytunnel_failure_diagnostic_evidence() -> dict[str, Any] | None:
         for name, group in regimes.items()
         if isinstance(group, dict)
     }
+    two_zone_path = Path(__file__).resolve().parents[2] / (
+        "research/hytunnel_two_zone_diagnostic_2026_10_11.json"
+    )
+    try:
+        two_zone_record = json.loads(two_zone_path.read_text(encoding="utf-8"))
+    except (OSError, ValueError, json.JSONDecodeError):
+        two_zone_record = {}
+    two_zone_evaluation = two_zone_record.get("evaluation") or {}
+    two_zone_cases = two_zone_evaluation.get("cases") or []
+    finite_nrmse = [
+        float(item["nrmse_percent_peak_measured"])
+        for item in two_zone_cases
+        if isinstance(item, dict)
+        and isinstance(item.get("nrmse_percent_peak_measured"), (int, float))
+    ]
+    finite_peak_error = [
+        float(item["peak_relative_error_percent"])
+        for item in two_zone_cases
+        if isinstance(item, dict)
+        and isinstance(item.get("peak_relative_error_percent"), (int, float))
+    ]
+    two_zone_development = None
+    if (
+        two_zone_record.get("artifact_type")
+        == "hytunnel_carpark_post_outcome_two_zone_diagnostic"
+        and two_zone_record.get("post_outcome_diagnostic") is True
+        and two_zone_record.get("model_boundary", {}).get("runtime_parameter_application") is False
+        and two_zone_record.get("model_boundary", {}).get("frozen_gate_effect") == "none"
+        and finite_nrmse
+        and finite_peak_error
+    ):
+        two_zone_development = {
+            "artifact": "research/hytunnel_two_zone_diagnostic_2026_10_11.json",
+            "model": "geometry_declared_two_zone_source_to_vent_transport",
+            "eligible_case_count": two_zone_evaluation.get("eligible_case_count"),
+            "pass_count": two_zone_evaluation.get("pass_count"),
+            "pass_fraction": two_zone_evaluation.get("pass_fraction_of_declared_cases"),
+            "mean_nrmse_percent_peak_measured": sum(finite_nrmse) / len(finite_nrmse),
+            "mean_peak_relative_error_percent": sum(finite_peak_error) / len(finite_peak_error),
+            "runtime_parameter_application": False,
+            "frozen_gate_effect": "none",
+            "claim_supported": False,
+            "claim_limit": str(two_zone_record.get("claim_boundary") or ""),
+        }
     return {
         "artifact": "research/hytunnel_carpark_failure_regime_diagnostic_2026_10_09.json",
         "evidence_role": "public actual-hydrogen holdout failure and regime diagnostic",
@@ -4121,6 +4165,7 @@ def _public_hytunnel_failure_diagnostic_evidence() -> dict[str, Any] | None:
         "default_model_parameters_changed": False,
         "claim_supported": False,
         "claim_limit": str(record.get("claim_boundary") or result.get("claim_boundary") or ""),
+        "two_zone_development": two_zone_development,
     }
 
 
