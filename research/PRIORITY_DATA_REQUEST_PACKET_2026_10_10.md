@@ -34,6 +34,12 @@
 - 이벤트 ID는 무작위 별칭으로 바꾸고, 시간은 이벤트 시작 기준의 경과시간으로
   변환한다.
 - 제공 전에 데이터 사전, 단위, 채널 역할, 공통 시계와 해시를 확인한다.
+- 각 채널은 태그 이름을 추정하지 말고 generic role, 단위, scale/offset,
+  결측 코드와 함께 custodian이 attestation한다. 압력은 저·중·고압 뱅크
+  역할을 명시하고, 상태 채널은 active/inactive/fault/unknown 값을 열거한다.
+- 공정 상태·밸브·ESD처럼 이산 채널은 보간하지 않으며, 이벤트별 공통 시계와
+  role map을 수치 행을 열기 전에 동결한다. 역할 attestation이 없으면 해당
+  자료는 station-side 진단으로만 분류한다.
 - 모델·프로토콜·분할·오차 기준을 파일을 열기 전에 동결한다. holdout에
   맞춘 계수 조정, 시간 이동, 실패 사례 제거는 하지 않는다.
 
@@ -70,6 +76,8 @@ derived figures and repository/journal deposition.
 1. `src/h2station/privacy_safe_full_loop_intake.py`로 스키마와 개인정보를 먼저
    검사한다.
 2. 파일 해시와 채널 역할을 기록하고, 모델·프로토콜·분할을 동결한다.
+   태그명만으로 역할을 채우지 말고, custodian role/unit attestation과
+   상태값 사전을 먼저 확인한다.
 3. 차량/수용부 채널이 있으면 station-to-receiving-vessel 후보로 평가한다.
 4. 차량 채널이 없으면 station-side 경계 진단으로만 보고한다.
 5. 모든 실패와 결측을 유지하고, 통과한 경우에도 현장 안전거리나 규제 적합성으로

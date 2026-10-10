@@ -36,6 +36,18 @@ convention, calibration/uncertainty summary, initial conditions, tank volume or
 geometry class, and the event-level file hash. Relative elapsed time is
 preferred; absolute timestamps are not required.
 
+For every mapped channel, please include a short role attestation rather than
+requiring the research team to infer semantics from tag names. At minimum this
+should identify the generic role (for example `station_pressure_medium`,
+`receiving_vessel_pressure`, `receiving_vessel_temperature`, or
+`compressor_state`), engineering unit and scale/offset, and the missing-value
+code. For discrete state channels, list the values that mean **active**,
+**inactive**, **fault**, and **unknown**. For pressure channels, identify the
+low/medium/high bank role or explicitly state that the bank role is unknown.
+Please confirm that the role map and common-clock alignment were attested by a
+custodian before the numerical rows are opened; a header-name guess is not
+accepted as validation evidence.
+
 The evaluation protocol and scoring code will be frozen before any numerical
 outcomes are opened. No parameter fitting, smoothing, time warping or case
 replacement will be performed on the pilot. We will return only aggregate

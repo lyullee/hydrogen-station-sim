@@ -250,3 +250,20 @@ fails the MC vehicle-tank boundary replay (0/8), H2SAFE spatial-response
 diagnostic (0/1), and NREL HDVS tank screen (0/7). These are negative,
 post-outcome development results only: they do not alter the frozen holdout,
 production parameters, readiness gates, or the 88.2% gate-closure value.
+
+## Restricted recharge-data recheck and intake tightening (2026-10-11)
+
+The owner-controlled refresh of eight station-side traces was re-read in
+memory only. Under a **temporary, non-published generic mapping** the earlier
+restart-dwell recommendation remained about **290 s**, while the later
+chronological segment contained a completed OFF-to-ON interval of about
+**176 s**. Because the mapping was not a custodian-signed role/unit map, this
+rerun is not validation evidence and was not copied into the repository or
+applied to runtime. The existing attested aggregate therefore remains
+runtime-ineligible and the default controller is unchanged.
+
+The full-loop request templates now require custodian attestation for generic
+channel roles, units and scale/offsets, missing-value codes, discrete active /
+inactive / fault values, bank-role mapping, and common-clock alignment before
+numerical rows are opened. This prevents inferred tag names from being treated
+as full-loop evidence in the next intake.
