@@ -2386,6 +2386,10 @@ def _requested_virtual_actions(question: str, *, language: str = "ko") -> list[d
     compact = re.sub(r"\s+", " ", str(question or "")).strip().lower()
     if not compact:
         return []
+    if re.search(r"(?:상태|여부|인가|인지|확인|알려|가능)", compact):
+        # Phrases such as "ESD 가동 여부를 확인해줘" are still questions,
+        # even though they contain the polite imperative suffix.
+        return []
     # Do not turn a status question ("ESD 상태?", "현재 정지인가?") into a
     # command.  A phrase must contain an imperative marker or an English
     # command verb before any reviewed action is proposed.

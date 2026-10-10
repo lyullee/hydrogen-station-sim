@@ -24,6 +24,7 @@ def test_explicit_operator_commands_are_exposed_as_confirmed_virtual_actions():
     assert [(row["kind"], row["target"]) for row in esd] == [("esd.trip", "station")]
     assert esd[0]["requires_confirmation"] is True
     assert api._requested_virtual_actions("현재 ESD 상태를 알려줘") == []
+    assert api._requested_virtual_actions("ESD 가동 여부를 확인해줘") == []
 
     vehicle = api._requested_virtual_actions("차량 2 충전을 정지해줘")
     assert [(row["kind"], row["target"]) for row in vehicle] == [
