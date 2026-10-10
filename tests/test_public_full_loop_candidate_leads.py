@@ -42,6 +42,14 @@ def test_candidate_leads_do_not_relax_full_loop_gate() -> None:
     assert kuroki["persistent_identifier"] == "10.1016/j.ijhydene.2021.04.037"
     assert kuroki["admission_status"] == "CONTACT_REQUEST_CANDIDATE_ONLY"
     assert kuroki["full_loop_external_holdout_eligible"] is False
+    kuroki_thermal = next(
+        item for item in record["candidates"]
+        if item["id"] == "kuroki_hrs_liner_temperature_experiment_2023"
+    )
+    assert kuroki_thermal["persistent_identifier"] == "10.1002/ente.202300239"
+    assert kuroki_thermal["admission_status"] == "CONTACT_REQUEST_CANDIDATE_ONLY"
+    assert kuroki_thermal["full_loop_external_holdout_eligible"] is False
+    assert "not_shared" in kuroki_thermal["raw_data_status"]
     assert record["privacy"]["raw_rows_persisted"] is False
 
 

@@ -45,3 +45,4 @@ For the BAM/KETI lead, the staged request text is in
 These additional leads do not change the gate: no candidate is admitted as a
 full-loop holdout until raw/de-identified rows, channel semantics, a common
 clock, reuse terms and a pre-access frozen scoring protocol are all verified.
+The 2023 Kuroki liner-temperature experiment is also recorded as a contact-only lead ([DOI](https://doi.org/10.1002/ente.202300239)). The publisher explicitly states that the research data are not shared, so its measured conditions remain contextual evidence and cannot be used as a full-loop holdout or fitting source.

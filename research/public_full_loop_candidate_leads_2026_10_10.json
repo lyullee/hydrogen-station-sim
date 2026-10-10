@@ -7,7 +7,8 @@
     "scope": [
       "Kuroki et al. 2021 article and author/institutional landing pages",
       "DLR 2025 railway-refuelling manuscript and repository record",
-      "DOI and supplementary-data web search results"
+      "DOI and supplementary-data web search results",
+      "Kuroki et al. 2023 Energy Technology article and Wiley data-availability statement"
     ],
     "finding": "The public records confirm measurement-based validation context, but no downloadable synchronized station-to-vehicle raw logger, channel dictionary, or independent reuse terms were located.",
     "evidence_urls": [
@@ -120,6 +121,25 @@
       "admission_status": "CONTACT_REQUEST_CANDIDATE_ONLY",
       "next_action": "Request the de-identified validation traces, channel dictionary and permission for independent scoring; retain the article as methodological context only until the raw export is verified.",
       "claim_boundary": "The article reports validation against an actual fueling station, but the publication alone is not a reproducible full-loop holdout for this project."
+    },
+    {
+      "id": "kuroki_hrs_liner_temperature_experiment_2023",
+      "title": "Temperature Rise on Liner Surfaces of Fuel Cell Electric Vehicle Tanks during Fueling Process",
+      "persistent_identifier": "10.1002/ente.202300239",
+      "article_url": "https://doi.org/10.1002/ente.202300239",
+      "reported_measurements": [
+        "NREL HITRF 108 L/three-tank fueling boundary",
+        "receptacle-exit hydrogen temperature",
+        "tank-inlet pressure",
+        "internal gas and liner temperature"
+      ],
+      "raw_data_status": "research_data_not_shared_in_publisher_data_availability_statement",
+      "channel_dictionary_status": "article-level channel roles and conditions reported; machine-readable logger schema not public",
+      "license_status": "article access is public; raw measurement reuse and redistribution are not granted",
+      "full_loop_external_holdout_eligible": false,
+      "admission_status": "CONTACT_REQUEST_CANDIDATE_ONLY",
+      "next_action": "Request a de-identified common-clock trace, channel dictionary, calibration metadata and independent-scoring permission from the data custodian; keep article figures and endpoint values as context only.",
+      "claim_boundary": "The article provides a high-value real-station tank thermal measurement lead. Its explicit data-availability statement says the research data are not shared, so it cannot be admitted as a reproducible full-loop holdout or used for parameter fitting."
     }
   ],
   "decision": {
