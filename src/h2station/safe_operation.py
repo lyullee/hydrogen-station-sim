@@ -927,7 +927,13 @@ class SafeFullStationSimulator:
                 return np.append(rates, compressor_result.mass_flow_kg_s) if process is not None else rates
 
             initial_vector = np.append(current.as_vector(), 0.0) if process is not None else current.as_vector()
-            method = "LSODA" if process is not None and not active_events else "BDF"
+            # Nominal API simulations without a ProcessRuntime used to fall
+            # through to BDF for every controller period.  BDF estimates a
+            # dense numerical Jacobian for this station state and is several
+            # times slower on the smooth, event-free path.  Keep BDF for
+            # discontinuous fault/relief/vent/cooling events, but use the
+            # non-reentrant-safe LSODA path for the normal continuous path.
+            method = "BDF" if (active_events or cooling_events) else "LSODA"
             if method == "LSODA":
                 with nonreentrant_integrator_lock:
                     solution = solve_ivp(rhs, (time_s, end_s), initial_vector, method=method,

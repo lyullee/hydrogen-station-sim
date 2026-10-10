@@ -838,3 +838,21 @@ Focused UI/control regression after the performance change:
   routing, risk range state and periodic-analysis controls).
 - Python operation/safety suites: 90 passed (normal-operation alarm policy,
   virtual safety, HAZOP and process operations).
+
+## 2026-10-10 - Event-aware solver selection for nominal operation
+
+Status: implemented; event and physics regressions passed.
+
+- The default no-event simulation path no longer forces BDF with a dense
+  numerical Jacobian for every control period. It uses the existing
+  non-reentrant-safe LSODA path; BDF remains selected whenever fault, relief,
+  vent or cooling events make the right-hand side discontinuous.
+- A 60-second API smoke run completed in 15.08 s after the change (the earlier
+  same-shape run took 20.5 s). This is a runtime measurement, not a claim of
+  real-time performance at every model configuration.
+- No physics constants, safety limits or event semantics were changed.
+
+Verification:
+
+- Core, integration, process-operation, virtual-safety and emergency-response
+  suites: 57 passed.
