@@ -312,3 +312,19 @@ absent, so this is not validation and cannot close a gate. The transfer result
 is stored in `research/h2safe_spatial_candidate_transfer_diagnostic_2026_10_11.json`,
 and the LLM evidence manifest now exposes the negative result so it cannot
 recommend the same-cohort candidate as a runtime improvement.
+
+## USN actual-hydrogen spatial response diagnostic (2026-10-11)
+
+The 22 public USN open-channel archives were replayed directly from their ZIP
+members using the 29 machine-readable sensor coordinates. The diagnostic uses
+the per-sensor q99-minus-q10 hydrogen response and compares a transparent
+inverse-distance rank with a downward-release sensitivity rank. The inverse-
+distance model reached median Spearman **0.591**, mean top-five response-
+quartile recall **0.727**, and nearest-sensor response-quartile fraction
+**0.545**; the declared joint screen therefore failed. The downward-release
+sensitivity was weaker (median Spearman **0.497**) and also failed. This is
+post-access development evidence only: no raw rows are retained, no runtime
+parameter is replaced, and no readiness gate is promoted. The result is stored
+in `research/usn_actual_h2_spatial_response_diagnostic_2026_10_11.json` and
+will be used to freeze the candidate features for a future untouched spatial
+holdout.
