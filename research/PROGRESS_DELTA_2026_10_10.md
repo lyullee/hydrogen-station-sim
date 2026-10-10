@@ -209,3 +209,17 @@ coverage and evidence-API lane passed 32 tests. Re-running the source-hash audit
 restored the integrity gates; the readiness audit remains **127 PASS / 10 FAIL / 7
 PENDING (88.2% gate closure)**, with bounded and full objective readiness still
 false.
+
+## HyTunnel model-form diagnostic (2026-10-11)
+
+Added a separate geometry-declared two-zone source-to-vent development model
+(`src/h2station/hytunnel_two_zone_diagnostic.py`) and reran all 18 public
+dispersion cases. The model uses the published 5 m source-to-vent-wall distance
+and 40 ft enclosure length without outcome fitting. It passes 4/18 cases versus
+6/18 for the frozen well-mixed model, so it is retained as a negative diagnostic
+(`research/hytunnel_two_zone_diagnostic_2026_10_11.json`) and does not change the
+readiness percentage or production parameters. This isolates a useful next
+physics requirement: a single source-to-bulk zone is insufficient; a validated
+plume/stratification model and sensor-coordinate crosswalk are still needed.
+The new module has three focused regression tests; the HyTunnel test lane is
+now 9 passed.

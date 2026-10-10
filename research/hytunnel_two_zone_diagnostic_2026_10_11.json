@@ -1,0 +1,372 @@
+{
+  "schema_version": 1,
+  "artifact_type": "hytunnel_carpark_post_outcome_two_zone_diagnostic",
+  "generated_at": "2026-10-10T15:24:07.863044+00:00",
+  "post_outcome_diagnostic": true,
+  "source": {
+    "dataset_doi": "10.23642/USN.14405903",
+    "article_doi": "10.3390/en14113008",
+    "license": "CC BY 4.0",
+    "raw_files_committed": false,
+    "file_count": 18,
+    "files": [
+      {
+        "name": "Exp04.mat",
+        "bytes": 7013153,
+        "sha256": "d3d10d8b07a11c6cd3fc6777c502591a4d94400c3af21c6aab3d3257d105655b"
+      },
+      {
+        "name": "Exp05.mat",
+        "bytes": 6406283,
+        "sha256": "fa0a95bcfe42059bd42935f3e57f2a0bd8a12563fed3d21991c4868e8a65b101"
+      },
+      {
+        "name": "Exp06.mat",
+        "bytes": 6966901,
+        "sha256": "f045fba3c022b40a57ed1fcf9b457032e88c75b045cf0c21b86c0d60e55cb4f1"
+      },
+      {
+        "name": "Exp07.mat",
+        "bytes": 7497583,
+        "sha256": "087a7d3c51f210a3f4318c774c51c5b6a75f783198d44455859405d2fa5edec6"
+      },
+      {
+        "name": "Exp08.mat",
+        "bytes": 7222508,
+        "sha256": "4fa72d65a761f9ace7ebee4c7cb61cf2e8dab285963d61e83720a8c209ed4062"
+      },
+      {
+        "name": "Exp09.mat",
+        "bytes": 7261446,
+        "sha256": "c2232a0be2bbcf2735f985c32e35cb4b1fef9ab6cd5342c96adcb39648b4ba78"
+      },
+      {
+        "name": "Exp10.mat",
+        "bytes": 7526264,
+        "sha256": "966375ef8e715146ebae73993d5f93353e6dd2862095cd8a8a1409e7345b5998"
+      },
+      {
+        "name": "Exp11.mat",
+        "bytes": 7213627,
+        "sha256": "230b44e71dea4053ffc387542f3dab3c99061c13c54dc2c7fa9a73975892f9a3"
+      },
+      {
+        "name": "Exp12.mat",
+        "bytes": 6778360,
+        "sha256": "f9d1d6de2430adeead2ce135b1e8b581ea9df6a185de28512873b9baf1fffe1d"
+      },
+      {
+        "name": "Exp13.mat",
+        "bytes": 7371715,
+        "sha256": "3414adf55f11c72f4b85608b4e9b1b2b8a1fd181bd89a80c112065fb2ba039fa"
+      },
+      {
+        "name": "Exp14.mat",
+        "bytes": 6947707,
+        "sha256": "ab967e3ce2a26e4cc8432359e864486a57a71ee02cfc233ec5e52451e010cf9d"
+      },
+      {
+        "name": "Exp15.mat",
+        "bytes": 6980195,
+        "sha256": "4c7107a9fa1e082b291a311284a8f80265bc76d951087ec9daf208a36cc04306"
+      },
+      {
+        "name": "Exp16.mat",
+        "bytes": 30929249,
+        "sha256": "cbeb25175596778f9c04cf9f69a6a0922650a0c534df68a6c8ca84fa8257d3cd"
+      },
+      {
+        "name": "Exp19.mat",
+        "bytes": 30964564,
+        "sha256": "dff296c154136028d7a38568ff4e7f90c0a74e29a51a0f026433f8b8fbd22fd2"
+      },
+      {
+        "name": "Exp20.mat",
+        "bytes": 32013319,
+        "sha256": "b0bc7c415da5dba9ba878bf5c7e4e14a785cf2c4ec7454b57f697609676417b3"
+      },
+      {
+        "name": "Exp21.mat",
+        "bytes": 30449511,
+        "sha256": "9cfc76033748612c441d71e9d23515c81260d557a8f0168403be889ba55cfd65"
+      },
+      {
+        "name": "Exp22.mat",
+        "bytes": 29952927,
+        "sha256": "8afd80f1e7e71650c47222adfbe11d64c21a2b05eeadb8f65ff2e8181984441e"
+      },
+      {
+        "name": "Exp23.mat",
+        "bytes": 32653229,
+        "sha256": "49f33d8ef7b7a73e607a615fcf5cf7fa443f1345265d0c4d3f18c7584560ac65"
+      }
+    ]
+  },
+  "protocol_reference": "research/hytunnel_carpark_holdout_protocol_2026_10_08.json",
+  "protocol_sha256": "f5b972a46d4585d94dd5e26fdd8891ae98b421740246672a294df6005312432e",
+  "baseline_reference": "research/hytunnel_carpark_holdout_result_2026_10_08.json",
+  "model_boundary": {
+    "name": "geometry_declared_two_zone_source_to_vent_transport",
+    "source_zone": "published 5 m source-to-vent-wall distance divided by 40 ft enclosure length",
+    "exchange": "ventilation volumetric flow transports source-zone gas to bulk zone and bulk gas to exhaust",
+    "initial_condition": "measured array mean at first retained post-release sample in both zones",
+    "case_specific_fitting": false,
+    "time_shift": false,
+    "sensor_subset_selection": false,
+    "runtime_parameter_application": false,
+    "frozen_gate_effect": "none"
+  },
+  "evaluation": {
+    "model": "geometry_declared_two_zone_source_to_vent_transport",
+    "inputs": {
+      "container_volume_m3": 60.8,
+      "enclosure_length_m": 12.192,
+      "source_to_vent_wall_m": 5.0,
+      "cross_section_area_m2": 6.317406720000001,
+      "source_zone_fraction": 0.41010498687664043,
+      "source_zone_volume_m3": 24.93438320209974,
+      "bulk_zone_volume_m3": 35.86561679790026
+    },
+    "cases": [
+      {
+        "experiment": 4,
+        "points": 320,
+        "measured_peak_volpct": 2.0969905267979887,
+        "predicted_peak_volpct": 1.2635488558101309,
+        "nrmse_percent_peak_measured": 25.453803825821975,
+        "median_absolute_percentage_error_percent": 39.56964409030703,
+        "peak_relative_error_percent": 39.74465598852686,
+        "spearman_rho": 0.33124578853309117,
+        "measured_flammable_duration_s": 0.0,
+        "predicted_flammable_duration_s": 0.0,
+        "joint_primary_screen_pass": false
+      },
+      {
+        "experiment": 5,
+        "points": 337,
+        "measured_peak_volpct": 2.5094958730156867,
+        "predicted_peak_volpct": 1.937040445758053,
+        "nrmse_percent_peak_measured": 21.239413767891804,
+        "median_absolute_percentage_error_percent": 22.769766516365532,
+        "peak_relative_error_percent": 22.81157077854478,
+        "spearman_rho": 0.2832470257430312,
+        "measured_flammable_duration_s": 0.0,
+        "predicted_flammable_duration_s": 0.0,
+        "joint_primary_screen_pass": false
+      },
+      {
+        "experiment": 6,
+        "points": 322,
+        "measured_peak_volpct": 2.0807699991563204,
+        "predicted_peak_volpct": 1.2636604197588128,
+        "nrmse_percent_peak_measured": 29.581585760501806,
+        "median_absolute_percentage_error_percent": 44.50449020914461,
+        "peak_relative_error_percent": 39.2695771146651,
+        "spearman_rho": 0.2545059855461251,
+        "measured_flammable_duration_s": 0.0,
+        "predicted_flammable_duration_s": 0.0,
+        "joint_primary_screen_pass": false
+      },
+      {
+        "experiment": 7,
+        "points": 317,
+        "measured_peak_volpct": 1.8290307157011134,
+        "predicted_peak_volpct": 0.9197383851669141,
+        "nrmse_percent_peak_measured": 33.9954515198562,
+        "median_absolute_percentage_error_percent": 55.29676392177587,
+        "peak_relative_error_percent": 49.714437419146606,
+        "spearman_rho": 0.2744422988685875,
+        "measured_flammable_duration_s": 0.0,
+        "predicted_flammable_duration_s": 0.0,
+        "joint_primary_screen_pass": false
+      },
+      {
+        "experiment": 8,
+        "points": 318,
+        "measured_peak_volpct": 1.3257174791613882,
+        "predicted_peak_volpct": 0.7976960324148552,
+        "nrmse_percent_peak_measured": 19.038511620443465,
+        "median_absolute_percentage_error_percent": 26.74344626289261,
+        "peak_relative_error_percent": 39.82910801481961,
+        "spearman_rho": 0.32702916063922904,
+        "measured_flammable_duration_s": 0.0,
+        "predicted_flammable_duration_s": 0.0,
+        "joint_primary_screen_pass": false
+      },
+      {
+        "experiment": 9,
+        "points": 318,
+        "measured_peak_volpct": 7.0617166666666655,
+        "predicted_peak_volpct": 7.410366197846295,
+        "nrmse_percent_peak_measured": 22.177263850963715,
+        "median_absolute_percentage_error_percent": 16.43799725256721,
+        "peak_relative_error_percent": 4.937178134395497,
+        "spearman_rho": 0.6420861648218805,
+        "measured_flammable_duration_s": 64.20000000000437,
+        "predicted_flammable_duration_s": 63.89999999999418,
+        "joint_primary_screen_pass": true
+      },
+      {
+        "experiment": 10,
+        "points": 319,
+        "measured_peak_volpct": 5.718745658107862,
+        "predicted_peak_volpct": 7.08334070991061,
+        "nrmse_percent_peak_measured": 34.69266351675298,
+        "median_absolute_percentage_error_percent": 17.863362849317515,
+        "peak_relative_error_percent": 23.861789514420305,
+        "spearman_rho": 0.5563316969302656,
+        "measured_flammable_duration_s": 42.599999999998545,
+        "predicted_flammable_duration_s": 62.70999999999913,
+        "joint_primary_screen_pass": false
+      },
+      {
+        "experiment": 11,
+        "points": 318,
+        "measured_peak_volpct": 5.659567110793191,
+        "predicted_peak_volpct": 6.395551914578163,
+        "nrmse_percent_peak_measured": 25.95391154936017,
+        "median_absolute_percentage_error_percent": 17.756628007650747,
+        "peak_relative_error_percent": 13.004259678825921,
+        "spearman_rho": 0.6044096494480196,
+        "measured_flammable_duration_s": 43.51000000000204,
+        "predicted_flammable_duration_s": 57.87000000000262,
+        "joint_primary_screen_pass": true
+      },
+      {
+        "experiment": 12,
+        "points": 321,
+        "measured_peak_volpct": 4.556478159350668,
+        "predicted_peak_volpct": 5.330415594529297,
+        "nrmse_percent_peak_measured": 27.493878210747013,
+        "median_absolute_percentage_error_percent": 11.889670799535889,
+        "peak_relative_error_percent": 16.985430591615543,
+        "spearman_rho": 0.6165477883554886,
+        "measured_flammable_duration_s": 23.400000000001455,
+        "predicted_flammable_duration_s": 50.69999999999709,
+        "joint_primary_screen_pass": true
+      },
+      {
+        "experiment": 13,
+        "points": 299,
+        "measured_peak_volpct": 4.721654238968298,
+        "predicted_peak_volpct": 5.444671024831835,
+        "nrmse_percent_peak_measured": 22.173564238242434,
+        "median_absolute_percentage_error_percent": 12.84514444526344,
+        "peak_relative_error_percent": 15.312785504207518,
+        "spearman_rho": 0.7540674732329241,
+        "measured_flammable_duration_s": 21.60000000000582,
+        "predicted_flammable_duration_s": 45.0,
+        "joint_primary_screen_pass": true
+      },
+      {
+        "experiment": 14,
+        "points": 320,
+        "measured_peak_volpct": 3.1279385964911395,
+        "predicted_peak_volpct": 2.836677277238544,
+        "nrmse_percent_peak_measured": 18.905089899260904,
+        "median_absolute_percentage_error_percent": 27.009457793252356,
+        "peak_relative_error_percent": 9.311606039176304,
+        "spearman_rho": 0.5753087188351449,
+        "measured_flammable_duration_s": 0.0,
+        "predicted_flammable_duration_s": 0.0,
+        "joint_primary_screen_pass": false
+      },
+      {
+        "experiment": 15,
+        "points": 57,
+        "measured_peak_volpct": 3.0958702702703826,
+        "predicted_peak_volpct": 3.4647213027920696,
+        "nrmse_percent_peak_measured": 32.640058467801104,
+        "median_absolute_percentage_error_percent": 29.667581467291093,
+        "peak_relative_error_percent": 11.914292277159042,
+        "spearman_rho": 0.014454239045890589,
+        "measured_flammable_duration_s": 0.0,
+        "predicted_flammable_duration_s": 0.0,
+        "joint_primary_screen_pass": false
+      },
+      {
+        "experiment": 16,
+        "points": 1335,
+        "measured_peak_volpct": 7.258790653357231,
+        "predicted_peak_volpct": 26.047770793670068,
+        "nrmse_percent_peak_measured": 208.86283055083416,
+        "median_absolute_percentage_error_percent": 264.5454220371702,
+        "peak_relative_error_percent": 258.84449679813855,
+        "spearman_rho": 0.5388730783316202,
+        "measured_flammable_duration_s": 342.6200000000026,
+        "predicted_flammable_duration_s": 378.1600000000035,
+        "joint_primary_screen_pass": false
+      },
+      {
+        "experiment": 19,
+        "points": 2836,
+        "measured_peak_volpct": 6.8511428126768825,
+        "predicted_peak_volpct": 15.314497306066272,
+        "nrmse_percent_peak_measured": 113.44075264387521,
+        "median_absolute_percentage_error_percent": 295.480055070479,
+        "peak_relative_error_percent": 123.53201100595044,
+        "spearman_rho": 0.5952867627971895,
+        "measured_flammable_duration_s": 212.66999999999825,
+        "predicted_flammable_duration_s": 951.989999999998,
+        "joint_primary_screen_pass": false
+      },
+      {
+        "experiment": 20,
+        "points": 3319,
+        "measured_peak_volpct": 6.400386555580451,
+        "predicted_peak_volpct": 19.256912227530563,
+        "nrmse_percent_peak_measured": 186.1851623587955,
+        "median_absolute_percentage_error_percent": 422.9917871329303,
+        "peak_relative_error_percent": 200.87108114963152,
+        "spearman_rho": 0.31384229600734426,
+        "measured_flammable_duration_s": 330.61000000000786,
+        "predicted_flammable_duration_s": 969.3399999999965,
+        "joint_primary_screen_pass": false
+      },
+      {
+        "experiment": 21,
+        "points": 3319,
+        "measured_peak_volpct": 4.686285227207029,
+        "predicted_peak_volpct": 11.304984984456539,
+        "nrmse_percent_peak_measured": 138.14342386632273,
+        "median_absolute_percentage_error_percent": 297.0969789975402,
+        "peak_relative_error_percent": 141.2355295581139,
+        "spearman_rho": 0.31733882326391993,
+        "measured_flammable_duration_s": 52.80999999999767,
+        "predicted_flammable_duration_s": 942.3499999999985,
+        "joint_primary_screen_pass": false
+      },
+      {
+        "experiment": 22,
+        "points": 3321,
+        "measured_peak_volpct": 3.308694726256968,
+        "predicted_peak_volpct": 7.20139605666897,
+        "nrmse_percent_peak_measured": 111.60938260183673,
+        "median_absolute_percentage_error_percent": 195.608718222383,
+        "peak_relative_error_percent": 117.65066446053498,
+        "spearman_rho": 0.32875363200631325,
+        "measured_flammable_duration_s": 0.0,
+        "predicted_flammable_duration_s": 795.0899999999965,
+        "joint_primary_screen_pass": false
+      },
+      {
+        "experiment": 23,
+        "points": 3318,
+        "measured_peak_volpct": 4.007517378234637,
+        "predicted_peak_volpct": 9.445863458748734,
+        "nrmse_percent_peak_measured": 116.62351139297027,
+        "median_absolute_percentage_error_percent": 222.1492973321479,
+        "peak_relative_error_percent": 135.70361815647968,
+        "spearman_rho": 0.6368881065923668,
+        "measured_flammable_duration_s": 0.6000000000058208,
+        "predicted_flammable_duration_s": 761.7299999999959,
+        "joint_primary_screen_pass": false
+      }
+    ],
+    "eligible_case_count": 18,
+    "pass_count": 4,
+    "pass_fraction_of_declared_cases": 0.2222222222222222,
+    "failures": []
+  },
+  "claim_boundary": "Post-outcome development diagnostic only. The public archive lacks an authoritative sensor-coordinate crosswalk, so this does not validate local plume geometry, detector placement, outdoor HRS dispersion, consequence distance, station controls or a complete station-to-vehicle loop. It must not replace the frozen holdout result."
+}
