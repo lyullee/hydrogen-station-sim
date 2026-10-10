@@ -1,4 +1,4 @@
-from h2station.api import _frames_after_cursor
+from h2station.api import _frames_after_cursor, _risk_zone_state_signature
 
 
 def _frames(count: int, start: int = 0):
@@ -18,3 +18,19 @@ def test_frame_cursor_catches_up_when_history_was_trimmed():
 
     assert _frames_after_cursor(frames, 2) == frames
 
+
+def test_risk_zone_signature_invalidates_on_safety_state_changes_only():
+    frame = {
+        "time_s": 12.0,
+        "esd": False,
+        "active_faults": [],
+        "total_leak_flow_g_s": 0.0,
+        "hazop": {"active": [], "releases": []},
+        "process_operations": {"relief_open": {}},
+    }
+
+    same = dict(frame, time_s=13.0)
+    esd = dict(frame, esd=True)
+
+    assert _risk_zone_state_signature(frame) == _risk_zone_state_signature(same)
+    assert _risk_zone_state_signature(frame) != _risk_zone_state_signature(esd)

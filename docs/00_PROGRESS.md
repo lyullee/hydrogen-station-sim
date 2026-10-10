@@ -11,14 +11,17 @@ Status: implemented; focused API/stream regression passed.
 - The 3D risk overlay also stopped deep-copying the full latest HAZOP tree on
   every refresh. Published frames are append-only snapshots, so the endpoint
   can read the latest frame directly while holding the job lock.
+- Its 30-second cache now invalidates immediately for ESD, active-fault,
+  HAZOP-rule, relief-valve, or release-state transitions, while concurrent
+  overlay requests for the same job share one in-flight calculation.
 - This changes transport and presentation overhead only. Physical integration,
   HAZOP sampling, safety actions, and stored replay frames are unchanged.
 
 Verification:
 
 - HAZOP/API/process-operation suite: **70 passed**.
-- Added cursor regression coverage for incremental delivery and trimmed-window
-  recovery.
+- Added cursor and risk-signature regression coverage for incremental delivery,
+  trimmed-window recovery, and immediate safety-state invalidation.
 
 ## 2026-10-10 - Direct operator command bridge
 

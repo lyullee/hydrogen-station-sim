@@ -503,6 +503,7 @@ _jobs: dict[str, dict[str, Any]] = {}
 _jobs_lock = Lock()
 _process_runtimes: dict[str, ProcessRuntime] = {}
 _risk_zone_cache: dict[str, dict[str, Any]] = {}
+_risk_zone_locks: dict[tuple[int, str], asyncio.Lock] = {}
 _executor = ThreadPoolExecutor(max_workers=2, thread_name_prefix="h2station")
 _saga_token_sink: ContextVar[Callable[[str], None] | None] = ContextVar("saga_token_sink", default=None)
 
@@ -1572,9 +1573,49 @@ def _frames_after_cursor(frames: list[dict[str, Any]], cursor: int) -> list[dict
     return frames[start:]
 
 
+def _risk_zone_state_signature(frame: Mapping[str, Any]) -> tuple[Any, ...]:
+    """Return only state transitions that must invalidate the overlay cache."""
+    hazop = frame.get("hazop") or {}
+    active_rules = tuple(sorted(
+        (str(row.get("rule_id")), str(row.get("state")), str(row.get("severity")))
+        for row in (hazop.get("active") or []) if isinstance(row, dict)
+    ))
+    release_rows = []
+    for row in (hazop.get("releases") or []):
+        if not isinstance(row, dict):
+            continue
+        consequence = row.get("consequence")
+        release_rows.append((
+            str(row.get("release_id")), str(row.get("component_id")),
+            str(consequence.get("status")) if isinstance(consequence, dict) else "",
+        ))
+    release_state = tuple(sorted(release_rows))
+    operations = frame.get("process_operations") or {}
+    relief_open = tuple(sorted(
+        str(key) for key, value in (operations.get("relief_open") or {}).items()
+        if value
+    )) if isinstance(operations, dict) else ()
+    return (
+        bool(frame.get("esd")),
+        tuple(sorted(str(item) for item in frame.get("active_faults") or [])),
+        active_rules,
+        release_state,
+        relief_open,
+        bool(float(frame.get("total_leak_flow_g_s") or 0.0) > 1.0e-3),
+    )
+
+
 @app.get("/api/simulations/{job_id}/risk-zones")
 async def simulation_risk_zones(job_id: str) -> dict[str, Any]:
     """Rate-limited current-state screening risk for the spatial overlay."""
+    loop_key = (id(asyncio.get_running_loop()), job_id)
+    lock = _risk_zone_locks.setdefault(loop_key, asyncio.Lock())
+    async with lock:
+        return await _simulation_risk_zones_locked(job_id)
+
+
+async def _simulation_risk_zones_locked(job_id: str) -> dict[str, Any]:
+    """Build one overlay payload while serializing concurrent cache misses."""
     with _jobs_lock:
         job = _jobs.get(job_id)
         if job is None:
@@ -1592,8 +1633,10 @@ async def simulation_risk_zones(job_id: str) -> dict[str, Any]:
     interval = int(settings.get("risk_update_interval_s", 30))
     sample_time = float(frame.get("time_s") or 0.0)
     bucket = int(sample_time // max(interval, 1))
+    state_signature = _risk_zone_state_signature(frame)
     cached = _risk_zone_cache.get(job_id)
-    if cached and cached.get("bucket") == bucket:
+    if (cached and cached.get("bucket") == bucket
+            and cached.get("state_signature") == state_signature):
         return cached["payload"]
     backend = await asyncio.to_thread(load_hyram_backend)
     catalog = load_catalog()
@@ -1636,7 +1679,9 @@ async def simulation_risk_zones(job_id: str) -> dict[str, Any]:
                "backend_available": bool(getattr(backend, "available", False)),
                "update_interval_s": interval,
                "basis": "현재 압력·온도와 1 mm 가정 누출 피해영향의 고정 기준 지수; 연간 개인위험도 아님"}
-    _risk_zone_cache[job_id] = {"bucket": bucket, "payload": payload}
+    _risk_zone_cache[job_id] = {
+        "bucket": bucket, "state_signature": state_signature, "payload": payload,
+    }
     return payload
 
 
