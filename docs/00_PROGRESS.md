@@ -1,5 +1,22 @@
 # Development Progress
 
+## 2026-10-10 - Recheck official public full-loop data sources
+
+Status: no new eligible raw station-to-vehicle holdout was found; the search
+branch is closed for now so model and safety work can continue in parallel.
+
+- The current Zenodo HySaM release (`10.5281/zenodo.20590842`) still contains
+  sampling-system workbooks without a vehicle-tank/controller boundary.
+- The newer-looking FCEV fueling Zenodo record (`10.5281/zenodo.12737240`)
+  contains an article PDF only. The DTU archive remains a Modelica/Matlab
+  simulator reference, not measured time series.
+- The official NREL HDVS and real-station publications remain data-request
+  leads because synchronized raw rows, channel dictionaries and reuse terms are
+  not publicly attached.
+
+The full-loop gate remains closed honestly; the available H2P and station-side
+traces continue through component diagnostics and LLM evidence grounding.
+
 ## 2026-10-10 - Repair Proust holdout metadata digests
 
 Status: implemented; the Proust independent holdout's recorded evaluator and
