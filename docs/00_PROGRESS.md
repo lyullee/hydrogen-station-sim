@@ -18,6 +18,19 @@ Verification:
 - GitHub Actions now runs the same focused P0/P1 command from a clean Python
   3.12 environment on pushes and pull requests to `main`.
 
+## 2026-10-10 - Readiness hashes refreshed after evidence updates
+
+- Rebuilt the public Type-IV runtime-calibration audit and public accident-
+  precedent routing audit after their source files changed. The previous
+  failures were stale hash records, not model or routing failures.
+- Synchronized the research and manuscript readiness snapshots. The current
+  authoritative count is 127 PASS / 10 FAIL / 7 PENDING; the remaining FAIL
+  gates are genuine physics/full-loop or governance gaps.
+
+Verification:
+
+- Readiness, tank-runtime and accident-routing tests passed (5 tests).
+
 ## 2026-10-10 - Mixed-format split-channel full-loop intake
 
 - The P0 intake now accepts station/vehicle pairs as CSV, XLSX, XLSM, or a
