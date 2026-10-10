@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-10-10T22:35:44.363283+00:00",
+  "artifact_type": "priority_failure_mechanism_triage",
+  "gate_id": "dickens_typeiii_prospective_validation",
+  "source_commit": "d52e090036ce58bebd1cf151a46959446039fa31",
+  "evidence_role": "post_outcome_development_diagnostic",
+  "baseline": {
+    "pressure_rmse_mpa": 0.9429227572761019,
+    "temperature_rmse_k": 19.1789735912541,
+    "temperature_peak_abs_error_k": 18.71978815209468,
+    "joint_primary_screen_pass": false
+  },
+  "mechanism_screen": {
+    "hypothesis": "Including forced inlet-jet convection in gas-to-liner heat transfer may explain the frozen temperature overprediction.",
+    "predefined_nozzle_grid_mm": [
+      3.0,
+      5.0,
+      7.0
+    ],
+    "all_grid_cases_joint_screen_pass": true,
+    "temperature_rmse_k_range": [
+      7.2147751776151345,
+      7.915347030876859
+    ],
+    "temperature_peak_error_k_range": [
+      8.17737086207643,
+      8.697508507942644
+    ],
+    "pressure_rmse_mpa_range": [
+      0.6531593514131298,
+      0.6738279453518523
+    ]
+  },
+  "source_semantics": {
+    "reported_channel": "validation.temperature.gas_mean",
+    "archive_reader_label": "Gas Temperature",
+    "missing_required_metadata": [
+      "experiment inlet nozzle internal diameter",
+      "time-resolved inlet gas temperature"
+    ],
+    "source_hashes_match": true
+  },
+  "decision": {
+    "runtime_model_changed": false,
+    "frozen_validation_revised": false,
+    "gate_status_changed": false,
+    "promotion_allowed": false,
+    "next_high_impact_action": "Freeze inlet nozzle diameter and time-resolved inlet temperature before scoring a new independent holdout with mixed convection enabled."
+  },
+  "claim_boundary": "This narrows a failure mechanism in a post-outcome development diagnostic. Because the nozzle is selected after outcomes, it does not support a Dickens PASS, field-safety, full-loop, or IJHE readiness claim."
+}
