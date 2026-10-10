@@ -322,7 +322,11 @@ class SimulationInput(BaseModel):
     duration_s: float = Field(default=300.0, gt=0.0, le=3600.0)
     continuous: bool = False
     speed_multiplier: Literal[0.5, 1, 2, 3, 5, 10, 30, 50, 100] = 1
-    control_period_s: float = Field(default=0.2, gt=0.0, le=2.0)
+    # 0.5 s is the balanced operator default.  The 0.2 s precision path
+    # remains selectable for validation and short transient studies, but using
+    # it for every normal run multiplies the expensive property/ODE evaluations
+    # without adding useful visible resolution to the monitor.
+    control_period_s: float = Field(default=0.5, gt=0.0, le=2.0)
     ambient_temperature_c: float = Field(default=25.0, ge=-40.0, le=50.0)
     initial_vehicle_pressure_mpa: float = Field(default=5.0, gt=0.0, le=70.0)
     initial_vehicle_temperature_c: float = Field(default=25.0, ge=-40.0, le=85.0)

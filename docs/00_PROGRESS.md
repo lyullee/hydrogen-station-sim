@@ -1,5 +1,18 @@
 # Development Progress
 
+## 2026-10-10 - Make the balanced control cadence the operator default
+
+Status: implemented; precision mode remains available.
+
+- The API and remote now default to a 0.5 s control period. The existing 1.0 s
+  fast mode and 0.2 s precision mode remain selectable.
+- This changes only the unspecialized operator default. Fault, relief, vent and
+  cooling events still use the event-aware solver path, and no safety threshold
+  or physical coefficient changed.
+- A local smoke comparison after warm-up measured a 10 s nominal run at about
+  2.8 s with 0.2 s control and about 2.0 s with 0.5 s control. These are local
+  development timings, not a real-time performance guarantee.
+
 ## 2026-10-10 - Remove scalar property lookup allocations from the solver hot path
 
 Status: implemented; property/restriction regression suite passed.
