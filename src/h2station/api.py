@@ -1553,6 +1553,25 @@ _RISK_DESIGN_PRESSURE_MPA = {
 }
 
 
+def _frames_after_cursor(frames: list[dict[str, Any]], cursor: int) -> list[dict[str, Any]]:
+    """Return only newly appended frames without rescanning the whole history.
+
+    Continuous monitoring keeps a bounded replay window, but a websocket or
+    fallback poller can remain connected for hours.  Filtering the complete
+    list on every 100 ms tick made delivery cost grow with the retained
+    history (an accidental O(n²) path).  Sequences are monotonic, so walking
+    backwards from the tail is proportional to the number of new frames in
+    the usual case.  If the cursor fell out of the retained window, the whole
+    available window is returned once and the caller catches up normally.
+    """
+    if not frames:
+        return []
+    start = len(frames)
+    while start and int(frames[start - 1].get("sequence", -1)) > cursor:
+        start -= 1
+    return frames[start:]
+
+
 @app.get("/api/simulations/{job_id}/risk-zones")
 async def simulation_risk_zones(job_id: str) -> dict[str, Any]:
     """Rate-limited current-state screening risk for the spatial overlay."""
@@ -1563,7 +1582,12 @@ async def simulation_risk_zones(job_id: str) -> dict[str, Any]:
         frames = job.get("frames") or []
         if not frames:
             return {"time_s": None, "zones": [], "status": "waiting"}
-        frame = deepcopy(frames[-1])
+        # Frames are append-only snapshots.  The risk endpoint only reads the
+        # latest snapshot, so copying the complete HAZOP/sensor tree here adds
+        # avoidable latency whenever the overlay is refreshed.  Keep the
+        # snapshot reference while under the job lock; no writer mutates an
+        # already-published frame.
+        frame = frames[-1]
         settings = ((job.get("operations") or {}).get("settings") or {})
     interval = int(settings.get("risk_update_interval_s", 30))
     sample_time = float(frame.get("time_s") or 0.0)
@@ -1623,9 +1647,10 @@ def simulation_frames(job_id: str, after: int = -1) -> dict[str, Any]:
         job = _jobs.get(job_id)
         if job is None:
             raise HTTPException(status_code=404, detail="Simulation not found")
+        stored_frames = job.get("frames", [])
         return {
             "job": {k: v for k, v in job.items() if k not in {"result", "frames", "hazop_detail", "pending_fault_commands", "fault_registry", "_simulation_clock"}},
-            "frames": [f for f in job.get("frames", []) if f["sequence"] > after],
+            "frames": _frames_after_cursor(stored_frames, after),
         }
 
 
@@ -3378,8 +3403,8 @@ async def simulation_stream(websocket: WebSocket, job_id: str) -> None:
                     )
                     await websocket.close(code=4404)
                     return
-                stored_frames = list(job.get("frames", []))
-                frames = [frame for frame in stored_frames if frame.get("sequence", -1) > cursor]
+                stored_frames = job.get("frames", [])
+                frames = _frames_after_cursor(stored_frames, cursor)
                 status = {
                     key: value
                     for key, value in job.items()

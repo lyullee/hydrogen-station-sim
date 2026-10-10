@@ -1,5 +1,25 @@
 # Development Progress
 
+## 2026-10-10 - Remove long-run telemetry scan bottleneck
+
+Status: implemented; focused API/stream regression passed.
+
+- Continuous websocket delivery and the HTTP fallback no longer filter the
+  entire retained frame history on every polling tick. Because frame sequence
+  numbers are monotonic, delivery now walks back only across newly appended
+  frames and catches up once if the bounded replay window has rolled over.
+- The 3D risk overlay also stopped deep-copying the full latest HAZOP tree on
+  every refresh. Published frames are append-only snapshots, so the endpoint
+  can read the latest frame directly while holding the job lock.
+- This changes transport and presentation overhead only. Physical integration,
+  HAZOP sampling, safety actions, and stored replay frames are unchanged.
+
+Verification:
+
+- HAZOP/API/process-operation suite: **70 passed**.
+- Added cursor regression coverage for incremental delivery and trimmed-window
+  recovery.
+
 ## 2026-10-10 - Direct operator command bridge
 
 - Added a deterministic command-intent layer to both the main direct assistant
