@@ -1,5 +1,19 @@
 # Development Progress
 
+## 2026-10-10 - Completion-gate revalidation after public-data sweep
+
+- Re-ran the current evidence audit after the latest public-data search. The
+  readiness counts remain **127 PASS / 10 FAIL / 7 PENDING**;
+  `bounded_ijhe_submission_ready`, `full_user_objective_ready` and
+  `goal_completion_permitted` remain false because the independent full-loop
+  and human-review gates are still open.
+- The additional CIP endpoint-table and DOE H2IQ report checks are retained as
+  source-classification evidence only. Neither contains a rights-cleared,
+  synchronized station-to-vehicle raw logger cohort, so no frozen validation
+  decision or runtime parameter was changed.
+- The latest complete regression run remains **1,257 passed / 20 warnings**;
+  the focused post-search audit tests pass as well.
+
 ## 2026-10-10 - Figshare open-channel dispersion intake and full regression recheck
 
 - Added a reproducible Figshare API intake for the CC BY 4.0 open-channel
