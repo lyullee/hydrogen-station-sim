@@ -1,0 +1,112 @@
+{
+  "schema_version": 1,
+  "artifact_type": "confidential_private_station_pressure_lifecycle_audit",
+  "recorded_at": "2026-10",
+  "source_scope": "owner-controlled hydrogen-refuelling-station pressure and lifecycle exports",
+  "privacy": {
+    "source_identifiers_published": false,
+    "source_paths_published": false,
+    "source_filenames_published": false,
+    "source_headers_published": false,
+    "raw_rows_persisted": false,
+    "calendar_values_published": false,
+    "site_company_location_manufacturer_published": false
+  },
+  "inventory": {
+    "file_count": 33,
+    "total_row_count": 59272300,
+    "size_buckets": {
+      "<1MiB": 0,
+      "1-100MiB": 9,
+      "100-500MiB": 24,
+      ">=500MiB": 0
+    },
+    "schema_families": [
+      {
+        "id": "schema_family_1",
+        "column_count": 9,
+        "roles": [
+          "flow_or_totalizer",
+          "pressure"
+        ],
+        "file_count": 12,
+        "row_count": 29361281
+      },
+      {
+        "id": "schema_family_2",
+        "column_count": 9,
+        "roles": [
+          "lifecycle_counter",
+          "temperature"
+        ],
+        "file_count": 13,
+        "row_count": 29257577
+      },
+      {
+        "id": "schema_family_3",
+        "column_count": 64,
+        "roles": [
+          "lifecycle_counter",
+          "pressure",
+          "state_or_alarm",
+          "temperature"
+        ],
+        "file_count": 8,
+        "row_count": 653442
+      }
+    ],
+    "role_file_counts": {
+      "flow_or_totalizer": 12,
+      "lifecycle_counter": 21,
+      "pressure": 20,
+      "state_or_alarm": 8,
+      "temperature": 21
+    },
+    "role_row_counts": {
+      "flow_or_totalizer": 29361281,
+      "lifecycle_counter": 29911019,
+      "pressure": 30014723,
+      "state_or_alarm": 653442,
+      "temperature": 29911019
+    }
+  },
+  "time_axis_screen": {
+    "files_with_parseable_timestamp": 25,
+    "files_with_monotonic_timestamp": 25,
+    "timestamp_order_counts": {
+      "descending": 25,
+      "single_value_or_unknown": 8
+    },
+    "duration_buckets": {
+      "<1h": 0,
+      "1-24h": 0,
+      "1-7d": 1,
+      "7-31d": 24,
+      ">=31d": 0
+    },
+    "calendar_values_persisted": false
+  },
+  "lifecycle_counter_screen": {
+    "files_with_counter": 21,
+    "numeric_counter_observations": 59168365,
+    "counter_decrease_observations": 22937,
+    "monotonicity_claim_supported": false,
+    "counter_semantics_attested": false
+  },
+  "eligibility": {
+    "station_side_pressure_replay_candidate": true,
+    "station_side_lifecycle_alignment_candidate": true,
+    "station_side_temperature_or_flow_candidate": true,
+    "parameter_fit_authorized": false,
+    "vehicle_or_receptacle_channels_present": false,
+    "full_loop_holdout_eligible": false
+  },
+  "next_custodian_checks": [
+    "Confirm engineering units, scaling, quality flags and tag-role mapping before fitting.",
+    "Confirm whether lifecycle counters increment on completed 450/850-bar cycles and how resets are encoded.",
+    "Freeze relative-time event windows and independent holdouts without publishing calendar dates.",
+    "Supply synchronized vehicle/receptacle pressure, temperature and delivered-mass channels for full-loop validation.",
+    "Keep the raw archive outside the public repository and retain written reuse permission."
+  ],
+  "claim_boundary": "Privacy-bounded station-side schema, time-axis and lifecycle-counter screening only. This artifact does not attest units, calibration, physical correctness, safety distance, vehicle filling, full-loop validation or field effectiveness."
+}

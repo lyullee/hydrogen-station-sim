@@ -15,6 +15,14 @@
 - 공개 Type-IV 탱크 경계 검증: 12건, 탱크 경계 구성요소 검증으로 유지합니다.
 - 사고 전례·대응 플레이북·가상 조치 실행은 시나리오와 단계별 대응 근거로 사용하며, 사고 빈도나 현장 대응 효과를 추정하지 않습니다.
 
+## 새로 확인한 비공개 충전소 자료
+
+- 소유자 관리 원본을 저장소로 복사하지 않고 비식별 스트리밍 감사한 결과, 압력·유량·온도·상태·뱅크 수명 카운터를 포함한 **33개 파일, 약 5,927만 행**이 확인되었습니다.
+- 이 자료는 충전소 측 압력 재생, 공정 상태, 수명 카운터 정렬의 후보 입력으로 등록했습니다. 시간축은 25개 파일에서 파싱 가능했고, 파일 단위 화면 검사는 역순 시간축도 허용하도록 기록했습니다.
+- 수명 카운터 감소가 **22,937회** 관찰되어 리셋·교체·집계 규칙을 확인하기 전에는 이를 단조 증가 수명 지표나 보정값으로 사용하지 않습니다. 단위·스케일·품질 플래그도 아직 관리자 확인 전입니다.
+- 차량·수용용기 채널은 확인되지 않아 이 자료만으로 차량 충전 정확도, 질량수지 또는 full-loop 외부검증을 주장하지 않습니다.
+- 비식별 감사 원본: `research/private_station_pressure_lifecycle_audit_2026_10_10.json`. 원본 경로·파일명·태그·행·정확한 날짜는 저장하지 않았습니다.
+
 ## 실패 또는 제한된 결과도 그대로 유지
 
 - 공개 MC Default full-loop holdout: 0 / 8 통과. 평균 압력 RMSE 15.862 MPa, 온도 RMSE 13.230 °C, SOC RMSE 18.082%p. 이 결과는 숨기거나 재평가로 대체하지 않습니다.
@@ -41,6 +49,7 @@
 - `research/data_coverage_summary_2026_10_10.json`
 - `research/ijhe_readiness_audit.json`
 - `research/local_candidate_full_loop_screen_2026_10_09.json`
+- `research/private_station_pressure_lifecycle_audit_2026_10_10.json`
 - `data/public_validation/results/closed_loop_external_holdout/validation.json`
 
 이 브리프는 모델이나 검증 게이트를 변경하지 않습니다. 새로운 자료가 들어오면 동일한 동결·시간축·권한 검사를 거친 뒤 다시 생성합니다.
