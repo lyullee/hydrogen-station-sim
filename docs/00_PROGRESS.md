@@ -14,6 +14,11 @@ or full-loop claim was changed.
 
 Focused search-recheck and LLM-grounding tests: **29 passed**.
 
+The hash-linked runtime audit records were refreshed after this evidence
+projection change. The readiness audit was rechecked at **127 PASS / 10 FAIL /
+7 PENDING (88.2%)**; the two transient hash mismatches were artifact staleness,
+not new model failures.
+
 ## 2026-10-11 - Full regression baseline rechecked
 
 The complete local regression suite finished with **1,355 passed** and no
