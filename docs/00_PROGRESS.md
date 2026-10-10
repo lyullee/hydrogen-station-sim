@@ -1,5 +1,18 @@
 # Development Progress
 
+## 2026-10-10 - Priority tracks for faster validation progress
+
+- The gap report now exposes three parallel execution tracks instead of a
+  serial gate list: **P0 full-loop intake/scoring**, **P1 component-model
+  repairs**, and **P2 review/publication**.
+- The P0 path is the first high-impact check because the frozen evaluator is
+  already implemented; once at least three synchronized events pass intake,
+  the custodian can score them without waiting for unrelated component gates.
+- Full regression is no longer a status check. It is reserved for code changes
+  in the affected track; status checks use the privacy-bounded triage report and
+  focused tests.
+- No readiness gate was promoted by this workflow change.
+
 ## 2026-10-10 - Workbook intake for controlled full-loop files
 
 - Added XLSX/XLSM support to the privacy-safe pilot and freeze workflow. The

@@ -40,6 +40,27 @@ _GOVERNANCE = {
     "submission_metadata_and_declarations",
 }
 
+# Keep the status report usable as an execution queue.  The full-loop gate is
+# the highest-impact blocker, while component and governance work can proceed
+# on independent tracks instead of forcing a serial, all-gates rerun.
+_TRACKS = {
+    "full_loop_data": {
+        "priority": "P0",
+        "parallel_track": "full_loop_intake_and_scoring",
+        "why_now": "동기화된 수용부·제어기 채널이 들어오면 현재 평가기로 바로 점수화할 수 있는 핵심 게이트",
+    },
+    "component_model": {
+        "priority": "P1",
+        "parallel_track": "component_model_repairs",
+        "why_now": "실패 물리량별 독립 holdout을 병행하되 full-loop 입력 대기를 막지 않음",
+    },
+    "governance_review": {
+        "priority": "P2",
+        "parallel_track": "review_and_publication",
+        "why_now": "수치 계산과 독립적으로 진행 가능한 검토·기록 작업",
+    },
+}
+
 
 def _read(root: Path, relative: str) -> dict[str, Any]:
     return json.loads((root / relative).read_text(encoding="utf-8"))
@@ -103,11 +124,20 @@ def build_report(root: Path) -> dict[str, Any]:
                 "id": gate_id,
                 "status": status,
                 "bucket": _bucket(gate_id),
+                "priority": _TRACKS.get(_bucket(gate_id), {}).get("priority", "P3"),
+                "parallel_track": _TRACKS.get(_bucket(gate_id), {}).get(
+                    "parallel_track", "other"
+                ),
                 "claim": str(gate.get("claim", "")),
                 "next_action": _next_action(gate_id, status),
+                "why_now": _TRACKS.get(_bucket(gate_id), {}).get(
+                    "why_now", "게이트 정의와 독립 근거를 먼저 확인"
+                ),
                 "claim_boundary": _claim_boundary(gate),
             }
         )
+
+    unresolved.sort(key=lambda item: (item["priority"], item["id"]))
 
     by_bucket: dict[str, dict[str, int]] = {}
     for item in unresolved:
@@ -131,6 +161,19 @@ def build_report(root: Path) -> dict[str, Any]:
             "privacy": "원시 행·경로·회사·사이트·제조사·달력 날짜를 이 보고서에 복사하지 않는다.",
         },
         "bucket_counts": by_bucket,
+        "execution_tracks": [
+            {
+                "priority": config["priority"],
+                "parallel_track": config["parallel_track"],
+                "bucket": bucket,
+                "open_gate_count": sum(
+                    1 for item in unresolved if item["bucket"] == bucket
+                ),
+                "why_now": config["why_now"],
+            }
+            for bucket, config in _TRACKS.items()
+            if any(item["bucket"] == bucket for item in unresolved)
+        ],
         "unresolved_gates": unresolved,
     }
 
@@ -148,13 +191,23 @@ def _markdown(report: dict[str, Any]) -> str:
         "",
         "## 미해결 게이트",
         "",
-        "| 구분 | 게이트 | 상태 | 다음 최소 행동 |",
-        "| --- | --- | --- | --- |",
+        "| 우선순위 | 병렬 트랙 | 게이트 | 상태 | 다음 최소 행동 |",
+        "| --- | --- | --- | --- | --- |",
     ]
     for item in report["unresolved_gates"]:
-        lines.append(f"| {item['bucket']} | `{item['id']}` | {item['status']} | {item['next_action']} |")
+        lines.append(
+            f"| {item['priority']} | {item['parallel_track']} | `{item['id']}` | "
+            f"{item['status']} | {item['next_action']} |"
+        )
     lines.extend(
         [
+            "",
+            "## 실행 순서",
+            "",
+            "- **P0** full-loop intake와 frozen scoring을 먼저 확인합니다. 이 트랙이 닫히면 전체 목표에 가장 큰 변화가 생깁니다.",
+            "- **P1** 실패한 구성요소 물리는 독립 holdout별로 병행합니다. 하나가 끝날 때까지 다른 트랙을 기다리지 않습니다.",
+            "- **P2** 윤리·전문가 검토·투고 메타데이터는 계산과 별도로 병행합니다.",
+            "- 전체 회귀는 코드 변경이 있는 트랙에서만 실행하고, 상태 확인에는 이 보고서와 focused test만 사용합니다.",
             "",
             "## 사용 원칙",
             "",

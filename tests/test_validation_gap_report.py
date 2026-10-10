@@ -28,6 +28,21 @@ def test_gap_report_classifies_primary_buckets() -> None:
     assert buckets["governance_review"]["PENDING"] >= 5
 
 
+def test_gap_report_prioritizes_high_impact_work_without_serializing_tracks() -> None:
+    report = build_report(ROOT)
+
+    assert report["execution_tracks"][0]["priority"] == "P0"
+    assert report["execution_tracks"][0]["parallel_track"] == "full_loop_intake_and_scoring"
+    unresolved = report["unresolved_gates"]
+    assert unresolved[0]["id"] == "full_loop_external_validation"
+    assert unresolved[0]["priority"] == "P0"
+    assert {item["parallel_track"] for item in unresolved} >= {
+        "full_loop_intake_and_scoring",
+        "component_model_repairs",
+        "review_and_publication",
+    }
+
+
 def test_markdown_does_not_expose_evidence_paths() -> None:
     markdown = _markdown(build_report(ROOT))
     assert "evidence" not in markdown.lower()
