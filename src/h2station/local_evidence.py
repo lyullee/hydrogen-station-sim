@@ -46,6 +46,9 @@ _MC_GEOMETRY_TRANSFER_DIAGNOSTIC = _ROOT / (
 _MC_SOC_BOUNDARY_DIAGNOSTIC = _ROOT / (
     "research/mc_soc_boundary_diagnostic_2026_10_10.json"
 )
+_DICKENS_GEOMETRY_FOLLOWUP = _ROOT / (
+    "research/dickens_typeiii_geometry_resolved_followup_2026_10_10.json"
+)
 
 
 def _read_json(path: Path) -> dict[str, Any]:
@@ -294,6 +297,69 @@ def _mc_soc_boundary_diagnostic_summary() -> dict[str, Any] | None:
             ),
             "runtime_parameter_application": False,
             "full_loop_external_validation_ready": False,
+            "claim_limit": str(record["claim_boundary"]),
+        }
+    except (OSError, KeyError, TypeError, ValueError, json.JSONDecodeError):
+        return None
+
+
+def _dickens_geometry_followup_summary() -> dict[str, Any] | None:
+    """Expose the source-grounded follow-up candidate without promotion."""
+
+    try:
+        record = _read_json(_DICKENS_GEOMETRY_FOLLOWUP)
+        source = record.get("source_geometry") or {}
+        selected = record.get("selected_diagnostic") or {}
+        metrics = selected.get("metrics") or {}
+        interpretation = record.get("diagnostic_interpretation") or {}
+        required = (
+            record.get("schema_version") == 1,
+            record.get("artifact_type") == "source_geometry_resolved_followup_candidate",
+            record.get("status") == "candidate_protocol_input_not_validation",
+            record.get("evidence_role") == "post_outcome_model_development_diagnostic",
+            interpretation.get("source_geometry_confirmed_after_original_outcome") is True,
+            interpretation.get("runtime_parameter_updated") is False,
+            interpretation.get("validation_gate_effect") == "none",
+            selected.get("nozzle_diameter_mm") == 5.0,
+            selected.get("joint_primary_screen_pass") is True,
+            isinstance(record.get("claim_boundary"), str),
+        )
+        if not all(required):
+            return None
+        return {
+            "status": "followup_candidate_only",
+            "evidence_role": str(record["evidence_role"]),
+            "source_confirmed_geometry": {
+                key: float(source[key])
+                for key in (
+                    "inlet_pipe_internal_diameter_m",
+                    "inlet_pipe_extension_m",
+                    "tank_internal_diameter_m",
+                    "tank_internal_length_source_m",
+                    "tank_internal_length_archived_case_m",
+                )
+            },
+            "selected_diagnostic": {
+                "nozzle_diameter_mm": 5.0,
+                "metrics": {
+                    key: float(metrics[key])
+                    for key in (
+                        "pressure_rmse_mpa",
+                        "pressure_nrmse_percent_measured_span",
+                        "gas_temperature_rmse_k",
+                        "gas_temperature_peak_absolute_error_k",
+                    )
+                },
+                "all_four_frozen_screens_pass": True,
+            },
+            "unresolved_requirements": [
+                "tank length interpretation",
+                "time-resolved inlet hydrogen temperature",
+                "prospectively frozen inlet geometry before outcome access",
+            ],
+            "runtime_parameter_application": False,
+            "full_loop_external_validation_ready": False,
+            "validation_gate_effect": "none",
             "claim_limit": str(record["claim_boundary"]),
         }
     except (OSError, KeyError, TypeError, ValueError, json.JSONDecodeError):
@@ -894,6 +960,12 @@ def public_evidence_inventory_summary() -> dict[str, Any]:
             "runtime_parameter_application": False,
             "full_loop_external_validation_ready": False,
         },
+        "public_dickens_geometry_followup_candidate": {
+            "status": "unavailable",
+            "runtime_parameter_application": False,
+            "full_loop_external_validation_ready": False,
+            "validation_gate_effect": "none",
+        },
     }
     try:
         record = _read_json(_KHK_ACCIDENTS)
@@ -1194,4 +1266,7 @@ def public_evidence_inventory_summary() -> dict[str, Any]:
     soc_boundary = _mc_soc_boundary_diagnostic_summary()
     if soc_boundary is not None:
         result["public_mc_soc_boundary_diagnostic"] = soc_boundary
+    dickens = _dickens_geometry_followup_summary()
+    if dickens is not None:
+        result["public_dickens_geometry_followup_candidate"] = dickens
     return result

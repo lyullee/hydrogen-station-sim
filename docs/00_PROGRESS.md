@@ -39,6 +39,10 @@ development result.
   the co-located pressure/temperature EOS (8/8 diagnostic screens; maximum RMSE
   0.33 percentage points). The remaining MC failure is therefore treated as a
   tank-boundary/geometry or thermal-model issue, not an SOC-definition issue.
+- The source-grounded Dickens follow-up candidate is now included in the same LLM
+  evidence surface: the 5 mm/82 mm inlet geometry passes the four diagnostic
+  screens, while tank-length interpretation and time-resolved inlet temperature
+  remain explicit prerequisites for a new prospective run.
 
 ## 2026-10-10 - Inspect scientific containers in local data discovery
 

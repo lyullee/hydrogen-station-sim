@@ -8086,6 +8086,18 @@ def build_evidence_manifest(
         envelope["response_evidence"][
             "public_mc_soc_boundary_diagnostic"
         ] = soc_boundary
+    dickens_followup = (
+        public_inventory.get("public_dickens_geometry_followup_candidate")
+        if isinstance(public_inventory, dict)
+        else None
+    )
+    if (
+        isinstance(dickens_followup, dict)
+        and dickens_followup.get("status") == "followup_candidate_only"
+    ):
+        envelope["response_evidence"][
+            "public_dickens_geometry_followup_candidate"
+        ] = dickens_followup
     nrel_screen = (
         public_inventory.get("public_station_tank_boundary")
         if isinstance(public_inventory, dict)

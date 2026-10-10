@@ -93,6 +93,12 @@ def test_validation_evidence_surface_is_privacy_bounded_and_claim_limited() -> N
     assert soc_boundary["soc_definition_screen_pass_count"] == 8
     assert soc_boundary["runtime_parameter_application"] is False
     assert soc_boundary["full_loop_external_validation_ready"] is False
+    dickens = inventory["public_dickens_geometry_followup_candidate"]
+    assert dickens["status"] == "followup_candidate_only"
+    assert dickens["source_confirmed_geometry"]["inlet_pipe_internal_diameter_m"] == 0.005
+    assert dickens["selected_diagnostic"]["all_four_frozen_screens_pass"] is True
+    assert dickens["runtime_parameter_application"] is False
+    assert dickens["validation_gate_effect"] == "none"
     assert all(
         set(archive) == {
             "scope",
