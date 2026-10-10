@@ -831,3 +831,10 @@ Follow-up hardening:
   the live bounded deque.
 - A regression test covers a 100,011-frame history and confirms that only the
   recent causal window is selected.
+
+Focused UI/control regression after the performance change:
+
+- Node UI suites: 15 passed (analysis stream, provider/API separation, flow
+  routing, risk range state and periodic-analysis controls).
+- Python operation/safety suites: 90 passed (normal-operation alarm policy,
+  virtual safety, HAZOP and process operations).
