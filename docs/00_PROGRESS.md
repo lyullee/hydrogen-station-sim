@@ -1,5 +1,21 @@
 # Development Progress
 
+## 2026-10-10 - Remove scalar property lookup allocations from the solver hot path
+
+Status: implemented; property/restriction regression suite passed.
+
+- Replaced scalar `searchsorted` calls in the dispenser choking-ratio lookup and
+  density-to-pressure inversion with monotone `bisect` lookups.
+- The tabulated hydrogen table remains the numerical source and the bracket,
+  endpoint, and interpolation rules are unchanged; this only removes temporary
+  NumPy scalar allocations during ODE right-hand-side evaluations.
+- A 15-second reference run completed in about **4.7 s** on the local runtime;
+  the earlier same-shape smoke run took about **11.6 s** (HTTP polling included).
+
+Verification:
+
+- Restriction-table, process-operation, and frame-cursor suites: **29 passed**.
+
 ## 2026-10-10 - Remove long-run telemetry scan bottleneck
 
 Status: implemented; focused API/stream regression passed.

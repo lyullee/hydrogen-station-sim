@@ -191,9 +191,10 @@ class HydrogenPropertyTable:
                 f"Hydrogen table density={density:g} is outside "
                 f"[{lower_density:g}, {upper_density:g}] at T={temperature:g} K"
             )
-        clipped = float(np.clip(density, lower_density, upper_density))
-        ip = int(np.searchsorted(density_curve, clipped, side="right") - 1)
-        ip = min(max(ip, 0), len(density_curve) - 2)
+        clipped = min(max(float(density), lower_density), upper_density)
+        # ``density_curve`` is monotone for a fixed temperature.  Avoid the
+        # NumPy scalar coercion/allocation in this very hot inverse-state path.
+        ip = min(max(bisect_right(density_curve, clipped) - 1, 0), len(density_curve) - 2)
         span = float(density_curve[ip + 1] - density_curve[ip])
         weight = 0.0 if span == 0.0 else (clipped - density_curve[ip]) / span
         log_pressure = (

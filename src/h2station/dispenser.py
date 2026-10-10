@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from bisect import bisect_right
 from functools import lru_cache
 from typing import Callable, Mapping
 
@@ -247,8 +248,11 @@ class IsentropicRealGasRestriction:
         if not (pressures[0] <= pressure <= pressures[-1]
                 and temperatures[0] <= temperature <= temperatures[-1]):
             return None
-        ip = min(int(np.searchsorted(pressures, pressure, side="right")) - 1, len(pressures) - 2)
-        it = min(int(np.searchsorted(temperatures, temperature, side="right")) - 1, len(temperatures) - 2)
+        # This scalar hot path is evaluated by every ODE RHS call.  NumPy's
+        # searchsorted coerces each scalar to a temporary array; the grids are
+        # monotone and tiny, so bisect is equivalent without allocation.
+        ip = min(max(bisect_right(pressures, pressure) - 1, 0), len(pressures) - 2)
+        it = min(max(bisect_right(temperatures, temperature) - 1, 0), len(temperatures) - 2)
         pressure_weight = (np.log(pressure) - np.log(pressures[ip])) / (
             np.log(pressures[ip + 1]) - np.log(pressures[ip])
         )
