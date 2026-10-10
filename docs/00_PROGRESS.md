@@ -741,3 +741,28 @@ Verification:
 
 - The focused LLM, SAGA contract, emergency-response and readiness-integrity
   suites passed: 45 tests, 2 dependency deprecation warnings.
+
+## 2026-10-10 - NREL H2FillS geometry pressure-bias diagnostic
+
+Status: evidence recorded; no frozen gate or production default was promoted.
+
+Completed:
+
+- Replayed the local, hash-identified NREL H2FillS 2022 HDVS Type-IV sample
+  through the existing tank screen: seven common-clock tank traces, 351 rows
+  each.
+- The legacy reference geometry produced 0/7 screening passes, pressure RMSE
+  6.164 MPa and final pressure error -8.681 MPa.
+- A declared-capacity, tabulated-EOS geometry sensitivity produced 7/7 passes;
+  the no-volume-fit variant reduced pressure RMSE to 0.496 MPa. This is a
+  post-access diagnostic, so it is retained as a model-repair lead rather than
+  a confirmatory validation result.
+- Added the privacy-safe summary to
+  `research/nrel_h2fills_geometry_diagnostic_2026_10_10.json` and its Markdown
+  report. The raw workbook remains local and is not redistributed.
+
+Next independent action:
+
+- Freeze a new capacity-EOS geometry protocol before outcome access, then test
+  it on a disjoint tank cohort and a synchronized station-to-receiving-vessel
+  cohort before changing the runtime default.

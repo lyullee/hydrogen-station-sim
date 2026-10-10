@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "generated_at_utc": "2026-10-10T03:34:00Z",
+  "evidence_role": "post_access_independent_component_geometry_diagnostic",
+  "source": {
+    "title": "NREL H2FillS 2022 HDVS Type IV sample test result",
+    "publisher": "National Renewable Energy Laboratory / National Laboratory of the Rockies",
+    "official_download_page": "https://www.nlr.gov/hydrogen/h2fills-download",
+    "workbook_sha256": "1a3fbe64a50c1c97266bfe0372998513ad3ccec5600fab7bc4b9fc68ad4d9d0c",
+    "capacity_kg_per_tank": 9.8,
+    "tank_count": 7,
+    "sample_count_per_tank": 351
+  },
+  "screening_limits": {
+    "pressure_rmse_mpa_max": 5.0,
+    "temperature_rmse_c_max": 10.0,
+    "mass_final_abs_error_kg_max": 0.5
+  },
+  "variants": {
+    "legacy_frozen": {
+      "basis": "legacy 0.122 m3 per 4.7 kg scaling",
+      "base_volume_m3": 0.25438297872340426,
+      "effective_volume_multiplier": 1.052729261198358,
+      "screening_pass_count": 0,
+      "screening_pass_fraction": 0.0,
+      "pressure_rmse_mpa": 6.164469743688679,
+      "temperature_rmse_c": 4.624745495755946,
+      "mass_final_error_kg": 0.11975781835466089,
+      "pressure_final_error_mpa": -8.680787636562084
+    },
+    "capacity_eos_with_frozen_fit": {
+      "basis": "9.8 kg divided by tabulated Hydrogen density at 70 MPa and 15 C; frozen H2Protocol fit retained",
+      "base_volume_m3": 0.24394320094584823,
+      "effective_volume_multiplier": 1.052729261198358,
+      "screening_pass_count": 7,
+      "screening_pass_fraction": 1.0,
+      "pressure_rmse_mpa": 3.5380890196945884,
+      "temperature_rmse_c": 4.254560578225422,
+      "mass_final_error_kg": 0.10160237053011123,
+      "pressure_final_error_mpa": -4.647884020564888
+    },
+    "capacity_eos_no_volume_fit": {
+      "basis": "9.8 kg divided by tabulated Hydrogen density at 70 MPa and 15 C; effective-volume multiplier fixed at one",
+      "base_volume_m3": 0.24394320094584823,
+      "effective_volume_multiplier": 1.0,
+      "screening_pass_count": 7,
+      "screening_pass_fraction": 1.0,
+      "pressure_rmse_mpa": 0.49577782245171065,
+      "temperature_rmse_c": 4.184657066054932,
+      "mass_final_error_kg": 0.07981887127262155,
+      "pressure_final_error_mpa": 0.5688184212173013
+    }
+  },
+  "interpretation": {
+    "finding": "The frozen legacy geometry has a systematic negative pressure bias; capacity-EOS geometry removes that bias in this post-access diagnostic.",
+    "legacy_pressure_rmse_mpa": 6.164469743688679,
+    "legacy_pressure_final_error_mpa": -8.680787636562084,
+    "capacity_eos_no_volume_fit_pressure_rmse_mpa": 0.49577782245171065,
+    "capacity_eos_no_volume_fit_pressure_final_error_mpa": 0.5688184212173013,
+    "capacity_eos_no_volume_fit_screening_pass_count": 7,
+    "capacity_eos_no_volume_fit_screening_pass_fraction": 1.0,
+    "claim_boundary": "This is a post-access sensitivity diagnostic, not a prospective validation pass and not evidence of station safety or full-loop performance."
+  },
+  "next_action": [
+    "Keep production default and frozen validation protocol unchanged until a new prospective split is defined.",
+    "Prepare an independent geometry protocol using capacity, nominal pressure and temperature with no outcome-dependent fitting.",
+    "Re-run disjoint tank and station-to-receiving-vessel cohorts before changing the runtime default."
+  ]
+}
