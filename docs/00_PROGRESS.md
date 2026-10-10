@@ -2068,3 +2068,21 @@ Verification:
 - Cumulative-mass diagnostic: 8 cases, 0/8 joint screen; no gate promotion.
 - Bounded diagnostic test added; runtime parameters and publication readiness
   are unchanged.
+
+## 2026-10-11 - Privacy-bounded long-form hydrogen archive recheck
+
+One newly screened local long-form hydrogen-system export was processed with a
+streaming aggregate-only audit. It contains 2,410,985 rows, 490 anonymized
+entities, 273 anonymized key families, and a 24-hour observation span, with
+pressure, temperature, flow/mass, and hydrogen-process candidate families.
+The result is retained in `research/local_longform_hydrogen_archive_recheck_2026_10_11.json`.
+
+The archive is useful for station/component-side context, but it does not
+establish a synchronized receiving-vessel/vehicle trace or an attested station
+controller/cascade/ESD boundary. It therefore opens no new full-loop gate,
+does not change runtime parameters, and leaves the readiness snapshot at
+127 PASS / 10 FAIL / 7 PENDING (88.2%). Source identity, paths, filenames,
+headers, identifiers, calendar dates, and raw rows remain excluded.
+
+Verification: the new aggregate audit test and the existing local-data and
+coverage tests pass (5 passed).

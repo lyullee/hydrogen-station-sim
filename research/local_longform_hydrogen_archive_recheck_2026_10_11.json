@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "artifact_type": "privacy_bounded_local_longform_hydrogen_archive_screen",
+  "recorded_at": "2026-10-11",
+  "archive_alias": "local_longform_hydrogen_system_archive_anon_01",
+  "decision": "COMPONENT_OR_STATION_SIDE_CANDIDATE_ONLY",
+  "aggregate": {
+    "row_count": 2410985,
+    "unique_entity_type_count": 1,
+    "unique_entity_count": 490,
+    "unique_key_count": 273,
+    "numeric_value_counts": {
+      "long_v": 1046237,
+      "dbl_v": 1364748
+    },
+    "other_value_counts": {
+      "bool_v": 0,
+      "str_v": 0
+    },
+    "observed_span_hours": 24.0,
+    "candidate_key_family_counts": {
+      "hydrogen_process": 27,
+      "pressure": 35,
+      "temperature": 70,
+      "flow_or_mass": 29,
+      "vehicle_or_dispenser": 66,
+      "controller_or_esd": 3,
+      "leak_or_fire": 19
+    }
+  },
+  "eligibility": {
+    "real_local_measurement_archive": true,
+    "station_or_component_side_diagnostics_supported": true,
+    "synchronized_vehicle_receiving_vessel_trace_attested": false,
+    "station_controller_cascade_esd_state_attested": false,
+    "independent_full_loop_hrs_validation_eligible": false,
+    "prospective_holdout_eligible": false,
+    "runtime_parameter_application": false
+  },
+  "coverage_effect": {
+    "new_validation_gate_opened": false,
+    "readiness_effect": "no_change",
+    "reason": "The archive contains long-form hydrogen-system measurements and is useful for component/station-side context, but the retained aggregate screen does not establish a synchronized station-to-vehicle receiving-vessel trace or an attested controller/ESD boundary."
+  },
+  "privacy": {
+    "local_source_paths_published": false,
+    "source_filenames_published": false,
+    "source_headers_published": false,
+    "entity_ids_published": false,
+    "raw_rows_persisted": false,
+    "absolute_timestamps_published": false,
+    "calendar_dates_or_site_identity_published": false,
+    "company_or_manufacturer_published": false
+  },
+  "claim_boundary": "This artifact is an aggregate screening record. It does not identify the source, publish raw measurements, attest engineering units or channel semantics, validate a vehicle fill, establish safety distances, or support field certification."
+}
