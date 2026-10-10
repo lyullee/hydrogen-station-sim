@@ -1,5 +1,30 @@
 # Development Progress
 
+## 2026-10-10 - Parallel priority pass: live public-catalogue access boundary
+
+- Rechecked the NBSDC liquid-hydrogen refueling-station catalogue through its
+  current metadata and file-tree endpoints. The record still exposes seven
+  files (about 42 MB) and a one-second, real-station monitoring scope with
+  pressure, temperature, flow, dispensed mass, current, frequency, level and
+  volume roles.
+- Probed all six numerical workbooks/CSV files independently. Each returned
+  the portal's HTTP 200/JSON 403 application-required response; only the
+  description file was downloadable. No numerical row was copied, opened or
+  used for fitting. The result is now preserved in the bounded recheck's
+  `live_recheck` section and the data-coverage summary.
+- This closes the repeated public-search loop for this candidate: it is a
+  high-priority custodian request, not a validation pass. The three execution
+  lanes remain independent so station-side model repairs and LLM/publication
+  work do not wait for the full-loop access request.
+
+Verification:
+
+- `scripts/recheck_nbsdc_liquid_hrs_access.py` completed against the live
+  catalogue; six numerical probes returned portal code 403 and
+  `raw_numerical_files_obtained=false`.
+- The focused priority command remains the fast status/verification path;
+  full regression is reserved for broad code changes.
+
 ## 2026-10-10 - Focused validation now uses the repository environment
 
 - The priority runner now prefers `.venv`/`venv` before the process-wide

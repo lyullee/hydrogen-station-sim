@@ -31,12 +31,42 @@
     "description_file_downloaded": true,
     "description_file_sha256": "669bf3487f07714da3ed08f7d891077841c39ef38497dc2abb307a5877954142",
     "numerical_file_inventory": [
-      {"id": "67bc96ed34eb407463579069", "name": "35MPa加氢机1.xlsx", "size_bytes": 3605593, "role": "dispenser_35mpa_1"},
-      {"id": "67bc96ed34eb40746357906a", "name": "35MPa加氢机2.xlsx", "size_bytes": 5700855, "role": "dispenser_35mpa_2"},
-      {"id": "67bc96ed34eb40746357906b", "name": "70MPa加氢机.csv", "size_bytes": 5974368, "role": "dispenser_70mpa"},
-      {"id": "67bc96ed34eb40746357906c", "name": "90MPa压缩机.xlsx", "size_bytes": 3922132, "role": "compressor_90mpa"},
-      {"id": "67bc96ed34eb40746357906e", "name": "液氢泵-液氢储罐.xlsx", "size_bytes": 15458212, "role": "liquid_pump_tank"},
-      {"id": "67bc96ed34eb40746357906f", "name": "高压储氢瓶组.xlsx", "size_bytes": 9423277, "role": "high_pressure_storage"}
+      {
+        "id": "67bc96ed34eb407463579069",
+        "name": "35MPa加氢机1.xlsx",
+        "size_bytes": 3605593,
+        "role": "dispenser_35mpa_1"
+      },
+      {
+        "id": "67bc96ed34eb40746357906a",
+        "name": "35MPa加氢机2.xlsx",
+        "size_bytes": 5700855,
+        "role": "dispenser_35mpa_2"
+      },
+      {
+        "id": "67bc96ed34eb40746357906b",
+        "name": "70MPa加氢机.csv",
+        "size_bytes": 5974368,
+        "role": "dispenser_70mpa"
+      },
+      {
+        "id": "67bc96ed34eb40746357906c",
+        "name": "90MPa压缩机.xlsx",
+        "size_bytes": 3922132,
+        "role": "compressor_90mpa"
+      },
+      {
+        "id": "67bc96ed34eb40746357906e",
+        "name": "液氢泵-液氢储罐.xlsx",
+        "size_bytes": 15458212,
+        "role": "liquid_pump_tank"
+      },
+      {
+        "id": "67bc96ed34eb40746357906f",
+        "name": "高压储氢瓶组.xlsx",
+        "size_bytes": 9423277,
+        "role": "high_pressure_storage"
+      }
     ]
   },
   "access_probe": {
@@ -73,5 +103,21 @@
     "private_site_or_company_identity_published": false,
     "manufacturer_details_published": false,
     "calendar_dates_from_private_sources_published": false
+  },
+  "rechecked_at_utc": "2026-10-10T03:26:40.449641+00:00",
+  "live_recheck": {
+    "performed_at_utc": "2026-10-10T03:26:40.449641+00:00",
+    "landing_http_status": 200,
+    "file_tree_http_status": 200,
+    "catalog_file_count": "7",
+    "catalog_storage_mb": 42.06,
+    "numeric_file_count": 6,
+    "numeric_probe_portal_codes": [
+      403
+    ],
+    "numeric_probe_message": "目前只支持部分数据集的说明文件下载，数据文件请通过数据申请获取。",
+    "description_downloaded": true,
+    "raw_numerical_files_obtained": false,
+    "eligibility_unchanged": "METADATA_ONLY_UNTIL_CUSTODIAN_APPROVES_NUMERICAL_FILES"
   }
 }
