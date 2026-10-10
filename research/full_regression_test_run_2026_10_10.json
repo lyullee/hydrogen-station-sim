@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "artifact_type": "full_regression_test_run",
+  "generated_at": "2026-10-10T12:05:06.9831810Z",
+  "commit": "1cdeac4ff3201fcb3b28a4cc608d32e365342856",
+  "command": "PYTHONPATH=src .venv/Scripts/python.exe -m pytest -q",
+  "passed": 1321,
+  "failed": 0,
+  "skipped": 0,
+  "warnings": 19,
+  "duration_s": 210.07,
+  "status": "PASS",
+  "warning_classes": [
+    "StarletteDeprecationWarning",
+    "DeprecationWarning",
+    "h2pyro PhysicsWarning",
+    "openpyxl UserWarning"
+  ],
+  "claim_boundary": "Software regression evidence only; does not promote external validation gates or prove full station-to-vehicle scientific validation."
+}
