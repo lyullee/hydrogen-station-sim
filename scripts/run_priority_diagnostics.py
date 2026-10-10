@@ -346,7 +346,10 @@ def main() -> int:
         "--priority",
         choices=("P0", "P1", "critical", "all"),
         default="all",
-        help="Use 'critical' to run the P0/P1 tracks together; 'all' is an alias.",
+        help=(
+            "Use 'critical' for P0 plus screen-producing P1 diagnostics; "
+            "'all' also includes exploratory replays."
+        ),
     )
     parser.add_argument("--timeout-s", type=float, default=300.0)
     parser.add_argument("--max-workers", type=int)
