@@ -98,6 +98,13 @@
   },
   "reconciliation": {
     "prior_attested_lifecycle_summary_in_repository": true,
+    "role_mapping_attestation_in_repository": {
+      "artifact": "research/local_station_semantic_attestation_2026_10_09.json",
+      "storage_pressure_units_attested": true,
+      "lifecycle_counter_event_definition_attested": true,
+      "flow_units_attested": false,
+      "vehicle_side_channels_attested": 0
+    },
     "this_collection_level_screen_replaces_prior_summary": false,
     "merge_decision": "HOLD_UNTIL_FILE_SEGMENT_AND_RESET_MAPPING",
     "reason": "The collection contains multiple time-segment schemas and mixed timestamp direction. The prior attested summary is retained as a separate bounded result; this broader screen must not be concatenated into it until segment identity and reset semantics are confirmed."

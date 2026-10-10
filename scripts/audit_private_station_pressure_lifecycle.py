@@ -320,6 +320,13 @@ def audit(root: Path) -> dict[str, Any]:
         },
         "reconciliation": {
             "prior_attested_lifecycle_summary_in_repository": True,
+            "role_mapping_attestation_in_repository": {
+                "artifact": "research/local_station_semantic_attestation_2026_10_09.json",
+                "storage_pressure_units_attested": True,
+                "lifecycle_counter_event_definition_attested": True,
+                "flow_units_attested": False,
+                "vehicle_side_channels_attested": 0,
+            },
             "this_collection_level_screen_replaces_prior_summary": False,
             "merge_decision": "HOLD_UNTIL_FILE_SEGMENT_AND_RESET_MAPPING",
             "reason": (
