@@ -15,6 +15,7 @@ from dataclasses import dataclass
 import json
 from pathlib import Path
 import os
+import re
 import subprocess
 import sys
 import time
@@ -105,7 +106,7 @@ def _run_check(check: PriorityCheck, *, timeout_s: float) -> dict[str, Any]:
             timeout=timeout_s,
             check=False,
         )
-        output = (completed.stdout + "\n" + completed.stderr).strip()
+        output = _sanitize_output((completed.stdout + "\n" + completed.stderr).strip())
         return {
             "name": check.name,
             "priority": check.priority,
@@ -115,7 +116,7 @@ def _run_check(check: PriorityCheck, *, timeout_s: float) -> dict[str, Any]:
             "output_tail": output[-1200:],
         }
     except subprocess.TimeoutExpired as exc:
-        output = str(exc.stdout or "") + "\n" + str(exc.stderr or "")
+        output = _sanitize_output(str(exc.stdout or "") + "\n" + str(exc.stderr or ""))
         return {
             "name": check.name,
             "priority": check.priority,
@@ -161,6 +162,15 @@ def run_priority_checks(
             "traces, change a frozen protocol, or promote a validation gate."
         ),
     }
+
+
+def _sanitize_output(output: str) -> str:
+    """Keep focused-test diagnostics from publishing local machine paths."""
+
+    sanitized = output.replace(str(ROOT), "<repository>")
+    # Tests should not print private input paths, but redact any Windows path
+    # that a dependency may include in an exception before it reaches JSON.
+    return re.sub(r"(?i)[A-Z]:\\[^\r\n]+", "<local-path>", sanitized)
 
 
 def main() -> int:
