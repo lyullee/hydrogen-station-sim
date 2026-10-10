@@ -1,5 +1,18 @@
 # Development Progress
 
+## 2026-10-10 - Expose vehicle geometry choice without changing the default
+
+Status: implemented; the remote now exposes the vehicle-tank geometry basis
+and nominal capacity inputs needed for impact-first boundary checks.
+
+- The historical reference geometry remains the default and sends no capacity
+  override, so existing runs are unchanged.
+- Capacity/EOS geometry is explicit and requires both vehicle capacities before
+  a run can start. The API and UI now enforce the same rule and report a clear
+  validation message instead of silently ignoring an input.
+- The change is covered by the remote scenario regression suite; 143 focused
+  tests passed after the UI/API contract update.
+
 ## 2026-10-10 - Impact-first parallel checkpoint
 
 Status: verified; the current work is being advanced by impact rather than by

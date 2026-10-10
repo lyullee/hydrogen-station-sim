@@ -52,6 +52,11 @@
           <label>차량 1 초기온도 (°C)<input id="initialTemp1" type="number" value="25" min="-40" max="85" step="any" required></label>
           <label>차량 2 초기온도 (°C)<input id="initialTemp2" type="number" value="25" min="-40" max="85" step="any" required></label>
         </div><p class="hint">압력 상승률과 최대 유량은 이 시뮬레이터의 고정 운전 설정입니다. SAE J2601 조건표에 따른 자동 충전 일정 선택은 적용되지 않습니다.</p></details>
+        <details class="vehicle-geometry-settings"><summary>차량 탱크 용량 · 형상 기준</summary><p class="hint">기본값은 기준 차량 형상을 유지합니다. 차량의 명목 수소 용량을 알고 있을 때만 <strong>용량 기반 EOS</strong>를 선택하세요. 이 선택은 차량 1·2의 유효 용적을 용량과 표 데이터로 계산하며, 기존 기본값을 바꾸지 않습니다.</p><div class="grid">
+          <label>차량 형상 기준<select id="vehicleGeometryBasis"><option value="reference" selected>기준 형상 · 기본</option><option value="capacity_eos">용량 기반 EOS · 명시적 선택</option></select></label>
+          <label>차량 1 명목 용량 (kg)<input id="vehicleCapacity" type="number" min="0.1" max="100" step="any" placeholder="용량 기반 선택 시 입력"></label>
+          <label>차량 2 명목 용량 (kg)<input id="vehicle2Capacity" type="number" min="0.1" max="100" step="any" placeholder="용량 기반 선택 시 입력"></label>
+        </div><p id="vehicleGeometryHint" class="hint">기준 형상에서는 용량을 보내지 않습니다. 검증되지 않은 형상 보정이 기본 계산에 섞이지 않도록 명시적 선택을 요구합니다.</p></details>
         <details class="protocol-training-settings"><summary>충전 프로토콜 훈련 검사</summary><p class="hint">공개 CARB 현장시험에서 확인된 항목을 가상 검사합니다. 빈 선택값은 검사를 끄며, 이 기능은 SAE J2601 또는 HGV 4.3 인증 시험이 아닙니다.</p><div class="grid">
           <label>최소 기동 대기시간 (s)<input id="minimumStartupTime" type="number" value="0" min="0" max="120" step="any"></label>
           <label>기동 질량 한도 (kg)<input id="maximumStartupMass" type="number" min="0.001" max="10" step="any" placeholder="검사 끔"></label>

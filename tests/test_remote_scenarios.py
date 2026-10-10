@@ -30,6 +30,15 @@ def test_remote_exposes_optional_hgv43_training_controls():
     assert not script.rstrip().endswith(r'\n')
 
 
+def test_remote_exposes_explicit_vehicle_geometry_basis_controls():
+    html = (ROOT / 'web/remote.html').read_text(encoding='utf-8')
+    script = (ROOT / 'web/remote.js').read_text(encoding='utf-8')
+    for control_id in ('vehicleGeometryBasis', 'vehicleCapacity', 'vehicle2Capacity'):
+        assert f'id="{control_id}"' in html
+        assert control_id in script
+    assert '용량 기반 EOS를 선택하면 차량 1·2 명목 용량을 모두 입력하세요.' in script
+
+
 def test_hgv43_training_inputs_require_a_complete_startup_mass_window():
     with pytest.raises(ValidationError, match="must be configured together"):
         SimulationInput(maximum_startup_mass_kg=0.05)

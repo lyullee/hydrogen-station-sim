@@ -99,6 +99,15 @@ function hydrateProcessSettings(settings){
     row.querySelector('.relief-close').value=valve.close_mpa;
     row.querySelector('.relief-orifice').value=valve.orifice_mm;}
 }
+function renderVehicleGeometrySettings(){
+  const basis=$('vehicleGeometryBasis').value, enabled=basis==='capacity_eos';
+  for(const id of ['vehicleCapacity','vehicle2Capacity']){
+    const input=$(id); input.disabled=!enabled; input.required=enabled;
+  }
+  $('vehicleGeometryHint').textContent=enabled
+    ? '용량 기반 EOS는 명목 용량에서 유효 용적을 한 번 계산합니다. 차량 1·2 용량을 모두 입력해야 하며, 기준 형상 기본값은 변경되지 않습니다.'
+    : '기준 형상에서는 용량을 보내지 않습니다. 검증되지 않은 형상 보정이 기본 계산에 섞이지 않도록 명시적 선택을 요구합니다.';
+}
 function renderProcess(){
   const running=['queued','running'].includes(job?.status),snapshot=job?.operations,settings=snapshot?.settings||{};
   const frame=window.latestProcessFrame,frameRevision=frame?.process_operations?.revision;
@@ -264,6 +273,15 @@ function readPayload(includeFaults=true){
   payload.pressure_corridor_upper_tolerance_mpa=optionalNumber('pressureCorridorUpper');
   payload.fueling_temperature_category=$('fuelingTemperatureCategory').value;
   payload.communication_loss_policy=$('communicationLossPolicy').value;
+  payload.vehicle_geometry_basis=$('vehicleGeometryBasis').value;
+  const vehicleCapacity=$('vehicleCapacity').value===''?null:Number($('vehicleCapacity').value);
+  const vehicle2Capacity=$('vehicle2Capacity').value===''?null:Number($('vehicle2Capacity').value);
+  if(payload.vehicle_geometry_basis==='capacity_eos'&&(vehicleCapacity===null||vehicle2Capacity===null))
+    throw new Error('용량 기반 EOS를 선택하면 차량 1·2 명목 용량을 모두 입력하세요.');
+  if(payload.vehicle_geometry_basis==='reference'&&(vehicleCapacity!==null||vehicle2Capacity!==null))
+    throw new Error('기준 형상에서는 차량 용량을 비우거나 용량 기반 EOS를 선택하세요.');
+  payload.vehicle_capacity_kg=payload.vehicle_geometry_basis==='capacity_eos'?vehicleCapacity:null;
+  payload.vehicle_2_capacity_kg=payload.vehicle_geometry_basis==='capacity_eos'?vehicle2Capacity:null;
   payload.leak_check_pressure_interval_mpa=$('leakCheckEnabled').checked?Number($('leakCheckPressureInterval').value):null;
   payload.leak_check_pause_s=Number($('leakCheckPause').value||5);
   payload.leak_check_pressure_drop_tolerance_kpa=Number($('leakCheckTolerance').value||10);
@@ -422,6 +440,8 @@ const leakCheckFields=['leakCheckPressureInterval','leakCheckPause','leakCheckTo
 function renderLeakCheckSettings(){const enabled=$('leakCheckEnabled').checked;for(const id of leakCheckFields)$(id).disabled=!enabled||mutating;}
 $('leakCheckEnabled').addEventListener('change',()=>{renderLeakCheckSettings();});
 renderLeakCheckSettings();
+$('vehicleGeometryBasis').addEventListener('change',renderVehicleGeometrySettings);
+renderVehicleGeometrySettings();
 for(const id of ['vehicle1AutoStop','vehicle2AutoStop','rechargeTargetLow','rechargeTargetMedium','rechargeTargetHigh','vehicle1TargetPressure','vehicle2TargetPressure'])
   $(id).addEventListener('change',()=>{if(['queued','running'].includes(job?.status))applyProcessSettings();else renderProcess();});
 for(const [source,other] of [['trailerAutoStop','rechargeAutoStop'],['rechargeAutoStop','trailerAutoStop']])
