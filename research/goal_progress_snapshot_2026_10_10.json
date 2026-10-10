@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-10-10T11:59:20.397921+00:00",
+  "metric_definition": "PASS gates divided by PASS+FAIL+PENDING gates; not a publication-readiness probability",
+  "gate_counts": {
+    "PASS": 127,
+    "FAIL": 10,
+    "PENDING": 7,
+    "TOTAL": 144
+  },
+  "gate_closure_percent": 88.2,
+  "bounded_ijhe_submission_ready": false,
+  "full_user_objective_ready": false,
+  "goal_completion_permitted": false,
+  "blocking_bounded_submission_gates": [
+    "dickens_typeiii_prospective_validation",
+    "preslhy_partb_ambient_external_validation",
+    "preslhy_revised_holdout_validation",
+    "proust_independent_release_validation",
+    "schefer_transient_release_validation",
+    "schefer_2007_pressure_decay_validation",
+    "grune_2014_pressure_decay_validation",
+    "institutional_ethics_determination",
+    "hiad_casebook_frozen",
+    "hiad_holdout_collection",
+    "independent_expert_review_complete",
+    "submission_metadata_and_declarations"
+  ],
+  "blocking_full_objective_gates": [
+    "dickens_typeiii_prospective_validation",
+    "preslhy_partb_ambient_external_validation",
+    "preslhy_revised_holdout_validation",
+    "proust_independent_release_validation",
+    "schefer_transient_release_validation",
+    "schefer_2007_pressure_decay_validation",
+    "grune_2014_pressure_decay_validation",
+    "institutional_ethics_determination",
+    "hiad_casebook_frozen",
+    "hiad_holdout_collection",
+    "independent_expert_review_complete",
+    "submission_metadata_and_declarations",
+    "full_loop_external_validation",
+    "h2safe_spatial_detector_transfer_validation",
+    "saga_effectiveness_and_safety_supported"
+  ],
+  "interpretation": {
+    "current_state": "implementation_and_evidence_gates_partially_closed",
+    "do_not_claim": [
+      "validated_full_station_to_vehicle_digital_twin",
+      "publication_acceptance_or_probability"
+    ],
+    "next_high_impact_actions": [
+      "obtain an independent time-resolved measured pressure trace for the pending Grune holdout",
+      "obtain a synchronized station-to-vehicle trace with vehicle-side and ESD/control channels",
+      "complete blinded expert and prospective SAGA safety-effectiveness evaluation"
+    ]
+  }
+}
