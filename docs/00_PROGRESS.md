@@ -2017,7 +2017,10 @@ boundary assumptions remain the leading candidates.
 
 The original negative MC result and its claim boundary are unchanged. The new
 artifact is `research/mc_cumulative_mass_sensitivity_2026_10_10.json` and is
-covered by a regression test.
+covered by a regression test. Its privacy-bounded aggregate is also exposed
+as `public_mc_cumulative_mass_sensitivity` in the LLM evidence envelope, so a
+provider can state the negative finding without treating it as a validation
+pass or applying the diagnostic to runtime parameters.
 
 Verification:
 

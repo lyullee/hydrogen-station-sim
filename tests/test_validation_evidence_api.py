@@ -93,6 +93,13 @@ def test_validation_evidence_surface_is_privacy_bounded_and_claim_limited() -> N
     assert tank_boundary["joint_screening_pass_count"] == 0
     assert tank_boundary["runtime_parameter_application"] is False
     assert tank_boundary["promotion_prohibited"] is True
+    cumulative_mass = inventory["public_mc_cumulative_mass_sensitivity"]
+    assert cumulative_mass["status"] == "diagnostic_only"
+    assert cumulative_mass["case_count"] == 8
+    assert cumulative_mass["joint_screening_pass_count"] == 0
+    assert cumulative_mass["runtime_parameter_application"] is False
+    assert cumulative_mass["promotion_prohibited"] is True
+    assert "no independent mass channel" in cumulative_mass["source_limitation"].lower()
     soc_boundary = inventory["public_mc_soc_boundary_diagnostic"]
     assert soc_boundary["status"] == "diagnostic_only"
     assert soc_boundary["case_count"] == 8

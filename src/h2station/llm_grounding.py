@@ -8127,6 +8127,18 @@ def build_evidence_manifest(
         envelope["response_evidence"][
             "public_mc_tank_boundary_diagnostic"
         ] = tank_boundary
+    cumulative_mass = (
+        public_inventory.get("public_mc_cumulative_mass_sensitivity")
+        if isinstance(public_inventory, dict)
+        else None
+    )
+    if (
+        isinstance(cumulative_mass, dict)
+        and cumulative_mass.get("status") == "diagnostic_only"
+    ):
+        envelope["response_evidence"][
+            "public_mc_cumulative_mass_sensitivity"
+        ] = cumulative_mass
     soc_boundary = (
         public_inventory.get("public_mc_soc_boundary_diagnostic")
         if isinstance(public_inventory, dict)
@@ -8686,6 +8698,19 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
                 "promotion_prohibited", "claim_limit",
             )
             if mc_tank_boundary.get(key) is not None
+        }
+    cumulative_mass = evidence.get("public_mc_cumulative_mass_sensitivity")
+    if isinstance(cumulative_mass, dict):
+        summary["public_mc_cumulative_mass_sensitivity"] = {
+            key: cumulative_mass.get(key)
+            for key in (
+                "status", "case_count", "joint_screening_pass_count",
+                "joint_screening_pass_fraction", "mass_boundary_mode",
+                "aggregate", "runtime_parameter_application",
+                "full_loop_external_validation_ready", "promotion_prohibited",
+                "source_limitation", "claim_limit",
+            )
+            if cumulative_mass.get(key) is not None
         }
     public_tank_trace = evidence.get("public_tank_trace_boundary")
     if isinstance(public_tank_trace, dict):
@@ -12962,6 +12987,18 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
                 "promotion_prohibited", "claim_limit",
             )
             if (evidence.get("public_mc_tank_boundary_diagnostic") or {}).get(key)
+            is not None
+        },
+        "public_mc_cumulative_mass_sensitivity": {
+            key: (evidence.get("public_mc_cumulative_mass_sensitivity") or {}).get(key)
+            for key in (
+                "status", "case_count", "joint_screening_pass_count",
+                "joint_screening_pass_fraction", "mass_boundary_mode",
+                "aggregate", "runtime_parameter_application",
+                "full_loop_external_validation_ready", "promotion_prohibited",
+                "source_limitation", "claim_limit",
+            )
+            if (evidence.get("public_mc_cumulative_mass_sensitivity") or {}).get(key)
             is not None
         },
         "public_tank_trace_boundary": {

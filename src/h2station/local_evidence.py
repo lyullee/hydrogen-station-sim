@@ -50,6 +50,9 @@ _MC_GEOMETRY_TRANSFER_DIAGNOSTIC = _ROOT / (
 _MC_TANK_BOUNDARY_DIAGNOSTIC = _ROOT / (
     "research/mc_tank_boundary_diagnostic_2026_10_05.json"
 )
+_MC_CUMULATIVE_MASS_SENSITIVITY = _ROOT / (
+    "research/mc_cumulative_mass_sensitivity_2026_10_10.json"
+)
 _MC_SOC_BOUNDARY_DIAGNOSTIC = _ROOT / (
     "research/mc_soc_boundary_diagnostic_2026_10_10.json"
 )
@@ -304,6 +307,60 @@ def _mc_tank_boundary_diagnostic_summary() -> dict[str, Any] | None:
             "runtime_parameter_application": False,
             "full_loop_external_validation_ready": False,
             "promotion_prohibited": True,
+            "claim_limit": str(record["claim_boundary"]),
+        }
+    except (OSError, KeyError, TypeError, ValueError, json.JSONDecodeError):
+        return None
+
+
+def _mc_cumulative_mass_sensitivity_summary() -> dict[str, Any] | None:
+    """Expose the post-outcome MC mass-path sensitivity without promotion."""
+
+    try:
+        record = _read_json(_MC_CUMULATIVE_MASS_SENSITIVITY)
+        aggregate = record.get("aggregate") or {}
+        required = (
+            record.get("schema_version") == 1,
+            record.get("artifact_type") == "mc_cumulative_mass_boundary_sensitivity",
+            record.get("evidence_role") == "development_diagnostic_only",
+            record.get("post_outcome") is True,
+            record.get("parameter_fitting") is False,
+            record.get("runtime_parameter_updated") is False,
+            aggregate.get("case_count") == 8,
+            aggregate.get("joint_screening_pass_count") == 0,
+            isinstance(record.get("source_limitation"), str)
+            and "no independent mass channel" in record["source_limitation"].lower(),
+            isinstance(record.get("claim_boundary"), str)
+            and "does not revise the frozen mc result" in record["claim_boundary"].lower(),
+        )
+        if not all(required):
+            return None
+        metric_keys = (
+            "pressure_rmse_mpa_mean",
+            "temperature_rmse_c_mean",
+            "soc_rmse_percentage_points_mean",
+            "soc_final_error_percentage_points_mean",
+        )
+        if not all(
+            isinstance(aggregate.get(key), (int, float))
+            and not isinstance(aggregate.get(key), bool)
+            for key in metric_keys
+        ):
+            return None
+        return {
+            "status": "diagnostic_only",
+            "evidence_role": str(record["evidence_role"]),
+            "case_count": 8,
+            "joint_screening_pass_count": 0,
+            "joint_screening_pass_fraction": float(
+                aggregate.get("joint_screening_pass_fraction", 0.0)
+            ),
+            "mass_boundary_mode": "cumulative_trapezoid_of_measured_mass_flow",
+            "aggregate": {key: float(aggregate[key]) for key in metric_keys},
+            "runtime_parameter_application": False,
+            "full_loop_external_validation_ready": False,
+            "promotion_prohibited": True,
+            "source_limitation": str(record["source_limitation"]),
             "claim_limit": str(record["claim_boundary"]),
         }
     except (OSError, KeyError, TypeError, ValueError, json.JSONDecodeError):
@@ -1138,6 +1195,16 @@ def public_evidence_inventory_summary() -> dict[str, Any]:
             "full_loop_external_validation_ready": False,
             "promotion_prohibited": True,
         },
+        "public_mc_cumulative_mass_sensitivity": {
+            "status": "unavailable",
+            "case_count": 0,
+            "joint_screening_pass_count": 0,
+            "joint_screening_pass_fraction": 0.0,
+            "aggregate": {},
+            "runtime_parameter_application": False,
+            "full_loop_external_validation_ready": False,
+            "promotion_prohibited": True,
+        },
         "public_mc_soc_boundary_diagnostic": {
             "status": "unavailable",
             "case_count": 0,
@@ -1468,6 +1535,9 @@ def public_evidence_inventory_summary() -> dict[str, Any]:
     tank_boundary = _mc_tank_boundary_diagnostic_summary()
     if tank_boundary is not None:
         result["public_mc_tank_boundary_diagnostic"] = tank_boundary
+    cumulative_mass = _mc_cumulative_mass_sensitivity_summary()
+    if cumulative_mass is not None:
+        result["public_mc_cumulative_mass_sensitivity"] = cumulative_mass
     soc_boundary = _mc_soc_boundary_diagnostic_summary()
     if soc_boundary is not None:
         result["public_mc_soc_boundary_diagnostic"] = soc_boundary
