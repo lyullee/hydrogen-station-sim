@@ -13,8 +13,10 @@ from __future__ import annotations
 
 import argparse
 import csv
+from concurrent.futures import ProcessPoolExecutor, as_completed
 from datetime import datetime, timezone
 import json
+import os
 from pathlib import Path
 import subprocess
 import zipfile
@@ -267,6 +269,11 @@ def main() -> int:
         "--maximum-gas-temperature-c", type=float, default=85.0,
         help="Controller gas-temperature stop used for the diagnostic; use a high value only for a declared physics-only sensitivity.",
     )
+    parser.add_argument(
+        "--max-workers", type=int,
+        default=max(1, min(4, (os.cpu_count() or 2) // 2)),
+        help="Independent case processes. Set to 1 for serial reproduction.",
+    )
     args = parser.parse_args()
 
     if args.dataset == "h2protocol":
@@ -313,11 +320,24 @@ def main() -> int:
     if not summaries:
         raise SystemExit("No case IDs selected")
     fit = _load_fit(args.fit)
+    if args.max_workers < 1:
+        raise SystemExit("--max-workers must be at least 1")
     rows: list[dict[str, Any]] = []
     args.output.mkdir(parents=True, exist_ok=True)
     trace_dir = args.output / "traces"
     trace_dir.mkdir(exist_ok=True)
-    for summary in sorted(summaries, key=lambda value: int(float(value["lab_test_number"]))):
+    ordered_summaries = sorted(
+        summaries, key=lambda value: int(float(value["lab_test_number"]))
+    )
+    case_inputs: list[
+        tuple[
+            dict[str, str],
+            list[dict[str, str]],
+            tuple[tuple[float, float], ...] | None,
+            tuple[tuple[float, float], ...] | None,
+        ]
+    ] = []
+    for summary in ordered_summaries:
         trace = _read_csv(args.processed / trace_dir_name / f"{summary['case_id']}.csv")
         source_profile = None
         if args.use_source_pressure_profile:
@@ -329,14 +349,52 @@ def main() -> int:
                 (_float(row, "time_s"), _float(row, args.source_pressure_column))
                 for row in trace
             )
-        metric, trace_rows = run_case(
+        case_inputs.append((summary, trace, source_profile, protocol_profiles.get(summary["case_id"])))
+
+    def evaluate_case(
+        case_input: tuple[
+            dict[str, str],
+            list[dict[str, str]],
+            tuple[tuple[float, float], ...] | None,
+            tuple[tuple[float, float], ...] | None,
+        ],
+    ) -> tuple[dict[str, Any], list[dict[str, Any]]]:
+        summary, trace, source_profile, pressure_reference_profile = case_input
+        return run_case(
             summary, trace, fit,
             supply_pressure_mpa=args.supply_pressure_mpa,
             use_inlet_profile_for_supply_temperature=not args.constant_supply_temperature,
             maximum_gas_temperature_k=args.maximum_gas_temperature_c + 273.15,
             supply_pressure_profile_mpa=source_profile,
-            pressure_reference_profile_mpa=protocol_profiles.get(summary["case_id"]),
+            pressure_reference_profile_mpa=pressure_reference_profile,
         )
+
+    evaluated: dict[str, tuple[dict[str, Any], list[dict[str, Any]]]] = {}
+    worker_count = min(args.max_workers, len(case_inputs))
+    if worker_count == 1:
+        for case_input in case_inputs:
+            summary = case_input[0]
+            evaluated[summary["case_id"]] = evaluate_case(case_input)
+    else:
+        with ProcessPoolExecutor(max_workers=worker_count) as executor:
+            futures = {
+                executor.submit(
+                    run_case,
+                    case_input[0], case_input[1], fit,
+                    supply_pressure_mpa=args.supply_pressure_mpa,
+                    use_inlet_profile_for_supply_temperature=not args.constant_supply_temperature,
+                    maximum_gas_temperature_k=args.maximum_gas_temperature_c + 273.15,
+                    supply_pressure_profile_mpa=case_input[2],
+                    pressure_reference_profile_mpa=case_input[3],
+                ): case_input[0]
+                for case_input in case_inputs
+            }
+            for future in as_completed(futures):
+                summary = futures[future]
+                evaluated[summary["case_id"]] = future.result()
+
+    for summary in ordered_summaries:
+        metric, trace_rows = evaluated[summary["case_id"]]
         rows.append(metric)
         with (trace_dir / f"{summary['case_id']}.csv").open("w", encoding="utf-8-sig", newline="") as handle:
             writer = csv.DictWriter(handle, fieldnames=list(trace_rows[0]))
@@ -369,7 +427,9 @@ def main() -> int:
             "source_temperature_profile_assumption": not args.constant_supply_temperature,
             "protocol_pressure_profile_used": args.use_protocol_pressure_profile,
             "raw_mc_archive": str(args.raw_mc_archive) if args.use_protocol_pressure_profile else None,
-        "dataset": args.dataset,
+            "dataset": args.dataset,
+            "case_evaluation_workers": worker_count,
+            "case_evaluation_mode": "process_parallel" if worker_count > 1 else "serial",
             "maximum_gas_temperature_c": args.maximum_gas_temperature_c,
             "temperature_stop_mode": (
                 "declared_physics_only_sensitivity"

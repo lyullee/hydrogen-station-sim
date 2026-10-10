@@ -1,5 +1,24 @@
 # Development Progress
 
+## 2026-10-10 - Process-parallelize independent MC partial-station replays
+
+Status: implemented; the slowest eight-case MC boundary diagnostic now runs
+independent case integrations in bounded worker processes.
+
+- `scripts/run_partial_station_validation.py` adds `--max-workers` and keeps
+  `--max-workers 1` as a serial reproduction path.
+- On the same workspace, the complete MC replay dropped from about **27.6 s**
+  serial to **9.8 s** with four workers (about 2.8x faster).
+- Aggregate metrics and every case metric were identical between serial and
+  process-parallel runs. Output rows remain in deterministic lab-test order.
+- This is a diagnostic execution change only; no frozen model, runtime
+  parameter, validation result or readiness gate was changed.
+
+Verification:
+
+- Serial/parallel aggregate and case records: **identical**.
+- `py_compile`, `git diff --check`: **passed**.
+
 ## 2026-10-10 - Isolate the MC upstream pressure boundary diagnostic
 
 Status: implemented; measured source-pressure channels are now compared with
