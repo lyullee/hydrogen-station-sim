@@ -139,6 +139,29 @@ def _scientific_screen(payload: dict[str, object] | None) -> dict[str, object]:
             "screen_pass_count": pass_count,
             "screen_pass_fraction": fraction,
         }
+    flags: list[bool] = []
+
+    def collect(value: object) -> None:
+        if isinstance(value, dict):
+            for key in ("joint_primary_screen_pass", "screening_pass"):
+                flag = value.get(key)
+                if isinstance(flag, bool):
+                    flags.append(flag)
+            for child in value.values():
+                collect(child)
+        elif isinstance(value, list):
+            for child in value:
+                collect(child)
+
+    collect(payload)
+    if flags:
+        fraction = sum(flags) / len(flags)
+        return {
+            "status": "PASS" if fraction >= 0.8 else "FAIL",
+            "screen_pass_count": sum(flags),
+            "screen_case_count": len(flags),
+            "screen_pass_fraction": fraction,
+        }
     return {"status": "NOT_REPORTED"}
 
 

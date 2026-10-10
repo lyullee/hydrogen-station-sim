@@ -39,4 +39,7 @@ def test_scientific_screen_is_separate_from_process_completion() -> None:
         }
     )
     assert passed["status"] == "PASS"
+    assert _scientific_screen(
+        {"cases": [{"joint_primary_screen_pass": True}, {"joint_primary_screen_pass": False}]}
+    )["status"] == "FAIL"
     assert _scientific_screen({"case_count": 8})["status"] == "NOT_REPORTED"

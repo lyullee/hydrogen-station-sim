@@ -1635,3 +1635,17 @@ Verification:
 - `tests/test_priority_diagnostics.py tests/test_priority_focus.py`: 4 passed.
 - P0 fast lane: process PASS, scientific screen FAIL only for
   `mc_tank_boundary`; duration 3.6 s.
+
+## 2026-10-10 - P1 component lane rechecked in parallel
+
+Status: no new P1 regression; the development-only Dickens mixed-convection
+screen remains 3/3, while H2SAFE and Schefer remain process-only diagnostics.
+
+- `scripts/run_priority_focus.py --priority P1 --max-workers 4` completed in
+  11.5 s.
+- The virtual-safety software suite passed 23 tests. The mixed-convection
+  diagnostic reported 3/3 joint screens, but its claim boundary remains
+  development-only and no runtime parameter was changed.
+- The remaining material scientific blocker is therefore still the P0 MC
+  vehicle-tank replay and the missing synchronized receiving-vessel/controller
+  full-loop cohort; sequential broad regression would not remove either one.
