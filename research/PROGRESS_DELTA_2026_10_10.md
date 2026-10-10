@@ -166,6 +166,16 @@ narrows the remaining high-impact request to synchronized receiving-vessel
 channels and custodian unit/timebase attestation; it does not justify a
 full-loop or safety-distance claim.
 
+## Readiness evidence refresh (2026-10-10)
+
+The readiness audit now selects the newest privacy-bounded local inventory and
+the newest Dickens mixed-convection diagnostic when present, while retaining
+the older records as fallbacks for older checkouts. The refreshed audit points
+to the 2026-10-10 artifacts and still reports **127 PASS / 10 FAIL / 7
+PENDING** (88.2% gate closure). The count is unchanged because this closes an
+evidence-freshness gap only; it does not promote station-side data to
+full-loop validation or change runtime parameters.
+
 ## Source records
 
 - `research/DATA_COVERAGE_SUMMARY_2026_10_09.md`
@@ -176,3 +186,5 @@ full-loop or safety-distance claim.
 - `research/local_workspace_candidate_scan_recheck_2026_10_10.json`
 - `research/nrel_h2fills_geometry_diagnostic_2026_10_10.json`
 - `research/h2protocol_capacity_eos_sensitivity_2026_10_10.json`
+- `research/ijhe_readiness_audit_2026_10_11.json`
+- `research/ijhe_readiness_audit_2026_10_11.md`

@@ -605,7 +605,14 @@ def audit(root: Path) -> dict[str, object]:
 
     dickens_protocol_path = root / "research/dickens_typeiii_prospective_protocol_2026_10_08.json"
     dickens_result_path = root / "research/dickens_typeiii_prospective_result_2026_10_08.json"
-    dickens_diagnostic_path = root / "research/dickens_typeiii_mixed_convection_diagnostic_2026_10_08.json"
+    dickens_diagnostic_candidates = (
+        root / "research/dickens_typeiii_mixed_convection_diagnostic_2026_10_10.json",
+        root / "research/dickens_typeiii_mixed_convection_diagnostic_2026_10_08.json",
+    )
+    dickens_diagnostic_path = next(
+        (candidate for candidate in dickens_diagnostic_candidates if candidate.is_file()),
+        dickens_diagnostic_candidates[-1],
+    )
     dickens_protocol = _json(dickens_protocol_path)
     dickens_result = _json(dickens_result_path)
     dickens_diagnostic = _json(dickens_diagnostic_path)
@@ -1579,8 +1586,18 @@ def audit(root: Path) -> dict[str, object]:
         } if schema_audit else "missing; confidential schema intake has not completed",
     ))
 
-    local_utilization_path = root / (
-        "research/local_confidential_station_data_utilization_2026_10_08.json"
+    # Prefer the most recent privacy-bounded inventory when the custodian has
+    # rerun the local archive scan.  Keep the frozen 2026-10-08 record as a
+    # fallback so older checkouts remain auditable.  This changes evidence
+    # freshness only; the gate below still requires the same aggregate counts
+    # and does not promote raw data or alter runtime parameters.
+    local_utilization_candidates = (
+        root / "research/local_confidential_station_data_utilization_2026_10_10.json",
+        root / "research/local_confidential_station_data_utilization_2026_10_08.json",
+    )
+    local_utilization_path = next(
+        (candidate for candidate in local_utilization_candidates if candidate.is_file()),
+        local_utilization_candidates[-1],
     )
     local_utilization = _json(local_utilization_path)
     local_privacy = (local_utilization or {}).get("privacy") or {}

@@ -133,6 +133,9 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     local_data = gates[
         "local_confidential_station_data_utilization_integrity"
     ]["observed"]
+    assert gates[
+        "local_confidential_station_data_utilization_integrity"
+    ]["evidence"].endswith("local_confidential_station_data_utilization_2026_10_10.json")
     assert local_data["inventory"]["csv_files"] == 33
     assert local_data["inventory"]["unique_csv_payloads"] == 32
     assert local_data["inventory"]["deduplicated_data_rows"] == 56_854_143
