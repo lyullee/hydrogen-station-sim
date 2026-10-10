@@ -17,3 +17,10 @@ and the archived case does not contain the source's time-resolved inlet
 temperature trace. Neither value is silently substituted.
 
 Machine-readable record: `research/dickens_typeiii_geometry_resolved_followup_2026_10_10.json`.
+
+The next pre-access step is now recorded in
+`research/dickens_typeiii_geometry_resolved_prospective_protocol_2026_10_10.json`.
+It requires a new or source-held untouched trace, a custodian-confirmed tank
+length, and a time-resolved inlet-temperature channel before any outcome can be
+used. The corresponding non-contacting request draft is
+`research/DICKENS_TYPEIII_GEOMETRY_RESOLVED_DATA_REQUEST_2026_10_10.md`.

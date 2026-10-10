@@ -1,0 +1,101 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-10-10",
+  "artifact_type": "pre_access_geometry_resolved_prospective_protocol",
+  "case_id": "dickens_typeIII",
+  "status": "pre_access_request",
+  "outcome_access_status": "awaiting_new_custodian_trace",
+  "evidence_role": "prospective_protocol_only",
+  "objective": "Evaluate the unfitted layered Type-III tank filling model on a fresh, outcome-unseen trace after resolving the inlet geometry and boundary-temperature ambiguity.",
+  "source_context": {
+    "original_experiment_doi": "10.1016/J.JPOWSOUR.2006.11.077",
+    "public_archive_doi": "10.5281/zenodo.20728325",
+    "geometry_mapping_artifact": "research/dickens_typeiii_source_geometry_mapping_2026_10_09.json",
+    "prior_result_artifact": "research/dickens_typeiii_prospective_result_2026_10_08.json",
+    "prior_result_interpretation": "The original frozen result remains negative and is not revised by this protocol.",
+    "new_trace_requirement": "A fresh trace, an untouched source-held split, or a custodian-run evaluation is required. Reusing the already inspected archived outcome arrays is ineligible for confirmatory validation."
+  },
+  "pre_access_declarations": {
+    "numerical_outcomes_seen_for_this_protocol": false,
+    "new_trace_selected_before_outcome_access": false,
+    "model_parameters_fitted_to_outcome": false,
+    "case_specific_multiplier_allowed": false,
+    "time_resolved_inlet_temperature_required": true,
+    "tank_length_mapping_required": true,
+    "same_archive_reuse_for_confirmatory_claim": false,
+    "failure_retention_required": true
+  },
+  "geometry_to_freeze_before_outcome_access": {
+    "inlet_pipe_internal_diameter_m": {
+      "value": 0.005,
+      "source": "published Dickens experiment description",
+      "status": "source_confirmed"
+    },
+    "inlet_pipe_extension_m": {
+      "value": 0.082,
+      "source": "published Dickens experiment description",
+      "status": "source_confirmed"
+    },
+    "tank_internal_diameter_m": {
+      "value": 0.358,
+      "source": "published Dickens experiment description and archived case",
+      "status": "matched"
+    },
+    "tank_internal_length_m": {
+      "value": null,
+      "candidate_source_value": 0.893,
+      "candidate_archived_case_value": 0.7451,
+      "status": "custodian_resolution_required",
+      "resolution_rule": "Do not choose by model error or reported volume. Record the custodian-confirmed physical length and its evidence before opening any new outcome values."
+    },
+    "tank_internal_volume_m3": {
+      "value": null,
+      "status": "derived_only_after_length_resolution",
+      "resolution_rule": "Derive from the frozen diameter and custodian-confirmed length; do not independently fit volume."
+    }
+  },
+  "required_input_contract": {
+    "time_s": "monotonic elapsed time from fill start",
+    "mass_flow_kg_s": "measured inlet mass flow or a cumulative delivered-mass trace with documented differentiation rule",
+    "inlet_pressure_mpa": "co-located inlet boundary pressure",
+    "inlet_temperature_k": "time-resolved measured inlet hydrogen temperature",
+    "tank_pressure_mpa": "measured tank pressure",
+    "mean_gas_temperature_k": "measured tank mean-gas temperature or documented equivalent",
+    "ambient_temperature_k": "ambient or enclosure temperature",
+    "sampling_and_quality": "sampling interval, missingness, synchronization, calibration and uncertainty flags",
+    "initial_conditions": "initial pressure, gas temperature and wall temperatures",
+    "geometry_and_materials": "frozen diameter, resolved length, inlet pipe geometry, liner/shell thickness and material properties"
+  },
+  "frozen_model": {
+    "thermodynamics": "repository hydrogen Helmholtz-EOS lookup table",
+    "state": "uniform gas plus separate aluminium-liner and composite-shell temperatures",
+    "inlet_enthalpy": "co-located measured inlet pressure and time-resolved inlet temperature",
+    "inlet_jet_mixing": "unfitted forced-convection term using the declared 5 mm inlet geometry and source-independent correlation",
+    "wall_heat_transfer": "declared natural-convection and layer-conduction correlations from the existing runtime implementation",
+    "integration": "BDF with the existing frozen tolerances and measured-time output grid",
+    "parameter_fitting": false
+  },
+  "primary_screens": {
+    "pressure_nrmse_percent_measured_span_max": 5.0,
+    "pressure_rmse_mpa_max": 2.0,
+    "gas_temperature_rmse_k_max": 10.0,
+    "gas_temperature_peak_absolute_error_k_max": 15.0,
+    "joint_rule": "All four screens must pass for a case to count as a joint pass; a failed or incomplete case is retained."
+  },
+  "analysis_sequence": [
+    "Receive metadata and rights statement without numerical outcomes.",
+    "Resolve and record the physical tank length, volume derivation and channel crosswalk.",
+    "Hash the new trace or custodian-run package and freeze this protocol plus the selected case split.",
+    "Open numerical outcomes only after the freeze record is complete.",
+    "Run the unchanged model once per eligible case with no fitting, smoothing, time warping or case removal.",
+    "Publish aggregate metrics, residual checks and all failures; do not promote a post-outcome sensitivity to validation."
+  ],
+  "integrity_checks": {
+    "mass_residual_relative_max": 1e-06,
+    "energy_residual_relative_max": 1e-06,
+    "source_hashes_required": true,
+    "channel_units_required": true,
+    "independent_outcome_access_attestation_required": true
+  },
+  "claim_boundary": "A passing fresh trace supports only transfer of the layered Type-III tank-filling submodel under the resolved geometry and measured boundary conditions. It does not validate the HRS cascade, compressor, precooler, dispenser metering, consequence distances, safety logic, or SAGA effectiveness."
+}
