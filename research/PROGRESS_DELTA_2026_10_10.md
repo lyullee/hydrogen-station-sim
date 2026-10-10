@@ -51,6 +51,18 @@ The NREL HDVS work also moved from a generic search lead to a bounded,
 hash-identified station-to-tank diagnostic and a separate custodian-data lead.
 Its result is retained as a model-repair signal, not as a new holdout.
 
+## Local workspace recheck
+
+An expanded privacy-bounded scan of the available ProjectData and DocuData
+workspaces screened 52,630 machine-readable files, including 349 spreadsheet
+headers. It found **0 full-loop candidates**, 8 partial station/source-boundary
+candidates, and no synchronized station/vehicle split pair. The result is
+recorded in `research/local_workspace_candidate_scan_recheck_2026_10_10.json`.
+This confirms that the current P0 blocker is missing attested receiving-vessel
+and controller channels rather than an unsearched local folder. The scanner was
+also hardened so malformed workbooks are counted as per-file parse misses
+instead of aborting the entire discovery pass.
+
 ## Why this still feels slow
 
 The remaining work is dominated by gates that cannot be manufactured locally:
