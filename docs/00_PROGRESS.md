@@ -1,5 +1,28 @@
 # Development Progress
 
+## 2026-10-10 - Critical-first parallel execution checkpoint
+
+Status: implemented; the critical work lanes were executed together instead of
+waiting for a sequential full regression.
+
+- Ran the P0 intake/evidence checks, the P1 virtual safety suite, and the
+  bounded MC, Dickens, H2SAFE and Schefer diagnostics in one process run.
+- The complete run finished in **12.2 s** and returned an execution **PASS**:
+  19 P0 intake tests, 3 P0 LLM-boundary tests, 23 P1 safety tests and 5
+  development diagnostics all completed.
+- This is a process check, not a scientific promotion. The readiness decision
+  is unchanged at **127 PASS / 10 FAIL / 7 PENDING** because the independent
+  receiving-vessel/controller full-loop cohort is still absent.
+- Work is now ordered by impact: P0 synchronized full-loop intake first, P1
+  component failures in parallel, and P2 review/publication tasks independently.
+  A slow broad regression is reserved for changes that actually touch those
+  paths.
+
+Verification:
+
+- `scripts/run_priority_focus.py --priority all --max-workers 4`: **PASS** in
+  12.2 s.
+
 ## 2026-10-10 - Run P0/P1 work in parallel and close the MC boundary probe
 
 Status: implemented; the fast lane now confirms the high-impact tracks without
