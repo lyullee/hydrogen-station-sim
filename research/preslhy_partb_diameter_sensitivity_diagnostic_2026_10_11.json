@@ -324,5 +324,6 @@
       "release-regime or calibrated flow coefficient measured on an untouched campaign"
     ],
     "claim_boundary": "No impact on research/preslhy_partb_ambient_validation.json; primary joint pass fraction remains 3/5 (0.6)."
-  }
+  },
+  "source_commit": "646629f91da49a2a128cfa927f5a38f040b2c201"
 }
