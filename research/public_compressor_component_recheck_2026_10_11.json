@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "artifact_type": "public_compressor_component_recheck",
+  "recorded_at": "2026-10-11",
+  "status": "PUBLIC_COMPONENT_SOURCE_RECHECK_COMPLETED",
+  "source": {
+    "title": "Experimental Dataset for a Two-Stage Metal Hydride Hydrogen Compressor",
+    "publisher": "Zenodo / Helmut Schmidt University and Helmholtz-Zentrum Hereon",
+    "doi": "10.5281/zenodo.18213166",
+    "record_url": "https://zenodo.org/records/18213166",
+    "repository_url": "https://github.com/LukasFleming/MHC-Dataset/tree/v1.1",
+    "version": "v1.1",
+    "license": "CC BY 4.0",
+    "archive_bytes": 300873031,
+    "archive_md5": "1ad5ee46dc764849e47b1e9810999ab0"
+  },
+  "observed_scope": {
+    "experiment_count": 29,
+    "measurement_families": [
+      "stage and vessel pressure",
+      "stage and vessel temperature",
+      "hydrogen mass flow",
+      "experimental metadata"
+    ],
+    "component_geometry_files_present": true,
+    "station_cascade_boundary_present": false,
+    "dispenser_boundary_present": false,
+    "vehicle_receiving_vessel_present": false,
+    "controller_or_esd_state_channels_present": false,
+    "raw_archive_downloaded_to_repository": false
+  },
+  "eligibility": {
+    "public_component_validation_candidate": true,
+    "compressor_component_protocol_ready": false,
+    "full_loop_external_holdout_eligible": false,
+    "station_safety_claim_supported": false,
+    "runtime_parameter_application": false,
+    "saga_effectiveness_supported": false
+  },
+  "allowed_use": [
+    "freeze a compressor-only pressure-temperature-flow protocol before reading rows",
+    "screen compressor thermal and flow plausibility",
+    "ground LLM explanations of the compressor evidence boundary"
+  ],
+  "prohibited_claims": [
+    "station cascade or dispenser validation",
+    "vehicle filling or SAE J2601 conformance",
+    "full-loop external validation",
+    "safety distance or emergency-response effectiveness"
+  ],
+  "next_action": "Freeze a no-fitting compressor component protocol, obtain the archive locally only under the CC BY 4.0 attribution terms, and retain all failures before considering any model or runtime change.",
+  "claim_boundary": "This is an open public component-data source recheck. It is not a validation result, does not change runtime parameters, and cannot close the station-to-vehicle full-loop or field-safety gates.",
+  "privacy": {
+    "private_raw_rows_persisted": false,
+    "private_site_or_company_identity_published": false,
+    "absolute_private_timestamps_published": false
+  }
+}

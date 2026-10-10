@@ -935,6 +935,88 @@ def _public_accident_source_recheck() -> dict[str, Any] | None:
     }
 
 
+def _public_compressor_component_recheck() -> dict[str, Any] | None:
+    """Expose a rights-cleared compressor component-data boundary.
+
+    The source is useful for a future compressor-only protocol, but it has no
+    station cascade, dispenser, vehicle or ESD boundary.  Only provenance and
+    eligibility flags enter the interactive evidence envelope until a frozen
+    component protocol is run.
+    """
+
+    root = Path(__file__).resolve().parents[2]
+    path = root / "research/public_compressor_component_recheck_2026_10_11.json"
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, json.JSONDecodeError):
+        return None
+    source = record.get("source") or {}
+    scope = record.get("observed_scope") or {}
+    eligibility = record.get("eligibility") or {}
+    privacy = record.get("privacy") or {}
+    if (
+        record.get("artifact_type") != "public_compressor_component_recheck"
+        or record.get("status") != "PUBLIC_COMPONENT_SOURCE_RECHECK_COMPLETED"
+        or source.get("doi") != "10.5281/zenodo.18213166"
+        or source.get("license") != "CC BY 4.0"
+        or int(scope.get("experiment_count") or 0) != 29
+        or scope.get("station_cascade_boundary_present") is not False
+        or scope.get("dispenser_boundary_present") is not False
+        or scope.get("vehicle_receiving_vessel_present") is not False
+        or scope.get("controller_or_esd_state_channels_present") is not False
+        or scope.get("raw_archive_downloaded_to_repository") is not False
+        or eligibility.get("public_component_validation_candidate") is not True
+        or eligibility.get("full_loop_external_holdout_eligible") is not False
+        or eligibility.get("runtime_parameter_application") is not False
+        or eligibility.get("saga_effectiveness_supported") is not False
+        or not privacy
+        or not all(value is False for value in privacy.values())
+    ):
+        return None
+    return {
+        "artifact": "research/public_compressor_component_recheck_2026_10_11.json",
+        "source": {
+            key: source.get(key)
+            for key in (
+                "title", "publisher", "doi", "record_url", "repository_url",
+                "version", "license", "archive_bytes", "archive_md5",
+            )
+            if source.get(key) is not None
+        },
+        "scope": {
+            "experiment_count": scope.get("experiment_count"),
+            "measurement_families": [
+                str(value) for value in scope.get("measurement_families") or []
+            ],
+            "component_geometry_files_present": scope.get(
+                "component_geometry_files_present"
+            ) is True,
+            "station_cascade_boundary_present": False,
+            "dispenser_boundary_present": False,
+            "vehicle_receiving_vessel_present": False,
+            "controller_or_esd_state_channels_present": False,
+            "raw_archive_downloaded_to_repository": False,
+        },
+        "eligibility": {
+            key: eligibility.get(key) is True
+            for key in (
+                "public_component_validation_candidate",
+                "compressor_component_protocol_ready",
+                "full_loop_external_holdout_eligible",
+                "station_safety_claim_supported",
+                "runtime_parameter_application",
+                "saga_effectiveness_supported",
+            )
+        },
+        "allowed_use": [str(value) for value in record.get("allowed_use") or []],
+        "prohibited_claims": [
+            str(value) for value in record.get("prohibited_claims") or []
+        ],
+        "next_action": str(record.get("next_action") or ""),
+        "claim_limit": str(record.get("claim_boundary") or ""),
+    }
+
+
 def _confidential_local_accident_response_coverage() -> dict[str, Any] | None:
     """Expose only aggregate response-plan traceability for restricted incidents.
 
@@ -4791,6 +4873,18 @@ def _public_source_links(evidence: dict[str, Any]) -> list[dict[str, Any]]:
             "최신 공개 사고자료 재검토(대응 근거만, 수치·full-loop 검증 아님)",
         )
 
+    compressor_component = evidence.get("public_compressor_component_recheck") or {}
+    compressor_source = compressor_component.get("source") or {}
+    add(
+        "PUBLIC_COMPRESSOR_COMPONENT_ZENODO_18213166",
+        str(
+            compressor_source.get("title")
+            or "Experimental Dataset for a Two-Stage Metal Hydride Hydrogen Compressor"
+        ),
+        str(compressor_source.get("record_url") or ""),
+        "공개 압축기 구성품 계측 근거(충전소 full-loop·차량·ESD 검증 아님)",
+    )
+
     accidental = evidence.get("public_accidental_release_evidence") or {}
     add(
         "PUBLIC_ACCIDENTAL_RELEASE_ARTICLE",
@@ -8464,6 +8558,11 @@ def build_evidence_manifest(
         envelope["response_evidence"][
             "public_accident_source_recheck"
         ] = accident_source_recheck
+    compressor_component = _public_compressor_component_recheck()
+    if compressor_component is not None:
+        envelope["response_evidence"][
+            "public_compressor_component_recheck"
+        ] = compressor_component
     local_accident_coverage = _confidential_local_accident_response_coverage()
     if local_accident_coverage is not None:
         envelope["response_evidence"][
@@ -9099,6 +9198,20 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
             ) is True,
             "claim_supported": accident_source_recheck.get("claim_supported") is True,
             "claim_limit": short(accident_source_recheck.get("claim_limit"), 360),
+        }
+    compressor_component = evidence.get("public_compressor_component_recheck")
+    if isinstance(compressor_component, dict):
+        summary["public_compressor_component_recheck"] = {
+            "artifact": compressor_component.get("artifact"),
+            "source": compressor_component.get("source") or {},
+            "scope": compressor_component.get("scope") or {},
+            "eligibility": compressor_component.get("eligibility") or {},
+            "allowed_use": list(compressor_component.get("allowed_use") or []),
+            "prohibited_claims": list(
+                compressor_component.get("prohibited_claims") or []
+            ),
+            "next_action": compressor_component.get("next_action"),
+            "claim_limit": short(compressor_component.get("claim_limit"), 360),
         }
     benchmarks = evidence.get("public_experimental_benchmarks")
     if isinstance(benchmarks, dict):
@@ -10766,6 +10879,7 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
     incident = response.get("public_incident_traceability") or {}
     accident_inventory = response.get("public_accident_report_inventory") or {}
     accident_source_recheck = response.get("public_accident_source_recheck") or {}
+    compressor_component = response.get("public_compressor_component_recheck") or {}
     khk_replay = accident_inventory.get("digital_twin_replay") or {}
     relevant_precedents = response.get("relevant_public_accident_precedents") or {}
     accidental_release = response.get("public_accidental_release_evidence") or {}
@@ -10865,6 +10979,10 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
     accident_sources_relevant = any(token in lead_context for token in (
         "사고", "누출", "화재", "폭발", "대응", "안전", "accident", "leak",
         "fire", "explosion", "response", "safety", "incident",
+    ))
+    compressor_component_relevant = any(token in lead_context for token in (
+        "압축기", "컴프레서", "compressor", "compression", "mass flow",
+        "질량유량", "유량", "압축",
     ))
     public_hrs_leads_relevant = any(token in lead_context for token in (
         "공개", "계측", "실측", "실데이터", "원자료", "검증", "데이터",
@@ -11334,6 +11452,17 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
             },
         } if accident_source_recheck and accident_sources_relevant else {}),
         **({
+            "public_compressor_component_recheck": {
+                "source": compressor_component.get("source") or {},
+                "scope": compressor_component.get("scope") or {},
+                "eligibility": compressor_component.get("eligibility") or {},
+                "next_action": compressor_component.get("next_action"),
+                "claim_limit": short(
+                    compressor_component.get("claim_limit"), 360
+                ),
+            },
+        } if compressor_component and compressor_component_relevant else {}),
+        **({
             "public_h2iq_aggregate_reference": public_h2iq_aggregate,
         } if h2iq_aggregate_relevant else {}),
         **({
@@ -11373,6 +11502,35 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                     ),
                 },
             } if accident_source_recheck and accident_sources_relevant else {}),
+            **({
+                "public_compressor_component_recheck": {
+                    "doi": (compressor_component.get("source") or {}).get("doi"),
+                    "license": (compressor_component.get("source") or {}).get(
+                        "license"
+                    ),
+                    "experiment_count": (
+                        compressor_component.get("scope") or {}
+                    ).get("experiment_count"),
+                    "component_validation_candidate": (
+                        (compressor_component.get("eligibility") or {}).get(
+                            "public_component_validation_candidate"
+                        ) is True
+                    ),
+                    "full_loop_external_holdout_eligible": (
+                        (compressor_component.get("eligibility") or {}).get(
+                            "full_loop_external_holdout_eligible"
+                        ) is True
+                    ),
+                    "runtime_parameter_application": (
+                        (compressor_component.get("eligibility") or {}).get(
+                            "runtime_parameter_application"
+                        ) is True
+                    ),
+                    "claim_limit": short(
+                        compressor_component.get("claim_limit"), 360
+                    ),
+                },
+            } if compressor_component and compressor_component_relevant else {}),
             **({
                 "public_operational_evidence_leads": operational_evidence_projection,
             } if operational_evidence_projection is not None else {}),
@@ -13257,6 +13415,7 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
     action_taxonomy = incident.get("action_taxonomy") or {}
     accident_inventory = evidence.get("public_accident_report_inventory") or {}
     relevant_precedents = evidence.get("relevant_public_accident_precedents") or {}
+    compressor_component = evidence.get("public_compressor_component_recheck") or {}
     accidental_release = evidence.get("public_accidental_release_evidence") or {}
     ignited_pressure_peaking = evidence.get(
         "public_ignited_pressure_peaking_validation"
@@ -14115,6 +14274,18 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
                 relevant_precedents.get("by_response_plan") or {}
             ),
             "precedent_claim_limit": relevant_precedents.get("claim_limit"),
+        },
+        "public_compressor_component_recheck": {
+            "artifact": compressor_component.get("artifact"),
+            "source": compressor_component.get("source") or {},
+            "scope": compressor_component.get("scope") or {},
+            "eligibility": compressor_component.get("eligibility") or {},
+            "allowed_use": list(compressor_component.get("allowed_use") or []),
+            "prohibited_claims": list(
+                compressor_component.get("prohibited_claims") or []
+            ),
+            "next_action": compressor_component.get("next_action"),
+            "claim_limit": compressor_component.get("claim_limit"),
         },
         "public_controlled_flare_evidence": {
             "doi": controlled_flare.get("doi"),

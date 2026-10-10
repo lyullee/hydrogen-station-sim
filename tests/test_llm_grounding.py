@@ -728,6 +728,7 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
         "KHK_PUBLIC_ACCIDENT_REPORTS",
         "PUBLIC_ACCIDENTAL_RELEASE_ARTICLE",
         "PUBLIC_ACCIDENTAL_RELEASE_DATASET",
+        "PUBLIC_COMPRESSOR_COMPONENT_ZENODO_18213166",
         "PUBLIC_DETECTOR_LOGIC_DATASET",
         "PUBLIC_REFERENCE_LEAK_DETECTOR_DATASET",
         "PUBLIC_ACTUAL_H2_SPATIAL_STRATIFICATION_ARTICLE",
@@ -846,6 +847,32 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert accident_support["response_grounding_supported"] is True
     assert accident_support["numerical_validation_supported"] is False
     assert accident_support["full_loop_external_validation_supported"] is False
+    compressor_header = header["public_compressor_component_recheck"]
+    assert compressor_header["source"]["doi"] == "10.5281/zenodo.18213166"
+    assert compressor_header["source"]["license"] == "CC BY 4.0"
+    assert compressor_header["scope"]["experiment_count"] == 29
+    assert compressor_header["eligibility"][
+        "public_component_validation_candidate"
+    ] is True
+    assert compressor_header["eligibility"][
+        "full_loop_external_holdout_eligible"
+    ] is False
+    compressor_manifest = build_evidence_manifest(
+        {"time_s": 1.0}, {}, [], False,
+        question="압축기 압력과 질량유량의 공개 검증 근거를 설명해줘",
+    )
+    compressor_decision = prompt_decision_evidence(compressor_manifest)
+    compressor_support = compressor_decision["decision_support_evidence"][
+        "public_compressor_component_recheck"
+    ]
+    assert compressor_support["doi"] == "10.5281/zenodo.18213166"
+    assert compressor_support["experiment_count"] == 29
+    assert compressor_support["component_validation_candidate"] is True
+    assert compressor_support["full_loop_external_holdout_eligible"] is False
+    assert compressor_support["runtime_parameter_application"] is False
+    assert "public_compressor_component_recheck" not in (
+        idle_decision["decision_support_evidence"]
+    )
     assert header["public_accident_evidence"]["hiad_public_source"]["version"] == (
         "HIAD 2.2"
     )
