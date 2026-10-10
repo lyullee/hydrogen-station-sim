@@ -1703,3 +1703,37 @@ aggregate MC vehicle-tank result without exposing raw rows.
 Verification:
 
 - Validation evidence, local evidence and LLM grounding suites: 36 passed.
+
+## 2026-10-10 - Switch development to impact-first execution
+
+Status: implemented; the active queue is now ordered by objective impact rather
+than by document or directory order.
+
+- P0 is reserved for evidence that can change the full-station readiness
+  decision: synchronized receiving-vessel/controller validation, consequence
+  boundary validation, and any failed scientific screen that could be closed
+  with already available data.
+- P1 covers independent component and spatial checks that can run in parallel
+  while P0 data are unavailable. P2 covers manuscript, UI, and presentation
+  work and is not allowed to delay P0/P1 execution.
+- The fast lane remains process-parallel: `run_priority_focus.py --priority
+  P0` completes in about 3--4 s on the current workspace. A completed child
+  process is still reported separately from its scientific screen, so speed
+  cannot hide a negative result.
+- The largest unresolved gate is `full_loop_external_validation`. The local
+  public files do not contain eight eligible synchronized vehicle pressure,
+  temperature, mass-flow, protocol/controller, and geometry traces. The
+  existing metadata-only intake contract is ready to quarantine and hash such
+  a bundle as soon as a rights-cleared custodian provides it; no raw private
+  rows or site identity are required in the repository.
+
+Current decision snapshot remains **127 PASS / 10 FAIL / 7 PENDING**;
+`bounded_ijhe_submission_ready=false` and
+`full_user_objective_ready=false`. The queue therefore continues with the
+highest-impact available diagnostic instead of waiting for sequential cleanup.
+
+Verification:
+
+- P0 priority focus: process PASS, scientific screen BLOCKED only for
+  `mc_tank_boundary`, approximately 3.4 s.
+- Priority and readiness regression suites: 10 passed.
