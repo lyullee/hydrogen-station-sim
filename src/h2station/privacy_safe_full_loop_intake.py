@@ -19,6 +19,7 @@ import hashlib
 from itertools import zip_longest
 import math
 from pathlib import Path
+import re
 from typing import Any, Iterable, Mapping, Sequence
 
 
@@ -48,6 +49,33 @@ FORBIDDEN_IDENTITY_TOKENS = (
     "timestamp",
     "datetime",
 )
+
+# Phase labels are inspected only as transient control-flow evidence. The
+# normalized labels themselves are never written to the privacy-safe report.
+# These aliases cover common English/Korean logger states without assuming a
+# particular controller vendor's vocabulary.
+_PHASE_START_MARKERS = frozenset({
+    "start", "begin", "ready", "ramp", "fill", "charging",
+    "시작", "준비", "충전", "주입",
+})
+_PHASE_TERMINAL_MARKERS = frozenset({
+    "stop", "stopped", "end", "ended", "complete", "completed", "done",
+    "finish", "finished", "abort", "aborted", "trip", "esd", "정지",
+    "종료", "완료", "중단", "차단", "비상정지",
+})
+
+
+def _phase_marker_flags(value: Any) -> tuple[str, bool, bool]:
+    """Return a privacy-safe phase key and start/terminal marker flags."""
+
+    text = str(value or "").strip().lower()
+    tokens = set(re.findall(r"[a-z0-9가-힣]+", text))
+    normalized = " ".join(sorted(tokens))
+    return (
+        normalized,
+        bool(tokens.intersection(_PHASE_START_MARKERS)),
+        bool(tokens.intersection(_PHASE_TERMINAL_MARKERS)),
+    )
 
 
 @dataclass(frozen=True)
@@ -134,6 +162,11 @@ def _inspect_event_rows(
     mass_nonnegative = True
     mass_monotonic = True
     protocol_phase_nonempty_count = 0
+    protocol_phase_keys: set[str] = set()
+    protocol_phase_transition_count = 0
+    protocol_phase_start_marker_present = False
+    protocol_phase_terminal_marker_present = False
+    previous_phase_key: str | None = None
     if not missing_required and not identity_columns:
         by_lower = {header.lower(): header for header in headers}
         parse_error: str | None = None
@@ -194,6 +227,13 @@ def _inspect_event_rows(
                     if not phase:
                         raise ValueError(f"protocol_phase at row {row_number} is empty")
                     protocol_phase_nonempty_count += 1
+                    phase_key, has_start, has_terminal = _phase_marker_flags(phase)
+                    if previous_phase_key is not None and phase_key != previous_phase_key:
+                        protocol_phase_transition_count += 1
+                    previous_phase_key = phase_key
+                    protocol_phase_keys.add(phase_key)
+                    protocol_phase_start_marker_present |= has_start
+                    protocol_phase_terminal_marker_present |= has_terminal
             except ValueError as exc:
                 if parse_error is None:
                     parse_error = str(exc)
@@ -243,6 +283,12 @@ def _inspect_event_rows(
             "sample_period_count": delta_count,
         },
         "protocol_phase_nonempty_count": protocol_phase_nonempty_count,
+        "protocol_phase": {
+            "distinct_phase_count": len(protocol_phase_keys),
+            "transition_count": protocol_phase_transition_count,
+            "start_marker_present": protocol_phase_start_marker_present,
+            "terminal_marker_present": protocol_phase_terminal_marker_present,
+        },
         "channel_presence": {
             "pilot_required": sorted(
                 set(PILOT_REQUIRED_COLUMNS).intersection(normalized)
@@ -427,6 +473,11 @@ def _read_split_event(
     mass_nonnegative = True
     mass_monotonic = True
     protocol_phase_nonempty_count = 0
+    protocol_phase_keys: set[str] = set()
+    protocol_phase_transition_count = 0
+    protocol_phase_start_marker_present = False
+    protocol_phase_terminal_marker_present = False
+    previous_phase_key: str | None = None
 
     with (
         _channel_rows(station_path, worksheet=station_worksheet) as station_channel,
@@ -507,6 +558,13 @@ def _read_split_event(
                         add_error(f"protocol_phase at row {row_number} is empty")
                     else:
                         protocol_phase_nonempty_count += 1
+                        phase_key, has_start, has_terminal = _phase_marker_flags(phase)
+                        if previous_phase_key is not None and phase_key != previous_phase_key:
+                            protocol_phase_transition_count += 1
+                        previous_phase_key = phase_key
+                        protocol_phase_keys.add(phase_key)
+                        protocol_phase_start_marker_present |= has_start
+                        protocol_phase_terminal_marker_present |= has_terminal
             except ValueError as exc:
                 add_error(str(exc))
 
@@ -547,6 +605,12 @@ def _read_split_event(
             "sample_period_count": delta_count,
         },
         "protocol_phase_nonempty_count": protocol_phase_nonempty_count,
+        "protocol_phase": {
+            "distinct_phase_count": len(protocol_phase_keys),
+            "transition_count": protocol_phase_transition_count,
+            "start_marker_present": protocol_phase_start_marker_present,
+            "terminal_marker_present": protocol_phase_terminal_marker_present,
+        },
         "channel_presence": {
             "pilot_required": sorted(set(PILOT_REQUIRED_COLUMNS).intersection(station_normalized)),
             "mass": mass_present,
@@ -610,15 +674,42 @@ def _aggregate_event_reports(
             for period in sample_periods
         ):
             common_sample_period_s = float(reference_period)
+    protocol_phase_sequence_present = bool(
+        event_reports
+        and all(
+            report.get("protocol_phase", {}).get("distinct_phase_count", 0) >= 2
+            and report.get("protocol_phase", {}).get("transition_count", 0) >= 1
+            for report in event_reports
+        )
+    )
+    protocol_phase_start_marker_complete = bool(
+        event_reports
+        and all(
+            report.get("protocol_phase", {}).get("start_marker_present") is True
+            for report in event_reports
+        )
+    )
+    protocol_phase_terminal_marker_complete = bool(
+        event_reports
+        and all(
+            report.get("protocol_phase", {}).get("terminal_marker_present") is True
+            for report in event_reports
+        )
+    )
     vehicle_boundary_complete = (
         pilot_ready
         and vehicle_complete_count == len(event_reports)
         and common_elapsed_time_axis
         and common_sample_period_s is not None
     )
+    protocol_freeze_candidate = bool(
+        vehicle_boundary_complete
+        and protocol_phase_sequence_present
+        and protocol_phase_start_marker_complete
+    )
     if not pilot_ready:
         readiness_status = "SCHEMA_INCOMPLETE"
-    elif vehicle_boundary_complete:
+    elif protocol_freeze_candidate:
         readiness_status = "READY_FOR_FULL_LOOP_PROTOCOL_FREEZE"
     else:
         readiness_status = "READY_FOR_PROTOCOL_FREEZE"
@@ -643,12 +734,16 @@ def _aggregate_event_reports(
             "sample_period_jitter_ratio_limit": (
                 selected.maximum_sample_period_jitter_ratio
             ),
+            "protocol_phase_sequence_present": protocol_phase_sequence_present,
+            "protocol_phase_start_marker_complete": protocol_phase_start_marker_complete,
+            "protocol_phase_terminal_marker_complete": protocol_phase_terminal_marker_complete,
+            "protocol_phase_terminal_marker_is_advisory": True,
             "vehicle_boundary_required_for_full_loop": True,
             "vehicle_boundary_complete": vehicle_boundary_complete,
             "missing_vehicle_boundary_event_count": max(
                 len(event_reports) - vehicle_complete_count, 0
             ),
-            "full_loop_protocol_freeze_candidate": vehicle_boundary_complete,
+            "full_loop_protocol_freeze_candidate": protocol_freeze_candidate,
             "claim_supported": False,
             "claim_limit": (
                 "A complete station-to-vehicle validation still requires a frozen "
@@ -669,10 +764,11 @@ def _aggregate_event_reports(
             "parameter_fitting_performed": False,
             "next_step": (
                 "freeze model and scoring protocol before reading outcomes"
-                if vehicle_boundary_complete
+                if protocol_freeze_candidate
                 else (
                     "obtain synchronized vehicle_pressure_mpa and "
-                    "vehicle_temperature_c channels before full-loop freeze"
+                    "vehicle_temperature_c channels, plus a multi-phase protocol "
+                    "sequence, before full-loop freeze"
                     if pilot_ready
                     else "repair schema or channel-role attestations"
                 )

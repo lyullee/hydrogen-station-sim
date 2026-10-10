@@ -1081,6 +1081,26 @@ Verification:
 - `node --check web/monitor-wall.js` and `web/node-monitor.js` passed.
 - Node UI suites: 16 passed.
 
+## 2026-10-10 - Strengthen full-loop intake phase evidence
+
+Status: implemented; privacy-safe intake and grounding regressions passed.
+
+- Privacy-safe station/receiving-vessel intake now records only aggregate phase
+  evidence: distinct phase count, transition count, start-marker presence and
+  terminal-marker presence. Raw phase labels are not emitted.
+- A synchronized vehicle-boundary bundle with a single repeated phase can no
+  longer become a full-loop protocol-freeze candidate. Each event must show a
+  multi-phase sequence and a start marker before the pre-access freeze path is
+  opened.
+- Terminal markers remain an explicit advisory field because custodians use
+  different stop/complete conventions; they are visible to the reviewer before
+  the scoring protocol is frozen.
+
+Verification:
+
+- Full-loop intake/CLI/freeze/registry checks: 30 passed.
+- LLM grounding and evidence API checks: 31 passed.
+
 ## 2026-10-10 - Throttle 3D operator-card repaints without slowing physics
 
 Status: implemented; 3D module syntax and UI regression passed.

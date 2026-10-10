@@ -184,6 +184,26 @@ def test_empty_protocol_phase_is_rejected(tmp_path: Path) -> None:
     assert any("protocol_phase at row 3 is empty" in error for error in event["errors"])
 
 
+def test_single_phase_trace_cannot_be_marked_full_loop_freeze_candidate(
+    tmp_path: Path,
+) -> None:
+    paths = [tmp_path / f"event_{index}.csv" for index in range(3)]
+    for path in paths:
+        path.write_text(
+            "elapsed_time_s,station_pressure_mpa,delivered_gas_temperature_c,mass_flow_g_s,protocol_phase,vehicle_pressure_mpa,vehicle_temperature_c\n"
+            "0,45,-35,10,fill,5,25\n"
+            "1,46,-34,10,fill,6,28\n",
+            encoding="utf-8",
+        )
+
+    report = validate_privacy_safe_pilot_bundle(paths)
+
+    assert report["status"] == "READY_FOR_PROTOCOL_FREEZE"
+    readiness = report["full_loop_readiness"]
+    assert readiness["protocol_phase_sequence_present"] is False
+    assert readiness["full_loop_protocol_freeze_candidate"] is False
+
+
 def test_split_station_vehicle_exports_are_checked_without_merging_raw_rows(
     tmp_path: Path,
 ) -> None:
