@@ -288,3 +288,15 @@ privacy-bounded result is recorded in
 `research/nrel_hdvs_event_unit_audit_2026_10_11.json` and is now exposed to the
 LLM evidence summary as `independent_event_count=1`. This tightens claim
 wording without changing the negative tank screen or the 88.2% readiness value.
+
+## Impact-first rerun after audit refresh (2026-10-11)
+
+The critical diagnostic lane was rerun after the readiness-audit refresh at
+commit `41f93a4`. All five child processes completed in **2.705 s**. The
+software/process status remained healthy; the scientific screen remained
+blocked by the MC vehicle-tank boundary (0/8), H2SAFE spatial response (0/1),
+and NREL HDVS tank boundary (0/7). The MC SOC/EOS boundary (8/8) and Dickens
+mixed-convection sensitivity (3/3) remained positive development diagnostics.
+The refreshed result is retained in
+`research/priority_diagnostic_run_2026_10_11_latest.json`; it does not promote
+a frozen validation gate or change the 88.2% headline.
