@@ -43,3 +43,13 @@ def test_candidate_leads_do_not_relax_full_loop_gate() -> None:
     assert kuroki["admission_status"] == "CONTACT_REQUEST_CANDIDATE_ONLY"
     assert kuroki["full_loop_external_holdout_eligible"] is False
     assert record["privacy"]["raw_rows_persisted"] is False
+
+
+def test_candidate_leads_record_search_recheck_without_admitting_data() -> None:
+    path = ROOT / "research/public_full_loop_candidate_leads_2026_10_10.json"
+    record = json.loads(path.read_text(encoding="utf-8"))
+    recheck = record["search_recheck"]
+    assert recheck["checked_at"] == "2026-10-10"
+    assert "synchronized" in recheck["finding"]
+    assert recheck["evidence_urls"]
+    assert "Do not admit" in recheck["action"]

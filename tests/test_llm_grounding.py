@@ -1320,6 +1320,8 @@ def test_full_loop_candidate_leads_are_grounded_without_being_admitted():
     assert leads["decision"]["new_full_loop_dataset_admitted"] is False
     assert leads["decision"]["goal_completion_permitted"] is False
     assert leads["privacy"]["raw_rows_persisted"] is False
+    assert leads["search_recheck"]["checked_at"] == "2026-10-10"
+    assert "synchronized" in leads["search_recheck"]["finding"]
 
     projected = prompt_decision_evidence(manifest)["decision_support_evidence"]
     candidate = projected["public_full_loop_candidate_leads"]["candidates"][0]
@@ -1339,6 +1341,9 @@ def test_full_loop_candidate_leads_are_grounded_without_being_admitted():
         item["full_loop_external_holdout_eligible"] is False
         for item in projected_by_id.values()
     )
+    assert projected["public_full_loop_candidate_leads"]["search_recheck"][
+        "checked_at"
+    ] == "2026-10-10"
 
 
 def test_prompt_projection_carries_consequence_risk_screening_boundary():

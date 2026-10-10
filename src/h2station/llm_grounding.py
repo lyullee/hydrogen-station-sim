@@ -3737,6 +3737,14 @@ def _public_full_loop_candidate_leads() -> dict[str, Any] | None:
             )
             if candidate.get(key) is not None
         })
+    search_recheck = record.get("search_recheck") or {}
+    compact_search_recheck = None
+    if isinstance(search_recheck, dict):
+        compact_search_recheck = {
+            key: search_recheck.get(key)
+            for key in ("checked_at", "scope", "finding", "evidence_urls", "action")
+            if search_recheck.get(key) is not None
+        }
     return {
         "artifact": "research/public_full_loop_candidate_leads_2026_10_10.json",
         "evidence_role": (
@@ -3755,6 +3763,7 @@ def _public_full_loop_candidate_leads() -> dict[str, Any] | None:
             if decision.get(key) is not None
         },
         "privacy": privacy,
+        "search_recheck": compact_search_recheck,
         "claim_limit": str(
             "No candidate is a validation result. Raw rows, channel semantics, "
             "reuse terms and independent holdout status must be verified before use."
@@ -8745,6 +8754,7 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
             "evidence_role": full_loop_candidate_leads.get("evidence_role"),
             "candidates": full_loop_candidate_leads.get("candidates") or [],
             "decision": full_loop_candidate_leads.get("decision") or {},
+            "search_recheck": full_loop_candidate_leads.get("search_recheck") or {},
             "full_loop_external_validation_supported": False,
             "runtime_parameter_application": False,
             "claim_limit": short(full_loop_candidate_leads.get("claim_limit")),
@@ -10071,6 +10081,7 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
             "evidence_role": full_loop_candidate_leads.get("evidence_role"),
             "candidates": full_loop_candidate_leads.get("candidates") or [],
             "decision": full_loop_candidate_leads.get("decision") or {},
+            "search_recheck": full_loop_candidate_leads.get("search_recheck") or {},
             "full_loop_external_validation_supported": False,
             "runtime_parameter_application": False,
             "claim_limit": short(full_loop_candidate_leads.get("claim_limit")),
