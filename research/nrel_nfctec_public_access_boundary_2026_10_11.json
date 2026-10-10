@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "artifact_type": "nrel_nfctec_public_access_boundary",
+  "recorded_at": "2026-10-10T19:38:12.793585+00:00",
+  "status": "PUBLIC_COMPOSITE_ONLY_RAW_CUSTODIAN_REQUEST_REQUIRED",
+  "sources": [
+    {
+      "id": "nrel_nfctec_data_access",
+      "title": "National Fuel Cell Technology Evaluation Center",
+      "url": "https://www.nlr.gov/hydrogen/nfctec",
+      "observed_scope": [
+        "secure operational and maintenance time-series processing",
+        "partner detailed data products",
+        "public composite data products"
+      ],
+      "raw_synchronized_public_archive": false,
+      "decision": "CUSTODIAN_REQUEST_LEAD_ONLY",
+      "claim_limit": "The official access description states that raw partner data are secured and public outputs are aggregated composite products; it cannot serve as an independent raw full-loop holdout."
+    },
+    {
+      "id": "nrel_h2_station_phm_article",
+      "title": "Hydrogen station PHM model using NFCTEC and HITRF data",
+      "url": "https://www.nrel.gov/docs/fy24osti/85333.pdf",
+      "doi": "10.1016/j.ijhydene.2023.10.035",
+      "observed_scope": [
+        "more than 465000 fills from more than 34 stations described as NFCTEC input",
+        "HITRF research-station data stream",
+        "station maintenance and safety event context"
+      ],
+      "machine_readable_public_raw_rows": false,
+      "decision": "AGGREGATE_AND_CUSTODIAN_REQUEST_LEAD_ONLY",
+      "claim_limit": "The publication describes the data sources and model but does not release a rights-cleared synchronized station-to-vehicle logger cohort."
+    },
+    {
+      "id": "nrel_hitrf_hdvs_partial_trace",
+      "title": "NREL H2FillS supplemental HDVS Type-IV sample test",
+      "url": "https://www.nlr.gov/hydrogen/h2fills-download",
+      "local_boundary_artifact": "research/nrel_hdvs_raw_trace_boundary_2026_10_05.json",
+      "physical_scope": "common-clock hose and seven-tank pressure/temperature/mass trace",
+      "full_loop_external_holdout_eligible": false,
+      "decision": "PARTIAL_STATION_TO_TANK_BOUNDARY_ONLY"
+    }
+  ],
+  "eligibility": {
+    "raw_public_full_loop_holdout": false,
+    "partial_station_to_tank_boundary": true,
+    "saga_effectiveness_evaluation": false,
+    "next_required_input": "custodian-approved de-identified common-clock station, dispenser and receiving-vehicle traces with units, controller/ESD states and reuse terms"
+  },
+  "gate_impact": "full_loop_external_validation_remains_open",
+  "runtime_parameter_application": false,
+  "claim_boundary": "This record documents an official public-access boundary and a data-request route. It adds no full-loop numerical validation and does not change runtime parameters."
+}
