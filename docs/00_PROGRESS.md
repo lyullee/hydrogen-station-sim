@@ -718,3 +718,26 @@ Verification:
 - Re-scanned the local project/data roots with privacy-bounded discovery and controlled schema checks. The roots contain substantial station-side material, but no attested synchronized station-to-vehicle full-loop candidate.
 - The private station archive remains immediately usable for station-side pressure, cascade and recharge diagnostics; it is not vehicle-side validation.
 - P0, P1 and P2 work are therefore kept independent: three-event receiving-vessel intake, station-side/model repairs, and LLM/HIAD/publication work proceed without waiting on one another.
+
+## 2026-10-10 - Parallel priority validation runner executed
+
+Status: implemented; this is a software-regression checkpoint and does not
+promote any external validation gate.
+
+Completed:
+
+- Ran the P0 full-loop intake checks, P0 LLM evidence-boundary checks and P1
+  virtual-safety/response checks concurrently through
+  `scripts/run_priority_validation.py`.
+- All three tracks passed (15 + 3 + 23 focused tests) in 8.155 seconds of
+  wall-clock time. The run is captured in
+  `research/priority_validation_run_2026_10_10.json`.
+- Kept the readiness decision unchanged at 127 PASS / 10 FAIL / 7 PENDING;
+  the synchronized receiving-vessel/controller cohort remains the single P0
+  full-loop blocker. No external claim, frozen protocol or private row was
+  changed.
+
+Verification:
+
+- The focused LLM, SAGA contract, emergency-response and readiness-integrity
+  suites passed: 45 tests, 2 dependency deprecation warnings.
