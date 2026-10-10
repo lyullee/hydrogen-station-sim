@@ -31,6 +31,9 @@ _CARB_BENCHMARK = _ROOT / "research/carb_2024_hrs_inuse_field_benchmark_2026_10_
 _STRIEDNIG_DIAGNOSTIC = _ROOT / "research/striednig_hyddown_diagnostic_result_2026_10_10.json"
 _NREL_HDVS_BOUNDARY = _ROOT / "research/nrel_hdvs_raw_trace_boundary_2026_10_05.json"
 _NREL_HDVS_RESULT = _ROOT / "research/nrel_hdvs_boundary_screen_2026_10_10.json"
+_H2SAFE_SPATIAL_DIAGNOSTIC = _ROOT / (
+    "research/h2safe_spatial_response_diagnostic_2026_10_08.json"
+)
 _LOCAL_HRS_CANDIDATE_SCAN = _ROOT / (
     "research/local_hydrogen_station_sim_candidate_scan_2026_10_10.json"
 )
@@ -413,6 +416,57 @@ def _mc_source_pressure_boundary_diagnostic_summary() -> dict[str, Any] | None:
             "full_loop_external_validation_ready": False,
             "promotion_prohibited": True,
             "interpretation": str(record["interpretation"]),
+            "claim_limit": str(record["claim_boundary"]),
+        }
+    except (OSError, KeyError, TypeError, ValueError, json.JSONDecodeError):
+        return None
+
+
+def _h2safe_spatial_diagnostic_summary() -> dict[str, Any] | None:
+    """Expose the negative H2SAFE spatial screen without sensor rows."""
+
+    try:
+        record = _read_json(_H2SAFE_SPATIAL_DIAGNOSTIC)
+        source = record.get("source") or {}
+        method = record.get("method") or {}
+        results = record.get("results") or {}
+        primary = results.get("Y_as_elevation") or {}
+        aggregate = primary.get("aggregate") or {}
+        decision = record.get("decision") or {}
+        screens = aggregate.get("screens") or {}
+        required = (
+            record.get("artifact_type") == "post_access_h2safe_spatial_response_diagnostic",
+            source.get("test_gas") == "helium surrogate",
+            method.get("status") == "POST_ACCESS_DEVELOPMENT_DIAGNOSTIC_NOT_VALIDATION",
+            aggregate.get("experiment_count") == 5,
+            isinstance(aggregate.get("median_spearman"), (int, float)),
+            isinstance(aggregate.get("mean_top5_recall"), (int, float)),
+            isinstance(aggregate.get("nearest_in_response_quartile_fraction"), (int, float)),
+            len(screens) == 4,
+            decision.get("joint_spatial_screen_pass") is False,
+            decision.get("runtime_use", "").startswith("Do not apply"),
+            isinstance(record.get("claim_boundary"), str),
+        )
+        if not all(required):
+            return None
+        return {
+            "status": "diagnostic_only_failed_screen",
+            "evidence_role": "post_access_spatial_diagnostic",
+            "source_doi": str(source.get("doi") or ""),
+            "test_gas": "helium surrogate",
+            "experiment_count": 5,
+            "median_spearman": float(aggregate["median_spearman"]),
+            "mean_top5_recall": float(aggregate["mean_top5_recall"]),
+            "nearest_sensor_response_quartile_fraction": float(
+                aggregate["nearest_in_response_quartile_fraction"]
+            ),
+            "screens": {
+                str(key): bool(value) for key, value in screens.items()
+            },
+            "joint_spatial_screen_pass": False,
+            "runtime_parameter_application": False,
+            "full_loop_external_validation_ready": False,
+            "promotion_prohibited": True,
             "claim_limit": str(record["claim_boundary"]),
         }
     except (OSError, KeyError, TypeError, ValueError, json.JSONDecodeError):
@@ -1098,6 +1152,14 @@ def public_evidence_inventory_summary() -> dict[str, Any]:
             "full_loop_external_validation_ready": False,
             "promotion_prohibited": True,
         },
+        "public_h2safe_spatial_diagnostic": {
+            "status": "unavailable",
+            "experiment_count": 0,
+            "joint_spatial_screen_pass": False,
+            "runtime_parameter_application": False,
+            "full_loop_external_validation_ready": False,
+            "promotion_prohibited": True,
+        },
         "public_dickens_geometry_followup_candidate": {
             "status": "unavailable",
             "runtime_parameter_application": False,
@@ -1410,6 +1472,9 @@ def public_evidence_inventory_summary() -> dict[str, Any]:
     source_pressure_boundary = _mc_source_pressure_boundary_diagnostic_summary()
     if source_pressure_boundary is not None:
         result["public_mc_source_pressure_boundary_diagnostic"] = source_pressure_boundary
+    h2safe_spatial = _h2safe_spatial_diagnostic_summary()
+    if h2safe_spatial is not None:
+        result["public_h2safe_spatial_diagnostic"] = h2safe_spatial
     dickens = _dickens_geometry_followup_summary()
     if dickens is not None:
         result["public_dickens_geometry_followup_candidate"] = dickens

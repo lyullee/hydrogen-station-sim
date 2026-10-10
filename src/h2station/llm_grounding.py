@@ -8110,6 +8110,18 @@ def build_evidence_manifest(
         envelope["response_evidence"][
             "public_mc_source_pressure_boundary_diagnostic"
         ] = source_pressure_boundary
+    h2safe_spatial = (
+        public_inventory.get("public_h2safe_spatial_diagnostic")
+        if isinstance(public_inventory, dict)
+        else None
+    )
+    if (
+        isinstance(h2safe_spatial, dict)
+        and h2safe_spatial.get("status") == "diagnostic_only_failed_screen"
+    ):
+        envelope["response_evidence"][
+            "public_h2safe_spatial_diagnostic"
+        ] = h2safe_spatial
     dickens_followup = (
         public_inventory.get("public_dickens_geometry_followup_candidate")
         if isinstance(public_inventory, dict)
@@ -8663,6 +8675,20 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
                 "claim_supported", "claim_limit",
             )
             if nrel_screen.get(key) is not None
+        }
+    h2safe_spatial = evidence.get("public_h2safe_spatial_diagnostic")
+    if isinstance(h2safe_spatial, dict):
+        summary["public_h2safe_spatial_diagnostic"] = {
+            key: h2safe_spatial.get(key)
+            for key in (
+                "status", "evidence_role", "source_doi", "test_gas",
+                "experiment_count", "median_spearman", "mean_top5_recall",
+                "nearest_sensor_response_quartile_fraction", "screens",
+                "joint_spatial_screen_pass", "runtime_parameter_application",
+                "full_loop_external_validation_ready", "promotion_prohibited",
+                "claim_limit",
+            )
+            if h2safe_spatial.get(key) is not None
         }
     public_measurement = evidence.get("public_measurement_instrumentation")
     if isinstance(public_measurement, dict):

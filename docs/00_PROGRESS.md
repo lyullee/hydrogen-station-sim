@@ -1761,3 +1761,25 @@ Verification:
 - Priority parser and focus tests: 5 passed.
 - P1 lane: process PASS, scientific screen FAIL for the H2SAFE spatial screen
   and the NREL 0/7 tank screen; readiness is correctly `BLOCKED`.
+
+## 2026-10-10 - Ground the H2SAFE spatial negative screen in LLM evidence
+
+Status: implemented; the failed H2SAFE spatial diagnostic is now visible to the
+LLM without being promoted into runtime detector routing or model calibration.
+
+- Added a privacy-bounded `public_h2safe_spatial_diagnostic` record containing
+  the five helium-surrogate experiments, the median Spearman score (0.582),
+  top-five recall (0.56), the failed joint spatial screen and its claim boundary.
+- Added the same record to the evidence manifest and compact prompt summary.
+  The fields explicitly state `runtime_parameter_application=false`,
+  `full_loop_external_validation_ready=false` and `promotion_prohibited=true`.
+- This makes the LLM report the negative result and its limits instead of
+  treating a post-access spatial diagnostic as validated station behavior.
+
+Verification:
+
+- Grounding, local-evidence, validation-gap and H2SAFE diagnostic suites:
+  37 passed.
+- Readiness audit regenerated after refreshing integrity hashes: 127 PASS /
+  10 FAIL / 7 PENDING; `bounded_ijhe_submission_ready=false` and
+  `full_user_objective_ready=false` remain unchanged.
