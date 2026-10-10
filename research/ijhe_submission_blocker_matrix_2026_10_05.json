@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-10T00:16:37.626343+00:00",
+  "generated_at": "2026-10-10T02:30:07.616539+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -255,16 +255,18 @@
     {
       "id": "tank_thermal_transfer_validation",
       "status": "FAIL",
-      "why_blocked": "The prospectively frozen Type-III fill passed both pressure screens but failed both temperature screens. A post-outcome inlet-jet sensitivity reduced temperature RMSE below the limit across three plausible diameters, but the exact nozzle geometry is absent. A proposed Byrnes Type-I route was invalidated when the same numerical files were found in the already-consumed Zenodo exploratory archive; its mean-temperature schema also differed from the frozen upper/lower endpoint pair.",
+      "why_blocked": "The prospectively frozen Type-III fill passed both pressure screens but failed both temperature screens. The published source now confirms a 5 mm inlet pipe extending 82 mm into the tank, and a post-outcome mixed-convection sensitivity passes all four screens for that diameter; however, the candidate is not prospective, the source and archived tank lengths differ, and the archived case lacks the time-resolved inlet-temperature boundary. A proposed Byrnes Type-I route was invalidated when the same numerical files were found in the already-consumed Zenodo exploratory archive; its mean-temperature schema also differed from the frozen upper/lower endpoint pair.",
       "evidence": [
         "research/DICKENS_TYPEIII_PROSPECTIVE_VALIDATION_2026_10_08.md",
         "research/dickens_typeiii_prospective_result_2026_10_08.json",
         "research/dickens_typeiii_mixed_convection_diagnostic_2026_10_08.json",
+        "research/dickens_typeiii_source_geometry_mapping_2026_10_09.json",
+        "research/dickens_typeiii_geometry_resolved_followup_2026_10_10.json",
         "research/byrnes_typei_thermal_prospective_protocol_2026_10_08.json",
         "research/byrnes_typei_thermal_prospective_result_2026_10_08.json"
       ],
-      "unblock_criterion": "Freeze the mixed-convection formulation and exact inlet geometry before opening a new filling trace, then pass the joint pressure and temperature screens without post-outcome parameter selection.",
-      "next_action": "Prioritize an untouched fill or discharge dataset with a predeclared temperature observable, explicit sensor locations, tank geometry and boundary-flow/pressure data."
+      "unblock_criterion": "Resolve the source-versus-archive tank length, freeze the source-confirmed 5 mm/82 mm inlet geometry and time-resolved inlet-temperature boundary before opening a new filling trace, then pass the joint pressure and temperature screens without post-outcome parameter selection.",
+      "next_action": "Open a new untouched Type-III fill or discharge protocol after resolving tank length and inlet-temperature provenance; retain the result regardless of outcome."
     },
     {
       "id": "full_loop_external_validation",

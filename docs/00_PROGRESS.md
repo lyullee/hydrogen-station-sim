@@ -1,5 +1,21 @@
 # Development Progress
 
+## 2026-10-10 - Source-geometry-resolved Type-III follow-up candidate
+
+- Connected the published Dickens inlet geometry (5 mm internal diameter,
+  82 mm insertion) to the existing 5 mm mixed-convection sensitivity and
+  recorded it as a reproducible follow-up candidate.
+- The candidate reproduces a joint pass of the four frozen pressure and
+  gas-temperature screens, but it is explicitly post-outcome and has **no**
+  validation-gate effect. The original prospective Type-III result remains a
+  retained negative (pressure pass, both temperature screens fail).
+- The remaining protocol blockers are now explicit: the source and archived
+  tank lengths differ (0.893 m vs 0.7451 m), and the archived case lacks the
+  time-resolved inlet-temperature boundary. No runtime parameter was changed.
+- Focused Dickens/blocker tests pass (8 tests). The overall readiness audit
+  remains **127 PASS / 10 FAIL / 7 PENDING** and the full objective remains
+  open.
+
 ## 2026-10-10 - Completion-gate revalidation after public-data sweep
 
 - Re-ran the current evidence audit after the latest public-data search. The

@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-10-10T02:30:07.528287+00:00",
+  "artifact_type": "source_geometry_resolved_followup_candidate",
+  "case_id": "dickens_typeIII",
+  "status": "candidate_protocol_input_not_validation",
+  "evidence_role": "post_outcome_model_development_diagnostic",
+  "source_geometry": {
+    "inlet_pipe_internal_diameter_m": 0.005,
+    "inlet_pipe_extension_m": 0.082,
+    "tank_internal_diameter_m": 0.358,
+    "tank_internal_length_source_m": 0.893,
+    "tank_internal_length_archived_case_m": 0.7451
+  },
+  "source_geometry_mapping_artifact": "research\\dickens_typeiii_source_geometry_mapping_2026_10_09.json",
+  "selected_diagnostic": {
+    "nozzle_diameter_mm": 5.0,
+    "metrics": {
+      "pressure_rmse_mpa": 0.6610081142896709,
+      "pressure_nrmse_percent_measured_span": 2.622944110314715,
+      "gas_temperature_rmse_k": 7.634245748930577,
+      "gas_temperature_peak_absolute_error_k": 8.487690727115876,
+      "mass_residual_relative": 1.3478349599618108e-15,
+      "energy_residual_relative": 1.3725022901760395e-15
+    },
+    "screen_results": {
+      "pressure_nrmse_percent_measured_span": true,
+      "pressure_rmse_mpa": true,
+      "gas_temperature_rmse_k": true,
+      "gas_temperature_peak_absolute_error_k": true
+    },
+    "joint_primary_screen_pass": true
+  },
+  "diagnostic_interpretation": {
+    "all_four_frozen_screens_pass_for_candidate": true,
+    "source_geometry_confirmed_after_original_outcome": true,
+    "tank_length_mapping_resolved": false,
+    "time_resolved_inlet_temperature_available": false,
+    "original_frozen_validation_result_changed": false,
+    "runtime_parameter_updated": false,
+    "validation_gate_effect": "none"
+  },
+  "next_protocol_requirements": [
+    "Resolve whether the source 0.893 m tank length or archived 0.7451 m case length is the intended physical geometry before freezing a new run.",
+    "Obtain and freeze the source time-resolved inlet hydrogen-temperature trace.",
+    "Declare the 5 mm inlet diameter and 82 mm insertion before accessing any new outcome values.",
+    "Evaluate an untouched filling or discharge trace and retain the result regardless of outcome."
+  ],
+  "claim_boundary": "The source-confirmed 5 mm geometry makes the existing mixed-convection run a physically grounded follow-up candidate. It does not promote the post-outcome sensitivity to validation, revise the original Type-III failure, change runtime parameters, or validate the HRS full loop, consequence distances, safety logic or SAGA effectiveness."
+}
