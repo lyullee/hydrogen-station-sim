@@ -47,14 +47,17 @@ $env:PYTHONPATH = 'src'
 
 3. The authorised custodian fills every `null` field from approved pre-outcome
    operation records: total vehicle internal volume, **number of vessels**,
-   nominal pressure, and the temperature observation role. The role must be
-   explicitly `gas_bulk` or `gas_bulk_mean`; a tank-wall, liner, shell, or
-   otherwise ambiguous temperature cannot be scored against the model's bulk-gas
-   temperature state. Also fill command target/ramp, gas temperature and flow
-   limits, ambient condition, all three initial bank pressures, trailer boundary
-   values, and literal state mappings. The volume is for the complete receiving
-   vessel assembly, while `vessel_count` records how many pressure vessels share
-   that volume. These geometry and sensor semantics are frozen before outcomes.
+   nominal pressure, and the temperature observation role. The role must be one
+   of the model's explicit operators: `gas_bulk`, `gas_bulk_mean`, `liner`,
+   `shell`, `gas_liner_mean`, or `liner_shell_mean`. A tank-wall or otherwise
+   ambiguous label is rejected; a declared non-gas operator is scored against
+   the corresponding exported thermal state and must not be reported as a
+   bulk-gas safety-temperature validation. Also fill command target/ramp, gas
+   temperature and flow limits, ambient condition, all three initial bank
+   pressures, trailer boundary values, and literal state mappings. The volume is
+   for the complete receiving vessel assembly, while `vessel_count` records how
+   many pressure vessels share that volume. These geometry and sensor semantics
+   are frozen before outcomes.
    The hash-locked trace's first vehicle pressure/temperature sample is the
    declared initial state (`vehicle.initial_state_policy` is fixed to
    `trace_first_sample`). The owner selects acceptance limits before seeing

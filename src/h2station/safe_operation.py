@@ -130,6 +130,13 @@ class SafeOperationSample:
     fueling_2_temperature_category: str = "custom"
     fueling_conformance_flags: tuple[str, ...] = ()
     fueling_2_conformance_flags: tuple[str, ...] = ()
+    # Resolved composite-tank thermal zones.  They let a frozen evaluation
+    # compare a declared observation operator without treating every channel
+    # labelled "tank temperature" as bulk-gas temperature.
+    vehicle_liner_temperature_k: float | None = None
+    vehicle_shell_temperature_k: float | None = None
+    vehicle_2_liner_temperature_k: float | None = None
+    vehicle_2_shell_temperature_k: float | None = None
 
 
 class SafeFullStationSimulator:
@@ -859,6 +866,20 @@ class SafeFullStationSimulator:
                         fueling_conformance_flags=fueling_command.conformance_flags,
                         fueling_2_conformance_flags=(
                             fueling_command_2.conformance_flags
+                        ),
+                        vehicle_liner_temperature_k=(
+                            current.partial_station.vehicle.liner_temperature_k
+                        ),
+                        vehicle_shell_temperature_k=(
+                            current.partial_station.vehicle.shell_temperature_k
+                        ),
+                        vehicle_2_liner_temperature_k=(
+                            current.secondary_partial_station.vehicle.liner_temperature_k
+                            if current.secondary_partial_station is not None else None
+                        ),
+                        vehicle_2_shell_temperature_k=(
+                            current.secondary_partial_station.vehicle.shell_temperature_k
+                            if current.secondary_partial_station is not None else None
                         ),
                     )
                 )

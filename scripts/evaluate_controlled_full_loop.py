@@ -44,7 +44,14 @@ _SCOPES = frozenset({
     "cascade_resolved_station_to_vehicle",
 })
 _BANKS = ("low", "medium", "high")
-_TEMPERATURE_OBSERVATION_ROLES = frozenset({"gas_bulk", "gas_bulk_mean"})
+_TEMPERATURE_OBSERVATION_ROLES = frozenset({
+    "gas_bulk",
+    "gas_bulk_mean",
+    "gas_liner_mean",
+    "liner",
+    "liner_shell_mean",
+    "shell",
+})
 _NUMERIC_TRACE_COLUMNS = (
     "time_s",
     "vehicle_pressure_mpa_abs",
@@ -291,8 +298,8 @@ def _protocol(payload: dict[str, Any], *, trace_sha256: str, receipt: dict[str, 
     if temperature_observation_role not in _TEMPERATURE_OBSERVATION_ROLES:
         allowed = ", ".join(sorted(_TEMPERATURE_OBSERVATION_ROLES))
         raise ValueError(
-            "vehicle.temperature_observation_role must identify a bulk-gas "
-            f"observation ({allowed})"
+            "vehicle.temperature_observation_role must identify a declared "
+            f"model thermal observation ({allowed})"
         )
     control = _mapping(payload.get("control"), field="protocol.control")
     station = _mapping(payload.get("station"), field="protocol.station")
@@ -444,10 +451,29 @@ def _simulate(
 
 
 def _prediction_arrays(samples: list[SafeOperationSample]) -> dict[str, Any]:
+    gas_temperature_c = np.asarray([
+        sample.vehicle_temperature_k - 273.15 for sample in samples
+    ])
+    liner_temperature_c = np.asarray([
+        (sample.vehicle_liner_temperature_k
+         if sample.vehicle_liner_temperature_k is not None
+         else sample.vehicle_temperature_k) - 273.15
+        for sample in samples
+    ])
+    shell_temperature_c = np.asarray([
+        (sample.vehicle_shell_temperature_k
+         if sample.vehicle_shell_temperature_k is not None
+         else sample.vehicle_temperature_k) - 273.15
+        for sample in samples
+    ])
     return {
         "time_s": np.asarray([sample.time_s for sample in samples], dtype=float),
         "vehicle_pressure_mpa": np.asarray([sample.vehicle_pressure_pa / 1.0e6 for sample in samples]),
-        "temperature_c": np.asarray([sample.vehicle_temperature_k - 273.15 for sample in samples]),
+        "temperature_c": gas_temperature_c,
+        "liner_temperature_c": liner_temperature_c,
+        "shell_temperature_c": shell_temperature_c,
+        "gas_liner_mean_temperature_c": (gas_temperature_c + liner_temperature_c) / 2.0,
+        "liner_shell_mean_temperature_c": (liner_temperature_c + shell_temperature_c) / 2.0,
         "mass_flow_g_s": np.asarray([1000.0 * sample.nozzle_mass_flow_kg_s for sample in samples]),
         "hose_pressure_mpa": np.asarray([sample.hose_pressure_pa / 1.0e6 for sample in samples]),
         "delivered_temperature_c": np.asarray([sample.precooler_outlet_temperature_k - 273.15 for sample in samples]),
@@ -458,6 +484,20 @@ def _prediction_arrays(samples: list[SafeOperationSample]) -> dict[str, Any]:
         "dispatch_bank": [sample.dispatch_bank for sample in samples],
         "compressor_active": [sample.recharge_bank is not None for sample in samples],
     }
+
+
+def _temperature_prediction_key(role: str) -> str:
+    if role in {"gas_bulk", "gas_bulk_mean"}:
+        return "temperature_c"
+    if role == "liner":
+        return "liner_temperature_c"
+    if role == "shell":
+        return "shell_temperature_c"
+    if role == "gas_liner_mean":
+        return "gas_liner_mean_temperature_c"
+    if role == "liner_shell_mean":
+        return "liner_shell_mean_temperature_c"
+    raise ValueError(f"unsupported temperature observation role: {role}")
 
 
 def _interpolate(times: np.ndarray, prediction: dict[str, Any], key: str) -> np.ndarray:
@@ -481,6 +521,9 @@ def evaluate(
     times = _times(rows)
     trajectory, samples = _simulate(rows, times, protocol)
     prediction = _prediction_arrays(samples)
+    temperature_prediction_key = _temperature_prediction_key(
+        protocol.vehicle_temperature_observation_role
+    )
 
     metrics: dict[str, dict[str, float | int]] = {
         "vehicle_pressure_mpa": _metric(
@@ -489,7 +532,7 @@ def evaluate(
         ),
         "vehicle_temperature_c": _metric(
             _trace_vector(rows, "temperature_degC"),
-            _interpolate(times, prediction, "temperature_c"),
+            _interpolate(times, prediction, temperature_prediction_key),
         ),
         "mass_flow_g_s": _metric(
             _trace_vector(rows, "mass_flow_g_s"),
@@ -567,6 +610,7 @@ def evaluate(
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "decision": "FROZEN_EVALUATION_PASS" if all(decisions.values()) else "FROZEN_EVALUATION_FAIL",
         "evaluation_scope": protocol.scope,
+        "temperature_observation_role": protocol.vehicle_temperature_observation_role,
         "trace_sha256": trace_sha256,
         "receipt_sha256": _sha256(receipt_path),
         "protocol_sha256": _sha256(protocol_path),

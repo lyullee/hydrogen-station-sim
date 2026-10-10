@@ -32,7 +32,7 @@ def _protocol(trace_sha256: str) -> dict:
             "internal_volume_m3": 0.12,
             "vessel_count": 1,
             "nominal_working_pressure_mpa": 70.0,
-            "temperature_observation_role": "gas_bulk_mean",
+            "temperature_observation_role": "gas_bulk",
         },
         "control": {
             "target_pressure_mpa": 70.0,
@@ -86,7 +86,7 @@ def _synthetic_trace() -> list[dict[str, str]]:
         vehicle_volume_m3=0.12,
         vehicle_vessel_count=1,
         vehicle_nominal_pressure_mpa=70.0,
-        vehicle_temperature_observation_role="gas_bulk_mean",
+        vehicle_temperature_observation_role="gas_bulk",
         ambient_temperature_c=25.0,
         target_pressure_mpa=70.0,
         pressure_ramp_rate_mpa_min=10.0,
@@ -168,6 +168,7 @@ def test_evaluates_hash_locked_full_loop_without_persisting_rows(tmp_path, monke
     assert result["evaluation_scope"] == "cascade_resolved_station_to_vehicle"
     assert result["raw_rows_persisted"] is False
     assert result["state_metrics"]["selected_bank"]["accuracy"] == 1.0
+    assert result["temperature_observation_role"] == "gas_bulk"
     assert result["metrics"]["vehicle_pressure_mpa"]["rmse"] < 1e-6
 
 
@@ -210,3 +211,14 @@ def test_rejects_unresolved_vehicle_geometry_or_temperature_semantics(
 
     with pytest.raises(ValueError, match=message):
         evaluator.evaluate(trace_path, receipt_path, protocol_path)
+
+
+def test_temperature_operator_mapping_is_explicit():
+    assert evaluator._temperature_prediction_key("gas_bulk") == "temperature_c"
+    assert evaluator._temperature_prediction_key("liner") == "liner_temperature_c"
+    assert evaluator._temperature_prediction_key("shell") == "shell_temperature_c"
+    assert evaluator._temperature_prediction_key("gas_liner_mean") == (
+        "gas_liner_mean_temperature_c"
+    )
+    with pytest.raises(ValueError, match="unsupported temperature observation role"):
+        evaluator._temperature_prediction_key("tank_wall")
