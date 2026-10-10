@@ -87,6 +87,12 @@ def test_validation_evidence_surface_is_privacy_bounded_and_claim_limited() -> N
     assert geometry["runtime_geometry_changed"] is False
     assert geometry["geometry_rule_selection_prohibited"] is True
     assert geometry["full_loop_external_validation_ready"] is False
+    tank_boundary = inventory["public_mc_tank_boundary_diagnostic"]
+    assert tank_boundary["status"] == "diagnostic_only"
+    assert tank_boundary["case_count"] == 8
+    assert tank_boundary["joint_screening_pass_count"] == 0
+    assert tank_boundary["runtime_parameter_application"] is False
+    assert tank_boundary["promotion_prohibited"] is True
     soc_boundary = inventory["public_mc_soc_boundary_diagnostic"]
     assert soc_boundary["status"] == "diagnostic_only"
     assert soc_boundary["case_count"] == 8

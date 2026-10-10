@@ -44,6 +44,22 @@ def test_mc_soc_boundary_diagnostic_separates_soc_definition_from_model_error():
     assert evidence["runtime_parameter_application"] is False
 
 
+def test_mc_tank_boundary_negative_screen_is_explicitly_grounded():
+    manifest = build_evidence_manifest(
+        {"time_s": 1.0}, {}, [], False, question="MC 차량탱크 검증"
+    )
+    evidence = manifest["response_evidence"][
+        "public_mc_tank_boundary_diagnostic"
+    ]
+    assert evidence["case_count"] == 8
+    assert evidence["joint_screening_pass_count"] == 0
+    assert evidence["promotion_prohibited"] is True
+    compact = prompt_evidence_summary(manifest)[
+        "public_mc_tank_boundary_diagnostic"
+    ]
+    assert compact["aggregate"]["pressure_rmse_mpa_mean"] == 4.375922315837227
+
+
 def test_dickens_followup_candidate_is_grounded_without_validation_promotion():
     manifest = build_evidence_manifest(
         {"time_s": 1.0}, {}, [], False, question="탱크 열전달 검증"

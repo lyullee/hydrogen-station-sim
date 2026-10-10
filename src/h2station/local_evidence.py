@@ -43,6 +43,9 @@ _CLOSED_LOOP_CALIBRATED_DIAGNOSTIC = _ROOT / (
 _MC_GEOMETRY_TRANSFER_DIAGNOSTIC = _ROOT / (
     "research/mc_geometry_transfer_diagnostic_2026_10_08.json"
 )
+_MC_TANK_BOUNDARY_DIAGNOSTIC = _ROOT / (
+    "research/mc_tank_boundary_diagnostic_2026_10_05.json"
+)
 _MC_SOC_BOUNDARY_DIAGNOSTIC = _ROOT / (
     "research/mc_soc_boundary_diagnostic_2026_10_10.json"
 )
@@ -255,6 +258,48 @@ def _mc_geometry_transfer_diagnostic_summary() -> dict[str, Any] | None:
             "runtime_geometry_changed": False,
             "geometry_rule_selection_prohibited": True,
             "full_loop_external_validation_ready": False,
+            "claim_limit": str(record["claim_boundary"]),
+        }
+    except (OSError, KeyError, TypeError, ValueError, json.JSONDecodeError):
+        return None
+
+
+def _mc_tank_boundary_diagnostic_summary() -> dict[str, Any] | None:
+    """Expose the retained negative MC tank replay without trace rows."""
+
+    try:
+        record = _read_json(_MC_TANK_BOUNDARY_DIAGNOSTIC)
+        aggregate = record.get("aggregate") or {}
+        required = (
+            record.get("schema_version") == 2,
+            record.get("diagnostic_type")
+            == "MC Default measured-boundary vehicle-tank replay",
+            record.get("evidence_role") == "development_diagnostic_only",
+            record.get("post_outcome") is True,
+            record.get("parameter_fitting") is False,
+            aggregate.get("case_count") == 8,
+            aggregate.get("joint_screening_pass_count") == 0,
+            aggregate.get("joint_screening_pass_fraction") == 0.0,
+            isinstance(record.get("claim_boundary"), str),
+        )
+        if not all(required):
+            return None
+        return {
+            "status": "diagnostic_only",
+            "case_count": 8,
+            "joint_screening_pass_count": 0,
+            "joint_screening_pass_fraction": 0.0,
+            "aggregate": {
+                key: float(aggregate[key])
+                for key in (
+                    "pressure_rmse_mpa_mean",
+                    "temperature_rmse_c_mean",
+                    "soc_rmse_percentage_points_mean",
+                )
+            },
+            "runtime_parameter_application": False,
+            "full_loop_external_validation_ready": False,
+            "promotion_prohibited": True,
             "claim_limit": str(record["claim_boundary"]),
         }
     except (OSError, KeyError, TypeError, ValueError, json.JSONDecodeError):
@@ -1027,6 +1072,16 @@ def public_evidence_inventory_summary() -> dict[str, Any]:
             "geometry_rule_selection_prohibited": True,
             "full_loop_external_validation_ready": False,
         },
+        "public_mc_tank_boundary_diagnostic": {
+            "status": "unavailable",
+            "case_count": 0,
+            "joint_screening_pass_count": 0,
+            "joint_screening_pass_fraction": 0.0,
+            "aggregate": {},
+            "runtime_parameter_application": False,
+            "full_loop_external_validation_ready": False,
+            "promotion_prohibited": True,
+        },
         "public_mc_soc_boundary_diagnostic": {
             "status": "unavailable",
             "case_count": 0,
@@ -1346,6 +1401,9 @@ def public_evidence_inventory_summary() -> dict[str, Any]:
     geometry = _mc_geometry_transfer_diagnostic_summary()
     if geometry is not None:
         result["public_mc_geometry_transfer_diagnostic"] = geometry
+    tank_boundary = _mc_tank_boundary_diagnostic_summary()
+    if tank_boundary is not None:
+        result["public_mc_tank_boundary_diagnostic"] = tank_boundary
     soc_boundary = _mc_soc_boundary_diagnostic_summary()
     if soc_boundary is not None:
         result["public_mc_soc_boundary_diagnostic"] = soc_boundary

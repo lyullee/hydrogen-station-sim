@@ -1649,3 +1649,21 @@ screen remains 3/3, while H2SAFE and Schefer remain process-only diagnostics.
 - The remaining material scientific blocker is therefore still the P0 MC
   vehicle-tank replay and the missing synchronized receiving-vessel/controller
   full-loop cohort; sequential broad regression would not remove either one.
+
+## 2026-10-10 - Ground the retained MC tank negative result in the LLM envelope
+
+Status: implemented; the main evidence API and prompt summary now carry the
+aggregate MC vehicle-tank result without exposing raw rows.
+
+- Added `public_mc_tank_boundary_diagnostic` to the privacy-bounded evidence
+  inventory: 8 cases, 0 joint screening passes, mean pressure RMSE 4.376 MPa,
+  temperature RMSE 9.052 °C and SOC RMSE 5.584 percentage points.
+- The record is explicitly marked post-outcome, diagnostic-only,
+  runtime-unchanged, full-loop-ineligible and promotion-prohibited.
+- This closes a grounding gap: the LLM now receives the negative P0 result
+  itself, alongside the already-grounded geometry and source-boundary
+  sensitivities, so it cannot describe the MC replay as a validation pass.
+
+Verification:
+
+- Validation evidence, local evidence and LLM grounding suites: 36 passed.

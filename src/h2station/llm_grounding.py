@@ -8074,6 +8074,18 @@ def build_evidence_manifest(
         envelope["response_evidence"][
             "public_mc_geometry_transfer_diagnostic"
         ] = geometry_diagnostic
+    tank_boundary = (
+        public_inventory.get("public_mc_tank_boundary_diagnostic")
+        if isinstance(public_inventory, dict)
+        else None
+    )
+    if (
+        isinstance(tank_boundary, dict)
+        and tank_boundary.get("status") == "diagnostic_only"
+    ):
+        envelope["response_evidence"][
+            "public_mc_tank_boundary_diagnostic"
+        ] = tank_boundary
     soc_boundary = (
         public_inventory.get("public_mc_soc_boundary_diagnostic")
         if isinstance(public_inventory, dict)
@@ -8608,6 +8620,19 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
                 "claim_limit",
             )
             if public_geometry_sensitivity.get(key) is not None
+        }
+    mc_tank_boundary = evidence.get("public_mc_tank_boundary_diagnostic")
+    if isinstance(mc_tank_boundary, dict):
+        summary["public_mc_tank_boundary_diagnostic"] = {
+            key: mc_tank_boundary.get(key)
+            for key in (
+                "status", "case_count", "joint_screening_pass_count",
+                "joint_screening_pass_fraction", "aggregate",
+                "runtime_parameter_application",
+                "full_loop_external_validation_ready",
+                "promotion_prohibited", "claim_limit",
+            )
+            if mc_tank_boundary.get(key) is not None
         }
     public_tank_trace = evidence.get("public_tank_trace_boundary")
     if isinstance(public_tank_trace, dict):
@@ -12859,6 +12884,18 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
             "claim_limit": (
                 evidence.get("public_geometry_sensitivity") or {}
             ).get("claim_limit"),
+        },
+        "public_mc_tank_boundary_diagnostic": {
+            key: (evidence.get("public_mc_tank_boundary_diagnostic") or {}).get(key)
+            for key in (
+                "status", "case_count", "joint_screening_pass_count",
+                "joint_screening_pass_fraction", "aggregate",
+                "runtime_parameter_application",
+                "full_loop_external_validation_ready",
+                "promotion_prohibited", "claim_limit",
+            )
+            if (evidence.get("public_mc_tank_boundary_diagnostic") or {}).get(key)
+            is not None
         },
         "public_tank_trace_boundary": {
             "evidence_role": (
