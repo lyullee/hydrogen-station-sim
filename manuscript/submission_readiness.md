@@ -12,7 +12,7 @@ evidence-readiness decision; it is not a prediction of editorial acceptance.
 
 ## Current decision
 
-Audit snapshot: **2026-10-09 KST**
+Audit snapshot: **2026-10-11 KST**
 
 | Decision | Result |
 |---|---|
@@ -21,6 +21,16 @@ Audit snapshot: **2026-10-09 KST**
 | Goal completion permitted | **False** |
 
 Gate counts: **127 PASS · 10 FAIL · 7 PENDING**.
+
+The primary claim scope is now explicitly station-side and component-bounded.
+The owner-controlled records are evaluated as same-site chronological holdouts;
+the public Type-IV records provide the independent component holdout. The
+synchronized station-to-vehicle full-loop lane is retained in the legacy audit
+for traceability but is excluded from the primary goal because no openly
+reusable raw cohort was found. The scope-adjusted closure is **127 PASS · 9
+FAIL · 2 PENDING = 92.0%**; this is a scope metric, not a new validation result.
+The exact split and the paper limitation are recorded in
+[`VALIDATION_DATA_SPLIT_AND_SCOPE_DECISION_2026_10_11.md`](../research/VALIDATION_DATA_SPLIT_AND_SCOPE_DECISION_2026_10_11.md).
 
 A fresh privacy-bounded local inventory confirms that data volume is not the
 station-side limitation. The controlled archive contains 33 CSV files,
@@ -578,6 +588,7 @@ work with explicit negative and pending evidence.
 - [Full audit (JSON)](ijhe_readiness_audit.json)
 - [Research audit mirror](../research/ijhe_readiness_audit.json)
 - [Blocker matrix](../research/ijhe_submission_blocker_matrix_2026_10_05.md)
+- [Validation split and scope decision](../research/VALIDATION_DATA_SPLIT_AND_SCOPE_DECISION_2026_10_11.md)
 - [Format check](ijhe_format_check.json)
 - [Compilation status](ijhe_compile_status.json)
 - [Compiled 23-page working PDF](../output/pdf/ijhe_manuscript_working_draft.pdf)
