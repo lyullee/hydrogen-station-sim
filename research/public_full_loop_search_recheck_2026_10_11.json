@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "artifact_type": "public_full_loop_search_recheck",
+  "recorded_at": "2026-10-11",
+  "gate": "new untouched public station-to-vehicle full-loop fueling validation",
+  "decision": "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET_IDENTIFIED",
+  "screened_sources": [
+    {
+      "id": "gti_hydrogen_station_performance_final_report_osti_1824631",
+      "url": "https://www.osti.gov/biblio/1824631",
+      "fulltext_url": "https://www.osti.gov/servlets/purl/1824631",
+      "doi": "10.2172/1824631",
+      "decision": "OFFICIAL_PROJECT_REPORT_WITH_CUSTODIAN_HELD_RAW_DATA",
+      "reported_scope": "Five hydrogen fueling stations, more than 12 station-years submitted to NREL, with station acquisition channels and fueling-log requirements described.",
+      "usable_for": [
+        "channel and provenance requirements",
+        "data-request lead",
+        "operating-envelope context"
+      ],
+      "not_usable_for": [
+        "untouched station-to-vehicle raw-trace validation"
+      ],
+      "raw_data_status": "The OSTI record exposes the final report and metadata only; no reuse-cleared synchronized logger archive or downloadable event rows were located.",
+      "claim_limit": "The report documents that data were collected and submitted to NREL; it does not make the underlying raw station and vehicle traces publicly available."
+    },
+    {
+      "id": "calstate_la_hydrogen_station_operation_reference",
+      "url": "https://www.calstatela.edu/ecst/h2station/operation",
+      "decision": "OFFICIAL_OPERATING_REFERENCE_NOT_DATASET",
+      "usable_for": [
+        "cascade-to-compressor operating sequence",
+        "periodic leak-check pause reference",
+        "precooling and pressure-range context"
+      ],
+      "not_usable_for": [
+        "synchronized numerical holdout"
+      ],
+      "raw_data_status": "The page describes station operation and safety checks but provides no downloadable synchronized pressure-temperature-mass-flow logger export.",
+      "claim_limit": "Use for process and protocol grounding only; do not treat the narrative operating page as dynamic-model validation."
+    },
+    {
+      "id": "calstate_la_big_data_prediction_2017",
+      "url": "https://www.calstatela.edu/sites/default/files/kscifall2017hydrogenbigdataanalysis.pdf",
+      "decision": "PUBLISHED_DATA_USE_DESCRIPTION_WITHOUT_REUSABLE_ARCHIVE",
+      "usable_for": [
+        "evidence that per-fill vehicle-pressure data existed",
+        "data-custodian request lead"
+      ],
+      "not_usable_for": [
+        "untouched validation"
+      ],
+      "raw_data_status": "The paper describes a station-provided per-fill dataset, but the public PDF contains no machine-readable release, checksum, channel dictionary or reuse terms.",
+      "claim_limit": "The paper supports a request for the underlying dataset, not a numerical validation claim."
+    }
+  ],
+  "gate_impact": "full_loop_external_validation_remains_open",
+  "next_action": "Use the existing privacy-safe request packet with the GTI/Cal State custodians; freeze model and split before opening any received numerical rows.",
+  "privacy": {
+    "private_source_paths_published": false,
+    "private_site_or_company_identity_published": false,
+    "private_raw_rows_persisted": false
+  },
+  "claim_boundary": "This is a source-classification recheck. It adds no numerical validation and does not establish IJHE readiness, safety distance, or field certification."
+}
