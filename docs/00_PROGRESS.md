@@ -661,3 +661,9 @@ Verification:
 - Public-lead and validation-boundary tests passed (8 tests).
 - The P0 gate remains correctly closed; the search produced better custodian
   targets, not a scientific validation result.
+
+## 2026-10-10 - Public-search branches closed and P0 intake re-centered
+
+- Screened the public HSR-Rig-Project and Figshare 20928025 leads. They are now recorded as bounded component/design context, not station-to-vehicle validation.
+- Closed this search branch so development time is not spent repeatedly collecting pressure/temperature tables that lack the receiving-vessel and controller boundary.
+- Re-centered the next high-impact action on the privacy-safe three-event custodian intake; P1 component repairs and P2 review remain independent parallel tracks.

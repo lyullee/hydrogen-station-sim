@@ -1,13 +1,10 @@
-# Public component-data lead (2026-10-10)
+# Public component-data leads (2026-10-10)
 
-The public `gadoseb/HSR-Rig-Project` repository contains one 24.85 MB example log with 168,476 rows, timestamped pressure, two temperatures, hydrogen flow, cumulative transferred hydrogen, strain channels, and 12 absorption/12 desorption phase pairs. The immutable source commit and raw-file SHA-256 are recorded in the adjacent JSON artifact.
+This record closes two low-yield public-search branches. Both are retained as bounded component/design context and explicitly excluded from the P0 station-to-receiving-vessel validation gate.
 
-This is **not** a hydrogen-refuelling-station dataset. It is a metal-hydride storage-reactor cycling rig. The repository has no explicit `LICENSE` file, so the raw rows are not copied into this project and are not treated as reusable validation data.
+- **HSR-Rig-Project**: a metal-hydride storage-reactor cycling rig with pressure, temperature, flow, cumulative transfer and absorption/desorption markers. It has no demonstrated HRS cascade/dispenser/vehicle receiving-vessel boundary.
+- **Figshare 20928025**: CC BY 4.0 tables for a robotic hydrogen-filling system's path planning, link parameters and trajectories. It is design/robotics data, not synchronized fueling telemetry.
 
-The lead is retained for three bounded purposes:
+The next high-impact action is therefore the privacy-safe three-event custodian intake defined in [`full_loop_raw_data_request_package_2026_10_05.json`](full_loop_raw_data_request_package_2026_10_05.json). Repeating a search for another article or design table will not close the open gate without receiving-vessel and controller channels.
 
-1. offline parser and phase-marker checks;
-2. a physics-compatibility review for component-level pressure/thermal diagnostics; and
-3. a future custodian-approved, de-identified data request.
-
-It cannot close the station-to-vehicle full-loop gate and does not change runtime parameters or any IJHE readiness gate.
+Sources: [HSR-Rig-Project](https://github.com/gadoseb/HSR-Rig-Project), [Figshare 20928025](https://figshare.com/articles/dataset/Data_of_Table_1_2_3_and_Figure_20_24_of_Design_of_Robotic_Hydrogen-filling_System_for_Hydrogen-powered_Vehicles/20928025).

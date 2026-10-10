@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "artifact_type": "public_component_data_lead",
+  "artifact_type": "public_component_data_leads",
   "recorded_at": "2026-10-10",
-  "purpose": "Preserve a reproducible lead for component-level hydrogen pressure/temperature/flow diagnostics without admitting it as HRS full-loop validation.",
+  "purpose": "Preserve bounded component evidence and close low-yield public-search branches without admitting it as HRS full-loop validation.",
   "source": {
     "repository": "https://github.com/gadoseb/HSR-Rig-Project",
     "commit": "9d0504b0b951d951e09dad02321cc0df00ff2b73",
@@ -27,11 +27,26 @@
       "strain_channels"
     ],
     "ranges_as_recorded": {
-      "hydrogen_flow_rate": {"min": 0.0, "max": 19.6603125},
-      "temperature_1": {"min": 25.17, "max": 31.91},
-      "temperature_2": {"min": 24.3, "max": 53.77},
-      "pressure": {"min": 23.2, "max": 58.84},
-      "cumulative_hydrogen_transferred": {"min": 25.52, "max": 62.45}
+      "hydrogen_flow_rate": {
+        "min": 0.0,
+        "max": 19.6603125
+      },
+      "temperature_1": {
+        "min": 25.17,
+        "max": 31.91
+      },
+      "temperature_2": {
+        "min": 24.3,
+        "max": 53.77
+      },
+      "pressure": {
+        "min": 23.2,
+        "max": 58.84
+      },
+      "cumulative_hydrogen_transferred": {
+        "min": 25.52,
+        "max": 62.45
+      }
     },
     "malformed_rows_in_screen": 0
   },
@@ -59,5 +74,32 @@
     "site_identity_published": false,
     "company_or_manufacturer_published": false,
     "calendar_dates_published": false
+  },
+  "related_public_leads": [
+    {
+      "id": "figshare_robotic_hydrogen_filling_20928025",
+      "title": "Data of Table 1,2,3 and Figure 20,24 of Design of Robotic Hydrogen-filling System for Hydrogen-powered Vehicles",
+      "persistent_identifier": "figshare:20928025",
+      "source_url": "https://figshare.com/articles/dataset/Data_of_Table_1_2_3_and_Figure_20_24_of_Design_of_Robotic_Hydrogen-filling_System_for_Hydrogen-powered_Vehicles/20928025",
+      "license": "CC BY 4.0",
+      "files_screened": 5,
+      "file_scope": [
+        "path-planning simulation table",
+        "robot-arm link parameters",
+        "trajectory-planning simulation table",
+        "planned path data",
+        "planned trajectory data"
+      ],
+      "full_loop_external_holdout_eligible": false,
+      "admission_status": "ROBOTICS_DESIGN_TABLES_ONLY",
+      "reason": "Public files contain robot geometry/path and trajectory tables, not synchronized station pressure-temperature-flow, vehicle boundary or controller event logs.",
+      "next_action": "Use only for future 3D hose/nozzle motion context; do not use for fueling physics, safety-distance or LLM-response validation."
+    }
+  ],
+  "decision": {
+    "new_full_loop_dataset_admitted": false,
+    "public_search_branch_closed": true,
+    "primary_next_action": "Obtain a privacy-safe three-event station-to-receiving-vessel pilot through the staged custodian request.",
+    "goal_completion_permitted": false
   }
 }
