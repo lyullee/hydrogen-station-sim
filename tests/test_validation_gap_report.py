@@ -28,6 +28,16 @@ def test_gap_report_classifies_primary_buckets() -> None:
     assert buckets["governance_review"]["PENDING"] >= 5
 
 
+def test_gap_report_can_use_dated_readiness_snapshot() -> None:
+    report = build_report(ROOT, audit_path="research/ijhe_readiness_audit_2026_10_11.json")
+    canonical = build_report(ROOT)
+
+    assert report["source_audit_generated_at"] != canonical["source_audit_generated_at"]
+    assert report["overall"]["pass"] == 127
+    assert report["overall"]["fail"] == 10
+    assert report["overall"]["pending"] == 7
+
+
 def test_gap_report_prioritizes_high_impact_work_without_serializing_tracks() -> None:
     report = build_report(ROOT)
 

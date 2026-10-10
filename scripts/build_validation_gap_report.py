@@ -110,8 +110,19 @@ def _claim_boundary(gate: dict[str, Any]) -> str:
     return "현재 게이트 상태 이상의 주장은 허용하지 않는다."
 
 
-def build_report(root: Path) -> dict[str, Any]:
-    audit = _read(root, "research/ijhe_readiness_audit.json")
+def build_report(
+    root: Path,
+    *,
+    audit_path: str = "research/ijhe_readiness_audit.json",
+) -> dict[str, Any]:
+    """Build the triage from an explicitly selected readiness snapshot.
+
+    The default keeps backwards compatibility with the long-lived canonical
+    audit path.  A dated audit can be selected for a current status report;
+    silently reading an older snapshot would make the execution queue stale.
+    """
+
+    audit = _read(root, audit_path)
     gates = audit.get("gates") or []
     unresolved: list[dict[str, Any]] = []
     for gate in gates:
@@ -224,10 +235,15 @@ def _markdown(report: dict[str, Any]) -> str:
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--root", type=Path, default=Path("."))
+    parser.add_argument(
+        "--audit",
+        default="research/ijhe_readiness_audit.json",
+        help="Readiness audit path relative to --root (supports dated snapshots).",
+    )
     parser.add_argument("--json-output", type=Path, required=True)
     parser.add_argument("--markdown-output", type=Path, required=True)
     args = parser.parse_args()
-    report = build_report(args.root.resolve())
+    report = build_report(args.root.resolve(), audit_path=args.audit)
     args.json_output.parent.mkdir(parents=True, exist_ok=True)
     args.json_output.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     args.markdown_output.parent.mkdir(parents=True, exist_ok=True)
