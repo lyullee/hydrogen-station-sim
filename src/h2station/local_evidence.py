@@ -329,6 +329,10 @@ def _dickens_geometry_followup_summary() -> dict[str, Any] | None:
         return {
             "status": "followup_candidate_only",
             "evidence_role": str(record["evidence_role"]),
+            "source_reference": {
+                "doi": "10.1016/J.JPOWSOUR.2006.11.077",
+                "public_record_url": "https://conference.ing.unipi.it/ichs2009/images/stories/papers/238.pdf",
+            },
             "source_confirmed_geometry": {
                 key: float(source[key])
                 for key in (
