@@ -24,7 +24,7 @@
     ]
   },
   "protocol": {
-    "candidate_holdout": "one untouched experiment selected by identifier before row access",
+    "candidate_holdout": "Dataset/Experiment 15.xlsx (selected before row access)",
     "calibration": "no coefficient fitting from the holdout; use the existing compressor model and declared boundary assumptions",
     "required_channels": [
       "elapsed time",
