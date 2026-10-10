@@ -1,5 +1,27 @@
 # Development Progress
 
+## 2026-10-10 - Reject silently ignored vehicle-capacity inputs
+
+Status: implemented; the highest-impact input-integrity gap in the vehicle
+boundary path is now fail-fast.
+
+- `SimulationInput` and direct `ReferenceScenario` assembly reject capacity
+  fields when `vehicle_geometry_basis="reference"` would otherwise ignore
+  them and continue with the historical 0.122 m³ geometry.
+- The error tells the operator to select the explicit `capacity_eos` basis and
+  provide both vehicle capacities. This prevents a UI or API caller from
+  believing that a tank-size change was applied when it was not.
+- The default geometry, frozen MC protocol, and validation claims are
+  unchanged. This is an input-integrity guard, not a promotion of the
+  post-outcome geometry sensitivity.
+
+Verification:
+
+- Public validation plus LLM grounding suites: 53 passed.
+- P0 priority focus: process PASS in 3.18 s; `mc_soc_boundary` 8/8 PASS;
+  `mc_tank_boundary` remains a scientific FAIL (0/8), so the readiness gate
+  correctly remains BLOCKED.
+
 ## 2026-10-10 - Repair readiness evidence digests after fast-lane changes
 
 Status: implemented; the two stale source-hash records found by the readiness

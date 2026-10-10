@@ -36,6 +36,10 @@ New input fields:
 - vehicle_geometry_basis (`reference` by default or opt-in `capacity_eos`)
 - vehicle_capacity_kg and vehicle_2_capacity_kg when `capacity_eos` is selected
 
+When the basis is `reference`, capacity fields are rejected rather than ignored.
+This prevents a vehicle-size setting from appearing active while the solver is
+still using the historical reference volume.
+
 ## Monitoring and 3D
 
 - The control strip accepts separate initial pressures for vehicles 1 and 2.

@@ -393,6 +393,13 @@ class SimulationInput(BaseModel):
                 "capacity_eos geometry requires vehicle_capacity_kg and "
                 "vehicle_2_capacity_kg"
             )
+        if self.vehicle_geometry_basis == "reference" and (
+            self.vehicle_capacity_kg is not None or self.vehicle_2_capacity_kg is not None
+        ):
+            raise ValueError(
+                "vehicle capacities are ignored by reference geometry; set "
+                "vehicle_geometry_basis='capacity_eos' and provide both capacities"
+            )
         if self.vehicle_tank_thermal_model == "mixed_convection":
             required = (
                 self.vehicle_internal_diameter_m,

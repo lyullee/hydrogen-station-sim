@@ -42,3 +42,10 @@ The capacity fields do not identify or embed any private station, operator,
 date, manufacturer, or raw operational data. Before using this basis as a
 published default, freeze the geometry and all other fit parameters, then run
 an untouched external holdout without tuning against it.
+
+The API now rejects capacity values when `vehicle_geometry_basis` is left at
+`reference`. The historical reference basis has no capacity input, so silently
+accepting those fields would make an operator believe the tank size changed
+when the solver still used 0.122 m³. Select `capacity_eos` explicitly and
+provide both vehicle capacities instead. This validation is an input-integrity
+guard; it does not promote the post-outcome sensitivity to validation evidence.

@@ -320,6 +320,11 @@ def build_reference_scenario(
             config.vehicle_2_capacity_kg, config.vehicle_2_nominal_working_pressure_pa
         )
     else:
+        if config.vehicle_capacity_kg is not None or config.vehicle_2_capacity_kg is not None:
+            raise ValueError(
+                "vehicle capacities are ignored by reference geometry; set "
+                "vehicle_geometry_basis='capacity_eos' and provide both capacities"
+            )
         vehicle_volume_m3 = config.vehicle_internal_volume_m3
         vehicle_2_volume_m3 = config.vehicle_2_internal_volume_m3
     if any(

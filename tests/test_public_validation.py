@@ -285,6 +285,19 @@ def test_api_rejects_capacity_eos_without_both_vehicle_capacities():
         )
 
 
+def test_api_rejects_capacities_that_reference_geometry_would_silently_ignore():
+    with pytest.raises(ValueError, match="ignored by reference geometry"):
+        SimulationInput(vehicle_capacity_kg=9.8, vehicle_2_capacity_kg=5.0)
+
+
+def test_reference_scenario_rejects_capacities_that_would_be_silently_ignored():
+    with pytest.raises(ValueError, match="ignored by reference geometry"):
+        build_reference_scenario(
+            ReferenceScenario(vehicle_capacity_kg=9.8, vehicle_2_capacity_kg=5.0),
+            UnavailableHyRAMBackend(),
+        )
+
+
 def test_mixed_convection_requires_explicit_geometry_for_both_vehicles():
     with pytest.raises(ValueError, match="explicit physical geometry"):
         build_reference_scenario(
