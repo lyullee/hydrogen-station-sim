@@ -1,6 +1,6 @@
 # LLM evidence-grounding validation
 
-**Recorded:** 2026-10-09
+**Recorded:** 2026-10-11
 **Scope:** digital-twin main assistant and selected-sensor assistant routes
 
 This record documents a software-level grounding check. It is not a human
@@ -77,6 +77,7 @@ contains:
   4.5 MPa candidate is corroborated on a second station-side bundle, while
   vehicle/full-loop validation and runtime parameter application remain false;
 - a SHA-256 digest over the canonical manifest contents.
+- the amended primary-goal scope (92.0% scope-adjusted helper metric) is delivered to interactive prompts without exposing paths; synchronized station-to-vehicle raw data remains a documented limitation, and human expert review is optional unless a SAGA human-guidance claim is made;
 
 The manifest explicitly states that simulated signals are not field
 measurements and that sampled consequence distances are not confirmed safety
@@ -89,10 +90,10 @@ The following tests passed in the repository virtual environment:
 
 ```text
 .venv\Scripts\python.exe -m pytest tests/test_llm_grounding.py tests/test_station_thermal_diagnostic.py tests/test_station_thermal_protocol.py tests/test_hiad_digital_twin_replay_coverage.py tests/test_khk_digital_twin_replay_coverage.py tests/test_flame_detection.py tests/test_carb_hrs_inuse_benchmark.py tests/test_ijhe_readiness_audit.py -q
-33 passed
+47 passed
 
 .venv\Scripts\python.exe -m pytest -q
-1158 passed, 18 warnings
+1374 passed, 20 warnings
 ```
 
 The tests verify that normal monitoring keeps impact calculation marked as

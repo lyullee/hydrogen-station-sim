@@ -4,10 +4,10 @@
   "artifact_type": "full_regression_test_run",
   "command": ".venv\\Scripts\\python.exe -m pytest -q",
   "status": "PASS",
-  "tests_passed": 1373,
+  "tests_passed": 1374,
   "tests_failed": 0,
   "warnings": 20,
-  "elapsed_seconds": 269.91,
+  "elapsed_seconds": 258.31,
   "source_commit": "71e8b72a8d30cccb490b028a89bbf133254812c1",
   "readiness_snapshot": "research/goal_progress_snapshot_2026_10_11.json",
   "interpretation": "All executable tests pass. This verifies implementation integrity only; it does not convert the independent validation FAIL/PENDING gates to PASS."

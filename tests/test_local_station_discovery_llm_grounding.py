@@ -214,6 +214,35 @@ def test_validation_readiness_ledger_reaches_all_llm_views_without_paths():
     assert header["ledger_integrity"] is True
 
 
+def test_primary_scope_amendment_reaches_llm_without_reclassifying_audit_gates():
+    manifest = _manifest()
+    scope = manifest["response_evidence"]["primary_scope_progress"]
+    assert scope["status"] == "available"
+    assert scope["artifact_integrity"] is True
+    assert scope["gate_counts"] == {
+        "PASS": 127,
+        "FAIL": 9,
+        "PENDING": 2,
+        "TOTAL": 138,
+    }
+    assert scope["gate_closure_percent"] == 92.0
+    assert scope["station_to_vehicle_scope"] == (
+        "removed_from_primary_goal_after_public_search"
+    )
+    assert "full_loop_external_validation" in scope["excluded_gate_ids"]
+    assert "optional_for_physics_validation" in scope["ethics_and_expert_review"]
+
+    decision = prompt_decision_evidence(manifest)
+    assert decision["primary_scope_progress"]["gate_closure_percent"] == 92.0
+    summary = prompt_evidence_summary(manifest)
+    assert summary["primary_scope_progress"]["gate_counts"]["TOTAL"] == 138
+    header = prompt_evidence_header(manifest)
+    assert header["primary_scope_progress"]["station_to_vehicle_scope"] == (
+        "removed_from_primary_goal_after_public_search"
+    )
+    assert "C:\\" not in str(scope)
+
+
 def test_data_coverage_instruction_uses_available_evidence_before_claim_limits():
     manifest = _manifest()
     instruction = manifest["data_coverage"]["assistant_instruction"]

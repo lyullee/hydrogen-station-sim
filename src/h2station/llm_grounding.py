@@ -56,6 +56,7 @@ def _ijhe_readiness_ledger() -> dict[str, Any]:
         "claim_tier": "unverified",
         "open_gate_count": 0,
         "open_gate_ids": [],
+        "primary_scope_progress": _primary_scope_progress(),
         "evidence_use_policy": {
             "validated": "Use only explicitly passed component or station-side evidence.",
             "diagnostic": "Treat post-access replays and aggregate references as diagnostic context.",
@@ -140,6 +141,7 @@ def _ijhe_readiness_ledger() -> dict[str, Any]:
         "independent_expert_review_complete": (
             statuses.get("independent_expert_review_complete") == "PASS"
         ),
+        "primary_scope_progress": _primary_scope_progress(),
         "claim_tier": claim_tier,
         "open_gate_count": len(open_gate_ids),
         "open_gate_ids": open_gate_ids,
@@ -152,6 +154,86 @@ def _ijhe_readiness_ledger() -> dict[str, Any]:
             "Aggregate audit status only; this does not predict peer review or "
             "journal acceptance. Full-loop and objective-completion claims remain "
             "disabled unless their gates are PASS."
+        ),
+    }
+
+
+def _primary_scope_progress() -> dict[str, Any]:
+    """Expose the amended primary-goal scope without leaking local paths.
+
+    The all-gates readiness ledger intentionally retains the historical
+    station-to-vehicle and human-evaluation gates for audit traceability.  The
+    active research scope, however, removes the unavailable synchronized
+    station-to-vehicle raw bundle and treats the SAGA human study as optional
+    unless a human-effectiveness claim is made.  Interactive assistants need
+    both facts so they do not repeatedly present an already documented
+    limitation as the next operator action.
+    """
+
+    unavailable: dict[str, Any] = {
+        "status": "unavailable",
+        "artifact_integrity": False,
+        "gate_counts": {},
+        "gate_closure_percent": None,
+        "excluded_gate_ids": [],
+        "station_to_vehicle_scope": "unknown",
+        "ethics_and_expert_review": "unknown",
+        "claim_limit": (
+            "개정 주 목표 범위를 읽지 못했으므로 station-to-vehicle와 "
+            "SAGA 효과평가를 필수 검증으로 재분류하지 않음"
+        ),
+    }
+    path = Path(__file__).resolve().parents[2] / "research" / (
+        "goal_progress_snapshot_2026_10_11.json"
+    )
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, json.JSONDecodeError):
+        return unavailable
+    if not isinstance(payload, dict):
+        return unavailable
+    progress = payload.get("primary_scope_progress_2026_10_11")
+    if not isinstance(progress, dict):
+        return unavailable
+    counts = progress.get("gate_counts")
+    excluded = progress.get("excluded_gate_ids")
+    if not isinstance(counts, dict) or not isinstance(excluded, list):
+        return unavailable
+    safe_counts: dict[str, int] = {}
+    for key in ("PASS", "FAIL", "PENDING", "TOTAL"):
+        value = counts.get(key)
+        if isinstance(value, bool) or not isinstance(value, int) or value < 0:
+            return unavailable
+        safe_counts[key] = value
+    if safe_counts["TOTAL"] != sum(safe_counts[key] for key in ("PASS", "FAIL", "PENDING")):
+        return unavailable
+    excluded_ids = sorted({str(value) for value in excluded if value})
+    required_exclusions = {
+        "full_loop_external_validation",
+        "hiad_casebook_frozen",
+        "hiad_holdout_collection",
+        "independent_expert_review_complete",
+        "institutional_ethics_determination",
+        "saga_effectiveness_and_safety_supported",
+    }
+    if not required_exclusions.issubset(excluded_ids):
+        return unavailable
+    raw_percent = progress.get("gate_closure_percent")
+    if isinstance(raw_percent, bool) or not isinstance(raw_percent, (int, float)):
+        return unavailable
+    return {
+        "status": "available",
+        "artifact_integrity": True,
+        "gate_counts": safe_counts,
+        "gate_closure_percent": float(raw_percent),
+        "excluded_gate_ids": excluded_ids,
+        "station_to_vehicle_scope": "removed_from_primary_goal_after_public_search",
+        "ethics_and_expert_review": (
+            "optional_for_physics_validation; required only for a claim that SAGA improves human safety guidance"
+        ),
+        "claim_limit": (
+            "92.0%는 범위 조정 보조 지표이며 새 실험 통과나 full-loop 현장검증을 뜻하지 않음. "
+            "원래 전체 게이트 88.2%는 감사 추적용으로 유지함."
         ),
     }
 
@@ -8713,6 +8795,7 @@ def build_evidence_manifest(
         "response_evidence": {
             "source_ids": sorted(response_source_ids),
             "claim_limit": "대응 절차의 공개 근거 식별자이며, 현장 절차 승인·효과·법적 적합성을 자동으로 보증하지 않음",
+            "primary_scope_progress": _primary_scope_progress(),
         },
         "impact": {
             "calculation_attempted": bool(impact_calculation_attempted),
@@ -9358,6 +9441,7 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
 
     summary: dict[str, Any] = {
         "claim_limit": short(evidence.get("claim_limit")),
+        "primary_scope_progress": evidence.get("primary_scope_progress") or {},
         "runtime_calibration": manifest.get("runtime_calibration") or {},
         "runtime_geometry": manifest.get("runtime_geometry") or {},
         "runtime_vehicle_tank_calibration": manifest.get(
@@ -13280,6 +13364,12 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
         or manifest.get("question")
     ):
         decision["data_used"] = data_used
+        # The amended goal scope is useful to an interactive operator, but it
+        # is deliberately omitted from summary-only/internal prompts to keep
+        # the provider envelope within its legacy context budget.
+        decision["primary_scope_progress"] = response.get(
+            "primary_scope_progress"
+        ) or {}
     # The gate-triage view is useful for evidence/data questions but is too
     # expensive for ordinary operational turns.  Keep the default provider
     # envelope compact and expose it only when the operator asks about
@@ -13850,6 +13940,7 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
             if data_coverage.get(key) is not None
         },
         "validation_gap_triage": validation_gap_triage,
+        "primary_scope_progress": evidence.get("primary_scope_progress") or {},
         "runtime_calibration": manifest.get("runtime_calibration") or {},
         "runtime_geometry": manifest.get("runtime_geometry") or {},
         "runtime_vehicle_tank_calibration": manifest.get(
