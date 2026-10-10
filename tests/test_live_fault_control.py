@@ -44,7 +44,15 @@ def test_bank_leak_consumes_inventory_and_reduces_bank_pressure():
     """A sustained bank leak cannot be represented as a release-only flag."""
     with TestClient(app) as client:
         job_id = client.post("/api/simulations", json={"continuous": True,
-            "duration_s": 4.0, "control_period_s": .2}).json()["id"]
+            "duration_s": 4.0, "control_period_s": .2,
+            # Supplying an explicit idle process runtime prevents the
+            # reference-only finite run from selecting a compressor recharge
+            # bank in the background.  The assertion is then about the leak,
+            # rather than a concurrent recharge transfer.
+            "process_settings": {"trailer_supply": False,
+                                  "pressure_recharge": False,
+                                  "vehicle_1": False,
+                                  "vehicle_2": False}}).json()["id"]
         try:
             frames = _wait_for(client, job_id, lambda rows: len(rows) >= 2)
             baseline = frames[-1]["bank_pressure_mpa"]["high"]
