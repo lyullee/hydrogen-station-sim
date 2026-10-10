@@ -18,16 +18,16 @@ Verification:
 
 - Restriction-table, process-operation, and frame-cursor suites: **29 passed**.
 
-## 2026-10-10 - Avoid duplicate continuous-result serialization
+## 2026-10-10 - Avoid duplicate frame-result serialization
 
 Status: implemented; continuous-stop alignment regression passed.
 
-- A continuous run now builds its stopped result from the retained, unit-
-  converted monitor frames that already drive the UI. The finite-duration
-  result still uses the full state serializer and keeps its existing precision.
-- This removes the redundant final-window gas-state reconstruction on long
-  demonstrations while preserving HAZOP frames, detector series, trend data,
-  leak series, summary values, and impact values.
+- Finite and continuous runs now build their API result from the retained,
+  unit-converted monitor frames that already drive the UI. The legacy state
+  serializer remains available for direct callers and fallback runs.
+- This removes redundant gas-state reconstruction at shutdown while preserving
+  HAZOP frames, detector series, trend data, leak series, event logs, summary
+  values, and impact values.
 
 Verification:
 

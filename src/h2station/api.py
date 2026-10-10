@@ -1160,8 +1160,8 @@ def _execute_simulation(job_id: str, request: SimulationInput) -> None:
         # with those same frames added several seconds of shutdown latency.
         # Keep the finite-run path unchanged and build continuous results from
         # the authoritative retained frames instead.
-        if request.continuous and retained_frames:
-            result = _serialize_continuous_frames(retained_frames, backend, final_faults)
+        if retained_frames:
+            result = _serialize_frame_result(retained_frames, backend, final_faults)
         else:
             result = _serialize_result(trajectory, built.station, backend, final_faults)
         if request.continuous:
@@ -1431,13 +1431,13 @@ _CONTINUOUS_FRAME_SERIES_KEYS = (
 )
 
 
-def _serialize_continuous_frames(
+def _serialize_frame_result(
     frames: list[dict[str, Any]], backend: Any, faults: list[Any],
 ) -> dict[str, Any]:
-    """Build a stopped continuous result without re-solving its final window.
+    """Build a result from already materialized operator frames.
 
     ``report_sample`` already stores the public, unit-converted frame consumed
-    by the monitor.  Reconstructing those values from solver state at shutdown
+    by the monitor. Reconstructing those values from solver state at shutdown
     is redundant and particularly costly for long-running demonstrations.
     """
 
@@ -1477,6 +1477,37 @@ def _serialize_continuous_frames(
         fault.model_dump() if hasattr(fault, "model_dump") else asdict(fault)
         for fault in faults
     ]
+    events: list[dict[str, Any]] = []
+    previous_esd = False
+    previous_dispatch = None
+    risk_updates: list[dict[str, Any]] = []
+    for frame in frames:
+        time_s = float(frame.get("time_s") or 0.0)
+        dispatch = frame.get("dispatch_bank")
+        if frame.get("esd") and not previous_esd:
+            events.append({
+                "time_s": time_s,
+                "severity": "trip",
+                "message": "ESD activated: " + ", ".join(frame.get("trip_causes") or []),
+            })
+        if dispatch != previous_dispatch and dispatch is not None:
+            events.append({
+                "time_s": time_s,
+                "severity": "info",
+                "message": f"Cascade dispatch changed to {dispatch}",
+            })
+        if frame.get("consequence_updated"):
+            for release in (frame.get("hazop") or {}).get("releases", []):
+                risk_updates.append({
+                    "time_s": time_s,
+                    "release_id": release.get("release_id"),
+                    "mass_flow_g_s": release.get("mass_flow_g_s", 0.0),
+                    "released_mass_kg": frame.get("released_mass_kg", 0.0),
+                    "annualized_risk": release.get("annualized_risk"),
+                    "consequence": dict(release.get("consequence") or {}),
+                })
+        previous_esd = bool(frame.get("esd"))
+        previous_dispatch = dispatch
     duration = times[-1] if times else 0.0
     return {
         "summary": {
@@ -1503,8 +1534,8 @@ def _serialize_continuous_frames(
             ),
         },
         "series": series,
-        "events": [],
-        "risk_updates": [],
+        "events": events,
+        "risk_updates": risk_updates,
         "faults": fault_payload,
         "impact": {
             "peak_vehicle_pressure_mpa": max(pressures, default=0.0),
