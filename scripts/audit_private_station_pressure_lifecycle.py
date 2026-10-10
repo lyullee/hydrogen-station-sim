@@ -126,6 +126,8 @@ def _audit_file(path: Path) -> dict[str, Any]:
             "counter_observed": False,
             "counter_numeric_rows": 0,
             "counter_decreases": 0,
+            "counter_increases": 0,
+            "counter_directional_violations": 0,
         }
     with path.open("r", encoding=encoding, errors="replace", newline="") as handle:
         first_line = handle.readline()
@@ -143,6 +145,7 @@ def _audit_file(path: Path) -> dict[str, Any]:
         counter_last: dict[int, float] = {}
         counter_numeric_rows = 0
         counter_decreases = 0
+        counter_increases = 0
         for row in reader:
             row_count += 1
             if timestamp_index is not None and timestamp_index < len(row):
@@ -171,6 +174,8 @@ def _audit_file(path: Path) -> dict[str, Any]:
                 counter_numeric_rows += 1
                 if index in counter_last and value < counter_last[index]:
                     counter_decreases += 1
+                elif index in counter_last and value > counter_last[index]:
+                    counter_increases += 1
                 counter_last[index] = value
         if last_time_raw is not None:
             # Keep only the final timestamp value for duration.  It is parsed
@@ -187,6 +192,12 @@ def _audit_file(path: Path) -> dict[str, Any]:
         timestamp_order = "descending"
     else:
         timestamp_order = "mixed"
+    if timestamp_order == "ascending":
+        directional_violations = counter_decreases
+    elif timestamp_order == "descending":
+        directional_violations = counter_increases
+    else:
+        directional_violations = counter_decreases + counter_increases
     return {
         "rows": row_count,
         "columns": len(headers),
@@ -198,6 +209,8 @@ def _audit_file(path: Path) -> dict[str, Any]:
         "counter_observed": bool(counter_indices),
         "counter_numeric_rows": counter_numeric_rows,
         "counter_decreases": counter_decreases,
+        "counter_increases": counter_increases,
+        "counter_directional_violations": directional_violations,
     }
 
 
@@ -215,6 +228,9 @@ def audit(root: Path) -> dict[str, Any]:
     counter_files = 0
     counter_numeric_rows = 0
     counter_decreases = 0
+    counter_increases = 0
+    counter_directional_violations = 0
+    counter_files_with_parseable_direction = 0
 
     for path in files:
         size_buckets[_size_bucket(path.stat().st_size)] += 1
@@ -243,6 +259,10 @@ def audit(root: Path) -> dict[str, Any]:
             counter_files += 1
             counter_numeric_rows += int(result["counter_numeric_rows"])
             counter_decreases += int(result["counter_decreases"])
+            counter_increases += int(result["counter_increases"])
+            counter_directional_violations += int(result["counter_directional_violations"])
+            if result["timestamp_order"] in {"ascending", "descending"}:
+                counter_files_with_parseable_direction += 1
 
     family_rows = []
     for index, ((columns, roles), counts) in enumerate(sorted(schema_families.items()), start=1):
@@ -286,10 +306,27 @@ def audit(root: Path) -> dict[str, Any]:
         },
         "lifecycle_counter_screen": {
             "files_with_counter": counter_files,
+            "counter_files_with_parseable_direction": counter_files_with_parseable_direction,
             "numeric_counter_observations": counter_numeric_rows,
-            "counter_decrease_observations": counter_decreases,
-            "monotonicity_claim_supported": counter_files > 0 and counter_decreases == 0,
+            "counter_decrease_observations_in_file_order": counter_decreases,
+            "counter_increase_observations_in_file_order": counter_increases,
+            "counter_directional_violations_after_time_order": counter_directional_violations,
+            "monotonicity_claim_supported": (
+                counter_files > 0
+                and counter_files_with_parseable_direction == counter_files
+                and counter_directional_violations == 0
+            ),
             "counter_semantics_attested": False,
+        },
+        "reconciliation": {
+            "prior_attested_lifecycle_summary_in_repository": True,
+            "this_collection_level_screen_replaces_prior_summary": False,
+            "merge_decision": "HOLD_UNTIL_FILE_SEGMENT_AND_RESET_MAPPING",
+            "reason": (
+                "The collection contains multiple time-segment schemas and mixed timestamp direction. "
+                "The prior attested summary is retained as a separate bounded result; this broader screen "
+                "must not be concatenated into it until segment identity and reset semantics are confirmed."
+            ),
         },
         "eligibility": {
             "station_side_pressure_replay_candidate": role_file_counts.get("pressure", 0) > 0,

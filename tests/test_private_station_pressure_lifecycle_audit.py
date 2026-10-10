@@ -44,6 +44,7 @@ def test_private_audit_detects_counter_decrease_without_promoting_validation(tmp
     report = audit(tmp_path)
 
     screen = report["lifecycle_counter_screen"]
-    assert screen["counter_decrease_observations"] == 1
+    assert screen["counter_decrease_observations_in_file_order"] == 1
+    assert screen["counter_directional_violations_after_time_order"] == 1
     assert screen["monotonicity_claim_supported"] is False
     assert report["eligibility"]["parameter_fit_authorized"] is False

@@ -88,10 +88,19 @@
   },
   "lifecycle_counter_screen": {
     "files_with_counter": 21,
+    "counter_files_with_parseable_direction": 13,
     "numeric_counter_observations": 59168365,
-    "counter_decrease_observations": 22937,
+    "counter_decrease_observations_in_file_order": 22937,
+    "counter_increase_observations_in_file_order": 157,
+    "counter_directional_violations_after_time_order": 157,
     "monotonicity_claim_supported": false,
     "counter_semantics_attested": false
+  },
+  "reconciliation": {
+    "prior_attested_lifecycle_summary_in_repository": true,
+    "this_collection_level_screen_replaces_prior_summary": false,
+    "merge_decision": "HOLD_UNTIL_FILE_SEGMENT_AND_RESET_MAPPING",
+    "reason": "The collection contains multiple time-segment schemas and mixed timestamp direction. The prior attested summary is retained as a separate bounded result; this broader screen must not be concatenated into it until segment identity and reset semantics are confirmed."
   },
   "eligibility": {
     "station_side_pressure_replay_candidate": true,
