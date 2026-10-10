@@ -1979,3 +1979,23 @@ Verification:
   screen still has the pre-existing MC tank-boundary failure (0/8 joint).
 - Parallel critical focus run: software PASS in 5.71 s, total 5.71 s; the
   three pre-existing negative scientific screens remain explicitly reported.
+
+## 2026-10-10 - Reuse inverse EOS states in the live solver
+
+Status: implemented; vehicle tanks, dispenser hoses and cascade banks now
+construct one tabulated `(density, internal energy)` state and reuse its
+pressure, temperature and enthalpy values. The full-station derivative also
+passes already-computed gas states and instantaneous flow values into the
+partial-station path, avoiding duplicate inverse lookups inside each BDF RHS.
+
+Observed local timing on the same two-vehicle 20 s replay at a 0.5 s control
+period: 1.43 s before this change and 1.00 s after it (about 30% faster). The
+final pressures and sampled count were unchanged. This is a runtime
+optimization only; no EOS values, controller limits, validation results or
+claim boundaries were changed.
+
+Verification:
+
+- Core/process/vehicle/safety and priority-focus tests: 59 passed.
+- Critical fast lane: software PASS; scientific screen remains FAIL on the
+  three existing negative diagnostics and readiness remains BLOCKED.

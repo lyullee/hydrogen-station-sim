@@ -136,8 +136,9 @@ class CascadeBank:
         inlet_enthalpy_j_kg: float,
         outlet_mass_flow_kg_s: float,
         ambient_temperature_k: float,
+        gas: CompositeTankGasState | None = None,
     ) -> CascadeBankState:
-        gas = self.gas_state(state)
+        gas = gas or self.gas_state(state)
         gas_wall_heat_w = (
             self.parameters.gas_wall_ua_w_k
             * self.fit.gas_wall_ua_multiplier
@@ -857,6 +858,10 @@ class FullStationModel:
             supply_index = int(np.argmax([gas.pressure_pa for gas in bank_gases]))
         else:
             supply_index = dispatch_index
+        primary_hose_gas = self.partial_station.hose_gas_state(state.partial_station)
+        primary_vehicle_gas = self.partial_station.vehicle_tank.gas_state(
+            state.partial_station.vehicle
+        )
         # The cascade outlet valve acts upstream of the hose. The dispenser
         # nozzle remains controlled by the fueling command so trapped line-pack
         # can discharge into the vehicle while banks switch.
@@ -878,6 +883,8 @@ class FullStationModel:
             effective_primary_pcv_multiplier,
             primary_nozzle_area_multiplier,
             primary_allow_reverse_flow,
+            primary_hose_gas,
+            primary_vehicle_gas,
         )
         partial_rate = self.partial_station.derivative(
             time_s,
@@ -888,6 +895,9 @@ class FullStationModel:
             effective_primary_pcv_multiplier,
             primary_nozzle_area_multiplier,
             primary_allow_reverse_flow,
+            instantaneous,
+            primary_hose_gas,
+            primary_vehicle_gas,
         )
         secondary_rate = None
         secondary_instantaneous = None
@@ -905,6 +915,12 @@ class FullStationModel:
                 (header_gas or bank_gases[secondary_supply_index]).temperature_k,
             )
             secondary_effective_command = secondary_command
+            secondary_hose_gas = self.secondary_partial_station.hose_gas_state(
+                state.secondary_partial_station
+            )
+            secondary_vehicle_gas = self.secondary_partial_station.vehicle_tank.gas_state(
+                state.secondary_partial_station.vehicle
+            )
             effective_secondary_pcv_multiplier = (
                 secondary_pcv_area_multiplier * secondary_dispatch_valve_opening
                 if secondary_dispatch_index is not None else 0.0
@@ -919,6 +935,8 @@ class FullStationModel:
                     effective_secondary_pcv_multiplier,
                     secondary_nozzle_area_multiplier,
                     secondary_allow_reverse_flow,
+                    secondary_hose_gas,
+                    secondary_vehicle_gas,
                 )
             )
             secondary_rate = self.secondary_partial_station.derivative(
@@ -930,6 +948,9 @@ class FullStationModel:
                 effective_secondary_pcv_multiplier,
                 secondary_nozzle_area_multiplier,
                 secondary_allow_reverse_flow,
+                secondary_instantaneous,
+                secondary_hose_gas,
+                secondary_vehicle_gas,
             )
 
         compressor_result, compressor_reverse_index = self.compressor_path_result(
@@ -948,14 +969,10 @@ class FullStationModel:
         )
         if header_gas is not None and self.common_header is not None:
             pcv_values = [instantaneous["pcv_mass_flow"]]
-            hose_gases = [self.partial_station.hose_gas_state(state.partial_station)]
+            hose_gases = [primary_hose_gas]
             if secondary_instantaneous is not None and state.secondary_partial_station is not None:
                 pcv_values.append(secondary_instantaneous["pcv_mass_flow"])
-                hose_gases.append(
-                    self.secondary_partial_station.hose_gas_state(
-                        state.secondary_partial_station
-                    )
-                )
+                hose_gases.append(secondary_hose_gas)
             header_inlet_mass = sum(max(flow, 0.0) for flow in header_flows)
             header_inlet_energy = sum(
                 max(flow, 0.0) * gas.specific_enthalpy_j_kg
@@ -1021,6 +1038,7 @@ class FullStationModel:
                     inlet_enthalpy,
                     direct_outflow,
                     self.ambient_temperature_k,
+                    gas=bank_gases[index],
                 )
             )
         return (

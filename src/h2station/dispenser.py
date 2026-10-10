@@ -490,10 +490,12 @@ class PartialStationModel:
         pcv_area_multiplier: float = 1.0,
         nozzle_area_multiplier: float = 1.0,
         allow_reverse_flow: bool = False,
+        hose_gas: CompositeTankGasState | None = None,
+        vehicle_gas: CompositeTankGasState | None = None,
     ) -> dict[str, float]:
         supply = supply_override or self.supply(time_s)
-        hose_gas = self.hose_gas_state(state)
-        vehicle_gas = self.vehicle_tank.gas_state(state.vehicle)
+        hose_gas = hose_gas or self.hose_gas_state(state)
+        vehicle_gas = vehicle_gas or self.vehicle_tank.gas_state(state.vehicle)
         pcv_outlet_pressure = max(
             hose_gas.pressure_pa + self.precooler.hydrogen_pressure_drop_pa,
             self.pcv_parameters.minimum_pressure_pa,
@@ -617,8 +619,11 @@ class PartialStationModel:
         pcv_area_multiplier: float = 1.0,
         nozzle_area_multiplier: float = 1.0,
         allow_reverse_flow: bool = False,
+        instantaneous: dict[str, float] | None = None,
+        hose_gas: CompositeTankGasState | None = None,
+        vehicle_gas: CompositeTankGasState | None = None,
     ) -> PartialStationState:
-        values = self._flow_and_thermal_states(
+        values = instantaneous or self._flow_and_thermal_states(
             time_s,
             state,
             command,
@@ -627,9 +632,11 @@ class PartialStationModel:
             pcv_area_multiplier,
             nozzle_area_multiplier,
             allow_reverse_flow,
+            hose_gas,
+            vehicle_gas,
         )
-        hose_gas = self.hose_gas_state(state)
-        vehicle_gas = self.vehicle_tank.gas_state(state.vehicle)
+        hose_gas = hose_gas or self.hose_gas_state(state)
+        vehicle_gas = vehicle_gas or self.vehicle_tank.gas_state(state.vehicle)
         gas_wall_heat_rate = (
             self.hose.gas_wall_ua_w_k
             * self.fit.hose_gas_wall_ua_multiplier
@@ -692,6 +699,7 @@ class PartialStationModel:
                     if nozzle_forward_flow > 0.0 else None
                 ),
             ),
+            gas=vehicle_gas,
         )
         return PartialStationState(
             coolant_temperature_rate,

@@ -311,8 +311,9 @@ class CompositeVehicleTank:
         self,
         state: CompositeTankState,
         boundary: TankBoundaryFlow,
+        gas: CompositeTankGasState | None = None,
     ) -> CompositeTankState:
-        gas = self.gas_state(state)
+        gas = gas or self.gas_state(state)
         p = self.parameters
         f = self.fit
 
@@ -435,6 +436,7 @@ class CompositeTankFillSimulator:
                         inlet_specific_enthalpy_j_kg=inlet_enthalpy,
                         ambient_temperature_k=self.ambient_temperature_k,
                     ),
+                    gas=local_gas,
                 )
                 return derivative.as_vector()
 
