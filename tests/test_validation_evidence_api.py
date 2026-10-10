@@ -68,6 +68,14 @@ def test_validation_evidence_surface_is_privacy_bounded_and_claim_limited() -> N
     assert scientific["partial_loop_candidate_count"] == 8
     assert scientific["runtime_parameter_application"] is False
     assert scientific["full_loop_external_validation_ready"] is False
+    calibrated = inventory["public_closed_loop_calibrated_diagnostic"]
+    assert calibrated["status"] == "diagnostic_only"
+    assert calibrated["case_count"] == 11
+    assert calibrated["screening_pass_count"] == 1
+    assert calibrated["runtime_parameter_application"] is False
+    assert calibrated["full_loop_external_validation_ready"] is False
+    assert calibrated["promotion_prohibited"] is True
+    assert "not a new independent holdout" in calibrated["claim_limit"].lower()
     assert all(
         set(archive) == {
             "scope",

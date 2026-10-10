@@ -37,6 +37,9 @@ _LOCAL_HRS_CANDIDATE_SCAN = _ROOT / (
 _LOCAL_DOCUDATA_CANDIDATE_SCAN = _ROOT / (
     "research/local_docudata_candidate_scan_2026_10_10.json"
 )
+_CLOSED_LOOP_CALIBRATED_DIAGNOSTIC = _ROOT / (
+    "research/closed_loop_calibrated_confirmatory_diagnostic_2026_10_10.json"
+)
 
 
 def _read_json(path: Path) -> dict[str, Any]:
@@ -116,6 +119,61 @@ def _scientific_container_discovery_summary() -> dict[str, Any] | None:
             "동기화·경계·권리 확인 전에는 실측 full-loop 검증이나 런타임 보정으로 사용할 수 없습니다."
         ),
     }
+
+
+def _closed_loop_calibrated_diagnostic_summary() -> dict[str, Any] | None:
+    """Expose aggregate closed-loop development evidence with a hard claim fence."""
+
+    try:
+        record = _read_json(_CLOSED_LOOP_CALIBRATED_DIAGNOSTIC)
+        aggregate = record.get("diagnostic_aggregate") or {}
+        metrics = aggregate.get("metrics_mean") or {}
+        required = (
+            record.get("artifact_type")
+            == "post_outcome_closed_loop_calibrated_confirmatory_diagnostic",
+            record.get("evidence_role") == "model-development diagnostic only",
+            record.get("post_outcome") is True,
+            record.get("parameter_fitting") is False,
+            record.get("production_default_changed") is False,
+            record.get("validation_gate_effect") == "none",
+            aggregate.get("case_count") == 11,
+            isinstance(aggregate.get("screening_pass_count"), int),
+            isinstance(aggregate.get("screening_pass_fraction"), (int, float)),
+            all(
+                isinstance(metrics.get(key), (int, float))
+                and not isinstance(metrics.get(key), bool)
+                for key in (
+                    "pressure_rmse_mpa",
+                    "temperature_rmse_c",
+                    "soc_rmse_percentage_points",
+                )
+            ),
+            isinstance(record.get("claim_boundary"), str)
+            and "not a new independent holdout" in record["claim_boundary"].lower(),
+        )
+        if not all(required):
+            return None
+        return {
+            "status": "diagnostic_only",
+            "evidence_role": str(record["evidence_role"]),
+            "case_count": int(aggregate["case_count"]),
+            "screening_pass_count": int(aggregate["screening_pass_count"]),
+            "screening_pass_fraction": float(aggregate["screening_pass_fraction"]),
+            "mean_metrics": {
+                key: float(metrics[key])
+                for key in (
+                    "pressure_rmse_mpa",
+                    "temperature_rmse_c",
+                    "soc_rmse_percentage_points",
+                )
+            },
+            "runtime_parameter_application": False,
+            "full_loop_external_validation_ready": False,
+            "promotion_prohibited": True,
+            "claim_limit": str(record["claim_boundary"]),
+        }
+    except (OSError, KeyError, TypeError, ValueError, json.JSONDecodeError):
+        return None
 
 
 def _privacy_boundary() -> dict[str, bool]:
@@ -687,6 +745,16 @@ def public_evidence_inventory_summary() -> dict[str, Any]:
             "runtime_parameter_application": False,
             "full_loop_external_validation_ready": False,
         },
+        "public_closed_loop_calibrated_diagnostic": {
+            "status": "unavailable",
+            "case_count": 0,
+            "screening_pass_count": 0,
+            "screening_pass_fraction": 0.0,
+            "mean_metrics": {},
+            "runtime_parameter_application": False,
+            "full_loop_external_validation_ready": False,
+            "promotion_prohibited": True,
+        },
     }
     try:
         record = _read_json(_KHK_ACCIDENTS)
@@ -978,4 +1046,7 @@ def public_evidence_inventory_summary() -> dict[str, Any]:
             "status": "available",
             **scientific,
         }
+    calibrated = _closed_loop_calibrated_diagnostic_summary()
+    if calibrated is not None:
+        result["public_closed_loop_calibrated_diagnostic"] = calibrated
     return result

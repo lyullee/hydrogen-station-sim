@@ -18,6 +18,17 @@ Verification:
 
 - `tests/test_priority_focus.py`: 1 passed.
 
+## 2026-10-10 - Surface the closed-loop diagnostic without promoting it
+
+Status: implemented; the evidence API and LLM now share the same aggregate-only
+development result.
+
+- Added a privacy-bounded `public_closed_loop_calibrated_diagnostic` inventory entry
+  for the 11-case post-outcome comparison (1/11 screening passes).
+- The projection contains only aggregate error means and the explicit claim fence;
+  it cannot be treated as an independent holdout, runtime calibration, or safety
+  validation.
+
 ## 2026-10-10 - Inspect scientific containers in local data discovery
 
 Status: implemented; MATLAB/HDF5 channel-name screening completed without
