@@ -37,7 +37,7 @@
       "license_status": "not_identified_for_raw_logs",
       "full_loop_external_holdout_eligible": false,
       "admission_status": "CONTACT_REQUEST_CANDIDATE_ONLY",
-      "next_action": "Request a privacy-safe export of at least three independent events with common elapsed time, station/dispenser pressure, delivered-gas temperature, transferred mass or mass flow, protocol phase, vehicle/receptacle pressure and temperature, and ESD/fault transitions.",
+      "next_action": "Use research/BAM_KETI_DATA_REQUEST_DRAFT_2026_10_10.md for a staged privacy-safe request: one schema pilot, three minimum events, then an eight-event frozen holdout if approved.",
       "claim_boundary": "The article and institutional description establish a credible lead and field-instrumentation context only. They do not by themselves provide a reproducible full-loop validation dataset."
     },
     {

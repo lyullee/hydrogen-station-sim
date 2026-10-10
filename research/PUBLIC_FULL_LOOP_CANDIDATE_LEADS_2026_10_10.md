@@ -19,3 +19,6 @@ elapsed time, station/dispenser pressure, delivered-gas temperature, transferred
 mass or mass flow, protocol phase, and (if available) vehicle/receptacle,
 precooler, cascade and ESD channels. The request must freeze the protocol and
 model before scoring and must not publish raw rows or facility identity.
+
+For the BAM/KETI lead, the staged request text is in
+[`BAM_KETI_DATA_REQUEST_DRAFT_2026_10_10.md`](BAM_KETI_DATA_REQUEST_DRAFT_2026_10_10.md).

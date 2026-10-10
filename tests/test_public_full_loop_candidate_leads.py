@@ -16,6 +16,9 @@ def test_candidate_leads_do_not_relax_full_loop_gate() -> None:
     bam = next(item for item in record["candidates"] if item["id"].startswith("bam_"))
     assert bam["admission_status"] == "CONTACT_REQUEST_CANDIDATE_ONLY"
     assert bam["full_loop_external_holdout_eligible"] is False
+    draft = ROOT / "research/BAM_KETI_DATA_REQUEST_DRAFT_2026_10_10.md"
+    assert draft.is_file()
+    assert "staged privacy-safe request" in bam["next_action"]
     nrel = next(item for item in record["candidates"] if item["id"].startswith("nrel_"))
     assert nrel["admission_status"] == "PARTIAL_STATION_TO_TANK_BOUNDARY_ONLY"
     assert nrel["full_loop_external_holdout_eligible"] is False
