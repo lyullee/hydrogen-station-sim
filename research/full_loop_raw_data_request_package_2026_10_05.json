@@ -79,6 +79,11 @@
       "requested_scope": "De-identified station acquisition and fueling-log traces: vehicle start pressure/temperature, vehicle end pressure, dispenser inlet pressure/temperature, compressor/precooler state, flow or dispensed mass, fill type and safety incident markers"
     },
     {
+      "id": "nrel_nfctec_station_data_custodian",
+      "url": "https://www.nrel.gov/hydrogen/nfctec",
+      "requested_scope": "Custodian-run de-identified fueling-event export from the NFCTEC station-data programme: start/end hose and vehicle pressure-temperature, dispensed mass, ambient temperature, station state and safety/fault markers"
+    },
+    {
       "id": "nrel_hitrf",
       "url": "https://www.nrel.gov/hydrogen/hitrf-animation",
       "requested_scope": "H70/H35 station, dispenser, protocol and vehicle logger rows"
