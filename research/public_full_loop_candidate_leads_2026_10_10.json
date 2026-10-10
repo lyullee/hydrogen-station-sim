@@ -2,6 +2,21 @@
   "schema_version": 1,
   "artifact_type": "public_full_loop_candidate_leads",
   "recorded_at": "2026-10-10",
+  "search_recheck": {
+    "checked_at": "2026-10-10",
+    "scope": [
+      "Kuroki et al. 2021 article and author/institutional landing pages",
+      "DLR 2025 railway-refuelling manuscript and repository record",
+      "DOI and supplementary-data web search results"
+    ],
+    "finding": "The public records confirm measurement-based validation context, but no downloadable synchronized station-to-vehicle raw logger, channel dictionary, or independent reuse terms were located.",
+    "evidence_urls": [
+      "https://doi.org/10.1016/j.ijhydene.2021.04.037",
+      "https://elib.dlr.de/213625/",
+      "https://elib.dlr.de/213625/1/manuscript_final_published_version.pdf"
+    ],
+    "action": "Do not admit either lead as an external holdout. If needed, send the staged privacy-safe custodian request instead of repeatedly searching for a file that is not publicly exposed."
+  },
   "purpose": "Record public leads that may contain synchronized HRS-to-vehicle measurements without admitting unverified material as validation evidence.",
   "search_policy": {
     "accepted_candidate_requirements": [

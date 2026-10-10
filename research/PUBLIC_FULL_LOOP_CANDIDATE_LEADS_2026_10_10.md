@@ -26,6 +26,13 @@ lead because it reports validation against an actual fueling station. The
 publication does not itself expose a reproducible logger export or channel
 dictionary, so it remains contact-only. [DOI](https://doi.org/10.1016/j.ijhydene.2021.04.037)
 
+On 2026-10-10, the Kuroki DOI/institutional record and the DLR repository
+record/manuscript were rechecked, including a targeted supplementary-data
+search. The public records still expose validation context and plotted
+measurements, not a downloadable synchronized logger with channel semantics
+and reuse terms. This is a documented negative search result, not evidence that
+the underlying custodians do not have the data.
+
 The privacy-safe route is to request three de-identified events with a common
 elapsed time, station/dispenser pressure, delivered-gas temperature, transferred
 mass or mass flow, protocol phase, and (if available) vehicle/receptacle,
