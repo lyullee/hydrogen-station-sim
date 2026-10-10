@@ -35,4 +35,11 @@ def test_candidate_leads_do_not_relax_full_loop_gate() -> None:
     )
     assert eho["admission_status"] == "INVENTORY_CONTEXT_ONLY"
     assert eho["full_loop_external_holdout_eligible"] is False
+    kuroki = next(
+        item for item in record["candidates"]
+        if item["id"] == "kuroki_hrs_station_to_vehicle_model_2021"
+    )
+    assert kuroki["persistent_identifier"] == "10.1016/j.ijhydene.2021.04.037"
+    assert kuroki["admission_status"] == "CONTACT_REQUEST_CANDIDATE_ONLY"
+    assert kuroki["full_loop_external_holdout_eligible"] is False
     assert record["privacy"]["raw_rows_persisted"] is False

@@ -54,6 +54,7 @@
     {
       "id": "dlr_rail_h2_refueling_measurement_2025",
       "title": "Development, application and optimization of hydrogen refueling processes for railway vehicles",
+      "persistent_identifier": "10.1016/j.ijhydene.2025.04.040",
       "article_url": "https://elib.dlr.de/213625/1/manuscript_final_published_version.pdf",
       "reported_measurements": [
         "tank-module pressure",
@@ -86,6 +87,24 @@
       "admission_status": "INVENTORY_CONTEXT_ONLY",
       "next_action": "Use only for station-scale/layout and pressure-class context; do not treat inventory availability as fueling-process telemetry.",
       "claim_boundary": "This is a public station roster, not a pressure-temperature-flow event dataset, and it cannot validate the digital twin or safety response."
+    },
+    {
+      "id": "kuroki_hrs_station_to_vehicle_model_2021",
+      "title": "Thermodynamic modeling of hydrogen fueling process from high-pressure storage tank to vehicle tank",
+      "persistent_identifier": "10.1016/j.ijhydene.2021.04.037",
+      "article_url": "https://doi.org/10.1016/j.ijhydene.2021.04.037",
+      "reported_measurements": [
+        "high-pressure storage pressure",
+        "vehicle tank pressure and temperature",
+        "station-to-vehicle fueling process"
+      ],
+      "raw_data_status": "article_reports_actual_station_validation_but_raw_trace_not_located",
+      "channel_dictionary_status": "model boundary described; public logger schema not located",
+      "license_status": "article access and raw-data reuse terms require custodian confirmation",
+      "full_loop_external_holdout_eligible": false,
+      "admission_status": "CONTACT_REQUEST_CANDIDATE_ONLY",
+      "next_action": "Request the de-identified validation traces, channel dictionary and permission for independent scoring; retain the article as methodological context only until the raw export is verified.",
+      "claim_boundary": "The article reports validation against an actual fueling station, but the publication alone is not a reproducible full-loop holdout for this project."
     }
   ],
   "decision": {

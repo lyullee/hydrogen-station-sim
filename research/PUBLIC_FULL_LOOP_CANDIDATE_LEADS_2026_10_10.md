@@ -21,6 +21,11 @@ clock-aligned logger archive. The European Hydrogen Observatory roster is
 useful for pressure-class and station-layout context only; it contains no
 process historian channels.
 
+The Kuroki et al. 2021 station-to-vehicle model is a further high-value request
+lead because it reports validation against an actual fueling station. The
+publication does not itself expose a reproducible logger export or channel
+dictionary, so it remains contact-only. [DOI](https://doi.org/10.1016/j.ijhydene.2021.04.037)
+
 The privacy-safe route is to request three de-identified events with a common
 elapsed time, station/dispenser pressure, delivered-gas temperature, transferred
 mass or mass flow, protocol phase, and (if available) vehicle/receptacle,
