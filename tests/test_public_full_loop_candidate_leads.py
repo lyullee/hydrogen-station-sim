@@ -64,6 +64,13 @@ def test_candidate_leads_do_not_relax_full_loop_gate() -> None:
     assert nbsdc_vehicle["persistent_identifier"] == "CSTR 16666.11.nbsdc.yxc5XLas"
     assert nbsdc_vehicle["admission_status"] == "CONTACT_REQUEST_CANDIDATE_ONLY"
     assert nbsdc_vehicle["full_loop_external_holdout_eligible"] is False
+    nbsdc_liquid = next(
+        item for item in record["candidates"]
+        if item["id"] == "nbsdc_liquid_h2_station_runtime_2025"
+    )
+    assert nbsdc_liquid["admission_status"] == "CONTACT_REQUEST_CANDIDATE_ONLY"
+    assert nbsdc_liquid["full_loop_external_holdout_eligible"] is False
+    assert "application-required" in nbsdc_liquid["raw_data_status"]
     assert record["privacy"]["raw_rows_persisted"] is False
 
 
@@ -76,3 +83,12 @@ def test_candidate_leads_record_search_recheck_without_admitting_data() -> None:
     assert "NBSDC" in " ".join(recheck["scope"])
     assert recheck["evidence_urls"]
     assert "Do not admit" in recheck["action"]
+
+
+def test_nbsdc_liquid_access_recheck_is_metadata_only() -> None:
+    path = ROOT / "research/nbsdc_liquid_h2_station_access_recheck_2026_10_10.json"
+    record = json.loads(path.read_text(encoding="utf-8"))
+    assert record["metadata_observed"]["listed_file_count"] == 7
+    assert record["download_check"]["api_code"] == 403
+    assert record["download_check"]["raw_rows_persisted"] is False
+    assert record["admission"]["full_loop_external_holdout_eligible"] is False

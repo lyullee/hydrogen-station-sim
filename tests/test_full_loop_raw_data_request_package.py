@@ -19,6 +19,10 @@ def test_full_loop_request_package_is_explicit_and_non_claiming():
     assert component["minimum_event_count"] == 3
     assert len(component["required_channels"]) == 5
     assert "full_station_to_vehicle_holdout_claim" in component["not_allowed"]
+    assert any(
+        route["id"] == "nbsdc_liquid_h2_station_runtime_access_request"
+        for route in record["custodian_routes"]
+    )
 
 
 def test_request_markdown_mentions_hashes_and_holdout_freeze():

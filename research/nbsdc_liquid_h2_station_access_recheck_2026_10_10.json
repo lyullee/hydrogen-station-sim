@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "artifact_type": "public_dataset_access_recheck",
+  "recorded_at": "2026-10-10",
+  "source": {
+    "dataset_page": "https://nbsdc.cn/general/dataDetail?id=67d50e37195d260905af9869&type=1",
+    "metadata_endpoint": "https://nbsdc.cn/api/general/v1/getFileTree?dataId=67d50e37195d260905af9869&pid=1&pageOffset=0&pageSize=20",
+    "record_id": "67d50e37195d260905af9869",
+    "access_scope": "public metadata only; no raw bytes retained"
+  },
+  "metadata_observed": {
+    "title": "液氢加氢站运行数据集",
+    "root_tree_id": "1",
+    "listed_file_count": 7,
+    "files": [
+      {
+        "tree_id": 11,
+        "name": "35MPa加氢机1.xlsx",
+        "bytes": 3605593,
+        "role": "dispenser operating log"
+      },
+      {
+        "tree_id": 12,
+        "name": "35MPa加氢机2.xlsx",
+        "bytes": 5700855,
+        "role": "dispenser operating log"
+      },
+      {
+        "tree_id": 13,
+        "name": "70MPa加氢机.csv",
+        "bytes": 5974368,
+        "role": "dispenser operating log"
+      },
+      {
+        "tree_id": 14,
+        "name": "90MPa压缩机.xlsx",
+        "bytes": 3922132,
+        "role": "compressor operating log"
+      },
+      {
+        "tree_id": 15,
+        "name": "液氢加氢站运行数据集数据说明 .docx",
+        "bytes": 15673,
+        "role": "dataset description"
+      },
+      {
+        "tree_id": 16,
+        "name": "液氢泵-液氢储罐.xlsx",
+        "bytes": 15458212,
+        "role": "pump and liquid-storage log"
+      },
+      {
+        "tree_id": 17,
+        "name": "高压储氢瓶组.xlsx",
+        "bytes": 9423277,
+        "role": "high-pressure storage-bank log"
+      }
+    ],
+    "reported_channel_families": [
+      "pressure",
+      "temperature",
+      "flow",
+      "dispensed mass",
+      "current",
+      "frequency",
+      "liquid level",
+      "volume"
+    ]
+  },
+  "download_check": {
+    "endpoint": "https://nbsdc.cn/api/general/v1/checkAndDownloadFile?dataId=67d50e37195d260905af9869&id=67bc96ed34eb407463579069&pid=1&pageOffset=0&pageSize=20",
+    "http_status": 200,
+    "api_code": 403,
+    "message": "data file requires a data-application process; no file bytes downloaded",
+    "raw_rows_persisted": false
+  },
+  "admission": {
+    "full_loop_external_holdout_eligible": false,
+    "admission_status": "CONTACT_REQUEST_CANDIDATE_ONLY",
+    "reason": "Metadata lists station equipment files but does not verify common-clock station/dispenser/receiving-vessel linkage, channel units, calibration or reuse terms.",
+    "next_action": "Request an authorized de-identified event bundle and description document; record checksum, channel dictionary, common clock and permission before any numerical row is used."
+  },
+  "claim_boundary": "This recheck establishes a concrete official dataset request route only. It is not a downloaded dataset, validation result or evidence of full-loop model performance."
+}

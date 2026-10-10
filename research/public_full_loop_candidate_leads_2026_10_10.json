@@ -17,7 +17,8 @@
       "official NBSDC detail page for the 35/70 MPa fixed hydrogenation-station demonstration dataset; entity-file listing and access-control check",
       "NLR H2FillS official programme page and registration route",
       "NLR fast-flow heavy-duty hydrogen truck programme page",
-      "official H2FillS user manual result-channel list"
+      "official H2FillS user manual result-channel list",
+      "official NBSDC liquid-hydrogen station detail page and file-tree API access recheck"
     ],
     "finding": "The official NBSDC record exposes a concrete 2022 station-operation dataset with a CC0 1.0 badge, a two-file package and an entity-file folder containing 固定站运营数据.xlsx; the actual file download is gated behind NBSDC registration/login, so the synchronized archive, channel dictionary and common-clock pairing remain unverified; the official NLR H2FillS page and manual add a concrete registration/custodian route with documented station-to-FCEV result channels, but do not expose a reuse-cleared raw synchronized archive.",
     "evidence_urls": [
@@ -34,9 +35,10 @@
       "https://creativecommons.org/publicdomain/zero/1.0/deed.zh-hans",
       "https://www.nlr.gov/hydrogen/h2fills",
       "https://www.nlr.gov/news/program/2022/fast-flow-future-heavy-duty-hydrogen-trucks.html",
-      "https://www.nrel.gov/docs/libraries/hydrogen/h2fills-user-manual.pdf?sfvrsn=b2960c3d_1"
+      "https://www.nrel.gov/docs/libraries/hydrogen/h2fills-user-manual.pdf?sfvrsn=b2960c3d_1",
+      "https://nbsdc.cn/general/dataDetail?id=67d50e37195d260905af9869&type=1"
     ],
-    "action": "Do not admit any NBSDC lead to the external holdout gate until the exact downloadable archive is obtained under the stated CC0 terms (or access is attested), its checksum and channel dictionary are recorded, common-clock station/dispenser/receiving-vessel linkage is verified, and the model/split are frozen before reading numerical rows. The H2FillS route remains registration/custodian-only until raw rows, checksum, channel dictionary, clock pairing and reuse terms are independently verified."
+    "action": "Do not admit any NBSDC lead to the external holdout gate until the exact downloadable archive is obtained under the stated CC0 terms (or access is attested), its checksum and channel dictionary are recorded, common-clock station/dispenser/receiving-vessel linkage is verified, and the model/split are frozen before reading numerical rows. The H2FillS and NBSDC liquid-H2 routes remain registration/custodian-only until raw rows, checksum, channel dictionary, clock pairing and reuse terms are independently verified."
   },
   "purpose": "Record public leads that may contain synchronized HRS-to-vehicle measurements without admitting unverified material as validation evidence.",
   "search_policy": {
@@ -292,11 +294,32 @@
       "admission_status": "CONTACT_REQUEST_CANDIDATE_ONLY",
       "next_action": "Obtain the public archive through an authorized NBSDC account or custodian attestation, record SHA-256 and the data-description file, then verify station/dispenser/vehicle boundary, units, clock and event linkage before a frozen external score.",
       "claim_boundary": "The official record establishes a strong, concrete station-operation lead and an explicit CC0 badge. Because the raw workbook is login-gated and its channels have not been independently verified, it is not yet a reproducible full-loop external holdout and has not been used for fitting or scoring."
+    },
+    {
+      "id": "nbsdc_liquid_h2_station_runtime_2025",
+      "title": "Official NBSDC liquid-hydrogen refuelling-station operating dataset",
+      "persistent_identifier": "NBSDC record 67d50e37195d260905af9869",
+      "article_url": "https://nbsdc.cn/general/dataDetail?id=67d50e37195d260905af9869&type=1",
+      "reported_measurements": [
+        "35 MPa dispenser 1 and 2 logs",
+        "70 MPa dispenser log",
+        "90 MPa compressor log",
+        "liquid-hydrogen pump and storage log",
+        "high-pressure storage-bank log",
+        "pressure, temperature, flow, dispensed mass, current, frequency, liquid level and volume fields reported by the catalogue"
+      ],
+      "raw_data_status": "official file tree lists seven files and byte sizes; data-file download returned application-required API 403, so raw rows were not obtained",
+      "channel_dictionary_status": "dataset-description document is listed but its contents and common-clock linkage were not independently verified",
+      "license_status": "access and independent-scoring reuse terms require data application/custodian confirmation",
+      "full_loop_external_holdout_eligible": false,
+      "admission_status": "CONTACT_REQUEST_CANDIDATE_ONLY",
+      "next_action": "Request the authorized de-identified files and description document, then record checksum, units, common-clock station/dispenser/receiving-vessel linkage, calibration and publication permission before any numerical use.",
+      "claim_boundary": "The official catalogue provides a concrete multi-equipment station-data lead. Metadata and file names alone do not establish a synchronized full-loop holdout, so the record has not been used for fitting or scoring."
     }
   ],
   "decision": {
     "new_full_loop_dataset_admitted": false,
-    "reason": "The official NBSDC 35/70MPa record is a stronger concrete lead than the prior landing-only references, but its raw workbook is login-gated and no independent channel/clock/pairing verification has been completed. No newly found candidate is therefore admitted as an external holdout. The official H2FillS route is likewise registration/custodian-only and does not change that decision.",
+    "reason": "The official NBSDC 35/70MPa record is a stronger concrete lead than the prior landing-only references, but its raw workbook is login-gated and no independent channel/clock/pairing verification has been completed. No newly found candidate is therefore admitted as an external holdout. The official H2FillS and NBSDC liquid-H2 routes are likewise registration/custodian-only and do not change that decision.",
     "minimum_next_input": "Use the privacy-safe three-event intake contract rather than publishing confidential raw logs.",
     "runtime_parameter_application": false,
     "goal_completion_permitted": false

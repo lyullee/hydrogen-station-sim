@@ -145,6 +145,14 @@ registration for downloads; no raw synchronized rows, checksum or reuse terms
 are admitted from the page alone. The [NLR fast-flow programme description](https://www.nlr.gov/news/program/2022/fast-flow-future-heavy-duty-hydrogen-trucks.html)
 is therefore a custodian lead, not external validation evidence.
 
+An official [NBSDC liquid-hydrogen station record](https://nbsdc.cn/general/dataDetail?id=67d50e37195d260905af9869&type=1)
+was also rechecked through its public file-tree API. The catalogue lists two
+35 MPa dispenser logs, a 70 MPa dispenser log, a 90 MPa compressor log,
+liquid-pump/storage and high-pressure-bank files, plus a data-description
+document. The data-file endpoint returned an application-required response, so
+no raw bytes were downloaded or admitted. This is a concrete multi-equipment
+request route only.
+
 | Custodian route | Public lead | Requested scope |
 | --- | --- | --- |
 | DOE/NREL heavy-duty fast-flow custodian | [H2IQ Hour report](https://www.energy.gov/sites/default/files/2024-04/h2iqhour-03262024.pdf) | Original synchronized station, hose, receptacle and vehicle logger rows; mass flow/totalizer, bank switching, precooler, stop/fault/ESD state and J2601-5 controller inputs |
@@ -152,6 +160,7 @@ is therefore a custodian lead, not external validation evidence.
 | NREL NFCTEC station-data custodian | [NFCTEC programme](https://www.nrel.gov/hydrogen/nfctec) | Custodian-run de-identified fueling events with hose/vehicle pressure-temperature, dispensed mass, ambient temperature and station/fault state |
 | NLR/NREL HITRF | [HITRF programme](https://www.nrel.gov/hydrogen/hitrf-animation) | H70/H35 station, dispenser, protocol and vehicle logger rows |
 | NLR H2FillS fast-flow programme | [H2FillS programme](https://www.nlr.gov/hydrogen/h2fills) / [fast-flow project](https://www.nlr.gov/news/program/2022/fast-flow-future-heavy-duty-hydrogen-trucks.html) | Registration/custodian request for common-clock station, hose, receptacle and vehicle pressure-temperature, mass flow/totalizer, cascade selection, precooler/compressor state, protocol phase, stop/fault/ESD state, calibration and reuse terms |
+| NBSDC liquid-hydrogen station record | [Official dataset record](https://nbsdc.cn/general/dataDetail?id=67d50e37195d260905af9869&type=1) | Authorized de-identified export of the listed 35 MPa dispensers, 70 MPa dispenser, 90 MPa compressor, liquid pump/storage and high-pressure-bank logs, with description, common clock, units, calibration and reuse terms |
 | Cal State LA HRFF | [HRFF operation](https://www.calstatela.edu/ecst/h2station/operation) | Light-duty station event logs and vehicle pressure/temperature/mass flow |
 | Cal State LA HRFF multi-year study | [IJHE 2024 article](https://doi.org/10.1016/j.ijhydene.2023.04.084) | Custodian-controlled historian/event export underlying the reported 4,500 refueling events and 8,800 kg dispensed; request synchronized vehicle/hose pressure-temperature, mass/totalizer, compressor/precooler state, stop/fault markers, channel dictionary, calibration and reuse terms |
 | KGS/Oh study custodians | [Published study](https://doi.org/10.1007/s11814-025-00551-9) | Six real-HRS scenarios reported with vehicle pressure, temperature and mass flow |

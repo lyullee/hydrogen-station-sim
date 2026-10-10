@@ -70,6 +70,15 @@ public pages. The route is now recorded in both request and candidate manifests
 as `CONTACT_REQUEST_CANDIDATE_ONLY`; it adds a concrete custodian path without
 changing the external-holdout gate.
 
+The official NBSDC liquid-hydrogen station record was then checked through its
+public file-tree endpoint. It exposes a concrete seven-file equipment bundle
+(two 35 MPa dispensers, a 70 MPa dispenser, a 90 MPa compressor, liquid
+pump/storage, high-pressure bank and description document), but the file
+endpoint returned an application-required response. The metadata and exact
+access result are frozen in
+`research/nbsdc_liquid_h2_station_access_recheck_2026_10_10.json`; no raw bytes
+were retained and the lead remains request-only.
+
 ## Geometry evidence boundary synchronized with LLM grounding
 
 The runtime LLM evidence now carries both public geometry diagnostics instead

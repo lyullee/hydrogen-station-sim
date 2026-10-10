@@ -9,7 +9,8 @@
     "raw_trace_obtained": false,
     "full_loop_external_validation_supported": false,
     "official_h2fills_route_added": true,
-    "official_h2fills_route_note": "The NLR H2FillS page describes empirical fueling-data validation and a full station-to-FCEV model; the H2FillS manual lists station, dispenser and vehicle result channels. The public page requires registration for downloads, so no raw rows or validation result are admitted."
+    "official_h2fills_route_note": "The NLR H2FillS page describes empirical fueling-data validation and a full station-to-FCEV model; the H2FillS manual lists station, dispenser and vehicle result channels. The public page requires registration for downloads, so no raw rows or validation result are admitted.",
+    "nbsdc_liquid_h2_access_recheck": "Official metadata lists seven station-equipment files and reports pressure, temperature, flow and mass channel families; the data-file endpoint returned an application-required response (API 403), so no raw bytes were admitted."
   },
   "priority_lead_2026_10_10": {
     "id": "doe_nrel_h2iq_heavy_duty_fast_flow",
@@ -57,7 +58,9 @@
   "staged_intake": {
     "schema_pilot": {
       "minimum_event_count": 1,
-      "allowed_use": ["channel_join_and_quality_screen"],
+      "allowed_use": [
+        "channel_join_and_quality_screen"
+      ],
       "parameter_fitting": false,
       "validation_score": false,
       "raw_rows_may_remain_custodian_controlled": true
@@ -118,6 +121,11 @@
       "id": "nrel_hitrf",
       "url": "https://www.nrel.gov/hydrogen/hitrf-animation",
       "requested_scope": "H70/H35 station, dispenser, protocol and vehicle logger rows"
+    },
+    {
+      "id": "nbsdc_liquid_h2_station_runtime_access_request",
+      "url": "https://nbsdc.cn/general/dataDetail?id=67d50e37195d260905af9869&type=1",
+      "requested_scope": "Authorized de-identified event bundle from the official liquid-hydrogen station record: 35 MPa dispenser 1/2, 70 MPa dispenser, 90 MPa compressor, liquid pump/storage, high-pressure bank logs, dataset description, common clock, engineering units, calibration metadata and permission for independent scoring."
     },
     {
       "id": "nlr_h2fills_fast_flow_custodian_registration",
