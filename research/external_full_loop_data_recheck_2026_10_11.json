@@ -68,6 +68,59 @@
       },
       "decision": "REPORT_SUMMARY_ONLY",
       "claim_boundary": "The public briefing supports face-validity ranges and a data-request lead, but its plots and aggregate endpoints cannot close the full-loop gate."
+    },
+    {
+      "id": "kit_preslhy_e31_part_a_open_data",
+      "title": "PRESLHY Experiment series E3.1 (Cryogenic Hydrogen Blow-down/Discharge) results - part A high pressure",
+      "doi": "10.35097/1187",
+      "source_url": "https://radar.kit.edu/radar/en/dataset/vuyYifgxlfOuFrSP",
+      "source_role": "independent component release validation dataset",
+      "observed": {
+        "physical_experiment": true,
+        "open_machine_readable_files": true,
+        "license": "CC BY 4.0",
+        "source_vessel_pressure_and_temperature": true,
+        "nozzle_diameter_and_initial_pressure_metadata": true,
+        "station_and_vehicle_synchronized": false,
+        "common_timebase_station_to_vehicle_public": false,
+        "published_component_validation": "ambient direct-aperture blowdown; 22 eligible cases; 72.7% joint pass"
+      },
+      "decision": "COMPONENT_ONLY_NOT_FULL_LOOP",
+      "claim_boundary": "This dataset supports an independent rigid-vessel direct-aperture component check. It cannot validate dispenser, receptacle, vehicle control, ESD or a complete station-to-vehicle loop."
+    },
+    {
+      "id": "kit_preslhy_e31_part_b_open_data",
+      "title": "PRESLHY Experiment series 3.1, part B",
+      "doi": "10.35097/1317",
+      "source_url": "https://radar.kit.edu/radar/en/dataset/OnGtSzjcAENtrgAJ",
+      "source_role": "independent component release and jet characterization lead",
+      "observed": {
+        "physical_experiment": true,
+        "open_machine_readable_files": true,
+        "license": "CC BY-SA 4.0",
+        "discharge_characteristics_recorded": true,
+        "station_and_vehicle_synchronized": false,
+        "common_timebase_station_to_vehicle_public": false
+      },
+      "decision": "COMPONENT_ONLY_NOT_FULL_LOOP",
+      "claim_boundary": "A component release dataset is not evidence for vehicle filling or station controller synchronization; any use requires a separately frozen protocol and license-compliant derived outputs."
+    },
+    {
+      "id": "kit_preslhy_e51_ignited_open_data",
+      "title": "PRESLHY Experiment series E5.1 (Ignited Discharge) results - Benchmarking",
+      "doi": "10.35097/1258",
+      "source_url": "https://radar.kit.edu/radar/en/dataset/uzDLoVtvVFILFwGQ",
+      "source_role": "independent ignited-release consequence validation lead",
+      "observed": {
+        "physical_experiment": true,
+        "open_machine_readable_files": true,
+        "license": "CC BY 4.0",
+        "thermal_and_pressure_effects_recorded": true,
+        "station_and_vehicle_synchronized": false,
+        "common_timebase_station_to_vehicle_public": false
+      },
+      "decision": "COMPONENT_ONLY_NOT_FULL_LOOP",
+      "claim_boundary": "The dataset can inform release/ignition consequence checks but cannot close the synchronized station-to-vehicle gate."
     }
   ],
   "outcome": {
