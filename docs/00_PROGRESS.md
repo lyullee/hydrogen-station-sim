@@ -1,5 +1,25 @@
 # Development Progress
 
+## 2026-10-10 - Shorten the P1 transient diagnostic fast lane
+
+Status: implemented; the Schefer line-transient sensitivity grid now evaluates
+its independent valve-time-constant cases with two bounded workers.
+
+- The baseline and five sensitivity replays own separate mutable EOS states, so
+  they can run concurrently without changing the equations, solver tolerances,
+  output ordering or evidence claim boundary.
+- Two workers are used deliberately to avoid oversubscribing the numerical
+  solver on operator machines. A local run dropped from about 15.5 s to about
+  10.7 s while the aggregate metrics remained byte-for-byte identical to the
+  previous serial diagnostic.
+- This is a development-speed change only. It does not promote the Schefer
+  holdout, alter runtime parameters or change any readiness gate.
+
+Verification:
+
+- `tests/test_priority_diagnostics.py`: **2 passed**.
+- Serial-versus-parallel aggregate comparison: **identical**.
+
 ## 2026-10-10 - Combine the priority fast lanes
 
 Status: implemented; P0/P1 software and physics checks can now start together.
@@ -9,6 +29,9 @@ Status: implemented; P0/P1 software and physics checks can now start together.
 - `--priority P0` runs only the highest-impact checks; `--priority all` keeps the
   independent P0/P1 tracks concurrent. The report preserves both runners' claim
   boundaries and does not alter model parameters or readiness gates.
+- The combined command now defaults to `P0`, so an unqualified status run returns
+  the blocking full-loop/evidence signal first; use `--priority all` when the
+  broader component queue is needed.
 - This avoids waiting for a serial “software first, diagnostics second” cycle while
   keeping the full regression suite available for broad changes.
 - The priority-validation workflow now uses this combined command so CI exercises

@@ -12,6 +12,7 @@ from __future__ import annotations
 from datetime import date
 from dataclasses import replace
 import argparse
+from concurrent.futures import ThreadPoolExecutor
 import hashlib
 import json
 from pathlib import Path
@@ -75,22 +76,32 @@ def main() -> None:
         source_to_line_discharge_coefficient=1.0,
         outlet_discharge_coefficient=1.0,
     )
-    result = simulate_line_transient(
-        trace.time_s, parameters=parameters, **DIAGNOSTIC_SOLVER
-    )
     measured = trace.measured_mass_flow_g_s
-    valve_sensitivity = []
-    # The two very short values are intentionally left for a future stiff
-    # solver study; this bounded grid keeps the diagnostic reproducible on the
-    # same EOS backend used by the development model.
-    for time_constant_s in (0.0, 0.5, 1.0, 2.0, 4.0):
+    # Each valve-time-constant replay owns its EOS instances and has no
+    # dependency on another replay.  Run the bounded sensitivity grid in
+    # parallel so the slowest case does not serialize the priority lane.
+    # This changes no equations, tolerances or claim boundary.
+    def _run_candidate(time_constant_s: float):
         candidate = replace(
             parameters,
             source_valve_time_constant_s=time_constant_s,
         )
-        candidate_result = simulate_line_transient(
+        return time_constant_s, simulate_line_transient(
             trace.time_s, parameters=candidate, **DIAGNOSTIC_SOLVER
         )
+
+    # The two very short values are intentionally left for a future stiff
+    # solver study; this bounded grid keeps the diagnostic reproducible on the
+    # same EOS backend used by the development model.
+    time_constants = (0.0, 0.5, 1.0, 2.0, 4.0)
+    # Two workers keep the solver's own numerical kernels from competing for
+    # every CPU core while still removing the serial five-case bottleneck.
+    with ThreadPoolExecutor(max_workers=min(2, len(time_constants))) as executor:
+        candidate_results = dict(executor.map(_run_candidate, time_constants))
+    result = candidate_results[0.0]
+    valve_sensitivity = []
+    for time_constant_s in time_constants:
+        candidate_result = candidate_results[time_constant_s]
         valve_sensitivity.append(
             {
                 "source_valve_time_constant_s": time_constant_s,

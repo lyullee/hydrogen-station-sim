@@ -40,7 +40,7 @@ def _select_checks(priority: str) -> tuple[PriorityCheck, ...]:
 
 def run_priority_focus(
     *,
-    priority: str = "all",
+    priority: str = "P0",
     timeout_s: float = 300.0,
     max_workers: int | None = None,
 ) -> dict[str, Any]:
@@ -87,7 +87,12 @@ def run_priority_focus(
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--priority", choices=("P0", "P1", "all"), default="all")
+    parser.add_argument(
+        "--priority",
+        choices=("P0", "P1", "all"),
+        default="P0",
+        help="Run the highest-impact P0 lane by default; use 'all' for the broader queue.",
+    )
     parser.add_argument("--timeout-s", type=float, default=300.0)
     parser.add_argument("--max-workers", type=int)
     parser.add_argument("--output", type=Path)
