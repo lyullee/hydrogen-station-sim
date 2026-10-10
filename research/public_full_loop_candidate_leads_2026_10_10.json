@@ -12,9 +12,10 @@
       "UCI Gen IV HRS performance article and data-access notes",
       "Cal State LA back-to-back fueling article and data-access notes",
       "NIST Transient Flow Facility public technical page",
-      "NBSDC public dataset landing record for station and fuel-cell-vehicle operational datasets"
+      "NBSDC public dataset landing record for station and fuel-cell-vehicle operational datasets",
+      "official NBSDC detail page for the 35/70 MPa fixed hydrogenation-station demonstration dataset; entity-file listing and access-control check"
     ],
-    "finding": "Public records now include a station operational-data lead and a separate vehicle operational-data lead, but no independently verified synchronized archive, channel dictionary or reuse terms were located.",
+    "finding": "The official NBSDC record exposes a concrete 2022 station-operation dataset with a CC0 1.0 badge, a two-file package and an entity-file folder containing 固定站运营数据.xlsx; the actual file download is gated behind NBSDC registration/login, so the synchronized archive, channel dictionary and common-clock pairing remain unverified.",
     "evidence_urls": [
       "https://doi.org/10.1016/j.ijhydene.2021.04.037",
       "https://elib.dlr.de/213625/",
@@ -22,9 +23,12 @@
       "https://doi.org/10.1016/j.ijhydene.2020.08.251",
       "https://doi.org/10.1016/j.jclepro.2021.129737",
       "https://www.nist.gov/programs-projects/transient-flow-facility",
-      "https://xiaopeiwang.com/en/result/r-057159df"
+      "https://xiaopeiwang.com/en/result/r-057159df",
+      "https://www.nbsdc.cn/general/dataDetail?id=64f08267bb16e06dfdc78c57&type=1",
+      "https://cstr.cn/16666.11.nbsdc.8c2MpcJl",
+      "https://creativecommons.org/publicdomain/zero/1.0/deed.zh-hans"
     ],
-    "action": "Do not admit either NBSDC lead as an external holdout. Request exact archives and attestation using the staged privacy-safe custodian packet, then freeze model and split before opening numerical rows."
+    "action": "Do not admit any NBSDC lead to the external holdout gate until the exact downloadable archive is obtained under the stated CC0 terms (or access is attested), its checksum and channel dictionary are recorded, common-clock station/dispenser/receiving-vessel linkage is verified, and the model/split are frozen before reading numerical rows."
   },
   "purpose": "Record public leads that may contain synchronized HRS-to-vehicle measurements without admitting unverified material as validation evidence.",
   "search_policy": {
@@ -221,11 +225,29 @@
       "admission_status": "CONTACT_REQUEST_CANDIDATE_ONLY",
       "next_action": "Request the exact archive URL, checksum, vehicle pressure/temperature/flow channels, common clock and a documented linkage to the station dataset before numerical access.",
       "claim_boundary": "The public record establishes a vehicle-data lead that may complement the station dataset. It does not prove common-clock pairing or station-to-vehicle full-loop eligibility."
+    },
+    {
+      "id": "nbsdc_35_70mpa_fixed_hrs_demonstration_2022",
+      "title": "35/70MPa fixed hydrogenation-station demonstration operation dataset",
+      "persistent_identifier": "CSTR 16666.11.nbsdc.8c2MpcJl",
+      "article_url": "https://www.nbsdc.cn/general/dataDetail?id=64f08267bb16e06dfdc78c57&type=1",
+      "cstr_url": "https://cstr.cn/16666.11.nbsdc.8c2MpcJl",
+      "reported_measurements": [
+        "fixed 35/70 MPa station monitoring during fuel-cell-vehicle refueling",
+        "station-operation telemetry described by the official record"
+      ],
+      "raw_data_status": "official page lists a two-file package (436.08KB) and an entity folder containing 固定站运营数据.xlsx; opening the file currently requires NBSDC registration/login",
+      "channel_dictionary_status": "dataset-description document is listed; machine-readable channel names, units, common clock and vehicle/event linkage not yet independently extracted",
+      "license_status": "official page displays CC0 1.0; archive access and checksum still require an authenticated download, so independent-scoring provenance is pending",
+      "full_loop_external_holdout_eligible": false,
+      "admission_status": "CONTACT_REQUEST_CANDIDATE_ONLY",
+      "next_action": "Obtain the public archive through an authorized NBSDC account or custodian attestation, record SHA-256 and the data-description file, then verify station/dispenser/vehicle boundary, units, clock and event linkage before a frozen external score.",
+      "claim_boundary": "The official record establishes a strong, concrete station-operation lead and an explicit CC0 badge. Because the raw workbook is login-gated and its channels have not been independently verified, it is not yet a reproducible full-loop external holdout and has not been used for fitting or scoring."
     }
   ],
   "decision": {
     "new_full_loop_dataset_admitted": false,
-    "reason": "No newly found candidate currently exposes a reproducible, licensed, synchronized station-to-vehicle raw trace with channel provenance; NBSDC station and vehicle records remain contact-only leads until the exact archives and pairing metadata are verified.",
+    "reason": "The official NBSDC 35/70MPa record is a stronger concrete lead than the prior landing-only references, but its raw workbook is login-gated and no independent channel/clock/pairing verification has been completed. No newly found candidate is therefore admitted as an external holdout.",
     "minimum_next_input": "Use the privacy-safe three-event intake contract rather than publishing confidential raw logs.",
     "runtime_parameter_application": false,
     "goal_completion_permitted": false
