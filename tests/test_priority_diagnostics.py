@@ -22,3 +22,4 @@ def test_diagnostic_scripts_are_repository_relative() -> None:
     for item in DEFAULT_DIAGNOSTICS:
         assert item.script.startswith("scripts/")
         assert item.script.endswith(".py")
+        assert item.output_argument is True

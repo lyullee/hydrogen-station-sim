@@ -11,6 +11,7 @@ from __future__ import annotations
 
 from datetime import date
 from dataclasses import replace
+import argparse
 import hashlib
 import json
 from pathlib import Path
@@ -60,6 +61,9 @@ def _metrics(measured: np.ndarray, predicted: np.ndarray) -> dict[str, float]:
 
 
 def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--output", type=Path, default=OUTPUT)
+    args = parser.parse_args()
     trace = load_schefer_flow_csv(DATA)
     parameters = LineTransientParameters(
         source_volume_m3=0.098,
@@ -138,7 +142,7 @@ def main() -> None:
         ],
         "claim_boundary": "This post-outcome diagnostic does not alter or replace the Schefer 2006 prospective result and does not validate a station loop, consequence distance or safety control.",
     }
-    OUTPUT.write_bytes((json.dumps(payload, indent=2) + "\n").encode("utf-8"))
+    args.output.write_bytes((json.dumps(payload, indent=2) + "\n").encode("utf-8"))
 
 
 if __name__ == "__main__":

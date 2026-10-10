@@ -18,6 +18,7 @@ from pathlib import Path
 import re
 import subprocess
 import sys
+import tempfile
 import time
 from typing import Sequence
 
@@ -43,6 +44,7 @@ class Diagnostic:
     priority: str
     script: str
     description: str
+    output_argument: bool = True
 
 
 DEFAULT_DIAGNOSTICS: tuple[Diagnostic, ...] = (
@@ -85,17 +87,23 @@ def _run_one(diagnostic: Diagnostic, timeout_s: float) -> dict[str, object]:
     environment["PYTHONPATH"] = str(ROOT / "src") + (
         os.pathsep + current if current else ""
     )
-    command = (_test_python(), diagnostic.script)
     try:
-        completed = subprocess.run(
-            command,
-            cwd=ROOT,
-            env=environment,
-            capture_output=True,
-            text=True,
-            timeout=timeout_s,
-            check=False,
-        )
+        # The child scripts default to tracked research artifacts.  A status
+        # run must not rewrite those artifacts, so isolate output in a
+        # temporary directory and discard it after the child exits.
+        with tempfile.TemporaryDirectory(prefix="h2station-priority-") as temp_dir:
+            command = [_test_python(), diagnostic.script]
+            if diagnostic.output_argument:
+                command.extend(("--output", str(Path(temp_dir) / "diagnostic.json")))
+            completed = subprocess.run(
+                command,
+                cwd=ROOT,
+                env=environment,
+                capture_output=True,
+                text=True,
+                timeout=timeout_s,
+                check=False,
+            )
         output = _sanitize((completed.stdout + "\n" + completed.stderr).strip())
         return {
             "name": diagnostic.name,

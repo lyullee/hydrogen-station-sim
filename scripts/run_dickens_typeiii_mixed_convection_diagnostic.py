@@ -9,6 +9,7 @@ from __future__ import annotations
 
 from dataclasses import replace
 from datetime import datetime, timezone
+import argparse
 import json
 from pathlib import Path
 
@@ -225,8 +226,11 @@ def run() -> dict[str, object]:
 
 
 def main() -> int:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--output", type=Path, default=RESULT_PATH)
+    args = parser.parse_args()
     report = run()
-    with RESULT_PATH.open("w", encoding="utf-8", newline="\n") as handle:
+    with args.output.open("w", encoding="utf-8", newline="\n") as handle:
         handle.write(json.dumps(report, ensure_ascii=False, indent=2) + "\n")
     print(json.dumps(report, ensure_ascii=False, indent=2))
     return 0
