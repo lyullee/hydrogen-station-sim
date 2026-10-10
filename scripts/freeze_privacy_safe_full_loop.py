@@ -1,6 +1,6 @@
 """Validate and pre-freeze a privacy-safe full-loop pilot bundle.
 
-The source event CSVs stay with the custodian.  The generated JSON contains
+The source event CSV/XLSX files stay with the custodian.  The generated JSON contains
 only aggregate schema results, channel-role attestations and SHA-256 digests;
 it must be created before any model outcome is inspected.
 """
@@ -70,6 +70,8 @@ def build_split_manifest(
     evaluator_path: Path,
     channel_roles_path: Path,
     minimum_event_count: int = 3,
+    station_xlsx_worksheet: str | None = None,
+    vehicle_xlsx_worksheet: str | None = None,
 ) -> dict[str, Any]:
     """Build a freeze manifest from paired station/vehicle exports."""
 
@@ -84,6 +86,8 @@ def build_split_manifest(
         evaluator_path=evaluator_path,
         channel_roles=_load_roles(channel_roles_path),
         rules=PilotIntakeRules(minimum_event_count=minimum_event_count),
+        station_worksheet=station_xlsx_worksheet,
+        vehicle_worksheet=vehicle_xlsx_worksheet,
     )
 
 
@@ -107,6 +111,14 @@ def main() -> int:
         help="Worksheet name for combined XLSX event files (default: active sheet)",
     )
     parser.add_argument(
+        "--station-xlsx-worksheet", type=str,
+        help="Worksheet name for a station XLSX split channel (default: active sheet)",
+    )
+    parser.add_argument(
+        "--vehicle-xlsx-worksheet", type=str,
+        help="Worksheet name for a vehicle XLSX split channel (default: active sheet)",
+    )
+    parser.add_argument(
         "--require-vehicle-boundary", action="store_true",
         help="Fail single-file intake unless every event contains vehicle channels",
     )
@@ -122,6 +134,8 @@ def main() -> int:
             evaluator_path=args.evaluator,
             channel_roles_path=args.channel_roles,
             minimum_event_count=args.minimum_event_count,
+            station_xlsx_worksheet=args.station_xlsx_worksheet,
+            vehicle_xlsx_worksheet=args.vehicle_xlsx_worksheet,
         )
     else:
         if args.vehicle_events is not None:

@@ -25,7 +25,7 @@ worksheet 또는 `--xlsx-worksheet`로 지정한 시트를 행 단위로 읽는�
 사이트명, 회사명, 제조사, 시리얼, 주소, 달력 날짜와 실제 타임스탬프 열은 포함하지 않는다. 이벤트 파일명도 결과에는 기록되지 않는다.
 
 station과 차량 로그가 별도 export로 제공되는 경우에는 파일을 임의로 합치지
-않고 `validate_privacy_safe_split_event_bundle`에 `(station_csv, vehicle_csv)`
+않고 `validate_privacy_safe_split_event_bundle`에 `(station, vehicle)`
 쌍으로 전달한다. 검사기는 두 파일을 행 단위로 스트리밍하며 `elapsed_time_s`
 축을 기본 1 µs 허용오차로 대조한다. 행 수가 다르거나 시간축이 어긋나면
 `channel_row_count_mismatch` 또는 `channel_time_axis_mismatch`로 해당 이벤트를
@@ -46,8 +46,15 @@ python scripts/freeze_privacy_safe_full_loop.py `
 ~~~
 
 결합형 워크북을 쓰는 경우에는 `--events event_*.xlsx --xlsx-worksheet trace`
-처럼 지정한다. 분리형 station/차량 워크북은 먼저 CSV로 비식별 export하거나
-분리 채널 API를 사용해 두 채널의 시간축을 명시적으로 대조한다.
+처럼 지정한다. 분리형 입력은 CSV, XLSX, XLSM 또는 서로 다른 형식의 혼합
+쌍을 지원하며, 워크북 시트가 고정되어 있으면 다음처럼 채널별로 지정한다.
+
+~~~powershell
+--station-xlsx-worksheet station --vehicle-xlsx-worksheet vehicle
+~~~
+
+CSV·XLSX 혼합 쌍도 같은 행 수, 시간축, 샘플 간격, `protocol_phase` 및 차량
+경계 검사를 통과해야 한다. 시트 이름과 셀 값은 manifest에 저장되지 않는다.
 
 두 목록의 위치가 서로 다른 이벤트를 가리키지 않도록 제출 전에 파일명·순서를
 보관자 측에서 고정하고, 결과의 `event_###` ID와 digest만 평가 담당자에게

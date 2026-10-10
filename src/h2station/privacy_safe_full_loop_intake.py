@@ -13,6 +13,7 @@ bundle passes this intake check.
 from __future__ import annotations
 
 import csv
+from contextlib import contextmanager
 from dataclasses import dataclass
 import hashlib
 from itertools import zip_longest
@@ -308,10 +309,64 @@ def _read_xlsx_event(
         workbook.close()
 
 
+@contextmanager
+def _channel_rows(
+    path: Path,
+    *,
+    worksheet: str | None = None,
+) -> Iterable[tuple[tuple[str, ...], Iterable[Mapping[str, Any]]]]:
+    """Yield one channel's headers and lazy records for CSV or XLSX.
+
+    Split station/vehicle exports often come from different export tools.  A
+    mixed CSV/XLSX pair must go through the same lock-step time-axis gate as a
+    CSV pair; otherwise the custodian would have to merge or convert private
+    files before intake.  The context manager keeps both the CSV handle and
+    read-only workbook open only while the caller consumes the iterator.
+    """
+
+    if path.suffix.casefold() in {".xlsx", ".xlsm"}:
+        try:
+            from openpyxl import load_workbook
+        except ImportError as exc:  # pragma: no cover - project dependency
+            raise RuntimeError("openpyxl is required for XLSX full-loop intake") from exc
+        workbook = load_workbook(path, read_only=True, data_only=True)
+        try:
+            if worksheet is None:
+                sheet = workbook.active
+            else:
+                if worksheet not in workbook.sheetnames:
+                    raise ValueError(f"worksheet not found: {worksheet}")
+                sheet = workbook[worksheet]
+            rows = sheet.iter_rows(values_only=True)
+            header_row = next(rows, None)
+            headers = tuple(str(value or "").strip() for value in (header_row or ()))
+
+            def records() -> Iterable[Mapping[str, Any]]:
+                for values in rows:
+                    yield {
+                        headers[index]: value
+                        for index, value in enumerate(values)
+                        if index < len(headers) and headers[index]
+                    }
+
+            yield headers, records()
+        finally:
+            workbook.close()
+        return
+
+    with path.open("r", encoding="utf-8-sig", newline="") as handle:
+        reader = csv.DictReader(handle)
+        headers = tuple(str(value or "").strip() for value in (reader.fieldnames or ()))
+        yield headers, reader
+
+
 def _read_split_event(
     station_path: Path,
     vehicle_path: Path,
     rules: PilotIntakeRules,
+    *,
+    station_worksheet: str | None = None,
+    vehicle_worksheet: str | None = None,
 ) -> dict[str, Any]:
     """Validate one event whose station and vehicle channels are separate.
 
@@ -320,12 +375,12 @@ def _read_split_event(
     full-loop protocol-freeze candidate.
     """
 
-    def headers_for(path: Path) -> tuple[str, ...]:
-        with path.open("r", encoding="utf-8-sig", newline="") as handle:
-            return tuple(str(value or "").strip() for value in (csv.DictReader(handle).fieldnames or ()))
-
-    station_headers = headers_for(station_path)
-    vehicle_headers = headers_for(vehicle_path)
+    # The actual iterators are opened below; these header probes are kept
+    # separate so schema errors can be reported before row-level checks.
+    with _channel_rows(station_path, worksheet=station_worksheet) as station_channel:
+        station_headers = station_channel[0]
+    with _channel_rows(vehicle_path, worksheet=vehicle_worksheet) as vehicle_channel:
+        vehicle_headers = vehicle_channel[0]
     station_normalized = {header.lower() for header in station_headers if header}
     vehicle_normalized = {header.lower() for header in vehicle_headers if header}
     all_headers = station_headers + vehicle_headers
@@ -374,11 +429,11 @@ def _read_split_event(
     protocol_phase_nonempty_count = 0
 
     with (
-        station_path.open("r", encoding="utf-8-sig", newline="") as station_handle,
-        vehicle_path.open("r", encoding="utf-8-sig", newline="") as vehicle_handle,
+        _channel_rows(station_path, worksheet=station_worksheet) as station_channel,
+        _channel_rows(vehicle_path, worksheet=vehicle_worksheet) as vehicle_channel,
     ):
-        station_reader = csv.DictReader(station_handle)
-        vehicle_reader = csv.DictReader(vehicle_handle)
+        station_reader = station_channel[1]
+        vehicle_reader = vehicle_channel[1]
         for row_number, (station_row, vehicle_row) in enumerate(
             zip_longest(station_reader, vehicle_reader), start=2
         ):
@@ -656,19 +711,26 @@ def validate_privacy_safe_split_event_bundle(
     event_channel_pairs: Sequence[tuple[Path | str, Path | str]],
     *,
     rules: PilotIntakeRules | None = None,
+    station_worksheet: str | None = None,
+    vehicle_worksheet: str | None = None,
 ) -> dict[str, Any]:
-    """Validate events supplied as ``(station_csv, vehicle_csv)`` pairs.
+    """Validate events supplied as ``(station, vehicle)`` file pairs.
 
     Station and vehicle exports are compared row-by-row on their relative time
-    axis.  This keeps the raw split logs outside the repository while exposing
-    enough quality evidence to decide whether a full-loop freeze is allowed.
+    axis.  CSV, XLSX and mixed pairs are supported. This keeps the raw split
+    logs outside the repository while exposing enough quality evidence to
+    decide whether a full-loop freeze is allowed.
     """
 
     selected = rules or PilotIntakeRules()
     if not event_channel_pairs:
         raise ValueError("At least one station/vehicle event pair is required")
     reports = [
-        _read_split_event(Path(station_path), Path(vehicle_path), selected)
+        _read_split_event(
+            Path(station_path), Path(vehicle_path), selected,
+            station_worksheet=station_worksheet,
+            vehicle_worksheet=vehicle_worksheet,
+        )
         for station_path, vehicle_path in event_channel_pairs
     ]
     return _aggregate_event_reports(reports, selected)
@@ -783,11 +845,18 @@ def build_privacy_safe_split_freeze_manifest(
     evaluator_path: Path | str,
     channel_roles: Mapping[str, str],
     rules: PilotIntakeRules | None = None,
+    station_worksheet: str | None = None,
+    vehicle_worksheet: str | None = None,
 ) -> dict[str, Any]:
     """Build a pre-access manifest for separate station/vehicle exports."""
 
     selected = rules or PilotIntakeRules()
-    intake = validate_privacy_safe_split_event_bundle(event_channel_pairs, rules=selected)
+    intake = validate_privacy_safe_split_event_bundle(
+        event_channel_pairs,
+        rules=selected,
+        station_worksheet=station_worksheet,
+        vehicle_worksheet=vehicle_worksheet,
+    )
     return _build_freeze_manifest_from_intake(
         intake,
         protocol_path=protocol_path,

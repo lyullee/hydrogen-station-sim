@@ -1,5 +1,14 @@
 # Development Progress
 
+## 2026-10-10 - Mixed-format split-channel full-loop intake
+
+- The P0 intake now accepts station/vehicle pairs as CSV, XLSX, XLSM, or a
+  mixed pair without first merging private files.
+- Each side remains streamed independently and is checked against the same
+  row-count, relative-time, jitter, protocol-phase and vehicle-boundary gates.
+- Per-channel worksheet names are optional and are never written to the public
+  freeze manifest. No external-validation gate was promoted by this change.
+
 ## 2026-10-10 - Priority tracks for faster validation progress
 
 - The gap report now exposes three parallel execution tracks instead of a

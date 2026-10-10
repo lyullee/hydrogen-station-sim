@@ -262,3 +262,34 @@ def test_combined_xlsx_event_is_streamed_through_same_gate(tmp_path: Path) -> No
     assert report["status"] == "READY_FOR_FULL_LOOP_PROTOCOL_FREEZE"
     assert report["valid_event_count"] == 3
     assert report["full_loop_readiness"]["common_elapsed_time_axis"] is True
+
+
+def test_split_mixed_csv_xlsx_channels_use_same_time_axis_gate(tmp_path: Path) -> None:
+    pairs = []
+    for index in range(3):
+        station = tmp_path / f"station_{index}.csv"
+        station.write_text(
+            "elapsed_time_s,station_pressure_mpa,delivered_gas_temperature_c,mass_flow_g_s,protocol_phase\n"
+            "0,45,-35,10,start\n"
+            "1,46,-34,10,fill\n",
+            encoding="utf-8",
+        )
+        vehicle = tmp_path / f"vehicle_{index}.xlsx"
+        workbook = Workbook()
+        sheet = workbook.active
+        sheet.title = "vehicle_trace"
+        sheet.append(["elapsed_time_s", "vehicle_pressure_mpa", "vehicle_temperature_c"])
+        sheet.append([0, 5, 25])
+        sheet.append([1, 6, 28])
+        workbook.save(vehicle)
+        pairs.append((station, vehicle))
+
+    report = validate_privacy_safe_split_event_bundle(
+        pairs,
+        station_worksheet=None,
+        vehicle_worksheet="vehicle_trace",
+    )
+
+    assert report["status"] == "READY_FOR_FULL_LOOP_PROTOCOL_FREEZE"
+    assert report["vehicle_boundary_complete_event_count"] == 3
+    assert "vehicle_0.xlsx" not in str(report)

@@ -21,6 +21,9 @@ def test_llm_receives_privacy_bounded_validation_gap_next_actions() -> None:
     assert triage["open_gate_count"] == 17
     assert triage["data_volume_is_primary_blocker"] is False
     assert triage["next_actions"]
+    assert triage["execution_tracks"][0]["priority"] == "P0"
+    assert triage["next_actions"][0]["parallel_track"] == "full_loop_intake_and_scoring"
+    assert triage["next_actions"][0]["why_now"]
 
     decision = prompt_decision_evidence(manifest)["validation_gap_triage"]
     assert decision["primary_blocker"]

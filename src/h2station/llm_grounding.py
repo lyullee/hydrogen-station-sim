@@ -202,6 +202,40 @@ def _validation_gap_triage() -> dict[str, Any]:
         safe_buckets[bucket] = safe_values
     safe_actions: list[dict[str, str]] = []
     seen: set[tuple[str, str]] = set()
+    priority_order = {"P0": 0, "P1": 1, "P2": 2, "P3": 3}
+    tracks = payload.get("execution_tracks")
+    if not isinstance(tracks, list):
+        return unavailable
+    safe_tracks: list[dict[str, str | int]] = []
+    track_names: set[str] = set()
+    for track in tracks:
+        if not isinstance(track, dict):
+            return unavailable
+        priority = str(track.get("priority") or "")
+        parallel_track = str(track.get("parallel_track") or "")
+        bucket = str(track.get("bucket") or "")
+        why_now = str(track.get("why_now") or "")
+        open_count = track.get("open_gate_count")
+        if (
+            priority not in priority_order
+            or not parallel_track
+            or not bucket
+            or not why_now
+            or isinstance(open_count, bool)
+            or not isinstance(open_count, int)
+            or open_count < 1
+            or parallel_track in track_names
+        ):
+            return unavailable
+        track_names.add(parallel_track)
+        safe_tracks.append({
+            "priority": priority,
+            "parallel_track": parallel_track,
+            "bucket": bucket,
+            "open_gate_count": open_count,
+            "why_now": why_now,
+        })
+    safe_tracks.sort(key=lambda item: priority_order[str(item["priority"])])
     for gate in gates:
         if not isinstance(gate, dict):
             return unavailable
@@ -209,18 +243,38 @@ def _validation_gap_triage() -> dict[str, Any]:
         status = str(gate.get("status") or "")
         action = str(gate.get("next_action") or "")
         bucket = str(gate.get("bucket") or "")
-        if not gate_id or status not in {"FAIL", "PENDING"} or not action or not bucket:
+        priority = str(gate.get("priority") or "")
+        parallel_track = str(gate.get("parallel_track") or "")
+        why_now = str(gate.get("why_now") or "")
+        if (
+            not gate_id
+            or status not in {"FAIL", "PENDING"}
+            or not action
+            or not bucket
+            or priority not in priority_order
+            or parallel_track not in track_names
+            or not why_now
+        ):
             return unavailable
         key = (bucket, action)
         if key not in seen:
-            safe_actions.append({"bucket": bucket, "status": status, "action": action})
+            safe_actions.append({
+                "priority": priority,
+                "parallel_track": parallel_track,
+                "bucket": bucket,
+                "status": status,
+                "action": action,
+                "why_now": why_now,
+            })
             seen.add(key)
+    safe_actions.sort(key=lambda item: priority_order[str(item["priority"])])
     open_gate_count = sum(sum(values.values()) for values in safe_buckets.values())
     return {
         "status": "available",
         "artifact_integrity": True,
         "source_generated_at": payload.get("source_audit_generated_at"),
         "bucket_counts": safe_buckets,
+        "execution_tracks": safe_tracks,
         "open_gate_count": open_gate_count,
         "next_actions": safe_actions[:8],
         "data_volume_is_primary_blocker": (
