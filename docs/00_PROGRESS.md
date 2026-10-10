@@ -1080,3 +1080,20 @@ Verification:
 
 - `node --check web/monitor-wall.js` and `web/node-monitor.js` passed.
 - Node UI suites: 16 passed.
+
+## 2026-10-10 - Compress large result snapshots without buffering streams
+
+Status: implemented; API regression suite passed.
+
+- Added Starlette `GZipMiddleware` for regular JSON responses above 1 KiB.
+  Finite simulation results contain dense frame, trend, detector and event
+  arrays, so this reduces transfer and browser parse pressure without changing
+  the simulation or result schema.
+- Starlette's event-stream exclusion remains in effect, so LLM token streams
+  and live simulation streaming are not buffered or compressed.
+
+Verification:
+
+- `/api/health` returned `content-encoding: gzip` for the JSON response.
+- API/integration/Hazop/header/initial-fill suite: 72 passed.
+- Public Type-IV runtime calibration audit: `runtime_match=true`.

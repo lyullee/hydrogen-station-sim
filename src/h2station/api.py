@@ -22,6 +22,7 @@ from uuid import uuid4
 import numpy as np
 from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.gzip import GZipMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field, ConfigDict, model_validator
@@ -498,6 +499,10 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+# Result snapshots contain dense frame/trend arrays. Compress only regular
+# HTTP payloads so the browser receives large results faster; Starlette keeps
+# ``text/event-stream`` uncompressed, preserving live token/frame streaming.
+app.add_middleware(GZipMiddleware, minimum_size=1024, compresslevel=5)
 
 _jobs: dict[str, dict[str, Any]] = {}
 _jobs_lock = Lock()
