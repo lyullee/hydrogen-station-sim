@@ -25,6 +25,26 @@ Verification:
 - The focused priority command remains the fast status/verification path;
   full regression is reserved for broad code changes.
 
+## 2026-10-10 - Parallel runtime evidence replay refreshed
+
+- Re-ran the privacy-bounded station-side integration audit from the existing
+  frozen aggregates. Pressure-boundary replay, medium/high cascade sequence
+  context and recharge-pressure forecast remain supported; the negative
+  lifecycle-counter result remains explicitly retained.
+- Re-ran the canonical HIAD-to-runtime response handoff independently. All
+  **9/9** executable incident families reached the expected response plan and
+  complete recognition/immediate/stabilize/restart/prevention guidance.
+- No raw rows, source identity, runtime defaults or external-validation gates
+  were changed. The attempted thermal-effects command was fail-closed because
+  the external MAT archive is not present locally; its prior evidence artifact
+  was restored rather than replaced with an empty result.
+
+Verification:
+
+- `tests/test_confidential_station_side_integrated_validation.py`,
+  `tests/test_hiad_runtime_response_handoff.py` and
+  `tests/test_ijhe_readiness_audit.py`: **5 passed**.
+
 ## 2026-10-10 - Focused validation now uses the repository environment
 
 - The priority runner now prefers `.venv`/`venv` before the process-wide

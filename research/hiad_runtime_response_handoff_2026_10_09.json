@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "artifact_type": "hiad_runtime_response_handoff_audit",
-  "generated_at_utc": "2026-10-09T23:42:21.841399+00:00",
+  "generated_at_utc": "2026-10-10T03:30:14.377962+00:00",
   "status": "completed_canonical_family_handoff_audit",
   "evidence_role": "retrospective_metadata_to_runtime_response_traceability_only",
   "source": {
