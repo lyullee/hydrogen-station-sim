@@ -368,3 +368,20 @@ existing Starlette/httpx, HyRAM physics, and workbook-reader deprecations; no
 test failures remain. The scientific readiness audit is unchanged at **88.2%**
 because this work clarifies evidence semantics rather than promoting a failed
 or pending external-validation gate.
+
+## Public Full-loop search recheck (2026-10-11)
+
+The latest official-source search was frozen as
+`research/public_full_loop_search_recheck_2026_10_11.json`. H2-Stations API v2
+was confirmed as an inventory/status contract, H2Protocol as a receiving-vessel
+component-data route, and the Cal State LA and NREL H2FillS records as
+custodian-request leads. None supplied a newly verified, reuse-cleared,
+common-clock station/dispenser/vehicle archive with controller or ESD states.
+
+The result is therefore explicitly **NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET**.
+No private rows or local source paths were published, no runtime parameter was
+changed, and no frozen holdout was replaced. The full-loop gate remains open and
+the readiness headline remains **127 PASS / 10 FAIL / 7 PENDING (88.2%)**. The
+next concrete input is a privacy-safe three-event schema pilot with a channel,
+unit, clock, checksum and reuse attestation before any numerical rows are
+opened.

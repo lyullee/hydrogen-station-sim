@@ -2,63 +2,114 @@
   "schema_version": 1,
   "artifact_type": "public_full_loop_search_recheck",
   "recorded_at": "2026-10-11",
-  "gate": "new untouched public station-to-vehicle full-loop fueling validation",
   "decision": "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET_IDENTIFIED",
+  "status": "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET",
+  "search_scope": [
+    "official H2-Stations API v2 documentation and data contract",
+    "H2Protocol/J2601 public raw-lab-data route",
+    "published real-station operational-data records",
+    "NREL HITRF and H2FillS public programme pages"
+  ],
+  "eligibility_rule": {
+    "required": [
+      "synchronized station or dispenser pressure",
+      "vehicle or receiving-vessel pressure and temperature",
+      "mass flow or transferred mass",
+      "common time base",
+      "initial conditions, engineering units and reuse terms",
+      "controller, valve or ESD state channels sufficient to identify the station boundary"
+    ],
+    "excluded_substitutes": [
+      "availability, inventory or aggregate station-status APIs",
+      "laboratory traces without the station-control boundary",
+      "article figures or endpoint tables without machine-readable rows",
+      "facility descriptions without a rights-cleared raw archive"
+    ]
+  },
   "screened_sources": [
     {
-      "id": "gti_hydrogen_station_performance_final_report_osti_1824631",
-      "url": "https://www.osti.gov/biblio/1824631",
-      "fulltext_url": "https://www.osti.gov/servlets/purl/1824631",
-      "doi": "10.2172/1824631",
-      "decision": "OFFICIAL_PROJECT_REPORT_WITH_CUSTODIAN_HELD_RAW_DATA",
-      "reported_scope": "Five hydrogen fueling stations, more than 12 station-years submitted to NREL, with station acquisition channels and fueling-log requirements described.",
-      "usable_for": [
-        "channel and provenance requirements",
-        "data-request lead",
-        "operating-envelope context"
+      "id": "h2_stations_eu_api_v2",
+      "title": "H2-Stations API v2",
+      "url": "https://docs.h2-stations.eu/for-data-users/api-v2/",
+      "license_or_access": "CC BY 4.0 documentation; personal bearer token required for API access",
+      "observed_scope": [
+        "station layout",
+        "nozzle and dispenser availability/usage",
+        "derived low-hydrogen-storage flag",
+        "pricing and station metadata"
       ],
-      "not_usable_for": [
-        "untouched station-to-vehicle raw-trace validation"
-      ],
-      "raw_data_status": "The OSTI record exposes the final report and metadata only; no reuse-cleared synchronized logger archive or downloadable event rows were located.",
-      "claim_limit": "The report documents that data were collected and submitted to NREL; it does not make the underlying raw station and vehicle traces publicly available."
+      "raw_synchronized_archive_located": false,
+      "vehicle_pressure_temperature_channels": false,
+      "controller_or_esd_channels": false,
+      "decision": "INVENTORY_AND_STATUS_CONTEXT_ONLY",
+      "claim_limit": "The public contract does not provide numeric process telemetry or a vehicle-side common-clock trace; it cannot support station-to-vehicle full-loop scoring."
     },
     {
-      "id": "calstate_la_hydrogen_station_operation_reference",
-      "url": "https://www.calstatela.edu/ecst/h2station/operation",
-      "decision": "OFFICIAL_OPERATING_REFERENCE_NOT_DATASET",
-      "usable_for": [
-        "cascade-to-compressor operating sequence",
-        "periodic leak-check pause reference",
-        "precooling and pressure-range context"
+      "id": "h2protocol_j2601_raw_lab_route",
+      "title": "H2Protocol/J2601 raw laboratory data route",
+      "url": "https://h2protocol.com/",
+      "supporting_url": "https://h2tools.org/bestpractices/hydrogen-properties-and-leak-detection-considerations/flame-detection",
+      "license_or_access": "Public download route described by the project; case-level reuse and channel-contract terms require verification before admission",
+      "observed_scope": [
+        "vehicle-tank pressure and temperature laboratory traces",
+        "J2601-relevant fueling measurements"
       ],
-      "not_usable_for": [
-        "synchronized numerical holdout"
-      ],
-      "raw_data_status": "The page describes station operation and safety checks but provides no downloadable synchronized pressure-temperature-mass-flow logger export.",
-      "claim_limit": "Use for process and protocol grounding only; do not treat the narrative operating page as dynamic-model validation."
+      "raw_synchronized_archive_located": true,
+      "station_controller_or_esd_channels": false,
+      "vehicle_side_channels": true,
+      "decision": "COMPONENT_BOUNDARY_ONLY",
+      "claim_limit": "The locally retained H2Protocol material supports receiving-vessel component diagnostics, but it lacks the station controller/cascade/ESD contract required for the full-loop gate. It is not a new full-loop dataset."
     },
     {
-      "id": "calstate_la_big_data_prediction_2017",
-      "url": "https://www.calstatela.edu/sites/default/files/kscifall2017hydrogenbigdataanalysis.pdf",
-      "decision": "PUBLISHED_DATA_USE_DESCRIPTION_WITHOUT_REUSABLE_ARCHIVE",
-      "usable_for": [
-        "evidence that per-fill vehicle-pressure data existed",
-        "data-custodian request lead"
+      "id": "calstate_la_multi_year_hrs_operation",
+      "title": "Multi-year hydrogen refueling-station operation study",
+      "doi": "10.1016/j.ijhydene.2023.04.084",
+      "url": "https://doi.org/10.1016/j.ijhydene.2023.04.084",
+      "license_or_access": "Published article; raw logger reuse terms and machine-readable archive not identified",
+      "observed_scope": [
+        "station storage, delivery, compression and dispensing operation",
+        "aggregate real-station fueling records"
       ],
-      "not_usable_for": [
-        "untouched validation"
+      "raw_synchronized_archive_located": false,
+      "decision": "CUSTODIAN_REQUEST_LEAD_ONLY",
+      "claim_limit": "The article is useful for operating-envelope and schema-request context, but publication-level summaries are not an independently scorable raw holdout."
+    },
+    {
+      "id": "nrel_hitrf_h2fills_programme",
+      "title": "NREL HITRF/H2FillS fueling test programme",
+      "url": "https://www.nrel.gov/hydrogen/h2fills",
+      "supporting_url": "https://www.nlr.gov/hydrogen/h2fills",
+      "license_or_access": "Facility and programme information public; raw synchronized logger export requires programme/custodian access",
+      "observed_scope": [
+        "station-to-receiving-vessel test apparatus",
+        "pressure, temperature and flow measurement roles",
+        "controlled fueling validation route"
       ],
-      "raw_data_status": "The paper describes a station-provided per-fill dataset, but the public PDF contains no machine-readable release, checksum, channel dictionary or reuse terms.",
-      "claim_limit": "The paper supports a request for the underlying dataset, not a numerical validation claim."
+      "raw_synchronized_archive_located": false,
+      "decision": "CUSTODIAN_REQUEST_LEAD_ONLY",
+      "claim_limit": "The programme documents a high-value measurement route, but no reuse-cleared raw cohort with checksum, common-clock attestation and controller/ESD channels was publicly verified."
     }
   ],
-  "gate_impact": "full_loop_external_validation_remains_open",
-  "next_action": "Use the existing privacy-safe request packet with the GTI/Cal State custodians; freeze model and split before opening any received numerical rows.",
   "privacy": {
-    "private_source_paths_published": false,
-    "private_site_or_company_identity_published": false,
-    "private_raw_rows_persisted": false
+    "private_raw_rows_persisted": false,
+    "site_or_company_identity_added": false,
+    "local_source_paths_published": false
   },
-  "claim_boundary": "This is a source-classification recheck. It adds no numerical validation and does not establish IJHE readiness, safety distance, or field certification."
+  "minimum_next_input": {
+    "event_count": 3,
+    "required_delivery": [
+      "de-identified common-clock station/dispenser/vehicle rows",
+      "channel dictionary, engineering units and calibration metadata",
+      "controller, valve and ESD states",
+      "initial conditions and protocol version",
+      "checksum and written permission for independent scoring"
+    ],
+    "freeze_rule": "Freeze the exact files, model version, split and scoring thresholds before opening numerical rows."
+  },
+  "gate_impact": "full_loop_external_validation_remains_open",
+  "runtime_parameter_application": false,
+  "prospective_holdout_eligible": false,
+  "claim_supported": false,
+  "next_action": "Send a privacy-safe custodian request for a minimum three-event schema pilot, then freeze a larger independent cohort only after role, unit, clock, checksum and reuse attestations are complete.",
+  "claim_boundary": "This artifact records a current public-access recheck and exclusion decision. It adds no numerical validation, does not alter any frozen holdout or runtime parameter, and does not support an IJHE full-loop or field-safety claim."
 }
