@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from h2station.station_pressure_forecast import forecast_storage_pressure
+from h2station.station_pressure_forecast import _pressure_samples
 from h2station.llm_grounding import build_evidence_manifest, prompt_decision_evidence
 
 
@@ -41,6 +42,18 @@ def test_forecast_fails_closed_when_bank_response_is_not_dominant() -> None:
     result = forecast_storage_pressure(frames)
     assert result["status"] == "not_available"
     assert result["reason"] == "bank_response_not_dominant"
+
+
+def test_pressure_prefix_uses_only_recent_causal_window() -> None:
+    frames = [_frame(float(index), 40.0, 70.0) for index in range(100_000)]
+    frames.extend(
+        _frame(100_000.0 + index, 60.0 + index * 0.05, 80.0)
+        for index in range(11)
+    )
+    recent = _pressure_samples(frames, now_s=100_010.0)
+    assert len(recent) == 11
+    assert recent[0]["time_s"] == 100_000.0
+    assert recent[-1]["time_s"] == 100_010.0
 
 
 def test_llm_manifest_carries_forecast_with_claim_boundary() -> None:

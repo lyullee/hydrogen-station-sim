@@ -822,3 +822,12 @@ Verification:
   `tests/test_priority_validation.py`: 8 passed.
 - The three independent priority tracks remain concurrent and pass in 6.857 s;
   no readiness gate was promoted by this optimization.
+
+Follow-up hardening:
+
+- The forecast helper itself now walks chronological list inputs backwards and
+  stops after the causal ten-second prefix. This keeps direct replay/API
+  callers safe even when they provide the full retained trajectory instead of
+  the live bounded deque.
+- A regression test covers a 100,011-frame history and confirms that only the
+  recent causal window is selected.

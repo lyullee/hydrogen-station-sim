@@ -114,6 +114,21 @@ def _pressure_samples(
     *,
     now_s: float,
 ) -> list[Mapping[str, Any]]:
+    # Runtime frames are appended in chronological order.  Walk that common
+    # path backwards and stop once the causal prefix is covered; otherwise a
+    # long replay would still scan its entire history on every forecast call.
+    if isinstance(frames, (list, tuple)):
+        selected: list[Mapping[str, Any]] = []
+        lower = now_s - _PREFIX_DURATION_S
+        for frame in reversed(frames):
+            time_s = _finite(frame.get("time_s"))
+            if time_s is None or time_s > now_s:
+                continue
+            if time_s < lower:
+                break
+            selected.append(frame)
+        selected.reverse()
+        return selected
     selected: list[Mapping[str, Any]] = []
     lower = now_s - _PREFIX_DURATION_S
     for frame in frames:
