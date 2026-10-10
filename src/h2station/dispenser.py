@@ -471,21 +471,13 @@ class PartialStationModel:
         internal_energy = (
             state.hose_hydrogen_internal_energy_j / state.hose_hydrogen_mass_kg
         )
-        pressure = float(
-            PropsSI("P", "Dmass", density, "Umass", internal_energy, self.fluid)
-        )
-        temperature = float(
-            PropsSI("T", "Dmass", density, "Umass", internal_energy, self.fluid)
-        )
-        enthalpy = float(
-            PropsSI("Hmass", "Dmass", density, "Umass", internal_energy, self.fluid)
-        )
+        thermo = hydrogen_table().state_rho_u(density, internal_energy)
         return CompositeTankGasState(
-            pressure_pa=pressure,
-            temperature_k=temperature,
+            pressure_pa=float(thermo.pressure),
+            temperature_k=float(thermo.temperature),
             density_kg_m3=density,
             specific_internal_energy_j_kg=internal_energy,
-            specific_enthalpy_j_kg=enthalpy,
+            specific_enthalpy_j_kg=float(thermo.enthalpy),
         )
 
     def _flow_and_thermal_states(

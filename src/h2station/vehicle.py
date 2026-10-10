@@ -7,7 +7,7 @@ import math
 from typing import Callable
 
 import numpy as np
-from .tabulated import PropsSI
+from .tabulated import PropsSI, hydrogen_table
 from scipy.integrate import solve_ivp
 
 from .protocol import (
@@ -189,30 +189,16 @@ class CompositeVehicleTank:
         specific_internal_energy = (
             state.hydrogen_internal_energy_j / state.hydrogen_mass_kg
         )
-        pressure = float(
-            PropsSI(
-                "P", "Dmass", density, "Umass", specific_internal_energy,
-                self.parameters.fluid,
-            )
-        )
-        temperature = float(
-            PropsSI(
-                "T", "Dmass", density, "Umass", specific_internal_energy,
-                self.parameters.fluid,
-            )
-        )
-        enthalpy = float(
-            PropsSI(
-                "Hmass", "Dmass", density, "Umass", specific_internal_energy,
-                self.parameters.fluid,
-            )
-        )
+        # Reuse one inverse EOS result for all derived gas properties. The
+        # previous three PropsSI calls each repeated the Python/cache dispatch
+        # on every solver RHS even though they resolve the same state.
+        thermo = hydrogen_table().state_rho_u(density, specific_internal_energy)
         return CompositeTankGasState(
-            pressure_pa=pressure,
-            temperature_k=temperature,
+            pressure_pa=float(thermo.pressure),
+            temperature_k=float(thermo.temperature),
             density_kg_m3=density,
             specific_internal_energy_j_kg=specific_internal_energy,
-            specific_enthalpy_j_kg=enthalpy,
+            specific_enthalpy_j_kg=float(thermo.enthalpy),
         )
 
     def gas_liner_ua_w_k(
