@@ -13,9 +13,11 @@ from h2station.llm_grounding import (
 
 def _receipt() -> dict:
     return {
+        "schema_version": 1,
         "artifact_type": "controlled_deidentified_hrs_component_bundle_receipt",
         "component_bundle_ready": True,
         "raw_rows_persisted_in_repository": False,
+        "source_identifiers_published": False,
         "runtime_parameter_application": False,
         "full_loop_holdout_eligible": False,
         "event_count": 3,
@@ -48,17 +50,20 @@ def test_component_receipt_is_sanitized_and_grounded_in_all_prompt_views() -> No
 def test_component_replay_diagnostic_is_sanitized() -> None:
     receipt = _receipt()
     replay = {
+        "schema_version": 1,
         "artifact_type": "controlled_component_bundle_replay_diagnostic",
         "predictive_validation": False,
         "runtime_parameter_application": False,
         "full_loop_holdout_eligible": False,
+        "raw_rows_persisted": False,
+        "source_identifiers_published": False,
         "decision": "COMPONENT_REPLAY_DIAGNOSTIC_PASS",
         "event_count": 3,
         "envelope_pass": True,
         "runtime_replay_pass": True,
         "events": [
             {
-                "event_index": 1,
+                "event_index": index,
                 "normalized_file_sha256": "secret-hash",
                 "observed": {"rows": 20, "duration_s": 9.5, "max_mass_flow_g_s": 4.0},
                 "fixed_envelope": {
@@ -69,7 +74,8 @@ def test_component_replay_diagnostic_is_sanitized() -> None:
                 "replay_status": "EXECUTED",
                 "runtime_replay": {"model_sample_count": 20, "esd_triggered": False},
             }
-        ] * 3,
+            for index in (1, 2, 3)
+        ],
         "claim_boundary": "diagnostic only",
     }
     sanitized = component_bundle_evidence({
@@ -79,3 +85,25 @@ def test_component_replay_diagnostic_is_sanitized() -> None:
     assert sanitized is not None
     assert sanitized["replay_diagnostic"]["runtime_replay_pass"] is True
     assert "normalized_file_sha256" not in json.dumps(sanitized)
+    assert "secret-hash" not in json.dumps(sanitized)
+    assert sanitized["replay_diagnostic"]["claim_limit"] != "diagnostic only"
+
+
+def test_component_replay_fails_closed_when_privacy_attestation_is_missing() -> None:
+    receipt = _receipt()
+    replay = {
+        "schema_version": 1,
+        "artifact_type": "controlled_component_bundle_replay_diagnostic",
+        "predictive_validation": False,
+        "runtime_parameter_application": False,
+        "full_loop_holdout_eligible": False,
+        "event_count": 3,
+        "events": [],
+        "claim_boundary": "ok",
+    }
+    sanitized = component_bundle_evidence({
+        "component_bundle_receipt": receipt,
+        "component_bundle_replay": replay,
+    })
+    assert sanitized is not None
+    assert sanitized["replay_diagnostic"] is None

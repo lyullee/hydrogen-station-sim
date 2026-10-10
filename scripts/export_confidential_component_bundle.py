@@ -214,6 +214,7 @@ def export_component_bundle(
         "attestation_sha256": _sha256(attestation_path),
         "protocol_sha256": _sha256(protocol_path),
         "raw_rows_persisted_in_repository": False,
+        "source_identifiers_published": False,
         "runtime_parameter_application": False,
         "full_loop_holdout_eligible": False,
         "claim_boundary": (
