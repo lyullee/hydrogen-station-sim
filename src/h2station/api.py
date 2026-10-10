@@ -1153,7 +1153,17 @@ def _execute_simulation(job_id: str, request: SimulationInput) -> None:
         )
         with _jobs_lock:
             final_faults = list(_jobs[job_id]["fault_registry"].values())
-        result = _serialize_result(trajectory, built.station, backend, final_faults)
+            retained_frames = list(_jobs[job_id].get("frames") or [])
+        # Continuous monitoring already materializes the complete operator
+        # frame in ``report_sample``.  Replaying the final solver window through
+        # the expensive state-to-property serializer here only to overwrite it
+        # with those same frames added several seconds of shutdown latency.
+        # Keep the finite-run path unchanged and build continuous results from
+        # the authoritative retained frames instead.
+        if request.continuous and retained_frames:
+            result = _serialize_continuous_frames(retained_frames, backend, final_faults)
+        else:
+            result = _serialize_result(trajectory, built.station, backend, final_faults)
         if request.continuous:
             with _jobs_lock:
                 live_job = _jobs[job_id]
@@ -1166,28 +1176,9 @@ def _execute_simulation(job_id: str, request: SimulationInput) -> None:
             result["impact"]["released_mass_kg"] = cumulative_mass
             result["impact"]["peak_vehicle_temperature_c"] = max_temp
         result["hazop"] = hazop_monitor.summary()
-        with _jobs_lock:
-            retained_frames = list(_jobs[job_id].get("frames") or [])
         # A stopped continuous run retains the same bounded timeline as its stream.
         if retained_frames:
-            for key in result["series"]:
-                if key in retained_frames[0] and key not in {"bank_pressure_mpa", "leaks"}:
-                    result["series"][key] = [f[key] for f in retained_frames]
-            result["series"]["bank_pressure_mpa"] = {
-                name: [f["bank_pressure_mpa"][name] for f in retained_frames]
-                for name in retained_frames[0]["bank_pressure_mpa"]
-            }
-            for key in ("analysis", "gas_detectors", "flame_detectors", "released_mass_kg", "peak_vehicle_temperature_c", "trip_causes"):
-                result["series"][key] = [f.get(key) for f in retained_frames]
             result["hazop"]["frames"] = [f["hazop"] for f in retained_frames]
-            releases_by_frame = [
-                {r["release_id"]: r.get("mass_flow_g_s", 0.0) for r in (f.get("hazop") or {}).get("releases", [])}
-                for f in retained_frames
-            ]
-            result["series"]["leaks"] = {
-                key: [r.get(key, 0.0) for r in releases_by_frame]
-                for key in {key for r in releases_by_frame for key in r}
-            }
         last_frame = retained_frames[-1] if retained_frames else None
         if last_frame:
             result["analysis"] = last_frame.get("analysis")
@@ -1415,6 +1406,119 @@ def _serialize_result(trajectory, station, backend, faults=()) -> dict[str, Any]
             "peak_leak_flow_g_s": float(np.max(total_leak_flow) * 1000.0) if len(total_leak_flow) else 0.0,
             "released_mass_kg": released_mass,
             "esd_time_s": trajectory.esd_time_s,
+            "fault_targets": sorted({fault.target for fault in faults}),
+        },
+    }
+
+
+_CONTINUOUS_FRAME_SERIES_KEYS = (
+    "time_s", "vehicle_pressure_mpa", "vehicle_temperature_c", "soc_percent",
+    "vehicle_2_pressure_mpa", "vehicle_2_temperature_c", "vehicle_2_soc_percent",
+    "pcv_flow_g_s", "nozzle_flow_g_s", "pcv_1_flow_g_s", "pcv_2_flow_g_s",
+    "nozzle_1_flow_g_s", "nozzle_2_flow_g_s", "total_leak_flow_g_s",
+    "hose_pressure_mpa", "hose_temperature_c", "hose_2_pressure_mpa",
+    "hose_2_temperature_c", "header_pressure_mpa", "header_temperature_c",
+    "header_mass_kg", "header_inflow_g_s", "dispatch_bank", "dispatch_bank_2",
+    "recharge_bank", "esd", "active_faults", "analysis", "gas_detectors",
+    "flame_detectors", "released_mass_kg", "peak_vehicle_temperature_c",
+    "trip_causes", "process_activity", "process_operations", "virtual_safety",
+    "relief_valves_open", "fueling_stop_reason", "fueling_2_stop_reason",
+    "fueling_communication_state", "fueling_2_communication_state",
+    "fueling_delivered_mass_kg", "fueling_2_delivered_mass_kg",
+    "fueling_temperature_category", "fueling_2_temperature_category",
+    "fueling_conformance_flags", "fueling_2_conformance_flags", "realtime_lag_s",
+    "simulation_rate_x", "vehicle_mass_kg", "vehicle_2_mass_kg",
+)
+
+
+def _serialize_continuous_frames(
+    frames: list[dict[str, Any]], backend: Any, faults: list[Any],
+) -> dict[str, Any]:
+    """Build a stopped continuous result without re-solving its final window.
+
+    ``report_sample`` already stores the public, unit-converted frame consumed
+    by the monitor.  Reconstructing those values from solver state at shutdown
+    is redundant and particularly costly for long-running demonstrations.
+    """
+
+    first, last = frames[0], frames[-1]
+    def values(key: str, default: Any = None) -> list[Any]:
+        return [frame.get(key, default) for frame in frames]
+
+    series: dict[str, Any] = {
+        key: values(key) for key in _CONTINUOUS_FRAME_SERIES_KEYS
+    }
+    series["bank_pressure_mpa"] = {
+        name: [frame.get("bank_pressure_mpa", {}).get(name)
+               for frame in frames]
+        for name in (first.get("bank_pressure_mpa") or {})
+    }
+    release_rows = [
+        {row.get("release_id"): row.get("mass_flow_g_s", 0.0)
+         for row in (frame.get("hazop") or {}).get("releases", [])
+         if row.get("release_id")}
+        for frame in frames
+    ]
+    release_ids = sorted({key for row in release_rows for key in row})
+    series["leaks"] = {
+        key: [row.get(key, 0.0) for row in release_rows]
+        for key in release_ids
+    }
+    pressures = [float(frame.get("vehicle_pressure_mpa") or 0.0) for frame in frames]
+    pressures_2 = [float(frame.get("vehicle_2_pressure_mpa") or 0.0) for frame in frames]
+    temperatures = [float(frame.get("vehicle_temperature_c") or 0.0) for frame in frames]
+    temperatures_2 = [float(frame.get("vehicle_2_temperature_c") or 0.0) for frame in frames]
+    flows = [float(frame.get("nozzle_flow_g_s") or 0.0) for frame in frames]
+    times = [float(frame.get("time_s") or 0.0) for frame in frames]
+    positive_flows = [value for value in flows if value > 1.0e-9]
+    esd_time = next((time for time, frame in zip(times, frames) if frame.get("esd")), None)
+    released_mass = float(last.get("released_mass_kg") or 0.0)
+    fault_payload = [
+        fault.model_dump() if hasattr(fault, "model_dump") else asdict(fault)
+        for fault in faults
+    ]
+    duration = times[-1] if times else 0.0
+    return {
+        "summary": {
+            "duration_s": duration,
+            "final_vehicle_pressure_mpa": pressures[-1] if pressures else 0.0,
+            "maximum_vehicle_temperature_c": max(temperatures, default=0.0),
+            "final_soc_percent": float(last.get("soc_percent") or 0.0),
+            "final_vehicle_2_pressure_mpa": pressures_2[-1] if pressures_2 else 0.0,
+            "maximum_vehicle_2_temperature_c": max(temperatures_2, default=0.0),
+            "final_vehicle_2_soc_percent": float(last.get("vehicle_2_soc_percent") or 0.0),
+            "maximum_flow_g_s": max(flows, default=0.0),
+            "average_flow_g_s": sum(positive_flows) / len(positive_flows) if positive_flows else 0.0,
+            "released_mass_kg": released_mass,
+            "esd_time_s": esd_time,
+            "hyram_available": bool(getattr(backend, "available", False)),
+            "hyram_backend": backend.name,
+            "active_faults": fault_payload,
+            "public_benchmark_diagnostics": compare_public_operating_context(
+                duration_s=duration,
+                start_pressure_mpa=pressures[0] if pressures else 0.0,
+                end_pressure_mpa=pressures[-1] if pressures else 0.0,
+                average_flow_g_s=sum(positive_flows) / len(positive_flows) if positive_flows else 0.0,
+                maximum_flow_g_s=max(flows, default=0.0),
+            ),
+        },
+        "series": series,
+        "events": [],
+        "risk_updates": [],
+        "faults": fault_payload,
+        "impact": {
+            "peak_vehicle_pressure_mpa": max(pressures, default=0.0),
+            "peak_vehicle_2_pressure_mpa": max(pressures_2, default=0.0),
+            "peak_vehicle_temperature_c": max(temperatures, default=0.0),
+            "peak_vehicle_2_temperature_c": max(temperatures_2, default=0.0),
+            "minimum_vehicle_pressure_mpa": min(pressures, default=0.0),
+            "minimum_vehicle_2_pressure_mpa": min(pressures_2, default=0.0),
+            "peak_leak_flow_g_s": max(
+                (float(frame.get("total_leak_flow_g_s") or 0.0) for frame in frames),
+                default=0.0,
+            ),
+            "released_mass_kg": released_mass,
+            "esd_time_s": esd_time,
             "fault_targets": sorted({fault.target for fault in faults}),
         },
     }
