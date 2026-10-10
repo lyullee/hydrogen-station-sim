@@ -5619,6 +5619,120 @@ def _confidential_station_schema_evidence() -> dict[str, Any] | None:
     }
 
 
+def _confidential_pressure_lifecycle_audit_evidence() -> dict[str, Any] | None:
+    """Expose the latest private pressure/lifecycle collection screen.
+
+    This is a collection-level audit, not a second calibration profile.  It
+    gives the LLM enough context to distinguish the newly found owner-held
+    station material from the already attested subset, while preserving the
+    full-loop boundary and the pending segment/reset reconciliation.
+    """
+
+    path = Path(__file__).resolve().parents[2] / (
+        "research/private_station_pressure_lifecycle_audit_2026_10_10.json"
+    )
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError, json.JSONDecodeError):
+        return None
+    privacy = record.get("privacy") or {}
+    inventory = record.get("inventory") or {}
+    time_axis = record.get("time_axis_screen") or {}
+    lifecycle = record.get("lifecycle_counter_screen") or {}
+    eligibility = record.get("eligibility") or {}
+    reconciliation = record.get("reconciliation") or {}
+    required_privacy = (
+        "source_identifiers_published",
+        "source_paths_published",
+        "source_filenames_published",
+        "source_headers_published",
+        "raw_rows_persisted",
+        "calendar_values_published",
+        "site_company_location_manufacturer_published",
+    )
+    if (
+        record.get("schema_version") != 1
+        or record.get("artifact_type")
+        != "confidential_private_station_pressure_lifecycle_audit"
+        or not all(privacy.get(key) is False for key in required_privacy)
+        or inventory.get("file_count") != 33
+        or inventory.get("total_row_count") != 59_272_300
+        or eligibility.get("station_side_pressure_replay_candidate") is not True
+        or eligibility.get("vehicle_or_receptacle_channels_present") is not False
+        or eligibility.get("full_loop_holdout_eligible") is not False
+        or reconciliation.get("merge_decision")
+        != "HOLD_UNTIL_FILE_SEGMENT_AND_RESET_MAPPING"
+    ):
+        return None
+    return {
+        "artifact": "research/private_station_pressure_lifecycle_audit_2026_10_10.json",
+        "evidence_role": "privacy-bounded collection-level private station pressure/lifecycle screen",
+        "inventory": {
+            key: inventory.get(key)
+            for key in (
+                "file_count", "total_row_count", "size_buckets", "schema_families",
+                "role_file_counts", "role_row_counts",
+            )
+            if inventory.get(key) is not None
+        },
+        "time_axis_screen": {
+            key: time_axis.get(key)
+            for key in (
+                "files_with_parseable_timestamp", "files_with_monotonic_timestamp",
+                "timestamp_order_counts", "duration_buckets",
+            )
+            if time_axis.get(key) is not None
+        },
+        "lifecycle_counter_screen": {
+            key: lifecycle.get(key)
+            for key in (
+                "files_with_counter", "counter_files_with_parseable_direction",
+                "numeric_counter_observations",
+                "counter_decrease_observations_in_file_order",
+                "counter_increase_observations_in_file_order",
+                "counter_directional_violations_after_time_order",
+                "monotonicity_claim_supported", "counter_semantics_attested",
+            )
+            if lifecycle.get(key) is not None
+        },
+        "reconciliation": {
+            "prior_attested_lifecycle_summary_in_repository": (
+                reconciliation.get("prior_attested_lifecycle_summary_in_repository")
+                is True
+            ),
+            "role_mapping_attestation_in_repository": reconciliation.get(
+                "role_mapping_attestation_in_repository"
+            ) or {},
+            "this_collection_level_screen_replaces_prior_summary": (
+                reconciliation.get("this_collection_level_screen_replaces_prior_summary")
+                is True
+            ),
+            "merge_decision": reconciliation.get("merge_decision"),
+        },
+        "eligibility": {
+            "station_side_pressure_replay_candidate": eligibility.get(
+                "station_side_pressure_replay_candidate"
+            ) is True,
+            "station_side_lifecycle_alignment_candidate": eligibility.get(
+                "station_side_lifecycle_alignment_candidate"
+            ) is True,
+            "station_side_temperature_or_flow_candidate": eligibility.get(
+                "station_side_temperature_or_flow_candidate"
+            ) is True,
+            "parameter_fit_authorized": eligibility.get(
+                "parameter_fit_authorized"
+            ) is True,
+            "vehicle_or_receptacle_channels_present": eligibility.get(
+                "vehicle_or_receptacle_channels_present"
+            ) is True,
+            "full_loop_holdout_eligible": eligibility.get(
+                "full_loop_holdout_eligible"
+            ) is True,
+        },
+        "claim_limit": str(record.get("claim_boundary") or ""),
+    }
+
+
 def _confidential_local_station_utilization_evidence() -> dict[str, Any] | None:
     """Expose aggregate local-station utilization without raw provenance.
 
@@ -8039,6 +8153,11 @@ def build_evidence_manifest(
         envelope["response_evidence"][
             "confidential_station_schema_intake"
         ] = station_schema
+    pressure_lifecycle_audit = _confidential_pressure_lifecycle_audit_evidence()
+    if pressure_lifecycle_audit is not None:
+        envelope["response_evidence"][
+            "confidential_private_station_pressure_lifecycle_audit"
+        ] = pressure_lifecycle_audit
     local_station_utilization = _confidential_local_station_utilization_evidence()
     if local_station_utilization is not None:
         envelope["response_evidence"][
@@ -9290,6 +9409,19 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
                 "full_loop_holdout_eligible", "claim_limit",
             )
             if station_schema.get(key) is not None
+        }
+    pressure_lifecycle_audit = evidence.get(
+        "confidential_private_station_pressure_lifecycle_audit"
+    )
+    if isinstance(pressure_lifecycle_audit, dict):
+        summary["confidential_private_station_pressure_lifecycle_audit"] = {
+            key: pressure_lifecycle_audit.get(key)
+            for key in (
+                "evidence_role", "inventory", "time_axis_screen",
+                "lifecycle_counter_screen", "reconciliation", "eligibility",
+                "claim_limit",
+            )
+            if pressure_lifecycle_audit.get(key) is not None
         }
     local_station_utilization = evidence.get(
         "confidential_local_station_data_utilization"
@@ -12025,6 +12157,9 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
         "confidential_station_signal_consistency"
     ) or {}
     station_schema = evidence.get("confidential_station_schema_intake") or {}
+    pressure_lifecycle_audit = evidence.get(
+        "confidential_private_station_pressure_lifecycle_audit"
+    ) or {}
     local_station_utilization = evidence.get(
         "confidential_local_station_data_utilization"
     ) or {}
@@ -13291,6 +13426,21 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
             "full_loop_holdout_eligible": (
                 station_schema.get("full_loop_holdout_eligible") is True
             ),
+        },
+        "confidential_private_station_pressure_lifecycle_audit": {
+            "evidence_artifact": pressure_lifecycle_audit.get("artifact"),
+            "inventory": pressure_lifecycle_audit.get("inventory") or {},
+            "time_axis_screen": pressure_lifecycle_audit.get(
+                "time_axis_screen"
+            ) or {},
+            "lifecycle_counter_screen": pressure_lifecycle_audit.get(
+                "lifecycle_counter_screen"
+            ) or {},
+            "reconciliation": pressure_lifecycle_audit.get(
+                "reconciliation"
+            ) or {},
+            "eligibility": pressure_lifecycle_audit.get("eligibility") or {},
+            "claim_limit": pressure_lifecycle_audit.get("claim_limit"),
         },
         "confidential_local_station_data_utilization": {
             "evidence_artifact": local_station_utilization.get("artifact"),

@@ -1042,6 +1042,23 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert schema_header["station_side_schema_intake_supported"] is True
     assert schema_header["privacy_bounded_channel_families"]["flow_rate"] > 0
     assert schema_header["vehicle_side_channel_family_count"] == 0
+    pressure_lifecycle = idle["response_evidence"][
+        "confidential_private_station_pressure_lifecycle_audit"
+    ]
+    assert pressure_lifecycle["inventory"]["file_count"] == 33
+    assert pressure_lifecycle["inventory"]["total_row_count"] == 59_272_300
+    assert pressure_lifecycle["eligibility"][
+        "vehicle_or_receptacle_channels_present"
+    ] is False
+    assert pressure_lifecycle["reconciliation"]["merge_decision"] == (
+        "HOLD_UNTIL_FILE_SEGMENT_AND_RESET_MAPPING"
+    )
+    pressure_lifecycle_header = prompt_evidence_header(idle)[
+        "confidential_private_station_pressure_lifecycle_audit"
+    ]
+    assert pressure_lifecycle_header["lifecycle_counter_screen"][
+        "counter_directional_violations_after_time_order"
+    ] == 157
     local_station = idle["response_evidence"][
         "confidential_local_station_data_utilization"
     ]
