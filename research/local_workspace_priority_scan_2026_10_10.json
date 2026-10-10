@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "artifact_type": "local_workspace_priority_scan",
+  "generated_at": "2026-10-10",
+  "purpose": "Prioritize work using local data availability without exposing paths, filenames, headers, timestamps or measurement values.",
+  "privacy": {
+    "source_paths_published": false,
+    "source_filenames_published": false,
+    "source_headers_published": false,
+    "absolute_timestamps_published": false,
+    "raw_rows_persisted": false,
+    "measurement_values_persisted": false
+  },
+  "discovery_scan": {
+    "machine_readable_files": 750,
+    "csv_tsv_headers_screened": 451,
+    "header_parse_errors": 0,
+    "coarse_candidate_classes": {
+      "vehicle_or_dispenser_candidate": 272,
+      "release_rig_experiment_candidate": 60,
+      "control_or_protocol_candidate": 4,
+      "flow_or_mass_candidate": 31,
+      "pressure_candidate": 14,
+      "temperature_candidate": 14
+    },
+    "full_loop_candidate_count": 0,
+    "interpretation": "Keyword-level discovery only; no candidate is admitted without role, unit, synchronization and reuse attestation."
+  },
+  "controlled_schema_scan": {
+    "source_files_scanned": 27,
+    "source_tables_scanned": 45,
+    "measurement_like_tables": 20,
+    "time_overlap_multi_table_cluster_count": 0,
+    "full_loop_candidate": 0,
+    "synchronized_flat_full_loop_candidate": 0,
+    "station_recharge_candidate": 0,
+    "vehicle_fill_candidate": 0,
+    "interpretation": "The screened controlled roots contain component/station-side signals but no attested synchronized station-to-vehicle cohort."
+  },
+  "private_station_archive": {
+    "measurement_files": 33,
+    "approximate_rows_screened": 59272300,
+    "station_side_pressure_flow_temperature_state_available": true,
+    "vehicle_or_receptacle_channels_attested": false,
+    "full_loop_holdout_eligible": false,
+    "station_side_replay_supported": true,
+    "interpretation": "Large local station-side evidence is available for P1 pressure, cascade and recharge diagnostics; it must not be presented as full-loop validation."
+  },
+  "priority_decision": {
+    "p0": {
+      "action": "Obtain a privacy-safe three-event station-to-receiving-vessel pilot with common time, station/dispenser pressure, delivered-gas temperature, mass flow/transferred mass and protocol phase.",
+      "why": "This is the only open gate that directly controls station-to-vehicle full-loop validation."
+    },
+    "p1": {
+      "action": "Continue station-side pressure/cascade/recharge replay and separately develop spatial/line-dynamics models for public actual-hydrogen failures.",
+      "why": "The local archive is substantial enough to work immediately without waiting for P0."
+    },
+    "p2": {
+      "action": "Keep LLM evidence-boundary, HIAD casebook and manuscript work independent of P0 data arrival.",
+      "why": "These tasks do not require raw vehicle rows and should not block engineering progress."
+    }
+  },
+  "claim_boundary": "This is an aggregate schema and availability scan. It is not a validation score, parameter fit, safety-distance result, full-loop evidence or IJHE readiness decision."
+}

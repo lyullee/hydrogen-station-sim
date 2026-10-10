@@ -667,3 +667,9 @@ Verification:
 - Screened the public HSR-Rig-Project and Figshare 20928025 leads. They are now recorded as bounded component/design context, not station-to-vehicle validation.
 - Closed this search branch so development time is not spent repeatedly collecting pressure/temperature tables that lack the receiving-vessel and controller boundary.
 - Re-centered the next high-impact action on the privacy-safe three-event custodian intake; P1 component repairs and P2 review remain independent parallel tracks.
+
+## 2026-10-10 - Local workspace priority scan
+
+- Re-scanned the local project/data roots with privacy-bounded discovery and controlled schema checks. The roots contain substantial station-side material, but no attested synchronized station-to-vehicle full-loop candidate.
+- The private station archive remains immediately usable for station-side pressure, cascade and recharge diagnostics; it is not vehicle-side validation.
+- P0, P1 and P2 work are therefore kept independent: three-event receiving-vessel intake, station-side/model repairs, and LLM/HIAD/publication work proceed without waiting on one another.
