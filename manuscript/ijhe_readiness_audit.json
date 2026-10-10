@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-10T23:08:48.198425+00:00",
+  "generated_at": "2026-10-10T23:47:41.488951+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -7536,7 +7536,7 @@
       "requirement": "Manifest schema, normal/emergency distinction, contradiction guard, bounded tank evidence, CARB field benchmark, mixed release-campaign outcomes and full regression suite.",
       "observed": {
         "schema_version": 1,
-        "recorded_at": "2026-10-09",
+        "recorded_at": "2026-10-11",
         "status": "software_contract_verified",
         "scope": [
           "digital-twin main assistant",
@@ -7547,15 +7547,15 @@
         "tests": {
           "targeted": {
             "command": ".venv\\Scripts\\python.exe -m pytest tests/test_llm_grounding.py tests/test_station_thermal_diagnostic.py tests/test_station_thermal_protocol.py tests/test_hiad_digital_twin_replay_coverage.py tests/test_khk_digital_twin_replay_coverage.py tests/test_flame_detection.py tests/test_carb_hrs_inuse_benchmark.py tests/test_ijhe_readiness_audit.py -q",
-            "passed": 33,
+            "passed": 47,
             "failed": 0,
             "warnings": 0
           },
           "full_suite": {
             "command": ".venv\\Scripts\\python.exe -m pytest -q",
-            "passed": 1158,
+            "passed": 1374,
             "failed": 0,
-            "warnings": 18
+            "warnings": 20
           }
         },
         "verified_properties": [
@@ -7601,7 +7601,8 @@
           "independent KHK metadata-to-runtime traceability is projected into full, summary, header and compact decision contexts: 22 reports covering 25 incident codes traverse eight passing canonical recipes, one KOH-electrolyte release remains outside gaseous-H2 scope, and report narrative parameterization remains prohibited",
           "CARB 22-station HGV 4.3 aggregate fault, communication and fueling-performance results are carried into the evidence envelope and only into relevant compact prompts, with no dynamic-model or full-loop validation claim",
           "CARB-motivated startup, pressure-corridor, T20/T30/T40 and communication hold/resume training controls publish traceable live-frame outcomes without claiming standards certification",
-          "owner-controlled station pressure-cycle cross-bundle transfer evidence is routed to all assistant projections while vehicle/full-loop and runtime-parameter claims remain false"
+          "owner-controlled station pressure-cycle cross-bundle transfer evidence is routed to all assistant projections while vehicle/full-loop and runtime-parameter claims remain false",
+          "the amended primary-goal scope is passed to interactive LLM evidence without exposing local paths: the unavailable synchronized station-to-vehicle bundle is a paper limitation, while SAGA human-effectiveness review is optional unless a human-guidance claim is made"
         ],
         "not_established": [
           "physics validity of the consequence model",
@@ -8216,7 +8217,7 @@
             75,
             72
           ],
-          "approximate_manuscript_words_before_references": 7994,
+          "approximate_manuscript_words_before_references": 8000,
           "figures": 3,
           "tables": 3,
           "citation_keys": 50,
@@ -8248,7 +8249,7 @@
       "requirement": "Compiler success, exact source/PDF hashes, no unresolved errors, and visual inspection of every rendered page.",
       "observed": {
         "schema_version": 2,
-        "verified_at_utc": "2026-10-08T11:42:52.390631+00:00",
+        "verified_at_utc": "2026-10-10T23:47:12.067400+00:00",
         "success": true,
         "compiler": {
           "name": "Tectonic",
@@ -8258,20 +8259,20 @@
         },
         "source": {
           "path": "manuscript/ijhe_manuscript_draft.tex",
-          "bytes": 76047,
-          "sha256": "09cedae74bcdb164746460c1f550c67ff07674c559dc8c1d215ce2f669227b05"
+          "bytes": 76076,
+          "sha256": "269b455d412b88776028ce719edeb410fc975d9022b10b309594cc13db342be7"
         },
         "pdf": {
           "path": "output/pdf/ijhe_manuscript_working_draft.pdf",
-          "bytes": 834643,
-          "sha256": "ed6c5d98d9c59d094f8ebb433f97fd303c9b2c6c3d7899caeb9b6397c5723e97",
+          "bytes": 834662,
+          "sha256": "ab4cd3652df5a57cd9b07fd7073d42563d495914a68a03a7a8e633f93494d7a8",
           "page_count": 23,
-          "extracted_character_count": 70776
+          "extracted_character_count": 70805
         },
         "compile_log": {
           "path": "output/pdf/ijhe_manuscript_working_draft.compile.txt",
-          "bytes": 3039,
-          "sha256": "774ea30c798430c378d2ef072f4872ea16b9e1910003a4e67a1d698792a7da10",
+          "bytes": 3015,
+          "sha256": "9c0af99ebc1ad923afcf3be0edcb700f2c1fecd19411da9257832d7c51cb2964",
           "unresolved_citations": 0,
           "unresolved_references": 0,
           "fatal_errors": [],
