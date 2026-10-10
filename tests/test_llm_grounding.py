@@ -302,6 +302,18 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert transfer_decision["transfer_cycle_count"] == 225
     assert transfer_decision["candidate_corroborated"] is True
     assert transfer_decision["full_loop"] is False
+    private_screen = local_decision["validation_boundaries"][
+        "private_candidate_group_screen"
+    ]
+    assert private_screen["candidate_records_screened"] == 199
+    assert private_screen["full_loop_external_holdout_eligible"] is False
+    schema_recheck = local_decision["validation_boundaries"][
+        "local_docudata_schema_recheck"
+    ]
+    assert schema_recheck["csv_files_seen"] == 15160
+    assert schema_recheck["readable_csv_files"] == 15134
+    assert schema_recheck["files_with_all_required_full_loop_groups"] == 0
+    assert schema_recheck["full_loop_external_holdout_eligible"] is False
     multisource = idle["response_evidence"][
         "confidential_multisource_mapping_feasibility"
     ]

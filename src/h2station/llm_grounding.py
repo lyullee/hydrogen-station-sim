@@ -7505,6 +7505,84 @@ def _local_station_custodian_attestation_request_evidence() -> dict[str, Any] | 
     }
 
 
+def _private_candidate_group_screen_evidence() -> dict[str, Any] | None:
+    """Expose the latest private-candidate discovery receipt safely.
+
+    The underlying candidate manifest contains private paths and opaque group
+    identifiers.  The committed receipt contains only aggregate coverage and
+    an explicit negative admission decision, so it can be sent to the LLM to
+    explain why a promising vehicle-labelled candidate is still not a
+    station-to-vehicle validation source.
+    """
+
+    root = Path(__file__).resolve().parents[2]
+    path = root / "research/private_candidate_group_screen_2026_10_11.json"
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError, json.JSONDecodeError):
+        return None
+    privacy = record.get("privacy_boundary") or {}
+    required_privacy = (
+        "source_paths_persisted",
+        "source_filenames_persisted",
+        "source_identifiers_persisted",
+        "original_headers_persisted",
+        "raw_rows_persisted",
+        "absolute_timestamps_persisted",
+        "measurement_values_persisted",
+    )
+    scope = record.get("manifest_scope") or {}
+    aggregate = record.get("aggregate") or {}
+    admission = record.get("admission") or {}
+    if (
+        record.get("artifact_type")
+        != "privacy_bounded_private_candidate_group_screen"
+        or any(privacy.get(key) is not False for key in required_privacy)
+        or scope.get("candidate_records_screened") != 199
+        or scope.get("candidate_group_count") != 6
+        or aggregate.get("csv_files_seen") != 230
+        or aggregate.get("readable_csv_files") != 229
+        or aggregate.get("roots_with_all_required_contract_groups") != 0
+        or aggregate.get("roots_with_vehicle_semantic_group") != 1
+        or admission.get("full_loop_external_holdout_eligible") is not False
+        or admission.get("runtime_parameter_application") is not False
+        or admission.get("validation_gate_effect") != "none"
+    ):
+        return None
+    return {
+        "artifact": str(path.relative_to(root)).replace("\\", "/"),
+        "evidence_role": "privacy-bounded private candidate discovery receipt",
+        "manifest_scope": {
+            "candidate_records_screened": scope.get("candidate_records_screened"),
+            "candidate_group_count": scope.get("candidate_group_count"),
+            "candidate_root_count": scope.get("candidate_root_count"),
+            "available_candidate_root_count": scope.get("available_candidate_root_count"),
+        },
+        "aggregate": {
+            "csv_files_seen": aggregate.get("csv_files_seen"),
+            "readable_csv_files": aggregate.get("readable_csv_files"),
+            "monotonic_numeric_time_files": aggregate.get("monotonic_numeric_time_files"),
+            "duplicate_numeric_time_files": aggregate.get("duplicate_numeric_time_files"),
+            "observed_semantic_groups": aggregate.get("observed_semantic_groups") or [],
+            "observed_full_loop_contract_groups": aggregate.get(
+                "observed_full_loop_contract_groups"
+            ) or [],
+            "missing_contract_groups": aggregate.get("missing_contract_groups") or [],
+            "roots_with_all_required_contract_groups": aggregate.get(
+                "roots_with_all_required_contract_groups"
+            ),
+            "roots_with_vehicle_semantic_group": aggregate.get(
+                "roots_with_vehicle_semantic_group"
+            ),
+        },
+        "full_loop_external_holdout_eligible": False,
+        "runtime_parameter_application": False,
+        "validation_gate_effect": "none",
+        "next_actions": [str(value) for value in admission.get("next_actions") or []],
+        "claim_limit": str(record.get("claim_boundary") or ""),
+    }
+
+
 def _local_data_deep_scan_evidence() -> dict[str, Any] | None:
     """Expose the broader local-corpus scan without private provenance.
 
@@ -7719,6 +7797,82 @@ def _local_docudata_discovery_evidence() -> dict[str, Any] | None:
             if eligibility.get(key) is not None
         },
         "claim_limit": str(record.get("claim_boundary") or ""),
+    }
+
+
+def _local_docudata_private_schema_recheck_evidence() -> dict[str, Any] | None:
+    """Expose the private CSV schema recheck without private provenance.
+
+    This receipt is intentionally a header-coverage screen.  It records that
+    the broader local corpus contains complementary semantic labels, while
+    preserving the stronger negative result that no single file attests the
+    complete station-to-vehicle contract needed for an external holdout.
+    """
+
+    root = Path(__file__).resolve().parents[2]
+    path = root / "research/local_docudata_private_full_loop_schema_recheck_2026_10_11.json"
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError, json.JSONDecodeError):
+        return None
+    privacy = record.get("scope") or {}
+    aggregate = record.get("aggregate") or {}
+    admission = record.get("admission") or {}
+    required_contract = {
+        "cascade_or_storage",
+        "common_time",
+        "controller_state",
+        "delivered_temperature",
+        "mass_flow",
+        "station_pressure",
+        "vehicle_identity",
+        "vehicle_pressure",
+        "vehicle_temperature",
+    }
+    if (
+        record.get("artifact_type") != "private_full_loop_schema_recheck"
+        or privacy.get("raw_rows_persisted") is not False
+        or privacy.get("original_headers_persisted") is not False
+        or privacy.get("filenames_and_source_paths_persisted") is not False
+        or privacy.get("absolute_timestamps_persisted") is not False
+        or privacy.get("repository_worktree_excluded") is not True
+        or int(aggregate.get("csv_files_seen") or 0) != 15160
+        or int(aggregate.get("readable_csv_files") or 0) != 15134
+        or int(aggregate.get("files_with_all_required_full_loop_groups") or 0) != 0
+        or int(aggregate.get("files_with_full_loop_contract_groups") or 0) != 0
+        or set(aggregate.get("missing_full_loop_contract_groups") or [])
+        or set(aggregate.get("contract_groups_missing_from_every_scanned_header") or [])
+        or admission.get("full_loop_external_holdout_eligible") is not False
+    ):
+        return None
+    observed = set(aggregate.get("observed_full_loop_contract_groups") or [])
+    if observed != required_contract:
+        return None
+    return {
+        "artifact": str(path.relative_to(root)).replace("\\", "/"),
+        "evidence_role": "privacy-bounded private corpus schema recheck",
+        "aggregate": {
+            "csv_files_seen": aggregate.get("csv_files_seen"),
+            "readable_csv_files": aggregate.get("readable_csv_files"),
+            "files_with_all_required_full_loop_groups": aggregate.get(
+                "files_with_all_required_full_loop_groups"
+            ),
+            "files_with_full_loop_contract_groups": aggregate.get(
+                "files_with_full_loop_contract_groups"
+            ),
+            "observed_semantic_groups": aggregate.get("observed_semantic_groups") or [],
+            "observed_full_loop_contract_groups": sorted(observed),
+            "monotonic_numeric_time_files": aggregate.get("monotonic_numeric_time_files"),
+            "duplicate_numeric_time_files": aggregate.get("duplicate_numeric_time_files"),
+        },
+        "full_loop_external_holdout_eligible": False,
+        "runtime_parameter_application": False,
+        "validation_gate_effect": "none",
+        "next_checks": [str(value) for value in admission.get("next_checks") or []],
+        "claim_limit": str(
+            admission.get("reason")
+            or "Header coverage does not establish a synchronized station-to-vehicle holdout."
+        ),
     }
 
 
@@ -9132,6 +9286,16 @@ def build_evidence_manifest(
         envelope["response_evidence"][
             "confidential_local_station_attestation_request"
         ] = local_attestation_request
+    private_candidate_screen = _private_candidate_group_screen_evidence()
+    if private_candidate_screen is not None:
+        envelope["response_evidence"][
+            "confidential_private_candidate_group_screen"
+        ] = private_candidate_screen
+    private_schema_recheck = _local_docudata_private_schema_recheck_evidence()
+    if private_schema_recheck is not None:
+        envelope["response_evidence"][
+            "confidential_local_docudata_schema_recheck"
+        ] = private_schema_recheck
     local_data_deep_scan = _local_data_deep_scan_evidence()
     if local_data_deep_scan is not None:
         envelope["response_evidence"][
@@ -9667,6 +9831,33 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
                 "current_gate_effect"
             ) or {},
             "claim_limit": short(local_attestation_request.get("claim_limit"), 320),
+        }
+    private_candidate_screen = evidence.get(
+        "confidential_private_candidate_group_screen"
+    )
+    if isinstance(private_candidate_screen, dict):
+        summary["confidential_private_candidate_group_screen"] = {
+            "evidence_role": private_candidate_screen.get("evidence_role"),
+            "manifest_scope": private_candidate_screen.get("manifest_scope") or {},
+            "aggregate": private_candidate_screen.get("aggregate") or {},
+            "full_loop_external_holdout_eligible": False,
+            "runtime_parameter_application": False,
+            "validation_gate_effect": "none",
+            "next_actions": private_candidate_screen.get("next_actions") or [],
+            "claim_limit": short(private_candidate_screen.get("claim_limit"), 320),
+        }
+    private_schema_recheck = evidence.get(
+        "confidential_local_docudata_schema_recheck"
+    )
+    if isinstance(private_schema_recheck, dict):
+        summary["confidential_local_docudata_schema_recheck"] = {
+            "evidence_role": private_schema_recheck.get("evidence_role"),
+            "aggregate": private_schema_recheck.get("aggregate") or {},
+            "full_loop_external_holdout_eligible": False,
+            "runtime_parameter_application": False,
+            "validation_gate_effect": "none",
+            "next_checks": private_schema_recheck.get("next_checks") or [],
+            "claim_limit": short(private_schema_recheck.get("claim_limit"), 320),
         }
     qra = evidence.get("qra_multimethod_comparison")
     if isinstance(qra, dict):
@@ -11053,6 +11244,12 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
     ) or {}
     local_attestation_request = response.get(
         "confidential_local_station_attestation_request"
+    ) or {}
+    private_candidate_screen = response.get(
+        "confidential_private_candidate_group_screen"
+    ) or {}
+    private_schema_recheck = response.get(
+        "confidential_local_docudata_schema_recheck"
     ) or {}
     local_data_deep_scan = response.get(
         "confidential_local_data_deep_scan"
@@ -12619,6 +12816,58 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                 },
             } if local_attestation_request and local_discovery_relevant else {}),
             **({
+                "private_candidate_group_screen": {
+                    "candidate_records_screened": (
+                        private_candidate_screen.get("manifest_scope") or {}
+                    ).get("candidate_records_screened"),
+                    "candidate_root_count": (
+                        private_candidate_screen.get("manifest_scope") or {}
+                    ).get("candidate_root_count"),
+                    "csv_files_seen": (
+                        private_candidate_screen.get("aggregate") or {}
+                    ).get("csv_files_seen"),
+                    "observed_semantic_groups": (
+                        private_candidate_screen.get("aggregate") or {}
+                    ).get("observed_semantic_groups") or [],
+                    "missing_contract_groups": (
+                        private_candidate_screen.get("aggregate") or {}
+                    ).get("missing_contract_groups") or [],
+                    "vehicle_semantic_root_count": (
+                        private_candidate_screen.get("aggregate") or {}
+                    ).get("roots_with_vehicle_semantic_group"),
+                    "full_loop_external_holdout_eligible": False,
+                    "runtime_parameter_application": False,
+                    "validation_gate_effect": "none",
+                    "next_actions": private_candidate_screen.get("next_actions") or [],
+                    "claim_limit": short(
+                        private_candidate_screen.get("claim_limit"), 220
+                    ),
+                },
+            } if private_candidate_screen and local_discovery_relevant else {}),
+            **({
+                "local_docudata_schema_recheck": {
+                    "csv_files_seen": (
+                        private_schema_recheck.get("aggregate") or {}
+                    ).get("csv_files_seen"),
+                    "readable_csv_files": (
+                        private_schema_recheck.get("aggregate") or {}
+                    ).get("readable_csv_files"),
+                    "files_with_all_required_full_loop_groups": (
+                        private_schema_recheck.get("aggregate") or {}
+                    ).get("files_with_all_required_full_loop_groups"),
+                    "observed_full_loop_contract_groups": (
+                        private_schema_recheck.get("aggregate") or {}
+                    ).get("observed_full_loop_contract_groups") or [],
+                    "full_loop_external_holdout_eligible": False,
+                    "runtime_parameter_application": False,
+                    "validation_gate_effect": "none",
+                    "next_checks": private_schema_recheck.get("next_checks") or [],
+                    "claim_limit": short(
+                        private_schema_recheck.get("claim_limit"), 220
+                    ),
+                },
+            } if private_schema_recheck and local_discovery_relevant else {}),
+            **({
                 "local_public_validation_catalog": {
                     "collection_count": (
                         (local_public_catalog.get("scope") or {}).get(
@@ -13529,6 +13778,9 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
     ) or {}
     local_attestation_request = evidence.get(
         "confidential_local_station_attestation_request"
+    ) or {}
+    private_schema_recheck = evidence.get(
+        "confidential_local_docudata_schema_recheck"
     ) or {}
     local_data_deep_scan = evidence.get(
         "confidential_local_data_deep_scan"
@@ -15046,6 +15298,16 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
             ) or {},
             "eligibility": docudata_discovery.get("eligibility") or {},
             "claim_limit": docudata_discovery.get("claim_limit"),
+        },
+        "confidential_local_docudata_schema_recheck": {
+            "evidence_artifact": private_schema_recheck.get("artifact"),
+            "evidence_role": private_schema_recheck.get("evidence_role"),
+            "aggregate": private_schema_recheck.get("aggregate") or {},
+            "full_loop_external_holdout_eligible": False,
+            "runtime_parameter_application": False,
+            "validation_gate_effect": "none",
+            "next_checks": private_schema_recheck.get("next_checks") or [],
+            "claim_limit": private_schema_recheck.get("claim_limit"),
         },
         "confidential_private_media_intake": {
             "artifact": private_media.get("artifact"),

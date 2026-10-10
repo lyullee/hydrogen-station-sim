@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "artifact_type": "privacy_bounded_private_candidate_group_screen",
+  "generated_at": "2026-10-10T22:01:33.414645+00:00",
+  "privacy_boundary": {
+    "source_paths_persisted": false,
+    "source_filenames_persisted": false,
+    "source_identifiers_persisted": false,
+    "original_headers_persisted": false,
+    "raw_rows_persisted": false,
+    "absolute_timestamps_persisted": false,
+    "measurement_values_persisted": false
+  },
+  "manifest_scope": {
+    "candidate_records_screened": 199,
+    "candidate_group_count": 6,
+    "candidate_root_count": 9,
+    "available_candidate_root_count": 9
+  },
+  "aggregate": {
+    "csv_files_seen": 230,
+    "readable_csv_files": 229,
+    "monotonic_numeric_time_files": 45,
+    "duplicate_numeric_time_files": 1,
+    "observed_semantic_groups": [
+      "cascade_or_storage",
+      "controller_state",
+      "mass_flow",
+      "pressure",
+      "temperature",
+      "time",
+      "vehicle"
+    ],
+    "observed_full_loop_contract_groups": [
+      "cascade_or_storage",
+      "common_time",
+      "controller_state",
+      "delivered_temperature",
+      "mass_flow",
+      "station_pressure"
+    ],
+    "missing_contract_groups": [
+      "vehicle_identity",
+      "vehicle_pressure",
+      "vehicle_temperature"
+    ],
+    "roots_with_all_required_contract_groups": 0,
+    "roots_with_vehicle_semantic_group": 1
+  },
+  "admission": {
+    "full_loop_external_holdout_eligible": false,
+    "runtime_parameter_application": false,
+    "validation_gate_effect": "none",
+    "reason": "Private candidate discovery shows complementary channel labels, but does not attest station/vehicle linkage, common clock, units, calibration, rights, or a model-and-split freeze before outcome access.",
+    "next_actions": [
+      "attest every required station/dispenser/vehicle channel role",
+      "attest common-clock event linkage and units/calibration",
+      "freeze the model and split before numerical outcome access",
+      "obtain independent reviewer access under declared rights"
+    ]
+  },
+  "claim_boundary": "This is a privacy-bounded candidate inventory screen only. It does not validate the model, establish a station-to-vehicle full-loop holdout, or support safety or regulatory claims."
+}

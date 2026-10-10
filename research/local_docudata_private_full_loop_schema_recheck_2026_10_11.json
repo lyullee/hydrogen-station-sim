@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "artifact_type": "private_full_loop_schema_recheck",
+  "generated_at": "2026-10-10T22:00:05.179730+00:00",
+  "source_label": "authorized-private-docudata-root",
+  "scope": {
+    "file_type": "csv",
+    "raw_rows_persisted": false,
+    "original_headers_persisted": false,
+    "filenames_and_source_paths_persisted": false,
+    "absolute_timestamps_persisted": false,
+    "repository_worktree_excluded": true
+  },
+  "aggregate": {
+    "csv_files_seen": 15160,
+    "readable_csv_files": 15134,
+    "files_with_all_required_full_loop_groups": 0,
+    "files_with_full_loop_contract_groups": 0,
+    "observed_semantic_groups": [
+      "cascade_or_storage",
+      "controller_state",
+      "mass_flow",
+      "pressure",
+      "temperature",
+      "time",
+      "vehicle"
+    ],
+    "observed_full_loop_contract_groups": [
+      "cascade_or_storage",
+      "common_time",
+      "controller_state",
+      "delivered_temperature",
+      "mass_flow",
+      "station_pressure",
+      "vehicle_identity",
+      "vehicle_pressure",
+      "vehicle_temperature"
+    ],
+    "missing_full_loop_contract_groups": [],
+    "contract_groups_missing_from_every_scanned_header": [],
+    "monotonic_numeric_time_files": 3270,
+    "duplicate_numeric_time_files": 240
+  },
+  "admission": {
+    "full_loop_external_holdout_eligible": false,
+    "reason": "Header coverage cannot attest common-clock station/dispenser/vehicle linkage, units, calibration, rights, or a frozen outcome-free split.",
+    "next_checks": [
+      "custodian channel-role and unit attestation",
+      "common-clock event linkage across station, dispenser and vehicle",
+      "calibration and uncertainty metadata",
+      "model and split freeze before numerical outcome access",
+      "independent reviewer access under declared rights"
+    ]
+  }
+}
