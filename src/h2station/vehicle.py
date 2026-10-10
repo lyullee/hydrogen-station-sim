@@ -182,6 +182,39 @@ class CompositeVehicleTank:
             shell_temperature_k=shell_temperature_k or gas_temperature_k,
         )
 
+    def initial_state_from_mass_temperature(
+        self,
+        hydrogen_mass_kg: float,
+        gas_temperature_k: float,
+        liner_temperature_k: float | None = None,
+        shell_temperature_k: float | None = None,
+    ) -> CompositeTankState:
+        """Initialize from an observed mass and gas temperature.
+
+        A synchronized mass channel is a stronger boundary condition than
+        reconstructing mass from a rounded pressure/temperature pair and a
+        nominal volume.  The EOS pressure is consequently the pressure
+        implied by the supplied mass, effective volume and temperature; it is
+        deliberately not silently forced to the separately observed pressure.
+        Callers must retain that pressure residual as a measurement-quality
+        diagnostic rather than hiding an inconsistent boundary.
+        """
+
+        if hydrogen_mass_kg <= 0.0:
+            raise ValueError("Hydrogen mass must be positive")
+        if gas_temperature_k <= 0.0:
+            raise ValueError("Gas temperature must be positive")
+        density = hydrogen_mass_kg / self.effective_volume_m3
+        thermo = hydrogen_table().state_rho_t(density, gas_temperature_k)
+        return CompositeTankState(
+            hydrogen_mass_kg=float(hydrogen_mass_kg),
+            hydrogen_internal_energy_j=(
+                float(hydrogen_mass_kg) * float(thermo.internal_energy)
+            ),
+            liner_temperature_k=liner_temperature_k or gas_temperature_k,
+            shell_temperature_k=shell_temperature_k or gas_temperature_k,
+        )
+
     def gas_state(self, state: CompositeTankState) -> CompositeTankGasState:
         if state.hydrogen_mass_kg <= 0.0:
             raise ValueError("Hydrogen mass must remain positive")

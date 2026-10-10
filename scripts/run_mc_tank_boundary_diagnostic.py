@@ -58,7 +58,7 @@ def _git_commit() -> str:
 
 def run_case(
     summary: dict[str, str], rows: list[dict[str, str]], fit: dict[str, float],
-    *, source_pressure_column: str,
+    *, source_pressure_column: str, initial_mass_kg: float | None = None,
 ) -> dict:
     time_s = np.asarray([_f(row, "time_s") for row in rows], dtype=float)
     pressure = np.asarray([_f(row, "pressure_mpa") for row in rows], dtype=float)
@@ -75,7 +75,15 @@ def run_case(
         effective_volume_multiplier=float(fit["effective_volume_multiplier"]),
         gas_liner_ua_multiplier=float(fit["gas_liner_ua_multiplier"]),
     ))
-    initial = tank.initial_state(pressure[0] * 1.0e6, temperature[0] + 273.15)
+    if initial_mass_kg is None:
+        initial = tank.initial_state(pressure[0] * 1.0e6, temperature[0] + 273.15)
+        initial_mass_source = "eos_from_initial_pressure_temperature"
+    else:
+        initial = tank.initial_state_from_mass_temperature(
+            initial_mass_kg, temperature[0] + 273.15
+        )
+        initial_mass_source = "observed_mass_boundary"
+    initial_gas = tank.gas_state(initial)
     ambient_k = float(np.median(chamber) + 273.15)
 
     def rhs(local_time_s: float, values: np.ndarray) -> np.ndarray:
@@ -117,6 +125,9 @@ def run_case(
     result = {
         "case_id": summary["case_id"],
         "tank_capacity_kg": capacity,
+        "initial_mass_source": initial_mass_source,
+        "initial_mass_kg": float(initial.hydrogen_mass_kg),
+        "initial_pressure_boundary_mpa": float(initial_gas.pressure_pa / 1.0e6),
         "inlet_enthalpy_pressure_basis": source_pressure_column,
         "observed_pressure_source": summary.get("pressure_source"),
         "experimental_duration_s": float(time_s[-1]),
