@@ -1,5 +1,30 @@
 # Development Progress
 
+## 2026-10-10 - Impact-first parallel checkpoint
+
+Status: verified; the current work is being advanced by impact rather than by
+the order of the repository checklist.
+
+- The P0 boundary lane and the critical P0/P1 lane were run concurrently. The
+  process layer completed in 3.6 s and 4.1 s respectively after the runtime
+  cache and SAGA circuit-breaker changes.
+- MC EOS/SOC consistency passed all 8/8 cases. The remaining MC tank replay is
+  a real scientific failure (0/8 joint pressure-temperature-final-SOC cases),
+  not a runner failure.
+- Dickens Type-III mixed-convection sensitivity passed its three declared
+  diagnostic variants. H2Safe spatial response and NREL H2FillS remain failed
+  component screens.
+- The frozen production geometry was not silently changed. Capacity/EOS and
+  unadjusted-volume alternatives remain explicitly post-outcome diagnostics;
+  selecting one requires a new frozen external holdout.
+
+Next work is therefore concentrated in three parallel tracks: (1) obtain or
+attest an independent receiving-vessel geometry/controller boundary, (2)
+separate the H2Safe spatial-response limitation from detector alarm semantics,
+and (3) decompose the NREL/MC pressure residual before considering any model
+change. Broad regression and publication polishing remain lower priority until
+these tracks produce evidence.
+
 ## 2026-10-10 - Reject silently ignored vehicle-capacity inputs
 
 Status: implemented; the highest-impact input-integrity gap in the vehicle
