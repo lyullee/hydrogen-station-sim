@@ -141,12 +141,24 @@ P2 review work independent. Repeating broad public-data searches without the
 missing receiving-vessel/controller boundary will increase documentation but
 will not move the readiness count.
 
+## Critical-lane rerun (2026-10-10)
+
+The five-track critical diagnostic lane was rerun in parallel after the NBSDC
+access recheck (`research/priority_diagnostic_run_2026_10_10.json`). All child
+processes completed in 2.66 s, but the scientific screen remains blocked: the
+MC SOC/EOS closure diagnostic passed all 8 cases and the Dickens thermal
+sensitivity passed its 3 internal cases, while the MC tank-boundary, H2SAFE
+spatial-response and NREL HDVS tank screens remain negative. These are
+post-outcome development diagnostics; they do not revise any frozen holdout,
+change production parameters or increase the readiness percentage.
+
 ## Source records
 
 - `research/DATA_COVERAGE_SUMMARY_2026_10_09.md`
 - `research/DATA_COVERAGE_SUMMARY_2026_10_10.md`
 - `research/ijhe_readiness_audit.json`
 - `research/priority_validation_run_2026_10_10.json`
+- `research/priority_diagnostic_run_2026_10_10.json`
 - `research/local_workspace_candidate_scan_recheck_2026_10_10.json`
 - `research/nrel_h2fills_geometry_diagnostic_2026_10_10.json`
 - `research/h2protocol_capacity_eos_sensitivity_2026_10_10.json`
