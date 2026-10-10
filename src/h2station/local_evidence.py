@@ -43,6 +43,9 @@ _CLOSED_LOOP_CALIBRATED_DIAGNOSTIC = _ROOT / (
 _MC_GEOMETRY_TRANSFER_DIAGNOSTIC = _ROOT / (
     "research/mc_geometry_transfer_diagnostic_2026_10_08.json"
 )
+_MC_SOC_BOUNDARY_DIAGNOSTIC = _ROOT / (
+    "research/mc_soc_boundary_diagnostic_2026_10_10.json"
+)
 
 
 def _read_json(path: Path) -> dict[str, Any]:
@@ -245,6 +248,51 @@ def _mc_geometry_transfer_diagnostic_summary() -> dict[str, Any] | None:
             },
             "runtime_geometry_changed": False,
             "geometry_rule_selection_prohibited": True,
+            "full_loop_external_validation_ready": False,
+            "claim_limit": str(record["claim_boundary"]),
+        }
+    except (OSError, KeyError, TypeError, ValueError, json.JSONDecodeError):
+        return None
+
+
+def _mc_soc_boundary_diagnostic_summary() -> dict[str, Any] | None:
+    """Expose the SOC/EOS boundary check without exposing trace rows."""
+
+    try:
+        record = _read_json(_MC_SOC_BOUNDARY_DIAGNOSTIC)
+        aggregate = record.get("aggregate") or {}
+        required = (
+            record.get("schema_version") == 1,
+            record.get("artifact_type") == "mc_soc_and_mass_boundary_diagnostic",
+            record.get("evidence_role") == "development_diagnostic_only",
+            record.get("post_outcome") is True,
+            record.get("parameter_fitting") is False,
+            record.get("runtime_parameter_updated") is False,
+            record.get("case_count") == 8,
+            isinstance(record.get("claim_boundary"), str),
+            isinstance(aggregate.get("soc_definition_screen_pass_count"), int),
+        )
+        if not all(required):
+            return None
+        return {
+            "status": "diagnostic_only",
+            "case_count": 8,
+            "aggregate": {
+                key: float(aggregate[key])
+                for key in (
+                    "soc_definition_rmse_percentage_points_mean",
+                    "soc_definition_rmse_percentage_points_max",
+                    "soc_definition_final_abs_error_percentage_points_mean",
+                    "soc_definition_final_abs_error_percentage_points_max",
+                    "inferred_volume_ratio_median",
+                    "inferred_volume_ratio_p10",
+                    "inferred_volume_ratio_p90",
+                )
+            },
+            "soc_definition_screen_pass_count": int(
+                aggregate["soc_definition_screen_pass_count"]
+            ),
+            "runtime_parameter_application": False,
             "full_loop_external_validation_ready": False,
             "claim_limit": str(record["claim_boundary"]),
         }
@@ -838,6 +886,14 @@ def public_evidence_inventory_summary() -> dict[str, Any]:
             "geometry_rule_selection_prohibited": True,
             "full_loop_external_validation_ready": False,
         },
+        "public_mc_soc_boundary_diagnostic": {
+            "status": "unavailable",
+            "case_count": 0,
+            "aggregate": {},
+            "soc_definition_screen_pass_count": 0,
+            "runtime_parameter_application": False,
+            "full_loop_external_validation_ready": False,
+        },
     }
     try:
         record = _read_json(_KHK_ACCIDENTS)
@@ -1135,4 +1191,7 @@ def public_evidence_inventory_summary() -> dict[str, Any]:
     geometry = _mc_geometry_transfer_diagnostic_summary()
     if geometry is not None:
         result["public_mc_geometry_transfer_diagnostic"] = geometry
+    soc_boundary = _mc_soc_boundary_diagnostic_summary()
+    if soc_boundary is not None:
+        result["public_mc_soc_boundary_diagnostic"] = soc_boundary
     return result

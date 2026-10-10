@@ -35,6 +35,10 @@ development result.
   capacity-EOS reached 4/8 joint screens versus 0/8 for the frozen Tables-Method
   volume. Rule selection remains prohibited until an untouched vessel-geometry
   holdout is available.
+- A separate MC boundary diagnostic confirms the published SOC channel agrees with
+  the co-located pressure/temperature EOS (8/8 diagnostic screens; maximum RMSE
+  0.33 percentage points). The remaining MC failure is therefore treated as a
+  tank-boundary/geometry or thermal-model issue, not an SOC-definition issue.
 
 ## 2026-10-10 - Inspect scientific containers in local data discovery
 

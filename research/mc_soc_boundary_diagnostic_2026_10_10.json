@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-10-10T07:00:57.340753+00:00",
+  "source_commit": "a0c92f637b4295c471eb961e491d8252b31d70f2",
+  "artifact_type": "mc_soc_and_mass_boundary_diagnostic",
+  "evidence_role": "development_diagnostic_only",
+  "post_outcome": true,
+  "parameter_fitting": false,
+  "runtime_parameter_updated": false,
+  "case_count": 8,
+  "reference_state": {
+    "pressure_mpa": 70.0,
+    "temperature_c": 15.0
+  },
+  "screening_limits": {
+    "soc_definition_rmse_percentage_points": 1.0,
+    "soc_definition_final_abs_error_percentage_points": 1.0
+  },
+  "aggregate": {
+    "soc_definition_rmse_percentage_points_mean": 0.1404152945188317,
+    "soc_definition_rmse_percentage_points_max": 0.3261870059370626,
+    "soc_definition_final_abs_error_percentage_points_mean": 0.12372523505790944,
+    "soc_definition_final_abs_error_percentage_points_max": 0.3882069382414244,
+    "inferred_volume_ratio_median": 1.0003039104605116,
+    "inferred_volume_ratio_p10": 0.9513583876584802,
+    "inferred_volume_ratio_p90": 1.0196411792126494,
+    "soc_definition_screen_pass_count": 8
+  },
+  "interpretation": "The measured SOC channel is checked against EOS density calculated from the co-located observed pressure and tank temperature. The inferred volume ratio is a mass-closure diagnostic only; it is not a post-outcome parameter choice.",
+  "claim_boundary": "This diagnostic does not validate the station controller, select a vehicle geometry, revise the frozen MC holdout, or support a safety claim."
+}

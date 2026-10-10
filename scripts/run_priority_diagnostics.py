@@ -55,6 +55,12 @@ DEFAULT_DIAGNOSTICS: tuple[Diagnostic, ...] = (
         "MC measured-boundary vehicle-tank replay",
     ),
     Diagnostic(
+        "mc_soc_boundary",
+        "P0",
+        "scripts/run_mc_soc_boundary_diagnostic.py",
+        "MC SOC/EOS and mass-closure boundary consistency",
+    ),
+    Diagnostic(
         "dickens_mixed_convection",
         "P1",
         "scripts/run_dickens_typeiii_mixed_convection_diagnostic.py",
