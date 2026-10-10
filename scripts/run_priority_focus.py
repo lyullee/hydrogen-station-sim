@@ -62,7 +62,10 @@ def run_priority_focus(
             run_priority_diagnostics,
             priority=priority,
             timeout_s=timeout_s,
-            max_workers=max_workers,
+            # Keep the two process-level tracks from oversubscribing the
+            # numerical solver on typical operator machines.  Callers can
+            # still raise this explicitly when they have spare cores.
+            max_workers=max_workers or 2,
         )
         software = software_future.result()
         diagnostics = diagnostic_future.result()
