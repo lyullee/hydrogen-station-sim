@@ -50,6 +50,20 @@ def test_candidate_leads_do_not_relax_full_loop_gate() -> None:
     assert kuroki_thermal["admission_status"] == "CONTACT_REQUEST_CANDIDATE_ONLY"
     assert kuroki_thermal["full_loop_external_holdout_eligible"] is False
     assert "not_shared" in kuroki_thermal["raw_data_status"]
+    nbsdc_station = next(
+        item for item in record["candidates"]
+        if item["id"] == "nbsdc_hydrogen_refuelling_station_operational_dataset_2023"
+    )
+    assert nbsdc_station["persistent_identifier"] == "CSTR 16666.11.nbsdc.aI3fJrzX"
+    assert nbsdc_station["admission_status"] == "CONTACT_REQUEST_CANDIDATE_ONLY"
+    assert nbsdc_station["full_loop_external_holdout_eligible"] is False
+    nbsdc_vehicle = next(
+        item for item in record["candidates"]
+        if item["id"] == "nbsdc_hydrogen_fuel_cell_vehicle_operational_dataset_2023"
+    )
+    assert nbsdc_vehicle["persistent_identifier"] == "CSTR 16666.11.nbsdc.yxc5XLas"
+    assert nbsdc_vehicle["admission_status"] == "CONTACT_REQUEST_CANDIDATE_ONLY"
+    assert nbsdc_vehicle["full_loop_external_holdout_eligible"] is False
     assert record["privacy"]["raw_rows_persisted"] is False
 
 
@@ -59,5 +73,6 @@ def test_candidate_leads_record_search_recheck_without_admitting_data() -> None:
     recheck = record["search_recheck"]
     assert recheck["checked_at"] == "2026-10-10"
     assert "synchronized" in recheck["finding"]
+    assert "NBSDC" in " ".join(recheck["scope"])
     assert recheck["evidence_urls"]
     assert "Do not admit" in recheck["action"]

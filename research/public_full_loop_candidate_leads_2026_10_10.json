@@ -11,18 +11,20 @@
       "Kuroki et al. 2023 Energy Technology article and Wiley data-availability statement",
       "UCI Gen IV HRS performance article and data-access notes",
       "Cal State LA back-to-back fueling article and data-access notes",
-      "NIST Transient Flow Facility public technical page"
+      "NIST Transient Flow Facility public technical page",
+      "NBSDC public dataset landing record for station and fuel-cell-vehicle operational datasets"
     ],
-    "finding": "Public records now include real UCI and Cal State LA fueling-log leads, but no downloadable synchronized station-to-vehicle raw logger, channel dictionary, or independent reuse terms were located.",
+    "finding": "Public records now include a station operational-data lead and a separate vehicle operational-data lead, but no independently verified synchronized archive, channel dictionary or reuse terms were located.",
     "evidence_urls": [
       "https://doi.org/10.1016/j.ijhydene.2021.04.037",
       "https://elib.dlr.de/213625/",
       "https://elib.dlr.de/213625/1/manuscript_final_published_version.pdf",
       "https://doi.org/10.1016/j.ijhydene.2020.08.251",
       "https://doi.org/10.1016/j.jclepro.2021.129737",
-      "https://www.nist.gov/programs-projects/transient-flow-facility"
+      "https://www.nist.gov/programs-projects/transient-flow-facility",
+      "https://xiaopeiwang.com/en/result/r-057159df"
     ],
-    "action": "Do not admit either lead as an external holdout. If needed, send the staged privacy-safe custodian request instead of repeatedly searching for a file that is not publicly exposed."
+    "action": "Do not admit either NBSDC lead as an external holdout. Request exact archives and attestation using the staged privacy-safe custodian packet, then freeze model and split before opening numerical rows."
   },
   "purpose": "Record public leads that may contain synchronized HRS-to-vehicle measurements without admitting unverified material as validation evidence.",
   "search_policy": {
@@ -184,11 +186,46 @@
       "admission_status": "CONTACT_REQUEST_CANDIDATE_ONLY",
       "next_action": "Request three privacy-safe common-clock station-to-vehicle events and a frozen channel-role/unit attestation before any scoring.",
       "claim_boundary": "The study supplies high-value real-operation context and potential data provenance, but aggregate article results cannot validate the digital twin or emergency response."
+    },
+    {
+      "id": "nbsdc_hydrogen_refuelling_station_operational_dataset_2023",
+      "title": "Hydrogen Refuelling Station Operational Dataset",
+      "persistent_identifier": "CSTR 16666.11.nbsdc.aI3fJrzX",
+      "article_url": "https://xiaopeiwang.com/en/result/r-057159df",
+      "reported_measurements": [
+        "hydrogen station monitoring",
+        "hydrogen supply processes",
+        "refuelling operations"
+      ],
+      "raw_data_status": "public landing record announces an open resource; machine-readable archive and download terms were not independently verified",
+      "channel_dictionary_status": "not identified in the accessible public record",
+      "license_status": "public status is reported, but dataset licence and independent-scoring reuse terms remain unverified",
+      "full_loop_external_holdout_eligible": false,
+      "admission_status": "CONTACT_REQUEST_CANDIDATE_ONLY",
+      "next_action": "Request the exact archive URL, checksum, channel dictionary, units, common-clock/station-dispenser boundary attestation, and permission for independent scoring before numerical access.",
+      "claim_boundary": "The public record establishes a credible station-data lead only. It does not yet prove a synchronized station-to-vehicle trace, raw-file integrity, or reuse rights."
+    },
+    {
+      "id": "nbsdc_hydrogen_fuel_cell_vehicle_operational_dataset_2023",
+      "title": "Operational Dataset for Hydrogen Fuel Cell Vehicles",
+      "persistent_identifier": "CSTR 16666.11.nbsdc.yxc5XLas",
+      "article_url": "https://xiaopeiwang.com/en/outputs",
+      "reported_measurements": [
+        "fuel-cell vehicle operation monitoring",
+        "multi-source vehicle time series"
+      ],
+      "raw_data_status": "public landing record announces an open resource; machine-readable archive and event-level fueling linkage were not independently verified",
+      "channel_dictionary_status": "not identified in the accessible public record",
+      "license_status": "public status is reported, but dataset licence and independent-scoring reuse terms remain unverified",
+      "full_loop_external_holdout_eligible": false,
+      "admission_status": "CONTACT_REQUEST_CANDIDATE_ONLY",
+      "next_action": "Request the exact archive URL, checksum, vehicle pressure/temperature/flow channels, common clock and a documented linkage to the station dataset before numerical access.",
+      "claim_boundary": "The public record establishes a vehicle-data lead that may complement the station dataset. It does not prove common-clock pairing or station-to-vehicle full-loop eligibility."
     }
   ],
   "decision": {
     "new_full_loop_dataset_admitted": false,
-    "reason": "No newly found candidate currently exposes a reproducible, licensed, synchronized station-to-vehicle raw trace with channel provenance; the UCI and Cal State LA records remain contact-only leads.",
+    "reason": "No newly found candidate currently exposes a reproducible, licensed, synchronized station-to-vehicle raw trace with channel provenance; NBSDC station and vehicle records remain contact-only leads until the exact archives and pairing metadata are verified.",
     "minimum_next_input": "Use the privacy-safe three-event intake contract rather than publishing confidential raw logs.",
     "runtime_parameter_application": false,
     "goal_completion_permitted": false
