@@ -42,6 +42,31 @@ def build_inventory(
         names = [name for name, _ in trace.tank_temperature_channels_c]
         independent = [name for name in names if "_Ave" not in name and "_Avg" not in name]
         aggregate = [name for name in names if name not in independent]
+        channel_values = [
+            values for name, values in trace.tank_temperature_channels_c
+            if name in independent
+        ]
+        spread = None
+        mean_average_error = None
+        if channel_values:
+            import numpy as np
+
+            stack = np.vstack(channel_values)
+            spread_values = np.max(stack, axis=0) - np.min(stack, axis=0)
+            spread = {
+                "mean_c": float(np.mean(spread_values)),
+                "median_c": float(np.median(spread_values)),
+                "p95_c": float(np.percentile(spread_values, 95)),
+                "peak_c": float(np.max(spread_values)),
+            }
+            if aggregate:
+                reported = next(
+                    values for name, values in trace.tank_temperature_channels_c
+                    if name == aggregate[0]
+                )
+                mean_average_error = float(
+                    np.mean(np.abs(np.mean(stack, axis=0) - reported))
+                )
         cases.append({
             "case_id": trace.case_id,
             "tank_capacity_kg": trace.metadata.tank_capacity_kg,
@@ -50,6 +75,8 @@ def build_inventory(
             "reported_average_channels": aggregate,
             "complete_channel_count": len(names),
             "channel_contract_pass": len(independent) >= 1,
+            "individual_channel_spread_c": spread,
+            "mean_to_reported_average_mae_c": mean_average_error,
         })
 
     archive_sha256 = _sha256(archive)
@@ -72,12 +99,14 @@ def build_inventory(
             "cases_with_reported_average": sum(
                 bool(case["reported_average_channels"]) for case in cases
             ),
+            "stratification_summary": _stratification_summary(cases),
             "cases": cases,
         },
         "privacy": {
             "raw_archive_committed": False,
             "raw_rows_persisted": False,
             "temperature_values_persisted": False,
+            "temperature_aggregates_persisted": True,
             "source_paths_persisted": False,
             "source_member_names_persisted": False,
             "site_company_manufacturer_published": False,
@@ -96,6 +125,33 @@ def build_inventory(
                 "full-loop refuelling model."
             ),
         },
+    }
+
+
+def _stratification_summary(cases: list[dict[str, Any]]) -> dict[str, Any]:
+    spreads = [
+        case["individual_channel_spread_c"]
+        for case in cases
+        if case.get("individual_channel_spread_c")
+    ]
+    average_errors = [
+        float(case["mean_to_reported_average_mae_c"])
+        for case in cases
+        if case.get("mean_to_reported_average_mae_c") is not None
+    ]
+    return {
+        "cases_with_spread_metrics": len(spreads),
+        "maximum_case_peak_spread_c": (
+            max(item["peak_c"] for item in spreads) if spreads else None
+        ),
+        "median_case_mean_spread_c": (
+            sorted(item["mean_c"] for item in spreads)[len(spreads) // 2]
+            if spreads else None
+        ),
+        "reported_average_comparison_case_count": len(average_errors),
+        "reported_average_mae_mean_c": (
+            sum(average_errors) / len(average_errors) if average_errors else None
+        ),
     }
 
 

@@ -6,7 +6,10 @@ The public MC Default reader now preserves every complete individual tank-gas
 temperature channel alongside the historical mean/max projections.  The
 source archive was re-read under the existing selected eight-case protocol:
 all eight cases contain at least two individual channels, six contain three,
-and four also expose a publisher-reported average.  The privacy-bounded
+and four also expose a publisher-reported average.  The measured inter-channel
+spread has a median case mean of **1.33 °C** and a maximum case peak of
+**8.53 °C**; the four reported averages equal the corresponding individual
+channel mean under the parsed active-fill samples.  The privacy-bounded
 inventory is recorded in
 `research/mc_temperature_channel_inventory_2026_10_11.json`; no source rows or
 temperature values are committed.  This enables a future pre-outcome thermal

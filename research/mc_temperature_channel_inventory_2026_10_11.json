@@ -13,6 +13,13 @@
     "parsed_case_count": 8,
     "cases_with_individual_channels": 8,
     "cases_with_reported_average": 4,
+    "stratification_summary": {
+      "cases_with_spread_metrics": 8,
+      "maximum_case_peak_spread_c": 8.532000000000004,
+      "median_case_mean_spread_c": 1.3332477876106192,
+      "reported_average_comparison_case_count": 4,
+      "reported_average_mae_mean_c": 0.0
+    },
     "cases": [
       {
         "case_id": "H2P-MC-1-A",
@@ -25,7 +32,14 @@
         ],
         "reported_average_channels": [],
         "complete_channel_count": 3,
-        "channel_contract_pass": true
+        "channel_contract_pass": true,
+        "individual_channel_spread_c": {
+          "mean_c": 0.9477841845140038,
+          "median_c": 0.7850000000000037,
+          "p95_c": 2.954799999999999,
+          "peak_c": 4.209000000000003
+        },
+        "mean_to_reported_average_mae_c": null
       },
       {
         "case_id": "H2P-MC-1-B",
@@ -38,7 +52,14 @@
         ],
         "reported_average_channels": [],
         "complete_channel_count": 3,
-        "channel_contract_pass": true
+        "channel_contract_pass": true,
+        "individual_channel_spread_c": {
+          "mean_c": 1.3332477876106192,
+          "median_c": 1.1340000000000003,
+          "p95_c": 3.6135000000000015,
+          "peak_c": 4.195
+        },
+        "mean_to_reported_average_mae_c": null
       },
       {
         "case_id": "H2P-MC-1-C",
@@ -53,7 +74,14 @@
           "Ttank_Ave"
         ],
         "complete_channel_count": 4,
-        "channel_contract_pass": true
+        "channel_contract_pass": true,
+        "individual_channel_spread_c": {
+          "mean_c": 1.6424362934362933,
+          "median_c": 1.3039999999999878,
+          "p95_c": 4.170100000000003,
+          "peak_c": 5.182000000000002
+        },
+        "mean_to_reported_average_mae_c": 0.0
       },
       {
         "case_id": "H2P-MC-1-D",
@@ -68,7 +96,14 @@
           "Ttank_Ave"
         ],
         "complete_channel_count": 4,
-        "channel_contract_pass": true
+        "channel_contract_pass": true,
+        "individual_channel_spread_c": {
+          "mean_c": 1.8800821428571428,
+          "median_c": 1.4080000000000013,
+          "p95_c": 6.131249999999993,
+          "peak_c": 6.564
+        },
+        "mean_to_reported_average_mae_c": 0.0
       },
       {
         "case_id": "H2P-MC-1-E",
@@ -83,7 +118,14 @@
           "Ttank_Ave"
         ],
         "complete_channel_count": 4,
-        "channel_contract_pass": true
+        "channel_contract_pass": true,
+        "individual_channel_spread_c": {
+          "mean_c": 0.9524456790123456,
+          "median_c": 0.8299999999999983,
+          "p95_c": 2.479399999999998,
+          "peak_c": 4.169000000000004
+        },
+        "mean_to_reported_average_mae_c": 0.0
       },
       {
         "case_id": "H2P-MC-1-F",
@@ -96,7 +138,14 @@
         ],
         "reported_average_channels": [],
         "complete_channel_count": 3,
-        "channel_contract_pass": true
+        "channel_contract_pass": true,
+        "individual_channel_spread_c": {
+          "mean_c": 0.6884703910614526,
+          "median_c": 0.6359999999999957,
+          "p95_c": 1.2765499999999974,
+          "peak_c": 3.067999999999998
+        },
+        "mean_to_reported_average_mae_c": null
       },
       {
         "case_id": "H2P-MC-2-A",
@@ -108,7 +157,14 @@
         ],
         "reported_average_channels": [],
         "complete_channel_count": 2,
-        "channel_contract_pass": true
+        "channel_contract_pass": true,
+        "individual_channel_spread_c": {
+          "mean_c": 1.1331202185792348,
+          "median_c": 1.0670000000000002,
+          "p95_c": 2.417700000000002,
+          "peak_c": 2.992000000000001
+        },
+        "mean_to_reported_average_mae_c": null
       },
       {
         "case_id": "H2P-MC-9.8KG",
@@ -123,7 +179,14 @@
           "Ttank_Ave_G"
         ],
         "complete_channel_count": 4,
-        "channel_contract_pass": true
+        "channel_contract_pass": true,
+        "individual_channel_spread_c": {
+          "mean_c": 3.3089664536741212,
+          "median_c": 3.227000000000004,
+          "p95_c": 6.099500000000004,
+          "peak_c": 8.532000000000004
+        },
+        "mean_to_reported_average_mae_c": 0.0
       }
     ]
   },
@@ -131,6 +194,7 @@
     "raw_archive_committed": false,
     "raw_rows_persisted": false,
     "temperature_values_persisted": false,
+    "temperature_aggregates_persisted": true,
     "source_paths_persisted": false,
     "source_member_names_persisted": false,
     "site_company_manufacturer_published": false
