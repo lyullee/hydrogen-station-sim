@@ -1,5 +1,17 @@
 # Development Progress
 
+## 2026-10-11 - Recheck priority tracks after validation-scope decision
+
+The priority runner was re-executed after separating same-site station-side
+holdouts from independent external component evidence and removing the
+unavailable station-to-vehicle full-loop lane from the active goal.  The LLM
+evidence boundary, full-loop intake boundary and virtual-safety/response
+tracks all passed (**45 focused tests** in 8.6 s).  The evidence-readiness
+count remains **127 PASS / 10 FAIL / 7 PENDING**; this software recheck does
+not promote a physics gate or imply human safety effectiveness.  A resumable
+KIT LH2 archive request was also rate-limited with HTTP 429, so the existing
+partial archive remains unopened and unverified.
+
 ## 2026-10-11 - Preserve individual MC Default tank-temperature channels
 
 The public MC Default reader now preserves every complete individual tank-gas

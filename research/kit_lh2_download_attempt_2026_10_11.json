@@ -55,6 +55,16 @@
     "numeric_signal_values_opened": false,
     "interpretation": "The official range route returned the expected archive size, but a low-rate 8 MiB range request timed out before any bytes were written. No partial chunk was retained."
   },
+  "range_resume_followup_2026_10_11": {
+    "status": "RATE_LIMITED_HTTP_429",
+    "requested_range": "bytes=964689920-965738495",
+    "workers": 8,
+    "chunk_bytes": 1048576,
+    "retries": 1,
+    "bytes_received": 0,
+    "numeric_signal_values_opened": false,
+    "interpretation": "The publisher range endpoint returned HTTP 429 before the resumable transfer could start. The existing 964689920-byte prefix was not modified and the complete archive MD5 remains unverified."
+  },
   "protocol_boundary": {
     "archive_committed_to_git": false,
     "numeric_signal_values_opened": false,
