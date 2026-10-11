@@ -7,6 +7,15 @@ The local result is an evidence-readiness gate, not a guarantee of editorial acc
 - Full user objective ready: **False**
 - Goal completion permitted: **False**
 
+## Explicit scope exclusions
+
+- `full_loop_external_validation`: **OUT_OF_SCOPE** — The study does not claim independent station-to-vehicle full-loop accuracy, vehicle-controller validation or field-safety validation.
+- `institutional_ethics_determination`: **OPTIONAL_PENDING** — The study does not claim measured improvement in operator response accuracy, response time or human safety outcomes.
+- `hiad_casebook_frozen`: **OPTIONAL_PENDING** — The study does not claim measured improvement in operator response accuracy, response time or human safety outcomes.
+- `hiad_holdout_collection`: **OPTIONAL_PENDING** — The study does not claim measured improvement in operator response accuracy, response time or human safety outcomes.
+- `independent_expert_review_complete`: **OPTIONAL_PENDING** — The study does not claim measured improvement in operator response accuracy, response time or human safety outcomes.
+- `saga_effectiveness_and_safety_supported`: **OPTIONAL_PENDING** — The study does not claim measured improvement in operator response accuracy, response time or human safety outcomes.
+
 | Gate | Status | Claim | Evidence |
 |---|---|---|---|
 | `tank_external_validation` | **PASS** | Measured-boundary Type-IV tank model is externally evaluated on the frozen public split. | `research\tank_model_validation_v2.json` |
@@ -163,10 +172,6 @@ The local result is an evidence-readiness gate, not a guarantee of editorial acc
 - `schefer_transient_release_validation`
 - `schefer_2007_pressure_decay_validation`
 - `grune_2014_pressure_decay_validation`
-- `institutional_ethics_determination`
-- `hiad_casebook_frozen`
-- `hiad_holdout_collection`
-- `independent_expert_review_complete`
 - `submission_metadata_and_declarations`
 
 ## Blocking full-objective gates
@@ -178,13 +183,7 @@ The local result is an evidence-readiness gate, not a guarantee of editorial acc
 - `schefer_transient_release_validation`
 - `schefer_2007_pressure_decay_validation`
 - `grune_2014_pressure_decay_validation`
-- `institutional_ethics_determination`
-- `hiad_casebook_frozen`
-- `hiad_holdout_collection`
-- `independent_expert_review_complete`
 - `submission_metadata_and_declarations`
-- `full_loop_external_validation`
 - `h2safe_spatial_detector_transfer_validation`
-- `saga_effectiveness_and_safety_supported`
 
-Only full_user_objective_ready=true permits goal completion. A bounded paper may report negative or limited physics honestly, but it does not satisfy the full validated-digital-twin objective.
+Only full_user_objective_ready=true permits goal completion. The current objective is explicitly scoped to station-side/component evidence and consequence/decision-support claims. Synchronized station-to-vehicle full-loop validation and human-effectiveness claims are excluded and must remain stated limitations until their re-entry conditions are met.
