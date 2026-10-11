@@ -3,7 +3,11 @@ from pathlib import Path
 
 import pytest
 
-from h2station.dispersion_proxy import concentration_volpct, load_public_dispersion_proxy
+from h2station.dispersion_proxy import (
+    concentration_interval_volpct,
+    concentration_volpct,
+    load_public_dispersion_proxy,
+)
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -16,6 +20,8 @@ def test_public_dispersion_proxy_artifact_is_loaded_with_provenance():
     assert policy.source_license == "CC BY 4.0"
     assert policy.case_count == 22
     assert policy.coefficient_volpct_per_g_s == pytest.approx(28.449493830243835)
+    assert policy.coefficient_p25_volpct_per_g_s == pytest.approx(21.487184227814353)
+    assert policy.coefficient_p75_volpct_per_g_s == pytest.approx(123.73865110982248)
 
 
 def test_public_dispersion_proxy_scales_small_release_without_instant_saturation():
@@ -35,3 +41,11 @@ def test_proxy_artifact_records_claim_boundary_and_case_statistics():
     assert record["source"]["case_count"] == 22
     assert len(record["cases"]) == 22
     assert "does not validate outdoor station dispersion" in record["claim_boundary"]
+
+
+def test_public_proxy_exposes_advisory_interquartile_interval_without_changing_median():
+    lower, upper = concentration_interval_volpct(0.1)
+    assert lower == pytest.approx(2.1487184227814354)
+    assert upper == pytest.approx(12.373865110982248)
+    assert lower < concentration_volpct(0.1) < upper
+    assert concentration_interval_volpct(0.0) == (0.0, 0.0)

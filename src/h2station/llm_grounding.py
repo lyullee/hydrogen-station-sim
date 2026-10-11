@@ -8772,12 +8772,41 @@ def _signal_rows(signals: dict[str, Any] | None) -> list[dict[str, Any]]:
         value = _finite_number(raw.get("value"))
         if value is None:
             continue
-        rows.append({
+        row: dict[str, Any] = {
             "tag": str(tag),
             "value": value,
             "unit": str(raw.get("unit") or ""),
             "quality": str(raw.get("quality") or "UNKNOWN"),
-        })
+        }
+        # Preserve the public-data detector-proxy envelope when the runtime
+        # provides one.  The median remains the live signal value; the range
+        # is advisory and must not be treated as a confidence interval or a
+        # site-calibrated measurement by downstream answer generation.
+        interval = raw.get("proxy_interval_volpct")
+        if isinstance(interval, dict):
+            p25 = _finite_number(interval.get("p25"))
+            median = _finite_number(interval.get("median"))
+            p75 = _finite_number(interval.get("p75"))
+            if (
+                p25 is not None
+                and median is not None
+                and p75 is not None
+                and p25 <= median <= p75
+            ):
+                row["proxy_interval_volpct"] = {
+                    "p25": p25,
+                    "median": median,
+                    "p75": p75,
+                    "basis": str(
+                        interval.get("basis")
+                        or "public-data interquartile coefficient range"
+                    ),
+                    "claim_limit": (
+                        "advisory public-data range; not a confidence interval "
+                        "or site calibration"
+                    ),
+                }
+        rows.append(row)
     return rows
 
 

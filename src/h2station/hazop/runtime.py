@@ -6,7 +6,11 @@ from .database import EventStore, load_catalog
 from .engine import RuleEngine
 from .mapping import GD_SENSOR_ZONES, ModelMapper, coverage
 from .flame import FLAME_DETECTORS, FLAME_RESPONSE_DELAY_S, sees_target
-from ..dispersion_proxy import PUBLIC_DISPERSION_PROXY, concentration_volpct
+from ..dispersion_proxy import (
+    PUBLIC_DISPERSION_PROXY,
+    concentration_interval_volpct,
+    concentration_volpct,
+)
 from ..spatial_detector import spatial_proxy_metadata
 
 
@@ -122,6 +126,11 @@ class HazopMonitor:
                 multiplier=dilution,
                 policy=PUBLIC_DISPERSION_PROXY,
             )
+            near_lower, near_upper = concentration_interval_volpct(
+                mass_flow * 1000.0,
+                multiplier=dilution,
+                policy=PUBLIC_DISPERSION_PROXY,
+            )
             # The H2SAFE coordinate-only rank diagnostic failed its joint
             # spatial screen, so the existing zone mapping and amplitudes are
             # retained until an orientation/HVAC/obstacle-aware holdout passes.
@@ -129,6 +138,8 @@ class HazopMonitor:
                 if tag not in self.mapper.specs or self.mapper.specs[tag]["종류"] != "G":
                     continue
                 value = near_value * multiplier
+                lower = near_lower * multiplier
+                upper = near_upper * multiplier
                 old = frame["signals"].get(tag)
                 if old and old.get("origin") == "MODEL_DETECTOR_AT_LOCATION":
                     continue
@@ -136,7 +147,13 @@ class HazopMonitor:
                     frame["signals"][tag] = {"value": value, "unit": "vol%_H2", "quality": "GOOD",
                                                "time_s": t, "origin": "VIRTUAL_DETECTOR_PROXY", "zone": GD_SENSOR_ZONES[tag],
                                                "calibration_artifact": PUBLIC_DISPERSION_PROXY.source_artifact,
-                                               "calibration_status": PUBLIC_DISPERSION_PROXY.status}
+                                               "calibration_status": PUBLIC_DISPERSION_PROXY.status,
+                                               "proxy_interval_volpct": {
+                                                   "p25": lower,
+                                                   "median": value,
+                                                   "p75": upper,
+                                                   "basis": "public-data interquartile coefficient range",
+                                               }}
         for event in model.get("fault_events", ()):
             if not event.target.startswith(("GD-", "FD-")) or event.target not in frame["signals"]:
                 continue

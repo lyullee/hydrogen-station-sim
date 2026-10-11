@@ -24,11 +24,15 @@ PUBLIC_SOURCE_LICENSE = "CC BY 4.0"
 # The value is the median coefficient recorded by the artifact, not a tunable
 # station parameter.
 FALLBACK_COEFFICIENT_VOLPCT_PER_G_S = 28.449493830243835
+FALLBACK_COEFFICIENT_P25_VOLPCT_PER_G_S = 21.487184227814353
+FALLBACK_COEFFICIENT_P75_VOLPCT_PER_G_S = 123.73865110982248
 
 
 @dataclass(frozen=True)
 class DispersionProxyPolicy:
     coefficient_volpct_per_g_s: float
+    coefficient_p25_volpct_per_g_s: float
+    coefficient_p75_volpct_per_g_s: float
     source_artifact: str
     source_doi: str
     source_license: str
@@ -44,6 +48,12 @@ class DispersionProxyPolicy:
             "source_license": self.source_license,
             "status": self.status,
             "coefficient_volpct_per_g_s": self.coefficient_volpct_per_g_s,
+            "coefficient_p25_volpct_per_g_s": self.coefficient_p25_volpct_per_g_s,
+            "coefficient_p75_volpct_per_g_s": self.coefficient_p75_volpct_per_g_s,
+            "uncertainty_interpretation": (
+                "public-data interquartile coefficient range; advisory only, "
+                "not a confidence interval or site calibration"
+            ),
             "case_count": self.case_count,
             "statistic": self.statistic,
             "formula": "clip(release_mass_flow_g_s * coefficient * ventilation_multiplier, 0, 100)",
@@ -71,6 +81,8 @@ def load_public_dispersion_proxy(root: Path | None = None) -> DispersionProxyPol
         source = record.get("source") or {}
         method = record.get("method") or {}
         coefficient = float(method["coefficient_volpct_per_g_s"])
+        coefficient_p25 = float(method["coefficient_p25_volpct_per_g_s"])
+        coefficient_p75 = float(method["coefficient_p75_volpct_per_g_s"])
         case_count = int(method["case_count"])
         if (
             record.get("status") != "derived_bounded_dispersion_concentration_proxy"
@@ -79,10 +91,15 @@ def load_public_dispersion_proxy(root: Path | None = None) -> DispersionProxyPol
             or case_count < 20
             or not math.isfinite(coefficient)
             or coefficient <= 0.0
+            or not math.isfinite(coefficient_p25)
+            or not math.isfinite(coefficient_p75)
+            or not 0.0 < coefficient_p25 <= coefficient <= coefficient_p75
         ):
             raise ValueError("dispersion proxy artifact failed provenance checks")
         return DispersionProxyPolicy(
             coefficient_volpct_per_g_s=coefficient,
+            coefficient_p25_volpct_per_g_s=coefficient_p25,
+            coefficient_p75_volpct_per_g_s=coefficient_p75,
             source_artifact=ARTIFACT_RELATIVE_PATH,
             source_doi=PUBLIC_SOURCE_DOI,
             source_license=PUBLIC_SOURCE_LICENSE,
@@ -94,6 +111,8 @@ def load_public_dispersion_proxy(root: Path | None = None) -> DispersionProxyPol
     except (OSError, ValueError, TypeError, KeyError, json.JSONDecodeError):
         return DispersionProxyPolicy(
             coefficient_volpct_per_g_s=FALLBACK_COEFFICIENT_VOLPCT_PER_G_S,
+            coefficient_p25_volpct_per_g_s=FALLBACK_COEFFICIENT_P25_VOLPCT_PER_G_S,
+            coefficient_p75_volpct_per_g_s=FALLBACK_COEFFICIENT_P75_VOLPCT_PER_G_S,
             source_artifact=ARTIFACT_RELATIVE_PATH,
             source_doi=PUBLIC_SOURCE_DOI,
             source_license=PUBLIC_SOURCE_LICENSE,
@@ -128,11 +147,39 @@ def concentration_volpct(
     return min(100.0, max(0.0, flow * policy.coefficient_volpct_per_g_s * scale))
 
 
+def concentration_interval_volpct(
+    mass_flow_g_s: float,
+    *,
+    multiplier: float = 1.0,
+    policy: DispersionProxyPolicy = PUBLIC_DISPERSION_PROXY,
+) -> tuple[float, float]:
+    """Return the public-data P25/P75 advisory concentration interval.
+
+    The interval describes variation among the public rectangular-channel
+    experiments. It is deliberately exposed as an uncertainty envelope, not
+    as a confidence interval, site calibration, or validated safety distance.
+    """
+
+    try:
+        flow = float(mass_flow_g_s)
+        scale = float(multiplier)
+    except (TypeError, ValueError):
+        return 0.0, 0.0
+    if not math.isfinite(flow) or not math.isfinite(scale) or flow <= 0.0 or scale <= 0.0:
+        return 0.0, 0.0
+    lower = flow * policy.coefficient_p25_volpct_per_g_s * scale
+    upper = flow * policy.coefficient_p75_volpct_per_g_s * scale
+    return min(100.0, max(0.0, lower)), min(100.0, max(0.0, upper))
+
+
 __all__ = [
     "ARTIFACT_RELATIVE_PATH",
     "DispersionProxyPolicy",
     "FALLBACK_COEFFICIENT_VOLPCT_PER_G_S",
+    "FALLBACK_COEFFICIENT_P25_VOLPCT_PER_G_S",
+    "FALLBACK_COEFFICIENT_P75_VOLPCT_PER_G_S",
     "PUBLIC_DISPERSION_PROXY",
     "concentration_volpct",
+    "concentration_interval_volpct",
     "load_public_dispersion_proxy",
 ]

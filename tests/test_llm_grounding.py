@@ -1395,6 +1395,37 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert calculated["evidence_digest"] != idle["evidence_digest"]
 
 
+def test_manifest_preserves_virtual_detector_public_uncertainty_envelope():
+    manifest = build_evidence_manifest(
+        {"time_s": 1.0},
+        {
+            "GD-0801": {
+                "value": 4.0,
+                "unit": "vol%_H2",
+                "quality": "GOOD",
+                "proxy_interval_volpct": {
+                    "p25": 2.0,
+                    "median": 4.0,
+                    "p75": 8.0,
+                    "basis": "public-data interquartile coefficient range",
+                },
+            }
+        },
+        [],
+        False,
+    )
+    row = manifest["signals"]["rows"][0]
+    assert row["proxy_interval_volpct"] == {
+        "p25": 2.0,
+        "median": 4.0,
+        "p75": 8.0,
+        "basis": "public-data interquartile coefficient range",
+        "claim_limit": (
+            "advisory public-data range; not a confidence interval or site calibration"
+        ),
+    }
+
+
 def test_full_loop_candidate_leads_are_grounded_without_being_admitted():
     manifest = build_evidence_manifest(
         {"time_s": 1.0},

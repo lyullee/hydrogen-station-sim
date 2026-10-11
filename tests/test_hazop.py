@@ -553,6 +553,9 @@ def test_virtual_detector_follows_actual_release_zone(target, tag):
     signals=monitor.latest['signals']
     assert signals[tag]['value'] > 0
     assert signals[tag]['origin']=='VIRTUAL_DETECTOR_PROXY'
+    interval = signals[tag]['proxy_interval_volpct']
+    assert interval['p25'] <= interval['median'] <= interval['p75']
+    assert interval['basis'] == 'public-data interquartile coefficient range'
     assert monitor.latest['virtual_detector_spatial_proxy']['source_doi']=='10.7799/17118570'
     assert monitor.latest['virtual_detector_spatial_proxy']['runtime_application'] is False
     assert signals['GD-2001']['value']==0  # No unrelated header alarm.
