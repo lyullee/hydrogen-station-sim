@@ -33,6 +33,9 @@ The exact split and the paper limitation are recorded in
 [`VALIDATION_DATA_SPLIT_AND_SCOPE_DECISION_2026_10_11.md`](../research/VALIDATION_DATA_SPLIT_AND_SCOPE_DECISION_2026_10_11.md)
 and the machine-readable
 [`confidential_validation_split_manifest_2026_10_11.json`](../research/confidential_validation_split_manifest_2026_10_11.json).
+The institutional-ethics, HIAD casebook, expert-review and SAGA human-effectiveness
+lanes are intentionally optional for this station-side manuscript; they remain
+required only for the broader operator-safety objective.
 
 A fresh privacy-bounded local inventory confirms that data volume is not the
 station-side limitation. The controlled archive contains 33 CSV files,
@@ -558,7 +561,7 @@ development evidence rather than a source for geometry fitting.
 
 ## Blocking gates
 
-The bounded paper still has 12 unresolved or failed gates:
+The bounded paper still has 8 unresolved or failed gates:
 
 1. `dickens_typeiii_prospective_validation`
 2. `preslhy_partb_ambient_external_validation`
@@ -567,14 +570,15 @@ The bounded paper still has 12 unresolved or failed gates:
 5. `schefer_transient_release_validation`
 6. `schefer_2007_pressure_decay_validation`
 7. `grune_2014_pressure_decay_validation`
-8. `institutional_ethics_determination`
-9. `hiad_casebook_frozen`
-10. `hiad_holdout_collection`
-11. `independent_expert_review_complete`
-12. `submission_metadata_and_declarations`
+8. `submission_metadata_and_declarations`
 
-The full user objective additionally requires:
+The full user objective additionally retains the human-effectiveness gates and
+also requires:
 
+9. `institutional_ethics_determination`
+10. `hiad_casebook_frozen`
+11. `hiad_holdout_collection`
+12. `independent_expert_review_complete`
 13. `full_loop_external_validation`
 14. `h2safe_spatial_detector_transfer_validation`
 15. `saga_effectiveness_and_safety_supported`

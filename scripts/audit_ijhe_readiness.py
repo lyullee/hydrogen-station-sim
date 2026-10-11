@@ -7368,6 +7368,13 @@ def audit(root: Path) -> dict[str, object]:
     ))
 
     by_id = {item["id"]: item for item in gates}
+    # Human-participant/effectiveness gates are intentionally outside the
+    # bounded station-side physics manuscript.  They remain mandatory for the
+    # full objective, which includes a claim that SAGA improves operator safety.
+    human_effectiveness_gates = (
+        "institutional_ethics_determination", "hiad_casebook_frozen",
+        "hiad_holdout_collection", "independent_expert_review_complete",
+    )
     bounded_required = (
         "tank_external_validation", "active_fill_correction_disclosed",
         "dickens_typeiii_prospective_validation",
@@ -7386,13 +7393,11 @@ def audit(root: Path) -> dict[str, object]:
         "hiad_protocol_integrity",
         "external_hrs_intake_integrity_contract",
         "external_hrs_trace_quality_contract",
-        "institutional_ethics_determination", "hiad_casebook_frozen",
-        "hiad_holdout_collection", "independent_expert_review_complete",
         "preoutcome_design_sensitivity", "ijhe_format_gate",
         "ijhe_latex_compilation", "submission_metadata_and_declarations",
         "software_doi",
     )
-    full_required = bounded_required + (
+    full_required = bounded_required + human_effectiveness_gates + (
         "full_loop_external_validation", "station_consequence_geometry_validation",
         "h2safe_spatial_detector_transfer_validation",
         "saga_effectiveness_and_safety_supported",

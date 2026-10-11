@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-11T01:17:09.720376+00:00",
+  "generated_at": "2026-10-11T01:24:03.436393+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -25,10 +25,6 @@
     "schefer_transient_release_validation",
     "schefer_2007_pressure_decay_validation",
     "grune_2014_pressure_decay_validation",
-    "institutional_ethics_determination",
-    "hiad_casebook_frozen",
-    "hiad_holdout_collection",
-    "independent_expert_review_complete",
     "submission_metadata_and_declarations"
   ],
   "blocking_full_objective_gates": [
@@ -39,11 +35,11 @@
     "schefer_transient_release_validation",
     "schefer_2007_pressure_decay_validation",
     "grune_2014_pressure_decay_validation",
+    "submission_metadata_and_declarations",
     "institutional_ethics_determination",
     "hiad_casebook_frozen",
     "hiad_holdout_collection",
     "independent_expert_review_complete",
-    "submission_metadata_and_declarations",
     "full_loop_external_validation",
     "h2safe_spatial_detector_transfer_validation",
     "saga_effectiveness_and_safety_supported"
