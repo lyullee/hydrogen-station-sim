@@ -20,7 +20,7 @@
       {
         "package_name": "PRE3P1A_KIT_D2_80K-DATA.zip",
         "nozzle_diameter_mm": 2.0,
-        "manifest_md5": "2843fe50eac792e18efbb4e77f0cfd28"
+        "manifest_md5": "ccdbc0fad4b7308dba86c1569ed22e6d"
       }
     ],
     "rights_boundary": "The public packages are read from the source cache for evaluation. Raw workbook rows are not copied into the repository; only aggregate metrics, case identifiers and source hashes are retained in the result artifact."
@@ -31,6 +31,12 @@
       "outcomes_accessed": false,
       "change": "Corrected the D05 package manifest MD5 mapping after reading the public archive checksum manifest; the checksum belongs to PRE3P1A_KIT_D05_80K-DATA.zip, while the adjacent checksum line belongs to the next package.",
       "basis": "Archive metadata only; no workbook payload or numerical outcome was opened before this correction."
+    },
+    {
+      "date": "2026-10-12",
+      "outcomes_accessed": true,
+      "change": "Corrected the D2 package manifest MD5 mapping after the runner verified the D05 package and stopped before reading the D2 package. The D05 numerical result was not written or used for a decision; the complete run is repeated from this amended protocol.",
+      "basis": "Checksum-only runner stop; no parameter, threshold, case selection or time alignment changed."
     }
   ],
   "independence": {
