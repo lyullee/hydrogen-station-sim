@@ -19,7 +19,10 @@
       "https://publications.jrc.ec.europa.eu/repository/handle/JRC76380",
       "https://doi.org/10.3390/en15103811",
       "https://www.energy.gov/sites/default/files/2024-04/h2iqhour-03262024.pdf",
-      "https://doi.org/10.1016/j.ijhydene.2025.152513"
+      "https://doi.org/10.1016/j.ijhydene.2025.152513",
+      "https://elib.dlr.de/213625/1/manuscript_final_published_version.pdf",
+      "https://github.com/DTU-TES/Hydrogen-Fuelling-Station",
+      "https://ipcei.observatory.clean-hydrogen.europa.eu/hydrogen-landscape/distribution-and-storage/hydrogen-refuelling-stations"
     ]
   },
   "status": "NO_NEW_ELIGIBLE_PUBLIC_RAW_SET_IDENTIFIED",
@@ -125,7 +128,10 @@
       "site:figshare.com hydrogen refueling station vehicle filling dataset pressure temperature",
       "hydrogen refuelling station vehicle tank pressure temperature time series raw dataset refueling",
       "hydrogen station dispenser vehicle fueling experiment data pressure time synchronized",
-      "HRS FCEV refueling data pressure temperature dataset"
+      "HRS FCEV refueling data pressure temperature dataset",
+      "FCH2RAIL hydrogen railway refueling station vehicle measurement raw time series pressure temperature mass flow",
+      "DTU hydrogen fuelling station Modelica raw measurement dataset vehicle tank",
+      "European hydrogen refuelling station operational dataset transient vehicle pressure mass flow"
     ],
     "additional_hits": [
       {
@@ -170,6 +176,21 @@
         "observed_role": "station operating-range paper with plotted pressure/temperature traces",
         "decision": "REPORT_SUMMARY_ONLY",
         "reason": "The public item is a paper/figure record rather than a reusable synchronized station-to-vehicle raw logger."
+      },
+      {
+        "name": "DLR FCH2RAIL railway refueling measurement paper",
+        "url": "https://elib.dlr.de/213625/1/manuscript_final_published_version.pdf",
+        "doi": "10.1016/j.ijhydene.2025.04.040",
+        "observed_role": "real transportable HRS and hydrogen-train refueling measurement/model-validation paper",
+        "decision": "REPORT_SUMMARY_ONLY",
+        "reason": "The paper describes station, dispenser and train measurements and shows plotted examples, but the public record does not provide a rights-cleared machine-readable synchronized logger archive with channel dictionary and reuse terms."
+      },
+      {
+        "name": "DTU Hydrogen-Fuelling-Station Modelica library",
+        "url": "https://github.com/DTU-TES/Hydrogen-Fuelling-Station",
+        "observed_role": "open thermodynamic station model and parameter files",
+        "decision": "MODEL_REFERENCE_NOT_EXTERNAL_RAW",
+        "reason": "The repository provides simulation code and parameter files rather than independent measured station-to-vehicle traces; it cannot serve as an external raw holdout."
       }
     ],
     "decision": "NO_NEW_ELIGIBLE_PUBLIC_RAW_SET_IDENTIFIED",
