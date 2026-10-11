@@ -46,7 +46,9 @@ ESD, cascade topology 또는 현장 안전거리까지 검증한 결과가 아�
 
 - [FCH2RAIL D6.1](https://fch2rail.eu/wp-content/uploads/2025/01/FCH2RAIL_D6.1_Report-on-KPI-assessment.pdf): 실제 열차 충전 측정의 범위와 결과를 설명하지만 공개 원시 logger export가 없다.
 - [DLR/FCH2RAIL 충전 연구](https://elib.dlr.de/213625/1/manuscript_final_published_version.pdf): 차량 탱크와 디스펜서 채널의 예시 trace를 보여주지만 재사용 가능한 전체 시계열 묶음이 없다.
+- [Cal State LA back-to-back fueling 연구](https://doi.org/10.1016/j.jclepro.2021.129737): 실제 station·호스·차량 채널과 고해상도 운전 자료를 설명하는 유력한 custodian 요청 대상이지만, 공개 페이지와 OSTI 기록에서 재사용 가능한 공통시계 logger 원자료와 권리 조건을 찾지 못했다. [OSTI station report](https://www.osti.gov/servlets/purl/1799187)도 DAQ 및 압력·분배 집계/도표를 제공할 뿐 원시 full-loop export는 제공하지 않는다.
 - [NREL H2FillS](https://www.nrel.gov/hydrogen/h2fills): 차량 충전 모델과 소프트웨어 설명이며, station-to-vehicle holdout 원자료 저장소가 아니다.
+- [H2-Stations Europe API v2](https://docs.h2-stations.eu/for-data-users/api-v2/): station layout과 availability/usage/storage/pricing 신호를 제공하지만 차량 탱크 transient 및 공통 station-to-vehicle 시계가 없다.
 - [ELVHYS 4.2](https://doi.org/10.18710/JXJP0H): CC0 공개 자료지만 1 m³ transfer-connection space의 극저온 누출·방출·점화 실험으로, 차량 충전 full-loop가 아니다.
 - 공개 HRS 운영·가용성 자료는 위치·압력단·가용성 또는 집계 실적 위주라 동기화 충전 transient holdout이 아니다.
 

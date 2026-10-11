@@ -26,6 +26,8 @@
   },
   "station_to_vehicle_public_search": {
     "status": "NO_ELIGIBLE_PUBLIC_SYNCHRONIZED_RAW_SET_IDENTIFIED",
+    "recheck_artifact": "research/external_full_loop_data_recheck_2026_10_11.json",
+    "rechecked_at": "2026-10-11",
     "search_boundary": [
       "station or dispenser channels",
       "vehicle or receptacle channels",
@@ -37,7 +39,10 @@
     "reviewed_leads": [
       {"id": "fch2rail_d61", "url": "https://fch2rail.eu/wp-content/uploads/2025/01/FCH2RAIL_D6.1_Report-on-KPI-assessment.pdf", "decision": "REPORT_OR_REQUEST_ONLY"},
       {"id": "dlr_fch2rail_refueling", "url": "https://elib.dlr.de/213625/1/manuscript_final_published_version.pdf", "decision": "PLOT_OR_REQUEST_ONLY"},
+      {"id": "calstate_la_back_to_back", "url": "https://doi.org/10.1016/j.jclepro.2021.129737", "decision": "CUSTODIAN_REQUEST_ONLY", "note": "Paper describes station, hose and vehicle channels, but no public machine-readable logger archive or reuse terms were found."},
+      {"id": "calstate_la_osti_station_report", "url": "https://www.osti.gov/servlets/purl/1799187", "decision": "REPORT_OR_REQUEST_ONLY", "note": "Station DAQ and pressure/dispensing summaries are described; a synchronized raw station-to-vehicle export is not published."},
       {"id": "nrel_h2fills", "url": "https://www.nrel.gov/hydrogen/h2fills", "decision": "MODEL_SOFTWARE_NOT_RAW_HOLDOUT"},
+      {"id": "h2_stations_europe_api_v2", "url": "https://docs.h2-stations.eu/for-data-users/api-v2/", "decision": "STATION_REGISTRY_NOT_FULL_LOOP", "note": "Layout and aggregate/availability signals are public; vehicle-tank transient channels and a common station-to-vehicle clock are absent."},
       {"id": "elvhys_42", "url": "https://doi.org/10.18710/JXJP0H", "decision": "OPEN_COMPONENT_RELEASE_DATA_NOT_VEHICLE_LOOP"}
     ],
     "primary_goal_effect": "REMOVE_FULL_LOOP_EXTERNAL_VALIDATION_FROM_PRIMARY_GOAL",
