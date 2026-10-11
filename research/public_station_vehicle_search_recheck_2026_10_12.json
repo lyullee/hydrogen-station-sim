@@ -57,6 +57,13 @@
       "reason": "The existing intake records confirm missing controller, vehicle-tank geometry and synchronized vehicle-side channel metadata; these records cannot be promoted to a station-to-vehicle holdout."
     },
     {
+      "name": "DOE Hydrogen Infrastructure Technologies FY2024 review — heavy-duty fueling protocol test",
+      "url": "https://www.hydrogen.energy.gov/docs/hydrogenprogramlibraries/pdfs/review24/in000_stetson_2024_o0e018332-9871-45a3-9c2c-67686e3fadab.pdf",
+      "observed_role": "Official program report describing a 70.5 kg heavy-duty fill in 7 minutes and SAE J2601/5 validation with preproduction hardware and wireless communications.",
+      "decision": "REPORT_SUMMARY_ONLY",
+      "reason": "The report contains aggregate performance and protocol statements, not a rights-cleared row-level common-clock station/controller/dispenser/vehicle archive with channel definitions. It cannot close the independent full-loop gate."
+    },
+    {
       "name": "FCH2RAIL D6.1 KPI assessment",
       "url": "https://fch2rail.eu/wp-content/uploads/2025/01/FCH2RAIL_D6.1_Report-on-KPI-assessment.pdf",
       "observed_role": "Report-level measurements for a transportable 300-bar hydrogen refuelling system, including 5/10-s flow observations and train-storage refuelling rates.",
