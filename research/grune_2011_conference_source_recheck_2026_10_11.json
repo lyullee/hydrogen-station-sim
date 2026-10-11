@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-11",
+  "status": "conference_source_context_recheck_completed",
+  "source": {
+    "url": "https://conference.ing.unipi.it/ichs2011/papers/133.pdf",
+    "title": "Experimental study of ignited unsteady hydrogen releases from a high pressure reservoir",
+    "authors": ["Grune", "Sempert", "Kuznetsov", "Jordan"],
+    "conference": "ICHs 2011",
+    "related_journal_doi": "10.1016/j.ijhydene.2013.08.076",
+    "reported_case": "0.37 dm3 reservoir, 4 mm nozzle, 200 bar initial pressure"
+  },
+  "reported_anchors": {
+    "first_10_ms_average_mass_flow_g_per_s": 66.0,
+    "half_pressure_time_ms": 64.0,
+    "half_pressure_bar": 100.0,
+    "complete_effusion_time_ms_approx": 500.0,
+    "source_basis": "text accompanying Figure 2; measured/calculated pressure-decay comparison"
+  },
+  "access_result": {
+    "machine_readable_raw_pressure_trace_found": false,
+    "figure_2_full_curve_available_as_machine_data": false,
+    "trace_specific_uncertainty_metadata_found": false,
+    "redistributable_logger_export_found": false,
+    "text_anchor_half_pressure_available": true
+  },
+  "eligibility": {
+    "numeric_holdout_added": false,
+    "grune_2014_pressure_decay_gate_eligible": false,
+    "model_promotion": false,
+    "reason": "The public source supplies textual timing anchors and a plot, but no complete machine-readable measured pressure-time series or trace-specific uncertainty metadata required by the frozen holdout protocol."
+  },
+  "claim_boundary": "Use only as source-context diagnostics and a lead for controlled raw-data access. Do not claim an independent validation pass or station-scale safety, ignition, dispersion, or SAGA-effectiveness evidence from these anchors."
+}
+
