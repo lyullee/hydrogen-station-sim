@@ -1,15 +1,15 @@
 {
   "schema_version": 1,
   "artifact_type": "ijhe_reproducibility_run",
-  "generated_at_utc": "2026-10-11T22:05:41.237260+00:00",
+  "generated_at_utc": "2026-10-11T23:24:41.834961+00:00",
   "status": "SCIENTIFIC_GATES_OPEN",
   "repository": {
     "root": ".",
-    "commit": "be10583204955f3d5668a28787715384d74d1abb",
+    "commit": "f6d673bb69493fcbf553d1f1d9a32f7e4864fa11",
     "dirty": false
   },
   "environment": {
-    "python": "3.12.14",
+    "python": "3.14.8",
     "platform": "Windows-11-10.0.26200-SP0",
     "interpreter": ".venv/Scripts/python.exe"
   },
@@ -54,7 +54,7 @@
     },
     "compile_status_rebuilt": {
       "schema_version": 2,
-      "verified_at_utc": "2026-10-11T22:05:39.361372+00:00",
+      "verified_at_utc": "2026-10-11T23:24:39.925430+00:00",
       "success": true,
       "compiler": {
         "name": "Tectonic",
@@ -72,7 +72,7 @@
         "bytes": 837358,
         "sha256": "20d7071434bc9bd077b790fba4d30178bd6eb6395f939c447a928a2cc17998b7",
         "page_count": 24,
-        "extracted_character_count": 71320
+        "extracted_character_count": 71318
       },
       "compile_log": {
         "path": "output/pdf/ijhe_manuscript_draft.log",
@@ -111,7 +111,7 @@
       "full_user_objective_ready": false,
       "goal_completion_permitted": false,
       "gate_counts": {
-        "PASS": 129,
+        "PASS": 131,
         "FAIL": 10,
         "PENDING": 7
       },
@@ -144,7 +144,7 @@
           "tests/test_goal_progress_snapshot.py",
           "tests/test_ijhe_reproduction.py"
         ],
-        "output_tail": "...........                                                              [100%]\n11 passed in 1.50s"
+        "output_tail": "...........                                                              [100%]\n11 passed in 1.47s"
       }
     ]
   },
