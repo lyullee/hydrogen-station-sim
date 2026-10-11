@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "artifact_type": "h2safe_oedi_public_record_recheck",
+  "recorded_at": "2026-10-12",
+  "source": {
+    "oedi_submission": "https://data.openei.org/submissions/8799",
+    "original_record": "https://data.nlr.gov/submissions/330",
+    "record_title": "Dataset for H2SAFE - Controlled Gas Releases and Sensor-Response for Indoor Hydrogen Safety",
+    "record_date": "2026-10-05",
+    "test_gas": "helium surrogate",
+    "experiment_count": 5,
+    "license_page": "https://data.nlr.gov/node/330/license",
+    "archive_url": "https://data.nlr.gov/system/files/330/1787856683-Dataset.zip"
+  },
+  "download_recheck": {
+    "bytes": 3766528,
+    "sha256": "f1b8bf747b7787f00152ec416940c80a143ea044fc18ee8a69ac9da204d9158e",
+    "prior_intake_artifact": "research/h2safe_public_dataset_intake_2026_10_08.json",
+    "prior_bytes": 3766528,
+    "prior_sha256": "f1b8bf747b7787f00152ec416940c80a143ea044fc18ee8a69ac9da204d9158e",
+    "content_changed_since_prior_intake": false
+  },
+  "eligibility_recheck": {
+    "new_independent_holdout": false,
+    "station_to_vehicle_full_loop": false,
+    "release_to_logger_time_crosswalk": false,
+    "reason": "The current public record is the same five helium-release archive already audited. It contains concentration time series and spatial metadata but no synchronized station/controller, dispenser/nozzle and vehicle/receptacle channels; the release-to-CSV timing crosswalk remains unavailable.",
+    "runtime_parameter_application": false
+  },
+  "claim_boundary": "Public-record availability and byte-integrity recheck only. This does not create hydrogen concentration validation, detector-placement validation, outdoor dispersion, ESD, safety-distance or station-to-vehicle full-loop evidence."
+}
