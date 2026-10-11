@@ -94,6 +94,9 @@ The following tests passed in the repository virtual environment:
 
 .venv\Scripts\python.exe -m pytest -q
 1385 passed, 20 warnings
+
+.venv\Scripts\python.exe -m pytest tests/test_digital_twin_direct_qa.py tests/test_hiad_response_stage_contract.py -q
+19 passed, 3 warnings
 ```
 
 The tests verify that normal monitoring keeps impact calculation marked as
@@ -101,6 +104,8 @@ The tests verify that normal monitoring keeps impact calculation marked as
 results and input tags, non-finite values are discarded, the main and sensor
 assistant routes remain isolated, and a generated answer cannot negate a
 confirmed alarm, gas observation, physical leak or calculated impact.
+The latest direct-route spot check also verifies that an active alarm receives
+all five response stages while a normal one-pass question remains concise.
 The manifest digest now also covers the public response-source identifiers, the
 HIAD action-to-playbook traceability metadata, the derived HIAD action-category
 counts and their artifact digest, and the KHK citation inventory and bounded

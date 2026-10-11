@@ -20,6 +20,19 @@
       "passed": 1385,
       "failed": 0,
       "warnings": 20
+    },
+    "latest_direct_route_spot_check": {
+      "command": ".venv\\Scripts\\python.exe -m pytest tests/test_digital_twin_direct_qa.py tests/test_hiad_response_stage_contract.py -q",
+      "passed": 19,
+      "failed": 0,
+      "warnings": 3,
+      "verified": [
+        "normal direct Q&A does not request impact results",
+        "alarm and explicit-impact paths carry calculated results and input tags",
+        "active alarms receive recognition, immediate, stabilize, restart and prevention stages",
+        "main and selected-sensor routes do not call the reasoning endpoint",
+        "contradictory direct-provider claims are guarded against confirmed signals"
+      ]
     }
   },
   "verified_properties": [
