@@ -8,6 +8,12 @@ authors of DOI 10.1016/j.ijhydene.2023.04.084 and DOI
 
 Subject: Request for de-identified HRS fill-level traces for independent model validation
 
+Access check (2026-10-11): the cited Cal State LA papers and public facility/DOE
+materials describe per-fill and back-to-back measurements, but the public routes
+were rechecked without finding a machine-readable synchronized logger export or
+written reuse terms. This draft is therefore a custodian request, not evidence
+that the data are already eligible for external validation.
+
 Dear Cal State LA Hydrogen Research and Fueling Facility team,
 
 I am preparing an academic validation study of a research and training digital

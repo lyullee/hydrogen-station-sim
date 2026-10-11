@@ -14,6 +14,8 @@
 | [H2-Stations 데이터 사용자 문서](https://docs.h2-stations.eu/for-data-users/) | 정적 station 정보와 availability·usage·hydrogen storage·pricing export API | 등록/운영 신호와 집계 수준이며 station·vehicle 동기 원시 충전 trace가 아님 |
 | [European Hydrogen Observatory HRS 데이터](https://observatory.clean-hydrogen.europa.eu/hydrogen-landscape/distribution-and-storage/hydrogen-refuelling-stations) | 위치, 운영 여부, dispenser type 및 XLSX station inventory | 시설 목록·시점별 집계 자료로서 vehicle-side transient 원자료가 아님 |
 | [CARB 2024 HRS in-use study](https://ww2.arb.ca.gov/sites/default/files/2024-12/Existing%20Light-Duty%20Hydrogen%20Refueling%20Stations%20In-Use%20Study%20Report%20ADA%20AL.pdf) | 22개 운영 HRS의 HyStEP 시험. Appendix A에 station/CHSS 압력·온도·질량유량·SOC 결과를 Excel로 정리했다고 명시 | 공개 페이지에는 PDF만 연결되고 Excel/logger 원자료와 재사용 조건은 제공되지 않음. **최우선 데이터 요청 후보** |
+| [Cal State LA 2017 fueling-data paper](https://www.calstatela.edu/sites/default/files/kscifall2017hydrogenbigdataanalysis.pdf) | 충전 때마다 fueling detail을 기록한 raw dataset을 사용했다고 논문이 명시 | 공개 PDF에 기계판독 파일·다운로드 링크·공통 시각축·재사용 조건이 없음. **custodian 요청 후보** |
+| [Cal State LA back-to-back fueling study](https://doi.org/10.1016/j.jclepro.2021.129737) | 1년간 실제 HRFF의 back-to-back 이벤트, 압력·열역학·냉각 응답·차량 SOC를 분석 | 논문·공개 manuscript 경로에 동기화 logger export와 출판 허가가 없음. **custodian 요청 후보** |
 | [ENDA HRS Connect](https://enda.eu/en/h2_monitoring) | 90개 HRS의 75–400개 신호를 짧은 간격으로 기록하는 실제 모니터링 시스템 설명 | 원자료 공개·재사용 경로와 차량 측 채널이 없어 접근 요청 후보로만 기록 |
 | [Lototskyy et al. (2020)](https://doi.org/10.1016/j.ijhydene.2019.05.133) | 38개월 실제 HRS 운전, 압력·온도 그래프와 제어 순서 | 그래프·운영 요약만 공개되어 기계판독 full-loop holdout 불가 |
 
@@ -32,3 +34,8 @@
 - 향후 재개 조건: station/dispenser와 vehicle/receptacle 채널, 공통 clock, 단위·프로토콜 메타데이터, 최소 3개 독립 충전 episode, 재사용·출판 권리를 custodian이 확인하고 해시를 사전 동결할 것.
 
 CARB 후보에 대해서는 `research/CARB_DATA_REQUEST_DRAFT.md`의 요청 경로를 사용한다. 요청이 승인되어도 파일을 받기 전에는 외부검증으로 간주하지 않고, 수령 시 원자료 해시·권리·채널 사전 동결 후 별도 holdout으로 평가한다.
+
+Cal State LA 후보는 `research/CALSTATE_DATA_REQUEST_DRAFT.md`의 요청 경로를 사용한다. 논문이
+실측 raw dataset의 수집·사용을 주장하는 것은 데이터 존재의 단서이지 공개 재사용 권리의
+증거가 아니다. 기계판독 파일, 채널 정의, 공통 시각축, 품질 플래그와 재사용 허가를 받기
+전에는 외부 holdout으로 계산하지 않는다.
