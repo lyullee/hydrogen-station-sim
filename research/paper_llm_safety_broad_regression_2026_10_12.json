@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "artifact_type": "paper_llm_safety_broad_regression",
+  "recorded_at_utc": "2026-10-11T18:59:17.065321+00:00",
+  "source_commit": "939db47e95a9160cfb27ce2fe7ab6711f0cba003",
+  "command": ".venv\\Scripts\\python.exe -m pytest [LLM/SAGA/virtual-safety/HAZOP/HIAD Python tests]",
+  "test_file_selector": "tests/*.py where filename matches llm|saga|virtual_action|virtual_safety|hazop|hiad_accident",
+  "passed": 159,
+  "failed": 0,
+  "warnings": 2,
+  "scope": [
+    "evidence-grounded LLM routing",
+    "direct-answer SAGA contracts",
+    "virtual action execution",
+    "staged emergency response",
+    "HAZOP mapping"
+  ],
+  "claim_boundary": "Software-contract regression only; this does not establish independent physical validation, expert-rated human effectiveness, field safety or journal acceptance."
+}
