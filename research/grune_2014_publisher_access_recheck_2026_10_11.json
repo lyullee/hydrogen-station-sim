@@ -14,8 +14,29 @@
     "checked KITopen publication metadata and associated-document links",
     "checked the publisher article record for downloadable supplementary data",
     "checked the public H2Tools conference-paper copy for a machine-readable trace",
-    "did not treat plotted calculated curves as measured outcomes"
+    "did not treat plotted calculated curves as measured outcomes",
+    "checked the author/article request record for an alternate full-text or data attachment",
+    "checked the related Zenodo ventilation release as a possible replacement source"
   ],
+  "follow_up_search_2026_10_11": {
+    "author_or_article_request_record": {
+      "url": "https://www.researchgate.net/publication/257779236_Experimental_study_of_ignited_unsteady_hydrogen_releases_from_a_high_pressure_reservoir",
+      "result": "request_page_only",
+      "machine_readable_pressure_time_trace_found": false
+    },
+    "public_conference_copy": {
+      "url": "https://h2tools.org/sites/default/files/2019-08/paper_120.pdf",
+      "result": "figure_and_description_only",
+      "machine_readable_pressure_time_trace_found": false
+    },
+    "related_zenodo_ventilation_release": {
+      "url": "https://zenodo.org/records/4668554",
+      "doi": "10.5281/zenodo.4668554",
+      "result": "different_experiment_family",
+      "usable_for_grune_pressure_decay": false,
+      "reason": "The release contains H2 concentration and flow-field/ventilation workbooks, not the 0.37 L reservoir pressure-decay trace required by the Grune holdout."
+    }
+  },
   "access_result": {
     "official_metadata_found": true,
     "apparatus_and_figure_description_found": true,
