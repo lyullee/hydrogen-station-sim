@@ -4259,6 +4259,27 @@ def audit(root: Path) -> dict[str, object]:
     h2safe_timing = (h2safe or {}).get("timing_crosswalk") or {}
     h2safe_eligibility = (h2safe or {}).get("eligibility_decision") or {}
     h2safe_privacy = (h2safe or {}).get("privacy_and_redistribution") or {}
+    h2safe_recheck_path = root / "research/h2safe_oedi_recheck_2026_10_12.json"
+    h2safe_recheck = _json(h2safe_recheck_path)
+    h2safe_recheck_pass = bool(
+        (h2safe_recheck or {}).get("artifact_type")
+        == "h2safe_oedi_public_record_recheck"
+        and ((h2safe_recheck or {}).get("source") or {}).get("test_gas")
+        == "helium surrogate"
+        and ((h2safe_recheck or {}).get("source") or {}).get("experiment_count") == 5
+        and ((h2safe_recheck or {}).get("download_recheck") or {}).get(
+            "content_changed_since_prior_intake"
+        ) is False
+        and ((h2safe_recheck or {}).get("eligibility_recheck") or {}).get(
+            "new_independent_holdout"
+        ) is False
+        and ((h2safe_recheck or {}).get("eligibility_recheck") or {}).get(
+            "release_to_logger_time_crosswalk"
+        ) is False
+        and ((h2safe_recheck or {}).get("eligibility_recheck") or {}).get(
+            "runtime_parameter_application"
+        ) is False
+    )
     h2safe_pass = bool(
         (h2safe or {}).get("artifact_type")
         == "public_h2safe_helium_dataset_intake_audit"
@@ -4285,9 +4306,11 @@ def audit(root: Path) -> dict[str, object]:
     )
     gates.append(_gate(
         "h2safe_public_helium_dataset_intake",
-        "PASS" if h2safe_pass else ("FAIL" if h2safe else "PENDING"),
+        "PASS" if h2safe_pass and h2safe_recheck_pass else (
+            "FAIL" if h2safe or h2safe_recheck else "PENDING"
+        ),
         "The public full-scale H2SAFE helium sensor dataset is hash-audited and screened prospectively without being promoted to hydrogen or detector-timing validation.",
-        str(h2safe_path.relative_to(root)),
+        f"{h2safe_path.relative_to(root)}; {h2safe_recheck_path.relative_to(root)}",
         "Two laboratories, five 1 s time-series tests, frozen pre-access protocol, release-time crosswalk decision and explicit surrogate/full-loop exclusions.",
         {
             "doi": h2safe_source.get("doi"),
@@ -4305,6 +4328,25 @@ def audit(root: Path) -> dict[str, object]:
             "runtime_parameter_application": h2safe_eligibility.get(
                 "runtime_parameter_application"
             ),
+            "oedi_source_recheck": {
+                "status": (h2safe_recheck or {}).get("artifact_type"),
+                "content_changed_since_prior_intake": (
+                    (h2safe_recheck or {}).get("download_recheck", {}).get(
+                        "content_changed_since_prior_intake"
+                    )
+                ),
+                "new_independent_holdout": (
+                    (h2safe_recheck or {}).get("eligibility_recheck", {}).get(
+                        "new_independent_holdout"
+                    )
+                ),
+                "release_to_logger_time_crosswalk": (
+                    (h2safe_recheck or {}).get("eligibility_recheck", {}).get(
+                        "release_to_logger_time_crosswalk"
+                    )
+                ),
+                "integrity_pass": h2safe_recheck_pass,
+            },
             "claim_boundary": (h2safe or {}).get("claim_boundary"),
         } if h2safe else "missing; H2SAFE public dataset intake has not run",
     ))

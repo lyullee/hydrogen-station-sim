@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-11T18:42:49.476290+00:00",
+  "generated_at": "2026-10-11T18:45:36.571708+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -3119,7 +3119,7 @@
       "id": "h2safe_public_helium_dataset_intake",
       "status": "PASS",
       "claim": "The public full-scale H2SAFE helium sensor dataset is hash-audited and screened prospectively without being promoted to hydrogen or detector-timing validation.",
-      "evidence": "research\\h2safe_public_dataset_intake_2026_10_08.json",
+      "evidence": "research\\h2safe_public_dataset_intake_2026_10_08.json; research\\h2safe_oedi_recheck_2026_10_12.json",
       "requirement": "Two laboratories, five 1 s time-series tests, frozen pre-access protocol, release-time crosswalk decision and explicit surrogate/full-loop exclusions.",
       "observed": {
         "doi": "10.7799/17118570",
@@ -3133,6 +3133,13 @@
         "timing_crosswalk_available": false,
         "timing_validation_eligible": false,
         "runtime_parameter_application": false,
+        "oedi_source_recheck": {
+          "status": "h2safe_oedi_public_record_recheck",
+          "content_changed_since_prior_intake": false,
+          "new_independent_holdout": false,
+          "release_to_logger_time_crosswalk": false,
+          "integrity_pass": true
+        },
         "claim_boundary": "This audit establishes public file integrity, sampling cadence and spatial metadata availability only. Helium is a surrogate gas, the release-to-logger time crosswalk is absent, and no hydrogen magnitude, detector latency, placement, ventilation, outdoor dispersion, ESD, safety-distance or full-loop HRS validation claim is supported."
       }
     },

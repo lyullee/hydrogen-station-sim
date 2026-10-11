@@ -428,6 +428,13 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     assert h2safe["hydrogen_threshold_calibration"] is False
     assert h2safe["full_loop_station_vehicle_validation"] is False
     assert h2safe["runtime_parameter_updated"] is False
+    public_h2safe = gates["h2safe_public_helium_dataset_intake"]
+    assert public_h2safe["status"] == "PASS"
+    assert "h2safe_oedi_recheck_2026_10_12.json" in public_h2safe["evidence"]
+    assert public_h2safe["observed"]["oedi_source_recheck"]["integrity_pass"] is True
+    assert public_h2safe["observed"]["oedi_source_recheck"][
+        "new_independent_holdout"
+    ] is False
     assert gates["h2safe_spatial_detector_transfer_validation"]["status"] == "FAIL"
     spatial_stratification = gates[
         "actual_hydrogen_spatial_stratification_evidence"
