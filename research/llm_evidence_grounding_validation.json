@@ -20,9 +20,9 @@
       "passed": 1449,
       "failed": 0,
       "warnings": 20,
-      "run_recorded_at": "2026-10-11T16:45:53+00:00",
-      "source_commit": "0ec83ab17b789e4d2ce378d1625d9f6779e7c57e",
-      "working_tree_dirty_at_run": true
+      "run_recorded_at": "2026-10-11T16:58:50.613934+00:00",
+      "source_commit": "afc4fbe",
+      "working_tree_dirty_at_run": false
     },
     "latest_direct_route_spot_check": {
       "command": ".venv\\Scripts\\python.exe -m pytest tests/test_digital_twin_direct_qa.py tests/test_hiad_response_stage_contract.py -q",
@@ -524,5 +524,5 @@
     "full_loop_external_holdout_eligible": false,
     "interpretation": "public aggregate field relevance and functional-gap evidence only; no synchronized station-dispenser-vehicle traces"
   },
-  "source_commit": "0ec83ab17b789e4d2ce378d1625d9f6779e7c57e"
+  "source_commit": "afc4fbe"
 }

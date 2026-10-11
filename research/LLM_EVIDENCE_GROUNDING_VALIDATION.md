@@ -99,7 +99,7 @@ The following tests passed in the repository virtual environment:
 20 passed, 3 warnings
 ```
 
-The full-suite result was rechecked on the validation working tree; the JSON artifact records its source commit and dirty-tree boundary. A clean current-commit direct-route spot check now records 20 passed and 3 warnings. The tests verify that normal monitoring keeps impact calculation marked as
+The full-suite result was rerun from clean commit `afc4fbe`; the JSON artifact records the source commit and `working_tree_dirty_at_run=false`. A clean direct-route spot check records 20 passed and 3 warnings. The tests verify that normal monitoring keeps impact calculation marked as
 `not_requested`, emergency or explicit-impact paths preserve calculated
 results and input tags, non-finite values are discarded, the main and sensor
 assistant routes remain isolated, and a generated answer cannot negate a
