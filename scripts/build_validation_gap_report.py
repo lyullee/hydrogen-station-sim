@@ -213,6 +213,9 @@ def build_report(
         "hiad_holdout_collection",
         "independent_expert_review_complete",
         "saga_effectiveness_and_safety_supported",
+        # Catalogue/file-access integrity is retained in the overall audit,
+        # but is not a scientific validation gate for the declared scope.
+        "public_nbsdc_lh2_station_intake_integrity",
     }
     scoped_gates = [
         gate for gate in gates
@@ -241,7 +244,8 @@ def build_report(
             "definition": (
                 "Declared 2026-10-11 primary scope: station-side process/safety, "
                 "public component holdouts and direct-answer SAGA grounding; "
-                "full-loop and human-effectiveness lanes remain excluded."
+                "full-loop, human-effectiveness and non-validation access-boundary "
+                "checks remain excluded."
             ),
             "pass": scoped_counts["PASS"],
             "fail": scoped_counts["FAIL"],

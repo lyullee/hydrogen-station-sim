@@ -89,6 +89,7 @@ def build_brief(
             "hiad_holdout_collection",
             "independent_expert_review_complete",
             "saga_effectiveness_and_safety_supported",
+            "public_nbsdc_lh2_station_intake_integrity",
         }
         scoped_rows = [
             row for row in (readiness.get("gates") or [])

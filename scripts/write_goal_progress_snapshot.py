@@ -32,6 +32,11 @@ def build_snapshot(
         "hiad_holdout_collection",
         "independent_expert_review_complete",
         "saga_effectiveness_and_safety_supported",
+        # This is a public-catalogue access-boundary record, not a numerical
+        # validation result.  Keep it in the overall ledger for provenance,
+        # but do not let a metadata/access check inflate the science-scope
+        # closure metric.
+        "public_nbsdc_lh2_station_intake_integrity",
     }
     gate_rows = audit.get("gates") or []
     scoped_rows = [
@@ -54,7 +59,7 @@ def build_snapshot(
         "gate_counts": {"PASS": passed, "FAIL": failed, "PENDING": pending, "TOTAL": total},
         "gate_closure_percent": round(closure, 1),
         "primary_scope_progress_2026_10_11": {
-            "metric_definition": "Scope-adjusted gate closure after removing the declared station-to-vehicle full-loop and optional SAGA human-evaluation lanes; this is not a scientific improvement claim.",
+            "metric_definition": "Scope-adjusted gate closure after removing the declared station-to-vehicle full-loop, optional SAGA human-evaluation lanes and non-validation public access-boundary checks; this is not a scientific improvement claim.",
             "gate_counts": {**scoped_counts, "TOTAL": scoped_total},
             "gate_closure_percent": round(scoped_closure, 1),
             "excluded_gate_ids": sorted(excluded_from_primary_scope),

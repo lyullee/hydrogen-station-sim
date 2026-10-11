@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-11T22:15:43+00:00",
+  "generated_at": "2026-10-11T22:41:47+00:00",
   "metric_definition": "PASS gates divided by PASS+FAIL+PENDING gates; not a publication-readiness probability",
   "gate_counts": {
     "PASS": 131,
@@ -10,7 +10,7 @@
   },
   "gate_closure_percent": 88.5,
   "primary_scope_progress_2026_10_11": {
-    "metric_definition": "Scope-adjusted gate closure after removing the declared station-to-vehicle full-loop and optional SAGA human-evaluation lanes; this is not a scientific improvement claim.",
+    "metric_definition": "Scope-adjusted gate closure after removing the declared station-to-vehicle full-loop, optional SAGA human-evaluation lanes and non-validation public access-boundary checks; this is not a scientific improvement claim.",
     "gate_counts": {
       "PASS": 130,
       "FAIL": 9,
@@ -24,6 +24,7 @@
       "hiad_holdout_collection",
       "independent_expert_review_complete",
       "institutional_ethics_determination",
+      "public_nbsdc_lh2_station_intake_integrity",
       "saga_effectiveness_and_safety_supported"
     ]
   },
