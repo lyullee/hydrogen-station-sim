@@ -2,6 +2,15 @@
 
 **Do not send without the project owner's review.**
 
+## Access check — 2026-10-11
+
+The public CARB hydrogen-fueling page and the 2024 report route were rechecked.
+The report is publicly downloadable, and Appendix A states that the study
+results were tabulated in an Excel workbook, but no workbook/logger download or
+reuse licence is linked from the public route. This draft therefore requests
+the workbook and, if available, the underlying de-identified event traces; it
+does not treat the report itself as a machine-readable holdout.
+
 To: CARB Vapor Recovery and Fuel Transfer Branch (`vapor@arb.ca.gov`)
 
 Subject: Request for de-identified fill-level data from the 2024 hydrogen station in-use study
@@ -40,7 +49,18 @@ the study will not characterize the data as regulatory certification.
 If the fill-level traces cannot be released, the Appendix A workbook alone, or
 guidance to the correct data custodian, would still be valuable.
 
+### On receipt (do not analyse before this checklist is complete)
+
+1. Record the custodian response, licence/reuse terms and any restrictions.
+2. Hash every received file and retain the original archive separately from
+   derived tables.
+3. Confirm the presence and units of station/dispenser, CHSS/receptacle,
+   common elapsed time, temperature, mass-flow/SOC and protocol fields.
+4. Freeze the eligibility rule, model commit and scoring thresholds before
+   opening numerical outcomes.
+5. Keep excluded or failed events in the manifest and report the result as an
+   independent external holdout only if the channel and provenance checks pass.
+
 Sincerely,
 
 *[name, affiliation, institutional email and project DOI to be supplied]*
-
