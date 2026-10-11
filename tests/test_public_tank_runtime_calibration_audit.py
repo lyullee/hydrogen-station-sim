@@ -19,6 +19,9 @@ def test_public_tank_runtime_audit_keeps_the_component_scope_and_runtime_link():
     assert record["runtime_match"] is True
     assert record["runtime"]["api_default_mode"] == "public_type_iv"
     assert record["runtime"]["validation_case_count"] == 12
+    assert record["runtime"]["validation_label"] == "independent_component_holdout"
+    assert record["runtime"]["independent_external_validation"] is True
+    assert record["runtime"]["full_loop_external_validation"] is False
     assert record["recheck"]["matches_frozen_expected_result"] is True
     assert "does not validate a station-to-vehicle controller" in record["claim_boundary"]
     assert len(record["source_hashes"]) == 6

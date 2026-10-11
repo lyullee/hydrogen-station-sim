@@ -18,6 +18,9 @@ def test_public_type_iv_profile_is_passing_and_claim_bounded():
     assert metadata["status"] == "active"
     assert metadata["validation_case_count"] == 12
     assert metadata["validation_mean_metrics"]["pressure_rmse_mpa"] < 5.0
+    assert metadata["validation_label"] == "independent_component_holdout"
+    assert metadata["independent_external_validation"] is True
+    assert metadata["full_loop_external_validation"] is False
     assert "not station-to-vehicle" in metadata["validation_boundary"]
 
 
@@ -49,6 +52,9 @@ def test_llm_evidence_keeps_the_tank_fit_separate_from_full_station_validation()
     )
     calibration = manifest["runtime_vehicle_tank_calibration"]
     assert calibration["status"] == "active"
+    assert calibration["validation_label"] == "independent_component_holdout"
+    assert calibration["independent_external_validation"] is True
+    assert calibration["full_loop_external_validation"] is False
     assert "not station-to-vehicle" in calibration["validation_boundary"]
     assert prompt_evidence_summary(manifest)["runtime_vehicle_tank_calibration"][
         "validation_case_count"

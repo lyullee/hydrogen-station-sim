@@ -80,6 +80,13 @@ def build_record(root: Path = ROOT) -> dict[str, Any]:
             "llm_evidence_status": runtime_evidence.get("status"),
             "llm_evidence_id": runtime_evidence.get("id"),
             "validation_case_count": runtime_evidence.get("validation_case_count"),
+            "validation_label": runtime_evidence.get("validation_label"),
+            "independent_external_validation": runtime_evidence.get(
+                "independent_external_validation"
+            ) is True,
+            "full_loop_external_validation": runtime_evidence.get(
+                "full_loop_external_validation"
+            ) is True,
         },
         "recheck": {
             "artifact": recheck_path.relative_to(root).as_posix(),

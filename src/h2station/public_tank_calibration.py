@@ -45,6 +45,12 @@ class PublicTypeIVTankCalibrationProfile:
             "gas_liner_ua_multiplier": self.gas_liner_ua_multiplier,
             "validation_case_count": self.validation_case_count,
             "validation_mean_metrics": dict(self.validation_metrics),
+            # This is a frozen, independent component holdout.  Keep the
+            # scope explicit in every provider-facing projection so it cannot
+            # be mistaken for a station-to-vehicle or field validation.
+            "validation_label": "independent_component_holdout",
+            "independent_external_validation": True,
+            "full_loop_external_validation": False,
             "validation_boundary": (
                 "Public Type-IV tank-only validation with measured mass-flow "
                 "and inlet-temperature boundaries; not station-to-vehicle, "
