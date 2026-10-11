@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-11T17:34:56.230746+00:00",
+  "generated_at": "2026-10-11T17:52:17.870754+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -7629,19 +7629,23 @@
         "manifest_schema": "h2station.llm-evidence.v1",
         "tests": {
           "targeted": {
-            "command": ".venv\\Scripts\\python.exe -m pytest tests/test_llm_grounding.py tests/test_station_thermal_diagnostic.py tests/test_station_thermal_protocol.py tests/test_hiad_digital_twin_replay_coverage.py tests/test_khk_digital_twin_replay_coverage.py tests/test_flame_detection.py tests/test_carb_hrs_inuse_benchmark.py tests/test_ijhe_readiness_audit.py -q",
-            "passed": 47,
+            "command": ".venv\\Scripts\\python.exe -m pytest tests/test_llm_grounding.py tests/test_saga_chat.py tests/test_saga_provider.py tests/test_saga_response_contract.py tests/test_hiad_digital_twin_replay_coverage.py tests/test_hiad_virtual_action_execution.py tests/test_hiad_accident_response_coverage_evaluation.py -q",
+            "passed": 65,
             "failed": 0,
-            "warnings": 0
+            "warnings": 2,
+            "run_recorded_at": "2026-10-11T17:51:25.479059+00:00",
+            "source_commit": "f24843d79b100a34defb510a0120f40d37a082b8",
+            "working_tree_dirty_at_run": false
           },
           "full_suite": {
             "command": ".venv\\Scripts\\python.exe -m pytest -q",
-            "passed": 1450,
+            "passed": 1454,
             "failed": 0,
             "warnings": 20,
-            "run_recorded_at": "2026-10-11T17:17:05.362042+00:00",
-            "source_commit": "6a5e41a",
-            "working_tree_dirty_at_run": false
+            "run_recorded_at": "2026-10-11T17:51:25.479059+00:00",
+            "source_commit": "f24843d79b100a34defb510a0120f40d37a082b8",
+            "working_tree_dirty_at_run": false,
+            "elapsed_seconds": 291.63
           },
           "latest_direct_route_spot_check": {
             "command": ".venv\\Scripts\\python.exe -m pytest tests/test_digital_twin_direct_qa.py tests/test_hiad_response_stage_contract.py -q",
@@ -7655,9 +7659,9 @@
               "main and selected-sensor routes do not call the reasoning endpoint",
               "contradictory direct-provider claims are guarded against confirmed signals"
             ],
-            "source_commit": "bfe63b6",
+            "source_commit": "f24843d79b100a34defb510a0120f40d37a082b8",
             "working_tree_dirty_at_run": false,
-            "run_recorded_at": "2026-10-11T16:52:24.364226+00:00"
+            "run_recorded_at": "2026-10-11T17:51:25.479059+00:00"
           }
         },
         "verified_properties": [
@@ -8143,7 +8147,7 @@
           "full_loop_external_holdout_eligible": false,
           "interpretation": "public aggregate field relevance and functional-gap evidence only; no synchronized station-dispenser-vehicle traces"
         },
-        "source_commit": "afc4fbe"
+        "source_commit": "f24843d79b100a34defb510a0120f40d37a082b8"
       }
     },
     {

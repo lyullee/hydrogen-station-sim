@@ -89,17 +89,17 @@ distances. An LLM response is not allowed to turn `not_requested` or
 The following tests passed in the repository virtual environment:
 
 ```text
-.venv\Scripts\python.exe -m pytest tests/test_llm_grounding.py tests/test_station_thermal_diagnostic.py tests/test_station_thermal_protocol.py tests/test_hiad_digital_twin_replay_coverage.py tests/test_khk_digital_twin_replay_coverage.py tests/test_flame_detection.py tests/test_carb_hrs_inuse_benchmark.py tests/test_ijhe_readiness_audit.py -q
-47 passed
+.venv\Scripts\python.exe -m pytest tests/test_llm_grounding.py tests/test_saga_chat.py tests/test_saga_provider.py tests/test_saga_response_contract.py tests/test_hiad_digital_twin_replay_coverage.py tests/test_hiad_virtual_action_execution.py tests/test_accident_response_coverage_evaluation.py -q
+65 passed, 2 warnings
 
 .venv\Scripts\python.exe -m pytest -q
-1449 passed, 20 warnings
+1454 passed, 20 warnings in 291.63 s
 
 .venv\Scripts\python.exe -m pytest tests/test_digital_twin_direct_qa.py tests/test_hiad_response_stage_contract.py -q
 20 passed, 3 warnings
 ```
 
-The full-suite result was rerun from clean commit `afc4fbe`; the JSON artifact records the source commit and `working_tree_dirty_at_run=false`. A clean direct-route spot check records 20 passed and 3 warnings. The tests verify that normal monitoring keeps impact calculation marked as
+The full-suite result was rerun from clean commit `f24843d79b100a34defb510a0120f40d37a082b8`; the JSON artifact records the source commit and `working_tree_dirty_at_run=false`. The focused LLM/accident-path regression and direct-route spot check also ran against that clean commit. The tests verify that normal monitoring keeps impact calculation marked as
 `not_requested`, emergency or explicit-impact paths preserve calculated
 results and input tags, non-finite values are discarded, the main and sensor
 assistant routes remain isolated, and a generated answer cannot negate a
