@@ -80,6 +80,16 @@
       "independent_component_holdout": "retained_public_type_iv_split_ready",
       "station_to_vehicle_raw_data": "removed_from_primary_goal_after_public_search",
       "ethics_and_expert_review": "optional_for_physics_validation; required only for a claim that SAGA improves human safety guidance"
+    },
+    "latest_access_evidence": {
+      "h2safe_oedi_recheck_2026_10_12": {
+        "status": "SAME_ARCHIVE_NO_NEW_HOLDOUT",
+        "evidence": "research/h2safe_oedi_recheck_2026_10_12.json",
+        "sha256": "f1b8bf747b7787f00152ec416940c80a143ea044fc18ee8a69ac9da204d9158e",
+        "content_changed_since_prior_intake": false,
+        "runtime_parameter_application": false,
+        "claim_boundary": "Public-record and byte-integrity recheck only; no new spatial or full-loop validation claim."
+      }
     }
   }
-}
+}\n
