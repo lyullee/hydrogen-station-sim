@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-11T16:49:12.000204+00:00",
+  "generated_at": "2026-10-11T16:52:24.793343+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -7645,7 +7645,7 @@
           },
           "latest_direct_route_spot_check": {
             "command": ".venv\\Scripts\\python.exe -m pytest tests/test_digital_twin_direct_qa.py tests/test_hiad_response_stage_contract.py -q",
-            "passed": 19,
+            "passed": 20,
             "failed": 0,
             "warnings": 3,
             "verified": [
@@ -7655,8 +7655,9 @@
               "main and selected-sensor routes do not call the reasoning endpoint",
               "contradictory direct-provider claims are guarded against confirmed signals"
             ],
-            "source_commit": "0ec83ab17b789e4d2ce378d1625d9f6779e7c57e",
-            "working_tree_dirty_at_run": true
+            "source_commit": "bfe63b6",
+            "working_tree_dirty_at_run": false,
+            "run_recorded_at": "2026-10-11T16:52:24.364226+00:00"
           }
         },
         "verified_properties": [

@@ -96,10 +96,10 @@ The following tests passed in the repository virtual environment:
 1449 passed, 20 warnings
 
 .venv\Scripts\python.exe -m pytest tests/test_digital_twin_direct_qa.py tests/test_hiad_response_stage_contract.py -q
-19 passed, 3 warnings
+20 passed, 3 warnings
 ```
 
-The full-suite result was rechecked on the current validation working tree; the recheck records the source commit and dirty-tree boundary in the JSON artifact. The tests verify that normal monitoring keeps impact calculation marked as
+The full-suite result was rechecked on the validation working tree; the JSON artifact records its source commit and dirty-tree boundary. A clean current-commit direct-route spot check now records 20 passed and 3 warnings. The tests verify that normal monitoring keeps impact calculation marked as
 `not_requested`, emergency or explicit-impact paths preserve calculated
 results and input tags, non-finite values are discarded, the main and sensor
 assistant routes remain isolated, and a generated answer cannot negate a
