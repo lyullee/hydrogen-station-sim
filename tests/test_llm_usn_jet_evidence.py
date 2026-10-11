@@ -5,6 +5,7 @@ from h2station.llm_grounding import (
     prompt_decision_evidence,
     prompt_evidence_summary,
 )
+from h2station.api import _provider_evidence_basis
 
 
 def test_usn_jet_dataset_is_grounded_as_post_access_component_diagnostic():
@@ -37,3 +38,10 @@ def test_usn_jet_dataset_is_grounded_as_post_access_component_diagnostic():
         link.get("id") == "PUBLIC_USN_IGNITED_JET_DATASET"
         for link in compact["public_source_links"]
     )
+    provider = _provider_evidence_basis(manifest)
+    assert provider["public_usn_ignited_jet_dataset_diagnostic"][
+        "current_validation_status"
+    ] == "NOT_REPLAYED"
+    assert provider["public_usn_ignited_jet_dataset_diagnostic"][
+        "station_vehicle_full_loop_supported"
+    ] is False

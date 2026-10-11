@@ -262,6 +262,32 @@ def _provider_evidence_basis(manifest: dict[str, Any]) -> dict[str, Any]:
                 **response_guidance,
                 "relevant_public_accident_precedents": public_rows,
             }
+    # Preserve bounded public component evidence when the current question
+    # makes it relevant.  The full decision-support projection intentionally
+    # stays out of provider prompts, but dropping this item entirely would
+    # make an interactive answer unable to cite the staged USN ignited-jet
+    # dataset even though the evidence contract admitted it above.
+    decision_support = full.get("decision_support_evidence")
+    if isinstance(decision_support, dict):
+        public_jet = decision_support.get(
+            "public_usn_ignited_jet_dataset_diagnostic"
+        )
+        if isinstance(public_jet, dict):
+            source = public_jet.get("source") or {}
+            claim_limit = str(public_jet.get("claim_limit") or "")
+            keep["public_usn_ignited_jet_dataset_diagnostic"] = {
+                "dataset_doi": source.get("dataset_doi"),
+                "component_consequence_candidate": public_jet.get(
+                    "component_consequence_candidate"
+                ) is True,
+                "current_validation_status": public_jet.get(
+                    "current_validation_status"
+                ),
+                "hrs_dispenser_validation_supported": False,
+                "station_vehicle_full_loop_supported": False,
+                "runtime_parameter_application": False,
+                "claim_limit": claim_limit[:240],
+            }
     boundaries = full.get("validation_boundaries")
     if isinstance(boundaries, dict):
         # The station-to-vehicle limitation is the decision-relevant boundary
