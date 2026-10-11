@@ -33,6 +33,15 @@
     "reuse_terms_for_derived_metrics_found": false,
     "graph_or_table_only": true
   },
+  "hytransfer_archived_site_recheck": {
+    "archive_url": "https://arquivo.pt/wayback/20170622141339mp_/https://www.hytransfer.eu/downloads-press-1/",
+    "archived_site_retrieved": true,
+    "public_document_or_image_links_count": 15,
+    "machine_readable_data_links_found": false,
+    "raw_gastef_files_exposed": false,
+    "channel_dictionary_exposed": false,
+    "interpretation": "The preserved HYTRANSFER download page exposes reports, slides and images, including the public filling-campaign report, but no CSV, XLSX, ZIP or other machine-readable GasTeF trace archive."
+  },
   "eligibility_decision": "CONTROLLED_ACCESS_LEAD_NO_PUBLIC_RAW_ARCHIVE",
   "full_loop_holdout_eligible": false,
   "numeric_holdout_added": false,

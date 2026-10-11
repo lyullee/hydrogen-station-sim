@@ -23,3 +23,8 @@ def test_jrc_gastef_recheck_preserves_raw_trace_boundary() -> None:
     assert record["numeric_holdout_added"] is False
     assert record["runtime_model_changed"] is False
     assert len(record["source_records"]) == 3
+    archived = record["hytransfer_archived_site_recheck"]
+    assert archived["archived_site_retrieved"] is True
+    assert archived["public_document_or_image_links_count"] == 15
+    assert archived["machine_readable_data_links_found"] is False
+    assert archived["raw_gastef_files_exposed"] is False
