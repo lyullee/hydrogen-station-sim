@@ -1,6 +1,12 @@
 from __future__ import annotations
 
+import json
+from pathlib import Path
+
 from scripts.write_goal_progress_snapshot import build_snapshot
+
+
+ROOT = Path(__file__).resolve().parents[1]
 
 
 def test_progress_snapshot_is_a_gate_closure_metric() -> None:
@@ -22,3 +28,20 @@ def test_progress_snapshot_is_a_gate_closure_metric() -> None:
     assert "synchronized station-to-vehicle raw logger validation" in scope["excluded_from_primary_goal"]
     assert snapshot["interpretation"]["priority_status_2026_10_11"]["independent_component_holdout"] == "retained_public_type_iv_split_ready"
     assert snapshot["primary_scope_progress_2026_10_11"]["gate_closure_percent"] == 88.2
+
+
+def test_committed_full_regression_evidence_is_reflected_in_progress_snapshot() -> None:
+    regression = json.loads(
+        (ROOT / "research/full_regression_test_run_2026_10_11.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    snapshot = json.loads(
+        (ROOT / "research/goal_progress_snapshot_2026_10_11.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    reflected = snapshot["interpretation"]["latest_access_evidence"]["full_regression"]
+    for key in ("status", "tests_passed", "tests_failed", "warnings", "source_commit"):
+        assert reflected[key] == regression[key]
+    assert reflected["evidence"] == "research/full_regression_test_run_2026_10_11.json"
