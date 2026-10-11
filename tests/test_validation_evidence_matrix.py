@@ -15,6 +15,10 @@ def _load(name: str) -> dict:
 
 def test_validation_matrix_preserves_claim_boundaries_and_metrics() -> None:
     matrix = _load("research/validation_evidence_matrix_2026_10_11.json")
+    scope_audit = matrix["scope_manifest_verification"]
+    assert scope_audit["status"] == "PASS"
+    assert scope_audit["artifact"].endswith("validation_scope_manifest_verification_2026_10_11.json")
+    assert "private rows" in scope_audit["claim_boundary"]
     lanes = {lane["id"]: lane for lane in matrix["lanes"]}
     same_site = lanes["same_site_station_side_holdout"]
     assert same_site["label"] == "same_site_station_side_time_ordered_holdout"

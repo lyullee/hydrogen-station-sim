@@ -3,6 +3,20 @@
   "artifact_type": "validation_evidence_matrix",
   "recorded_at": "2026-10-11",
   "purpose": "Keep validation labels, metrics and claim boundaries consistent across the manuscript, audit and LLM grounding.",
+  "scope_manifest_verification": {
+    "status": "PASS",
+    "artifact": "research/validation_scope_manifest_verification_2026_10_11.json",
+    "verifier": "scripts/verify_validation_scope_manifest.py",
+    "checks": [
+      "privacy boundary",
+      "chronology-preserving same-site split",
+      "frozen owner calibration/holdout counts",
+      "public Type-IV split counts",
+      "referenced artifact SHA-256 digests",
+      "station-to-vehicle scope exclusion"
+    ],
+    "claim_boundary": "Metadata and artifact-integrity audit only; no private rows are published and no full-loop or human-effectiveness claim is created."
+  },
   "primary_scope": {
     "includes": [
       "station-side HRS process and safety digital-twin behavior",

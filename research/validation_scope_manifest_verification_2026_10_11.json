@@ -1,0 +1,125 @@
+{
+  "schema_version": 1,
+  "artifact_type": "validation_scope_manifest_verification",
+  "generated_at": "2026-10-11T09:01:38.263129+00:00",
+  "status": "PASS",
+  "manifest": "research/confidential_validation_split_manifest_2026_10_11.json",
+  "checks": {
+    "manifest_identity": {
+      "pass": true,
+      "observed": {
+        "artifact_type": "confidential_validation_split_manifest",
+        "status": "frozen_scope_manifest"
+      },
+      "expected": {
+        "artifact_type": "confidential_validation_split_manifest",
+        "status": "frozen_scope_manifest"
+      }
+    },
+    "privacy_boundary": {
+      "pass": true,
+      "observed": {
+        "source_identifiers_published": false,
+        "source_paths_published": false,
+        "source_filenames_published": false,
+        "source_headers_published": false,
+        "raw_rows_persisted": false,
+        "absolute_timestamps_published": false,
+        "calendar_dates_published": false,
+        "site_company_location_manufacturer_published": false
+      },
+      "expected": "all false"
+    },
+    "owner_partition_rule": {
+      "pass": true,
+      "observed": {
+        "partition_rule": "episode/time order; calibration prefix and later untouched suffix; no random row mixing",
+        "fit_uses_holdout": false,
+        "default_model_parameters_changed_after_holdout": false,
+        "claim_label": "same_site_temporal_holdout"
+      },
+      "expected": "chronology-preserving same-site holdout"
+    },
+    "owner_counts": {
+      "pass": true,
+      "observed": {
+        "deduplicated_rows": 56854143,
+        "pressure": {
+          "id": "pressure_boundary",
+          "calibration_points": 998,
+          "holdout_points": 30,
+          "holdout_duration_s": 1755.0,
+          "artifact": "research/confidential_operational_envelope_holdout_replay_2026_10_06.json"
+        },
+        "cascade": {
+          "id": "cascade_sequence",
+          "calibration_pairs": 8106,
+          "holdout_pairs": 3664,
+          "artifact": "research/confidential_station_cascade_sequence_holdout_2026_10_08.json"
+        },
+        "recharge": {
+          "id": "recharge_pressure_forecast",
+          "calibration_cases": 1024,
+          "holdout_cases": 394,
+          "artifact": "research/confidential_station_recharge_pressure_forecast_holdout_2026_10_08.json"
+        }
+      },
+      "expected": "frozen owner split counts"
+    },
+    "public_component_split": {
+      "pass": true,
+      "observed": {
+        "source_scope": "open Type-IV tank measurements",
+        "partition_rule": "lab_test_number modulo 3 equals 0 reserved before outcome inspection",
+        "calibration_cases": 23,
+        "holdout_cases": 12,
+        "excluded_mass_closure_cases": 1,
+        "artifact": "research/independent_component_holdout_reanalysis_2026_10_11.json",
+        "claim_label": "independent_component_holdout"
+      },
+      "expected": "23 calibration, 12 holdout, 1 excluded; independent component only"
+    },
+    "full_loop_scope_exclusion": {
+      "pass": true,
+      "observed": {
+        "status": "not_available_in_rights_cleared_machine_readable_form",
+        "decision": "excluded_from_current_goal_and_reported_as_limitation",
+        "independent_external_validation_supported": false
+      },
+      "expected": "excluded and reported as a limitation"
+    },
+    "referenced_artifact_hashes": {
+      "pass": true,
+      "observed": {
+        "research/confidential_operational_envelope_holdout_replay_2026_10_06.json": {
+          "pass": true,
+          "expected": "5f211cf0f7b4df25ed18fe64cf8a9dfb9a0b7f2bfa1fe5c787b6c4ac51edc164",
+          "actual": "5f211cf0f7b4df25ed18fe64cf8a9dfb9a0b7f2bfa1fe5c787b6c4ac51edc164"
+        },
+        "research/confidential_station_cascade_sequence_holdout_2026_10_08.json": {
+          "pass": true,
+          "expected": "44aafda5dcb905744b22266fa431b9c2ad1f00a34410534ea5c9d03ca2caec60",
+          "actual": "44aafda5dcb905744b22266fa431b9c2ad1f00a34410534ea5c9d03ca2caec60"
+        },
+        "research/confidential_station_recharge_pressure_forecast_holdout_2026_10_08.json": {
+          "pass": true,
+          "expected": "c870990c3416de59593c7a893dc33939a0a42665bf08db972290dd412d13b999",
+          "actual": "c870990c3416de59593c7a893dc33939a0a42665bf08db972290dd412d13b999"
+        },
+        "research/confidential_station_lifecycle_pressure_alignment_holdout_2026_10_09.json": {
+          "pass": true,
+          "expected": "98e328a37dc0093379c7495e13608c8ad79c1d8d2ce49eec3735418e3ecd2919",
+          "actual": "98e328a37dc0093379c7495e13608c8ad79c1d8d2ce49eec3735418e3ecd2919"
+        },
+        "research/independent_component_holdout_reanalysis_2026_10_11.json": {
+          "pass": true,
+          "expected": "8710f21e681bbdba6c1264b8d399f446b00771560962bb39558b8865ba17b935",
+          "actual": "8710f21e681bbdba6c1264b8d399f446b00771560962bb39558b8865ba17b935"
+        }
+      },
+      "expected": "all referenced SHA-256 digests match"
+    }
+  },
+  "failures": [],
+  "claim_boundary": "This verifier checks metadata and referenced-artifact integrity only. It does not publish private rows, convert a same-site holdout into external validation, or establish station-to-vehicle full-loop accuracy."
+}
