@@ -918,6 +918,20 @@
       "evidence_role": "Post-access metal-tank heat-transfer mechanism diagnostic only.",
       "rights_note": "The HydDown repository is MIT licensed, but redistribution rights for the original experimental arrays were not independently established. Only hashes, source metadata and aggregate errors are committed.",
       "eligibility_note": "The outcomes were inspected before this comparison and the vessel is a small Type-I metal tank. The result cannot serve as prospective Type-III/IV or full-station validation and does not select runtime parameters."
+    },
+
+    "nbsdc_static_hydrogen_compression_test_dataset_2026_10_12": {
+      "title": "Static hydrogen compression apparatus hydrogen-supply performance test report dataset",
+      "title_zh": "2019YFB1505103-010 静态氢压缩装置储供氢性能测试报告数据集",
+      "publisher": "National Basic Science Data Center catalogue",
+      "landing_page": "https://www.nbsdc.cn/general/dataDetail?id=64edc6babb16e07753c3461a&type=1",
+      "metadata_endpoint": "https://www.nbsdc.cn/api/general/v1/getFileTree?dataId=64edc6babb16e07753c3461a&pid={pid}&pageOffset=0&pageSize=30",
+      "custodian_catalogue": "https://www.nbsdc.cn/general/openAPI",
+      "data_id": "64edc6babb16e07753c3461a",
+      "reported_scope": "Nested compressor, interstage supply, final-stage delivery, pressurization and water-temperature performance files; seven numerical XLS files plus seven Origin project files.",
+      "public_raw_data": false,
+      "access_recheck": "research/nbsdc_static_compressor_access_recheck_2026_10_12.json",
+      "eligibility_note": "Metadata-only high-value request candidate. A representative numerical XLS request returned portal code 403; no raw bytes or numerical cells were used. It cannot close any external holdout or station-to-vehicle claim until authorized files and reuse terms are supplied."
     }
   }
 }

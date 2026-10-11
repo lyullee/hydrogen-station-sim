@@ -1,0 +1,178 @@
+{
+  "schema_version": 1,
+  "artifact_type": "nbsdc_public_raw_access_recheck",
+  "recorded_at": "2026-10-12",
+  "purpose": "paper_evidence_and_reproducibility",
+  "source": {
+    "title": "2019YFB1505103-010 静态氢压缩装置储供氢性能测试报告数据集",
+    "title_en": "Static hydrogen compression apparatus hydrogen-supply performance test report dataset",
+    "data_id": "64edc6babb16e07753c3461a",
+    "landing_url": "https://www.nbsdc.cn/general/dataDetail?id=64edc6babb16e07753c3461a&type=1",
+    "metadata_endpoint": "https://www.nbsdc.cn/api/general/v1/getFileTree?dataId=64edc6babb16e07753c3461a&pid={pid}&pageOffset=0&pageSize=30",
+    "rights_and_api_page": "https://www.nbsdc.cn/general/openAPI",
+    "catalogue_scope": "static hydrogen compression, storage and supply performance test curves",
+    "raw_data_status": "catalogue_metadata_visible; numerical_file_download_application_controlled"
+  },
+  "metadata_observation": {
+    "root": {
+      "http_status": 200,
+      "total": 1,
+      "tree_id": 1,
+      "name": "2019YFB1505103-010--静态氢压缩装置储供氢性能测试报告数据集",
+      "reported_size": 2,
+      "node_id": "63f62f325443004975fd2e7f"
+    },
+    "children": {
+      "http_status": 200,
+      "total": 2,
+      "tree_id": 11,
+      "name": "静态氢压缩装置储供氢性能测试报告数据集",
+      "tree_id_description": 12,
+      "description_file": {
+        "name": "静态氢压缩装置储供氢性能测试报告数据集说明文件.docx",
+        "bytes": 20598,
+        "node_id": "63f62f325443004975fd2e96"
+      }
+    },
+    "numerical_group": {
+      "http_status": 200,
+      "total": 7,
+      "tree_id": 11,
+      "files": [
+        {
+          "tree_id": 1111,
+          "name": "初级压缩向中级压缩供氢.xls",
+          "bytes": 944128,
+          "node_id": "63f62f325443004975fd2e82",
+          "role": "interstage_supply_curve"
+        },
+        {
+          "tree_id": 1112,
+          "name": "课题3-图7左.opju",
+          "bytes": 65089,
+          "node_id": "63f62f325443004975fd2e83",
+          "role": "origin_project_file"
+        },
+        {
+          "tree_id": 1122,
+          "name": "初级压缩向中级压缩供氢.xls",
+          "bytes": 1432576,
+          "node_id": "63f62f325443004975fd2e85",
+          "role": "interstage_supply_curve"
+        },
+        {
+          "tree_id": 1123,
+          "name": "课题3-图7右.opju",
+          "bytes": 65014,
+          "node_id": "63f62f325443004975fd2e86",
+          "role": "origin_project_file"
+        },
+        {
+          "tree_id": 1133,
+          "name": "低压高密向初级压缩供氢.xls",
+          "bytes": 1395712,
+          "node_id": "63f62f325443004975fd2e88",
+          "role": "primary_compressor_curve"
+        },
+        {
+          "tree_id": 1134,
+          "name": "课题3-图5.opju",
+          "bytes": 105607,
+          "node_id": "63f62f325443004975fd2e89",
+          "role": "origin_project_file"
+        },
+        {
+          "tree_id": 1144,
+          "name": "末级压缩装置供氢速率与累积供氢量曲线.xls",
+          "bytes": 753664,
+          "node_id": "63f62f325443004975fd2e8b",
+          "role": "delivery_rate_and_cumulative_mass"
+        },
+        {
+          "tree_id": 1145,
+          "name": "课题3-图13.opju",
+          "bytes": 65323,
+          "node_id": "63f62f325443004975fd2e8c",
+          "role": "origin_project_file"
+        },
+        {
+          "tree_id": 1155,
+          "name": "末级压缩装置充氢测试曲线.xls",
+          "bytes": 510976,
+          "node_id": "63f62f325443004975fd2e8e",
+          "role": "final_compressor_curve"
+        },
+        {
+          "tree_id": 1156,
+          "name": "课题3-图9.opju",
+          "bytes": 61154,
+          "node_id": "63f62f325443004975fd2e8f",
+          "role": "origin_project_file"
+        },
+        {
+          "tree_id": 1166,
+          "name": "末级压缩装置增压过程中水温变化.xls",
+          "bytes": 753664,
+          "node_id": "63f62f325443004975fd2e91",
+          "role": "water_temperature_during_pressurization"
+        },
+        {
+          "tree_id": 1167,
+          "name": "第四级排气一次升压-4-水.opju",
+          "bytes": 73550,
+          "node_id": "63f62f325443004975fd2e92",
+          "role": "origin_project_file"
+        },
+        {
+          "tree_id": 1177,
+          "name": "四排升压.xls",
+          "bytes": 501248,
+          "node_id": "63f62f325443004975fd2e94",
+          "role": "fourth_stage_pressurization_curve"
+        },
+        {
+          "tree_id": 1178,
+          "name": "课题3-图11.opju",
+          "bytes": 16600,
+          "node_id": "63f62f325443004975fd2e95",
+          "role": "origin_project_file"
+        }
+      ],
+      "inventory_note": "The fourteen-file nested inventory contains seven numerical XLS files and seven Origin project files. It is provenance metadata only; no numerical file bytes were retained.",
+      "numerical_file_count": 7,
+      "origin_project_file_count": 7
+    }
+  },
+  "raw_file_probe": {
+    "endpoint": "https://www.nbsdc.cn/api/general/v1/checkAndDownloadFile?dataId=64edc6babb16e07753c3461a&id=63f62f325443004975fd2e82&pid=111&pageOffset=0&pageSize=20",
+    "http_status": 200,
+    "portal_code": 403,
+    "message": "目前只支持部分数据集的说明文件下载，数据文件请通过数据申请获取。",
+    "raw_bytes_received": false,
+    "numeric_cells_opened": false,
+    "probe_scope": "one representative numerical XLS file; no retries or alternate download route used"
+  },
+  "paper_admission": {
+    "numerical_validation_eligible": false,
+    "component_schema_context_eligible": false,
+    "request_candidate": true,
+    "decision": "METADATA_ONLY_UNTIL_AUTHORIZED_ACCESS",
+    "reason": "The catalogue exposes potentially useful compressor/storage/supply performance curves, but numerical files are application-controlled. Units, timestamps, calibration, initial conditions, stop semantics, channel alignment and publication rights cannot be verified from metadata alone.",
+    "required_before_use": [
+      "custodian-approved numerical files",
+      "per-file SHA-256 hashes and immutable version",
+      "column dictionary and units",
+      "time base and sampling semantics",
+      "pressure, temperature, flow and cumulative-mass definitions",
+      "calibration and quality flags",
+      "written permission for derived metrics and IJHE publication"
+    ]
+  },
+  "claim_boundary": "This live recheck documents an official high-value candidate and a reproducible raw-access denial. It is not a downloaded dataset, numerical validation, controller validation, station-to-vehicle evidence or safety-distance evidence.",
+  "privacy": {
+    "raw_rows_persisted": false,
+    "private_site_or_company_identity_published": false,
+    "manufacturer_details_published": false,
+    "calendar_dates_from_private_sources_published": false
+  }
+}
