@@ -77,6 +77,7 @@ detailed geometry remain withheld.
 - `manuscript/ijhe_manuscript_draft.tex`
 - `research/ijhe_reproduction_run_2026_10_12.json`
 - `research/paper_llm_safety_broad_regression_2026_10_12.json`
+- `research/frontend_regression_test_run_2026_10_12.json` (latest 16-test state-contract run)
 - `research/PROGRESS_DELTA_2026_10_12.md`
 - `research/public_station_vehicle_search_recheck_2026_10_12.json`
 - `research/INCIDENT_EVIDENCE_TRACEABILITY_2026_10_12.md`
