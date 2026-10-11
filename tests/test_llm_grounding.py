@@ -662,6 +662,14 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert early["preslhy_validation_boundary"][
         "independent_holdout"
     ]["minimum_requirements_met"] is False
+    additional_80k = preslhy["additional_80k_intake"]
+    assert additional_80k["workbooks_read"] == 11
+    assert additional_80k["ambient_pressure_values_measured"] == 0
+    assert additional_80k["aggregate_eligible_cases"] == 0
+    assert additional_80k["claim_supported"] is False
+    assert early["preslhy_validation_boundary"]["additional_80k_intake"][
+        "raw_rows_persisted"
+    ] is False
     closed_loop = idle["response_evidence"]["closed_loop_validation_boundary"]
     assert closed_loop["aggregate"]["case_count"] == 8
     assert closed_loop["aggregate"]["screening_pass_count"] == 0
@@ -1856,7 +1864,7 @@ def test_compact_data_used_reports_available_and_applied_station_profile():
         include_references=True,
     )["validation_readiness"]
     assert readiness["claim_tier"] == "component_and_station_side_only"
-    assert readiness["gate_counts"] == {"PASS": 129, "FAIL": 10, "PENDING": 7}
+    assert readiness["gate_counts"] == {"PASS": 130, "FAIL": 10, "PENDING": 7}
     assert readiness["open_gate_count"] == 17
     assert readiness["full_loop_external_validation_supported"] is False
     assert readiness["expert_effectiveness_evaluation_supported"] is False

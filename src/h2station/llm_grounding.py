@@ -194,12 +194,22 @@ def _primary_scope_progress() -> dict[str, Any]:
             "SAGA 효과평가를 필수 검증으로 재분류하지 않음"
         ),
     }
-    path = Path(__file__).resolve().parents[2] / "research" / (
-        "goal_progress_snapshot_2026_10_11.json"
-    )
-    try:
-        payload = json.loads(path.read_text(encoding="utf-8"))
-    except (OSError, UnicodeError, json.JSONDecodeError):
+    research_dir = Path(__file__).resolve().parents[2] / "research"
+    payload = None
+    # Prefer the newest privacy-bounded snapshot, while retaining a fallback
+    # for packaged deployments that have not yet received that day's ledger.
+    for filename in (
+        "goal_progress_snapshot_2026_10_12.json",
+        "goal_progress_snapshot_2026_10_11.json",
+    ):
+        try:
+            candidate = json.loads((research_dir / filename).read_text(encoding="utf-8"))
+        except (OSError, UnicodeError, json.JSONDecodeError):
+            continue
+        if isinstance(candidate, dict):
+            payload = candidate
+            break
+    if payload is None:
         return unavailable
     if not isinstance(payload, dict):
         return unavailable
@@ -3578,6 +3588,73 @@ def _preslhy_validation_boundary() -> dict[str, Any] | None:
         or not isinstance(locked_model.get("module"), str)
     ):
         return None
+    additional_80k_intake: dict[str, Any] = {}
+    additional_result_path = (
+        root / "research/preslhy_e31_80k_d05_d2_holdout_result_2026_10_12.json"
+    )
+    additional_protocol_path = (
+        root / "research/preslhy_e31_80k_d05_d2_holdout_protocol_2026_10_12.json"
+    )
+    try:
+        additional_result = json.loads(
+            additional_result_path.read_text(encoding="utf-8")
+        )
+        additional_protocol = json.loads(
+            additional_protocol_path.read_text(encoding="utf-8")
+        )
+        observed = additional_result.get("observed") or {}
+        aggregate = additional_result.get("aggregate") or {}
+        protocol_hash = sha256(additional_protocol_path.read_bytes()).hexdigest()
+        if (
+            additional_result.get("status")
+            == "completed_negative_eligibility_result"
+            and additional_protocol.get("status")
+            == "frozen_before_numerical_outcome_access"
+            and additional_result.get("protocol_sha256") == protocol_hash
+            and observed.get("workbooks_read") == 11
+            and observed.get("read_errors") == 0
+            and observed.get("gas_temperature_values_measured") == 11
+            and observed.get("ambient_pressure_values_measured") == 0
+            and observed.get("aggregate_eligible_cases") == 0
+            and aggregate.get("claim_supported") is False
+            and (additional_result.get("source") or {}).get(
+                "raw_rows_persisted"
+            ) is False
+        ):
+            additional_80k_intake = {
+                "artifact": "research/preslhy_e31_80k_d05_d2_holdout_result_2026_10_12.json",
+                "protocol": "research/preslhy_e31_80k_d05_d2_holdout_protocol_2026_10_12.json",
+                "evidence_role": "prospective_public_80k_intake_boundary",
+                "dataset_doi": "10.35097/1187",
+                "package_count": len(
+                    (additional_result.get("source") or {}).get("packages") or []
+                ),
+                "workbooks_read": observed.get("workbooks_read"),
+                "read_errors": observed.get("read_errors"),
+                "gas_temperature_values_measured": observed.get(
+                    "gas_temperature_values_measured"
+                ),
+                "ambient_pressure_values_measured": observed.get(
+                    "ambient_pressure_values_measured"
+                ),
+                "ambient_pressure_values_substituted": observed.get(
+                    "ambient_pressure_values_substituted"
+                ),
+                "aggregate_eligible_cases": observed.get(
+                    "aggregate_eligible_cases"
+                ),
+                "claim_supported": False,
+                "runtime_model_parameter_changed": False,
+                "raw_rows_persisted": False,
+                "interpretation": (
+                    "11 public 80 K workbooks were read, but all lacked a measured "
+                    "ambient-pressure boundary; no case was scored with a substituted "
+                    "boundary and no validation claim was promoted."
+                ),
+                "claim_limit": str(additional_result.get("claim_boundary") or ""),
+            }
+    except (OSError, ValueError, json.JSONDecodeError):
+        additional_80k_intake = {}
     return {
         "artifact": "data/public_validation/results/preslhy_e5_1_holdout.json",
         "development_artifact": "research/preslhy_nonadiabatic_development_result.json",
@@ -3602,6 +3679,7 @@ def _preslhy_validation_boundary() -> dict[str, Any] | None:
             "claim_supported": False,
             "claim_threshold": holdout_aggregate.get("claim_threshold"),
         },
+        "additional_80k_intake": additional_80k_intake,
         "runtime_model_parameter_changed": False,
         "claim_limit": str(holdout.get("claim_boundary") or ""),
     }
@@ -10944,6 +11022,7 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
             ),
             "development": preslhy.get("development") or {},
             "independent_holdout": preslhy.get("independent_holdout") or {},
+            "additional_80k_intake": preslhy.get("additional_80k_intake") or {},
             "runtime_model_parameter_changed": preslhy.get(
                 "runtime_model_parameter_changed"
             ),
@@ -15838,6 +15917,7 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
             "independent_holdout_claim_supported": (
                 preslhy.get("independent_holdout") or {}
             ).get("claim_supported") is True,
+            "additional_80k_intake": preslhy.get("additional_80k_intake") or {},
             "runtime_model_parameter_changed": preslhy.get(
                 "runtime_model_parameter_changed"
             ) is True,
