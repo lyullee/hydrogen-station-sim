@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "artifact_type": "preslhy_partb_frozen_reproducibility_recheck",
+  "recorded_at": "2026-10-11",
+  "reference_result": "research/preslhy_partb_ambient_validation.json",
+  "recheck_result": "data/public_validation/results/preslhy_partb/recheck_2026_10_11/validation.json",
+  "runner_git_commit": "d8c722b7e324fa9e7a7a4dc66ae514fd912b5ba8",
+  "reference_protocol_sha256": "fa79e8da4495d0e2c8197e3fe7f98c6bc51cb9a05880d18e65dec5692c80224a",
+  "recheck_protocol_sha256": "fa79e8da4495d0e2c8197e3fe7f98c6bc51cb9a05880d18e65dec5692c80224a",
+  "archive_sha256": "2d4fbc6b3d2996a40629c71c6a33a6fdec3fde246ee4cee23de12c86672cd4ff",
+  "aggregate_match": true,
+  "eligible_case_count_match": true,
+  "case_comparison": [
+    {
+      "case_id": "20200520-143038_290K-2mm-5bar_W01-Final",
+      "pressure_nrmse_abs_difference": 2.606912019587071e-09,
+      "half_time_error_abs_difference": 0.0,
+      "joint_pass_same": true
+    },
+    {
+      "case_id": "20200520-144544_290K-2mm-3bar2_W02-Final",
+      "pressure_nrmse_abs_difference": 0.0,
+      "half_time_error_abs_difference": 0.0,
+      "joint_pass_same": true
+    },
+    {
+      "case_id": "20200520-145506_290K-4mm-5bar_W03-Final",
+      "pressure_nrmse_abs_difference": 0.0,
+      "half_time_error_abs_difference": 0.0,
+      "joint_pass_same": true
+    },
+    {
+      "case_id": "20200520-150010_290K-4mm-3bar2_W04-Final",
+      "pressure_nrmse_abs_difference": 1.2541079286165768e-12,
+      "half_time_error_abs_difference": 0.0,
+      "joint_pass_same": true
+    },
+    {
+      "case_id": "20200520-150332_290K-4mm-4bar8_W05-Final",
+      "pressure_nrmse_abs_difference": 0.0,
+      "half_time_error_abs_difference": 0.0,
+      "joint_pass_same": true
+    }
+  ],
+  "claim_status": "NOT_SUPPORTED",
+  "interpretation": "The frozen current model reproduces the earlier 3/5 joint pass result. The two 2 mm cases remain timing failures; no parameters, cases, thresholds or source alignment were changed.",
+  "reproducibility_sha256": "c14c5c77e4742a46e73171e24b39c23a402d9459165bd0e343efd02df5ea756e"
+}
