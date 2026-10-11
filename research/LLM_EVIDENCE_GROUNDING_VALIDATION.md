@@ -112,6 +112,13 @@ counts and their artifact digest, and the KHK citation inventory and bounded
 runtime trace used to ground the staged action plan. Raw HIAD action prose and
 KHK report text are never inserted into the live prompt.
 
+The separately versioned SAGA service has an additional SSE-level contract
+check. Its test parses every streamed token and verifies that a provider's
+unsupported numeric measurement is absent before the guarded final answer is
+emitted. The result is recorded in
+[`SAGA_DIRECT_STREAM_GROUNDING_VALIDATION_2026_10_12.md`](SAGA_DIRECT_STREAM_GROUNDING_VALIDATION_2026_10_12.md)
+and is linked to SAGA commit `4e1b7ca9b5c4c280717dad788c810d007c12d0e9`.
+
 The accidental-release evidence envelope links the open Zenodo archive and
 its parent article to qualitative release/ignition scenario grounding. It exposes
 only compact channel, row-count, time-range and local-hash metadata; the raw
