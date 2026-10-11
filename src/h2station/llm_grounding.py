@@ -14044,7 +14044,13 @@ def compact_data_used(
                 "human_effectiveness_claim_permitted": scope.get(
                     "human_effectiveness_claim_permitted"
                 ) is True,
-                "claim_limit": scope.get("claim_limit"),
+                # The full boundary remains in primary_scope_progress and the
+                # prompt summary.  Keep this operator-facing projection short
+                # because it is embedded in the direct-answer context budget.
+                "claim_limit": (
+                    "현재 목표 병목은 active_scope_open_gate_ids만 사용하며, "
+                    "station-to-vehicle와 인간효과 주장은 범위 밖이다."
+                ),
             }
         if include_references:
             # Keep the evidence scale visible without exposing raw rows,
