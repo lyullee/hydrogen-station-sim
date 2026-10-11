@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-11T18:34:43.654699+00:00",
+  "generated_at": "2026-10-11T18:39:10.171409+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -386,7 +386,7 @@
     {
       "id": "public_mhc_experiment16_component_screen_integrity",
       "status": "PASS",
-      "claim": "The protocol-frozen public MHC Experiment 16 trace is retained as independent component compatibility evidence and routed to bounded LLM grounding.",
+      "claim": "The protocol-frozen public MHC Experiment 16 trace is retained as independent component compatibility evidence with an explicit bounded-LLM/runtime exclusion boundary.",
       "evidence": "research\\public_mhc_experiment16_holdout_protocol_2026_10_12.json; research\\public_mhc_experiment16_screen_2026_10_12.json",
       "requirement": "Selection precedes row access, the required pressure/temperature/flow/time schema is present, raw rows are not committed, and runtime/full-loop promotion remains explicitly false.",
       "observed": {
@@ -403,9 +403,9 @@
     {
       "id": "dickens_typeiii_prospective_validation",
       "status": "FAIL",
-      "claim": "The unfitted layered tank model meets every frozen pressure and temperature screen on the prospective public Type-III filling experiment.",
+      "claim": "The frozen public Type-III filling experiment is retained as an independent component result: both pressure screens pass, both gas-temperature screens fail, and the joint validation claim is therefore rejected.",
       "evidence": "research\\dickens_typeiii_prospective_protocol_2026_10_08.json; research\\dickens_typeiii_prospective_result_2026_10_08.json",
-      "requirement": "Protocol frozen before numerical outcome access, exact source hashes, conservation residuals <=1e-6 and all four pressure/temperature screens passed.",
+      "requirement": "Protocol frozen before numerical outcome access, exact source hashes and conservation residuals <=1e-6; the negative result must retain the two passing pressure screens and two failing gas-temperature screens without parameter fitting or runtime promotion.",
       "observed": {
         "protocol_frozen_before_outcome_access": true,
         "metrics": {

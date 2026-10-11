@@ -185,6 +185,12 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     assert dickens["screen_results"]["gas_temperature_rmse_k"] is False
     assert dickens["joint_primary_screen_pass"] is False
     assert dickens["retained_negative_result"] is True
+    assert "both pressure screens pass" in gates[
+        "dickens_typeiii_prospective_validation"
+    ]["claim"]
+    assert "both gas-temperature screens fail" in gates[
+        "dickens_typeiii_prospective_validation"
+    ]["claim"]
     assert gates["dickens_mixed_convection_diagnostic_integrity"]["status"] == "PASS"
     mixed = gates["dickens_mixed_convection_diagnostic_integrity"]["observed"]
     assert mixed["run_count"] == 3

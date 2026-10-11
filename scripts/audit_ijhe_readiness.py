@@ -708,9 +708,9 @@ def audit(root: Path) -> dict[str, object]:
     gates.append(_gate(
         "dickens_typeiii_prospective_validation",
         "FAIL" if dickens_result else "PENDING",
-        "The unfitted layered tank model meets every frozen pressure and temperature screen on the prospective public Type-III filling experiment.",
+        "The frozen public Type-III filling experiment is retained as an independent component result: both pressure screens pass, both gas-temperature screens fail, and the joint validation claim is therefore rejected.",
         f"{dickens_protocol_path.relative_to(root)}; {dickens_result_path.relative_to(root)}",
-        "Protocol frozen before numerical outcome access, exact source hashes, conservation residuals <=1e-6 and all four pressure/temperature screens passed.",
+        "Protocol frozen before numerical outcome access, exact source hashes and conservation residuals <=1e-6; the negative result must retain the two passing pressure screens and two failing gas-temperature screens without parameter fitting or runtime promotion.",
         {
             "protocol_frozen_before_outcome_access": (dickens_protocol or {}).get(
                 "numerical_outcome_values_inspected_before_freeze"
