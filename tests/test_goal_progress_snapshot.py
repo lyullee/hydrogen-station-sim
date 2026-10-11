@@ -45,3 +45,19 @@ def test_committed_full_regression_evidence_is_reflected_in_progress_snapshot() 
     for key in ("status", "tests_passed", "tests_failed", "warnings", "source_commit"):
         assert reflected[key] == regression[key]
     assert reflected["evidence"] == "research/full_regression_test_run_2026_10_11.json"
+
+
+def test_regeneration_preserves_curated_evidence_block() -> None:
+    prior = {
+        "interpretation": {
+            "latest_access_evidence": {
+                "full_regression": {"tests_passed": 1446},
+                "geometry_diagnostic": {"runtime_default_changed": False},
+            }
+        }
+    }
+    snapshot = build_snapshot(
+        {"gate_counts": {"PASS": 1, "FAIL": 0, "PENDING": 0}},
+        prior,
+    )
+    assert snapshot["interpretation"]["latest_access_evidence"] == prior["interpretation"]["latest_access_evidence"]

@@ -15,7 +15,10 @@ from pathlib import Path
 from typing import Any
 
 
-def build_snapshot(audit: dict[str, Any]) -> dict[str, Any]:
+def build_snapshot(
+    audit: dict[str, Any],
+    prior_snapshot: dict[str, Any] | None = None,
+) -> dict[str, Any]:
     counts = audit.get("gate_counts") or {}
     passed = int(counts.get("PASS", 0))
     failed = int(counts.get("FAIL", 0))
@@ -44,9 +47,9 @@ def build_snapshot(audit: dict[str, Any]) -> dict[str, Any]:
         scoped_counts = {"PASS": passed, "FAIL": failed, "PENDING": pending}
     scoped_total = sum(scoped_counts.values())
     scoped_closure = (scoped_counts["PASS"] / scoped_total * 100.0) if scoped_total else 0.0
-    return {
+    snapshot = {
         "schema_version": 1,
-        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "metric_definition": "PASS gates divided by PASS+FAIL+PENDING gates; not a publication-readiness probability",
         "gate_counts": {"PASS": passed, "FAIL": failed, "PENDING": pending, "TOTAL": total},
         "gate_closure_percent": round(closure, 1),
@@ -108,6 +111,18 @@ def build_snapshot(audit: dict[str, Any]) -> dict[str, Any]:
             },
         },
     }
+    # The audit is the authoritative source for gate state, while the
+    # snapshot also carries manually curated provenance details (full
+    # regression records, post-access diagnostic boundaries and hashes).  Keep
+    # that evidence block across regeneration so refreshing the audit cannot
+    # silently delete the paper's reproducibility trail.
+    prior_evidence = (
+        ((prior_snapshot or {}).get("interpretation") or {})
+        .get("latest_access_evidence")
+    )
+    if isinstance(prior_evidence, dict) and prior_evidence:
+        snapshot["interpretation"]["latest_access_evidence"] = prior_evidence
+    return snapshot
 
 
 def main() -> None:
@@ -116,9 +131,20 @@ def main() -> None:
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
     audit = json.loads(args.audit_json.read_text(encoding="utf-8"))
-    snapshot = build_snapshot(audit)
+    prior_snapshot: dict[str, Any] | None = None
+    if args.output.is_file():
+        try:
+            candidate = json.loads(args.output.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            candidate = None
+        if isinstance(candidate, dict):
+            prior_snapshot = candidate
+    snapshot = build_snapshot(audit, prior_snapshot)
     args.output.parent.mkdir(parents=True, exist_ok=True)
-    args.output.write_text(json.dumps(snapshot, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    # Use an explicit LF newline so regeneration does not create a repository-wide
+    # CRLF diff on Windows; only evidence or gate changes should appear in review.
+    with args.output.open("w", encoding="utf-8", newline="\n") as handle:
+        handle.write(json.dumps(snapshot, ensure_ascii=False, indent=2) + "\n")
     print(json.dumps(snapshot, ensure_ascii=False, indent=2))
 
 
