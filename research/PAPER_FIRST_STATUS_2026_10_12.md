@@ -53,6 +53,12 @@ is explicitly outside the primary scope after repeated public-data searches.
    limitation. Do not present aggregate operating reports or component traces
    as a full-loop external holdout.
 
+## Ethics and expert-review boundary
+
+The ethics and expert-review item is not a physics or process-validation gate for this paper. The manuscript does not claim improved operator performance, usability, human safety decisions, certification, or autonomous emergency response. Facility-specific ethics determination and qualified independent expert review remain deployment prerequisites because suitability depends on each site's equipment, procedures, evacuation plan, and accountability structure. These reviews do not retroactively turn a failed or pending public-data validation screen into a PASS.
+
+KGS-custodied measurements are used only within the approved de-identified and aggregated scope for baseline data, calibration diagnostics, and model checks. Facility identity, manufacturers, detailed geometry, exact dates, and raw rows remain withheld. The paper therefore describes a research decision-support prototype that requires facility-specific review before deployment.
+
 ## Claim boundary for the paper
 
 The paper can make a bounded claim about a reproducible virtual station,
