@@ -68,3 +68,11 @@ two-zone 모델은 원인 진단용 post-outcome 모델로 기록되어 있지�
   - 산출물: `research/priority_diagnostics_run_2026_10_11_latest.json`
 
 이 실행은 코드 계약과 실패 원인을 갱신한 것이며, 사후 진단을 외부 검증 통과로 바꾸거나 런타임 파라미터를 자동 승격하지 않는다. 물리 실패를 해결하려면 결과를 본 뒤 재튜닝하는 대신, 경계조건·공간좌표·동기화 채널이 명시된 새 사전동결 holdout이 필요하다.
+
+## 2026-10-11 — paper-scope wording alignment
+
+- Reworded the manuscript so a three-arm incident study is explicitly an optional future study, not a pending result or a current scientific gate.
+- Reworded the limitation so independent expert review is required only before a facility-specific human-effectiveness claim.
+- Recompiled the exact LaTeX source with Tectonic 0.17.0: 23/23 pages, no fatal errors, unresolved citations/references 0, overfull boxes 0.
+- Re-ran IJHE format and readiness audits: format gate PASS; readiness remains blocked by the existing failed release/holdout validation gates and unconfirmed submission metadata, while ethics/expert review remains optional for this objective engineering paper.
+- Targeted regression: 33 passed (`test_ijhe_readiness_audit.py`, `test_llm_grounding.py`, `test_local_full_loop_schema_inventory.py`).

@@ -383,8 +383,10 @@ value--unit claims in 3/34 responses. A post-outcome runtime recheck after addin
 the direct-API numeric guard exposed 0/34 such claims with no provider failures.
 On the 33 cases with public action categories, a further post-outcome audit found
 reference F1 of 0.564 versus 0.281 but also 140.5 versus 28.1 words per response,
-showing that improved coverage came with more operator information burden. These
-results do not replace the pending blinded expert study.
+showing that improved coverage came with more operator information burden. A
+blinded expert study would be required for a future human-effectiveness claim;
+it is outside this engineering paper and is not represented as a completed
+result here.
 
 A separate canonical replay audit now prevents the HIAD text benchmark from
 bypassing the digital twin. Nine response families were executed through the
@@ -640,4 +642,3 @@ manuscript already has station-to-vehicle or human-effectiveness evidence.
 
 The audit must be regenerated after any evidence, manuscript, or protocol
 change; this summary must retain the same decision flags and gate counts.
-
