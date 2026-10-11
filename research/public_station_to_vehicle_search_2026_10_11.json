@@ -1,5 +1,5 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "artifact_type": "public_station_to_vehicle_raw_data_search",
   "generated_at": "2026-10-11",
   "status": "NO_REUSE_CLEARED_SYNCHRONIZED_RAW_BUNDLE_IDENTIFIED",
@@ -15,10 +15,20 @@
   "leads": [
     {"id": "fch2rail_d6_1", "url": "https://fch2rail.eu/wp-content/uploads/2025/01/FCH2RAIL_D6.1_Report-on-KPI-assessment.pdf", "raw_bundle_found": false},
     {"id": "dlr_fch2rail", "url": "https://elib.dlr.de/213625/1/manuscript_final_published_version.pdf", "raw_bundle_found": false},
-    {"id": "nrel_h2fills", "url": "https://www.nrel.gov/hydrogen/h2fills", "raw_bundle_found": false},
+    {"id": "nrel_h2fills", "url": "https://www.nrel.gov/hydrogen/h2fills", "raw_bundle_found": false, "classification": "validated_model_and_software_description"},
+    {"id": "nrel_h2fills_manual", "url": "https://www.nrel.gov/docs/libraries/hydrogen/h2fills-user-manual.pdf", "raw_bundle_found": false, "classification": "model_manual_not_logger_archive"},
     {"id": "jrc_reference_data", "url": "https://www.researchgate.net/publication/262017374_JRC_reference_data_from_experiments_of_on-board_hydrogen_tanks_fast_filling", "raw_bundle_found": false},
-    {"id": "esst_2020_dispenser", "url": "https://esst.cip.com.cn/article/2020/2095-4239/2095-4239-2020-9-3-702.shtml", "raw_bundle_found": false}
+    {"id": "esst_2020_dispenser", "url": "https://esst.cip.com.cn/article/2020/2095-4239/2095-4239-2020-9-3-702.shtml", "raw_bundle_found": false},
+    {"id": "h2_stations_data_users", "url": "https://docs.h2-stations.eu/for-data-users/", "raw_bundle_found": false, "classification": "registry_and_availability_usage_storage_pricing_api"},
+    {"id": "european_hydrogen_observatory_hrs", "url": "https://observatory.clean-hydrogen.europa.eu/hydrogen-landscape/distribution-and-storage/hydrogen-refuelling-stations", "raw_bundle_found": false, "classification": "station_inventory_xlsx"},
+    {"id": "dlr_fch2rail_paper", "url": "https://elib.dlr.de/213625/1/manuscript_final_published_version.pdf", "raw_bundle_found": false, "classification": "published_example_trace_without_reuse_cleared_raw_files"}
   ],
+  "search_update_2026_10_11": {
+    "official_pages_rechecked": ["nrel_h2fills", "nrel_h2fills_manual", "h2_stations_data_users", "european_hydrogen_observatory_hrs"],
+    "reported_traces_or_models_are_not_admitted_as_raw_holdout": true,
+    "rights_cleared_synchronized_raw_bundle_count": 0,
+    "interpretation": "H2FillS documents a station-to-FCEV model validated against empirical fueling data; H2-Stations and the European Hydrogen Observatory expose station registry/availability/storage/inventory data; the DLR/FCH2RAIL paper shows example measurement traces. None was admitted as a reusable synchronized station-to-vehicle raw logger bundle in this release."
+  },
   "decision": {
     "remove_from_primary_goal": true,
     "paper_limitation_required": true,
