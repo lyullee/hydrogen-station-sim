@@ -14020,6 +14020,15 @@ def compact_data_used(
                 "independent_external_full_loop_validation_supported": scope.get(
                     "independent_external_full_loop_validation_supported"
                 ) is True,
+                # Keep the active scope's actionable blockers visible in the
+                # operator-facing data panel.  Legacy audit gates are retained
+                # elsewhere for traceability, but must not be interpreted as
+                # current station-side work items.
+                "active_scope_open_gate_ids": [
+                    value
+                    for value in scope.get("active_scope_open_gate_ids") or []
+                    if isinstance(value, str) and value
+                ],
                 "station_to_vehicle_raw_data_status": scope.get(
                     "station_to_vehicle_raw_data_status"
                 ),

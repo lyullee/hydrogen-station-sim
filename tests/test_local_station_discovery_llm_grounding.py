@@ -289,6 +289,19 @@ def test_frozen_split_and_ethics_boundaries_reach_all_llm_projections():
     assert data_used["validation_scope"][
         "independent_external_full_loop_validation_supported"
     ] is False
+    assert data_used["validation_scope"]["active_scope_open_gate_ids"] == [
+        "dickens_typeiii_prospective_validation",
+        "grune_2014_pressure_decay_validation",
+        "preslhy_partb_ambient_external_validation",
+        "preslhy_revised_holdout_validation",
+        "proust_independent_release_validation",
+        "schefer_2007_pressure_decay_validation",
+        "schefer_transient_release_validation",
+        "submission_metadata_and_declarations",
+    ]
+    assert "full_loop_external_validation" not in data_used["validation_scope"][
+        "active_scope_open_gate_ids"
+    ]
     assert data_used["validation_scope"][
         "institutional_ethics_determination"
     ] == "PENDING"
