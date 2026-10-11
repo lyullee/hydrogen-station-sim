@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-11T11:57:04.200688+00:00",
+  "generated_at": "2026-10-11T21:18:09+09:00",
   "metric_definition": "PASS gates divided by PASS+FAIL+PENDING gates; not a publication-readiness probability",
   "gate_counts": {
     "PASS": 128,
@@ -97,12 +97,12 @@
       },
       "full_regression": {
         "status": "PASS",
-        "tests_passed": 1421,
+        "tests_passed": 1426,
         "tests_failed": 0,
         "evidence": "research/full_regression_test_run_2026_10_11.json",
         "warnings": 20,
-        "elapsed_seconds": 270.53,
-        "source_commit": "f7744c3cecb5106ae3aec5683f027f15bcf4330f"
+        "elapsed_seconds": 286.27,
+        "source_commit": "1c2b35591da4aa7528a4d6509944f2d3a133d3d9"
       },
       "preslhy_partb_boundary_diagnostic": {
         "status": "POST_OUTCOME_DIAGNOSTIC_ONLY",
