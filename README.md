@@ -30,6 +30,9 @@ Original project software and associated documentation are available under the [
 - [Independent 90 MPa release holdout](research/PROUST_RELEASE_HOLDOUT_RESULT.md): prospectively frozen INERIS/CEA mass-flow transfer test; all three nozzle series were eligible and all failed the joint screens.
 - [HIAD expert-review protocol](docs/EXPERT_REVIEW_PROTOCOL.md): frozen casebook, masking, reviewer rubric, endpoints, and analysis plan.
 - [HIAD evaluation readiness](research/hiad_evaluation_readiness.json): machine-checkable status of coordinator review, ethics, holdout collection and independent expert-review gates; advisory prescreen output never counts as approval.
+- [Validation evidence matrix](research/VALIDATION_EVIDENCE_MATRIX_2026_10_11.md): claim-bounded map of the owner-data holdouts, independent component evidence, station-to-vehicle limitation, and SAGA human-study boundary.
+- [Validation split and scope decision](research/VALIDATION_DATA_SPLIT_AND_SCOPE_DECISION_2026_10_11.md): frozen chronology-preserving split of the private station-side archive and the decision to exclude unavailable synchronized station-to-vehicle raw validation from the primary goal.
+- [Ethics and expert-review scope](research/ETHICS_AND_EXPERT_REVIEW_SCOPE_2026_10_11.md): distinguishes institutional ethics determination from independent blinded subject-matter review and defines when each is required.
 - [IJHE working manuscript](manuscript/ijhe_manuscript_draft.tex): claim-bounded English draft, journal-format checks, figures, graphical abstract and the remaining submission gates.
 
 The monitor and remote now have a Korean/English language selector. New main and sensor assistant requests use the selected output language while consequence calculations and source data remain unchanged. English answers are advisory translations/analyses; verify exact safety requirements against their original source.
