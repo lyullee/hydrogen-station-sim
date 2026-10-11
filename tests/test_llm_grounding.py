@@ -527,6 +527,16 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert geometry["latest_recheck"]["variants"]["capacity_eos_no_volume_fit"][
         "screening_pass_count"
     ] == 7
+    archived = geometry["latest_archived_aggregate"]
+    assert archived["artifact"] == (
+        "research/nrel_h2fills_geometry_sensitivity_2026_10_12.json"
+    )
+    assert archived["runtime_default_changed"] is False
+    assert archived["validation_gate_effect"] == "none"
+    assert archived["variants"]["capacity_eos_no_volume_fit"][
+        "screening_pass_count"
+    ] == 7
+    assert archived["claim_supported"] is False
     pressure_recheck = idle["response_evidence"][
         "public_unignited_pressure_peaking_recheck"
     ]

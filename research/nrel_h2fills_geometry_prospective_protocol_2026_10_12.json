@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "artifact_type": "nrel_h2fills_geometry_prospective_holdout_protocol",
+  "status": "PROTOCOL_ONLY_NO_OUTCOMES_OPENED",
+  "recorded_at": "2026-10-12",
+  "purpose": "Freeze a capacity/EOS geometry rule before scoring a new untouched tank-and-hose trace.",
+  "model_commit": "2244933",
+  "model_rule": {
+    "geometry_basis": "capacity_eos",
+    "effective_volume_multiplier": 1.0,
+    "capacity_to_volume_inputs": {
+      "capacity_kg": "declared by the source before outcome access",
+      "reference_pressure_mpa": "declared by the source before outcome access",
+      "reference_temperature_c": "declared by the source before outcome access",
+      "fluid": "hydrogen"
+    },
+    "parameter_fitting": false,
+    "case_specific_tuning": false,
+    "runtime_default_change": false
+  },
+  "minimum_input_contract": [
+    "common_elapsed_time_s",
+    "inlet_or_hose_pressure_mpa",
+    "inlet_or_hose_temperature_c",
+    "tank_pressure_mpa",
+    "tank_gas_or_wall_temperature_c",
+    "transferred_mass_kg_or_mass_flow_kg_s",
+    "declared_capacity_kg",
+    "initial_conditions",
+    "tank_geometry_or_traceable_capacity_basis",
+    "measurement_units_and_sampling_metadata",
+    "rights_for_independent_scoring"
+  ],
+  "frozen_screening_limits": {
+    "pressure_rmse_mpa_max": 5.0,
+    "temperature_rmse_c_max": 10.0,
+    "mass_final_abs_error_kg_max": 0.5,
+    "joint_rule": "all three screens pass for every eligible case"
+  },
+  "pre_access_controls": {
+    "protocol_frozen_before_numeric_outcomes": true,
+    "case_selection_before_numeric_outcomes": true,
+    "source_digest_recorded_before_numeric_outcomes": true,
+    "failed_cases_retained": true,
+    "raw_rows_committed": false,
+    "site_company_manufacturer_identifiers_committed": false
+  },
+  "promotion_rule": {
+    "requires_new_untouched_trace": true,
+    "requires_provenance_and_unit_attestation": true,
+    "requires_all_case_joint_screen_pass": true,
+    "requires_runtime_review": true,
+    "diagnostic_failure_does_not_change_runtime": true
+  },
+  "claim_boundary": "This protocol can support a bounded tank-and-hose component claim only. It cannot establish station controller, cascade, dispenser, vehicle, ESD, consequence-distance or field-safety validation.",
+  "current_evidence_boundary": "The 2026-10-12 capacity/EOS result is post-access development evidence and is not scored under this protocol."
+}

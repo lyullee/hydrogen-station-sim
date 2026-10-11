@@ -2981,6 +2981,9 @@ def _public_geometry_sensitivity_evidence() -> dict[str, Any] | None:
     transfer_path = Path(__file__).resolve().parents[2] / (
         "research/h2protocol_capacity_eos_diagnostic_2026_10_06.json"
     )
+    archive_path = Path(__file__).resolve().parents[2] / (
+        "research/nrel_h2fills_geometry_sensitivity_2026_10_12.json"
+    )
     rule_path = Path(__file__).resolve().parents[2] / (
         "research/capacity_eos_geometry_rule_2026_10_06.json"
     )
@@ -2993,6 +2996,9 @@ def _public_geometry_sensitivity_evidence() -> dict[str, Any] | None:
         latest_recheck = json.loads(
             latest_recheck_path.read_text(encoding="utf-8")
         ) if latest_recheck_path.is_file() else None
+        archived = json.loads(
+            archive_path.read_text(encoding="utf-8")
+        ) if archive_path.is_file() else None
         rule = json.loads(rule_path.read_text(encoding="utf-8"))
         transfer_record = json.loads(transfer_path.read_text(encoding="utf-8"))
     except (OSError, ValueError, json.JSONDecodeError):
@@ -3088,6 +3094,56 @@ def _public_geometry_sensitivity_evidence() -> dict[str, Any] | None:
     ):
         return None
 
+    archived_payload: dict[str, Any] | None = None
+    if isinstance(archived, dict):
+        archived_variants = archived.get("variants") or {}
+        archived_finding = archived.get("finding") or {}
+        archived_governance = archived.get("governance") or {}
+        if (
+            archived.get("status") == "post_access_development_diagnostic"
+            and archived.get("evidence_role") == "mechanism_and_geometry_sensitivity_only"
+            and archived_governance.get("runtime_default_changed") is False
+            and archived_governance.get("validation_gate_effect") == "none"
+            and set(archived_variants) == set(required_variants)
+            and archived_finding.get("preferred_physical_sensitivity")
+            == "capacity_eos_no_volume_fit"
+        ):
+            archived_payload = {
+                "artifact": "research/nrel_h2fills_geometry_sensitivity_2026_10_12.json",
+                "status": archived["status"],
+                "source_result_sha256": (archived.get("source") or {}).get(
+                    "source_result_sha256"
+                ),
+                "tank_count": (archived.get("source") or {}).get("tank_count"),
+                "variants": {
+                    name: {
+                        "screening_pass_count": archived_variants[name].get(
+                            "screening_pass_count"
+                        ),
+                        "screening_pass_fraction": archived_variants[name].get(
+                            "screening_pass_fraction"
+                        ),
+                        "pressure_rmse_mpa": archived_variants[name].get(
+                            "pressure_rmse_mpa"
+                        ),
+                        "temperature_rmse_c": archived_variants[name].get(
+                            "temperature_rmse_c"
+                        ),
+                        "mass_final_error_kg": archived_variants[name].get(
+                            "mass_final_error_kg"
+                        ),
+                    }
+                    for name in required_variants
+                },
+                "runtime_default_changed": False,
+                "validation_gate_effect": "none",
+                "claim_supported": False,
+                "claim_limit": str(archived.get("claim_boundary") or ""),
+                "next_required_step": str(
+                    archived_governance.get("next_required_step") or ""
+                ),
+            }
+
     def scalar_values(values: dict[str, Any]) -> dict[str, Any]:
         return {
             str(key): value
@@ -3144,6 +3200,7 @@ def _public_geometry_sensitivity_evidence() -> dict[str, Any] | None:
             claim_boundary.get("reason") or ""
         ),
         "latest_recheck": latest_payload,
+        "latest_archived_aggregate": archived_payload,
     }
 
 
@@ -10468,7 +10525,7 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
             for key in (
                 "evidence_role", "source", "runtime_rule", "variants",
                 "finding", "required_next_step", "claim_supported",
-                "claim_limit",
+                "claim_limit", "latest_archived_aggregate",
             )
             if public_geometry_sensitivity.get(key) is not None
         }
@@ -15518,6 +15575,9 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
             "claim_limit": (
                 evidence.get("public_geometry_sensitivity") or {}
             ).get("claim_limit"),
+            "latest_archived_aggregate": (
+                evidence.get("public_geometry_sensitivity") or {}
+            ).get("latest_archived_aggregate"),
         },
         "public_mc_tank_boundary_diagnostic": {
             key: (evidence.get("public_mc_tank_boundary_diagnostic") or {}).get(key)
