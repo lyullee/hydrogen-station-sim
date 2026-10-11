@@ -1,12 +1,28 @@
 {
   "schema_version": 1,
-  "source_audit_generated_at": "2026-10-11T04:03:37.438156+00:00",
+  "source_audit_generated_at": "2026-10-11T18:50:34.202241+00:00",
   "target_journal": null,
   "overall": {
-    "pass": 127,
+    "pass": 129,
     "fail": 10,
     "pending": 7,
     "full_user_objective_ready": false
+  },
+  "primary_scope": {
+    "definition": "Declared 2026-10-11 primary scope: station-side process/safety, public component holdouts and direct-answer SAGA grounding; full-loop and human-effectiveness lanes remain excluded.",
+    "pass": 129,
+    "fail": 9,
+    "pending": 2,
+    "total": 140,
+    "closure_percent": 92.1,
+    "excluded_gate_ids": [
+      "full_loop_external_validation",
+      "hiad_casebook_frozen",
+      "hiad_holdout_collection",
+      "independent_expert_review_complete",
+      "institutional_ethics_determination",
+      "saga_effectiveness_and_safety_supported"
+    ]
   },
   "interpretation": {
     "data_volume_is_primary_blocker": false,
@@ -57,7 +73,8 @@
       "bucket": "component_model",
       "priority": "P0",
       "parallel_track": "component_model_repairs",
-      "claim": "The unfitted layered tank model meets every frozen pressure and temperature screen on the prospective public Type-III filling experiment.",
+      "scope_role": "required_primary_scope",
+      "claim": "The frozen public Type-III filling experiment is retained as an independent component result: both pressure screens pass, both gas-temperature screens fail, and the joint validation claim is therefore rejected.",
       "next_action": "결과를 재튜닝하지 말고 실패한 물리량·직경·경계조건에 맞는 새 pre-access protocol과 독립 원시 trace를 확보한다.",
       "why_now": "현재 주 목표에 포함된 실패 물리량별 독립 holdout을 병행하고, 통과 전 런타임 승격을 막음",
       "claim_boundary": "실패 결과를 유지하며 해당 강한 주장은 현재 지원하지 않는다."
@@ -68,8 +85,9 @@
       "bucket": "component_model",
       "priority": "P0",
       "parallel_track": "component_model_repairs",
+      "scope_role": "required_primary_scope",
       "claim": "The locked source model meets all pressure-decay screens on the independent KIT small-reservoir release.",
-      "next_action": "결과를 재튜닝하지 말고 실패한 물리량·직경·경계조건에 맞는 새 pre-access protocol과 독립 원시 trace를 확보한다.",
+      "next_action": "공식 KIT·출판사 재확인에서도 원시 pressure-time 표가 없어 보류 중이다. custodian 원자료와 재사용 조건을 받은 뒤 새 pre-access protocol을 동결한다. 별도 KIT LH2 원자료는 공식 권리는 확인했지만 전체 아카이브 MD5가 검증되지 않아 이 게이트를 닫지 않는다.",
       "why_now": "현재 주 목표에 포함된 실패 물리량별 독립 holdout을 병행하고, 통과 전 런타임 승격을 막음",
       "claim_boundary": "One 20 MPa, 0.37 L, 4 mm pressure-decay trace; no flame, ignition, dispersion, radiation, station control or safety-distance claim. The digitized measured curve does not provide the required half-pressure crossing, so no validation claim is made."
     },
@@ -79,6 +97,7 @@
       "bucket": "component_model",
       "priority": "P0",
       "parallel_track": "component_model_repairs",
+      "scope_role": "required_primary_scope",
       "claim": "The exact frozen orientation-class detector ranking must pass every screen on an independent actual-hydrogen spatial holdout before runtime use.",
       "next_action": "공간좌표·방출방향·센서별 수치응답이 함께 있는 독립 holdout을 추가하고, 통과 전 runtime 자동 라우팅을 유지하지 않는다.",
       "why_now": "현재 주 목표에 포함된 실패 물리량별 독립 holdout을 병행하고, 통과 전 런타임 승격을 막음",
@@ -90,6 +109,7 @@
       "bucket": "component_model",
       "priority": "P0",
       "parallel_track": "component_model_repairs",
+      "scope_role": "required_primary_scope",
       "claim": "The frozen zero-dimensional well-mixed model meets its independent actual-hydrogen concentration screen across the declared ventilated-enclosure experiments.",
       "next_action": "공간좌표·방출방향·센서별 수치응답이 함께 있는 독립 holdout을 추가하고, 통과 전 runtime 자동 라우팅을 유지하지 않는다.",
       "why_now": "현재 주 목표에 포함된 실패 물리량별 독립 holdout을 병행하고, 통과 전 런타임 승격을 막음",
@@ -101,6 +121,7 @@
       "bucket": "component_model",
       "priority": "P0",
       "parallel_track": "component_model_repairs",
+      "scope_role": "required_primary_scope",
       "claim": "The fixed local real-gas 0.5 mm aperture relation meets its independent actual-hydrogen blowdown mass-flow screen.",
       "next_action": "결과를 재튜닝하지 말고 실패한 물리량·직경·경계조건에 맞는 새 pre-access protocol과 독립 원시 trace를 확보한다.",
       "why_now": "현재 주 목표에 포함된 실패 물리량별 독립 holdout을 병행하고, 통과 전 런타임 승격을 막음",
@@ -112,6 +133,7 @@
       "bucket": "component_model",
       "priority": "P0",
       "parallel_track": "component_model_repairs",
+      "scope_role": "required_primary_scope",
       "claim": "The frozen release model meets the independent ambient Cryostat Part-B pressure-decay screens.",
       "next_action": "결과를 재튜닝하지 말고 실패한 물리량·직경·경계조건에 맞는 새 pre-access protocol과 독립 원시 trace를 확보한다.",
       "why_now": "현재 주 목표에 포함된 실패 물리량별 독립 holdout을 병행하고, 통과 전 런타임 승격을 막음",
@@ -123,6 +145,7 @@
       "bucket": "component_model",
       "priority": "P0",
       "parallel_track": "component_model_repairs",
+      "scope_role": "required_primary_scope",
       "claim": "The revised non-adiabatic source-depletion model meets the prospectively frozen PRESLHY E5.1 holdout rule.",
       "next_action": "결과를 재튜닝하지 말고 실패한 물리량·직경·경계조건에 맞는 새 pre-access protocol과 독립 원시 trace를 확보한다.",
       "why_now": "현재 주 목표에 포함된 실패 물리량별 독립 holdout을 병행하고, 통과 전 런타임 승격을 막음",
@@ -134,6 +157,7 @@
       "bucket": "component_model",
       "priority": "P0",
       "parallel_track": "component_model_repairs",
+      "scope_role": "required_primary_scope",
       "claim": "The fixed high-pressure aperture relation meets its prospectively frozen rule on the independent INERIS/CEA 90 MPa campaign.",
       "next_action": "결과를 재튜닝하지 말고 실패한 물리량·직경·경계조건에 맞는 새 pre-access protocol과 독립 원시 trace를 확보한다.",
       "why_now": "현재 주 목표에 포함된 실패 물리량별 독립 holdout을 병행하고, 통과 전 런타임 승격을 막음",
@@ -145,6 +169,7 @@
       "bucket": "component_model",
       "priority": "P0",
       "parallel_track": "component_model_repairs",
+      "scope_role": "required_primary_scope",
       "claim": "The locked adiabatic vessel-discharge model meets all frozen pressure-decay screens on the independent Schefer et al. 2007 experiment.",
       "next_action": "결과를 재튜닝하지 말고 실패한 물리량·직경·경계조건에 맞는 새 pre-access protocol과 독립 원시 trace를 확보한다.",
       "why_now": "현재 주 목표에 포함된 실패 물리량별 독립 holdout을 병행하고, 통과 전 런타임 승격을 막음",
@@ -156,6 +181,7 @@
       "bucket": "component_model",
       "priority": "P0",
       "parallel_track": "component_model_repairs",
+      "scope_role": "required_primary_scope",
       "claim": "The locked adiabatic vessel-discharge model meets all frozen transient mass-flow screens on the independent Sandia/SRI experiment.",
       "next_action": "결과를 재튜닝하지 말고 실패한 물리량·직경·경계조건에 맞는 새 pre-access protocol과 독립 원시 trace를 확보한다.",
       "why_now": "현재 주 목표에 포함된 실패 물리량별 독립 holdout을 병행하고, 통과 전 런타임 승격을 막음",
@@ -167,8 +193,9 @@
       "bucket": "governance_review",
       "priority": "P1",
       "parallel_track": "review_and_publication",
+      "scope_role": "optional_human_evaluation",
       "claim": "All 24 holdout incident vignettes passed coordinator leakage review and were frozen.",
-      "next_action": "고정된 HIAD 평가 프로토콜에 따라 casebook·응답·전문가 평가를 수집하고 freeze hash를 남긴다.",
+      "next_action": "선택 항목: 사람 대상 SAGA 효과를 주장할 때만 고정된 HIAD 평가 프로토콜에 따라 casebook·응답·전문가 평가를 수집하고 freeze hash를 남긴다.",
       "why_now": "수치 계산과 독립적으로 진행 가능한 검토·기록 작업",
       "claim_boundary": "증거 산출물이 없어 판정할 수 없다."
     },
@@ -178,8 +205,9 @@
       "bucket": "governance_review",
       "priority": "P1",
       "parallel_track": "review_and_publication",
+      "scope_role": "optional_human_evaluation",
       "claim": "All masked alarm/direct/RAG holdout responses were collected under the frozen protocol.",
-      "next_action": "고정된 HIAD 평가 프로토콜에 따라 casebook·응답·전문가 평가를 수집하고 freeze hash를 남긴다.",
+      "next_action": "선택 항목: 사람 대상 SAGA 효과를 주장할 때만 고정된 HIAD 평가 프로토콜에 따라 casebook·응답·전문가 평가를 수집하고 freeze hash를 남긴다.",
       "why_now": "수치 계산과 독립적으로 진행 가능한 검토·기록 작업",
       "claim_boundary": "증거 산출물이 없어 판정할 수 없다."
     },
@@ -189,8 +217,9 @@
       "bucket": "governance_review",
       "priority": "P1",
       "parallel_track": "review_and_publication",
+      "scope_role": "optional_human_evaluation",
       "claim": "Three qualified independent reviewers completed the locked 24-event evaluation.",
-      "next_action": "고정된 HIAD 평가 프로토콜에 따라 casebook·응답·전문가 평가를 수집하고 freeze hash를 남긴다.",
+      "next_action": "선택 항목: 사람 대상 SAGA 효과를 주장할 때만 고정된 HIAD 평가 프로토콜에 따라 casebook·응답·전문가 평가를 수집하고 freeze hash를 남긴다.",
       "why_now": "수치 계산과 독립적으로 진행 가능한 검토·기록 작업",
       "claim_boundary": "증거 산출물이 없어 판정할 수 없다."
     },
@@ -200,8 +229,9 @@
       "bucket": "governance_review",
       "priority": "P1",
       "parallel_track": "review_and_publication",
+      "scope_role": "optional_human_evaluation",
       "claim": "The applicable institution has recorded the human-participant determination.",
-      "next_action": "기관의 승인·면제·비대상 중 하나와 식별자를 확정하고 연구 기록에 보존한다.",
+      "next_action": "선택 항목: SAGA가 운영자의 안전 판단을 개선한다고 주장할 때만 기관의 승인·면제·비대상 중 하나와 식별자를 확정하고 연구 기록에 보존한다.",
       "why_now": "수치 계산과 독립적으로 진행 가능한 검토·기록 작업",
       "claim_boundary": "현재 게이트 상태 이상의 주장은 허용하지 않는다."
     },
@@ -211,8 +241,9 @@
       "bucket": "governance_review",
       "priority": "P1",
       "parallel_track": "review_and_publication",
+      "scope_role": "optional_human_evaluation",
       "claim": "Direct SAGA improves expert-rated guidance without higher observed omission or unsafe-advice rates.",
-      "next_action": "고정된 HIAD 평가 프로토콜에 따라 casebook·응답·전문가 평가를 수집하고 freeze hash를 남긴다.",
+      "next_action": "선택 항목: 사람 대상 SAGA 효과를 주장할 때만 고정된 HIAD 평가 프로토콜에 따라 casebook·응답·전문가 평가를 수집하고 freeze hash를 남긴다.",
       "why_now": "수치 계산과 독립적으로 진행 가능한 검토·기록 작업",
       "claim_boundary": "현재 게이트 상태 이상의 주장은 허용하지 않는다."
     },
@@ -222,10 +253,11 @@
       "bucket": "governance_review",
       "priority": "P1",
       "parallel_track": "review_and_publication",
+      "scope_role": "required_primary_scope",
       "claim": "Every author, affiliation, institutional email and declaration is confirmed.",
       "next_action": "저자·기여·이해상충·자금·AI 사용 공개를 확인한 뒤 제출 메타데이터를 잠근다.",
       "why_now": "수치 계산과 독립적으로 진행 가능한 검토·기록 작업",
-      "claim_boundary": "증거 산출물이 없어 판정할 수 없다."
+      "claim_boundary": "현재 게이트 상태 이상의 주장은 허용하지 않는다."
     }
   ]
 }

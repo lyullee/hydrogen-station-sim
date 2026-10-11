@@ -1,19 +1,19 @@
 {
   "schema_version": 1,
-  "source_audit_generated_at": "2026-10-11T12:29:02.316080+00:00",
+  "source_audit_generated_at": "2026-10-11T18:50:34.202241+00:00",
   "target_journal": null,
   "overall": {
-    "pass": 128,
+    "pass": 129,
     "fail": 10,
     "pending": 7,
     "full_user_objective_ready": false
   },
   "primary_scope": {
     "definition": "Declared 2026-10-11 primary scope: station-side process/safety, public component holdouts and direct-answer SAGA grounding; full-loop and human-effectiveness lanes remain excluded.",
-    "pass": 128,
+    "pass": 129,
     "fail": 9,
     "pending": 2,
-    "total": 139,
+    "total": 140,
     "closure_percent": 92.1,
     "excluded_gate_ids": [
       "full_loop_external_validation",
@@ -74,7 +74,7 @@
       "priority": "P0",
       "parallel_track": "component_model_repairs",
       "scope_role": "required_primary_scope",
-      "claim": "The unfitted layered tank model meets every frozen pressure and temperature screen on the prospective public Type-III filling experiment.",
+      "claim": "The frozen public Type-III filling experiment is retained as an independent component result: both pressure screens pass, both gas-temperature screens fail, and the joint validation claim is therefore rejected.",
       "next_action": "결과를 재튜닝하지 말고 실패한 물리량·직경·경계조건에 맞는 새 pre-access protocol과 독립 원시 trace를 확보한다.",
       "why_now": "현재 주 목표에 포함된 실패 물리량별 독립 holdout을 병행하고, 통과 전 런타임 승격을 막음",
       "claim_boundary": "실패 결과를 유지하며 해당 강한 주장은 현재 지원하지 않는다."

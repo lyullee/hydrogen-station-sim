@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "artifact_type": "privacy_bounded_data_coverage_summary",
-  "generated_at": "2026-10-10",
+  "generated_at": "2026-10-11",
   "privacy": {
     "source_paths_published": false,
     "source_filenames_published": false,
@@ -12,7 +12,7 @@
   },
   "readiness": {
     "ijhe_gate_counts": {
-      "PASS": 127,
+      "PASS": 129,
       "FAIL": 10,
       "PENDING": 7
     },
@@ -23,7 +23,7 @@
     {
       "id": "owner_station_side_dynamics",
       "status": "ACTIONABLE",
-      "evidence": "research/local_confidential_station_data_utilization_2026_10_08.json",
+      "evidence": "research/local_confidential_station_data_utilization_2026_10_10.json",
       "coverage": {
         "deduplicated_rows": 56854143,
         "ordered_high_bank_pressure_cycles": 16770,
@@ -133,6 +133,30 @@
       },
       "allowed_claim": "public synchronized component pressure/temperature/flow diagnostics",
       "not_allowed": "prospective station-to-vehicle holdout"
+    },
+    {
+      "id": "public_compressor_component",
+      "status": "DIAGNOSTIC_ONLY",
+      "evidence": "research/public_compressor_component_recheck_2026_10_11.json",
+      "coverage": {
+        "doi": "10.5281/zenodo.18213166",
+        "license": "CC BY 4.0",
+        "experiment_count": 29,
+        "measurement_families": [
+          "stage and vessel pressure",
+          "stage and vessel temperature",
+          "hydrogen mass flow",
+          "experimental metadata"
+        ],
+        "schema_screen_pass": true,
+        "direct_runtime_model_compatibility": false,
+        "public_component_validation_candidate": true,
+        "full_loop_external_holdout_eligible": false,
+        "runtime_parameter_application": false,
+        "raw_rows_persisted": false
+      },
+      "allowed_claim": "공개 2단 금속수소화물 압축기 압력·온도·유량 구성품 경계와 스키마 진단",
+      "not_allowed": "충전소 full-loop, 차량 충전, SAE J2601, ESD·사고영향, 런타임 압축기 파라미터 승격"
     },
     {
       "id": "public_type_i_filling_thermal",

@@ -182,7 +182,7 @@ def test_role_aware_schema_contract_is_exposed_without_private_headers():
 def test_validation_readiness_ledger_reaches_all_llm_views_without_paths():
     manifest = _manifest()
     expected = {
-        "PASS": 128,
+        "PASS": 129,
         "FAIL": 10,
         "PENDING": 7,
     }
@@ -208,7 +208,7 @@ def test_validation_readiness_ledger_reaches_all_llm_views_without_paths():
     assert summary["full_user_objective_ready"] is False
 
     decision = prompt_decision_evidence(manifest)["validation_boundaries"]
-    assert decision["r"] == "128/10/7;0l0"
+    assert decision["r"] == "129/10/7;0l0"
 
     header = prompt_evidence_header(manifest)["validation_readiness"]
     assert header["gate_counts"] == expected
@@ -221,10 +221,10 @@ def test_primary_scope_amendment_reaches_llm_without_reclassifying_audit_gates()
     assert scope["status"] == "available"
     assert scope["artifact_integrity"] is True
     assert scope["gate_counts"] == {
-        "PASS": 128,
+        "PASS": 129,
         "FAIL": 9,
         "PENDING": 2,
-        "TOTAL": 139,
+        "TOTAL": 140,
     }
     assert scope["gate_closure_percent"] == 92.1
     assert scope["station_to_vehicle_scope"] == (
@@ -249,7 +249,7 @@ def test_primary_scope_amendment_reaches_llm_without_reclassifying_audit_gates()
     decision = prompt_decision_evidence(manifest)
     assert decision["primary_scope_progress"]["gate_closure_percent"] == 92.1
     summary = prompt_evidence_summary(manifest)
-    assert summary["primary_scope_progress"]["gate_counts"]["TOTAL"] == 139
+    assert summary["primary_scope_progress"]["gate_counts"]["TOTAL"] == 140
     header = prompt_evidence_header(manifest)
     assert header["primary_scope_progress"]["station_to_vehicle_scope"] == (
         "removed_from_primary_goal_after_public_search"

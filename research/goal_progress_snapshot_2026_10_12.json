@@ -1,21 +1,21 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-11T18:09:53+00:00",
+  "generated_at": "2026-10-11T18:50:34+00:00",
   "metric_definition": "PASS gates divided by PASS+FAIL+PENDING gates; not a publication-readiness probability",
   "gate_counts": {
-    "PASS": 128,
+    "PASS": 129,
     "FAIL": 10,
     "PENDING": 7,
-    "TOTAL": 145
+    "TOTAL": 146
   },
-  "gate_closure_percent": 88.3,
+  "gate_closure_percent": 88.4,
   "primary_scope_progress_2026_10_11": {
     "metric_definition": "Scope-adjusted gate closure after removing the declared station-to-vehicle full-loop and optional SAGA human-evaluation lanes; this is not a scientific improvement claim.",
     "gate_counts": {
-      "PASS": 128,
+      "PASS": 129,
       "FAIL": 9,
       "PENDING": 2,
-      "TOTAL": 139
+      "TOTAL": 140
     },
     "gate_closure_percent": 92.1,
     "excluded_gate_ids": [

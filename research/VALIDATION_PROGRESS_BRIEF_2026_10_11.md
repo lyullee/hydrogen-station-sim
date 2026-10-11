@@ -4,27 +4,27 @@
 
 ## 현재 판정
 
-- IJHE 내부 게이트: **PASS 127 / FAIL 10 / PENDING 7**.
+- IJHE 내부 게이트: **PASS 129 / FAIL 10 / PENDING 7**.
 - 제한된 투고 준비: **아직 불가**.
 - 현재 주 목표: **station-side 안전 디지털 트윈·구성요소 검증·근거 기반 SAGA 응답**.
 - 동기화 station-to-vehicle full-loop 검증: **주 목표에서 제외하고 논문 한계로 명시**.
-- 개정 주 목표 보조 지표: **127 PASS / 9 FAIL / 2 PENDING = 92.0%**. 범위 조정 결과이지 새 검증 통과가 아닙니다.
+- 개정 주 목표 보조 지표: **129 PASS / 9 FAIL / 2 PENDING = 92.1%**. 범위 조정 결과이지 새 검증 통과가 아닙니다.
 
 ## 지금 바로 사용할 수 있는 근거
 
 - 비식별 station-side 원자료: 56,854,143개 행, 고압 압력 사이클 16,770건, 중·고압 연계 11,770건, 재충전 압력 예측 1,418건. 압력·cascade·재충전 동역학 진단에 사용합니다.
 - 같은 자료의 시간순 holdout: 압력 경계 30점, cascade 3,664쌍, 재충전 예측 394건. 차량 충전 정확도나 현장 안전한계로 확대하지 않습니다.
 - 공개 Type-IV 탱크 경계 검증: 12건, 탱크 경계 구성요소 검증으로 유지합니다.
+- 공개 MHC Experiment 16 구성요소 screen: 1,186개 기록 / 1,185초의 압력·유량·온도 trace입니다. 프로토콜 고정 후 접근했고, 단위·열경계가 station compressor와 달라 호환성 근거로만 사용합니다.
+- MHC screen은 근거 기반 LLM의 구성요소·공개 검증 질문에만 privacy-safe 요약으로 전달합니다. runtime 파라미터, HRS full-loop, 차량 동기화, 안전거리 및 LLM 효과 검증에는 사용하지 않습니다.
 - 사고 전례·대응 플레이북·가상 조치 실행은 시나리오와 단계별 대응 근거로 사용하며, 사고 빈도나 현장 대응 효과를 추정하지 않습니다.
-- HIAD 사고 34건은 공개 물리효과 범주와 디지털 트윈 실행 family를 대조했습니다. 33건은 범주가 일치했고, 1건은 metadata/runtime 충돌로 제한사항에 남겼습니다. 이 표는 사고 재구성이나 대응 효과 검증이 아닙니다.
 
 ## 실패 또는 제한된 결과도 그대로 유지
 
 - 공개 MC Default full-loop holdout: 0 / 8 통과. 평균 압력 RMSE 15.862 MPa, 온도 RMSE 13.230 °C, SOC RMSE 18.082%p. 이 결과는 숨기거나 재평가로 대체하지 않습니다.
 - NREL 탱크 경계 자료: 압력 RMSE 6.164 MPa로 현재 스크리닝을 통과하지 못해 진단용으로만 유지합니다.
-- 새 full-loop 측정 코호트: **확인되지 않음**. 이 자료 공백은 현재 논문의 범위 제외
-  한계로 남기며, 실행 큐의 주된 작업은 구성요소 물리 실패 holdout과 그에 대한
-  독립 원시 trace 확보입니다.
+- 새 full-loop 측정 코호트: **확인되지 않음**. 현재 주된 공백은 동기화된 차량·수용용기 측 채널입니다.
+- 2026-10-12 공개자료 재검색에서도 H2-Stations 운영 메타데이터와 보고서·구성요소 자료만 확인되었고, 공통 시계의 station/controller·dispenser·vehicle 원시 로그는 새로 확인되지 않았습니다.
 
 ## 추가 자료 없이 진행 가능한 작업
 
@@ -39,7 +39,7 @@
 - 공통 경과시간, station/디스펜서 압력, 공급가스 또는 경계 온도, 질량유량/이송질량, 프로토콜 시작·종료 상태.
 - 가능하면 차량·수용용기 압력·온도, cascade 선택 상태, precooler 출구온도, ESD·fault 전이.
 - Units, initial conditions, sensor quality, synchronization and reuse rights must be confirmed by the custodian; raw files need not be published.
-- The synchronized station-to-vehicle data gap is documented as a paper limitation and is no longer a required goal gate or an active P0 queue item.
+- The synchronized station-to-vehicle data gap is documented as a paper limitation and is no longer a required goal gate.
 - 윤리·전문가 평가는 물리 모델 검증이 아니라 SAGA가 사람의 안전 판단을 개선한다고 주장할 때 필요한 별도 사람 대상 평가입니다. 그 주장을 하지 않으면 미실시 한계로 명시합니다.
 
 ## 근거 파일
@@ -49,15 +49,10 @@
 - `research/local_candidate_full_loop_screen_2026_10_09.json`
 - `research/GOAL_SCOPE_AMENDMENT_2026_10_11.md`
 - `research/PUBLIC_STATION_TO_VEHICLE_SEARCH_2026_10_11.md`
-- `research/HIAD_EVENT_CATEGORY_CONCORDANCE_2026_10_11.md`
+- `research/public_station_vehicle_search_recheck_2026_10_12.json`
+- `research/h2safe_oedi_recheck_2026_10_12.json`
+- `research/public_mhc_experiment16_holdout_protocol_2026_10_12.json`
+- `research/public_mhc_experiment16_screen_2026_10_12.json`
 - `data/public_validation/results/closed_loop_external_holdout/validation.json`
 
 이 브리프는 모델이나 검증 게이트를 변경하지 않습니다. 새로운 자료가 들어오면 동일한 동결·시간축·권한 검사를 거친 뒤 다시 생성합니다.
-
-## 2026-10-11 감사 갱신 메모
-
-현재 정본 감사 파일 `research/ijhe_readiness_audit.json`의 최신 집계는
-**128 PASS / 10 FAIL / 7 PENDING**이며, 범위 조정 후 주 목표 지표는
-**128 PASS / 9 FAIL / 2 PENDING (92.1%)**이다. 위 본문 앞부분의 127/92.0%
-표기는 이전 생성 시점의 기록으로 보존하고, 현재 상태를 인용할 때는 정본
-감사 파일과 `research/PROGRESS_DELTA_2026_10_11.md`를 우선한다.
