@@ -93,7 +93,7 @@ The following tests passed in the repository virtual environment:
 47 passed
 
 .venv\Scripts\python.exe -m pytest -q
-1374 passed, 20 warnings
+1385 passed, 20 warnings
 ```
 
 The tests verify that normal monitoring keeps impact calculation marked as
