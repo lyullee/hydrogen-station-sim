@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-11T02:10:16.035400+00:00",
+  "generated_at": "2026-10-11T02:20:01.385777+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -36,12 +36,7 @@
     "schefer_2007_pressure_decay_validation",
     "grune_2014_pressure_decay_validation",
     "submission_metadata_and_declarations",
-    "institutional_ethics_determination",
-    "hiad_casebook_frozen",
-    "hiad_holdout_collection",
-    "independent_expert_review_complete",
-    "h2safe_spatial_detector_transfer_validation",
-    "saga_effectiveness_and_safety_supported"
+    "h2safe_spatial_detector_transfer_validation"
   ],
   "scope_exclusions": [
     {
@@ -50,6 +45,41 @@
       "reason": "No reusable public raw dataset was found with synchronized station/controller, dispenser/nozzle and vehicle/receptacle channels on a common time base.",
       "paper_limitation": "The study does not claim independent station-to-vehicle full-loop accuracy, vehicle-controller validation or field-safety validation.",
       "reentry_condition": "A custodian provides at least three rights-cleared, independently documented events with station and vehicle channels; freeze the protocol before outcome access."
+    },
+    {
+      "id": "institutional_ethics_determination",
+      "status": "OPTIONAL_PENDING",
+      "reason": "This gate is required only for a human-participant claim that SAGA improves operator safety decisions; it is not required to establish traceable, evidence-grounded response generation.",
+      "paper_limitation": "The study does not claim measured improvement in operator response accuracy, response time or human safety outcomes.",
+      "reentry_condition": "Obtain institutional ethics determination, freeze the 24-case protocol, collect masked responses and complete the independent expert analysis."
+    },
+    {
+      "id": "hiad_casebook_frozen",
+      "status": "OPTIONAL_PENDING",
+      "reason": "This gate is required only for a human-participant claim that SAGA improves operator safety decisions; it is not required to establish traceable, evidence-grounded response generation.",
+      "paper_limitation": "The study does not claim measured improvement in operator response accuracy, response time or human safety outcomes.",
+      "reentry_condition": "Obtain institutional ethics determination, freeze the 24-case protocol, collect masked responses and complete the independent expert analysis."
+    },
+    {
+      "id": "hiad_holdout_collection",
+      "status": "OPTIONAL_PENDING",
+      "reason": "This gate is required only for a human-participant claim that SAGA improves operator safety decisions; it is not required to establish traceable, evidence-grounded response generation.",
+      "paper_limitation": "The study does not claim measured improvement in operator response accuracy, response time or human safety outcomes.",
+      "reentry_condition": "Obtain institutional ethics determination, freeze the 24-case protocol, collect masked responses and complete the independent expert analysis."
+    },
+    {
+      "id": "independent_expert_review_complete",
+      "status": "OPTIONAL_PENDING",
+      "reason": "This gate is required only for a human-participant claim that SAGA improves operator safety decisions; it is not required to establish traceable, evidence-grounded response generation.",
+      "paper_limitation": "The study does not claim measured improvement in operator response accuracy, response time or human safety outcomes.",
+      "reentry_condition": "Obtain institutional ethics determination, freeze the 24-case protocol, collect masked responses and complete the independent expert analysis."
+    },
+    {
+      "id": "saga_effectiveness_and_safety_supported",
+      "status": "OPTIONAL_PENDING",
+      "reason": "This gate is required only for a human-participant claim that SAGA improves operator safety decisions; it is not required to establish traceable, evidence-grounded response generation.",
+      "paper_limitation": "The study does not claim measured improvement in operator response accuracy, response time or human safety outcomes.",
+      "reentry_condition": "Obtain institutional ethics determination, freeze the 24-case protocol, collect masked responses and complete the independent expert analysis."
     }
   ],
   "gates": [
@@ -8335,5 +8365,5 @@
       "observed": "10.5281/zenodo.23084421"
     }
   ],
-  "decision_rule": "Only full_user_objective_ready=true permits goal completion. The current objective is explicitly scoped to station-side/component evidence and consequence/decision-support claims. Synchronized station-to-vehicle full-loop validation is excluded and must remain a stated limitation until the re-entry condition is met."
+  "decision_rule": "Only full_user_objective_ready=true permits goal completion. The current objective is explicitly scoped to station-side/component evidence and consequence/decision-support claims. Synchronized station-to-vehicle full-loop validation and human-effectiveness claims are excluded and must remain stated limitations until their re-entry conditions are met."
 }

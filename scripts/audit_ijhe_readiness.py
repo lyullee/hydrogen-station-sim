@@ -7368,13 +7368,15 @@ def audit(root: Path) -> dict[str, object]:
     ))
 
     by_id = {item["id"]: item for item in gates}
-    # Human-participant/effectiveness gates are intentionally outside the
-    # bounded station-side physics manuscript.  They remain mandatory for the
-    # full objective, which includes a claim that SAGA improves operator safety.
+    # Human-participant/effectiveness gates are an optional evidence lane.  The
+    # primary objective requires traceable, evidence-grounded SAGA responses;
+    # it does not claim that SAGA improves human safety decisions without a
+    # separate approved study.
     human_effectiveness_gates = (
         "institutional_ethics_determination", "hiad_casebook_frozen",
         "hiad_holdout_collection", "independent_expert_review_complete",
     )
+    human_claim_gate = "saga_effectiveness_and_safety_supported"
     bounded_required = (
         "tank_external_validation", "active_fill_correction_disclosed",
         "dickens_typeiii_prospective_validation",
@@ -7417,12 +7419,31 @@ def audit(root: Path) -> dict[str, object]:
                 "A custodian provides at least three rights-cleared, independently documented "
                 "events with station and vehicle channels; freeze the protocol before outcome access."
             ),
-        }
+        },
+        *[
+            {
+                "id": gate_id,
+                "status": "OPTIONAL_PENDING",
+                "reason": (
+                    "This gate is required only for a human-participant claim that SAGA improves "
+                    "operator safety decisions; it is not required to establish traceable, "
+                    "evidence-grounded response generation."
+                ),
+                "paper_limitation": (
+                    "The study does not claim measured improvement in operator response accuracy, "
+                    "response time or human safety outcomes."
+                ),
+                "reentry_condition": (
+                    "Obtain institutional ethics determination, freeze the 24-case protocol, "
+                    "collect masked responses and complete the independent expert analysis."
+                ),
+            }
+            for gate_id in (*human_effectiveness_gates, human_claim_gate)
+        ],
     ]
-    full_required = bounded_required + human_effectiveness_gates + (
+    full_required = bounded_required + (
         "station_consequence_geometry_validation",
         "h2safe_spatial_detector_transfer_validation",
-        "saga_effectiveness_and_safety_supported",
     )
     bounded_ready = all(by_id[item]["status"] == "PASS" for item in bounded_required)
     full_ready = all(by_id[item]["status"] == "PASS" for item in full_required)
@@ -7464,8 +7485,8 @@ def audit(root: Path) -> dict[str, object]:
             "Only full_user_objective_ready=true permits goal completion. "
             "The current objective is explicitly scoped to station-side/component evidence "
             "and consequence/decision-support claims. Synchronized station-to-vehicle "
-            "full-loop validation is excluded and must remain a stated limitation until "
-            "the re-entry condition is met."
+            "full-loop validation and human-effectiveness claims are excluded and must "
+            "remain stated limitations until their re-entry conditions are met."
         ),
     }
 

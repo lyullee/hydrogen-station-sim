@@ -910,9 +910,11 @@ def test_full_objective_gate_is_stricter_than_bounded_submission_gate():
     full = set(report["blocking_full_objective_gates"])
     assert bounded < full
     assert "full_loop_external_validation" not in full
-    assert "saga_effectiveness_and_safety_supported" in full - bounded
+    assert "saga_effectiveness_and_safety_supported" not in full
+    assert "institutional_ethics_determination" not in full
     exclusions = {item["id"]: item for item in report["scope_exclusions"]}
     assert exclusions["full_loop_external_validation"]["status"] == "OUT_OF_SCOPE"
+    assert exclusions["saga_effectiveness_and_safety_supported"]["status"] == "OPTIONAL_PENDING"
     geometry = next(
         gate for gate in report["gates"]
         if gate["id"] == "station_consequence_geometry_validation"

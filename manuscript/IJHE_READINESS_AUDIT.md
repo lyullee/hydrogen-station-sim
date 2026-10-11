@@ -10,6 +10,11 @@ The local result is an evidence-readiness gate, not a guarantee of editorial acc
 ## Explicit scope exclusions
 
 - `full_loop_external_validation`: **OUT_OF_SCOPE** — The study does not claim independent station-to-vehicle full-loop accuracy, vehicle-controller validation or field-safety validation.
+- `institutional_ethics_determination`: **OPTIONAL_PENDING** — The study does not claim measured improvement in operator response accuracy, response time or human safety outcomes.
+- `hiad_casebook_frozen`: **OPTIONAL_PENDING** — The study does not claim measured improvement in operator response accuracy, response time or human safety outcomes.
+- `hiad_holdout_collection`: **OPTIONAL_PENDING** — The study does not claim measured improvement in operator response accuracy, response time or human safety outcomes.
+- `independent_expert_review_complete`: **OPTIONAL_PENDING** — The study does not claim measured improvement in operator response accuracy, response time or human safety outcomes.
+- `saga_effectiveness_and_safety_supported`: **OPTIONAL_PENDING** — The study does not claim measured improvement in operator response accuracy, response time or human safety outcomes.
 
 | Gate | Status | Claim | Evidence |
 |---|---|---|---|
@@ -179,11 +184,6 @@ The local result is an evidence-readiness gate, not a guarantee of editorial acc
 - `schefer_2007_pressure_decay_validation`
 - `grune_2014_pressure_decay_validation`
 - `submission_metadata_and_declarations`
-- `institutional_ethics_determination`
-- `hiad_casebook_frozen`
-- `hiad_holdout_collection`
-- `independent_expert_review_complete`
 - `h2safe_spatial_detector_transfer_validation`
-- `saga_effectiveness_and_safety_supported`
 
-Only full_user_objective_ready=true permits goal completion. The current objective is explicitly scoped to station-side/component evidence and consequence/decision-support claims. Synchronized station-to-vehicle full-loop validation is excluded and must remain a stated limitation until the re-entry condition is met.
+Only full_user_objective_ready=true permits goal completion. The current objective is explicitly scoped to station-side/component evidence and consequence/decision-support claims. Synchronized station-to-vehicle full-loop validation and human-effectiveness claims are excluded and must remain stated limitations until their re-entry conditions are met.

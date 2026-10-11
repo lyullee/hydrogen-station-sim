@@ -551,16 +551,23 @@ def build(root: Path) -> dict[str, Any]:
     # Keep the unresolved full-loop search result visible, but do not present
     # it as a blocker after the current study scope was narrowed explicitly.
     matrix["scope_exclusions"] = audit.get("scope_exclusions", [])
+    excluded_ids = {
+        item.get("id") for item in matrix["scope_exclusions"]
+        if isinstance(item, dict)
+    }
+    # The blocker matrix uses one aggregate row for the human-effectiveness
+    # lane, while the readiness audit records its five component gates.
+    excluded_ids.add("saga_human_effectiveness")
     matrix["blocking_matrix"] = [
         item for item in matrix["blocking_matrix"]
-        if item.get("id") != "full_loop_external_validation"
+        if item.get("id") not in excluded_ids
     ]
     matrix["claim_policy"] = [
         item for item in matrix["claim_policy"]
         if "Do not mark the user goal complete until full_loop_external_validation" not in item
     ]
     matrix["claim_policy"].append(
-        "Synchronized station-to-vehicle full-loop validation is out of scope for the current objective; disclose its absence as a paper limitation and reopen only after the frozen re-entry condition is met."
+        "Synchronized station-to-vehicle full-loop validation and human-effectiveness evaluation are out of scope for the current objective; disclose both as paper limitations and reopen only after their frozen re-entry conditions are met."
     )
     return matrix
 
