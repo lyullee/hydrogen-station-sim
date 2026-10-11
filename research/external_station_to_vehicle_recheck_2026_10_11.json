@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "artifact_type": "external_station_to_vehicle_public_raw_recheck",
+  "recorded_at": "2026-10-11",
+  "search_scope": {
+    "queries": [
+      "hydrogen fueling station vehicle pressure temperature mass flow raw time series",
+      "hydrogen refueling station vehicle fueling pressure temperature mass flow dataset",
+      "hydrogen station dispenser vehicle fueling time series pressure temperature"
+    ],
+    "eligibility_rule": "A reusable physical experiment or in-use fill must expose station/controller and dispenser/nozzle plus vehicle/receptacle channels on a common time base, with initial conditions, units, tank capacity and protocol metadata."
+  },
+  "status": "NO_NEW_ELIGIBLE_PUBLIC_RAW_SET_IDENTIFIED",
+  "candidates": [
+    {
+      "name": "NREL H2FillS",
+      "url": "https://www.nrel.gov/hydrogen/h2fills",
+      "observed_role": "thermodynamic fueling simulator",
+      "decision": "EXCLUDE_FROM_EXTERNAL_VALIDATION",
+      "reason": "The time-series fields are simulator outputs; the page does not provide independent measured station-to-vehicle logger traces."
+    },
+    {
+      "name": "NREL Next Generation Hydrogen Station Composite Data Products: Retail Stations",
+      "url": "https://www.nlr.gov/hydrogen/infrastructure-cdps-retail",
+      "observed_role": "aggregate station performance, reliability and safety statistics",
+      "decision": "EXCLUDE_FROM_EXTERNAL_VALIDATION",
+      "reason": "The published products are aggregate charts and summaries, not synchronized station/dispenser/vehicle raw time series."
+    },
+    {
+      "name": "MetHyTrucks Group B -- HySam system measurement data",
+      "url": "https://zenodo.org/records/20590842",
+      "doi": "10.5281/zenodo.20590842",
+      "observed_role": "open synchronized sampling-system measurements",
+      "decision": "RETAIN_AS_COMPONENT_DIAGNOSTIC_ONLY",
+      "reason": "The workbooks contain sampling-system pressure/temperature/flow-like channels but no vehicle/receptacle tank channels, station controller state or full station-to-vehicle common-clock context. This source is already consumed under the frozen component diagnostic boundary."
+    }
+  ],
+  "primary_goal_decision": {
+    "full_loop_external_validation": "OUT_OF_SCOPE",
+    "paper_limitation": "No openly reusable synchronized station-to-vehicle raw trace was identified in the recheck. The study therefore does not claim independent station-to-vehicle full-loop accuracy, vehicle-controller validation or field-safety validation.",
+    "reentry_condition": "A custodian must provide at least three rights-cleared, independently documented events with station/controller, dispenser/nozzle and vehicle/receptacle channels on a common time base, including units, initial conditions, tank capacity and protocol metadata; the analysis protocol must be frozen before outcome access."
+  }
+}
