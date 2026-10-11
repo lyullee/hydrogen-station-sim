@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-11T02:24:26.281826+00:00",
+  "generated_at": "2026-10-11T12:35:00+09:00",
   "metric_definition": "PASS gates divided by PASS+FAIL+PENDING gates; not a publication-readiness probability",
   "gate_counts": {
     "PASS": 127,
@@ -58,8 +58,9 @@
       "publication_acceptance_or_probability"
     ],
     "next_high_impact_actions": [
-      "obtain an independent time-resolved measured pressure trace for the pending Grune holdout",
-      "complete blinded expert and prospective SAGA safety-effectiveness evaluation"
+      "retry the range-capable KIT LH2 archive fetch after the RADAR rate limit cools, then verify the publisher MD5 before metadata-only inventory",
+      "obtain an independent time-resolved measured pressure trace for the pending Grune holdout or a replacement physical consequence trace under a frozen protocol",
+      "keep the SAGA human-effectiveness study optional unless the paper claims improved human safety decisions"
     ],
     "scope_amendment_2026_10_11": {
       "in_scope": [
@@ -79,6 +80,22 @@
       "independent_component_holdout": "retained_public_type_iv_split_ready",
       "station_to_vehicle_raw_data": "removed_from_primary_goal_after_public_search",
       "ethics_and_expert_review": "optional_for_physics_validation; required only for a claim that SAGA improves human safety guidance"
+    },
+    "latest_access_evidence": {
+      "kit_lh2_consequence_archive": {
+        "status": "RANGE_ENDPOINT_FOUND_RATE_LIMITED",
+        "archive_bytes_reported": 4971447808,
+        "publisher_md5": "0e4ac934ecb973c6f07212e8a80707c9",
+        "numeric_outcomes_opened": false,
+        "evidence": "research/kit_lh2_download_attempt_2026_10_11.json",
+        "fetcher": "scripts/fetch_kit_lh2_archive.py"
+      },
+      "full_regression": {
+        "status": "PASS",
+        "tests_passed": 1383,
+        "tests_failed": 0,
+        "evidence": "research/full_regression_test_run_2026_10_11.json"
+      }
     }
   }
 }
