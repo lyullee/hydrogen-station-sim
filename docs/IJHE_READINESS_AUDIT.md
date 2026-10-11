@@ -7,6 +7,15 @@ The local result is an evidence-readiness gate, not a guarantee of editorial acc
 - Full user objective ready: **False**
 - Goal completion permitted: **False**
 
+## Explicit scope exclusions
+
+- `full_loop_external_validation`: **OUT_OF_SCOPE** — The study does not claim independent station-to-vehicle full-loop accuracy, vehicle-controller validation or field-safety validation.
+- `institutional_ethics_determination`: **OPTIONAL_PENDING** — The study does not claim measured improvement in operator response accuracy, response time or human safety outcomes.
+- `hiad_casebook_frozen`: **OPTIONAL_PENDING** — The study does not claim measured improvement in operator response accuracy, response time or human safety outcomes.
+- `hiad_holdout_collection`: **OPTIONAL_PENDING** — The study does not claim measured improvement in operator response accuracy, response time or human safety outcomes.
+- `independent_expert_review_complete`: **OPTIONAL_PENDING** — The study does not claim measured improvement in operator response accuracy, response time or human safety outcomes.
+- `saga_effectiveness_and_safety_supported`: **OPTIONAL_PENDING** — The study does not claim measured improvement in operator response accuracy, response time or human safety outcomes.
+
 | Gate | Status | Claim | Evidence |
 |---|---|---|---|
 | `tank_external_validation` | **PASS** | Measured-boundary Type-IV tank model is externally evaluated on the frozen public split. | `research\tank_model_validation_v2.json` |
@@ -47,7 +56,7 @@ The local result is an evidence-readiness gate, not a guarantee of editorial acc
 | `confidential_station_recharge_pressure_forecast_holdout_integrity` | **PASS** | A prospectively frozen same-site holdout supports a causal 30-second medium/high storage pressure-response forecast while runtime, geometry, capacity, vehicle and independent-site claims remain locked. | `research\confidential_station_recharge_pressure_forecast_protocol_2026_10_08.json; research\confidential_station_recharge_pressure_forecast_holdout_2026_10_08.json` |
 | `confidential_station_lifecycle_pressure_alignment_negative_result_integrity` | **PASS** | The prospectively frozen same-site lifecycle/pressure alignment failure is retained without outcome-driven refitting or claim promotion. | `research\confidential_station_lifecycle_pressure_alignment_protocol_2026_10_08.json; research\confidential_station_lifecycle_pressure_alignment_holdout_2026_10_09.json` |
 | `confidential_station_side_integrated_validation_integrity` | **PASS** | A hash-linked same-site bundle integrates pressure-boundary, cascade-sequence and recharge-pressure holdouts while retaining the negative lifecycle-counter result. | `research\confidential_station_side_integrated_validation_2026_10_09.json` |
-| `full_loop_external_validation` | **FAIL** | The complete station controller/cascade/precooler loop meets frozen engineering screens on new external cases. | `data\public_validation\results\closed_loop_external_holdout\validation.json; research\external_full_loop_data_search.json; research\public_full_loop_search_recheck_2026_10_05.json; research\public_operational_benchmark_recheck_2026_10_05.json; research\public_full_loop_search_sweep_2026_10_05.json; research\public_full_loop_search_recheck_2026_10_06.json; research\public_full_loop_search_recheck_2026_10_09.json; research\public_full_loop_data_update_2026_10_08.json; research\methytrucks_hysam_postaccess_diagnostic_2026_10_08.json; research\rheadhy_public_test_matrix_pretrace_protocol_2026_10_08.json; research\methytrucks_2026_public_measurement_intake.json; research\methytrucks_group_d_prospective_protocol_2026_10_08.json; research\methytrucks_group_d_prospective_result_2026_10_08.json; research\apparatus_resolved_release_protocol.json; research\controlled_full_loop_cohort_registry.json` |
+| `full_loop_external_validation` | **FAIL** | The complete station controller/cascade/precooler loop meets frozen engineering screens on new external cases. | `data\public_validation\results\closed_loop_external_holdout\validation.json; research\external_full_loop_data_search.json; research\public_full_loop_search_recheck_2026_10_05.json; research\public_operational_benchmark_recheck_2026_10_05.json; research\public_full_loop_search_sweep_2026_10_05.json; research\public_full_loop_search_recheck_2026_10_06.json; research\public_full_loop_search_recheck_2026_10_09.json; research\public_full_loop_search_recheck_2026_10_11.json; research\public_full_loop_data_update_2026_10_08.json; research\methytrucks_hysam_postaccess_diagnostic_2026_10_08.json; research\rheadhy_public_test_matrix_pretrace_protocol_2026_10_08.json; research\methytrucks_2026_public_measurement_intake.json; research\methytrucks_group_d_prospective_protocol_2026_10_08.json; research\methytrucks_group_d_prospective_result_2026_10_08.json; research\apparatus_resolved_release_protocol.json; research\controlled_full_loop_cohort_registry.json` |
 | `full_loop_raw_data_request_package_integrity` | **PASS** | The full-loop acquisition request specifies required channels, reuse rights and a pre-outcome freeze without claiming access or validation. | `research\full_loop_raw_data_request_package_2026_10_05.json` |
 | `real_station_article_boundary_integrity` | **PASS** | The public BAM/KETI field-validation article is recorded as an auditable real-station context and data-request lead without being promoted to raw full-loop validation. | `research\keti_bam_hrs_article_data_boundary_2026_10_05.json` |
 | `zbt_hrs_sampling_article_boundary_integrity` | **PASS** | The public ZBT HRS sampling article is recorded as a real multi-bank station data-request lead without being promoted to raw full-loop validation. | `research\zbt_hrs_sampling_article_data_boundary_2026_10_05.json` |
@@ -134,7 +143,7 @@ The local result is an evidence-readiness gate, not a guarantee of editorial acc
 | `schefer_transient_release_validation` | **FAIL** | The locked adiabatic vessel-discharge model meets all frozen transient mass-flow screens on the independent Sandia/SRI experiment. | `research\schefer_2006_holdout_result.json; research\schefer_2006_holdout_protocol.json; data\public_validation\derived\schefer_2006_figure3b.csv` |
 | `schefer_2007_pressure_decay_validation` | **FAIL** | The locked adiabatic vessel-discharge model meets all frozen pressure-decay screens on the independent Schefer et al. 2007 experiment. | `research\schefer_2007_holdout_result.json; research\schefer_2007_holdout_protocol.json; data\public_validation\derived\schefer_2007_figure4.csv` |
 | `jankuj_pressure_decay_diagnostic_integrity` | **PASS** | The Jankuj pressure-decay transfer attempt is retained as a failed post-access diagnostic and cannot be mistaken for prospective external validation. | `research\jankuj_2026_pressure_decay_transfer_result_2026_10_08.json; research\jankuj_2026_pressure_decay_protocol_2026_10_08.json; research\accidental_self_ignition_public_evidence_2026_10_04.json` |
-| `grune_2014_pressure_decay_validation` | **PENDING** | The locked source model meets all pressure-decay screens on the independent KIT small-reservoir release. | `research\grune_2014_holdout_result.json; research\grune_2014_holdout_protocol.json; data\public_validation\derived\grune_2014_figure2.csv; research\grune_2014_publisher_access_recheck_2026_10_06.json; research/grune_2014_archive_access_recheck_2026_10_05.json` |
+| `grune_2014_pressure_decay_validation` | **PENDING** | The locked source model meets all pressure-decay screens on the independent KIT small-reservoir release. | `research\grune_2014_holdout_result.json; research\grune_2014_holdout_protocol.json; data\public_validation\derived\grune_2014_figure2.csv; research\grune_2014_publisher_access_recheck_2026_10_11.json; research/grune_2014_publisher_access_recheck_2026_10_06.json; research/grune_2014_archive_access_recheck_2026_10_05.json` |
 | `ekoto_transient_release_validation` | **PASS** | The locked adiabatic vessel-discharge model meets all frozen transient mass-flow screens on the independent Ekoto et al. scaled release. | `research\ekoto_2012_holdout_result.json; research\ekoto_2012_holdout_protocol.json; data\public_validation\derived\ekoto_2012_figure3.csv` |
 | `hiad_protocol_integrity` | **PASS** | The incident decision-support study protocol was hash-locked before outcomes. | `research\hiad_study_protocol_manifest.json` |
 | `hiad_casebook_machine_preflight_integrity` | **PASS** | The prepared HIAD casebook passes machine-only structural checks while all human gates remain unresolved. | `research\hiad_casebook_machine_preflight_2026_10_05.json` |
@@ -163,10 +172,6 @@ The local result is an evidence-readiness gate, not a guarantee of editorial acc
 - `schefer_transient_release_validation`
 - `schefer_2007_pressure_decay_validation`
 - `grune_2014_pressure_decay_validation`
-- `institutional_ethics_determination`
-- `hiad_casebook_frozen`
-- `hiad_holdout_collection`
-- `independent_expert_review_complete`
 - `submission_metadata_and_declarations`
 
 ## Blocking full-objective gates
@@ -178,13 +183,7 @@ The local result is an evidence-readiness gate, not a guarantee of editorial acc
 - `schefer_transient_release_validation`
 - `schefer_2007_pressure_decay_validation`
 - `grune_2014_pressure_decay_validation`
-- `institutional_ethics_determination`
-- `hiad_casebook_frozen`
-- `hiad_holdout_collection`
-- `independent_expert_review_complete`
 - `submission_metadata_and_declarations`
-- `full_loop_external_validation`
 - `h2safe_spatial_detector_transfer_validation`
-- `saga_effectiveness_and_safety_supported`
 
-Only full_user_objective_ready=true permits goal completion. A bounded paper may report negative or limited physics honestly, but it does not satisfy the full validated-digital-twin objective.
+Only full_user_objective_ready=true permits goal completion. The current objective is explicitly scoped to station-side/component evidence and consequence/decision-support claims. Synchronized station-to-vehicle full-loop validation and human-effectiveness claims are excluded and must remain stated limitations until their re-entry conditions are met.
