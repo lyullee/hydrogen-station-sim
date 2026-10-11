@@ -4,9 +4,9 @@
   "status": "exploratory_geometry_sensitivity_only",
   "claim_limit": "The variants were compared after access to the NREL workbook. No variant is an independent confirmatory pass, and no parameter or default model was changed by this script. A new frozen protocol is required before using a capacity-based geometry in a validation claim.",
   "source": {
-    "workbook": "C:\\Users\\lyul\\Desktop\\ProjectData\\hydrogen-station-sim\\data\\public_validation\\raw\\nrel_h2fills_2022_hdvs_typeiv.xlsx",
+    "workbook": "data/public_validation/raw/nrel_h2fills_2022_hdvs_typeiv.xlsx",
     "workbook_sha256": "1a3fbe64a50c1c97266bfe0372998513ad3ccec5600fab7bc4b9fc68ad4d9d0c",
-    "fit_source": "C:\\Users\\lyul\\Desktop\\ProjectData\\hydrogen-station-sim\\research\\tank_model_validation_v2.json",
+    "fit_source": "research/tank_model_validation_v2.json",
     "fit_source_sha256": "4480505cd2e094f64c03421545bfb2a0235a7f58b66e2a5cb5ed529d4d669840",
     "tank_ids": [
       1,
