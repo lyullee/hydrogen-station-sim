@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
   "artifact_type": "ijhe_claim_evidence_matrix",
-  "generated_at": "2026-10-11T15:50:43.209145+00:00",
+  "generated_at": "2026-10-11T16:40:58.568785+00:00",
   "source_audit": "manuscript/ijhe_readiness_audit.json",
-  "source_audit_sha256": "fbf1012aa3cf482f67c1f4c892905812e135c17d24b2edf6dfd12e7e68e4bf0c",
+  "source_audit_sha256": "ac7f08c7eb2679560a7f3fc3f9f77a642f3fc588f7bc2710f1dc35f0db8bc0df",
   "paper_scope": "objective engineering and physics validation; no human-effectiveness or field-safety claim",
   "rows": [
     {
@@ -252,7 +252,7 @@
       "interpretation": "Out of scope: no rights-cleared synchronized station/controller/dispenser/vehicle raw cohort was found.",
       "status": "OUT OF SCOPE",
       "audit_claim": "The complete station controller/cascade/precooler loop meets frozen engineering screens on new external cases.",
-      "evidence": "data\\public_validation\\results\\closed_loop_external_holdout\\validation.json; research\\external_full_loop_data_search.json; research\\public_full_loop_search_recheck_2026_10_05.json; research\\public_operational_benchmark_recheck_2026_10_05.json; research\\public_full_loop_search_sweep_2026_10_05.json; research\\public_full_loop_search_recheck_2026_10_06.json; research\\public_full_loop_search_recheck_2026_10_09.json; research\\public_full_loop_search_recheck_2026_10_11.json; research\\public_station_vehicle_search_recheck_2026_10_11.json; research\\public_full_loop_data_update_2026_10_08.json; research\\methytrucks_hysam_postaccess_diagnostic_2026_10_08.json; research\\rheadhy_public_test_matrix_pretrace_protocol_2026_10_08.json; research\\methytrucks_2026_public_measurement_intake.json; research\\methytrucks_group_d_prospective_protocol_2026_10_08.json; research\\methytrucks_group_d_prospective_result_2026_10_08.json; research\\apparatus_resolved_release_protocol.json; research\\controlled_full_loop_cohort_registry.json",
+      "evidence": "data\\public_validation\\results\\closed_loop_external_holdout\\validation.json; research\\external_full_loop_data_search.json; research\\public_full_loop_search_recheck_2026_10_05.json; research\\public_operational_benchmark_recheck_2026_10_05.json; research\\public_full_loop_search_sweep_2026_10_05.json; research\\public_full_loop_search_recheck_2026_10_06.json; research\\public_full_loop_search_recheck_2026_10_09.json; research\\public_full_loop_search_recheck_2026_10_11.json; research\\public_station_vehicle_search_recheck_2026_10_12.json; research\\public_full_loop_data_update_2026_10_08.json; research\\methytrucks_hysam_postaccess_diagnostic_2026_10_08.json; research\\rheadhy_public_test_matrix_pretrace_protocol_2026_10_08.json; research\\methytrucks_2026_public_measurement_intake.json; research\\methytrucks_group_d_prospective_protocol_2026_10_08.json; research\\methytrucks_group_d_prospective_result_2026_10_08.json; research\\apparatus_resolved_release_protocol.json; research\\controlled_full_loop_cohort_registry.json",
       "requirement": "Hash-locked protocol and model, clean-source external holdout with >=8 cases and >=80% screen pass fraction.",
       "observed": {
         "protocol_integrity": true,
@@ -355,10 +355,10 @@
           "runtime_parameter_application": false,
           "claim_boundary": "This artifact records a current public-access recheck and exclusion decision. It adds no numerical validation, does not alter any frozen holdout or runtime parameter, and does not support an IJHE full-loop or field-safety claim."
         },
-        "public_station_vehicle_search_recheck_2026_10_11": {
+        "public_station_vehicle_search_recheck_2026_10_12": {
           "decision": "NO_NEW_ELIGIBLE_PUBLIC_RAW_STATION_TO_VEHICLE_SET_IDENTIFIED",
-          "source_count": 5,
-          "claim_boundary": "This is a public-access availability audit. It does not prove that restricted, proprietary or unpublished traces do not exist."
+          "source_count": 6,
+          "claim_boundary": "This is a public-access availability audit. It records the checked endpoints and does not prove that restricted, proprietary or unpublished traces do not exist."
         },
         "public_data_update_2026_10_08": {
           "status": "public_synchronized_rows_found_but_full_loop_gate_open",

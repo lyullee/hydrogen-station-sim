@@ -138,8 +138,12 @@ def main() -> int:
     audit_sha256 = _sha256(args.audit)
     matrix = build(json.loads(args.audit.read_text(encoding="utf-8")), audit_sha256=audit_sha256)
     args.json_output.parent.mkdir(parents=True, exist_ok=True)
-    args.json_output.write_text(json.dumps(matrix, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    args.md_output.write_text(_md(matrix), encoding="utf-8")
+    args.json_output.write_text(
+        json.dumps(matrix, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+        newline="\n",
+    )
+    args.md_output.write_text(_md(matrix), encoding="utf-8", newline="\n")
     print(json.dumps({"rows": len(matrix["rows"]), "audit_sha256": audit_sha256}, ensure_ascii=False))
     return 0
 
