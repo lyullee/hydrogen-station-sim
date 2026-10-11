@@ -29,6 +29,9 @@ def test_llm_receives_privacy_bounded_validation_gap_next_actions() -> None:
     decision = prompt_decision_evidence(manifest)["validation_gap_triage"]
     assert decision["primary_blocker"]
     assert "full_loop_data" not in decision["bucket_counts"]
+    assert decision["scope_exclusions"][0]["id"] == "full_loop_external_validation"
+    assert decision["scope_exclusions"][0]["legacy_status"] == "FAIL"
+    assert "paper scope" in decision["scope_exclusions"][0]["reason"]
 
     summary = prompt_evidence_summary(manifest)["validation_gap_triage"]
     assert summary["claim_limit"]

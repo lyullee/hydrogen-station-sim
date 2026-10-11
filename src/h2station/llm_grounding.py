@@ -13627,6 +13627,7 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
             (
                 "status", "artifact_integrity", "source_generated_at",
                 "bucket_counts", "open_gate_count", "next_actions",
+                "scope_exclusions",
                 "data_volume_is_primary_blocker", "primary_blocker", "claim_limit",
             ),
         )
