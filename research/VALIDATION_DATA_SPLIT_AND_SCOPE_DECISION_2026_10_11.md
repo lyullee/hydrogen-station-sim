@@ -19,6 +19,8 @@
 경계·cascade·재충전 자문 범위로만 보고하고 차량 측 정확도나 현장 안전한계로
 확장하지 않는다. 세부 식별자, 경로, 날짜, 제조사와 원시 행은 저장소에 공개하지
 않는다. 근거: `research/confidential_station_side_integrated_validation_2026_10_09.json`.
+분할 규칙·참조 산출물 해시·누수 방지 조건은
+`research/confidential_validation_split_manifest_2026_10_11.json`에 고정했다.
 
 ### B. 공개 외부 Type-IV 수용탱크 자료
 

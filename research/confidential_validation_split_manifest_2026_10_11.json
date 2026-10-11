@@ -1,0 +1,90 @@
+{
+  "schema_version": 1,
+  "artifact_type": "confidential_validation_split_manifest",
+  "recorded_at": "2026-10-11",
+  "status": "frozen_scope_manifest",
+  "privacy": {
+    "source_identifiers_published": false,
+    "source_paths_published": false,
+    "source_filenames_published": false,
+    "source_headers_published": false,
+    "raw_rows_persisted": false,
+    "absolute_timestamps_published": false,
+    "calendar_dates_published": false,
+    "site_company_location_manufacturer_published": false
+  },
+  "owner_station_side_split": {
+    "source_scope": "33 owner-controlled station CSV files; de-identified and retained locally",
+    "deduplicated_rows": 56854143,
+    "partition_rule": "episode/time order; calibration prefix and later untouched suffix; no random row mixing",
+    "cohorts": [
+      {
+        "id": "pressure_boundary",
+        "calibration_points": 998,
+        "holdout_points": 30,
+        "holdout_duration_s": 1755.0,
+        "artifact": "research/confidential_operational_envelope_holdout_replay_2026_10_06.json"
+      },
+      {
+        "id": "cascade_sequence",
+        "calibration_pairs": 8106,
+        "holdout_pairs": 3664,
+        "artifact": "research/confidential_station_cascade_sequence_holdout_2026_10_08.json"
+      },
+      {
+        "id": "recharge_pressure_forecast",
+        "calibration_cases": 1024,
+        "holdout_cases": 394,
+        "artifact": "research/confidential_station_recharge_pressure_forecast_holdout_2026_10_08.json"
+      },
+      {
+        "id": "lifecycle_alignment_negative_check",
+        "calibration_role": "development prefix only",
+        "holdout_role": "later suffix; negative result retained",
+        "artifact": "research/confidential_station_lifecycle_pressure_alignment_holdout_2026_10_09.json"
+      }
+    ],
+    "fit_uses_holdout": false,
+    "default_model_parameters_changed_after_holdout": false,
+    "claim_label": "same_site_temporal_holdout"
+  },
+  "public_component_split": {
+    "source_scope": "open Type-IV tank measurements",
+    "partition_rule": "lab_test_number modulo 3 equals 0 reserved before outcome inspection",
+    "calibration_cases": 23,
+    "holdout_cases": 12,
+    "excluded_mass_closure_cases": 1,
+    "artifact": "research/independent_component_holdout_reanalysis_2026_10_11.json",
+    "claim_label": "independent_component_holdout"
+  },
+  "station_to_vehicle_full_loop": {
+    "status": "not_available_in_rights_cleared_machine_readable_form",
+    "required_channels": [
+      "station/dispenser pressure and temperature",
+      "vehicle/receptacle pressure and temperature",
+      "common elapsed-time axis",
+      "mass flow or transferred mass",
+      "protocol and reuse rights"
+    ],
+    "decision": "excluded_from_current_goal_and_reported_as_limitation",
+    "independent_external_validation_supported": false
+  },
+  "integrity": {
+    "referenced_artifacts_sha256": {
+      "research/confidential_operational_envelope_holdout_replay_2026_10_06.json": "5f211cf0f7b4df25ed18fe64cf8a9dfb9a0b7f2bfa1fe5c787b6c4ac51edc164",
+      "research/confidential_station_cascade_sequence_holdout_2026_10_08.json": "44aafda5dcb905744b22266fa431b9c2ad1f00a34410534ea5c9d03ca2caec60",
+      "research/confidential_station_recharge_pressure_forecast_holdout_2026_10_08.json": "c870990c3416de59593c7a893dc33939a0a42665bf08db972290dd412d13b999",
+      "research/confidential_station_lifecycle_pressure_alignment_holdout_2026_10_09.json": "98e328a37dc0093379c7495e13608c8ad79c1d8d2ce49eec3735418e3ecd2919",
+      "research/independent_component_holdout_reanalysis_2026_10_11.json": "8710f21e681bbdba6c1264b8d399f446b00771560962bb39558b8865ba17b935"
+    },
+    "raw_private_data_published": false,
+    "post_outcome_refit_allowed": false
+  },
+  "decision": {
+    "same_site_station_side_holdout_supported": true,
+    "independent_component_holdout_supported": true,
+    "independent_external_full_loop_validation_supported": false,
+    "full_loop_external_validation_gate_closed": false
+  },
+  "claim_boundary": "The owned data are split into chronology-preserving same-site station-side holdouts and the public Type-IV data provide an independent component holdout. Neither partition supports a claim of independent external station-to-vehicle validation. The unavailable synchronized station-to-vehicle archive is a stated limitation and remains outside the current target."
+}

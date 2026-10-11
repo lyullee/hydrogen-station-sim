@@ -30,7 +30,9 @@ for traceability but is excluded from the primary goal because no openly
 reusable raw cohort was found. The scope-adjusted closure is **127 PASS · 9
 FAIL · 2 PENDING = 92.0%**; this is a scope metric, not a new validation result.
 The exact split and the paper limitation are recorded in
-[`VALIDATION_DATA_SPLIT_AND_SCOPE_DECISION_2026_10_11.md`](../research/VALIDATION_DATA_SPLIT_AND_SCOPE_DECISION_2026_10_11.md).
+[`VALIDATION_DATA_SPLIT_AND_SCOPE_DECISION_2026_10_11.md`](../research/VALIDATION_DATA_SPLIT_AND_SCOPE_DECISION_2026_10_11.md)
+and the machine-readable
+[`confidential_validation_split_manifest_2026_10_11.json`](../research/confidential_validation_split_manifest_2026_10_11.json).
 
 A fresh privacy-bounded local inventory confirms that data volume is not the
 station-side limitation. The controlled archive contains 33 CSV files,
