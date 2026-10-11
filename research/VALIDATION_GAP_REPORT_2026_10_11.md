@@ -12,7 +12,7 @@
 | 우선순위 | 병렬 트랙 | 게이트 | 상태 | 다음 최소 행동 |
 | --- | --- | --- | --- | --- |
 | P0 | component_model_repairs | `dickens_typeiii_prospective_validation` | FAIL | 결과를 재튜닝하지 말고 실패한 물리량·직경·경계조건에 맞는 새 pre-access protocol과 독립 원시 trace를 확보한다. |
-| P0 | component_model_repairs | `grune_2014_pressure_decay_validation` | PENDING | 결과를 재튜닝하지 말고 실패한 물리량·직경·경계조건에 맞는 새 pre-access protocol과 독립 원시 trace를 확보한다. |
+| P0 | component_model_repairs | `grune_2014_pressure_decay_validation` | PENDING | 공식 KIT·출판사 재확인에서도 원시 pressure-time 표가 없어 보류 중이다. `research/grune_2014_publisher_access_recheck_2026_10_11.json`에 기록했으며, custodian 원자료와 재사용 조건을 받은 뒤 새 pre-access protocol을 동결한다. |
 | P0 | component_model_repairs | `h2safe_spatial_detector_transfer_validation` | FAIL | 공간좌표·방출방향·센서별 수치응답이 함께 있는 독립 holdout을 추가하고, 통과 전 runtime 자동 라우팅을 유지하지 않는다. |
 | P0 | component_model_repairs | `hytunnel_carpark_dispersion_validation` | FAIL | 공간좌표·방출방향·센서별 수치응답이 함께 있는 독립 holdout을 추가하고, 통과 전 runtime 자동 라우팅을 유지하지 않는다. |
 | P0 | component_model_repairs | `hytunnel_carpark_mass_flow_validation` | FAIL | 결과를 재튜닝하지 말고 실패한 물리량·직경·경계조건에 맞는 새 pre-access protocol과 독립 원시 trace를 확보한다. |

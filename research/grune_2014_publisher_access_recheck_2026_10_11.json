@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-11",
+  "status": "publisher_and_repository_recheck_completed",
+  "source": {
+    "official_repository": "https://publikationen.bibliothek.kit.edu/110097219",
+    "publisher_article": "https://www.sciencedirect.com/science/article/pii/S0360319913020521",
+    "doi": "10.1016/j.ijhydene.2013.08.076",
+    "supporting_public_report": "https://h2tools.org/sites/default/files/2019-08/paper_120.pdf",
+    "title": "Experimental study of ignited unsteady hydrogen releases from a high pressure reservoir",
+    "target": "Figure 2 measured pressure decay for the 4 mm, approximately 200 bar release"
+  },
+  "search_actions": [
+    "checked KITopen publication metadata and associated-document links",
+    "checked the publisher article record for downloadable supplementary data",
+    "checked the public H2Tools conference-paper copy for a machine-readable trace",
+    "did not treat plotted calculated curves as measured outcomes"
+  ],
+  "access_result": {
+    "official_metadata_found": true,
+    "apparatus_and_figure_description_found": true,
+    "machine_readable_pressure_time_trace_found": false,
+    "trace_specific_reuse_terms_found": false,
+    "measured_half_pressure_endpoint_recoverable_from_public_record": false
+  },
+  "eligibility": {
+    "full_raw_holdout_eligible": false,
+    "grune_2014_pressure_decay_gate_closed": false,
+    "reason": "The public records expose publication metadata, apparatus details and figure-level descriptions but no rights-cleared pressure-time table. The existing digitized curve does not reach the required half-pressure endpoint, so no additional endpoint may be inferred."
+  },
+  "next_action": "Request the original pressure-time logger export and reuse terms from the KIT custodian; freeze a new protocol before reading numerical outcomes.",
+  "claim_boundary": "This is a data-access recheck only. It neither validates nor invalidates the release model and does not support ignition, radiation, dispersion or safety-distance claims."
+}
