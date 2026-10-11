@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "artifact_type": "full_python_test_run",
+  "generated_at": "2026-10-12T00:00:00+09:00",
+  "command": "python -m pytest -q",
+  "status": "PASS",
+  "tests_passed": 1461,
+  "tests_failed": 0,
+  "tests_skipped": 6,
+  "warnings": 208,
+  "duration_seconds": 264.59,
+  "source_commit": "eb689452bde6ef440206123c184ddcaaedae0268",
+  "environment_note": "Executed after installing the declared runtime/test dependencies in the local environment; no repository dependency files were changed.",
+  "claim_boundary": "Software and evidence-contract regression only; this does not convert pending or failed external physical-validation gates into passes."
+}
