@@ -135,3 +135,7 @@ two-zone 모델은 원인 진단용 post-outcome 모델로 기록되어 있지�
   사고 선례 라우팅은 `PASS`로 확인됐다. `bounded_ijhe_submission_ready`와
   `full_user_objective_ready`는 기존 물리 holdout·full-loop·사람 효과성 조건
   때문에 계속 `false`다.
+
+- 2026-10-12 01:24 KST에 readiness audit를 다시 실행해 현재 파일·해시와
+  일치함을 확인했다. 게이트 수와 차단 목록은 변하지 않았으며, 이 재실행은
+  진행률을 부풀리거나 실패한 물리 검증을 통과로 바꾸지 않는다.
