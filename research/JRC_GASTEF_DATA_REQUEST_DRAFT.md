@@ -14,6 +14,11 @@ twin for hydrogen refuelling-station safety. Your open-access article,
 *JRC reference data from experiments of on-board hydrogen tanks fast filling*
 (DOI 10.1016/j.ijhydene.2014.03.227), describes a GasTeF database with more
 than 133 filling and emptying entries from commercial high-pressure tanks.
+The public paper reports 23 ambient-temperature Type-III 40 L tests and a
+0.6-second pressure/temperature logging interval. We would be grateful for a
+small, de-identified subset rather than the complete archive; three or more
+independent Type-III fill episodes would already support a separately frozen
+component holdout.
 
 The public HYTRANSFER campaign report also describes 18 recorded-data files
 from GasTeF filling and emptying tests, but those files are not linked from the
@@ -47,6 +52,13 @@ fields are:
 - tank type, volume, nominal pressure, initial state and fill endpoint;
 - filling protocol or pressure-ramp information, cooling condition and quality
   flags.
+
+For the Type-III subset, the reported 0.6 s sampling interval is sufficient;
+please preserve the native interval or state any resampling rule. If only
+event-level exports are possible, please identify the event IDs, channel
+definitions, sample interval, sensor calibration/uncertainty and whether the
+events are independent. No station, operator, vehicle or site identity is
+needed for the component model.
 
 Station and operator identities are not required. A de-identified CSV or Excel
 export is sufficient. Please state the licence or written reuse and citation
