@@ -53,3 +53,11 @@
 - `data/public_validation/results/closed_loop_external_holdout/validation.json`
 
 이 브리프는 모델이나 검증 게이트를 변경하지 않습니다. 새로운 자료가 들어오면 동일한 동결·시간축·권한 검사를 거친 뒤 다시 생성합니다.
+
+## 2026-10-11 감사 갱신 메모
+
+현재 정본 감사 파일 `research/ijhe_readiness_audit.json`의 최신 집계는
+**128 PASS / 10 FAIL / 7 PENDING**이며, 범위 조정 후 주 목표 지표는
+**128 PASS / 9 FAIL / 2 PENDING (92.1%)**이다. 위 본문 앞부분의 127/92.0%
+표기는 이전 생성 시점의 기록으로 보존하고, 현재 상태를 인용할 때는 정본
+감사 파일과 `research/PROGRESS_DELTA_2026_10_11.md`를 우선한다.

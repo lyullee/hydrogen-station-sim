@@ -46,3 +46,10 @@
 | 게이트 | 감사 상태 | 처리 |
 | --- | --- | --- |
 | `full_loop_external_validation` | FAIL | No reusable synchronized station-to-vehicle raw bundle was identified; the current paper scope is station-side and component validation. 논문 한계: Do not claim independent station-to-vehicle full-loop accuracy, vehicle-controller validation or field-safety validation. |
+
+## 2026-10-11 집계 갱신 메모
+
+이 문서는 2026-10-10 triage 시점의 우선순위 기록을 보존한다. 현재 정본
+`research/ijhe_readiness_audit.json`은 **128 PASS / 10 FAIL / 7 PENDING**을
+기록하며, station-side/component 범위 지표는 **92.1%**이다. 이 갱신은 게이트
+상태를 통과로 바꾸지 않으며, 실패·보류 항목은 정본 감사 파일을 따른다.
