@@ -2011,6 +2011,8 @@ def test_manifest_exposes_station_side_integrated_validation_bundle():
         "confidential_station_side_integrated_validation"
     ]
     assert evidence["station_side_integrated_validation_supported"] is True
+    assert evidence["validation_label"] == "same_site_temporal_holdout"
+    assert evidence["independent_external_validation"] is False
     assert evidence["pressure_boundary"]["supported"] is True
     assert evidence["cascade_sequence"]["holdout_pairs"] == 3664
     assert evidence["recharge_pressure_forecast"]["holdout_cases"] == 394
@@ -2026,6 +2028,8 @@ def test_manifest_exposes_station_side_integrated_validation_bundle():
         "station_side_integrated_validation"
     ]
     assert decision["claim_supported"] is True
+    assert decision["validation_label"] == "same_site_temporal_holdout"
+    assert decision["independent_external_validation"] is False
     assert decision["holdout_points"] == 30
     assert decision["cascade_holdout_pairs"] == 3664
     assert decision["recharge_forecast_holdout_cases"] == 394

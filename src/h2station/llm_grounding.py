@@ -5921,6 +5921,12 @@ def _confidential_station_side_integrated_validation_evidence() -> dict[str, Any
     return {
         "artifact": relative,
         "evidence_role": record.get("evidence_role"),
+        # The owner-controlled data are chronology-preserving, same-site
+        # holdouts.  Keep this label explicit in every prompt projection so a
+        # component result cannot be described as independent external
+        # validation by a downstream answer generator.
+        "validation_label": "same_site_temporal_holdout",
+        "independent_external_validation": False,
         "pressure_boundary": checks.get("pressure_boundary") or {},
         "cascade_sequence": checks.get("cascade_sequence") or {},
         "recharge_pressure_forecast": checks.get("recharge_pressure_forecast") or {},
@@ -10866,7 +10872,9 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
         summary["confidential_station_side_integrated_validation"] = {
             key: station_side_integrated.get(key)
             for key in (
-                "evidence_role", "pressure_boundary", "cascade_sequence",
+                "evidence_role", "validation_label",
+                "independent_external_validation",
+                "pressure_boundary", "cascade_sequence",
                 "recharge_pressure_forecast", "lifecycle_alignment",
                 "station_side_integrated_validation_supported",
                 "runtime_parameter_application", "vehicle_fill_validation",
@@ -13283,6 +13291,12 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                     "claim_supported": station_side_integrated.get(
                         "station_side_integrated_validation_supported"
                     ) is True,
+                    "validation_label": station_side_integrated.get(
+                        "validation_label"
+                    ),
+                    "independent_external_validation": station_side_integrated.get(
+                        "independent_external_validation"
+                    ) is True,
                     "pressure_boundary_holdout_supported": station_side_integrated.get(
                         "pressure_boundary", {}
                     ).get("supported") is True,
@@ -15252,6 +15266,12 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
         "confidential_station_side_integrated_validation": {
             "evidence_artifact": station_side_integrated.get("artifact"),
             "evidence_role": station_side_integrated.get("evidence_role"),
+            "validation_label": station_side_integrated.get(
+                "validation_label"
+            ),
+            "independent_external_validation": station_side_integrated.get(
+                "independent_external_validation"
+            ) is True,
             "pressure_boundary": station_side_integrated.get("pressure_boundary") or {},
             "cascade_sequence": station_side_integrated.get("cascade_sequence") or {},
             "recharge_pressure_forecast": station_side_integrated.get(
