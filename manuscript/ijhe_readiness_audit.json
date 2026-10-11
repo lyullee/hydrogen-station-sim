@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-11T19:15:12.200444+00:00",
+  "generated_at": "2026-10-11T19:24:06.331389+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -8348,7 +8348,7 @@
             75,
             72
           ],
-          "approximate_manuscript_words_before_references": 7998,
+          "approximate_manuscript_words_before_references": 7999,
           "figures": 3,
           "tables": 3,
           "citation_keys": 53,
@@ -8380,7 +8380,7 @@
       "requirement": "Compiler success, exact source/PDF hashes, no unresolved errors, and visual inspection of every rendered page.",
       "observed": {
         "schema_version": 2,
-        "verified_at_utc": "2026-10-11T19:15:11.646206+00:00",
+        "verified_at_utc": "2026-10-11T19:23:42.685988+00:00",
         "success": true,
         "compiler": {
           "name": "Tectonic",
@@ -8390,20 +8390,20 @@
         },
         "source": {
           "path": "manuscript/ijhe_manuscript_draft.tex",
-          "bytes": 76895,
-          "sha256": "cfbfcc87bb5f533e2179ddedbf6225003e77c6608696398583ccab2b2a1d1a4e"
+          "bytes": 76910,
+          "sha256": "87e6f15ec9a7062d29bbce5d2978d48a74cc394225f535fa594515042bc0e43b"
         },
         "pdf": {
           "path": "output/pdf/ijhe_manuscript_draft.pdf",
-          "bytes": 837005,
-          "sha256": "da34ca5881c6fb3cb0789d8de4189565ce5b00d123c6cf5c2ef26460869b6242",
+          "bytes": 837042,
+          "sha256": "3c41ef0e1b68c4859cae16c204b656822c80fac729915e88b9798b2ad9c21c6b",
           "page_count": 24,
-          "extracted_character_count": 71315
+          "extracted_character_count": 71336
         },
         "compile_log": {
           "path": "output/pdf/ijhe_manuscript_draft.log",
           "bytes": 19549,
-          "sha256": "7eb3316fd568fe9279c18aaa2d3b4fa901c5de11c5123764720b69c422428c7a",
+          "sha256": "0ce61f4f2928c59603a503bc82de7cfc76f77f948a7aba74afad1f96d8f3b252",
           "unresolved_citations": 0,
           "unresolved_references": 0,
           "fatal_errors": [],
