@@ -4,8 +4,17 @@
   "recorded_at": "2026-10-11",
   "source": {
     "doi": "10.35097/1483",
+    "record_url": "https://radar.kit.edu/radar/en/dataset/umUTdrjbbQCUDIXE",
+    "rights_statement": "CC BY-SA 4.0",
+    "rights_url": "https://creativecommons.org/licenses/by-sa/4.0/deed.en",
     "archive_bytes_reported": 4971447808,
-    "archive_md5_reported": "0e4ac934ecb973c6f07212e8a80707c9"
+    "archive_md5_reported": "0e4ac934ecb973c6f07212e8a80707c9",
+    "metadata_recheck": {
+      "checked_at": "2026-10-11",
+      "rights_verified_from_official_record": true,
+      "archive_size_and_md5_verified_from_official_record": true,
+      "numeric_outcomes_opened": false
+    }
   },
   "attempt": {
     "session_route": "RADAR terms-accepted frontend datasetBinaryTreeStream",
@@ -43,6 +52,7 @@
     "numeric_signal_values_opened": false,
     "video_outcomes_opened": false,
     "member_headers_scanned_only": true,
+    "reuse_rights_verified": true,
     "stage1_integrity_verified": false,
     "stage2_eligible": false,
     "range_download_tool_added": "scripts/fetch_kit_lh2_archive.py",
