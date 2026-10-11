@@ -458,6 +458,25 @@ def _primary_scope_progress() -> dict[str, Any]:
             "human_effectiveness_claim_permitted"
         ),
     }
+    incident_lane = next(
+        (lane for lane in lanes if isinstance(lane, dict)
+         and lane.get("id") == "public_hiad_incident_action_grounding"),
+        None,
+    )
+    if isinstance(incident_lane, dict):
+        incident_evidence = incident_lane.get("evidence")
+        if isinstance(incident_evidence, dict):
+            scope["validation_evidence_matrix"]["public_hiad_incident_grounding"] = {
+                "status": incident_lane.get("status"),
+                "incident_cases": incident_evidence.get("incident_cases"),
+                "action_categories": incident_evidence.get("action_categories"),
+                "covered_categories": incident_evidence.get("covered_categories"),
+                "covered_cases": incident_evidence.get("covered_cases"),
+                "mapped_plans_have_five_stages": incident_evidence.get(
+                    "mapped_plans_have_five_stages"
+                ),
+                "claim_boundary": incident_lane.get("claim_boundary"),
+            }
     return scope
 
 

@@ -62,6 +62,22 @@
       "source_artifact": "research/zenodo_4106101_pressure_peaking_result.json",
       "evidence": {"eligible_cases": 10, "joint_primary_passes": 7, "joint_primary_pass_fraction": 0.7, "confirmatory_rule_met": false},
       "claim_boundary": "Retain as exploratory confined-vented enclosure evidence; do not present as confirmatory validation or as full-loop station evidence."
+    },
+    {
+      "id": "public_hiad_incident_action_grounding",
+      "status": "QUALITATIVE_TRACEABILITY_PASS",
+      "label": "public_actual_incident_action_to_playbook_traceability",
+      "source_artifact": "research/hiad_action_playbook_coverage.json",
+      "evidence": {
+        "incident_cases": 34,
+        "action_categories": 8,
+        "covered_categories": 8,
+        "covered_cases": 34,
+        "category_coverage_fraction": 1.0,
+        "case_coverage_fraction": 1.0,
+        "mapped_plans_have_five_stages": true
+      },
+      "claim_boundary": "Public actual-incident action categories are traceably routed to staged simulator playbooks. This does not judge whether the historical action was correct, validate physics, estimate incident probability, or demonstrate SAGA/operator safety effectiveness."
     }
   ],
   "unresolved_or_excluded": {

@@ -45,6 +45,13 @@ def test_validation_matrix_preserves_claim_boundaries_and_metrics() -> None:
     assert matrix["interpretation"]["full_station_to_vehicle_validation_available"] is False
     assert matrix["interpretation"]["human_effectiveness_claim_permitted"] is False
 
+    incidents = lanes["public_hiad_incident_action_grounding"]
+    assert incidents["status"] == "QUALITATIVE_TRACEABILITY_PASS"
+    assert incidents["evidence"]["incident_cases"] == 34
+    assert incidents["evidence"]["covered_categories"] == 8
+    assert incidents["evidence"]["covered_cases"] == 34
+    assert incidents["evidence"]["mapped_plans_have_five_stages"] is True
+
 
 def test_validation_matrix_matches_scope_decision() -> None:
     matrix = _load("research/validation_evidence_matrix_2026_10_11.json")
@@ -88,5 +95,9 @@ def test_llm_grounding_exposes_matrix_without_source_paths_or_raw_rows() -> None
     assert matrix["public_eligible_synchronized_raw_set_count"] == 0
     assert matrix["full_station_to_vehicle_validation_available"] is False
     assert matrix["human_effectiveness_claim_permitted"] is False
+    incident_grounding = matrix["public_hiad_incident_grounding"]
+    assert incident_grounding["incident_cases"] == 34
+    assert incident_grounding["covered_categories"] == 8
+    assert incident_grounding["mapped_plans_have_five_stages"] is True
     assert "research/" not in str(matrix)
     assert "raw_rows" not in str(matrix)
