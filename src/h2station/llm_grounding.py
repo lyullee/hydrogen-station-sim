@@ -390,6 +390,74 @@ def _primary_scope_progress() -> dict[str, Any]:
         "동기화 station-to-vehicle 원자료가 없어 독립 외부 full-loop 검증은 목표·논문 한계로 남긴다. "
         "윤리결정과 독립 전문가 평가는 보류되어 SAGA의 인간 안전효과를 주장하지 않는다."
     )
+
+    # Keep the provider's evidence vocabulary aligned with the manuscript.  A
+    # compact, privacy-bounded projection is used here instead of copying the
+    # source artifacts or any raw rows into a prompt.  This prevents the model
+    # from calling a same-site holdout "external" or turning a component pass
+    # into a full station-to-vehicle claim.
+    matrix_path = Path(__file__).resolve().parents[2] / "research" / (
+        "validation_evidence_matrix_2026_10_11.json"
+    )
+    try:
+        matrix = json.loads(matrix_path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, json.JSONDecodeError):
+        return scope
+    if not isinstance(matrix, dict) or matrix.get("artifact_type") != "validation_evidence_matrix":
+        return scope
+    lanes = matrix.get("lanes")
+    if not isinstance(lanes, list):
+        return scope
+    safe_lanes: list[dict[str, Any]] = []
+    for lane in lanes:
+        if not isinstance(lane, dict):
+            return scope
+        lane_id = lane.get("id")
+        status = lane.get("status")
+        label = lane.get("label")
+        boundary = lane.get("claim_boundary")
+        if not all(isinstance(value, str) and value for value in (lane_id, status, label, boundary)):
+            return scope
+        safe_lanes.append({
+            "id": lane_id,
+            "status": status,
+            "label": label,
+            "claim_boundary": boundary,
+        })
+    excluded = matrix.get("unresolved_or_excluded")
+    interpretation = matrix.get("interpretation")
+    if not isinstance(excluded, dict) or not isinstance(interpretation, dict):
+        return scope
+    station_vehicle = excluded.get("station_to_vehicle")
+    human = excluded.get("human_saga_effectiveness")
+    if not isinstance(station_vehicle, dict) or not isinstance(human, dict):
+        return scope
+    scope["validation_evidence_matrix"] = {
+        "status": "frozen_2026_10_11",
+        "lanes": safe_lanes,
+        "station_to_vehicle_status": station_vehicle.get("status"),
+        "public_eligible_synchronized_raw_set_count": station_vehicle.get(
+            "public_eligible_synchronized_raw_set_count"
+        ),
+        "institutional_ethics_determination": human.get(
+            "institutional_ethics_determination"
+        ),
+        "independent_expert_review_complete": human.get(
+            "independent_expert_review_complete"
+        ),
+        "independent_external_validation_available": interpretation.get(
+            "independent_external_validation_available"
+        ),
+        "independent_external_validation_scope": interpretation.get(
+            "independent_external_validation_scope"
+        ),
+        "full_station_to_vehicle_validation_available": interpretation.get(
+            "full_station_to_vehicle_validation_available"
+        ),
+        "human_effectiveness_claim_permitted": interpretation.get(
+            "human_effectiveness_claim_permitted"
+        ),
+    }
     return scope
 
 

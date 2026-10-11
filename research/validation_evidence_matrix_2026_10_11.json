@@ -1,0 +1,92 @@
+{
+  "schema_version": 1,
+  "artifact_type": "validation_evidence_matrix",
+  "recorded_at": "2026-10-11",
+  "purpose": "Keep validation labels, metrics and claim boundaries consistent across the manuscript, audit and LLM grounding.",
+  "primary_scope": {
+    "includes": [
+      "station-side HRS process and safety digital-twin behavior",
+      "independent public component checks",
+      "release, dispersion, consequence and risk-model component checks",
+      "direct-answer SAGA generation with explicit evidence boundaries"
+    ],
+    "excludes": [
+      "synchronized station-to-vehicle raw logger validation",
+      "vehicle-side controller and ESD channel validation",
+      "human operator safety-effectiveness claims"
+    ]
+  },
+  "lanes": [
+    {
+      "id": "same_site_station_side_holdout",
+      "status": "SUPPORTED_WITH_LIMITED_CLAIM",
+      "label": "same_site_station_side_time_ordered_holdout",
+      "source_artifact": "research/confidential_station_side_integrated_validation_2026_10_09.json",
+      "evidence": {
+        "deduplicated_rows": 56854143,
+        "pressure_boundary": {"calibration_points": 998, "holdout_points": 30, "holdout_duration_s": 1755.0},
+        "cascade_sequence": {"calibration_pairs": 8106, "holdout_pairs": 3664, "pair_coverage": 0.703939, "sequential_fraction": 0.943777, "median_handoff_gap_s": 80.0},
+        "recharge_pressure_forecast": {"calibration_cases": 1024, "holdout_cases": 394, "mae_mpa": 0.184407, "p90_absolute_error_mpa": 0.529255, "positive_direction_fraction": 0.949239},
+        "lifecycle_alignment": {"status": "NEGATIVE_RETAINED", "counter_monotonicity_met": false, "holdout_counter_recall": 0.196032, "holdout_pressure_precision": 0.902716}
+      },
+      "claim_boundary": "Same-site station-side pressure, cascade and short-horizon recharge diagnostics only; this is not independent external validation and does not support vehicle, field-safety, certification or SAGA-effectiveness claims."
+    },
+    {
+      "id": "public_type_iv_component_holdout",
+      "status": "READY_WITH_FROZEN_SPLIT",
+      "label": "independent_external_component_holdout",
+      "source_artifact": "research/independent_component_holdout_reanalysis_2026_10_11.json",
+      "evidence": {
+        "calibration_cases": 23,
+        "validation_cases": 12,
+        "excluded_for_mass_closure": 1,
+        "new_parameter_fit": false,
+        "pressure_rmse_mpa_mean": 3.8413052037435977,
+        "temperature_rmse_c_mean": 4.832748408545587,
+        "soc_rmse_percentage_points_mean": 3.8495521984109318
+      },
+      "claim_boundary": "Independent external receiving-tank thermodynamic component evidence only; it does not validate station control, cascade topology, dispenser, vehicle channels, ESD sequence or field safety."
+    },
+    {
+      "id": "actual_hydrogen_ignited_pressure_peaking",
+      "status": "CONFIRMATORY_COMPONENT_PASS",
+      "label": "prospective_external_ignited_pressure_peaking_component",
+      "source_artifact": "research/usn_17934047_ignited_pressure_peaking_result_2026_10_08.json",
+      "evidence": {"eligible_cases": 27, "primary_passes": 27, "primary_pass_fraction": 1.0, "peak_overpressure_mae_kpa": 0.6716371499859706},
+      "claim_boundary": "Actual-hydrogen ignited pressure-peaking consequence submodel only; not an H70 outdoor station, fueling loop, jet-radiation, emergency-control or SAGA-effectiveness validation."
+    },
+    {
+      "id": "actual_hydrogen_unignited_pressure_peaking",
+      "status": "EXPLORATORY_ONLY",
+      "label": "prospective_external_unignited_pressure_peaking_screen",
+      "source_artifact": "research/zenodo_4106101_pressure_peaking_result.json",
+      "evidence": {"eligible_cases": 10, "joint_primary_passes": 7, "joint_primary_pass_fraction": 0.7, "confirmatory_rule_met": false},
+      "claim_boundary": "Retain as exploratory confined-vented enclosure evidence; do not present as confirmatory validation or as full-loop station evidence."
+    }
+  ],
+  "unresolved_or_excluded": {
+    "station_to_vehicle": {
+      "status": "REMOVED_FROM_PRIMARY_GOAL",
+      "source_artifact": "research/external_full_loop_data_recheck_2026_10_11.json",
+      "public_eligible_synchronized_raw_set_count": 0,
+      "required_channels": ["station/dispenser", "vehicle/receptacle", "common elapsed time", "pressure", "temperature", "mass flow or transferred mass", "units/initial conditions", "protocol metadata", "reuse rights"],
+      "paper_limitation": "No openly reusable synchronized station-to-vehicle raw trace was identified; vehicle-side controller/ESD and complete full-loop field validation remain outside the claim boundary.",
+      "reentry_condition": "Only a custodian-provided, de-identified, synchronized trace frozen before outcome access can reopen this lane."
+    },
+    "human_saga_effectiveness": {
+      "status": "OPTIONAL_FOR_PHYSICS_PAPER_BUT_REQUIRED_FOR_HUMAN_EFFECT_CLAIM",
+      "source_artifact": "research/ethics_and_expert_review_scope_decision_2026_10_11.json",
+      "institutional_ethics_determination": "PENDING",
+      "independent_expert_review_complete": "PENDING",
+      "frozen_protocol": {"holdout_event_count": 24, "reviewer_count": 3, "conditions": ["alarm_only", "direct_saga", "standards_rag_saga"], "safety_endpoints": ["critical_omission", "unsafe_advice"]},
+      "paper_boundary": "Do not claim improved operator safety, response time, decision accuracy or deployment readiness until an institutional determination and independent blinded expert review are complete."
+    }
+  },
+  "interpretation": {
+    "independent_external_validation_available": true,
+    "independent_external_validation_scope": "public Type-IV component plus actual-hydrogen ignited consequence component; not full-loop",
+    "full_station_to_vehicle_validation_available": false,
+    "human_effectiveness_claim_permitted": false,
+    "do_not_conflate": ["same-site holdout with independent external validation", "component validation with full-loop validation", "LLM output with expert evaluation"]
+  }
+}
