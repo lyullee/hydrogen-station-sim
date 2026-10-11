@@ -9883,6 +9883,30 @@ def build_evidence_manifest(
         envelope["response_evidence"][
             "public_dickens_geometry_followup_candidate"
         ] = dickens_followup
+    mhc_component = (
+        public_inventory.get("public_mhc_component_screen")
+        if isinstance(public_inventory, dict)
+        else None
+    )
+    if (
+        isinstance(mhc_component, dict)
+        and mhc_component.get("status") == "available"
+    ):
+        # Experiment 16 is intentionally exposed as a compatibility boundary
+        # only. The raw workbook, source path and component parameters never
+        # enter the provider prompt, and the negative full-loop flags stay
+        # explicit so the LLM cannot turn a component screen into an HRS claim.
+        envelope["response_evidence"]["public_mhc_component_screen"] = {
+            key: mhc_component.get(key)
+            for key in (
+                "status", "evidence_role", "source_doi", "experiment_id",
+                "record_count", "duration_s", "channel_families",
+                "schema_screen_pass", "direct_runtime_model_compatibility",
+                "runtime_parameter_application", "full_loop_external_holdout_eligible",
+                "claim_limit",
+            )
+            if mhc_component.get(key) is not None
+        }
     nrel_screen = (
         public_inventory.get("public_station_tank_boundary")
         if isinstance(public_inventory, dict)
@@ -10384,6 +10408,19 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
             ),
             "next_action": compressor_component.get("next_action"),
             "claim_limit": short(compressor_component.get("claim_limit"), 360),
+        }
+    mhc_component = evidence.get("public_mhc_component_screen")
+    if isinstance(mhc_component, dict):
+        summary["public_mhc_component_screen"] = {
+            key: mhc_component.get(key)
+            for key in (
+                "status", "evidence_role", "source_doi", "experiment_id",
+                "record_count", "duration_s", "channel_families",
+                "schema_screen_pass", "direct_runtime_model_compatibility",
+                "runtime_parameter_application", "full_loop_external_holdout_eligible",
+                "claim_limit",
+            )
+            if mhc_component.get(key) is not None
         }
     benchmarks = evidence.get("public_experimental_benchmarks")
     if isinstance(benchmarks, dict):
@@ -12190,6 +12227,7 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
     accident_inventory = response.get("public_accident_report_inventory") or {}
     accident_source_recheck = response.get("public_accident_source_recheck") or {}
     compressor_component = response.get("public_compressor_component_recheck") or {}
+    mhc_component = response.get("public_mhc_component_screen") or {}
     khk_replay = accident_inventory.get("digital_twin_replay") or {}
     relevant_precedents = response.get("relevant_public_accident_precedents") or {}
     accidental_release = response.get("public_accidental_release_evidence") or {}
@@ -12307,6 +12345,17 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
         "압축기", "컴프레서", "compressor", "compression", "mass flow",
         "질량유량", "유량", "압축",
     ))
+    mhc_component_relevant = bool(
+        mhc_component
+        and (
+            compressor_component_relevant
+            or public_catalog_relevant
+            or any(token in lead_context for token in (
+                "금속수소화물", "mhc", "experiment 16", "구성요소",
+                "component", "dataset", "validation", "검증",
+            ))
+        )
+    )
     public_hrs_leads_relevant = any(token in lead_context for token in (
         "공개", "계측", "실측", "실데이터", "원자료", "검증", "데이터",
         "local", "measurement", "dataset", "raw", "validation", "data",
@@ -12858,6 +12907,19 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
             },
         } if compressor_component and compressor_component_relevant else {}),
         **({
+            "public_mhc_component_screen": {
+                key: mhc_component.get(key)
+                for key in (
+                    "status", "evidence_role", "source_doi", "experiment_id",
+                    "record_count", "duration_s", "channel_families",
+                    "schema_screen_pass", "direct_runtime_model_compatibility",
+                    "runtime_parameter_application",
+                    "full_loop_external_holdout_eligible", "claim_limit",
+                )
+                if mhc_component.get(key) is not None
+            },
+        } if mhc_component and mhc_component_relevant else {}),
+        **({
             "public_h2iq_aggregate_reference": public_h2iq_aggregate,
         } if h2iq_aggregate_relevant else {}),
         **({
@@ -12941,6 +13003,19 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                     ),
                 },
             } if compressor_component and compressor_component_relevant else {}),
+            **({
+                "public_mhc_component_screen": {
+                    key: mhc_component.get(key)
+                    for key in (
+                        "status", "evidence_role", "source_doi", "experiment_id",
+                        "record_count", "duration_s", "channel_families",
+                        "schema_screen_pass", "direct_runtime_model_compatibility",
+                        "runtime_parameter_application",
+                        "full_loop_external_holdout_eligible", "claim_limit",
+                    )
+                    if mhc_component.get(key) is not None
+                },
+            } if mhc_component and mhc_component_relevant else {}),
             **({
                 "public_operational_evidence_leads": operational_evidence_projection,
             } if operational_evidence_projection is not None else {}),

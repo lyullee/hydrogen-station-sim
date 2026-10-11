@@ -74,6 +74,9 @@ _MC_SOURCE_PRESSURE_BOUNDARY_DIAGNOSTIC = _ROOT / (
 _DICKENS_GEOMETRY_FOLLOWUP = _ROOT / (
     "research/dickens_typeiii_geometry_resolved_followup_2026_10_10.json"
 )
+_MHC_COMPONENT_SCREEN = _ROOT / (
+    "research/public_mhc_experiment16_screen_2026_10_12.json"
+)
 
 
 def _read_json(path: Path) -> dict[str, Any]:
@@ -1346,6 +1349,20 @@ def public_evidence_inventory_summary() -> dict[str, Any]:
             "full_loop_external_validation_ready": False,
             "validation_gate_effect": "none",
         },
+        "public_mhc_component_screen": {
+            "status": "unavailable",
+            "evidence_role": "independent_public_component_schema_boundary",
+            "source_doi": None,
+            "experiment_id": None,
+            "record_count": 0,
+            "duration_s": None,
+            "channel_families": [],
+            "schema_screen_pass": False,
+            "direct_runtime_model_compatibility": False,
+            "runtime_parameter_application": False,
+            "full_loop_external_holdout_eligible": False,
+            "claim_limit": None,
+        },
     }
     try:
         record = _read_json(_KHK_ACCIDENTS)
@@ -1708,4 +1725,41 @@ def public_evidence_inventory_summary() -> dict[str, Any]:
     dickens = _dickens_geometry_followup_summary()
     if dickens is not None:
         result["public_dickens_geometry_followup_candidate"] = dickens
+    try:
+        record = _read_json(_MHC_COMPONENT_SCREEN)
+        source = record.get("source") or {}
+        protocol = record.get("protocol") or {}
+        workbook = record.get("workbook") or {}
+        schema_screen = record.get("schema_screen") or {}
+        decision = record.get("decision") or {}
+        if (
+            record.get("artifact_type") == "public_mhc_component_holdout_screen"
+            and record.get("status") == "screened_component_only_not_runtime_admitted"
+            and source.get("doi") == "10.5281/zenodo.18213166"
+            and source.get("accessed_after_protocol_freeze") is True
+            and protocol.get("raw_file_persisted_in_repository") is False
+            and schema_screen.get("required_families_present") is True
+            and decision.get("schema_screen_pass") is True
+            and decision.get("direct_runtime_model_compatibility") is False
+            and decision.get("runtime_parameter_application") is False
+            and decision.get("full_loop_external_holdout_eligible") is False
+        ):
+            result["public_mhc_component_screen"] = {
+                "status": "available",
+                "evidence_role": "independent_public_component_schema_boundary",
+                "source_doi": str(source.get("doi")),
+                "experiment_id": "Experiment 16",
+                "record_count": int(workbook.get("cycle_data_numeric_records") or 0),
+                "duration_s": float(workbook.get("elapsed_time_span_s") or 0.0),
+                "channel_families": [
+                    "elapsed_time", "pressure", "volumetric_flow", "temperature",
+                ],
+                "schema_screen_pass": True,
+                "direct_runtime_model_compatibility": False,
+                "runtime_parameter_application": False,
+                "full_loop_external_holdout_eligible": False,
+                "claim_limit": str(record.get("claim_boundary") or ""),
+            }
+    except (OSError, KeyError, TypeError, ValueError, json.JSONDecodeError):
+        pass
     return result

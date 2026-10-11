@@ -16,6 +16,7 @@
 - 같은 자료의 시간순 holdout: 압력 경계 30점, cascade 3,664쌍, 재충전 예측 394건. 차량 충전 정확도나 현장 안전한계로 확대하지 않습니다.
 - 공개 Type-IV 탱크 경계 검증: 12건, 탱크 경계 구성요소 검증으로 유지합니다.
 - 공개 MHC Experiment 16 구성요소 screen: 프로토콜 고정 후 1,186개 기록/1,185초 압력·유량·온도 trace를 확인했습니다. 금속수소화물 압축기 경계와 `L/min` 단위가 station compressor와 달라 호환성 근거로만 유지하며 runtime 파라미터에는 반영하지 않습니다.
+- 위 MHC screen은 이제 근거 기반 LLM의 구성요소·공개 검증 질문에만 privacy-safe 요약으로 전달됩니다. `direct_runtime_model_compatibility=false`, `runtime_parameter_application=false`, `full_loop_external_holdout_eligible=false`를 함께 전달해 구성요소 자료가 HRS 전체 검증으로 확장되지 않도록 했습니다.
 - 사고 전례·대응 플레이북·가상 조치 실행은 시나리오와 단계별 대응 근거로 사용하며, 사고 빈도나 현장 대응 효과를 추정하지 않습니다.
 
 ## 실패 또는 제한된 결과도 그대로 유지
