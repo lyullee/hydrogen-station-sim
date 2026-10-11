@@ -13,11 +13,15 @@ validation result.
 - [Publisher record](https://www.sciencedirect.com/science/article/pii/S0360319913020521)
 - [KIT publication landing page](https://publikationen.bibliothek.kit.edu/110097219)
 - [Public ICHS conference PDF](https://conference.ing.unipi.it/ichs2011/papers/133.pdf)
+- [Public H2Tools preprint](https://h2tools.org/sites/default/files/2019-08/paper_120.pdf)
 - [Official JHFC/JARI project archive](https://www.jari.or.jp/jhfc/)
 - [Reported JHFC report index](https://www.jari.or.jp/jhfc/data/report/index.html) (unavailable at recheck; HTTP 404)
 
-The search also checked targeted public-data indexes for a rights-cleared
-machine-readable pressure-time archive. The JHFC/JARI route provides project
+The H2Tools copy confirms the same experiment description and plotted
+pressure-decay context, but does not expose a complete machine-readable trace
+or a data-redistribution licence. The search also checked targeted public-data
+indexes for a rights-cleared machine-readable pressure-time archive. The
+JHFC/JARI route provides project
 scope and report context, but no Grüne-specific pressure-time file or
 supplementary raw trace was found.
 

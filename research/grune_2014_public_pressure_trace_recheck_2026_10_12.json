@@ -11,6 +11,7 @@
     },
     "publisher_landing": "https://publikationen.bibliothek.kit.edu/110097219",
     "conference_preprint": "https://conference.ing.unipi.it/ichs2011/papers/133.pdf",
+    "h2tools_public_preprint": "https://h2tools.org/sites/default/files/2019-08/paper_120.pdf",
     "jari_jhfc_archive_route": {
       "project_landing": "https://www.jari.or.jp/jhfc/",
       "reported_archive_index": "https://www.jari.or.jp/jhfc/data/report/index.html",
@@ -20,7 +21,8 @@
       "finding": "The public JHFC/JARI route exposes project reports and context, but the reported report index is unavailable and no Grüne 2014 pressure-time file or supplementary raw trace was found."
     },
     "search_date": "2026-10-12",
-    "search_scope": "publisher and institutional landing pages, the public conference PDF, the official JHFC/JARI archive route, and targeted public-data searches for a rights-cleared pressure-time archive"
+    "search_scope": "publisher and institutional landing pages, the public conference and H2Tools preprint PDFs, the official JHFC/JARI archive route, and targeted public-data searches for a rights-cleared pressure-time archive",
+    "h2tools_finding": "The H2Tools copy confirms the experiment description and plotted pressure-decay context but does not expose a reusable complete machine-readable pressure-time trace or a data-redistribution licence."
   },
   "existing_trace": {
     "protocol": "research/grune_2014_holdout_protocol.json",
