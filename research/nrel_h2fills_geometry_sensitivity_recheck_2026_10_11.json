@@ -1,0 +1,428 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-10-11T11:36:09.505036+00:00",
+  "status": "exploratory_geometry_sensitivity_only",
+  "claim_limit": "The variants were compared after access to the NREL workbook. No variant is an independent confirmatory pass, and no parameter or default model was changed by this script. A new frozen protocol is required before using a capacity-based geometry in a validation claim.",
+  "source": {
+    "workbook": "C:\\Users\\lyul\\Desktop\\ProjectData\\hydrogen-station-sim\\data\\public_validation\\raw\\nrel_h2fills_2022_hdvs_typeiv.xlsx",
+    "workbook_sha256": "1a3fbe64a50c1c97266bfe0372998513ad3ccec5600fab7bc4b9fc68ad4d9d0c",
+    "fit_source": "C:\\Users\\lyul\\Desktop\\ProjectData\\hydrogen-station-sim\\research\\tank_model_validation_v2.json",
+    "fit_source_sha256": "4480505cd2e094f64c03421545bfb2a0235a7f58b66e2a5cb5ed529d4d669840",
+    "tank_ids": [
+      1,
+      2,
+      3,
+      5,
+      7,
+      8,
+      9
+    ],
+    "capacity_kg": 9.8,
+    "reference_pressure_pa": 70000000.0,
+    "reference_temperature_k": 288.15,
+    "capacity_eos_volume_m3": 0.24394320094584823
+  },
+  "variants": {
+    "legacy_frozen": {
+      "basis": "legacy 0.122 m3 per 4.7 kg scaling",
+      "base_volume_m3": 0.25438297872340426,
+      "effective_volume_multiplier": 1.052729261198358,
+      "gas_liner_ua_multiplier": 31.460656519273492,
+      "screening_limits": {
+        "pressure_rmse_mpa_max": 5.0,
+        "temperature_rmse_c_max": 10.0,
+        "mass_final_abs_error_kg_max": 0.5
+      },
+      "aggregate": {
+        "screening_pass_count": 0,
+        "screening_pass_fraction": 0.0,
+        "pressure_rmse_mpa": 6.163939306629355,
+        "temperature_rmse_c": 4.624768386874764,
+        "mass_final_error_kg": 0.11989206093515849,
+        "pressure_final_error_mpa": -8.679337444242147
+      },
+      "tanks": [
+        {
+          "tank_id": 1,
+          "sample_count": 351,
+          "pressure_rmse_mpa": 5.9229021540243565,
+          "temperature_rmse_c": 3.6089626826519563,
+          "mass_rmse_kg": 0.06890857457816368,
+          "pressure_final_error_mpa": -7.923149404457703,
+          "temperature_peak_error_c": -0.9851817885682266,
+          "mass_final_error_kg": 0.17486198527132757,
+          "screening_pass": false,
+          "geometry_diagnostic": {
+            "nominal_volume_m3": 0.25438297872340426,
+            "frozen_effective_volume_m3": 0.26779640525292703,
+            "implied_volume_m3_median": 0.243889771191211
+          }
+        },
+        {
+          "tank_id": 2,
+          "sample_count": 351,
+          "pressure_rmse_mpa": 6.448259732490571,
+          "temperature_rmse_c": 4.639604986242893,
+          "mass_rmse_kg": 0.047810405118766885,
+          "pressure_final_error_mpa": -9.15444972518479,
+          "temperature_peak_error_c": -3.4675590581301634,
+          "mass_final_error_kg": 0.11031003344353074,
+          "screening_pass": false,
+          "geometry_diagnostic": {
+            "nominal_volume_m3": 0.25438297872340426,
+            "frozen_effective_volume_m3": 0.26779640525292703,
+            "implied_volume_m3_median": 0.24387617144142854
+          }
+        },
+        {
+          "tank_id": 3,
+          "sample_count": 351,
+          "pressure_rmse_mpa": 6.419400807111852,
+          "temperature_rmse_c": 4.631745559152454,
+          "mass_rmse_kg": 0.03205713116689528,
+          "pressure_final_error_mpa": -9.682130703393256,
+          "temperature_peak_error_c": -2.6547936150578835,
+          "mass_final_error_kg": 0.04636888634234637,
+          "screening_pass": false,
+          "geometry_diagnostic": {
+            "nominal_volume_m3": 0.25438297872340426,
+            "frozen_effective_volume_m3": 0.26779640525292703,
+            "implied_volume_m3_median": 0.24416754182341033
+          }
+        },
+        {
+          "tank_id": 5,
+          "sample_count": 351,
+          "pressure_rmse_mpa": 5.803643208311505,
+          "temperature_rmse_c": 4.255031670923505,
+          "mass_rmse_kg": 0.03892741379465853,
+          "pressure_final_error_mpa": -8.585932054854709,
+          "temperature_peak_error_c": -2.5139507917771198,
+          "mass_final_error_kg": 0.10073758668862531,
+          "screening_pass": false,
+          "geometry_diagnostic": {
+            "nominal_volume_m3": 0.25438297872340426,
+            "frozen_effective_volume_m3": 0.26779640525292703,
+            "implied_volume_m3_median": 0.244409735542527
+          }
+        },
+        {
+          "tank_id": 7,
+          "sample_count": 351,
+          "pressure_rmse_mpa": 6.075692977557631,
+          "temperature_rmse_c": 4.51753579695339,
+          "mass_rmse_kg": 0.033168463735243604,
+          "pressure_final_error_mpa": -8.34728986320107,
+          "temperature_peak_error_c": -1.780381298467546,
+          "mass_final_error_kg": 0.11948714184724274,
+          "screening_pass": false,
+          "geometry_diagnostic": {
+            "nominal_volume_m3": 0.25438297872340426,
+            "frozen_effective_volume_m3": 0.26779640525292703,
+            "implied_volume_m3_median": 0.24388459603368584
+          }
+        },
+        {
+          "tank_id": 8,
+          "sample_count": 351,
+          "pressure_rmse_mpa": 6.23858033342287,
+          "temperature_rmse_c": 5.900547620230237,
+          "mass_rmse_kg": 0.056875678499420365,
+          "pressure_final_error_mpa": -8.433468639300997,
+          "temperature_peak_error_c": -2.659621158287109,
+          "mass_final_error_kg": 0.18366237584931788,
+          "screening_pass": false,
+          "geometry_diagnostic": {
+            "nominal_volume_m3": 0.25438297872340426,
+            "frozen_effective_volume_m3": 0.26779640525292703,
+            "implied_volume_m3_median": 0.2438624116352588
+          }
+        },
+        {
+          "tank_id": 9,
+          "sample_count": 351,
+          "pressure_rmse_mpa": 6.239095933486703,
+          "temperature_rmse_c": 4.819950391968913,
+          "mass_rmse_kg": 0.03751267759409783,
+          "pressure_final_error_mpa": -8.628941719302503,
+          "temperature_peak_error_c": -1.9651233825982501,
+          "mass_final_error_kg": 0.1038164171037188,
+          "screening_pass": false,
+          "geometry_diagnostic": {
+            "nominal_volume_m3": 0.25438297872340426,
+            "frozen_effective_volume_m3": 0.26779640525292703,
+            "implied_volume_m3_median": 0.24386008946486312
+          }
+        }
+      ]
+    },
+    "capacity_eos_with_frozen_fit": {
+      "basis": "9.8 kg divided by tabulated Hydrogen density at 70 MPa and 15 C; frozen H2Protocol fit retained",
+      "base_volume_m3": 0.24394320094584823,
+      "effective_volume_multiplier": 1.052729261198358,
+      "gas_liner_ua_multiplier": 31.460656519273492,
+      "screening_limits": {
+        "pressure_rmse_mpa_max": 5.0,
+        "temperature_rmse_c_max": 10.0,
+        "mass_final_abs_error_kg_max": 0.5
+      },
+      "aggregate": {
+        "screening_pass_count": 7,
+        "screening_pass_fraction": 1.0,
+        "pressure_rmse_mpa": 3.5383969869664886,
+        "temperature_rmse_c": 4.254476204413092,
+        "mass_final_error_kg": 0.10147524635478408,
+        "pressure_final_error_mpa": -4.649447119098917
+      },
+      "tanks": [
+        {
+          "tank_id": 1,
+          "sample_count": 351,
+          "pressure_rmse_mpa": 3.2557789052470136,
+          "temperature_rmse_c": 3.329901515280613,
+          "mass_rmse_kg": 0.05988374522460034,
+          "pressure_final_error_mpa": -3.818923411404569,
+          "temperature_peak_error_c": -0.35513980012164836,
+          "mass_final_error_kg": 0.15824152225818544,
+          "screening_pass": true,
+          "geometry_diagnostic": {
+            "nominal_volume_m3": 0.24394320094584823,
+            "frozen_effective_volume_m3": 0.2568061457060854,
+            "implied_volume_m3_median": 0.243889771191211
+          }
+        },
+        {
+          "tank_id": 2,
+          "sample_count": 351,
+          "pressure_rmse_mpa": 3.812354646458177,
+          "temperature_rmse_c": 4.183444129344352,
+          "mass_rmse_kg": 0.03572355041927297,
+          "pressure_final_error_mpa": -5.152099421646028,
+          "temperature_peak_error_c": -2.8447648998962762,
+          "mass_final_error_kg": 0.09117655289380977,
+          "screening_pass": true,
+          "geometry_diagnostic": {
+            "nominal_volume_m3": 0.24394320094584823,
+            "frozen_effective_volume_m3": 0.2568061457060854,
+            "implied_volume_m3_median": 0.24387617144142854
+          }
+        },
+        {
+          "tank_id": 3,
+          "sample_count": 351,
+          "pressure_rmse_mpa": 3.7968878159106128,
+          "temperature_rmse_c": 4.160373518129441,
+          "mass_rmse_kg": 0.013275557319142877,
+          "pressure_final_error_mpa": -5.703245116921636,
+          "temperature_peak_error_c": -2.0102276588203267,
+          "mass_final_error_kg": 0.027017388938745057,
+          "screening_pass": true,
+          "geometry_diagnostic": {
+            "nominal_volume_m3": 0.24394320094584823,
+            "frozen_effective_volume_m3": 0.2568061457060854,
+            "implied_volume_m3_median": 0.24416754182341033
+          }
+        },
+        {
+          "tank_id": 5,
+          "sample_count": 351,
+          "pressure_rmse_mpa": 3.256326222520032,
+          "temperature_rmse_c": 3.936752262621052,
+          "mass_rmse_kg": 0.025241319695023186,
+          "pressure_final_error_mpa": -4.584644727576659,
+          "temperature_peak_error_c": -1.8560330596378662,
+          "mass_final_error_kg": 0.08372118372858317,
+          "screening_pass": true,
+          "geometry_diagnostic": {
+            "nominal_volume_m3": 0.24394320094584823,
+            "frozen_effective_volume_m3": 0.2568061457060854,
+            "implied_volume_m3_median": 0.244409735542527
+          }
+        },
+        {
+          "tank_id": 7,
+          "sample_count": 351,
+          "pressure_rmse_mpa": 3.452581295152117,
+          "temperature_rmse_c": 4.2269523252729995,
+          "mass_rmse_kg": 0.02207078545559961,
+          "pressure_final_error_mpa": -4.316008144154139,
+          "temperature_peak_error_c": -1.141329491054762,
+          "mass_final_error_kg": 0.1031657611680199,
+          "screening_pass": true,
+          "geometry_diagnostic": {
+            "nominal_volume_m3": 0.24394320094584823,
+            "frozen_effective_volume_m3": 0.2568061457060854,
+            "implied_volume_m3_median": 0.24388459603368584
+          }
+        },
+        {
+          "tank_id": 8,
+          "sample_count": 351,
+          "pressure_rmse_mpa": 3.6227995890456346,
+          "temperature_rmse_c": 5.486917149837305,
+          "mass_rmse_kg": 0.04413920793701426,
+          "pressure_final_error_mpa": -4.421068345102583,
+          "temperature_peak_error_c": -2.029855887133749,
+          "mass_final_error_kg": 0.16139478406311447,
+          "screening_pass": true,
+          "geometry_diagnostic": {
+            "nominal_volume_m3": 0.24394320094584823,
+            "frozen_effective_volume_m3": 0.2568061457060854,
+            "implied_volume_m3_median": 0.2438624116352588
+          }
+        },
+        {
+          "tank_id": 9,
+          "sample_count": 351,
+          "pressure_rmse_mpa": 3.572050434431833,
+          "temperature_rmse_c": 4.456992530405883,
+          "mass_rmse_kg": 0.024401925711978623,
+          "pressure_final_error_mpa": -4.550140666886804,
+          "temperature_peak_error_c": -1.3277869657935355,
+          "mass_final_error_kg": 0.08560953143303074,
+          "screening_pass": true,
+          "geometry_diagnostic": {
+            "nominal_volume_m3": 0.24394320094584823,
+            "frozen_effective_volume_m3": 0.2568061457060854,
+            "implied_volume_m3_median": 0.24386008946486312
+          }
+        }
+      ]
+    },
+    "capacity_eos_no_volume_fit": {
+      "basis": "9.8 kg divided by tabulated Hydrogen density at 70 MPa and 15 C; effective-volume multiplier fixed at one",
+      "base_volume_m3": 0.24394320094584823,
+      "effective_volume_multiplier": 1.0,
+      "gas_liner_ua_multiplier": 31.460656519273492,
+      "screening_limits": {
+        "pressure_rmse_mpa_max": 5.0,
+        "temperature_rmse_c_max": 10.0,
+        "mass_final_abs_error_kg_max": 0.5
+      },
+      "aggregate": {
+        "screening_pass_count": 7,
+        "screening_pass_fraction": 1.0,
+        "pressure_rmse_mpa": 0.49577782246935176,
+        "temperature_rmse_c": 4.184657066055385,
+        "mass_final_error_kg": 0.07981887127926209,
+        "pressure_final_error_mpa": 0.5688184213020833
+      },
+      "tanks": [
+        {
+          "tank_id": 1,
+          "sample_count": 351,
+          "pressure_rmse_mpa": 0.6353484710747946,
+          "temperature_rmse_c": 3.3070710897041877,
+          "mass_rmse_kg": 0.05322465490812853,
+          "pressure_final_error_mpa": 1.49535921430018,
+          "temperature_peak_error_c": -0.20490025644072318,
+          "mass_final_error_kg": 0.13859184101458055,
+          "screening_pass": true,
+          "geometry_diagnostic": {
+            "nominal_volume_m3": 0.24394320094584823,
+            "frozen_effective_volume_m3": 0.24394320094584823,
+            "implied_volume_m3_median": 0.243889771191211
+          }
+        },
+        {
+          "tank_id": 2,
+          "sample_count": 351,
+          "pressure_rmse_mpa": 0.5034518526053091,
+          "temperature_rmse_c": 4.085691999938294,
+          "mass_rmse_kg": 0.030438272185910095,
+          "pressure_final_error_mpa": 0.062259419081641454,
+          "temperature_peak_error_c": -2.687559429909058,
+          "mass_final_error_kg": 0.07108520011268737,
+          "screening_pass": true,
+          "geometry_diagnostic": {
+            "nominal_volume_m3": 0.24394320094584823,
+            "frozen_effective_volume_m3": 0.24394320094584823,
+            "implied_volume_m3_median": 0.24387617144142854
+          }
+        },
+        {
+          "tank_id": 3,
+          "sample_count": 351,
+          "pressure_rmse_mpa": 0.46388385127499926,
+          "temperature_rmse_c": 4.042885975736084,
+          "mass_rmse_kg": 0.013157070266951459,
+          "pressure_final_error_mpa": -0.543150711043765,
+          "temperature_peak_error_c": -1.8400174106956229,
+          "mass_final_error_kg": 0.00508011484198434,
+          "screening_pass": true,
+          "geometry_diagnostic": {
+            "nominal_volume_m3": 0.24394320094584823,
+            "frozen_effective_volume_m3": 0.24394320094584823,
+            "implied_volume_m3_median": 0.24416754182341033
+          }
+        },
+        {
+          "tank_id": 5,
+          "sample_count": 351,
+          "pressure_rmse_mpa": 0.2623974547441561,
+          "temperature_rmse_c": 3.8903015624413024,
+          "mass_rmse_kg": 0.021291876605350667,
+          "pressure_final_error_mpa": 0.5361389190227186,
+          "temperature_peak_error_c": -1.6979426125738541,
+          "mass_final_error_kg": 0.05950360866542681,
+          "screening_pass": true,
+          "geometry_diagnostic": {
+            "nominal_volume_m3": 0.24394320094584823,
+            "frozen_effective_volume_m3": 0.24394320094584823,
+            "implied_volume_m3_median": 0.244409735542527
+          }
+        },
+        {
+          "tank_id": 7,
+          "sample_count": 351,
+          "pressure_rmse_mpa": 0.4726910202462146,
+          "temperature_rmse_c": 4.189910860469983,
+          "mass_rmse_kg": 0.021403843281872233,
+          "pressure_final_error_mpa": 0.8922850839851861,
+          "temperature_peak_error_c": -0.9832538260677097,
+          "mass_final_error_kg": 0.08304089255506852,
+          "screening_pass": true,
+          "geometry_diagnostic": {
+            "nominal_volume_m3": 0.24394320094584823,
+            "frozen_effective_volume_m3": 0.24394320094584823,
+            "implied_volume_m3_median": 0.24388459603368584
+          }
+        },
+        {
+          "tank_id": 8,
+          "sample_count": 351,
+          "pressure_rmse_mpa": 0.640648637076623,
+          "temperature_rmse_c": 5.391756351166803,
+          "mass_rmse_kg": 0.037893337128879455,
+          "pressure_final_error_mpa": 0.803462287521171,
+          "temperature_peak_error_c": -1.8759409251727561,
+          "mass_final_error_kg": 0.13693689883124982,
+          "screening_pass": true,
+          "geometry_diagnostic": {
+            "nominal_volume_m3": 0.24394320094584823,
+            "frozen_effective_volume_m3": 0.24394320094584823,
+            "implied_volume_m3_median": 0.2438624116352588
+          }
+        },
+        {
+          "tank_id": 9,
+          "sample_count": 351,
+          "pressure_rmse_mpa": 0.49202347026336546,
+          "temperature_rmse_c": 4.3849816229310425,
+          "mass_rmse_kg": 0.021768682359352906,
+          "pressure_final_error_mpa": 0.7353747362474508,
+          "temperature_peak_error_c": -1.1718277314558634,
+          "mass_final_error_kg": 0.06449354293383713,
+          "screening_pass": true,
+          "geometry_diagnostic": {
+            "nominal_volume_m3": 0.24394320094584823,
+            "frozen_effective_volume_m3": 0.24394320094584823,
+            "implied_volume_m3_median": 0.24386008946486312
+          }
+        }
+      ]
+    }
+  },
+  "source_commit": "d9e29e91de9331d1adb2dac871a101a8ef82b571",
+  "source_worktree_dirty": false
+}

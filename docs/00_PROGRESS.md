@@ -2282,3 +2282,13 @@ work (P1). LLM evidence now reads the dated 2026-10-11 triage artifact and
 shows the scope exclusion explicitly, so it does not repeatedly ask for a
 station-to-vehicle bundle that is a documented limitation. This does not make
 the full-loop claim pass.
+## 2026-10-11 - NREL H2FillS geometry sensitivity recheck
+
+- Replayed seven NREL H2FillS Type-IV tank histories after access to the
+  workbook using the historical frozen geometry and two capacity/EOS geometry
+  variants. The capacity/EOS variants screened 7/7 histories, while the legacy
+  frozen scaling screened 0/7; the machine-readable result is
+  `research/nrel_h2fills_geometry_sensitivity_recheck_2026_10_11.json`.
+- This is explicitly a post-access diagnostic. It does not refit parameters,
+  change the production default, or close an external-validation gate. A new
+  outcome-unseen geometry protocol is required before promotion.
