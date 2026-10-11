@@ -97,7 +97,10 @@
         "status": "PASS",
         "tests_passed": 1383,
         "tests_failed": 0,
-        "evidence": "research/full_regression_test_run_2026_10_11.json"
+        "evidence": "research/full_regression_test_run_2026_10_11.json",
+        "warnings": 20,
+        "elapsed_seconds": 257.52,
+        "source_commit": "e2b9ebe9c79af0a6668e6132fc2afdc7f1fa27f9"
       }
     }
   }
