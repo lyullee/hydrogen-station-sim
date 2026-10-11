@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "artifact_type": "rheadhy_public_matrix_source_recheck",
+  "rechecked_at": "2026-10-11",
+  "source": {
+    "doi": "10.5281/zenodo.16992589",
+    "record_url": "https://zenodo.org/records/16992589",
+    "title": "RHeaDHy Introduction to test matrix (Public)",
+    "license": "CC BY 4.0",
+    "record_status": "published",
+    "file_count": 1,
+    "file": {
+      "name": "RHeaDHy_Introduction_to_test_matrix_Public.pdf",
+      "bytes": 706953,
+      "md5": "864e0cf8e55b00b62638015ca364803a"
+    }
+  },
+  "observed_scope": {
+    "real_test_campaign_described": true,
+    "test_matrix_and_conditions_described": true,
+    "machine_readable_station_telemetry": false,
+    "machine_readable_vehicle_or_receiving_vessel_telemetry": false,
+    "common_time_base_station_to_vehicle": false,
+    "controller_valve_or_esd_state_channels": false,
+    "numerical_results_archive_in_record": false
+  },
+  "decision": {
+    "full_loop_external_holdout_eligible": false,
+    "decision": "MATRIX_ONLY_CUSTODIAN_REQUEST_LEAD",
+    "claim_boundary": "The record supports test-campaign and operating-condition context only. It does not provide a reusable synchronized station-to-vehicle raw trace and cannot close the full-loop validation gate.",
+    "next_action": "Request a rights-cleared, de-identified pilot with station/dispenser/vehicle channels, common clock, units, controller/ESD states, checksums and reuse permission before protocol freeze."
+  },
+  "privacy": {
+    "raw_rows_persisted": false,
+    "private_site_or_company_identity_published": false,
+    "local_source_paths_published": false
+  }
+}

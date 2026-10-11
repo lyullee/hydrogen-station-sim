@@ -48,6 +48,24 @@
       "claim_limit": "The public contract does not provide numeric process telemetry or a vehicle-side common-clock trace; it cannot support station-to-vehicle full-loop scoring."
     },
     {
+      "id": "rheadhy_public_test_matrix",
+      "title": "RHeaDHy Introduction to test matrix (Public)",
+      "doi": "10.5281/zenodo.16992589",
+      "url": "https://zenodo.org/records/16992589",
+      "license_or_access": "CC BY 4.0; one public PDF file",
+      "observed_scope": [
+        "real high-flow refuelling test campaign described",
+        "planned station-to-receiving-vessel test conditions",
+        "public test matrix and operating-condition context"
+      ],
+      "raw_synchronized_archive_located": false,
+      "vehicle_pressure_temperature_channels": false,
+      "controller_or_esd_channels": false,
+      "numerical_results_archive_in_record": false,
+      "decision": "MATRIX_ONLY_CUSTODIAN_REQUEST_LEAD_ONLY",
+      "claim_limit": "The DOI record contains a test-matrix PDF, not machine-readable results. It cannot close the synchronized station-to-vehicle full-loop gate without a separate rights-cleared raw-data release."
+    },
+    {
       "id": "h2protocol_j2601_raw_lab_route",
       "title": "H2Protocol/J2601 raw laboratory data route",
       "url": "https://h2protocol.com/",

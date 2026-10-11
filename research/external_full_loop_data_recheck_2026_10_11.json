@@ -166,6 +166,23 @@
       "claim_boundary": "The API is useful for station inventory and operational-context metadata, but it does not publish a synchronized dispenser-to-vehicle measurement trace or a vehicle-tank pressure/temperature holdout."
     },
     {
+      "id": "rheadhy_public_test_matrix",
+      "title": "RHeaDHy Introduction to test matrix (Public)",
+      "doi": "10.5281/zenodo.16992589",
+      "source_url": "https://zenodo.org/records/16992589",
+      "source_role": "high-flow station-to-receiving-vessel test-campaign and custodian-request lead",
+      "observed": {
+        "physical_test_campaign_described": true,
+        "public_test_matrix_pdf": true,
+        "machine_readable_common_timebase_public": false,
+        "station_controller_or_esd_channels_public": false,
+        "vehicle_or_receiving_vessel_raw_trace_public": false,
+        "reuse_terms_for_raw_or_derived_trace": "not applicable to a results archive; only the CC BY matrix PDF is public"
+      },
+      "decision": "MATRIX_ONLY_REQUEST_RAW_TRACE",
+      "claim_boundary": "The record provides campaign design and operating-condition context, but no raw numerical results. It cannot close a station-to-vehicle holdout until a separate synchronized release is obtained."
+    },
+    {
       "id": "nrel_h2fills_public_model",
       "title": "NREL H2FillS hydrogen filling simulation",
       "source_url": "https://www.nrel.gov/hydrogen/h2fills",

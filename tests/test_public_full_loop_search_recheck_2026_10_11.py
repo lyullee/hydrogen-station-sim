@@ -16,7 +16,7 @@ def test_2026_10_11_public_recheck_is_privacy_safe_and_does_not_open_full_loop_g
     assert record["prospective_holdout_eligible"] is False
     assert record["runtime_parameter_application"] is False
     assert record["claim_supported"] is False
-    assert len(record["screened_sources"]) == 8
+    assert len(record["screened_sources"]) == 9
     assert record["privacy"]["private_raw_rows_persisted"] is False
     assert record["privacy"]["local_source_paths_published"] is False
     assert record["minimum_next_input"]["event_count"] == 3
@@ -29,6 +29,11 @@ def test_2026_10_11_public_recheck_is_privacy_safe_and_does_not_open_full_loop_g
     api = next(item for item in record["screened_sources"] if item["id"] == "h2_stations_eu_api_v2")
     assert api["decision"] == "INVENTORY_AND_STATUS_CONTEXT_ONLY"
     assert api["vehicle_pressure_temperature_channels"] is False
+
+    rheadhy = next(item for item in record["screened_sources"] if item["id"] == "rheadhy_public_test_matrix")
+    assert rheadhy["raw_synchronized_archive_located"] is False
+    assert rheadhy["numerical_results_archive_in_record"] is False
+    assert rheadhy["decision"] == "MATRIX_ONLY_CUSTODIAN_REQUEST_LEAD_ONLY"
 
     h2protocol = next(item for item in record["screened_sources"] if item["id"] == "h2protocol_j2601_raw_lab_route")
     assert h2protocol["raw_synchronized_archive_located"] is True

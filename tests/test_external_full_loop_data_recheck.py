@@ -26,18 +26,20 @@ def test_recheck_preserves_full_loop_gate_boundary():
         "kit_preslhy_e51_ignited_open_data",
         "h2_stations_europe_api_v2",
         "nrel_h2fills_public_model",
-        "enda_hrs_connect_monitoring",
-        "lototskyy_2020_mh_compressor_station",
-        "calstate_la_back_to_back_fueling_2021",
-    } <= candidates.keys()
+            "enda_hrs_connect_monitoring",
+            "lototskyy_2020_mh_compressor_station",
+            "calstate_la_back_to_back_fueling_2021",
+            "rheadhy_public_test_matrix",
+        } <= candidates.keys()
     assert {
         item["decision"] for item in record["candidates"]
     } <= {
         "REQUEST_RAW_TRACE",
         "REPORT_SUMMARY_ONLY",
-        "COMPONENT_ONLY_NOT_FULL_LOOP",
-        "STATION_REGISTRY_ONLY_NOT_FULL_LOOP",
-    }
+            "COMPONENT_ONLY_NOT_FULL_LOOP",
+            "STATION_REGISTRY_ONLY_NOT_FULL_LOOP",
+            "MATRIX_ONLY_REQUEST_RAW_TRACE",
+        }
     for candidate in record["candidates"]:
         observed = candidate["observed"]
         assert observed.get(
