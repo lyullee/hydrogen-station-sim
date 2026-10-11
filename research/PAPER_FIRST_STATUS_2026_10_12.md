@@ -64,3 +64,4 @@ detailed geometry remain withheld.
 - `research/paper_llm_safety_broad_regression_2026_10_12.json`
 - `research/PROGRESS_DELTA_2026_10_12.md`
 - `research/public_station_vehicle_search_recheck_2026_10_12.json`
+- `research/INCIDENT_EVIDENCE_TRACEABILITY_2026_10_12.md`

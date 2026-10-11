@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "artifact_type": "public_incident_evidence_traceability_summary",
+  "generated_at_utc": "2026-10-11T19:16:56.145837+00:00",
+  "sources": [
+    {
+      "path": "research/hiad_digital_twin_replay_coverage_2026_10_08.json",
+      "sha256": "a43f645c8e2fc468eb33edaecde7a31102eced4c9977de6af5e4968ff922f6df"
+    },
+    {
+      "path": "research/khk_digital_twin_replay_coverage_2026_10_08.json",
+      "sha256": "60192d30a997a890b7b30f8a612b1c64846be5a098802246e04e1a61c10f0867"
+    },
+    {
+      "path": "research/hiad_accident_response_coverage_evaluation_2026_10_05.json",
+      "sha256": "ce2b10c44e585d44975736f78c2b25d6cb1e003b05be11f543c9459eddb2aad3"
+    }
+  ],
+  "hiad": {
+    "case_count": 34,
+    "trace_pass_count": 34,
+    "direct_physical_replay_cases": 29,
+    "proxy_partial_replay_cases": 4,
+    "response_only_cases": 1,
+    "mapped_family_count": 10,
+    "executable_family_recipes": 9,
+    "passed_family_recipes": 9
+  },
+  "khk": {
+    "public_report_count": 23,
+    "incident_code_count": 26,
+    "in_scope_report_count": 22,
+    "in_scope_incident_code_count": 25,
+    "trace_pass_report_count": 22,
+    "trace_pass_incident_code_count": 25,
+    "direct_canonical_replay_reports": 12,
+    "proxy_partial_replay_reports": 10,
+    "executable_family_recipes": 8,
+    "passed_family_recipes": 8
+  },
+  "response_grounding": {
+    "case_count": 34,
+    "cases_with_public_action_categories": 33,
+    "action_category_count": 8,
+    "covered_action_category_count": 8,
+    "contract_pass": true
+  },
+  "supported_claim": "Public incident metadata can be mapped to registered staged response families and used as traceability evidence for grounded decision-support prompts.",
+  "excluded_claims": [
+    "accident reconstruction",
+    "accident frequency or calibrated risk",
+    "site separation distance or consequence validation",
+    "operator effectiveness or improved human safety"
+  ]
+}
