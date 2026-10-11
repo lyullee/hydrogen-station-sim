@@ -1,5 +1,21 @@
 # Development Progress
 
+## 2026-10-11 - Revalidate the data-split scope boundary
+
+`scripts/verify_validation_scope_manifest.py` was rerun against the current
+source and returned `PASS`. The owner-controlled station data remain split by
+episode/time order into a calibration prefix and untouched later suffix, while
+the public Type-IV records remain a separate independent component holdout.
+The result is recorded in
+`research/validation_scope_manifest_verification_2026_10_11.json`.
+
+This recheck preserves the claim boundary: same-site data are labelled
+`same_site_temporal_holdout`, public Type-IV data are labelled
+`independent_component_holdout`, and the unavailable synchronized
+station-to-vehicle full-loop archive remains excluded from the primary goal and
+stated as a paper limitation. No raw rows, absolute timestamps, company/site,
+or manufacturer identifiers are published.
+
 ## 2026-10-11 - Recheck priority tracks after validation-scope decision
 
 The priority runner was re-executed after separating same-site station-side
