@@ -43,8 +43,9 @@ decision support. A Type-IV tank model yielded validation errors of 3.841 MPa,
 fills. A public 15-workbook intake
 contained 58,440 synchronized samples; 8/9 comparable post-access transfer
 sessions passed descriptive flow--mass closure (18 sessions detected). A 22-case
-PRESLHY blowdown evaluation passed
-50.0\% against a 70\% threshold; a non-adiabatic revision passed 20/22 consumed
+PRESLHY E3.1 blowdown evaluation passed
+50.0\% against a 70\% threshold, while a separate five-case ambient Part-B
+evaluation passed 3/5 (60\%). A non-adiabatic revision passed 20/22 consumed
 cases but only 2/3 eligible holdouts. Independent 90 MPa releases passed 0/3
 mass-flow series. HyRAM+ matched its API and an ignited-enclosure model passed
 27/27 peak-pressure screens. A 44-case large-scale delayed-ignition rank screen
@@ -90,24 +91,16 @@ corridor termination, T20/T30/T40 checks, and data-loss hold/resume. These
 training controls lack J2601 tables and HGV 4.3 thresholds.
 Aggregates support field relevance, not calibration.
 
-Two real-station studies bound operating context. Genovese et al.
-report more than 4,500 Cal State LA HRFF events and over 8,800 kg dispensed
-\cite{genovese2024}; Samuelsen et al. report fill-level pressure, temperature,
-mass and time summaries from the UCI NFCRC station \cite{samuelsen2020}.
-Neither public record includes synchronized pressure, temperature and
-mass-flow rows with reuse terms, so neither supplies a numerical holdout.
+Genovese et al. report more than 4,500 Cal State LA HRFF events and 8,800 kg
+dispensed \cite{genovese2024}; Samuelsen et al. report UCI NFCRC fill summaries
+\cite{samuelsen2020}. Neither releases synchronized raw rows with reuse terms,
+so both provide operating context rather than a numerical holdout.
 
-The public PRHYDE deliverable provides a broader protocol and experiment
-context: four instrumented tanks (240 L H70, 350 L H50, 322 L H35 and 165 L
-H70) were tested at ZBT and Nikola across pressure-ramp and delivery-
-temperature conditions \\cite{prhyde2023}. Its public artifact contains test
-matrices, plots and aggregate model errors, but not the synchronized logger
-arrays needed for an untouched numerical holdout. An earlier JHFC/NEDO study
-likewise reports six practical 35/70 MPa filling conditions and station-supplied
-pressure/temperature measurements \\cite{monde2012}; the current public article
-and project archive do not expose the underlying machine-readable runs. These
-sources therefore support operating-range context and data-request targeting,
-not a new external pass claim.
+PRHYDE reports four instrumented tanks (240 L H70, 350 L H50, 322 L H35 and
+165 L H70) at ZBT and Nikola with aggregate errors, but no synchronized logger
+arrays \cite{prhyde2023}; JHFC/NEDO likewise reports six 35/70 MPa conditions without
+machine-readable runs \cite{monde2012}. Both provide context, not an external
+pass claim.
 
 Safety-oriented twins add a second model family. Release, dispersion, jet-fire,
 overpressure and quantitative-risk calculations are commonly delegated to a
@@ -674,6 +667,16 @@ analysis retains the measured state and separately records the nominal label.
 The eligibility minimum and performance threshold both failed, so the revised
 source-depletion claim is not supported by this holdout.
 
+\subsection{Independent ambient Part-B pressure-decay transfer}
+A separate protocol evaluated five previously unopened ambient Part-B cases
+from the public PRESLHY archive \cite{preslhypartb}. All five met the frozen
+eligibility requirements and all pressure-error screens passed, but the two
+2~mm cases failed the half-pressure timing screen. The joint result was 3/5
+(60\%; bootstrap 95\% CI 20--100\%), below the predeclared 70\% threshold.
+This result is retained as a negative transfer of the rigid-source depletion
+model; it does not validate cryogenic two-phase flow, ignition, dispersion,
+station control or separation distance.
+
 \subsection{Negative independent 90 MPa mass-flow transfer}
 All three INERIS/CEA diameter series met their eligibility minima, with 13, 10
 and 12 paired states for 1, 2 and 3 mm, respectively. None passed both screens.
@@ -958,7 +961,8 @@ experimental samples and eight descriptive flow--mass closure passes, while its
 documented sampling-only boundary, metadata gaps and prior outcome access
 precluded a prospective full-loop claim.
 The out-of-scope closed-loop transfer diagnostic and prospective ambient-blowdown
-holdouts did not meet their declared screens; the former is reported only as a
+holdouts, including the five-case Part-B transfer, did not meet their declared
+screens; the former is reported only as a
 negative transfer result because synchronized reusable station-to-vehicle raw
 data were unavailable. An eight-trace confidential station dwell rule also failed its
 holdout and remains disabled. Independent release tests exposed pressure-,
@@ -1077,6 +1081,11 @@ T. Jordan, A. Friedrich, A. Veser, N. Kotchourko, \textit{PRESLHY Experiment
 series E3.1 (Cryogenic Hydrogen Blow-down/Discharge) results--part A high
 pressure}, Karlsruhe Institute of Technology (2023),
 \href{https://doi.org/10.35097/1187}{doi:10.35097/1187}.
+
+\bibitem{preslhypartb}
+T. Jordan, A. Friedrich, A. Veser, N. Kotchourko, \textit{PRESLHY Experiment
+series E3.1, part B}, Karlsruhe Institute of Technology (2023),
+\href{https://doi.org/10.35097/1317}{doi:10.35097/1317}.
 
 \bibitem{preslhye5}
 T. Jordan, A. Friedrich, A. Veser, N. Kotchourko, \textit{PRESLHY Experiment
