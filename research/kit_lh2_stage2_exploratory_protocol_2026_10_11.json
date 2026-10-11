@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "protocol_id": "KIT-LH2-CONSEQUENCE-STAGE2-EXPLORATORY-001",
+  "frozen_at": "2026-10-11",
+  "status": "FROZEN_EXPLORATORY_COMPONENT_REPLAY",
+  "purpose": "Permit a transparent, metadata-selected exploratory replay of complete LH2 consequence workbooks in the reachable archive prefix without promoting the result to an external validation gate.",
+  "source": {
+    "doi": "10.35097/1483",
+    "license": "CC BY-SA 4.0",
+    "archive_reported_bytes": 4971447808,
+    "archive_reported_md5": "0e4ac934ecb973c6f07212e8a80707c9",
+    "local_archive_is_complete": false
+  },
+  "case_selection": {
+    "rule": "Use every XLSX member whose complete byte span occurs in the locally available archive prefix, as determined from TAR headers only.",
+    "members": [
+      "ignited_trial_15_28-10-2019alldata.xlsx",
+      "ignited_trial_16_28-10-2019alldata.xlsx",
+      "ignited_trial_17_28-10-2019alldata.xlsx",
+      "ignited_trial_19_28-10-2019alldata.xlsx"
+    ],
+    "outcome_based_selection": false,
+    "all_archive_cases_represented": false
+  },
+  "allowed_analysis": [
+    "read workbook sheet names, column labels and declared units",
+    "compute finite-count, timebase and channel-coverage summaries",
+    "report descriptive ranges and cross-channel availability",
+    "compare only against a separately documented bounded component model if its inputs are present"
+  ],
+  "prohibited_analysis": [
+    "case-specific parameter fitting",
+    "selection or removal based on observed consequence magnitude",
+    "runtime model or threshold changes",
+    "conversion into station-to-vehicle or site safety-distance validation",
+    "claim of complete KIT archive reproducibility while the publisher MD5 is unverified",
+    "LLM or operator-effectiveness claim"
+  ],
+  "promotion_rule": {
+    "validation_gate_effect": "none",
+    "stage2_numeric_result_may_be_descriptive_only": true,
+    "primary_external_validation_requires": [
+      "complete publisher archive byte count and MD5",
+      "complete metadata/apparatus/unit inventory",
+      "predeclared endpoint and uncertainty rule",
+      "all eligible cases retained, including failures",
+      "independent code and protocol hash"
+    ]
+  },
+  "claim_boundary": "This protocol permits an exploratory LH2 consequence-component replay from four metadata-selected workbook members. It cannot close any primary validation gate, establish station safety distance, validate HyRAM, or support station-to-vehicle or SAGA effectiveness claims."
+}

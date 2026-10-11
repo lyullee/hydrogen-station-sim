@@ -1,0 +1,2506 @@
+{
+  "schema_version": 1,
+  "artifact_type": "kit_lh2_exploratory_component_summary",
+  "generated_at": "2026-10-11",
+  "protocol": "research/kit_lh2_stage2_exploratory_protocol_2026_10_11.json",
+  "case_count": 4,
+  "trials": [
+    {
+      "file": "ignited_trial_15_28-10-2019alldata.xlsx",
+      "sheets": {
+        "Flexlogger": {
+          "rows": 125,
+          "columns": [
+            "time",
+            "Ambient_Temperature",
+            "Cold_junction",
+            "Cold_junction_error",
+            "EV1_Streaming_current",
+            "M1S1_TC2318",
+            "M1S2_TC2319",
+            "M1S3_TC2320",
+            "M1S4_TC2321",
+            "M1S5_TC2328",
+            "M1S6_TC2329",
+            "M1S7_TC2330",
+            "M1S8_TC2336",
+            "M2S1_TC2322",
+            "M2S2_TC2323",
+            "M2S3_TC2331",
+            "M2S4_TC2337",
+            "M2S5_TC2324",
+            "M2S6_TC2332",
+            "M2S7_TC2333",
+            "M2S8_TC2338",
+            "MFM1_Mass_Flow_Rate",
+            "MFM2_Drive_Gain",
+            "PT1_Pipe_Pressure",
+            "PT2_Nozzle_Pressure",
+            "Relative_Humidity",
+            "TC1_MFM_In",
+            "TC1_MFM_InC",
+            "TC2_MFM_Out",
+            "TC2_MFM_OutC",
+            "TC3_Release_Nozzle_Flow",
+            "TC3_Release_Nozzle_FlowC",
+            "TC4_Release_Nozzle_Wall",
+            "TC4_Release_Nozzle_WallC",
+            "TC5_Vent_Stack",
+            "Wind_Direction",
+            "Wind_Speed"
+          ],
+          "numeric_ranges": {
+            "Ambient_Temperature": {
+              "finite_count": 125,
+              "min": 7.590288512500003,
+              "max": 7.757265118749999
+            },
+            "Cold_junction": {
+              "finite_count": 125,
+              "min": 18.59237492035482,
+              "max": 18.778614582924256
+            },
+            "Cold_junction_error": {
+              "finite_count": 125,
+              "min": 21.345914682502432,
+              "max": 23.087488000839233
+            },
+            "EV1_Streaming_current": {
+              "finite_count": 125,
+              "min": -0.0037813188899349505,
+              "max": 0.0008821487952559468
+            },
+            "M1S1_TC2318": {
+              "finite_count": 125,
+              "min": 0.821167169863725,
+              "max": 186.09935491085153
+            },
+            "M1S2_TC2319": {
+              "finite_count": 125,
+              "min": -4.7185772536177835,
+              "max": 304.08429456690493
+            },
+            "M1S3_TC2320": {
+              "finite_count": 125,
+              "min": -111.40372503259701,
+              "max": 517.9010317560411
+            },
+            "M1S4_TC2321": {
+              "finite_count": 125,
+              "min": -7.795530859297403,
+              "max": 163.63210919828632
+            },
+            "M1S5_TC2328": {
+              "finite_count": 125,
+              "min": -1.8487816287290386,
+              "max": 156.17719314928308
+            },
+            "M1S6_TC2329": {
+              "finite_count": 125,
+              "min": -0.08879156590807386,
+              "max": 240.80025804720523
+            },
+            "M1S7_TC2330": {
+              "finite_count": 125,
+              "min": -25.743163382374526,
+              "max": 551.7752843328021
+            },
+            "M1S8_TC2336": {
+              "finite_count": 125,
+              "min": -69.2792150240931,
+              "max": 552.2703146716027
+            },
+            "M2S1_TC2322": {
+              "finite_count": 125,
+              "min": -138.0013071135376,
+              "max": 530.0158451402909
+            },
+            "M2S2_TC2323": {
+              "finite_count": 125,
+              "min": -84.97881256901748,
+              "max": 419.7965674112498
+            },
+            "M2S3_TC2331": {
+              "finite_count": 125,
+              "min": -20.778515861814352,
+              "max": 315.0182479299348
+            },
+            "M2S4_TC2337": {
+              "finite_count": 125,
+              "min": 0.17932398812864245,
+              "max": 286.15329051617357
+            },
+            "M2S5_TC2324": {
+              "finite_count": 125,
+              "min": -15.174303055676653,
+              "max": 548.2234577239434
+            },
+            "M2S6_TC2332": {
+              "finite_count": 125,
+              "min": -87.91824577493513,
+              "max": 431.3533015129504
+            },
+            "M2S7_TC2333": {
+              "finite_count": 125,
+              "min": -19.1302766068347,
+              "max": 308.31554136057093
+            },
+            "M2S8_TC2338": {
+              "finite_count": 125,
+              "min": -2.682032980134625,
+              "max": 536.2327562827707
+            },
+            "MFM1_Mass_Flow_Rate": {
+              "finite_count": 125,
+              "min": -4.349127671070562,
+              "max": 274.0990161358724
+            },
+            "MFM2_Drive_Gain": {
+              "finite_count": 125,
+              "min": -0.004604459083342505,
+              "max": 99.97843056788628
+            },
+            "PT1_Pipe_Pressure": {
+              "finite_count": 125,
+              "min": 1.2053507550134999,
+              "max": 4.8418033449655
+            },
+            "PT2_Nozzle_Pressure": {
+              "finite_count": 125,
+              "min": 10.465398967591,
+              "max": 10.465398967591
+            },
+            "Relative_Humidity": {
+              "finite_count": 125,
+              "min": 37.0340675125,
+              "max": 43.2795487125
+            },
+            "TC1_MFM_In": {
+              "finite_count": 125,
+              "min": -6632.330291410106,
+              "max": -4875.995509385795
+            },
+            "TC1_MFM_InC": {
+              "finite_count": 125,
+              "min": -222.4411990190261,
+              "max": -129.24428587413075
+            },
+            "TC2_MFM_Out": {
+              "finite_count": 125,
+              "min": -6634.686537664326,
+              "max": -4444.495108395523
+            },
+            "TC2_MFM_OutC": {
+              "finite_count": 125,
+              "min": -222.4211029284253,
+              "max": -112.57802762455543
+            },
+            "TC3_Release_Nozzle_Flow": {
+              "finite_count": 125,
+              "min": -6599.473229019239,
+              "max": -612.6799054551068
+            },
+            "TC3_Release_Nozzle_FlowC": {
+              "finite_count": 125,
+              "min": -219.9460316230305,
+              "max": 2.613633945729778
+            },
+            "TC4_Release_Nozzle_Wall": {
+              "finite_count": 125,
+              "min": -5157.934809204031,
+              "max": -134.50161424288837
+            },
+            "TC4_Release_Nozzle_WallC": {
+              "finite_count": 125,
+              "min": -141.07179693357912,
+              "max": 14.859668707240951
+            },
+            "TC5_Vent_Stack": {
+              "finite_count": 125,
+              "min": -153.35836121320276,
+              "max": 2.8000448924365293
+            },
+            "Wind_Direction": {
+              "finite_count": 125,
+              "min": 0.7072440728000003,
+              "max": 359.21380682980003
+            },
+            "Wind_Speed": {
+              "finite_count": 125,
+              "min": 0.551494848,
+              "max": 4.177453044000001
+            }
+          },
+          "values_scanned": true,
+          "timebase": {
+            "finite_time_samples": 125,
+            "median_positive_interval_s": 1.0,
+            "duration_s": 124.0
+          }
+        },
+        "Radiometers": {
+          "rows": 6341,
+          "columns": [
+            "time",
+            "increment",
+            "RAD1_Radiometer_96381",
+            "RAD2_Radiometer_96384",
+            "RAD3_Radiometer_96386"
+          ],
+          "numeric_ranges": {
+            "increment": {
+              "finite_count": 6341,
+              "min": 0.0,
+              "max": 126.80000000000001
+            },
+            "RAD1_Radiometer_96381": {
+              "finite_count": 6341,
+              "min": -1.0761934274670002,
+              "max": 1.4743695040680003
+            },
+            "RAD2_Radiometer_96384": {
+              "finite_count": 6341,
+              "min": -0.7298984925280001,
+              "max": 0.9850891773920001
+            },
+            "RAD3_Radiometer_96386": {
+              "finite_count": 6341,
+              "min": -1.8239980342120001,
+              "max": -0.5061789338960001
+            }
+          },
+          "values_scanned": true,
+          "timebase": {
+            "finite_time_samples": 6341,
+            "median_positive_interval_s": 0.01999999999679858,
+            "duration_s": 126.80000000000291
+          }
+        },
+        "Blastlogger": {
+          "rows": 500000,
+          "columns": [
+            "time",
+            "increment",
+            "K1",
+            "K1Avg",
+            "K2",
+            "K2Avg",
+            "K3",
+            "K3Avg",
+            "K4",
+            "K4Avg",
+            "K5",
+            "K5Avg",
+            "K6",
+            "K6Avg",
+            "K7",
+            "K7Avg",
+            "K8",
+            "K8Avg",
+            "Trigger"
+          ],
+          "numeric_ranges": {},
+          "values_scanned": false,
+          "scan_limit_rows": 20000
+        },
+        "BlastloggerClip": {
+          "rows": 100001,
+          "columns": [
+            "time",
+            "increment",
+            "K1",
+            "K1Avg",
+            "K2",
+            "K2Avg",
+            "K3",
+            "K3Avg",
+            "K4",
+            "K4Avg",
+            "K5",
+            "K5Avg",
+            "K6",
+            "K6Avg",
+            "K7",
+            "K7Avg",
+            "K8",
+            "K8Avg",
+            "Trigger"
+          ],
+          "numeric_ranges": {},
+          "values_scanned": false,
+          "scan_limit_rows": 20000
+        },
+        "Xensor": {
+          "rows": 415,
+          "columns": [
+            "X2019_10_21_02EC42Time",
+            "X2019_10_21_02EC42Output",
+            "X2019_10_21_02EC43Output",
+            "X2019_10_21_02EC44Output",
+            "X2019_10_21_02EC45Output",
+            "X2019_10_21_02EC46Output",
+            "X2019_10_21_04DC51Output",
+            "X2019_10_21_04DC52Output",
+            "X2019_10_21_04DC53Output",
+            "X2019_10_21_04DC54Output",
+            "X2019_10_21_04DC58Output",
+            "X2019_10_21_04DC59Output",
+            "X2019_10_21_04DC60Output",
+            "X2019_10_21_10DC100Output",
+            "X2019_10_21_10DC101Output",
+            "X2019_10_21_10DC95Output",
+            "X2019_10_21_10DC96Output",
+            "Time"
+          ],
+          "numeric_ranges": {
+            "X2019_10_21_02EC42Output": {
+              "finite_count": 415,
+              "min": -0.039,
+              "max": 12.152
+            },
+            "X2019_10_21_02EC43Output": {
+              "finite_count": 415,
+              "min": -0.047,
+              "max": 41.983
+            },
+            "X2019_10_21_02EC44Output": {
+              "finite_count": 415,
+              "min": -0.1298857142857143,
+              "max": 0.028
+            },
+            "X2019_10_21_02EC45Output": {
+              "finite_count": 415,
+              "min": -0.0463,
+              "max": 5.211866666666666
+            },
+            "X2019_10_21_02EC46Output": {
+              "finite_count": 415,
+              "min": -0.03833333333333334,
+              "max": 18.05493548387097
+            },
+            "X2019_10_21_04DC51Output": {
+              "finite_count": 415,
+              "min": -0.024333333333333335,
+              "max": 18.95113793103448
+            },
+            "X2019_10_21_04DC52Output": {
+              "finite_count": 415,
+              "min": -0.008266666666666669,
+              "max": 37.7336
+            },
+            "X2019_10_21_04DC53Output": {
+              "finite_count": 415,
+              "min": -0.0048000000000000004,
+              "max": 15.541599999999999
+            },
+            "X2019_10_21_04DC54Output": {
+              "finite_count": 415,
+              "min": -0.018000000000000002,
+              "max": 12.608935483870969
+            },
+            "X2019_10_21_04DC58Output": {
+              "finite_count": 415,
+              "min": -0.010733333333333333,
+              "max": 7.854466666666667
+            },
+            "X2019_10_21_04DC59Output": {
+              "finite_count": 415,
+              "min": 0.016,
+              "max": 19.6212
+            },
+            "X2019_10_21_04DC60Output": {
+              "finite_count": 415,
+              "min": -0.03866666666666667,
+              "max": 20.760800000000003
+            },
+            "X2019_10_21_10DC100Output": {
+              "finite_count": 415,
+              "min": -0.0156,
+              "max": 60.59674193548387
+            },
+            "X2019_10_21_10DC101Output": {
+              "finite_count": 415,
+              "min": -0.028000000000000004,
+              "max": 6.399
+            },
+            "X2019_10_21_10DC95Output": {
+              "finite_count": 415,
+              "min": -0.001,
+              "max": 10.6542
+            },
+            "X2019_10_21_10DC96Output": {
+              "finite_count": 415,
+              "min": -0.022199999999999998,
+              "max": 7.942333333333334
+            }
+          },
+          "values_scanned": true,
+          "timebase": {
+            "finite_time_samples": 415,
+            "median_positive_interval_s": 0.3000000000029104,
+            "duration_s": 124.5
+          }
+        },
+        "Flowmeter": {
+          "rows": 125,
+          "columns": [
+            "FlTime",
+            "FlElapseTimesec",
+            "FlDensitykgm3R0249",
+            "FlMassFlowRategsecR0247",
+            "FlVolumeFlowRatelminR0253",
+            "FlDriveGainR0291",
+            "FlLeftPickoffAmplitudeVoltsR0287",
+            "FlRawTubeFrequencyHzR0285",
+            "FlRightPickoffAmplitudeVoltsR0289",
+            "FlZeroValuesecR0233",
+            "FlCalcDensitykgm3"
+          ],
+          "numeric_ranges": {
+            "FlElapseTimesec": {
+              "finite_count": 125,
+              "min": 698.5804,
+              "max": 822.515
+            },
+            "FlDensitykgm3R0249": {
+              "finite_count": 125,
+              "min": 0.0,
+              "max": 0.0
+            },
+            "FlMassFlowRategsecR0247": {
+              "finite_count": 125,
+              "min": -4.659514,
+              "max": 274.3386
+            },
+            "FlVolumeFlowRatelminR0253": {
+              "finite_count": 125,
+              "min": 0.0,
+              "max": 0.0
+            },
+            "FlDriveGainR0291": {
+              "finite_count": 125,
+              "min": 0.0,
+              "max": 100.0
+            },
+            "FlLeftPickoffAmplitudeVoltsR0287": {
+              "finite_count": 125,
+              "min": 0.2299737,
+              "max": 0.50201
+            },
+            "FlRawTubeFrequencyHzR0285": {
+              "finite_count": 125,
+              "min": 125.3397,
+              "max": 128.1023
+            },
+            "FlRightPickoffAmplitudeVoltsR0289": {
+              "finite_count": 125,
+              "min": 0.2370369,
+              "max": 0.5149416
+            },
+            "FlZeroValuesecR0233": {
+              "finite_count": 125,
+              "min": -0.03114732,
+              "max": -0.03114732
+            },
+            "FlCalcDensitykgm3": {
+              "finite_count": 125,
+              "min": -5.438436486772336,
+              "max": 82.2869393465835
+            }
+          },
+          "values_scanned": true,
+          "timebase": {
+            "finite_time_samples": 125,
+            "median_positive_interval_s": 1.0,
+            "duration_s": 124.0
+          }
+        },
+        "LocalWeather": {
+          "rows": 84,
+          "columns": [
+            "Time",
+            "Loc_Interval",
+            "Loc_IndoorTemperatureC",
+            "Loc_IndoorHumidity",
+            "Loc_OutdoorTemperatureC",
+            "Loc_OutdoorHumidity",
+            "Loc_RelativePressurehpa",
+            "Loc_AbsolutePressurehpa",
+            "Loc_WindSpeedms",
+            "Loc_Gustms",
+            "Loc_WindDirection",
+            "Loc_DewPointC",
+            "Loc_WindChillC",
+            "Loc_HourRainfallmm",
+            "Loc_HourRainfallmm1",
+            "Loc_WeekRainfallmm",
+            "Loc_MonthRainfallmm",
+            "Loc_TotalRainfallmm"
+          ],
+          "numeric_ranges": {
+            "Loc_Interval": {
+              "finite_count": 84,
+              "min": 5.0,
+              "max": 5.0
+            },
+            "Loc_IndoorTemperatureC": {
+              "finite_count": 84,
+              "min": 15.3,
+              "max": 22.9
+            },
+            "Loc_IndoorHumidity": {
+              "finite_count": 84,
+              "min": 23.0,
+              "max": 34.0
+            },
+            "Loc_OutdoorTemperatureC": {
+              "finite_count": 84,
+              "min": 4.4,
+              "max": 11.2
+            },
+            "Loc_OutdoorHumidity": {
+              "finite_count": 84,
+              "min": 53.0,
+              "max": 90.0
+            },
+            "Loc_RelativePressurehpa": {
+              "finite_count": 84,
+              "min": 1025.5,
+              "max": 1026.8
+            },
+            "Loc_AbsolutePressurehpa": {
+              "finite_count": 84,
+              "min": 979.0,
+              "max": 980.3
+            },
+            "Loc_WindSpeedms": {
+              "finite_count": 84,
+              "min": 0.0,
+              "max": 3.1
+            },
+            "Loc_Gustms": {
+              "finite_count": 84,
+              "min": 0.0,
+              "max": 4.1
+            },
+            "Loc_DewPointC": {
+              "finite_count": 84,
+              "min": -0.3,
+              "max": 4.4
+            },
+            "Loc_WindChillC": {
+              "finite_count": 84,
+              "min": 4.4,
+              "max": 11.2
+            },
+            "Loc_HourRainfallmm": {
+              "finite_count": 84,
+              "min": 0.0,
+              "max": 0.3
+            },
+            "Loc_HourRainfallmm1": {
+              "finite_count": 84,
+              "min": 0.0,
+              "max": 0.3
+            },
+            "Loc_WeekRainfallmm": {
+              "finite_count": 84,
+              "min": 0.9,
+              "max": 1.2
+            },
+            "Loc_MonthRainfallmm": {
+              "finite_count": 84,
+              "min": 169.5,
+              "max": 169.8
+            },
+            "Loc_TotalRainfallmm": {
+              "finite_count": 84,
+              "min": 550.8,
+              "max": 551.1
+            }
+          },
+          "values_scanned": true,
+          "timebase": {
+            "finite_time_samples": 84,
+            "median_positive_interval_s": 300.0,
+            "duration_s": 24900.0
+          }
+        }
+      }
+    },
+    {
+      "file": "ignited_trial_16_28-10-2019alldata.xlsx",
+      "sheets": {
+        "Flexlogger": {
+          "rows": 82,
+          "columns": [
+            "time",
+            "Ambient_Temperature",
+            "Cold_junction",
+            "Cold_junction_error",
+            "EV1_Streaming_current",
+            "M1S1_TC2318",
+            "M1S2_TC2319",
+            "M1S3_TC2320",
+            "M1S4_TC2321",
+            "M1S5_TC2328",
+            "M1S6_TC2329",
+            "M1S7_TC2330",
+            "M1S8_TC2336",
+            "M2S1_TC2322",
+            "M2S2_TC2323",
+            "M2S3_TC2331",
+            "M2S4_TC2337",
+            "M2S5_TC2324",
+            "M2S6_TC2332",
+            "M2S7_TC2333",
+            "M2S8_TC2338",
+            "MFM1_Mass_Flow_Rate",
+            "MFM2_Drive_Gain",
+            "PT1_Pipe_Pressure",
+            "PT2_Nozzle_Pressure",
+            "Relative_Humidity",
+            "TC1_MFM_In",
+            "TC1_MFM_InC",
+            "TC2_MFM_Out",
+            "TC2_MFM_OutC",
+            "TC3_Release_Nozzle_Flow",
+            "TC3_Release_Nozzle_FlowC",
+            "TC4_Release_Nozzle_Wall",
+            "TC4_Release_Nozzle_WallC",
+            "TC5_Vent_Stack",
+            "Wind_Direction",
+            "Wind_Speed"
+          ],
+          "numeric_ranges": {
+            "Ambient_Temperature": {
+              "finite_count": 82,
+              "min": 7.064489837499998,
+              "max": 7.2101502812499945
+            },
+            "Cold_junction": {
+              "finite_count": 82,
+              "min": 17.262951831907724,
+              "max": 17.310111323610105
+            },
+            "Cold_junction_error": {
+              "finite_count": 82,
+              "min": 13.429672326426049,
+              "max": 14.714897556000803
+            },
+            "EV1_Streaming_current": {
+              "finite_count": 82,
+              "min": -0.0029540063711408597,
+              "max": 0.0012397766852245739
+            },
+            "M1S1_TC2318": {
+              "finite_count": 82,
+              "min": 5.102384671551944,
+              "max": 183.43019136049477
+            },
+            "M1S2_TC2319": {
+              "finite_count": 82,
+              "min": -20.797891402142728,
+              "max": 553.0598403156492
+            },
+            "M1S3_TC2320": {
+              "finite_count": 82,
+              "min": -160.53335230700606,
+              "max": 389.9367409449918
+            },
+            "M1S4_TC2321": {
+              "finite_count": 82,
+              "min": 6.022185661829914,
+              "max": 163.72449891056124
+            },
+            "M1S5_TC2328": {
+              "finite_count": 82,
+              "min": 6.236715786838075,
+              "max": 175.87674121020882
+            },
+            "M1S6_TC2329": {
+              "finite_count": 82,
+              "min": 6.288643673038958,
+              "max": 212.4458606170384
+            },
+            "M1S7_TC2330": {
+              "finite_count": 82,
+              "min": -27.91227075994227,
+              "max": 508.1461900564253
+            },
+            "M1S8_TC2336": {
+              "finite_count": 82,
+              "min": -100.0339009064339,
+              "max": 552.9207454854404
+            },
+            "M2S1_TC2322": {
+              "finite_count": 82,
+              "min": -171.2945409513334,
+              "max": 513.8719085801241
+            },
+            "M2S2_TC2323": {
+              "finite_count": 82,
+              "min": -17.359392836430374,
+              "max": 312.8064631575029
+            },
+            "M2S3_TC2331": {
+              "finite_count": 82,
+              "min": 6.148906953518636,
+              "max": 319.55460360750726
+            },
+            "M2S4_TC2337": {
+              "finite_count": 82,
+              "min": 6.263758592307502,
+              "max": 252.7703693959533
+            },
+            "M2S5_TC2324": {
+              "finite_count": 82,
+              "min": -25.900335380317134,
+              "max": 552.5061155823266
+            },
+            "M2S6_TC2332": {
+              "finite_count": 82,
+              "min": -93.95362795899096,
+              "max": 547.6209624916889
+            },
+            "M2S7_TC2333": {
+              "finite_count": 82,
+              "min": 6.138427601087355,
+              "max": 285.59234165577726
+            },
+            "M2S8_TC2338": {
+              "finite_count": 82,
+              "min": -12.583214224448765,
+              "max": 550.5632915473284
+            },
+            "MFM1_Mass_Flow_Rate": {
+              "finite_count": 82,
+              "min": 0.3004074275736741,
+              "max": 276.43514582128205
+            },
+            "MFM2_Drive_Gain": {
+              "finite_count": 82,
+              "min": 0.003535300703962463,
+              "max": 99.98409300947743
+            },
+            "PT1_Pipe_Pressure": {
+              "finite_count": 82,
+              "min": 1.8779824455625,
+              "max": 5.609667838816501
+            },
+            "PT2_Nozzle_Pressure": {
+              "finite_count": 82,
+              "min": 10.465398967591,
+              "max": 10.465398967591
+            },
+            "Relative_Humidity": {
+              "finite_count": 82,
+              "min": 45.5977056375,
+              "max": 48.10705076250001
+            },
+            "TC1_MFM_In": {
+              "finite_count": 82,
+              "min": -6589.107608145929,
+              "max": -5437.4806098628405
+            },
+            "TC1_MFM_InC": {
+              "finite_count": 82,
+              "min": -222.78332995422898,
+              "max": -155.53288512427068
+            },
+            "TC2_MFM_Out": {
+              "finite_count": 82,
+              "min": -6593.326499660402,
+              "max": -5080.4301399248925
+            },
+            "TC2_MFM_OutC": {
+              "finite_count": 82,
+              "min": -223.09438163226469,
+              "max": -139.75583823632235
+            },
+            "TC3_Release_Nozzle_Flow": {
+              "finite_count": 82,
+              "min": -6554.378587268507,
+              "max": -534.0949019250215
+            },
+            "TC3_Release_Nozzle_FlowC": {
+              "finite_count": 82,
+              "min": -220.01762706883724,
+              "max": 3.3956452461355022
+            },
+            "TC4_Release_Nozzle_Wall": {
+              "finite_count": 82,
+              "min": -5436.642419495726,
+              "max": 157.68223450674026
+            },
+            "TC4_Release_Nozzle_WallC": {
+              "finite_count": 82,
+              "min": -155.56936350592525,
+              "max": 20.87430641899741
+            },
+            "TC5_Vent_Stack": {
+              "finite_count": 82,
+              "min": -124.36013782777984,
+              "max": -0.11355440797151205
+            },
+            "Wind_Direction": {
+              "finite_count": 82,
+              "min": 1.2966320356000005,
+              "max": 358.96445038400003
+            },
+            "Wind_Speed": {
+              "finite_count": 82,
+              "min": 0.496122132,
+              "max": 2.101930896
+            }
+          },
+          "values_scanned": true,
+          "timebase": {
+            "finite_time_samples": 82,
+            "median_positive_interval_s": 1.0,
+            "duration_s": 81.0
+          }
+        },
+        "Radiometers": {
+          "rows": 4171,
+          "columns": [
+            "time",
+            "increment",
+            "RAD1_Radiometer_96381",
+            "RAD2_Radiometer_96384",
+            "RAD3_Radiometer_96386"
+          ],
+          "numeric_ranges": {
+            "increment": {
+              "finite_count": 4171,
+              "min": 0.0,
+              "max": 83.4
+            },
+            "RAD1_Radiometer_96381": {
+              "finite_count": 4171,
+              "min": -0.22014242056099997,
+              "max": 2.048979084046
+            },
+            "RAD2_Radiometer_96384": {
+              "finite_count": 4171,
+              "min": -0.09742077028800002,
+              "max": 0.9790076608320001
+            },
+            "RAD3_Radiometer_96386": {
+              "finite_count": 4171,
+              "min": -0.9966676573320001,
+              "max": -0.5061789338960001
+            }
+          },
+          "values_scanned": true,
+          "timebase": {
+            "finite_time_samples": 4171,
+            "median_positive_interval_s": 0.01999999999679858,
+            "duration_s": 83.40000000000146
+          }
+        },
+        "Blastlogger": {
+          "rows": 500000,
+          "columns": [
+            "time",
+            "increment",
+            "K1",
+            "K1Avg",
+            "K2",
+            "K2Avg",
+            "K3",
+            "K3Avg",
+            "K4",
+            "K4Avg",
+            "K5",
+            "K5Avg",
+            "K6",
+            "K6Avg",
+            "K7",
+            "K7Avg",
+            "K8",
+            "K8Avg",
+            "Trigger"
+          ],
+          "numeric_ranges": {},
+          "values_scanned": false,
+          "scan_limit_rows": 20000
+        },
+        "BlastloggerClip": {
+          "rows": 100001,
+          "columns": [
+            "time",
+            "increment",
+            "K1",
+            "K1Avg",
+            "K2",
+            "K2Avg",
+            "K3",
+            "K3Avg",
+            "K4",
+            "K4Avg",
+            "K5",
+            "K5Avg",
+            "K6",
+            "K6Avg",
+            "K7",
+            "K7Avg",
+            "K8",
+            "K8Avg",
+            "Trigger"
+          ],
+          "numeric_ranges": {},
+          "values_scanned": false,
+          "scan_limit_rows": 20000
+        },
+        "Xensor": {
+          "rows": 272,
+          "columns": [
+            "X2019_10_21_02EC42Time",
+            "X2019_10_21_02EC42Output",
+            "X2019_10_21_02EC43Output",
+            "X2019_10_21_02EC44Output",
+            "X2019_10_21_02EC45Output",
+            "X2019_10_21_02EC46Output",
+            "X2019_10_21_04DC51Output",
+            "X2019_10_21_04DC52Output",
+            "X2019_10_21_04DC53Output",
+            "X2019_10_21_04DC54Output",
+            "X2019_10_21_04DC58Output",
+            "X2019_10_21_04DC59Output",
+            "X2019_10_21_04DC60Output",
+            "X2019_10_21_10DC100Output",
+            "X2019_10_21_10DC101Output",
+            "X2019_10_21_10DC95Output",
+            "X2019_10_21_10DC96Output",
+            "Time"
+          ],
+          "numeric_ranges": {
+            "X2019_10_21_02EC42Output": {
+              "finite_count": 272,
+              "min": -0.038,
+              "max": 13.445
+            },
+            "X2019_10_21_02EC43Output": {
+              "finite_count": 272,
+              "min": -0.052,
+              "max": 11.874
+            },
+            "X2019_10_21_02EC44Output": {
+              "finite_count": 272,
+              "min": -0.10516666666666666,
+              "max": 0.024966666666666668
+            },
+            "X2019_10_21_02EC45Output": {
+              "finite_count": 272,
+              "min": -0.056499999999999995,
+              "max": 0.36648275862068963
+            },
+            "X2019_10_21_02EC46Output": {
+              "finite_count": 272,
+              "min": -0.038290322580645166,
+              "max": 18.600290322580648
+            },
+            "X2019_10_21_04DC51Output": {
+              "finite_count": 272,
+              "min": -0.024933333333333335,
+              "max": 7.8553
+            },
+            "X2019_10_21_04DC52Output": {
+              "finite_count": 272,
+              "min": -0.00967741935483871,
+              "max": 42.5845
+            },
+            "X2019_10_21_04DC53Output": {
+              "finite_count": 272,
+              "min": -0.0076999999999999985,
+              "max": 0.5074000000000001
+            },
+            "X2019_10_21_04DC54Output": {
+              "finite_count": 272,
+              "min": -0.0378,
+              "max": 0.0426
+            },
+            "X2019_10_21_04DC58Output": {
+              "finite_count": 272,
+              "min": -0.013933333333333332,
+              "max": 0.0486
+            },
+            "X2019_10_21_04DC59Output": {
+              "finite_count": 272,
+              "min": 0.013433333333333334,
+              "max": 15.536833333333334
+            },
+            "X2019_10_21_04DC60Output": {
+              "finite_count": 272,
+              "min": -0.023,
+              "max": 28.117666666666665
+            },
+            "X2019_10_21_10DC100Output": {
+              "finite_count": 272,
+              "min": -0.012466666666666666,
+              "max": 28.2963
+            },
+            "X2019_10_21_10DC101Output": {
+              "finite_count": 272,
+              "min": -0.029400000000000003,
+              "max": 0.0108
+            },
+            "X2019_10_21_10DC95Output": {
+              "finite_count": 272,
+              "min": -0.013266666666666666,
+              "max": 4.195533333333334
+            },
+            "X2019_10_21_10DC96Output": {
+              "finite_count": 272,
+              "min": -0.026500000000000003,
+              "max": 0.0974
+            }
+          },
+          "values_scanned": true,
+          "timebase": {
+            "finite_time_samples": 272,
+            "median_positive_interval_s": 0.3000000000029104,
+            "duration_s": 81.80000000000291
+          }
+        },
+        "Flowmeter": {
+          "rows": 82,
+          "columns": [
+            "FlTime",
+            "FlElapseTimesec",
+            "FlDensitykgm3R0249",
+            "FlMassFlowRategsecR0247",
+            "FlVolumeFlowRatelminR0253",
+            "FlDriveGainR0291",
+            "FlLeftPickoffAmplitudeVoltsR0287",
+            "FlRawTubeFrequencyHzR0285",
+            "FlRightPickoffAmplitudeVoltsR0289",
+            "FlZeroValuesecR0233",
+            "FlCalcDensitykgm3"
+          ],
+          "numeric_ranges": {
+            "FlElapseTimesec": {
+              "finite_count": 82,
+              "min": 691.9008,
+              "max": 772.8098
+            },
+            "FlDensitykgm3R0249": {
+              "finite_count": 82,
+              "min": 0.0,
+              "max": 0.0
+            },
+            "FlMassFlowRategsecR0247": {
+              "finite_count": 82,
+              "min": 17.1095,
+              "max": 276.6389
+            },
+            "FlVolumeFlowRatelminR0253": {
+              "finite_count": 82,
+              "min": 0.0,
+              "max": 0.0
+            },
+            "FlDriveGainR0291": {
+              "finite_count": 82,
+              "min": 0.0,
+              "max": 100.0
+            },
+            "FlLeftPickoffAmplitudeVoltsR0287": {
+              "finite_count": 82,
+              "min": 0.2352272,
+              "max": 0.4897813
+            },
+            "FlRawTubeFrequencyHzR0285": {
+              "finite_count": 82,
+              "min": 125.336,
+              "max": 128.2166
+            },
+            "FlRightPickoffAmplitudeVoltsR0289": {
+              "finite_count": 82,
+              "min": 0.2312212,
+              "max": 0.5186137
+            },
+            "FlZeroValuesecR0233": {
+              "finite_count": 82,
+              "min": -0.03114732,
+              "max": -0.03114732
+            },
+            "FlCalcDensitykgm3": {
+              "finite_count": 82,
+              "min": -3.1544123893909592,
+              "max": 82.35591357743921
+            }
+          },
+          "values_scanned": true,
+          "timebase": {
+            "finite_time_samples": 82,
+            "median_positive_interval_s": 1.0,
+            "duration_s": 81.0
+          }
+        },
+        "LocalWeather": {
+          "rows": 84,
+          "columns": [
+            "Time",
+            "Loc_Interval",
+            "Loc_IndoorTemperatureC",
+            "Loc_IndoorHumidity",
+            "Loc_OutdoorTemperatureC",
+            "Loc_OutdoorHumidity",
+            "Loc_RelativePressurehpa",
+            "Loc_AbsolutePressurehpa",
+            "Loc_WindSpeedms",
+            "Loc_Gustms",
+            "Loc_WindDirection",
+            "Loc_DewPointC",
+            "Loc_WindChillC",
+            "Loc_HourRainfallmm",
+            "Loc_HourRainfallmm1",
+            "Loc_WeekRainfallmm",
+            "Loc_MonthRainfallmm",
+            "Loc_TotalRainfallmm"
+          ],
+          "numeric_ranges": {
+            "Loc_Interval": {
+              "finite_count": 84,
+              "min": 5.0,
+              "max": 5.0
+            },
+            "Loc_IndoorTemperatureC": {
+              "finite_count": 84,
+              "min": 15.3,
+              "max": 22.9
+            },
+            "Loc_IndoorHumidity": {
+              "finite_count": 84,
+              "min": 23.0,
+              "max": 34.0
+            },
+            "Loc_OutdoorTemperatureC": {
+              "finite_count": 84,
+              "min": 4.4,
+              "max": 11.2
+            },
+            "Loc_OutdoorHumidity": {
+              "finite_count": 84,
+              "min": 53.0,
+              "max": 90.0
+            },
+            "Loc_RelativePressurehpa": {
+              "finite_count": 84,
+              "min": 1025.5,
+              "max": 1026.8
+            },
+            "Loc_AbsolutePressurehpa": {
+              "finite_count": 84,
+              "min": 979.0,
+              "max": 980.3
+            },
+            "Loc_WindSpeedms": {
+              "finite_count": 84,
+              "min": 0.0,
+              "max": 3.1
+            },
+            "Loc_Gustms": {
+              "finite_count": 84,
+              "min": 0.0,
+              "max": 4.1
+            },
+            "Loc_DewPointC": {
+              "finite_count": 84,
+              "min": -0.3,
+              "max": 4.4
+            },
+            "Loc_WindChillC": {
+              "finite_count": 84,
+              "min": 4.4,
+              "max": 11.2
+            },
+            "Loc_HourRainfallmm": {
+              "finite_count": 84,
+              "min": 0.0,
+              "max": 0.3
+            },
+            "Loc_HourRainfallmm1": {
+              "finite_count": 84,
+              "min": 0.0,
+              "max": 0.3
+            },
+            "Loc_WeekRainfallmm": {
+              "finite_count": 84,
+              "min": 0.9,
+              "max": 1.2
+            },
+            "Loc_MonthRainfallmm": {
+              "finite_count": 84,
+              "min": 169.5,
+              "max": 169.8
+            },
+            "Loc_TotalRainfallmm": {
+              "finite_count": 84,
+              "min": 550.8,
+              "max": 551.1
+            }
+          },
+          "values_scanned": true,
+          "timebase": {
+            "finite_time_samples": 84,
+            "median_positive_interval_s": 300.0,
+            "duration_s": 24900.0
+          }
+        }
+      }
+    },
+    {
+      "file": "ignited_trial_17_28-10-2019alldata.xlsx",
+      "sheets": {
+        "Flexlogger": {
+          "rows": 25,
+          "columns": [
+            "time",
+            "Ambient_Temperature",
+            "Cold_junction",
+            "Cold_junction_error",
+            "EV1_Streaming_current",
+            "M1S1_TC2318",
+            "M1S2_TC2319",
+            "M1S3_TC2320",
+            "M1S4_TC2321",
+            "M1S5_TC2328",
+            "M1S6_TC2329",
+            "M1S7_TC2330",
+            "M1S8_TC2336",
+            "M2S1_TC2322",
+            "M2S2_TC2323",
+            "M2S3_TC2331",
+            "M2S4_TC2337",
+            "M2S5_TC2324",
+            "M2S6_TC2332",
+            "M2S7_TC2333",
+            "M2S8_TC2338",
+            "MFM1_Mass_Flow_Rate",
+            "MFM2_Drive_Gain",
+            "PT1_Pipe_Pressure",
+            "PT2_Nozzle_Pressure",
+            "Relative_Humidity",
+            "TC1_MFM_In",
+            "TC1_MFM_InC",
+            "TC2_MFM_Out",
+            "TC2_MFM_OutC",
+            "TC3_Release_Nozzle_Flow",
+            "TC3_Release_Nozzle_FlowC",
+            "TC4_Release_Nozzle_Wall",
+            "TC4_Release_Nozzle_WallC",
+            "TC5_Vent_Stack",
+            "Wind_Direction",
+            "Wind_Speed"
+          ],
+          "numeric_ranges": {
+            "Ambient_Temperature": {
+              "finite_count": 25,
+              "min": 6.133684074999998,
+              "max": 6.208290643749997
+            },
+            "Cold_junction": {
+              "finite_count": 25,
+              "min": 16.583134425141672,
+              "max": 16.61157568418134
+            },
+            "Cold_junction_error": {
+              "finite_count": 25,
+              "min": 13.094396179580462,
+              "max": 14.062971714912159
+            },
+            "EV1_Streaming_current": {
+              "finite_count": 25,
+              "min": -0.001466274348871371,
+              "max": 0.000700950664338509
+            },
+            "M1S1_TC2318": {
+              "finite_count": 25,
+              "min": 6.733976737229099,
+              "max": 323.15358643458615
+            },
+            "M1S2_TC2319": {
+              "finite_count": 25,
+              "min": 3.1200022080981307,
+              "max": 383.5716906372903
+            },
+            "M1S3_TC2320": {
+              "finite_count": 25,
+              "min": -138.72589833890135,
+              "max": 444.8706731260913
+            },
+            "M1S4_TC2321": {
+              "finite_count": 25,
+              "min": 4.895645497699797,
+              "max": 193.0306392128874
+            },
+            "M1S5_TC2328": {
+              "finite_count": 25,
+              "min": 6.067964201933316,
+              "max": 180.7301576928184
+            },
+            "M1S6_TC2329": {
+              "finite_count": 25,
+              "min": 6.531040986909825,
+              "max": 260.80556635097304
+            },
+            "M1S7_TC2330": {
+              "finite_count": 25,
+              "min": 5.60870643927371,
+              "max": 375.8330801737609
+            },
+            "M1S8_TC2336": {
+              "finite_count": 25,
+              "min": -56.82855600018696,
+              "max": 431.5147345939126
+            },
+            "M2S1_TC2322": {
+              "finite_count": 25,
+              "min": -160.28974901639813,
+              "max": 500.1241060094085
+            },
+            "M2S2_TC2323": {
+              "finite_count": 25,
+              "min": -130.97491240494654,
+              "max": 432.04957160301524
+            },
+            "M2S3_TC2331": {
+              "finite_count": 25,
+              "min": -0.05172139987670818,
+              "max": 410.81246287301684
+            },
+            "M2S4_TC2337": {
+              "finite_count": 25,
+              "min": 5.892488528101241,
+              "max": 336.0046873930174
+            },
+            "M2S5_TC2324": {
+              "finite_count": 25,
+              "min": 2.0321953877184367,
+              "max": 360.23660834703367
+            },
+            "M2S6_TC2332": {
+              "finite_count": 25,
+              "min": -144.29684760868008,
+              "max": 551.0560952706649
+            },
+            "M2S7_TC2333": {
+              "finite_count": 25,
+              "min": 6.089881123643686,
+              "max": 393.94793068231456
+            },
+            "M2S8_TC2338": {
+              "finite_count": 25,
+              "min": -49.42581530108531,
+              "max": 550.0241535940655
+            },
+            "MFM1_Mass_Flow_Rate": {
+              "finite_count": 25,
+              "min": -0.002644956269563181,
+              "max": 282.7929128881045
+            },
+            "MFM2_Drive_Gain": {
+              "finite_count": 25,
+              "min": 0.0061988834261264,
+              "max": 29.642151572832553
+            },
+            "PT1_Pipe_Pressure": {
+              "finite_count": 25,
+              "min": 1.1109182273694995,
+              "max": 4.6793473863915
+            },
+            "PT2_Nozzle_Pressure": {
+              "finite_count": 25,
+              "min": 10.465398967591,
+              "max": 10.465398967591
+            },
+            "Relative_Humidity": {
+              "finite_count": 25,
+              "min": 49.807829125,
+              "max": 50.301731974999996
+            },
+            "TC1_MFM_In": {
+              "finite_count": 25,
+              "min": -6559.379789792287,
+              "max": -6556.4740631862915
+            },
+            "TC1_MFM_InC": {
+              "finite_count": 25,
+              "min": -222.50562783169653,
+              "max": -222.3113902795144
+            },
+            "TC2_MFM_Out": {
+              "finite_count": 25,
+              "min": -6511.798516619117,
+              "max": -6481.111435956444
+            },
+            "TC2_MFM_OutC": {
+              "finite_count": 25,
+              "min": -218.70141740666986,
+              "max": -216.46743749132156
+            },
+            "TC3_Release_Nozzle_Flow": {
+              "finite_count": 25,
+              "min": -6541.703286272484,
+              "max": -6047.636630990304
+            },
+            "TC3_Release_Nozzle_FlowC": {
+              "finite_count": 25,
+              "min": -221.100127035242,
+              "max": -188.29819528896246
+            },
+            "TC4_Release_Nozzle_Wall": {
+              "finite_count": 25,
+              "min": -5128.914796049285,
+              "max": -3760.4386365675114
+            },
+            "TC4_Release_Nozzle_WallC": {
+              "finite_count": 25,
+              "min": -143.02109926253877,
+              "max": -91.12904418298561
+            },
+            "TC5_Vent_Stack": {
+              "finite_count": 25,
+              "min": -160.85199766642407,
+              "max": -114.3851276308208
+            },
+            "Wind_Direction": {
+              "finite_count": 25,
+              "min": 17.958176368600004,
+              "max": 351.1663942608
+            },
+            "Wind_Speed": {
+              "finite_count": 25,
+              "min": 0.125697756,
+              "max": 1.1052220080000001
+            }
+          },
+          "values_scanned": true,
+          "timebase": {
+            "finite_time_samples": 25,
+            "median_positive_interval_s": 1.0,
+            "duration_s": 24.0
+          }
+        },
+        "Radiometers": {
+          "rows": 1296,
+          "columns": [
+            "time",
+            "increment",
+            "RAD1_Radiometer_96381",
+            "RAD2_Radiometer_96384",
+            "RAD3_Radiometer_96386"
+          ],
+          "numeric_ranges": {
+            "increment": {
+              "finite_count": 1296,
+              "min": 0.0,
+              "max": 25.900000000000002
+            },
+            "RAD1_Radiometer_96381": {
+              "finite_count": 1296,
+              "min": -0.161508789951,
+              "max": 2.512184765865
+            },
+            "RAD2_Radiometer_96384": {
+              "finite_count": 1296,
+              "min": 0.25530719019200004,
+              "max": 0.9972522105120002
+            },
+            "RAD3_Radiometer_96386": {
+              "finite_count": 1296,
+              "min": -0.6539165011960001,
+              "max": -0.5298169446640001
+            }
+          },
+          "values_scanned": true,
+          "timebase": {
+            "finite_time_samples": 1296,
+            "median_positive_interval_s": 0.01999999999679858,
+            "duration_s": 25.900000000001455
+          }
+        },
+        "Blastlogger": {
+          "rows": 500000,
+          "columns": [
+            "time",
+            "increment",
+            "K1",
+            "K1Avg",
+            "K2",
+            "K2Avg",
+            "K3",
+            "K3Avg",
+            "K4",
+            "K4Avg",
+            "K5",
+            "K5Avg",
+            "K6",
+            "K6Avg",
+            "K7",
+            "K7Avg",
+            "K8",
+            "K8Avg",
+            "Trigger"
+          ],
+          "numeric_ranges": {},
+          "values_scanned": false,
+          "scan_limit_rows": 20000
+        },
+        "BlastloggerClip": {
+          "rows": 100001,
+          "columns": [
+            "time",
+            "increment",
+            "K1",
+            "K1Avg",
+            "K2",
+            "K2Avg",
+            "K3",
+            "K3Avg",
+            "K4",
+            "K4Avg",
+            "K5",
+            "K5Avg",
+            "K6",
+            "K6Avg",
+            "K7",
+            "K7Avg",
+            "K8",
+            "K8Avg",
+            "Trigger"
+          ],
+          "numeric_ranges": {},
+          "values_scanned": false,
+          "scan_limit_rows": 20000
+        },
+        "Xensor": {
+          "rows": 83,
+          "columns": [
+            "X2019_10_21_02EC42Time",
+            "X2019_10_21_02EC42Output",
+            "X2019_10_21_02EC43Output",
+            "X2019_10_21_02EC44Output",
+            "X2019_10_21_02EC45Output",
+            "X2019_10_21_02EC46Output",
+            "X2019_10_21_04DC51Output",
+            "X2019_10_21_04DC52Output",
+            "X2019_10_21_04DC53Output",
+            "X2019_10_21_04DC54Output",
+            "X2019_10_21_04DC58Output",
+            "X2019_10_21_04DC59Output",
+            "X2019_10_21_04DC60Output",
+            "X2019_10_21_10DC100Output",
+            "X2019_10_21_10DC101Output",
+            "X2019_10_21_10DC95Output",
+            "X2019_10_21_10DC96Output",
+            "Time"
+          ],
+          "numeric_ranges": {
+            "X2019_10_21_02EC42Output": {
+              "finite_count": 83,
+              "min": -0.038,
+              "max": 13.113
+            },
+            "X2019_10_21_02EC43Output": {
+              "finite_count": 83,
+              "min": -0.052,
+              "max": 44.815
+            },
+            "X2019_10_21_02EC44Output": {
+              "finite_count": 83,
+              "min": -0.0926,
+              "max": 0.0239
+            },
+            "X2019_10_21_02EC45Output": {
+              "finite_count": 83,
+              "min": -0.17099999999999999,
+              "max": 0.1092
+            },
+            "X2019_10_21_02EC46Output": {
+              "finite_count": 83,
+              "min": -0.034800000000000005,
+              "max": 3.6324
+            },
+            "X2019_10_21_04DC51Output": {
+              "finite_count": 83,
+              "min": -0.008,
+              "max": 35.004225806451615
+            },
+            "X2019_10_21_04DC52Output": {
+              "finite_count": 83,
+              "min": -0.011933333333333332,
+              "max": 41.47033333333333
+            },
+            "X2019_10_21_04DC53Output": {
+              "finite_count": 83,
+              "min": 0.024161290322580645,
+              "max": 0.8908
+            },
+            "X2019_10_21_04DC54Output": {
+              "finite_count": 83,
+              "min": -0.013129032258064516,
+              "max": 0.0358
+            },
+            "X2019_10_21_04DC58Output": {
+              "finite_count": 83,
+              "min": -0.012133333333333333,
+              "max": 0.041466666666666666
+            },
+            "X2019_10_21_04DC59Output": {
+              "finite_count": 83,
+              "min": 0.02266666666666667,
+              "max": 1.2290333333333334
+            },
+            "X2019_10_21_04DC60Output": {
+              "finite_count": 83,
+              "min": -0.018566666666666665,
+              "max": 15.4186
+            },
+            "X2019_10_21_10DC100Output": {
+              "finite_count": 83,
+              "min": -0.008666666666666668,
+              "max": 52.34986666666667
+            },
+            "X2019_10_21_10DC101Output": {
+              "finite_count": 83,
+              "min": -0.02493548387096774,
+              "max": 0.010700000000000001
+            },
+            "X2019_10_21_10DC95Output": {
+              "finite_count": 83,
+              "min": -0.0004000000000000002,
+              "max": 1.1207333333333334
+            },
+            "X2019_10_21_10DC96Output": {
+              "finite_count": 83,
+              "min": -0.027,
+              "max": 0.0354
+            }
+          },
+          "values_scanned": true,
+          "timebase": {
+            "finite_time_samples": 83,
+            "median_positive_interval_s": 0.3000000000029104,
+            "duration_s": 24.60000000000582
+          }
+        },
+        "Flowmeter": {
+          "rows": 25,
+          "columns": [
+            "FlTime",
+            "FlElapseTimesec",
+            "FlDensitykgm3R0249",
+            "FlMassFlowRategsecR0247",
+            "FlVolumeFlowRatelminR0253",
+            "FlDriveGainR0291",
+            "FlLeftPickoffAmplitudeVoltsR0287",
+            "FlRawTubeFrequencyHzR0285",
+            "FlRightPickoffAmplitudeVoltsR0289",
+            "FlZeroValuesecR0233",
+            "FlCalcDensitykgm3"
+          ],
+          "numeric_ranges": {
+            "FlElapseTimesec": {
+              "finite_count": 25,
+              "min": 735.632,
+              "max": 759.6394
+            },
+            "FlDensitykgm3R0249": {
+              "finite_count": 25,
+              "min": 0.0,
+              "max": 0.0
+            },
+            "FlMassFlowRategsecR0247": {
+              "finite_count": 25,
+              "min": 0.0,
+              "max": 282.0569
+            },
+            "FlVolumeFlowRatelminR0253": {
+              "finite_count": 25,
+              "min": 0.0,
+              "max": 0.0
+            },
+            "FlDriveGainR0291": {
+              "finite_count": 25,
+              "min": 0.0,
+              "max": 30.3336
+            },
+            "FlLeftPickoffAmplitudeVoltsR0287": {
+              "finite_count": 25,
+              "min": 0.3267317,
+              "max": 0.4754618
+            },
+            "FlRawTubeFrequencyHzR0285": {
+              "finite_count": 25,
+              "min": 125.3599,
+              "max": 127.096
+            },
+            "FlRightPickoffAmplitudeVoltsR0289": {
+              "finite_count": 25,
+              "min": 0.3473062,
+              "max": 0.4800476
+            },
+            "FlZeroValuesecR0233": {
+              "finite_count": 25,
+              "min": -0.03114732,
+              "max": -0.03114732
+            },
+            "FlCalcDensitykgm3": {
+              "finite_count": 25,
+              "min": 20.225328021979294,
+              "max": 81.26831341857832
+            }
+          },
+          "values_scanned": true,
+          "timebase": {
+            "finite_time_samples": 25,
+            "median_positive_interval_s": 1.0,
+            "duration_s": 24.0
+          }
+        },
+        "LocalWeather": {
+          "rows": 84,
+          "columns": [
+            "Time",
+            "Loc_Interval",
+            "Loc_IndoorTemperatureC",
+            "Loc_IndoorHumidity",
+            "Loc_OutdoorTemperatureC",
+            "Loc_OutdoorHumidity",
+            "Loc_RelativePressurehpa",
+            "Loc_AbsolutePressurehpa",
+            "Loc_WindSpeedms",
+            "Loc_Gustms",
+            "Loc_WindDirection",
+            "Loc_DewPointC",
+            "Loc_WindChillC",
+            "Loc_HourRainfallmm",
+            "Loc_HourRainfallmm1",
+            "Loc_WeekRainfallmm",
+            "Loc_MonthRainfallmm",
+            "Loc_TotalRainfallmm"
+          ],
+          "numeric_ranges": {
+            "Loc_Interval": {
+              "finite_count": 84,
+              "min": 5.0,
+              "max": 5.0
+            },
+            "Loc_IndoorTemperatureC": {
+              "finite_count": 84,
+              "min": 15.3,
+              "max": 22.9
+            },
+            "Loc_IndoorHumidity": {
+              "finite_count": 84,
+              "min": 23.0,
+              "max": 34.0
+            },
+            "Loc_OutdoorTemperatureC": {
+              "finite_count": 84,
+              "min": 4.4,
+              "max": 11.2
+            },
+            "Loc_OutdoorHumidity": {
+              "finite_count": 84,
+              "min": 53.0,
+              "max": 90.0
+            },
+            "Loc_RelativePressurehpa": {
+              "finite_count": 84,
+              "min": 1025.5,
+              "max": 1026.8
+            },
+            "Loc_AbsolutePressurehpa": {
+              "finite_count": 84,
+              "min": 979.0,
+              "max": 980.3
+            },
+            "Loc_WindSpeedms": {
+              "finite_count": 84,
+              "min": 0.0,
+              "max": 3.1
+            },
+            "Loc_Gustms": {
+              "finite_count": 84,
+              "min": 0.0,
+              "max": 4.1
+            },
+            "Loc_DewPointC": {
+              "finite_count": 84,
+              "min": -0.3,
+              "max": 4.4
+            },
+            "Loc_WindChillC": {
+              "finite_count": 84,
+              "min": 4.4,
+              "max": 11.2
+            },
+            "Loc_HourRainfallmm": {
+              "finite_count": 84,
+              "min": 0.0,
+              "max": 0.3
+            },
+            "Loc_HourRainfallmm1": {
+              "finite_count": 84,
+              "min": 0.0,
+              "max": 0.3
+            },
+            "Loc_WeekRainfallmm": {
+              "finite_count": 84,
+              "min": 0.9,
+              "max": 1.2
+            },
+            "Loc_MonthRainfallmm": {
+              "finite_count": 84,
+              "min": 169.5,
+              "max": 169.8
+            },
+            "Loc_TotalRainfallmm": {
+              "finite_count": 84,
+              "min": 550.8,
+              "max": 551.1
+            }
+          },
+          "values_scanned": true,
+          "timebase": {
+            "finite_time_samples": 84,
+            "median_positive_interval_s": 300.0,
+            "duration_s": 24900.0
+          }
+        }
+      }
+    },
+    {
+      "file": "ignited_trial_19_28-10-2019alldata.xlsx",
+      "sheets": {
+        "Flexlogger": {
+          "rows": 104,
+          "columns": [
+            "time",
+            "Ambient_Temperature",
+            "Cold_junction",
+            "Cold_junction_error",
+            "EV1_Streaming_current",
+            "M1S1_TC2318",
+            "M1S2_TC2319",
+            "M1S3_TC2320",
+            "M1S4_TC2321",
+            "M1S5_TC2328",
+            "M1S6_TC2329",
+            "M1S7_TC2330",
+            "M1S8_TC2336",
+            "M2S1_TC2322",
+            "M2S2_TC2323",
+            "M2S3_TC2331",
+            "M2S4_TC2337",
+            "M2S5_TC2324",
+            "M2S6_TC2332",
+            "M2S7_TC2333",
+            "M2S8_TC2338",
+            "MFM1_Mass_Flow_Rate",
+            "MFM2_Drive_Gain",
+            "PT1_Pipe_Pressure",
+            "PT2_Nozzle_Pressure",
+            "Relative_Humidity",
+            "TC1_MFM_In",
+            "TC1_MFM_InC",
+            "TC2_MFM_Out",
+            "TC2_MFM_OutC",
+            "TC3_Release_Nozzle_Flow",
+            "TC3_Release_Nozzle_FlowC",
+            "TC4_Release_Nozzle_Wall",
+            "TC4_Release_Nozzle_WallC",
+            "TC5_Vent_Stack",
+            "Wind_Direction",
+            "Wind_Speed"
+          ],
+          "numeric_ranges": {
+            "Ambient_Temperature": {
+              "finite_count": 104,
+              "min": 6.460531899999999,
+              "max": 6.641719281250005
+            },
+            "Cold_junction": {
+              "finite_count": 104,
+              "min": 15.746746272446988,
+              "max": 15.822286525174128
+            },
+            "Cold_junction_error": {
+              "finite_count": 104,
+              "min": 10.346994420706894,
+              "max": 11.809170950005706
+            },
+            "EV1_Streaming_current": {
+              "finite_count": 104,
+              "min": -0.0036454202917468722,
+              "max": 0.0013327599366164168
+            },
+            "M1S1_TC2318": {
+              "finite_count": 104,
+              "min": 5.873584198463504,
+              "max": 209.41255294779387
+            },
+            "M1S2_TC2319": {
+              "finite_count": 104,
+              "min": 4.643749320322352,
+              "max": 266.0319005852833
+            },
+            "M1S3_TC2320": {
+              "finite_count": 104,
+              "min": -179.87690579145624,
+              "max": 284.0422337229085
+            },
+            "M1S4_TC2321": {
+              "finite_count": 104,
+              "min": 3.571088971440633,
+              "max": 169.05806751123703
+            },
+            "M1S5_TC2328": {
+              "finite_count": 104,
+              "min": 6.117556048292002,
+              "max": 180.2464616635296
+            },
+            "M1S6_TC2329": {
+              "finite_count": 104,
+              "min": 6.234595963383059,
+              "max": 260.34048591783693
+            },
+            "M1S7_TC2330": {
+              "finite_count": 104,
+              "min": -49.57315432500702,
+              "max": 343.06983056289886
+            },
+            "M1S8_TC2336": {
+              "finite_count": 104,
+              "min": -115.75228847925722,
+              "max": 334.65749354277057
+            },
+            "M2S1_TC2322": {
+              "finite_count": 104,
+              "min": -205.4215677588051,
+              "max": 258.5890022446202
+            },
+            "M2S2_TC2323": {
+              "finite_count": 104,
+              "min": -82.88439901379351,
+              "max": 344.7501522763617
+            },
+            "M2S3_TC2331": {
+              "finite_count": 104,
+              "min": 3.031079615468798,
+              "max": 452.8073521987755
+            },
+            "M2S4_TC2337": {
+              "finite_count": 104,
+              "min": 5.808164803829961,
+              "max": 451.9116625288307
+            },
+            "M2S5_TC2324": {
+              "finite_count": 104,
+              "min": -30.169413363206385,
+              "max": 436.6525584684816
+            },
+            "M2S6_TC2332": {
+              "finite_count": 104,
+              "min": -144.57874341858965,
+              "max": 348.2137692707937
+            },
+            "M2S7_TC2333": {
+              "finite_count": 104,
+              "min": -1.8134768714193372,
+              "max": 397.77794178647645
+            },
+            "M2S8_TC2338": {
+              "finite_count": 104,
+              "min": -9.239198991204004,
+              "max": 464.16035394054904
+            },
+            "MFM1_Mass_Flow_Rate": {
+              "finite_count": 104,
+              "min": -12.499504536360746,
+              "max": 311.9623101927227
+            },
+            "MFM2_Drive_Gain": {
+              "finite_count": 104,
+              "min": 0.0019334257801446597,
+              "max": 99.97405335152467
+            },
+            "PT1_Pipe_Pressure": {
+              "finite_count": 104,
+              "min": 1.0536985178224998,
+              "max": 4.9298336673455
+            },
+            "PT2_Nozzle_Pressure": {
+              "finite_count": 104,
+              "min": 10.465398967591,
+              "max": 10.465398967591
+            },
+            "Relative_Humidity": {
+              "finite_count": 104,
+              "min": 47.402044274999994,
+              "max": 49.094856462500005
+            },
+            "TC1_MFM_In": {
+              "finite_count": 104,
+              "min": -6531.933711882455,
+              "max": -5844.803875375025
+            },
+            "TC1_MFM_InC": {
+              "finite_count": 104,
+              "min": -222.7663040006114,
+              "max": -178.57176298954397
+            },
+            "TC2_MFM_Out": {
+              "finite_count": 104,
+              "min": -6536.60895148569,
+              "max": -5479.092104976899
+            },
+            "TC2_MFM_OutC": {
+              "finite_count": 104,
+              "min": -223.0850799474343,
+              "max": -160.17047444826974
+            },
+            "TC3_Release_Nozzle_Flow": {
+              "finite_count": 104,
+              "min": -6513.493523805948,
+              "max": -754.7624859072259
+            },
+            "TC3_Release_Nozzle_FlowC": {
+              "finite_count": 104,
+              "min": -221.32914818100892,
+              "max": -3.782017512245967
+            },
+            "TC4_Release_Nozzle_Wall": {
+              "finite_count": 104,
+              "min": -5617.346949419198,
+              "max": -556.9402460420278
+            },
+            "TC4_Release_Nozzle_WallC": {
+              "finite_count": 104,
+              "min": -166.9501776476561,
+              "max": 1.3554219319567857
+            },
+            "TC5_Vent_Stack": {
+              "finite_count": 104,
+              "min": -177.03947465799286,
+              "max": -30.157130769145958
+            },
+            "Wind_Direction": {
+              "finite_count": 104,
+              "min": 1.4779821780000004,
+              "max": 357.85368076180004
+            },
+            "Wind_Speed": {
+              "finite_count": 104,
+              "min": 0.22307736000000006,
+              "max": 2.3597004360000002
+            }
+          },
+          "values_scanned": true,
+          "timebase": {
+            "finite_time_samples": 104,
+            "median_positive_interval_s": 1.0,
+            "duration_s": 103.0
+          }
+        },
+        "Radiometers": {
+          "rows": 5256,
+          "columns": [
+            "time",
+            "increment",
+            "RAD1_Radiometer_96381",
+            "RAD2_Radiometer_96384",
+            "RAD3_Radiometer_96386"
+          ],
+          "numeric_ranges": {
+            "increment": {
+              "finite_count": 5256,
+              "min": 0.0,
+              "max": 105.10000000000001
+            },
+            "RAD1_Radiometer_96381": {
+              "finite_count": 5256,
+              "min": -2.588941097205,
+              "max": 11.436223344707
+            },
+            "RAD2_Radiometer_96384": {
+              "finite_count": 5256,
+              "min": -2.998304169408,
+              "max": 1.283083488832
+            },
+            "RAD3_Radiometer_96386": {
+              "finite_count": 5256,
+              "min": -3.3191022152880003,
+              "max": -0.49435992851200006
+            }
+          },
+          "values_scanned": true,
+          "timebase": {
+            "finite_time_samples": 5256,
+            "median_positive_interval_s": 0.01999999999679858,
+            "duration_s": 105.10000000000582
+          }
+        },
+        "Blastlogger": {
+          "rows": 500000,
+          "columns": [
+            "time",
+            "increment",
+            "K1",
+            "K1Avg",
+            "K2",
+            "K2Avg",
+            "K3",
+            "K3Avg",
+            "K4",
+            "K4Avg",
+            "K5",
+            "K5Avg",
+            "K6",
+            "K6Avg",
+            "K7",
+            "K7Avg",
+            "K8",
+            "K8Avg",
+            "Trigger"
+          ],
+          "numeric_ranges": {},
+          "values_scanned": false,
+          "scan_limit_rows": 20000
+        },
+        "BlastloggerClip": {
+          "rows": 100001,
+          "columns": [
+            "time",
+            "increment",
+            "K1",
+            "K1Avg",
+            "K2",
+            "K2Avg",
+            "K3",
+            "K3Avg",
+            "K4",
+            "K4Avg",
+            "K5",
+            "K5Avg",
+            "K6",
+            "K6Avg",
+            "K7",
+            "K7Avg",
+            "K8",
+            "K8Avg",
+            "Trigger"
+          ],
+          "numeric_ranges": {},
+          "values_scanned": false,
+          "scan_limit_rows": 20000
+        },
+        "Xensor": {
+          "rows": 346,
+          "columns": [
+            "X2019_10_21_02EC42Time",
+            "X2019_10_21_02EC42Output",
+            "X2019_10_21_02EC43Output",
+            "X2019_10_21_02EC44Output",
+            "X2019_10_21_02EC45Output",
+            "X2019_10_21_02EC46Output",
+            "X2019_10_21_04DC51Output",
+            "X2019_10_21_04DC52Output",
+            "X2019_10_21_04DC53Output",
+            "X2019_10_21_04DC54Output",
+            "X2019_10_21_04DC58Output",
+            "X2019_10_21_04DC59Output",
+            "X2019_10_21_04DC60Output",
+            "X2019_10_21_10DC100Output",
+            "X2019_10_21_10DC101Output",
+            "X2019_10_21_10DC95Output",
+            "X2019_10_21_10DC96Output",
+            "Time"
+          ],
+          "numeric_ranges": {
+            "X2019_10_21_02EC42Output": {
+              "finite_count": 346,
+              "min": -0.04,
+              "max": 14.035
+            },
+            "X2019_10_21_02EC43Output": {
+              "finite_count": 346,
+              "min": -0.049300000000000004,
+              "max": 28.243233333333336
+            },
+            "X2019_10_21_02EC44Output": {
+              "finite_count": 346,
+              "min": -0.09577419354838711,
+              "max": 0.026774193548387098
+            },
+            "X2019_10_21_02EC45Output": {
+              "finite_count": 346,
+              "min": -0.12029032258064516,
+              "max": 0.14563333333333334
+            },
+            "X2019_10_21_02EC46Output": {
+              "finite_count": 346,
+              "min": -0.0391,
+              "max": 8.673266666666667
+            },
+            "X2019_10_21_04DC51Output": {
+              "finite_count": 346,
+              "min": -0.026620689655172412,
+              "max": 11.647333333333334
+            },
+            "X2019_10_21_04DC52Output": {
+              "finite_count": 346,
+              "min": -0.016399999999999998,
+              "max": 33.3763
+            },
+            "X2019_10_21_04DC53Output": {
+              "finite_count": 346,
+              "min": -0.0085,
+              "max": 1.086666666666667
+            },
+            "X2019_10_21_04DC54Output": {
+              "finite_count": 346,
+              "min": -0.018866666666666664,
+              "max": 0.061533333333333336
+            },
+            "X2019_10_21_04DC58Output": {
+              "finite_count": 346,
+              "min": -0.03575862068965517,
+              "max": 0.04585714285714286
+            },
+            "X2019_10_21_04DC59Output": {
+              "finite_count": 346,
+              "min": 0.012,
+              "max": 14.987599999999999
+            },
+            "X2019_10_21_04DC60Output": {
+              "finite_count": 346,
+              "min": -0.033,
+              "max": 21.931
+            },
+            "X2019_10_21_10DC100Output": {
+              "finite_count": 346,
+              "min": -0.015500000000000002,
+              "max": 49.44539999999999
+            },
+            "X2019_10_21_10DC101Output": {
+              "finite_count": 346,
+              "min": -0.032379310344827585,
+              "max": 0.0118
+            },
+            "X2019_10_21_10DC95Output": {
+              "finite_count": 346,
+              "min": -0.005076923076923077,
+              "max": 0.34909999999999997
+            },
+            "X2019_10_21_10DC96Output": {
+              "finite_count": 346,
+              "min": -0.024133333333333333,
+              "max": 0.18500000000000003
+            }
+          },
+          "values_scanned": true,
+          "timebase": {
+            "finite_time_samples": 346,
+            "median_positive_interval_s": 0.3000000000029104,
+            "duration_s": 103.56000000000495
+          }
+        },
+        "Flowmeter": {
+          "rows": 104,
+          "columns": [
+            "FlTime",
+            "FlElapseTimesec",
+            "FlDensitykgm3R0249",
+            "FlMassFlowRategsecR0247",
+            "FlVolumeFlowRatelminR0253",
+            "FlDriveGainR0291",
+            "FlLeftPickoffAmplitudeVoltsR0287",
+            "FlRawTubeFrequencyHzR0285",
+            "FlRightPickoffAmplitudeVoltsR0289",
+            "FlZeroValuesecR0233",
+            "FlCalcDensitykgm3"
+          ],
+          "numeric_ranges": {
+            "FlElapseTimesec": {
+              "finite_count": 104,
+              "min": 463.185,
+              "max": 566.0832
+            },
+            "FlDensitykgm3R0249": {
+              "finite_count": 104,
+              "min": 0.0,
+              "max": 0.0
+            },
+            "FlMassFlowRategsecR0247": {
+              "finite_count": 104,
+              "min": -23.16043,
+              "max": 312.0752
+            },
+            "FlVolumeFlowRatelminR0253": {
+              "finite_count": 104,
+              "min": 0.0,
+              "max": 0.0
+            },
+            "FlDriveGainR0291": {
+              "finite_count": 104,
+              "min": 0.0,
+              "max": 100.0
+            },
+            "FlLeftPickoffAmplitudeVoltsR0287": {
+              "finite_count": 104,
+              "min": 0.2090654,
+              "max": 0.4843522
+            },
+            "FlRawTubeFrequencyHzR0285": {
+              "finite_count": 104,
+              "min": 125.3626,
+              "max": 128.1051
+            },
+            "FlRightPickoffAmplitudeVoltsR0289": {
+              "finite_count": 104,
+              "min": 0.2139148,
+              "max": 0.4939454
+            },
+            "FlZeroValuesecR0233": {
+              "finite_count": 104,
+              "min": -0.03114732,
+              "max": -0.03114732
+            },
+            "FlCalcDensitykgm3": {
+              "finite_count": 104,
+              "min": -7.290355352886468,
+              "max": 81.2486980549414
+            }
+          },
+          "values_scanned": true,
+          "timebase": {
+            "finite_time_samples": 104,
+            "median_positive_interval_s": 1.0,
+            "duration_s": 103.0
+          }
+        },
+        "LocalWeather": {
+          "rows": 84,
+          "columns": [
+            "Time",
+            "Loc_Interval",
+            "Loc_IndoorTemperatureC",
+            "Loc_IndoorHumidity",
+            "Loc_OutdoorTemperatureC",
+            "Loc_OutdoorHumidity",
+            "Loc_RelativePressurehpa",
+            "Loc_AbsolutePressurehpa",
+            "Loc_WindSpeedms",
+            "Loc_Gustms",
+            "Loc_WindDirection",
+            "Loc_DewPointC",
+            "Loc_WindChillC",
+            "Loc_HourRainfallmm",
+            "Loc_HourRainfallmm1",
+            "Loc_WeekRainfallmm",
+            "Loc_MonthRainfallmm",
+            "Loc_TotalRainfallmm"
+          ],
+          "numeric_ranges": {
+            "Loc_Interval": {
+              "finite_count": 84,
+              "min": 5.0,
+              "max": 5.0
+            },
+            "Loc_IndoorTemperatureC": {
+              "finite_count": 84,
+              "min": 15.3,
+              "max": 22.9
+            },
+            "Loc_IndoorHumidity": {
+              "finite_count": 84,
+              "min": 23.0,
+              "max": 34.0
+            },
+            "Loc_OutdoorTemperatureC": {
+              "finite_count": 84,
+              "min": 4.4,
+              "max": 11.2
+            },
+            "Loc_OutdoorHumidity": {
+              "finite_count": 84,
+              "min": 53.0,
+              "max": 90.0
+            },
+            "Loc_RelativePressurehpa": {
+              "finite_count": 84,
+              "min": 1025.5,
+              "max": 1026.8
+            },
+            "Loc_AbsolutePressurehpa": {
+              "finite_count": 84,
+              "min": 979.0,
+              "max": 980.3
+            },
+            "Loc_WindSpeedms": {
+              "finite_count": 84,
+              "min": 0.0,
+              "max": 3.1
+            },
+            "Loc_Gustms": {
+              "finite_count": 84,
+              "min": 0.0,
+              "max": 4.1
+            },
+            "Loc_DewPointC": {
+              "finite_count": 84,
+              "min": -0.3,
+              "max": 4.4
+            },
+            "Loc_WindChillC": {
+              "finite_count": 84,
+              "min": 4.4,
+              "max": 11.2
+            },
+            "Loc_HourRainfallmm": {
+              "finite_count": 84,
+              "min": 0.0,
+              "max": 0.3
+            },
+            "Loc_HourRainfallmm1": {
+              "finite_count": 84,
+              "min": 0.0,
+              "max": 0.3
+            },
+            "Loc_WeekRainfallmm": {
+              "finite_count": 84,
+              "min": 0.9,
+              "max": 1.2
+            },
+            "Loc_MonthRainfallmm": {
+              "finite_count": 84,
+              "min": 169.5,
+              "max": 169.8
+            },
+            "Loc_TotalRainfallmm": {
+              "finite_count": 84,
+              "min": 550.8,
+              "max": 551.1
+            }
+          },
+          "values_scanned": true,
+          "timebase": {
+            "finite_time_samples": 84,
+            "median_positive_interval_s": 300.0,
+            "duration_s": 24900.0
+          }
+        }
+      }
+    }
+  ],
+  "numeric_values_opened_after_protocol_freeze": true,
+  "parameter_fitting_performed": false,
+  "runtime_parameter_changes": false,
+  "validation_gate_effect": "none",
+  "claim_boundary": "Descriptive aggregate replay of four complete workbooks in an incomplete archive prefix. No quantitative validation, station safety-distance, HyRAM, full-loop or SAGA effectiveness claim."
+}
