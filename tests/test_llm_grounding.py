@@ -527,6 +527,14 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert geometry["latest_recheck"]["variants"]["capacity_eos_no_volume_fit"][
         "screening_pass_count"
     ] == 7
+    pressure_recheck = idle["response_evidence"][
+        "public_unignited_pressure_peaking_recheck"
+    ]
+    assert pressure_recheck["source"]["dataset_doi"] == "10.23642/USN.17932439"
+    assert pressure_recheck["aggregate"]["eligible_case_count"] == 10
+    assert pressure_recheck["aggregate"]["joint_primary_pass_count"] == 8
+    assert pressure_recheck["diagnostic_replay_supported"] is True
+    assert pressure_recheck["component_validation_supported"] is False
     tank_trace = idle["response_evidence"]["public_tank_trace_boundary"]
     assert tank_trace["evidence_role"] == "public_tank_thermal_boundary_candidate"
     assert tank_trace["experiment"]["sample_count"] == 2536
@@ -557,6 +565,9 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert early["public_geometry_sensitivity"]["variants"][
         "capacity_eos_with_frozen_fit"
     ]["pressure_rmse_mean_mpa"] == 3.5380890196945884
+    assert early["public_unignited_pressure_peaking_recheck"]["aggregate"][
+        "joint_primary_pass_count"
+    ] == 8
     assert early["public_tank_trace_boundary"]["observed_ranges"][
         "p_2_bar"
     ][1] == 699.553778
@@ -1810,7 +1821,7 @@ def test_compact_data_used_reports_available_and_applied_station_profile():
         include_references=True,
     )["validation_readiness"]
     assert readiness["claim_tier"] == "component_and_station_side_only"
-    assert readiness["gate_counts"] == {"PASS": 127, "FAIL": 10, "PENDING": 7}
+    assert readiness["gate_counts"] == {"PASS": 128, "FAIL": 10, "PENDING": 7}
     assert readiness["open_gate_count"] == 17
     assert readiness["full_loop_external_validation_supported"] is False
     assert readiness["expert_effectiveness_evaluation_supported"] is False

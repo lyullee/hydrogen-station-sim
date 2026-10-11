@@ -2292,3 +2292,18 @@ the full-loop claim pass.
 - This is explicitly a post-access diagnostic. It does not refit parameters,
   change the production default, or close an external-validation gate. A new
   outcome-unseen geometry protocol is required before promotion.
+## 2026-10-11 - USN 17932439 pressure-peaking recheck
+
+- Added a post-access replay of the public actual-hydrogen USN pressure-peaking
+  MAT release (`10.23642/USN.17932439`). All ten cases expose synchronized
+  `SIGMA` mass flow and `GEN3i` pressure traces; the fixed perfect-mix model
+  passes 8/10 joint peak screens.
+- The result is explicitly diagnostic only because the raw release was accessed
+  before this runner was created and the temperature/vent-area inputs inherit
+  the earlier protocol. It does not change runtime parameters or close any
+  station-to-vehicle, outdoor-dispersion, or emergency-response gate.
+- The integrity audit now records this artifact as one additional passing
+  component-evidence gate: **128 PASS / 10 FAIL / 7 PENDING** overall, with the
+  scope-adjusted station-side closure at **92.1%**. The bounded IJHE decision
+  remains false because the unresolved consequence and submission gates are
+  unchanged.

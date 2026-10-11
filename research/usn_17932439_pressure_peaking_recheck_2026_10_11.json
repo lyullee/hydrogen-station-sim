@@ -1,0 +1,259 @@
+{
+  "schema_version": 1,
+  "status": "completed_post_access_pressure_peaking_recheck",
+  "evidence_role": "post_access_public_actual_hydrogen_pressure_peaking_diagnostic",
+  "source": {
+    "doi": "10.23642/USN.17932439",
+    "license": "CC BY 4.0",
+    "dataset_version": "1.1",
+    "raw_files_committed": false,
+    "raw_directory": "data/public_validation/raw/usn_pressure_peaking",
+    "file_manifest": [
+      {
+        "name": "HTE242USN_00002_READ190621.mat",
+        "bytes": 122520170,
+        "sha256": "bfc52b7ab1de1448f9e4917f73ab74a5989fb7d2d1a6d42920691af7ef175186"
+      },
+      {
+        "name": "HTE242USN_00003_READ190621.mat",
+        "bytes": 37466494,
+        "sha256": "f74643684fac53ec8e57893f6647b33fd0313da3cb5a1038c0b8c44ce425f1f0"
+      },
+      {
+        "name": "HTE242USN_00004_READ190621.mat",
+        "bytes": 58136657,
+        "sha256": "d9a22faf051746eab07c3a2469e8d6c5f97bf803d2a8897d0680b0535a9a9c12"
+      },
+      {
+        "name": "HTE242USN_00005_READ190621.mat",
+        "bytes": 54488827,
+        "sha256": "fbcb9292621636e028f3a80be0bee852656b2f8ca6941fc970d74222b8ac8bbb"
+      },
+      {
+        "name": "HTE242USN_00006_READ190621.mat",
+        "bytes": 55351054,
+        "sha256": "35f463419fd7e5f1cd8c191e2d39222da005d16d6c098b36de00b77fb40bcf2c"
+      },
+      {
+        "name": "HTE242USN_00007_READ190621.mat",
+        "bytes": 80847629,
+        "sha256": "28911d384b0bc58f150b6e8689a7570abdb7195d13f188a4c7d4c54bec5cd96f"
+      },
+      {
+        "name": "HTE242USN_00008_READ190621.mat",
+        "bytes": 85205953,
+        "sha256": "3e3a400e38022c87cdbbaa1d7460cbfae78e3dd3b4dd72855394e6c8bf85f066"
+      },
+      {
+        "name": "HTE242USN_00009_READ190621.mat",
+        "bytes": 85623160,
+        "sha256": "5f94af8b3f5e64734c4becc48f6b79b56a34e61d28b409feb2a07ea85d8f898a"
+      },
+      {
+        "name": "HTE242USN_00010_READ190621.mat",
+        "bytes": 80098233,
+        "sha256": "5397d2ac69961f80a44041ba78c70a3e3fe590b2c8bdcda8edb02383d1c2c504"
+      },
+      {
+        "name": "HTE242USN_00011_READ190621.mat",
+        "bytes": 20072251,
+        "sha256": "879e516bf1338d7c28f06a9fd428522212fc6d4b9af4b5f80d8694034d4fd675"
+      }
+    ]
+  },
+  "claim_boundary": "This replay is limited to the unignited pressure-peaking response of a 14.9 m3 confined, vented enclosure. The public raw MAT files were accessed before this runner was created, so the result is not an independent confirmatory holdout. It does not validate the HRS fueling loop, outdoor dispersion, station control, vehicle fueling or emergency response.",
+  "model": {
+    "enclosure_volume_m3": 14.9,
+    "temperature_assumption": "fixed case temperatures carried from the earlier frozen pressure-peaking protocol; no raw temperature channel used",
+    "discharge_coefficient": 0.7,
+    "vent_area_mapping_source": "research/zenodo_4106101_pressure_peaking_protocol.json",
+    "mass_flow_input": "SIGMA[:,1] from each public MAT file",
+    "pressure_observation": "GEN3i[:,1] peak, no filtering or case selection",
+    "time_step_source": "median difference of each SIGMA time column",
+    "parameter_fitting": false
+  },
+  "aggregate": {
+    "eligible_case_count": 10,
+    "excluded_case_count": 0,
+    "excluded_cases": [],
+    "joint_primary_pass_count": 8,
+    "joint_primary_pass_fraction": 0.8,
+    "screening_limits": {
+      "peak_overpressure_abs_error_kpa_max": 5.0,
+      "peak_time_relative_error_percent_max": 20.0
+    },
+    "interpretation": "diagnostic_only"
+  },
+  "cases": [
+    {
+      "case": 2,
+      "source_file": "HTE242USN_00002_READ190621.mat",
+      "measured_peak_overpressure_kpa": 0.5975109000000001,
+      "measured_peak_time_s": 12.18224,
+      "predicted_peak_overpressure_kpa": 0.4117788138066971,
+      "predicted_peak_time_s": 25.68639999999717,
+      "peak_overpressure_abs_error_kpa": 0.18573208619330295,
+      "peak_time_relative_error_percent": 110.85120634626449,
+      "primary_pressure_pass": true,
+      "primary_time_pass": false,
+      "joint_primary_pass": false,
+      "mass_flow_samples": 999999,
+      "mass_flow_peak_g_s": 1.9548829999999988,
+      "pressure_samples": 9596118,
+      "time_step_s": 0.00019999999999997797
+    },
+    {
+      "case": 3,
+      "source_file": "HTE242USN_00003_READ190621.mat",
+      "measured_peak_overpressure_kpa": 0.6975591200000001,
+      "measured_peak_time_s": 17.291199999999996,
+      "predicted_peak_overpressure_kpa": 0.5242674862958665,
+      "predicted_peak_time_s": 18.391799999997975,
+      "peak_overpressure_abs_error_kpa": 0.17329163370413359,
+      "peak_time_relative_error_percent": 6.365087443312083,
+      "primary_pressure_pass": true,
+      "primary_time_pass": true,
+      "joint_primary_pass": true,
+      "mass_flow_samples": 999999,
+      "mass_flow_peak_g_s": 3.578906125000002,
+      "pressure_samples": 2193192,
+      "time_step_s": 0.00019999999999997797
+    },
+    {
+      "case": 4,
+      "source_file": "HTE242USN_00004_READ190621.mat",
+      "measured_peak_overpressure_kpa": 2.8924047999999996,
+      "measured_peak_time_s": 18.98424,
+      "predicted_peak_overpressure_kpa": 2.9932219098246278,
+      "predicted_peak_time_s": 25.277999999997217,
+      "peak_overpressure_abs_error_kpa": 0.10081710982462821,
+      "peak_time_relative_error_percent": 33.15255180084753,
+      "primary_pressure_pass": true,
+      "primary_time_pass": false,
+      "joint_primary_pass": false,
+      "mass_flow_samples": 999999,
+      "mass_flow_peak_g_s": 9.22578125,
+      "pressure_samples": 3959832,
+      "time_step_s": 0.00019999999999997797
+    },
+    {
+      "case": 5,
+      "source_file": "HTE242USN_00005_READ190621.mat",
+      "measured_peak_overpressure_kpa": 6.472948600000001,
+      "measured_peak_time_s": 37.07408,
+      "predicted_peak_overpressure_kpa": 6.240814524116678,
+      "predicted_peak_time_s": 41.7829999999954,
+      "peak_overpressure_abs_error_kpa": 0.23213407588332302,
+      "peak_time_relative_error_percent": 12.701380587179493,
+      "primary_pressure_pass": true,
+      "primary_time_pass": true,
+      "joint_primary_pass": true,
+      "mass_flow_samples": 999999,
+      "mass_flow_peak_g_s": 10.05651075,
+      "pressure_samples": 3705861,
+      "time_step_s": 0.00019999999999997797
+    },
+    {
+      "case": 6,
+      "source_file": "HTE242USN_00006_READ190621.mat",
+      "measured_peak_overpressure_kpa": 6.7592174,
+      "measured_peak_time_s": 38.70316,
+      "predicted_peak_overpressure_kpa": 6.52015922203906,
+      "predicted_peak_time_s": 40.884199999995495,
+      "peak_overpressure_abs_error_kpa": 0.2390581779609402,
+      "peak_time_relative_error_percent": 5.635302130357052,
+      "primary_pressure_pass": true,
+      "primary_time_pass": true,
+      "joint_primary_pass": true,
+      "mass_flow_samples": 999999,
+      "mass_flow_peak_g_s": 10.186198375000002,
+      "pressure_samples": 3803801,
+      "time_step_s": 0.00019999999999997797
+    },
+    {
+      "case": 7,
+      "source_file": "HTE242USN_00007_READ190621.mat",
+      "measured_peak_overpressure_kpa": 4.0787472000000005,
+      "measured_peak_time_s": 76.68628,
+      "predicted_peak_overpressure_kpa": 3.597270858593445,
+      "predicted_peak_time_s": 81.91459999999098,
+      "peak_overpressure_abs_error_kpa": 0.48147634140655526,
+      "peak_time_relative_error_percent": 6.817803654044749,
+      "primary_pressure_pass": true,
+      "primary_time_pass": true,
+      "joint_primary_pass": true,
+      "mass_flow_samples": 999999,
+      "mass_flow_peak_g_s": 3.113997624999998,
+      "pressure_samples": 6093238,
+      "time_step_s": 0.00019999999999997797
+    },
+    {
+      "case": 8,
+      "source_file": "HTE242USN_00008_READ190621.mat",
+      "measured_peak_overpressure_kpa": 3.9729648,
+      "measured_peak_time_s": 82.99228,
+      "predicted_peak_overpressure_kpa": 3.6092405613176233,
+      "predicted_peak_time_s": 83.12359999999084,
+      "peak_overpressure_abs_error_kpa": 0.3637242386823769,
+      "peak_time_relative_error_percent": 0.15823158490265665,
+      "primary_pressure_pass": true,
+      "primary_time_pass": true,
+      "joint_primary_pass": true,
+      "mass_flow_samples": 999999,
+      "mass_flow_peak_g_s": 3.137044250000001,
+      "pressure_samples": 6445667,
+      "time_step_s": 0.00019999999999997797
+    },
+    {
+      "case": 9,
+      "source_file": "HTE242USN_00009_READ190621.mat",
+      "measured_peak_overpressure_kpa": 8.0616926,
+      "measured_peak_time_s": 88.87328,
+      "predicted_peak_overpressure_kpa": 7.530812472830105,
+      "predicted_peak_time_s": 94.13939999998964,
+      "peak_overpressure_abs_error_kpa": 0.5308801271698957,
+      "peak_time_relative_error_percent": 5.925425504706973,
+      "primary_pressure_pass": true,
+      "primary_time_pass": true,
+      "joint_primary_pass": true,
+      "mass_flow_samples": 999999,
+      "mass_flow_peak_g_s": 4.884960749999998,
+      "pressure_samples": 6536703,
+      "time_step_s": 0.00019999999999997797
+    },
+    {
+      "case": 10,
+      "source_file": "HTE242USN_00010_READ190621.mat",
+      "measured_peak_overpressure_kpa": 6.724246999999998,
+      "measured_peak_time_s": 89.97832,
+      "predicted_peak_overpressure_kpa": 6.111154884863747,
+      "predicted_peak_time_s": 92.14419999998985,
+      "peak_overpressure_abs_error_kpa": 0.6130921151362516,
+      "peak_time_relative_error_percent": 2.4071131801414554,
+      "primary_pressure_pass": true,
+      "primary_time_pass": true,
+      "joint_primary_pass": true,
+      "mass_flow_samples": 999999,
+      "mass_flow_peak_g_s": 4.342383250000002,
+      "pressure_samples": 6110895,
+      "time_step_s": 0.00019999999999997797
+    },
+    {
+      "case": 11,
+      "source_file": "HTE242USN_00011_READ190621.mat",
+      "measured_peak_overpressure_kpa": 7.0309578,
+      "measured_peak_time_s": 63.221,
+      "predicted_peak_overpressure_kpa": 6.417822553955892,
+      "predicted_peak_time_s": 71.12099999831821,
+      "peak_overpressure_abs_error_kpa": 0.6131352460441084,
+      "peak_time_relative_error_percent": 12.495847895981106,
+      "primary_pressure_pass": true,
+      "primary_time_pass": true,
+      "joint_primary_pass": true,
+      "mass_flow_samples": 999999,
+      "mass_flow_peak_g_s": 4.972591750000004,
+      "pressure_samples": 998100,
+      "time_step_s": 0.0009999999999763531
+    }
+  ]
+}

@@ -20,15 +20,15 @@ Audit snapshot: **2026-10-11 KST**
 | Full validated-digital-twin objective ready | **False** |
 | Goal completion permitted | **False** |
 
-Gate counts: **127 PASS · 10 FAIL · 7 PENDING**.
+Gate counts: **128 PASS · 10 FAIL · 7 PENDING**.
 
 The primary claim scope is now explicitly station-side and component-bounded.
 The owner-controlled records are evaluated as same-site chronological holdouts;
 the public Type-IV records provide the independent component holdout. The
 synchronized station-to-vehicle full-loop lane is retained in the legacy audit
 for traceability but is excluded from the primary goal because no openly
-reusable raw cohort was found. The scope-adjusted closure is **127 PASS · 9
-FAIL · 2 PENDING = 92.0%**; this is a scope metric, not a new validation result.
+reusable raw cohort was found. The scope-adjusted closure is **128 PASS · 9
+FAIL · 2 PENDING = 92.1%**; this is a scope metric, not a new validation result.
 The exact split and the paper limitation are recorded in
 [`VALIDATION_DATA_SPLIT_AND_SCOPE_DECISION_2026_10_11.md`](../research/VALIDATION_DATA_SPLIT_AND_SCOPE_DECISION_2026_10_11.md)
 and the machine-readable
@@ -46,6 +46,13 @@ recorded in
 [`PUBLIC_STATION_VEHICLE_SEARCH_RECHECK_2026_10_11.md`](../research/PUBLIC_STATION_VEHICLE_SEARCH_RECHECK_2026_10_11.md)
 and
 [`STATION_VEHICLE_CUSTODIAN_REQUEST_PLAN_2026_10_11.md`](../research/STATION_VEHICLE_CUSTODIAN_REQUEST_PLAN_2026_10_11.md).
+
+The USN DataverseNO actual-hydrogen pressure-peaking archive was also replayed
+as a post-access component diagnostic. Ten cases were eligible and 8/10 passed
+the joint peak-pressure/peak-time screen. Because the raw outcomes were seen
+before the replay runner was frozen, this result remains diagnostic only and
+does not close the station-to-vehicle or outdoor-dispersion gates; see
+[`USN_17932439_PRESSURE_PEAKING_RECHECK_2026_10_11.md`](../research/USN_17932439_PRESSURE_PEAKING_RECHECK_2026_10_11.md).
 
 A fresh privacy-bounded local inventory confirms that data volume is not the
 station-side limitation. The controlled archive contains 33 CSV files,

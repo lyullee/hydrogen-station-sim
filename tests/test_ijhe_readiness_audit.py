@@ -199,6 +199,17 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     assert woodfield["runtime_parameter_updated"] is False
     assert woodfield["validation_gate_effect"] == "none"
     assert gates["hyram_adapter_verification"]["status"] == "PASS"
+    usn_recheck = gates[
+        "usn_17932439_actual_hydrogen_pressure_peaking_recheck_integrity"
+    ]
+    assert usn_recheck["status"] == "PASS"
+    assert usn_recheck["observed"]["doi"] == "10.23642/USN.17932439"
+    assert usn_recheck["observed"]["license"] == "CC BY 4.0"
+    assert usn_recheck["observed"]["file_count"] == 10
+    assert usn_recheck["observed"]["aggregate"]["eligible_case_count"] == 10
+    assert usn_recheck["observed"]["aggregate"]["joint_primary_pass_count"] == 8
+    assert usn_recheck["observed"]["aggregate"]["interpretation"] == "diagnostic_only"
+    assert usn_recheck["observed"]["raw_files_committed"] is False
     assert gates["molkov_jet_flame_literature_benchmark"]["status"] == "PASS"
     molkov = gates["molkov_jet_flame_literature_benchmark"]["observed"]
     assert molkov["experimental_case_count_reported"] == 123

@@ -3504,6 +3504,46 @@ def audit(root: Path) -> dict[str, object]:
         } if mendeley_manifest else "missing",
     ))
 
+    usn_recheck_path = root / "research/usn_17932439_pressure_peaking_recheck_2026_10_11.json"
+    usn_recheck = _json(usn_recheck_path)
+    usn_recheck_source = (usn_recheck or {}).get("source") or {}
+    usn_recheck_aggregate = (usn_recheck or {}).get("aggregate") or {}
+    usn_recheck_pass = bool(
+        (usn_recheck or {}).get("status")
+        == "completed_post_access_pressure_peaking_recheck"
+        and (usn_recheck or {}).get("evidence_role")
+        == "post_access_public_actual_hydrogen_pressure_peaking_diagnostic"
+        and usn_recheck_source.get("doi") == "10.23642/USN.17932439"
+        and usn_recheck_source.get("license") == "CC BY 4.0"
+        and usn_recheck_source.get("raw_files_committed") is False
+        and len(usn_recheck_source.get("file_manifest") or []) == 10
+        and usn_recheck_aggregate.get("eligible_case_count") == 10
+        and usn_recheck_aggregate.get("excluded_case_count") == 0
+        and usn_recheck_aggregate.get("joint_primary_pass_count") == 8
+        and usn_recheck_aggregate.get("interpretation") == "diagnostic_only"
+        and "not an independent confirmatory holdout" in str(
+            (usn_recheck or {}).get("claim_boundary", "")
+        )
+        and "does not validate the HRS fueling loop" in str(
+            (usn_recheck or {}).get("claim_boundary", "")
+        )
+    )
+    gates.append(_gate(
+        "usn_17932439_actual_hydrogen_pressure_peaking_recheck_integrity",
+        "PASS" if usn_recheck_pass else ("FAIL" if usn_recheck else "PENDING"),
+        "The newly accessed USN actual-hydrogen pressure-peaking archive is replayed as transparent post-access component diagnostic evidence and is not promoted to confirmatory or full-loop validation.",
+        str(usn_recheck_path.relative_to(root)),
+        "DOI/license provenance, ten raw-file manifest entries, 10 eligible cases, 8/10 diagnostic screen passes, raw files kept outside Git, and explicit non-full-loop claim boundary.",
+        {
+            "doi": usn_recheck_source.get("doi"),
+            "license": usn_recheck_source.get("license"),
+            "file_count": len(usn_recheck_source.get("file_manifest") or []),
+            "aggregate": usn_recheck_aggregate,
+            "raw_files_committed": usn_recheck_source.get("raw_files_committed"),
+            "claim_boundary": (usn_recheck or {}).get("claim_boundary"),
+        } if usn_recheck else "missing",
+    ))
+
     elvhys_replay_path = root / "research/elvhys_auxiliary_replay.json"
     elvhys_replay = _json(elvhys_replay_path)
     elvhys_claims = (elvhys_replay or {}).get("claims") or {}

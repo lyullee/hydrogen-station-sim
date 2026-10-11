@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-11T11:32:42.644507+00:00",
+  "generated_at": "2026-10-11T11:57:04.038481+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -13,7 +13,7 @@
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 127,
+    "PASS": 128,
     "FAIL": 10,
     "PENDING": 7
   },
@@ -2711,6 +2711,32 @@
         "component_consequence_holdout_eligible": true,
         "full_loop_external_holdout_eligible": false,
         "claim_boundary": "This CC BY 4.0 archive provides raw pressure and Coriolis mass-flow channels for ten confined-enclosure experiments and is suitable for reproducible pressure-peaking consequence checks. It is not a gaseous H70 station-to-vehicle fueling loop, does not include station control or dispenser logs, and cannot establish full-loop digital-twin or SAGA effectiveness."
+      }
+    },
+    {
+      "id": "usn_17932439_actual_hydrogen_pressure_peaking_recheck_integrity",
+      "status": "PASS",
+      "claim": "The newly accessed USN actual-hydrogen pressure-peaking archive is replayed as transparent post-access component diagnostic evidence and is not promoted to confirmatory or full-loop validation.",
+      "evidence": "research\\usn_17932439_pressure_peaking_recheck_2026_10_11.json",
+      "requirement": "DOI/license provenance, ten raw-file manifest entries, 10 eligible cases, 8/10 diagnostic screen passes, raw files kept outside Git, and explicit non-full-loop claim boundary.",
+      "observed": {
+        "doi": "10.23642/USN.17932439",
+        "license": "CC BY 4.0",
+        "file_count": 10,
+        "aggregate": {
+          "eligible_case_count": 10,
+          "excluded_case_count": 0,
+          "excluded_cases": [],
+          "joint_primary_pass_count": 8,
+          "joint_primary_pass_fraction": 0.8,
+          "screening_limits": {
+            "peak_overpressure_abs_error_kpa_max": 5.0,
+            "peak_time_relative_error_percent_max": 20.0
+          },
+          "interpretation": "diagnostic_only"
+        },
+        "raw_files_committed": false,
+        "claim_boundary": "This replay is limited to the unignited pressure-peaking response of a 14.9 m3 confined, vented enclosure. The public raw MAT files were accessed before this runner was created, so the result is not an independent confirmatory holdout. It does not validate the HRS fueling loop, outdoor dispersion, station control, vehicle fueling or emergency response."
       }
     },
     {

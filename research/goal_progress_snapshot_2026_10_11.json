@@ -1,23 +1,23 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-11T20:25:53+09:00",
+  "generated_at": "2026-10-11T11:57:04.200688+00:00",
   "metric_definition": "PASS gates divided by PASS+FAIL+PENDING gates; not a publication-readiness probability",
   "gate_counts": {
-    "PASS": 127,
+    "PASS": 128,
     "FAIL": 10,
     "PENDING": 7,
-    "TOTAL": 144
+    "TOTAL": 145
   },
-  "gate_closure_percent": 88.2,
+  "gate_closure_percent": 88.3,
   "primary_scope_progress_2026_10_11": {
     "metric_definition": "Scope-adjusted gate closure after removing the declared station-to-vehicle full-loop and optional SAGA human-evaluation lanes; this is not a scientific improvement claim.",
     "gate_counts": {
-      "PASS": 127,
+      "PASS": 128,
       "FAIL": 9,
       "PENDING": 2,
-      "TOTAL": 138
+      "TOTAL": 139
     },
-    "gate_closure_percent": 92.0,
+    "gate_closure_percent": 92.1,
     "excluded_gate_ids": [
       "full_loop_external_validation",
       "hiad_casebook_frozen",
@@ -59,8 +59,8 @@
     ],
     "next_high_impact_actions": [
       "retry the range-capable KIT LH2 archive fetch after the RADAR rate limit cools, then verify the publisher MD5 before metadata-only inventory",
-      "obtain an independent time-resolved measured pressure trace for the pending Grune holdout or a replacement physical consequence trace under a frozen protocol",
-      "keep the SAGA human-effectiveness study optional unless the paper claims improved human safety decisions"
+      "obtain an independent time-resolved measured pressure trace for the pending Grune holdout",
+      "keep the blinded expert and prospective SAGA safety-effectiveness study optional; start it only if the manuscript claims improved human safety decisions"
     ],
     "scope_amendment_2026_10_11": {
       "in_scope": [
@@ -156,6 +156,16 @@
         "frozen_gate_effect": "none",
         "finding": "A declared 3.86 m x 3 mm line with a 0.5 mm nozzle produces about 0.39-1.07 g line inventory across the 5/10/20 L source-volume sensitivity envelope; line inventory alone does not explain the frozen HyTunnel mass-flow failure.",
         "claim_boundary": "Post-outcome development diagnostic only; no source volume, valve law or runtime parameter was promoted."
+      },
+      "usn_17932439_pressure_peaking_recheck": {
+        "status": "POST_ACCESS_DIAGNOSTIC_ONLY",
+        "evidence": "research/usn_17932439_pressure_peaking_recheck_2026_10_11.json",
+        "dataset_doi": "10.23642/USN.17932439",
+        "eligible_case_count": 10,
+        "joint_primary_pass_count": 8,
+        "runtime_parameter_application": false,
+        "frozen_gate_effect": "component diagnostic integrity only",
+        "claim_boundary": "Actual-hydrogen confined-enclosure pressure-peaking replay; not an independent confirmatory holdout and not HRS station-to-vehicle, outdoor-dispersion or emergency-response validation."
       },
       "frontend_regression": {
         "status": "PASS",

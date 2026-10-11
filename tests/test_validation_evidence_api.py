@@ -11,7 +11,7 @@ def test_validation_evidence_surface_is_privacy_bounded_and_claim_limited() -> N
 
     assert summary["status"] == "available"
     assert summary["readiness"]["ijhe_gate_counts"] == {
-        "PASS": 127,
+        "PASS": 128,
         "FAIL": 10,
         "PENDING": 7,
     }
