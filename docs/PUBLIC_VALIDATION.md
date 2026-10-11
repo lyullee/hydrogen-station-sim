@@ -8,6 +8,31 @@ decision support is tested on independent incident evidence. A green software
 test suite proves implementation consistency; it does not prove physical
 accuracy, emergency-response correctness, field safety, or regulatory approval.
 
+### Active validation scope (2026-10-11)
+
+The primary manuscript scope is deliberately narrower than a complete
+station-to-vehicle qualification. Owner-controlled station telemetry is split
+by operating episode and time into calibration and later untouched **same-site
+station-side holdouts**. Public Type-IV experiments provide the independent
+component holdout. These lanes support station-side pressure/cascade/recharge
+behavior and the declared tank pressure-temperature-SOC component claims; they
+do not establish vehicle-controller, dispenser, ESD, or field safety-limit
+accuracy.
+
+The synchronized station-to-vehicle raw-data lane is **excluded from the primary
+objective** because no openly reusable cohort was found with both station and
+vehicle channels on a documented common timebase, known units/sensor roles, and
+publishable reuse rights. The previously consumed MC Default closed-loop replay
+remains in the repository as a negative engineering diagnostic and is retained
+for audit traceability; it is not presented as a successful external holdout or
+used to claim full-loop validity. The absence of an openly reusable synchronized
+cohort is reported as a data-availability limitation.
+
+Ethics review and independent expert scoring are not physical-model validation
+gates. They become prerequisites only if the paper claims that SAGA improves
+human operator safety, response time, or decision accuracy. The current
+station-side manuscript makes no such human-effectiveness claim.
+
 The repository commits source metadata, checksums, parsers, metrics, and study
 scripts. Raw third-party files and generated model answers remain under the
 gitignored `data/` directory. This preserves licensing boundaries and prevents a
@@ -18,7 +43,7 @@ paper result from silently becoming part of the source tree.
 | Evidence | Role | Current normalized scope | Use in the study |
 |---|---|---:|---|
 | Powertech Labs SAE J2601 Tables Method data | External process-physics validation | 36 fills; 2.0, 4.7, 5.9 and 9.8 kg nominal tanks | Pressure, tank-gas temperature and SOC traces on the experimental clock |
-| Powertech Labs SAE J2601 MC Default bench data | Prospectively frozen external closed-loop holdout | 8 fills; six 4.7 kg cases plus 2.0 and 9.8 kg tanks | Frozen controller, precooling and tank-response transportability |
+| Powertech Labs SAE J2601 MC Default bench data | Consumed negative closed-loop diagnostic (legacy audit only) | 8 fills; six 4.7 kg cases plus 2.0 and 9.8 kg tanks | Records the failed transportability screen; excluded from the primary full-loop claim and not retuned after outcomes |
 | HIAD 2.2, European Commission JRC | Independent real-incident decision cases | 34 HRS events; 33 with at least one response/lesson/corrective field | Development/holdout casebook and blinded expert review |
 | KHK public hydrogen accident reports | Independent actual-accident integration trace | 23 reports covering 26 incident codes | Citation-only metadata routed through canonical process, detector, safety and consequence recipes |
 | USN/FFI open-channel dispersion data | Bounded consequence/detector-logic benchmark | 22 releases, 29 concentration sensors, 0.029–1.250 g/s | Measured concentration replay through declared alarm/trip thresholds; not an outdoor HRS full-loop holdout |
@@ -104,6 +129,14 @@ To normalize only the MC Default holdout:
 ```
 
 ## J2601 baseline validation
+
+The J2601 records contain two distinct evidence roles. The open schedule/table
+traces support the public process-physics and tank-component analyses described
+above. The MC Default replay was frozen and consumed as a closed-loop
+transportability diagnostic; its negative result is retained and cannot be
+relabelled as validation. Because the public package does not provide an openly
+reusable synchronized station-to-vehicle raw cohort, no full-loop external
+validation claim is made from it.
 
 Run every external fill without fitting case-specific model parameters:
 
