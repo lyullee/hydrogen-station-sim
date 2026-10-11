@@ -2714,6 +2714,10 @@ def _public_experimental_benchmarks() -> dict[str, Any] | None:
                 projected_source["coordinate_metadata"]["coordinate_source_artifact"] = str(
                     coordinate_metadata["coordinate_source_artifact"]
                 )
+        if source.get("provenance_recheck_artifact"):
+            projected_source["provenance_recheck_artifact"] = str(
+                source["provenance_recheck_artifact"]
+            )
         sources.append(projected_source)
     if not sources:
         return None

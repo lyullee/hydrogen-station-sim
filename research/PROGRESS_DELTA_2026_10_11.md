@@ -116,3 +116,6 @@ two-zone 모델은 원인 진단용 post-outcome 모델로 기록되어 있지�
 - 이 자료는 실제 수소 개방 채널 분산·유량 구성요소 검증 후보로만 유지한다.
   station-to-vehicle full-loop, HRS 제어기/ESD, 시설별 안전거리와 SAGA의
   인간 안전효과 주장을 닫는 근거로 사용하지 않는다.
+- 이 provenance 재검증 경로를 근거 기반 LLM envelope에도 연결했다. 따라서
+  SAGA가 해당 공개 실험의 범위나 재현성을 설명할 때 DataverseNO 체크섬 기록을
+  근거로 노출할 수 있지만, spatial holdout 준비 여부는 계속 `false`로 유지한다.

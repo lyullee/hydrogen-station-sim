@@ -290,6 +290,7 @@
         "coordinate_source_artifact": "research/usn_open_channel_sensor_coordinates_2026_10_10.json",
         "spatial_holdout_ready": false
       },
+      "provenance_recheck_artifact": "research/usn_open_channel_dataverseno_recheck_2026_10_12.json",
       "eligible_for": [
         "actual-hydrogen spatial dispersion and detector-response development after a frozen protocol",
         "low-pressure leak-source mass-flow and sensor-range plausibility",
