@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-11T12:35:00+09:00",
+  "generated_at": "2026-10-11T12:31:40+09:00",
   "metric_definition": "PASS gates divided by PASS+FAIL+PENDING gates; not a publication-readiness probability",
   "gate_counts": {
     "PASS": 127,
@@ -83,12 +83,15 @@
     },
     "latest_access_evidence": {
       "kit_lh2_consequence_archive": {
-        "status": "RANGE_ENDPOINT_FOUND_RATE_LIMITED",
+        "status": "RANGE_ENDPOINT_FOUND_INTERMITTENTLY",
         "archive_bytes_reported": 4971447808,
         "publisher_md5": "0e4ac934ecb973c6f07212e8a80707c9",
         "numeric_outcomes_opened": false,
         "evidence": "research/kit_lh2_download_attempt_2026_10_11.json",
-        "fetcher": "scripts/fetch_kit_lh2_archive.py"
+        "fetcher": "scripts/fetch_kit_lh2_archive.py",
+        "range_resume_probe_bytes": 1048576,
+        "full_archive_checksum_verified": false,
+        "limitation": "Only a 1 MiB sparse range resume probe completed after rate limiting; no outcome values or video were opened."
       },
       "full_regression": {
         "status": "PASS",

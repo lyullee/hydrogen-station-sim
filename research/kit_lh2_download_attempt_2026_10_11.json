@@ -25,7 +25,18 @@
     "one_chunk_probe_bytes": 8388608,
     "one_chunk_probe_completed": true,
     "subsequent_rate_limit_status": 429,
-    "subsequent_rate_limit_message": "Too Many Requests"
+    "subsequent_rate_limit_message": "Too Many Requests",
+    "resume_probe_after_cooldown": {
+      "status": 206,
+      "content_range": "bytes 964689920-965738495/4971447808",
+      "range_start": 964689920,
+      "range_end": 965738495,
+      "bytes_received": 1048576,
+      "request_completed": true,
+      "numeric_signal_values_opened": false,
+      "video_outcomes_opened": false,
+      "interpretation": "The range endpoint is intermittently usable for sparse resumable acquisition; the complete archive checksum remains unverified."
+    }
   },
   "protocol_boundary": {
     "archive_committed_to_git": false,
@@ -34,7 +45,8 @@
     "member_headers_scanned_only": true,
     "stage1_integrity_verified": false,
     "stage2_eligible": false,
-    "range_download_tool_added": "scripts/fetch_kit_lh2_archive.py"
+    "range_download_tool_added": "scripts/fetch_kit_lh2_archive.py",
+    "range_resume_probe_bytes": 1048576
   },
-  "next_action": "Use a stable authenticated download session or obtain the archive from the custodian; verify the complete publisher MD5 before reading any outcome file."
+  "next_action": "Continue low-rate range acquisition or obtain a stable custodian/session transfer; verify the complete publisher MD5 before opening any outcome file."
 }

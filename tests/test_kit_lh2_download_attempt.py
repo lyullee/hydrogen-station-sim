@@ -18,3 +18,8 @@ def test_kit_download_attempt_cannot_be_promoted_from_partial_stream() -> None:
     assert boundary["video_outcomes_opened"] is False
     assert boundary["stage1_integrity_verified"] is False
     assert boundary["stage2_eligible"] is False
+    resume = payload["range_route_probe"]["resume_probe_after_cooldown"]
+    assert resume["status"] == 206
+    assert resume["bytes_received"] == 1048576
+    assert resume["numeric_signal_values_opened"] is False
+    assert resume["video_outcomes_opened"] is False
