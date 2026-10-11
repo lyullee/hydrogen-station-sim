@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-11T10:12:03.180910+00:00",
+  "generated_at": "2026-10-11T10:20:31.698491+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -8367,7 +8367,40 @@
       "claim": "Every author, affiliation, institutional email and declaration is confirmed.",
       "evidence": "manuscript\\submission_metadata.json",
       "requirement": "All author/CRediT/conflict/funding/AI-disclosure confirmations true.",
-      "observed": "missing"
+      "observed": {
+        "schema_version": 1,
+        "status": "DRAFT_PENDING_AUTHOR_CONFIRMATION",
+        "purpose": "IJHE submission metadata and declarations checklist; do not submit while any confirmation is false.",
+        "title": "Evidence-grounded safety digital twin and direct-answer decision support for a hydrogen refuelling station",
+        "authors": [],
+        "corresponding_author": {
+          "name": null,
+          "institution": null,
+          "institutional_email": null,
+          "orcid": null
+        },
+        "all_authors_confirmed": false,
+        "institutional_emails_confirmed": false,
+        "credit_roles_confirmed": false,
+        "credit_roles": {},
+        "competing_interests_confirmed": false,
+        "competing_interests_statement": null,
+        "funding_confirmed": false,
+        "funding_statement": null,
+        "ai_disclosure_confirmed": false,
+        "ai_disclosure_statement": "During preparation of the working draft, AI-assisted tools were used for code and prose support. The authors must review, edit and take responsibility for all content, references, analyses and claims before submission.",
+        "data_availability_statement_confirmed": false,
+        "data_availability_statement": "Public source identifiers, derived metrics and validation manifests are provided where permitted. Confidential station-side data are not redistributed. No reusable synchronized station-to-vehicle raw trace was identified; this is stated as a limitation.",
+        "ethics_statement_confirmed": false,
+        "ethics_statement": "No human participants or operator responses are included in the physics validation study. A separate institutional determination and blinded expert study would be required before claiming human safety effectiveness of SAGA.",
+        "author_action_required": [
+          "Add every author and affiliation.",
+          "Confirm institutional email addresses and corresponding-author responsibility.",
+          "Complete CRediT roles and obtain agreement from every author.",
+          "Confirm competing interests and funding statements.",
+          "Approve the AI, data-availability and ethics wording against the final manuscript."
+        ]
+      }
     },
     {
       "id": "software_doi",
