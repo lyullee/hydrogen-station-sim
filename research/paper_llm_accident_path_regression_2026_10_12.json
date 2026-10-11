@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "artifact_type": "paper_llm_accident_path_regression",
+  "generated_at": "2026-10-11T15:55:35.074456+00:00",
+  "source_commit": "db9c6152671608584bdf9c59b89f20cc1c340559",
+  "status": "PASS",
+  "pytest": {
+    "tests_passed": 65,
+    "tests_failed": 0,
+    "warnings": 2,
+    "duration_s": 7.15
+  },
+  "test_files": [
+    "tests/test_llm_grounding.py",
+    "tests/test_saga_chat.py",
+    "tests/test_saga_provider.py",
+    "tests/test_saga_response_contract.py",
+    "tests/test_hiad_digital_twin_replay_coverage.py",
+    "tests/test_hiad_virtual_action_execution.py",
+    "tests/test_hiad_accident_response_coverage_evaluation.py"
+  ],
+  "coverage_scope": [
+    "evidence-grounded LLM response contract and provider routing",
+    "direct SAGA chat and response contract",
+    "HIAD accident scenario evidence and digital-twin replay coverage",
+    "virtual action execution and staged response playbooks"
+  ],
+  "claim_boundary": "This regression confirms deterministic software contracts and accident-evidence routing. It does not establish independent expert-rated human safety effectiveness or field deployment safety."
+}

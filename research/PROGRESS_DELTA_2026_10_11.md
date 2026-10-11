@@ -94,3 +94,10 @@ two-zone 모델은 원인 진단용 post-outcome 모델로 기록되어 있지�
 
 - Final full regression after the matrix-hash repair: **1,443 passed, 0
   failed, 20 warnings** (`research/full_regression_test_run_2026_10_11.json`).
+
+- LLM·사고경로 회귀를 다시 실행해 **65 passed / 0 failed / 2 warnings**를
+  확인했다. 근거 기반 LLM 계약, provider routing, 직접 SAGA 대화, HIAD
+  사고 재생, 가상 조치 실행과 단계별 대응 플레이북을 함께 검증했으며,
+  상세 기록은 `research/paper_llm_accident_path_regression_2026_10_12.json`에
+  고정했다. 이는 소프트웨어 계약과 사고자료 연결 증거이며 독립 전문가의
+  사람 대상 안전효과나 현장 배포 안전성을 의미하지 않는다.
