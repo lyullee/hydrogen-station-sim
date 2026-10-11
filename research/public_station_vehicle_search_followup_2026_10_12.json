@@ -32,6 +32,14 @@
       "observed_scope": "Protocol and event-level performance summaries for heavy-duty fueling.",
       "decision": "REPORT_SUMMARY_ONLY",
       "reason": "The public report does not expose the common-clock raw station/controller/dispenser/vehicle channels required by the frozen holdout."
+    },
+    {
+      "name": "NREL H2FillS software and user manual",
+      "url": "https://www.nrel.gov/hydrogen/h2fills",
+      "manual_url": "https://www.nrel.gov/docs/libraries/hydrogen/h2fills-user-manual.pdf",
+      "observed_scope": "A registered simulation tool that reports station-to-vehicle pressure, temperature and mass-flow time series and describes validation against empirical fueling profiles.",
+      "decision": "SIMULATION_TOOL_NOT_RAW_HOLDOUT",
+      "reason": "The public page and manual describe model outputs and input formats but do not release a rights-cleared, outcome-unseen common-clock measured station/controller/dispenser/vehicle archive."
     }
   ],
   "decision": "NO_NEW_ELIGIBLE_PUBLIC_RAW_STATION_TO_VEHICLE_SET_IDENTIFIED",
