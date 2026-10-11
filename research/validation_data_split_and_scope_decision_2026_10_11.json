@@ -2,6 +2,13 @@
   "schema_version": 1,
   "artifact_type": "validation_data_split_and_scope_decision",
   "recorded_at": "2026-10-11",
+  "user_scope_confirmation": {
+    "recorded_at": "2026-10-11",
+    "owner_data_use": "Split the available owner data by episode/time order and use the untouched portion as an independent time-ordered holdout.",
+    "externality_rule": "Do not label a same-site owner holdout as independent external validation; retain the public Type-IV holdout as the independent external component lane.",
+    "station_to_vehicle_goal": "Remove synchronized station-to-vehicle raw validation from the primary goal and disclose the missing reusable public bundle as a paper limitation.",
+    "ethics_and_expert_review": "Keep human-subject ethics determination and independent expert review out of the physics-paper gate; require them only before claiming SAGA improves human safety decisions."
+  },
   "data_lanes": {
     "owner_station_side_time_ordered_holdout": {
       "status": "SAME_SITE_STATION_SIDE_HOLDOUT",
@@ -11,6 +18,7 @@
       "cascade_sequence": {"calibration_pairs": 8106, "holdout_pairs": 3664},
       "recharge_pressure_forecast": {"calibration_cases": 1024, "holdout_cases": 394},
       "independent_external_validation": false,
+      "revised_role": "INDEPENDENT_TIME_ORDERED_SAME_SITE_HOLDOUT",
       "claim_boundary": "Same-site station-side pressure, cascade and recharge diagnostics only; no vehicle-side or field-safety claim."
     },
     "public_type_iv_component_holdout": {
@@ -21,6 +29,7 @@
       "validation_cases": 12,
       "excluded_for_mass_closure": 1,
       "new_parameter_fit": false,
+      "revised_role": "INDEPENDENT_EXTERNAL_COMPONENT_HOLDOUT",
       "claim_boundary": "Independent external receiving-tank component evidence only; no station controller, dispenser, ESD, vehicle or field-safety claim."
     }
   },
