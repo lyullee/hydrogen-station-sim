@@ -1,20 +1,20 @@
 {
   "schema_version": 1,
-  "source_audit_generated_at": "2026-10-11T11:08:00.699708+00:00",
+  "source_audit_generated_at": "2026-10-11T12:29:02.316080+00:00",
   "target_journal": null,
   "overall": {
-    "pass": 127,
+    "pass": 128,
     "fail": 10,
     "pending": 7,
     "full_user_objective_ready": false
   },
   "primary_scope": {
     "definition": "Declared 2026-10-11 primary scope: station-side process/safety, public component holdouts and direct-answer SAGA grounding; full-loop and human-effectiveness lanes remain excluded.",
-    "pass": 127,
+    "pass": 128,
     "fail": 9,
     "pending": 2,
-    "total": 138,
-    "closure_percent": 92.0,
+    "total": 139,
+    "closure_percent": 92.1,
     "excluded_gate_ids": [
       "full_loop_external_validation",
       "hiad_casebook_frozen",
