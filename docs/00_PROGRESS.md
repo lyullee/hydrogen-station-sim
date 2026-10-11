@@ -9,6 +9,9 @@ bundle.  The available material is retained as summary or custodian-request
 evidence only.  It cannot close the independent station-to-vehicle holdout or
 change runtime parameters.  The search boundary and exclusion reasons are
 recorded in `research/public_station_vehicle_search_recheck_2026_10_11.json`.
+A non-sending intake plan with the minimum channel, rights and pre-access
+freeze requirements is recorded in
+`research/STATION_VEHICLE_CUSTODIAN_REQUEST_PLAN_2026_10_11.md`.
 
 ## 2026-10-11 - Recheck a published vehicle-fueling experiment lead
 
