@@ -302,6 +302,15 @@ This applies only to the tank model driven by measured mass-flow and inlet
 temperature; it does not convert the result into a compressor, cascade,
 dispenser, full-station or field-safety validation claim.
 
+The public USN ignited-jet raw dataset is now routed to the provider prompt
+only when a question requests public consequence or validation evidence. The
+provider projection exposes its DOI, component-candidate status and explicit
+`NOT_REPLAYED`/no-HRS/full-loop boundary; it never applies the data as a
+runtime parameter. The normal operating-status prompt omits this auxiliary
+dataset. This software contract is recorded in
+[`USN_IGNITED_JET_LLM_GROUNDING_VALIDATION_2026_10_11.md`](../research/USN_IGNITED_JET_LLM_GROUNDING_VALIDATION_2026_10_11.md)
+and is not a physical consequence-validation result.
+
 The fresh de-identified private-data recheck matches the committed
 station-boundary profile across all attested fields. It does not replace the
 profile, change default model parameters, or establish station-to-vehicle
