@@ -36,7 +36,9 @@ def test_dataverseno_recheck_confirms_all_experiment_archives() -> None:
 def test_dataverseno_recheck_keeps_paper_claim_boundary() -> None:
     record = _record()
     boundary = record["claim_boundary"]
-    assert boundary["protocol_status"] == "CANDIDATE_REQUIRES_PREACCESS_PROTOCOL_FREEZE"
+    assert boundary["protocol_status"] == "POST_ACCESS_DEVELOPMENT_ONLY"
+    assert boundary["outcome_independence"] is False
+    assert "independent actual-hydrogen open-channel validation" in boundary["not_eligible_for"]
     assert boundary["runtime_parameter_application"] is False
     assert "station-to-vehicle full-loop validation" in boundary["not_eligible_for"]
     assert "SAGA human-effectiveness claim" in boundary["not_eligible_for"]

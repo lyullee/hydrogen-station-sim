@@ -291,20 +291,23 @@
     "numeric_sensor_values_negative_fraction": 0.10200585259097353
   },
   "claim_boundary": {
-    "eligible_for": "new independently frozen actual-hydrogen open-channel dispersion/mass-flow component validation",
+    "eligible_for": "provenance, checksum integrity and post-access actual-hydrogen open-channel development diagnostics",
     "not_eligible_for": [
+      "independent actual-hydrogen open-channel validation",
       "station-to-vehicle full-loop validation",
       "HRS controller/ESD validation",
       "site-specific HRS safety-distance certification",
       "SAGA human-effectiveness claim"
     ],
     "runtime_parameter_application": false,
-    "protocol_status": "CANDIDATE_REQUIRES_PREACCESS_PROTOCOL_FREEZE"
+    "protocol_status": "POST_ACCESS_DEVELOPMENT_ONLY",
+    "outcome_independence": false,
+    "reason": "The archive was opened before the spatial diagnostic was scored; a future independent validation requires a new untouched archive and a pre-access protocol freeze."
   },
   "cross_archive_reconciliation": {
     "figshare_intake": "research/figshare_h2_dispersion_intake_2026_10_10.json",
     "same_experiment_file_count_22": true,
     "dataverse_checksum_manifest_available": true,
-    "purpose": "provenance and checksum recheck only; does not change prior validation scores or readiness gates"
+    "purpose": "provenance and checksum recheck only; the existing post-access diagnostic and readiness gates are unchanged"
   }
 }
