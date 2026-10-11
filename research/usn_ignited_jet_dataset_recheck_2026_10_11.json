@@ -65,6 +65,12 @@
     "raw_time_series_expected": true,
     "exact_header_and_clock_alignment": "must be verified from selected raw CSV files before replay"
   },
+  "ingestion_implementation": {
+    "path": "src/h2station/usn_ignited_jet.py",
+    "behavior": "semicolon/decimal-comma reader preserving raw voltage channels",
+    "automatic_pressure_calibration": false,
+    "runtime_alarm_or_hyram_routing": false
+  },
   "eligibility": {
     "public_raw_component_consequence_data": true,
     "component_consequence_external_holdout_candidate": true,

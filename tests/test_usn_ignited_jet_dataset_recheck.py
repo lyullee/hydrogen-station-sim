@@ -23,5 +23,6 @@ def test_usn_dataset_is_staged_as_public_component_data_only():
     assert record["eligibility"]["hrs_dispenser_validation"] is False
     assert record["eligibility"]["station_to_vehicle_full_loop_validation"] is False
     assert record["eligibility"]["current_runtime_validation_status"] == "NOT_REPLAYED"
+    assert record["ingestion_implementation"]["automatic_pressure_calibration"] is False
     assert "no case-specific fitting" in record["replay_protocol_requirement"]["parameter_policy"]
     assert record["claim_boundary"]
