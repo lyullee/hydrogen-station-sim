@@ -11,7 +11,7 @@
 - `bounded_ijhe_submission_ready`: `false`
 - `full_user_objective_ready`: `false`
 - 최신 readiness audit: `manuscript/ijhe_readiness_audit.json`
-- 최신 감사 갱신 커밋: `7ef40ce`
+- 최신 감사 갱신 커밋: `efd0406`
 - 최신 전체 회귀 기록: `research/full_regression_test_run_2026_10_11.json`
 
 주 목표 범위에서 제외한 것은 공개 동기화 station-to-vehicle full-loop 원자료와
@@ -50,6 +50,6 @@ two-zone 모델은 원인 진단용 post-outcome 모델로 기록되어 있지�
 ## 검증
 
 이번 문서 갱신 후 focused validation/grounding 테스트는 **9 passed**였다.
-전체 회귀 기록은 1,428 passed, 0 failed, 20 warnings이며, 경고는 의존성·수치
+전체 회귀 기록은 1,436 passed, 0 failed, 20 warnings이며, 경고는 의존성·수치
 환경 경고로 기록되어 있다.
 
