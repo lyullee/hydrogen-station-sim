@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "artifact_type": "kgs_open_model_benchmark_recheck",
+  "recorded_at": "2026-10-12",
+  "title": "Enhanced Thermofluidic Modeling and Open-Source Rigorous Simulation of Hydrogen Fueling Systems Validated with Real-World Data",
+  "article_doi": "10.1007/s11814-025-00551-9",
+  "preprint_doi": "10.21203/rs.3.rs-6248350/v1",
+  "article_url": "https://doi.org/10.1007/s11814-025-00551-9",
+  "preprint_url": "https://assets-eu.researchsquare.com/files/rs-6248350/v1_covered_c592f075-8489-4caf-bc6f-21ee2cf066b1.pdf",
+  "kci_record_url": "https://www.kci.go.kr/kciportal/ci/sereArticleSearch/ciSereArtiView.kci?sereArticleSearchBean.artiId=ART003256168",
+  "code_route": {
+    "url": "https://drive.google.com/drive/folders/1l_rKzlKZaxSVIyFwNkbVX0r2JLnRtosp",
+    "described_by_source": "Research Square preprint states that the Python code is published in this Google Drive folder.",
+    "access_result": "HTTP_401_SIGN_IN_REQUIRED",
+    "raw_code_downloaded": false,
+    "raw_rows_public": false,
+    "underlying_station_data_reuse_license": "NOT_SPECIFIED"
+  },
+  "reported_scope": {
+    "implementation": "Python thermofluidic model with ODE/PDE components",
+    "real_world_scenarios": 6,
+    "context": "Korean HRS operating scenarios reported as aggregate model-versus-data comparisons",
+    "reported_temperature_r2_or_accuracy_mean_percent": 94.5,
+    "reported_pressure_r2_or_accuracy_mean_percent": 96.7,
+    "reported_final_temperature_mean_c": 73.65,
+    "reported_final_pressure_mean_mpa": 73.9,
+    "reported_fueling_time_mean_s": 351.68
+  },
+  "eligibility": {
+    "aggregate_context_evidence": true,
+    "independent_raw_holdout": false,
+    "station_to_vehicle_full_loop": false,
+    "runtime_parameter_application": false,
+    "validation_gate_promoted": false
+  },
+  "decision": "PUBLISHED_AGGREGATE_CODE_ROUTE_NOT_HOLDOUT",
+  "claim_boundary": "The publication is retained as aggregate benchmark context and a lead for reproducible code access. Because the code route required sign-in during the recheck and the underlying station data rights and row-level synchronized traces were not exposed, it does not close an independent raw-data holdout or support full station-to-vehicle field validation."
+}

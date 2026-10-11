@@ -40,6 +40,15 @@
       "observed_scope": "A registered simulation tool that reports station-to-vehicle pressure, temperature and mass-flow time series and describes validation against empirical fueling profiles.",
       "decision": "SIMULATION_TOOL_NOT_RAW_HOLDOUT",
       "reason": "The public page and manual describe model outputs and input formats but do not release a rights-cleared, outcome-unseen common-clock measured station/controller/dispenser/vehicle archive."
+    },
+    {
+      "name": "KGS HRS thermofluidic model and open-code route",
+      "url": "https://doi.org/10.1007/s11814-025-00551-9",
+      "preprint_url": "https://assets-eu.researchsquare.com/files/rs-6248350/v1_covered_c592f075-8489-4caf-bc6f-21ee2cf066b1.pdf",
+      "code_url": "https://drive.google.com/drive/folders/1l_rKzlKZaxSVIyFwNkbVX0r2JLnRtosp",
+      "observed_scope": "Published Python model evaluated against six Korean HRS scenarios; aggregate station/vehicle operating context and reported performance metrics.",
+      "decision": "PUBLISHED_AGGREGATE_CODE_ROUTE_NOT_HOLDOUT",
+      "reason": "The preprint describes an open-code Google Drive route, but the folder returned HTTP 401/sign-in required during recheck; no raw code, row-level synchronized station/controller/dispenser/vehicle trace or underlying-data reuse terms were independently exposed."
     }
   ],
   "decision": "NO_NEW_ELIGIBLE_PUBLIC_RAW_STATION_TO_VEHICLE_SET_IDENTIFIED",

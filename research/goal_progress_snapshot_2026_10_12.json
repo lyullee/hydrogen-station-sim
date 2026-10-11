@@ -111,10 +111,22 @@
       "public_station_vehicle_search_followup_2026_10_12": {
         "status": "NO_NEW_ELIGIBLE_PUBLIC_RAW_SET",
         "evidence": "research/public_station_vehicle_search_followup_2026_10_12.json",
-        "sources_checked": 5,
+        "sources_checked": 6,
         "new_validation_holdout": false,
         "runtime_parameter_application": false,
         "claim_boundary": "Public-access availability audit only; no station-to-vehicle accuracy or field-safety claim is supported."
+      },
+      "kgs_open_model_benchmark_recheck_2026_10_12": {
+        "status": "PUBLISHED_AGGREGATE_CODE_ROUTE_NOT_HOLDOUT",
+        "evidence": "research/kgs_open_model_benchmark_recheck_2026_10_12.json",
+        "real_world_scenarios_reported": 6,
+        "code_route_access": "HTTP_401_SIGN_IN_REQUIRED",
+        "raw_code_downloaded": false,
+        "raw_rows_public": false,
+        "new_validation_holdout": false,
+        "runtime_parameter_application": false,
+        "validation_gate_promoted": false,
+        "claim_boundary": "Published aggregate benchmark context and code-access lead only; no independent raw-data or full station-to-vehicle validation claim."
       }
     }
   }
