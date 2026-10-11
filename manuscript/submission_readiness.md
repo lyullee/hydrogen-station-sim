@@ -598,6 +598,19 @@ computed. No case was replaced, no threshold changed and no runtime parameter
 was updated. This retained negative intake result improves provenance discipline
 but does not validate or invalidate overpressure magnitude or rank.
 
+## 2026-10-12 X044QK publisher-calibration boundary recheck
+
+The related open article reports that the campaign used an AST4000-series
+upstream pressure transducer with a 0--250 bar(g) range and an uncertainty of
+approximately +/-0.5% FSO (+/-1.25 bar). This confirms the instrument-level
+measurement boundary, but it does not disclose the experiment-specific
+voltage-to-pressure transfer for the released CSV channels. A generic sensor
+datasheet is therefore not substituted for the missing campaign DAQ and
+conditioning calibration. The LLM evidence envelope now exposes this boundary
+and the numerical replay remains fail-closed; no runtime value, threshold or
+validation gate was changed. The routing regression is recorded in
+`research/usn_ignited_jet_llm_calibration_boundary_validation_2026_10_12.json`.
+
 ## 2026-10-08 WSKBIJ large-scale overpressure-rank result
 
 The exact WSKBIJ workbook and locked HyRAM+ 6.1 BST runtime were evaluated under
