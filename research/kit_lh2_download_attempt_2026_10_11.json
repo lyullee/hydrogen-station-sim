@@ -58,5 +58,5 @@
     "range_download_tool_added": "scripts/fetch_kit_lh2_archive.py",
     "range_resume_probe_bytes": 1048576
   },
-  "next_action": "Continue low-rate range acquisition or obtain a stable custodian/session transfer; verify the complete publisher MD5 before opening any outcome file."
+  "next_action": "Use scripts/fetch_kit_lh2_archive.py --resume-existing-prefix --existing-prefix-md5 5dc3c9898487b08d273ee5b143840677 with a low-rate single worker, or obtain a stable custodian/session transfer; verify the complete publisher MD5 before opening any outcome file."
 }

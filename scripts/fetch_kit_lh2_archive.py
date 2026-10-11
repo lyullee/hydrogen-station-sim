@@ -120,7 +120,64 @@ def _download_range(
     raise RuntimeError(f"range {start}-{end} failed after retries: {last_error}")
 
 
-def fetch(output: Path, chunk_bytes: int, workers: int, retries: int) -> dict[str, object]:
+def _md5_file(path: Path, block_bytes: int = 8 * 1024 * 1024) -> str:
+    digest = hashlib.md5()
+    with path.open("rb") as source:
+        while block := source.read(block_bytes):
+            digest.update(block)
+    return digest.hexdigest()
+
+
+def _seed_existing_prefix(
+    existing: Path,
+    chunk_dir: Path,
+    chunk_bytes: int,
+    expected_md5: str | None,
+) -> int:
+    """Copy a verified, chunk-aligned prefix into the range cache.
+
+    The archive is opaque at this stage: this function only hashes and copies
+    bytes.  Refusing a non-aligned prefix prevents a partial final chunk from
+    being mistaken for a complete HTTP range.
+    """
+
+    size = existing.stat().st_size
+    if size == 0:
+        return 0
+    if size % chunk_bytes:
+        raise RuntimeError(
+            f"existing prefix is not chunk aligned: {size} bytes for {chunk_bytes}-byte chunks"
+        )
+    if expected_md5 and _md5_file(existing) != expected_md5.lower():
+        raise RuntimeError(f"existing prefix MD5 mismatch: {existing}")
+
+    with existing.open("rb") as source:
+        start = 0
+        while start < size:
+            part = chunk_dir / f"{start:012d}.part"
+            expected = min(chunk_bytes, size - start)
+            if not part.exists() or part.stat().st_size != expected:
+                source.seek(start)
+                with part.open("wb") as target:
+                    remaining = expected
+                    while remaining:
+                        block = source.read(min(8 * 1024 * 1024, remaining))
+                        if not block:
+                            raise RuntimeError(f"existing prefix ended at {start}")
+                        target.write(block)
+                        remaining -= len(block)
+            start += expected
+    return size
+
+
+def fetch(
+    output: Path,
+    chunk_bytes: int,
+    workers: int,
+    retries: int,
+    resume_existing_prefix: bool = False,
+    existing_prefix_md5: str | None = None,
+) -> dict[str, object]:
     opener, headers = _session()
     total = _probe(opener, headers)
     if total != EXPECTED_BYTES:
@@ -129,9 +186,17 @@ def fetch(output: Path, chunk_bytes: int, workers: int, retries: int) -> dict[st
     output.parent.mkdir(parents=True, exist_ok=True)
     chunk_dir = output.with_name(output.name + ".ranges")
     chunk_dir.mkdir(parents=True, exist_ok=True)
-    ranges = [
+    seeded_bytes = 0
+    if resume_existing_prefix and output.exists():
+        seeded_bytes = _seed_existing_prefix(
+            output, chunk_dir, chunk_bytes, existing_prefix_md5
+        )
+    all_ranges = [
         (start, min(start + chunk_bytes, total) - 1)
         for start in range(0, total, chunk_bytes)
+    ]
+    download_ranges = [
+        item for item in all_ranges if item[0] >= seeded_bytes
     ]
     url = headers["Download-URL"]
     with concurrent.futures.ThreadPoolExecutor(max_workers=workers) as pool:
@@ -145,7 +210,7 @@ def fetch(output: Path, chunk_bytes: int, workers: int, retries: int) -> dict[st
                 chunk_dir / f"{start:012d}.part",
                 retries,
             ): (start, end)
-            for start, end in ranges
+            for start, end in download_ranges
         }
         completed = 0
         for future in concurrent.futures.as_completed(futures):
@@ -155,7 +220,7 @@ def fetch(output: Path, chunk_bytes: int, workers: int, retries: int) -> dict[st
 
     digest = hashlib.md5()
     with output.with_suffix(output.suffix + ".partial").open("wb") as target:
-        for start, _end in ranges:
+        for start, _end in all_ranges:
             part = chunk_dir / f"{start:012d}.part"
             with part.open("rb") as source:
                 shutil.copyfileobj(source, target, length=8 * 1024 * 1024)
@@ -180,7 +245,9 @@ def fetch(output: Path, chunk_bytes: int, workers: int, retries: int) -> dict[st
         "bytes": total,
         "md5": actual_md5,
         "output": str(output),
-        "range_count": len(ranges),
+        "range_count": len(all_ranges),
+        "download_range_count": len(download_ranges),
+        "seeded_prefix_bytes": seeded_bytes,
     }
 
 
@@ -190,8 +257,25 @@ def main() -> int:
     parser.add_argument("--chunk-bytes", type=int, default=64 * 1024 * 1024)
     parser.add_argument("--workers", type=int, default=4)
     parser.add_argument("--retries", type=int, default=2)
+    parser.add_argument(
+        "--resume-existing-prefix",
+        action="store_true",
+        help="Reuse an existing chunk-aligned opaque prefix at --output.",
+    )
+    parser.add_argument(
+        "--existing-prefix-md5",
+        default=None,
+        help="Optional MD5 for the existing prefix; fail closed on mismatch.",
+    )
     args = parser.parse_args()
-    result = fetch(args.output.resolve(), args.chunk_bytes, args.workers, args.retries)
+    result = fetch(
+        args.output.resolve(),
+        args.chunk_bytes,
+        args.workers,
+        args.retries,
+        args.resume_existing_prefix,
+        args.existing_prefix_md5,
+    )
     print(json.dumps(result), flush=True)
     return 0 if result["status"] == "PASS" else 2
 
