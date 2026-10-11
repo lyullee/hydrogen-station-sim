@@ -1,0 +1,376 @@
+{
+  "schema_version": 1,
+  "artifact_type": "hytunnel_post_outcome_line_inventory_diagnostic",
+  "generated_at": "2026-10-11T08:27:56.771099+00:00",
+  "post_outcome_diagnostic": true,
+  "source": {
+    "dataset_doi": "10.23642/USN.14405903",
+    "article_doi": "10.3390/en14113008",
+    "license": "CC BY 4.0",
+    "raw_files_committed": false,
+    "files": [
+      {
+        "name": "Exp19.mat",
+        "bytes": 30964564,
+        "sha256": "dff296c154136028d7a38568ff4e7f90c0a74e29a51a0f026433f8b8fbd22fd2"
+      },
+      {
+        "name": "Exp20.mat",
+        "bytes": 32013319,
+        "sha256": "b0bc7c415da5dba9ba878bf5c7e4e14a785cf2c4ec7454b57f697609676417b3"
+      },
+      {
+        "name": "Exp21.mat",
+        "bytes": 30449511,
+        "sha256": "9cfc76033748612c441d71e9d23515c81260d557a8f0168403be889ba55cfd65"
+      },
+      {
+        "name": "Exp22.mat",
+        "bytes": 29952927,
+        "sha256": "8afd80f1e7e71650c47222adfbe11d64c21a2b05eeadb8f65ff2e8181984441e"
+      },
+      {
+        "name": "Exp23.mat",
+        "bytes": 32653229,
+        "sha256": "49f33d8ef7b7a73e607a615fcf5cf7fa443f1345265d0c4d3f18c7584560ac65"
+      }
+    ]
+  },
+  "protocol_reference": "research/hytunnel_carpark_holdout_protocol_2026_10_08.json",
+  "model_boundary": {
+    "name": "source_vessel_plus_3.86_m_line_plus_0.5_mm_nozzle",
+    "line_length_m": 3.86,
+    "line_inner_diameter_m": 0.003,
+    "nozzle_inner_diameter_m": 0.0005,
+    "source_volume_sensitivity_l": [
+      5.0,
+      10.0,
+      20.0
+    ],
+    "source_volume_selection": "declared sensitivity envelope; not selected from measured outcomes",
+    "initial_source_state": "measured Tank.p and Tank.T interpolated at MFM.t0",
+    "line_initial_state": "ambient pressure and temperature",
+    "case_specific_fitting": false,
+    "time_shift": false,
+    "runtime_parameter_application": false,
+    "frozen_gate_effect": "none"
+  },
+  "cases": [
+    {
+      "experiment": 19,
+      "source_volume_l": 5.0,
+      "diagnostic_window_s": 30.0,
+      "initial_source_pressure_mpa_abs": 72.10275371700004,
+      "initial_source_temperature_c": 22.818759999999997,
+      "line_volume_cm3": 27.284732196427353,
+      "summary": {
+        "measured_peak_mass_flow_g_s": 7.952311029330551,
+        "source_peak_mass_flow_g_s": 6.944348499860929,
+        "outlet_peak_mass_flow_g_s": 6.982231187535173,
+        "outlet_to_source_peak_ratio": 1.0054551823940003,
+        "source_peak_time_from_release_s": 0.0,
+        "outlet_peak_time_from_release_s": 0.0,
+        "outlet_peak_delay_s": 0.0,
+        "initial_line_inventory_g": 1.0025699652677933,
+        "peak_line_inventory_g": 1.0025699652677933,
+        "source_pressure_end_mpa_abs": 11.593167483846472,
+        "line_pressure_peak_mpa_abs": 59.912949199391875
+      }
+    },
+    {
+      "experiment": 19,
+      "source_volume_l": 10.0,
+      "diagnostic_window_s": 30.0,
+      "initial_source_pressure_mpa_abs": 72.10275371700004,
+      "initial_source_temperature_c": 22.818759999999997,
+      "line_volume_cm3": 27.284732196427353,
+      "summary": {
+        "measured_peak_mass_flow_g_s": 7.952311029330551,
+        "source_peak_mass_flow_g_s": 7.475656743864768,
+        "outlet_peak_mass_flow_g_s": 7.496049147401148,
+        "outlet_to_source_peak_ratio": 1.002727841076052,
+        "source_peak_time_from_release_s": 0.0,
+        "outlet_peak_time_from_release_s": 0.0,
+        "outlet_peak_delay_s": 0.0,
+        "initial_line_inventory_g": 1.0481422084599512,
+        "peak_line_inventory_g": 1.0481422084599512,
+        "source_pressure_end_mpa_abs": 24.88723438385946,
+        "line_pressure_peak_mpa_abs": 65.57723840463292
+      }
+    },
+    {
+      "experiment": 19,
+      "source_volume_l": 20.0,
+      "diagnostic_window_s": 30.0,
+      "initial_source_pressure_mpa_abs": 72.10275371700004,
+      "initial_source_temperature_c": 22.818759999999997,
+      "line_volume_cm3": 27.284732196427353,
+      "summary": {
+        "measured_peak_mass_flow_g_s": 7.952311029330551,
+        "source_peak_mass_flow_g_s": 7.765426522616558,
+        "outlet_peak_mass_flow_g_s": 7.776018010588293,
+        "outlet_to_source_peak_ratio": 1.001363928683233,
+        "source_peak_time_from_release_s": 0.0,
+        "outlet_peak_time_from_release_s": 0.0,
+        "outlet_peak_delay_s": 0.0,
+        "initial_line_inventory_g": 1.0722828045851671,
+        "peak_line_inventory_g": 1.0722828045851671,
+        "source_pressure_end_mpa_abs": 39.993428750493514,
+        "line_pressure_peak_mpa_abs": 68.71594915259946
+      }
+    },
+    {
+      "experiment": 20,
+      "source_volume_l": 5.0,
+      "diagnostic_window_s": 30.000000000000004,
+      "initial_source_pressure_mpa_abs": 70.85023786400008,
+      "initial_source_temperature_c": 14.971898000000067,
+      "line_volume_cm3": 27.284732196427353,
+      "summary": {
+        "measured_peak_mass_flow_g_s": 7.864777068331664,
+        "source_peak_mass_flow_g_s": 6.168131806785259,
+        "outlet_peak_mass_flow_g_s": 6.201797280007304,
+        "outlet_to_source_peak_ratio": 1.0054579691674246,
+        "source_peak_time_from_release_s": 0.0,
+        "outlet_peak_time_from_release_s": 0.0,
+        "outlet_peak_delay_s": 0.0,
+        "initial_line_inventory_g": 0.9390009364217052,
+        "peak_line_inventory_g": 0.9390009364217052,
+        "source_pressure_end_mpa_abs": 10.558461553445493,
+        "line_pressure_peak_mpa_abs": 50.84667218153136
+      }
+    },
+    {
+      "experiment": 20,
+      "source_volume_l": 10.0,
+      "diagnostic_window_s": 30.000000000000004,
+      "initial_source_pressure_mpa_abs": 70.85023786400008,
+      "initial_source_temperature_c": 14.971898000000067,
+      "line_volume_cm3": 27.284732196427353,
+      "summary": {
+        "measured_peak_mass_flow_g_s": 7.864777068331664,
+        "source_peak_mass_flow_g_s": 7.010891871788954,
+        "outlet_peak_mass_flow_g_s": 7.029976149610369,
+        "outlet_to_source_peak_ratio": 1.0027220898810618,
+        "source_peak_time_from_release_s": 0.0,
+        "outlet_peak_time_from_release_s": 0.0,
+        "outlet_peak_delay_s": 0.0,
+        "initial_line_inventory_g": 1.0163593550585768,
+        "peak_line_inventory_g": 1.0163593550585768,
+        "source_pressure_end_mpa_abs": 23.286313777881965,
+        "line_pressure_peak_mpa_abs": 59.62403809730732
+      }
+    },
+    {
+      "experiment": 20,
+      "source_volume_l": 20.0,
+      "diagnostic_window_s": 30.000000000000004,
+      "initial_source_pressure_mpa_abs": 70.85023786400008,
+      "initial_source_temperature_c": 14.971898000000067,
+      "line_volume_cm3": 27.284732196427353,
+      "summary": {
+        "measured_peak_mass_flow_g_s": 7.864777068331664,
+        "source_peak_mass_flow_g_s": 7.500549961269358,
+        "outlet_peak_mass_flow_g_s": 7.510781282424817,
+        "outlet_to_source_peak_ratio": 1.001364076128856,
+        "source_peak_time_from_release_s": 0.0,
+        "outlet_peak_time_from_release_s": 0.0,
+        "outlet_peak_delay_s": 0.0,
+        "initial_line_inventory_g": 1.0590968732541943,
+        "peak_line_inventory_g": 1.0590968732541943,
+        "source_pressure_end_mpa_abs": 38.1497908686305,
+        "line_pressure_peak_mpa_abs": 64.87224778389644
+      }
+    },
+    {
+      "experiment": 21,
+      "source_volume_l": 5.0,
+      "diagnostic_window_s": 30.0,
+      "initial_source_pressure_mpa_abs": 35.93718453400004,
+      "initial_source_temperature_c": 10.451063999999917,
+      "line_volume_cm3": 27.284732196427353,
+      "summary": {
+        "measured_peak_mass_flow_g_s": 4.220534452427572,
+        "source_peak_mass_flow_g_s": 3.455505810413151,
+        "outlet_peak_mass_flow_g_s": 3.47433309414155,
+        "outlet_to_source_peak_ratio": 1.0054484885169814,
+        "source_peak_time_from_release_s": 0.0,
+        "outlet_peak_time_from_release_s": 0.0,
+        "outlet_peak_delay_s": 0.0,
+        "initial_line_inventory_g": 0.5838470324422304,
+        "peak_line_inventory_g": 0.5838470324422304,
+        "source_pressure_end_mpa_abs": 7.042618548186042,
+        "line_pressure_peak_mpa_abs": 27.64580620348384
+      }
+    },
+    {
+      "experiment": 21,
+      "source_volume_l": 10.0,
+      "diagnostic_window_s": 30.0,
+      "initial_source_pressure_mpa_abs": 35.93718453400004,
+      "initial_source_temperature_c": 10.451063999999917,
+      "line_volume_cm3": 27.284732196427353,
+      "summary": {
+        "measured_peak_mass_flow_g_s": 4.220534452427572,
+        "source_peak_mass_flow_g_s": 3.843727121080456,
+        "outlet_peak_mass_flow_g_s": 3.8542390044345325,
+        "outlet_to_source_peak_ratio": 1.00273481519966,
+        "source_peak_time_from_release_s": 0.0,
+        "outlet_peak_time_from_release_s": 0.0,
+        "outlet_peak_delay_s": 0.0,
+        "initial_line_inventory_g": 0.6280973071614858,
+        "peak_line_inventory_g": 0.6280973071614858,
+        "source_pressure_end_mpa_abs": 14.479592765524748,
+        "line_pressure_peak_mpa_abs": 31.410353006482442
+      }
+    },
+    {
+      "experiment": 21,
+      "source_volume_l": 20.0,
+      "diagnostic_window_s": 30.0,
+      "initial_source_pressure_mpa_abs": 35.93718453400004,
+      "initial_source_temperature_c": 10.451063999999917,
+      "line_volume_cm3": 27.284732196427353,
+      "summary": {
+        "measured_peak_mass_flow_g_s": 4.220534452427572,
+        "source_peak_mass_flow_g_s": 4.061791735758864,
+        "outlet_peak_mass_flow_g_s": 4.067332228798411,
+        "outlet_to_source_peak_ratio": 1.0013640514826918,
+        "source_peak_time_from_release_s": 0.0,
+        "outlet_peak_time_from_release_s": 0.0,
+        "outlet_peak_delay_s": 0.0,
+        "initial_line_inventory_g": 0.6521304175799076,
+        "peak_line_inventory_g": 0.6521304175799076,
+        "source_pressure_end_mpa_abs": 22.061870575680135,
+        "line_pressure_peak_mpa_abs": 33.56383991584574
+      }
+    },
+    {
+      "experiment": 22,
+      "source_volume_l": 5.0,
+      "diagnostic_window_s": 30.0,
+      "initial_source_pressure_mpa_abs": 20.79247203399997,
+      "initial_source_temperature_c": 5.842731999999955,
+      "line_volume_cm3": 27.284732196427353,
+      "summary": {
+        "measured_peak_mass_flow_g_s": 2.5220887570829196,
+        "source_peak_mass_flow_g_s": 2.182862389385788,
+        "outlet_peak_mass_flow_g_s": 2.1947724890223985,
+        "outlet_to_source_peak_ratio": 1.0054561843634868,
+        "source_peak_time_from_release_s": 0.0,
+        "outlet_peak_time_from_release_s": 0.0,
+        "outlet_peak_delay_s": 0.0,
+        "initial_line_inventory_g": 0.38770272138861644,
+        "peak_line_inventory_g": 0.38770272138861644,
+        "source_pressure_end_mpa_abs": 4.846033842391831,
+        "line_pressure_peak_mpa_abs": 17.28952041737581
+      }
+    },
+    {
+      "experiment": 22,
+      "source_volume_l": 10.0,
+      "diagnostic_window_s": 30.0,
+      "initial_source_pressure_mpa_abs": 20.79247203399997,
+      "initial_source_temperature_c": 5.842731999999955,
+      "line_volume_cm3": 27.284732196427353,
+      "summary": {
+        "measured_peak_mass_flow_g_s": 2.5220887570829196,
+        "source_peak_mass_flow_g_s": 2.359086815620145,
+        "outlet_peak_mass_flow_g_s": 2.3655223651878985,
+        "outlet_to_source_peak_ratio": 1.0027279833557383,
+        "source_peak_time_from_release_s": 0.0,
+        "outlet_peak_time_from_release_s": 0.0,
+        "outlet_peak_delay_s": 0.0,
+        "initial_line_inventory_g": 0.41005912601483596,
+        "peak_line_inventory_g": 0.41005912601483596,
+        "source_pressure_end_mpa_abs": 9.436086708545199,
+        "line_pressure_peak_mpa_abs": 18.930963504131334
+      }
+    },
+    {
+      "experiment": 22,
+      "source_volume_l": 20.0,
+      "diagnostic_window_s": 30.0,
+      "initial_source_pressure_mpa_abs": 20.79247203399997,
+      "initial_source_temperature_c": 5.842731999999955,
+      "line_volume_cm3": 27.284732196427353,
+      "summary": {
+        "measured_peak_mass_flow_g_s": 2.5220887570829196,
+        "source_peak_mass_flow_g_s": 2.454594641156854,
+        "outlet_peak_mass_flow_g_s": 2.45794271947042,
+        "outlet_to_source_peak_ratio": 1.0013640045722532,
+        "source_peak_time_from_release_s": 0.0,
+        "outlet_peak_time_from_release_s": 0.0,
+        "outlet_peak_delay_s": 0.0,
+        "initial_line_inventory_g": 0.4219345900157737,
+        "peak_line_inventory_g": 0.4219345900157737,
+        "source_pressure_end_mpa_abs": 13.72332743862616,
+        "line_pressure_peak_mpa_abs": 19.830451056488442
+      }
+    },
+    {
+      "experiment": 23,
+      "source_volume_l": 5.0,
+      "diagnostic_window_s": 30.0,
+      "initial_source_pressure_mpa_abs": 35.70958526400003,
+      "initial_source_temperature_c": 5.785432000000128,
+      "line_volume_cm3": 27.284732196427353,
+      "summary": {
+        "measured_peak_mass_flow_g_s": 4.271830149690311,
+        "source_peak_mass_flow_g_s": 3.450052515549421,
+        "outlet_peak_mass_flow_g_s": 3.46887703526939,
+        "outlet_to_source_peak_ratio": 1.005456299472291,
+        "source_peak_time_from_release_s": 0.0,
+        "outlet_peak_time_from_release_s": 0.0,
+        "outlet_peak_delay_s": 0.0,
+        "initial_line_inventory_g": 0.5875885445592188,
+        "peak_line_inventory_g": 0.5875885445592188,
+        "source_pressure_end_mpa_abs": 7.00634423317009,
+        "line_pressure_peak_mpa_abs": 27.33116065245322
+      }
+    },
+    {
+      "experiment": 23,
+      "source_volume_l": 10.0,
+      "diagnostic_window_s": 30.0,
+      "initial_source_pressure_mpa_abs": 35.70958526400003,
+      "initial_source_temperature_c": 5.785432000000128,
+      "line_volume_cm3": 27.284732196427353,
+      "summary": {
+        "measured_peak_mass_flow_g_s": 4.271830149690311,
+        "source_peak_mass_flow_g_s": 3.8447784334486172,
+        "outlet_peak_mass_flow_g_s": 3.855267283505021,
+        "outlet_to_source_peak_ratio": 1.0027280765947792,
+        "source_peak_time_from_release_s": 0.0,
+        "outlet_peak_time_from_release_s": 0.0,
+        "outlet_peak_delay_s": 0.0,
+        "initial_line_inventory_g": 0.6328462067487468,
+        "peak_line_inventory_g": 0.6328462067487468,
+        "source_pressure_end_mpa_abs": 14.393326151337831,
+        "line_pressure_peak_mpa_abs": 31.127728456742936
+      }
+    },
+    {
+      "experiment": 23,
+      "source_volume_l": 20.0,
+      "diagnostic_window_s": 30.0,
+      "initial_source_pressure_mpa_abs": 35.70958526400003,
+      "initial_source_temperature_c": 5.785432000000128,
+      "line_volume_cm3": 27.284732196427353,
+      "summary": {
+        "measured_peak_mass_flow_g_s": 4.271830149690311,
+        "source_peak_mass_flow_g_s": 4.06692334378929,
+        "outlet_peak_mass_flow_g_s": 4.072470674817293,
+        "outlet_to_source_peak_ratio": 1.001364011701001,
+        "source_peak_time_from_release_s": 0.0,
+        "outlet_peak_time_from_release_s": 0.0,
+        "outlet_peak_delay_s": 0.0,
+        "initial_line_inventory_g": 0.6574613900017462,
+        "peak_line_inventory_g": 0.6574613900017462,
+        "source_pressure_end_mpa_abs": 21.923748012905556,
+        "line_pressure_peak_mpa_abs": 33.30523460950456
+      }
+    }
+  ],
+  "claim_boundary": "Post-outcome development diagnostic only. It separates source-side and nozzle-side flows and reports line inventory; it does not replace the frozen mass-flow holdout, prove a source volume, validate station controls, or authorize a runtime change."
+}
