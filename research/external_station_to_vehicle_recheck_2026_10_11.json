@@ -10,6 +10,8 @@
     ],
     "eligibility_rule": "A reusable physical experiment or in-use fill must expose station/controller and dispenser/nozzle plus vehicle/receptacle channels on a common time base, with initial conditions, units, tank capacity and protocol metadata.",
     "fresh_public_sources_checked": [
+      "https://www.nrel.gov/hydrogen/h2fills",
+      "https://www.nlr.gov/hydrogen/h2fills-download",
       "https://ww2.arb.ca.gov/sites/default/files/2024-12/Existing%20Light-Duty%20Hydrogen%20Refueling%20Stations%20In-Use%20Study%20Report%20ADA%20AL.pdf",
       "https://doi.org/10.1016/j.jclepro.2021.129737",
       "https://docs.h2-stations.eu/for-data-users/api-v2/",
@@ -28,6 +30,14 @@
       "observed_role": "thermodynamic fueling simulator",
       "decision": "EXCLUDE_FROM_EXTERNAL_VALIDATION",
       "reason": "The time-series fields are simulator outputs; the page does not provide independent measured station-to-vehicle logger traces."
+    },
+    {
+      "name": "NREL H2FillS 2022 HDVS Type IV sample workbook",
+      "url": "https://www.nlr.gov/docs/libraries/hydrogen/h2fills-package.zip?sfvrsn=4ee4550e_0",
+      "observed_role": "public package sample with common-clock hose and seven-tank HDVS pressure, temperature and mass channels",
+      "decision": "RETAIN_AS_PARTIAL_STATION_TO_TANK_BOUNDARY_ONLY",
+      "reason": "The local workbook has a 1 s common time base, hose pressure/temperature and per-tank pressure/temperature/mass, but no station-controller or cascade state, ESD/interlock, breakaway/nozzle/receptacle or vehicle protocol trace. The package's internal-use data policy also prevents redistribution. It cannot close the independent full-loop gate; retain it as component/boundary evidence only.",
+      "local_boundary_artifact": "research/nrel_hdvs_raw_trace_boundary_2026_10_05.json"
     },
     {
       "name": "NREL Next Generation Hydrogen Station Composite Data Products: Retail Stations",

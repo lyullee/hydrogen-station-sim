@@ -51,6 +51,7 @@
       {"id": "calstate_la_back_to_back", "url": "https://doi.org/10.1016/j.jclepro.2021.129737", "decision": "CUSTODIAN_REQUEST_ONLY", "note": "Paper describes station, hose and vehicle channels, but no public machine-readable logger archive or reuse terms were found."},
       {"id": "calstate_la_osti_station_report", "url": "https://www.osti.gov/servlets/purl/1799187", "decision": "REPORT_OR_REQUEST_ONLY", "note": "Station DAQ and pressure/dispensing summaries are described; a synchronized raw station-to-vehicle export is not published."},
       {"id": "nrel_h2fills", "url": "https://www.nrel.gov/hydrogen/h2fills", "decision": "MODEL_SOFTWARE_NOT_RAW_HOLDOUT"},
+      {"id": "nrel_h2fills_hdvs_typeiv", "url": "https://www.nlr.gov/hydrogen/h2fills-download", "decision": "PARTIAL_STATION_TO_TANK_BOUNDARY_ONLY", "note": "The local sample workbook has common-clock hose and seven-tank pressure/temperature/mass channels, but no station-controller/cascade, ESD/interlock, nozzle/receptacle or vehicle-protocol trace; internal-use data policy prevents redistribution."},
       {"id": "h2_stations_europe_api_v2", "url": "https://docs.h2-stations.eu/for-data-users/api-v2/", "decision": "STATION_REGISTRY_NOT_FULL_LOOP", "note": "Layout and aggregate/availability signals are public; vehicle-tank transient channels and a common station-to-vehicle clock are absent."},
       {"id": "elvhys_42", "url": "https://doi.org/10.18710/JXJP0H", "decision": "OPEN_COMPONENT_RELEASE_DATA_NOT_VEHICLE_LOOP"}
     ],

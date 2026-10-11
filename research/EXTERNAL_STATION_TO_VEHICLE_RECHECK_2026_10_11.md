@@ -12,6 +12,13 @@ The recheck did not identify a new eligible raw set:
 - [NREL H2FillS](https://www.nrel.gov/hydrogen/h2fills) is a thermodynamic
   fueling simulator. Its time-series fields are generated model outputs, not an
   independent measured station-to-vehicle logger trace.
+- The official H2FillS package also contains a local 1-sample-period HDVS Type-IV
+  workbook with hose pressure/temperature and seven-tank pressure/temperature/
+  mass channels. It is useful **partial station-to-tank boundary evidence**, but
+  it has no station-controller/cascade state, ESD/interlock, breakaway/nozzle/
+  receptacle or vehicle-protocol trace, and the package data policy is internal
+  use only. It therefore cannot close the independent full-loop gate. Its exact
+  boundary is recorded in `research/nrel_hdvs_raw_trace_boundary_2026_10_05.json`.
 - [NREL retail station composite data products](https://www.nrel.gov/hydrogen/infrastructure-cdps-retail.html)
   provide aggregate utilization, reliability, safety and fueling statistics;
   they do not publish synchronized raw station/dispenser/vehicle channels.
