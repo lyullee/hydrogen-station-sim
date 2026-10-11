@@ -10,6 +10,7 @@
   "elapsed_seconds": 284.33,
   "source_commit": "0ec83ab17b789e4d2ce378d1625d9f6779e7c57e",
   "readiness_snapshot": "research/goal_progress_snapshot_2026_10_11.json",
-  "interpretation": "All executable tests pass at the current source commit. This verifies implementation integrity only; it does not convert independent validation FAIL/PENDING gates to PASS.",
-  "run_recorded_at": "2026-10-11T16:45:53+00:00"
+  "interpretation": "All executable tests pass in the tested working tree. This verifies implementation integrity only; it does not convert independent validation FAIL/PENDING gates to PASS.",
+  "run_recorded_at": "2026-10-11T16:45:53+00:00",
+  "working_tree_dirty_at_run": true
 }

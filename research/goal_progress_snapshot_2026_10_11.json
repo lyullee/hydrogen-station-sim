@@ -216,7 +216,17 @@
         "warnings": 20,
         "elapsed_seconds": 284.33,
         "source_commit": "0ec83ab17b789e4d2ce378d1625d9f6779e7c57e",
-        "claim_boundary": "Implementation-integrity evidence only; independent validation gates and publication readiness are unchanged."
+        "claim_boundary": "Implementation-integrity evidence from the tested working tree; independent validation gates and publication readiness are unchanged.",
+        "working_tree_dirty_at_run": true
+      },
+      "grune_2014_public_trace_recheck_2026_10_12": {
+        "status": "NO_NEW_MACHINE_READABLE_FULL_TRACE_FOUND",
+        "evidence": "research/grune_2014_public_pressure_trace_recheck_2026_10_12.json",
+        "existing_digitized_points": 51,
+        "half_pressure_endpoint_available": false,
+        "runtime_parameter_application": false,
+        "gate_effect": "none",
+        "claim_boundary": "Public-source availability audit only; no pressure-decay validation claim is made until a rights-cleared complete trace is obtained and a new protocol is frozen."
       }
     }
   }
