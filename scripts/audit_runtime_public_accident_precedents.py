@@ -13,13 +13,19 @@ from datetime import datetime, timezone
 import hashlib
 import json
 from pathlib import Path
+import sys
 from typing import Any
+
+# Keep this standalone audit reproducible from a source checkout.  The project
+# documentation supports both editable installs and PYTHONPATH=src; adding the
+# source tree here also makes ``python scripts/...`` behave consistently.
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "src"))
 
 from h2station.hazop.response import public_accident_precedents
 from h2station.llm_grounding import build_evidence_manifest, prompt_decision_evidence
 
 
-ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_MAP = ROOT / "research/khk_scenario_precedent_map_2026_10_04.json"
 DEFAULT_OUTPUT = ROOT / "research/runtime_public_accident_precedent_routing_2026_10_07.json"
 
