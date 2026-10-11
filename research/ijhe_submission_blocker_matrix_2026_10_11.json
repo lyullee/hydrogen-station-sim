@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-10T22:34:07.457440+00:00",
+  "generated_at": "2026-10-11T06:59:05.908364+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -269,28 +269,6 @@
       "next_action": "Open a new untouched Type-III fill or discharge protocol after resolving tank length and inlet-temperature provenance; retain the result regardless of outcome."
     },
     {
-      "id": "full_loop_external_validation",
-      "status": "FAIL",
-      "why_blocked": "The frozen external station-loop holdout has 0/8 engineering-screen passes. The public MetHyTrucks D3 report confirms Groups A and C are 35 MPa direct/serial sampling-system tests, not vehicle-tank filling traces; the post-access Hy-SaM set also has incomplete mapping. A separately frozen Group D H70 vehicle event was retained prospectively, but it lacks vehicle tank pressure and temperature, engineering units and independently documented tank geometry, so no model score was permitted.",
-      "evidence": [
-        "data/public_validation/results/closed_loop_external_holdout/validation.json",
-        "research/mc_default_source_boundary_identifiability_2026_10_04.json",
-        "research/public_full_loop_search_recheck_2026_10_04.json",
-        "research/public_full_loop_search_recheck_2026_10_06.json",
-        "research/public_full_loop_data_update_2026_10_08.json",
-        "research/methytrucks_2026_public_measurement_intake.json",
-        "research/methytrucks_hysam_postaccess_diagnostic_2026_10_08.json",
-        "research/methytrucks_group_d_prospective_protocol_2026_10_08.json",
-        "research/methytrucks_group_d_prospective_result_2026_10_08.json",
-        "research/public_operational_benchmark_recheck_2026_10_05.json",
-        "research/public_operational_benchmark_face_validity_2026_10_05.json",
-        "research/nbsdc_hrss_operational_access_verification_2026_10_04.json",
-        "research/nbsdc_winter_olympics_access_recheck_2026_10_05.json"
-      ],
-      "unblock_criterion": "Obtain a clean, rights-cleared, pre-access frozen external dataset with synchronized station pressure/temperature/mass-flow, protocol/controller, dispenser/nozzle, and vehicle/receptacle channels; resolve the source-boundary/topology ambiguity; then score >=8 cases with >=80% screen pass fraction.",
-      "next_action": "Request at least eight disjoint physical-HRS vehicle traces with explicit vehicle pressure/temperature, tank geometry, units and controller/cascade states. Do not spend additional model-scoring effort on MetHyTrucks Groups A/C for the full-loop gate; their official physical test class is now resolved."
-    },
-    {
       "id": "consequence_model_external_validation",
       "status": "FAIL_OR_PENDING",
       "why_blocked": "The prospectively frozen ignited confined pressure-peaking component passed 27/27 primary screens, but that narrow result does not validate outdoor jet-fire or blast distance. The seven-method DATA3632 simulation comparison retained 211 rows and shows material method/source-boundary spread: the current runtime lies inside 2/4 thermal envelopes and 0/3 comparable overpressure envelopes. The dispenser mass-flow boundary differs by about 22-fold. Because DATA3632 is a simulation ensemble rather than experimental truth, these findings diagnose the boundary but cannot close the station consequence gate or authorize post-outcome tuning.",
@@ -336,19 +314,6 @@
       "next_action": "Add explicit HVAC-vector, downward-jet and obstruction features using development-only evidence, freeze the revised candidate, and reserve a separate actual-hydrogen spatial cohort for the next confirmatory execution."
     },
     {
-      "id": "saga_human_effectiveness",
-      "status": "PENDING",
-      "why_blocked": "The HIAD casebook is not frozen, ethics/collection permission is unresolved, no masked holdout responses are present, and no independent expert ratings exist.",
-      "evidence": [
-        "research/hiad_evaluation_readiness.json",
-        "research/HIAD_EXPERT_STUDY_PREREGISTRATION.md",
-        "research/ETHICS_DETERMINATION_REQUEST.md",
-        "research/hiad_accident_response_coverage_evaluation_2026_10_05.json"
-      ],
-      "unblock_criterion": "Institutional determination, coordinator leakage review, frozen 24-event casebook, 168 masked responses, and three qualified independent raters with locked analysis.",
-      "next_action": "Obtain the institutional determination and complete the pre-registered human-evaluation workflow before making an effectiveness or safety claim about SAGA."
-    },
-    {
       "id": "submission_declarations",
       "status": "PENDING",
       "why_blocked": "Author, affiliation, CRediT, conflict, funding and AI-use declarations are not confirmed in the repository.",
@@ -360,7 +325,7 @@
     }
   ],
   "reproducibility": {
-    "audit_sha256": "7c7240d00ab887bbdc7cfc8fe025c37e808713fcacd65e53db2337b15487c7ce",
+    "audit_sha256": "bf9d23bb086dca04c8babdca669ba7c260112219c43df985e154907b923b9809",
     "hiad_readiness_sha256": "b2c482328eca3a13af8774142a2d9b933234bee8a12851784dc148fc5538045b",
     "acquisition_tracker_sha256": "42f06e0474285fbe75847fd9d7af463c9cd23a36fe4cc5f0c00cc1d3405baa10",
     "full_loop_search_sha256": "7bf50a987108144ce02d4f0ada3e80bed235bee5d437ec13dfb20fe460826a69",
@@ -400,6 +365,50 @@
   "claim_policy": [
     "Never present a request, metadata page, or public station inventory as raw validation evidence.",
     "Keep component-test failures and model limitations visible in the paper and supplement.",
-    "Do not mark the user goal complete until full_loop_external_validation, h2safe_spatial_detector_transfer_validation and saga_effectiveness_and_safety_supported are supported and all pending human/submission gates are closed."
+    "Synchronized station-to-vehicle full-loop validation and human-effectiveness evaluation are out of scope for the current objective; disclose both as paper limitations and reopen only after their frozen re-entry conditions are met."
+  ],
+  "scope_exclusions": [
+    {
+      "id": "full_loop_external_validation",
+      "status": "OUT_OF_SCOPE",
+      "reason": "No reusable public raw dataset was found with synchronized station/controller, dispenser/nozzle and vehicle/receptacle channels on a common time base.",
+      "paper_limitation": "The study does not claim independent station-to-vehicle full-loop accuracy, vehicle-controller validation or field-safety validation.",
+      "reentry_condition": "A custodian provides at least three rights-cleared, independently documented events with station and vehicle channels; freeze the protocol before outcome access."
+    },
+    {
+      "id": "institutional_ethics_determination",
+      "status": "OPTIONAL_PENDING",
+      "reason": "This gate is required only for a human-participant claim that SAGA improves operator safety decisions; it is not required to establish traceable, evidence-grounded response generation.",
+      "paper_limitation": "The study does not claim measured improvement in operator response accuracy, response time or human safety outcomes.",
+      "reentry_condition": "Obtain institutional ethics determination, freeze the 24-case protocol, collect masked responses and complete the independent expert analysis."
+    },
+    {
+      "id": "hiad_casebook_frozen",
+      "status": "OPTIONAL_PENDING",
+      "reason": "This gate is required only for a human-participant claim that SAGA improves operator safety decisions; it is not required to establish traceable, evidence-grounded response generation.",
+      "paper_limitation": "The study does not claim measured improvement in operator response accuracy, response time or human safety outcomes.",
+      "reentry_condition": "Obtain institutional ethics determination, freeze the 24-case protocol, collect masked responses and complete the independent expert analysis."
+    },
+    {
+      "id": "hiad_holdout_collection",
+      "status": "OPTIONAL_PENDING",
+      "reason": "This gate is required only for a human-participant claim that SAGA improves operator safety decisions; it is not required to establish traceable, evidence-grounded response generation.",
+      "paper_limitation": "The study does not claim measured improvement in operator response accuracy, response time or human safety outcomes.",
+      "reentry_condition": "Obtain institutional ethics determination, freeze the 24-case protocol, collect masked responses and complete the independent expert analysis."
+    },
+    {
+      "id": "independent_expert_review_complete",
+      "status": "OPTIONAL_PENDING",
+      "reason": "This gate is required only for a human-participant claim that SAGA improves operator safety decisions; it is not required to establish traceable, evidence-grounded response generation.",
+      "paper_limitation": "The study does not claim measured improvement in operator response accuracy, response time or human safety outcomes.",
+      "reentry_condition": "Obtain institutional ethics determination, freeze the 24-case protocol, collect masked responses and complete the independent expert analysis."
+    },
+    {
+      "id": "saga_effectiveness_and_safety_supported",
+      "status": "OPTIONAL_PENDING",
+      "reason": "This gate is required only for a human-participant claim that SAGA improves operator safety decisions; it is not required to establish traceable, evidence-grounded response generation.",
+      "paper_limitation": "The study does not claim measured improvement in operator response accuracy, response time or human safety outcomes.",
+      "reentry_condition": "Obtain institutional ethics determination, freeze the 24-case protocol, collect masked responses and complete the independent expert analysis."
+    }
   ]
 }

@@ -86,3 +86,17 @@ def test_current_blocker_matrix_tracks_the_readiness_audit():
     typeiii = matrix["evidence_snapshot"]["typeiii_prospective_fill"]
     assert typeiii["gate"] == "FAIL"
     assert typeiii["diagnostic_gate"] == "PASS"
+
+
+def test_dated_blocker_matrix_applies_declared_scope_exclusions():
+    matrix = json.loads(
+        (ROOT / "research/ijhe_submission_blocker_matrix_2026_10_11.json")
+        .read_text(encoding="utf-8")
+    )
+    ids = {item["id"] for item in matrix["blocking_matrix"]}
+    assert "full_loop_external_validation" not in ids
+    assert "saga_human_effectiveness" not in ids
+    assert any(
+        "out of scope" in item.lower()
+        for item in matrix["claim_policy"]
+    )
