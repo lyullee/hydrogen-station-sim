@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "artifact_type": "ethics_and_expert_review_scope_decision",
+  "recorded_at": "2026-10-11",
+  "current_scope": "physics_and_station_side_validation_without_human_participant_data",
+  "institutional_ethics_determination": "PENDING",
+  "independent_expert_review_complete": "PENDING",
+  "human_effectiveness_claim_permitted": false,
+  "llm_as_judge_permitted": false,
+  "frozen_expert_protocol": {
+    "holdout_event_count": 24,
+    "reviewer_count": 3,
+    "reviewer_independence": true,
+    "masked_conditions": ["alarm_only", "direct_saga", "standards_rag_saga"],
+    "primary_unit": "event",
+    "safety_endpoints": ["critical_omission", "unsafe_advice"]
+  },
+  "decision": {
+    "ethics_gate_is_not_required_for_existing_archived_data_analysis": true,
+    "institutional_determination_required_before_human_rating": true,
+    "expert_review_required_for_operator_effectiveness_claim": true,
+    "physics_station_side_paper_can_report_without_expert_review": true
+  },
+  "claim_boundary": "No human safety-effectiveness, operator-performance or deployment claim is made until an institutional determination and independent blinded expert review are complete."
+}

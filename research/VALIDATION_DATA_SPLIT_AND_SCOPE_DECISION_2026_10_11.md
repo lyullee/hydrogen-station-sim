@@ -75,6 +75,8 @@ SAGA가 사람의 안전 판단을 개선한다고 주장할 때 필요한 **사
 평가를 재개한다. 관련 동결 프로토콜은
 `research/HIAD_EXPERT_STUDY_PREREGISTRATION.md`와
 `research/hiad_study_protocol_manifest.json`에 남겨 둔다.
+현재 범위 결정은 `research/ETHICS_AND_EXPERT_REVIEW_SCOPE_2026_10_11.md`와
+`research/ethics_and_expert_review_scope_decision_2026_10_11.json`에도 고정했다.
 
 ## 주장 범위
 
