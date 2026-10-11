@@ -139,3 +139,6 @@ two-zone 모델은 원인 진단용 post-outcome 모델로 기록되어 있지�
 - 2026-10-12 01:24 KST에 readiness audit를 다시 실행해 현재 파일·해시와
   일치함을 확인했다. 게이트 수와 차단 목록은 변하지 않았으며, 이 재실행은
   진행률을 부풀리거나 실패한 물리 검증을 통과로 바꾸지 않는다.
+
+
+- 2026-10-12 KST: Rechecked public station-to-vehicle sources (Kuroki/NREL HITRF, Genovese Cal State LA, OSTI/NREL model and MetHyTrucks). No new rights-cleared synchronized raw holdout was identified; recorded as availability evidence only in `research/public_station_vehicle_search_recheck_2026_10_12.json`.

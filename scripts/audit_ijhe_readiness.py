@@ -2709,7 +2709,7 @@ def audit(root: Path) -> dict[str, object]:
     external_search_recheck_2026_10_09 = _json(external_search_recheck_2026_10_09_path)
     external_search_recheck_2026_10_11_path = root / "research/public_full_loop_search_recheck_2026_10_11.json"
     external_search_recheck_2026_10_11 = _json(external_search_recheck_2026_10_11_path)
-    public_station_vehicle_search_recheck_path = root / "research/public_station_vehicle_search_recheck_2026_10_11.json"
+    public_station_vehicle_search_recheck_path = root / "research/public_station_vehicle_search_recheck_2026_10_12.json"
     public_station_vehicle_search_recheck = _json(public_station_vehicle_search_recheck_path)
     public_full_loop_update_path = root / "research/public_full_loop_data_update_2026_10_08.json"
     public_full_loop_update = _json(public_full_loop_update_path)
@@ -2813,7 +2813,7 @@ def audit(root: Path) -> dict[str, object]:
                 "runtime_parameter_application": (external_search_recheck_2026_10_11 or {}).get("runtime_parameter_application"),
                 "claim_boundary": (external_search_recheck_2026_10_11 or {}).get("claim_boundary"),
             },
-            "public_station_vehicle_search_recheck_2026_10_11": {
+            "public_station_vehicle_search_recheck_2026_10_12": {
                 "decision": (public_station_vehicle_search_recheck or {}).get("decision"),
                 "source_count": len((public_station_vehicle_search_recheck or {}).get("sources") or []),
                 "claim_boundary": (public_station_vehicle_search_recheck or {}).get("claim_boundary"),

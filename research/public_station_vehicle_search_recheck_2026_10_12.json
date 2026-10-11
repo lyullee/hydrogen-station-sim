@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "artifact_type": "station_to_vehicle_public_search_recheck",
+  "recorded_at": "2026-10-12",
+  "search_scope": {
+    "queries": [
+      "open dataset synchronized hydrogen refuelling station vehicle pressure temperature mass flow raw data H70",
+      "Zenodo hydrogen refuelling station vehicle filling dataset pressure temperature mass flow",
+      "public hydrogen fueling station experimental data vehicle tank pressure temperature time series",
+      "MetHyTrucks raw data H2 refuelling station vehicle filling dataset"
+    ],
+    "eligibility_rule": "A reusable physical event must expose station/controller and dispenser/nozzle plus vehicle/receptacle channels on a common clock, with units, initial conditions, tank capacity, protocol metadata and rights sufficient for independent scoring."
+  },
+  "sources": [
+    {
+      "name": "Kuroki et al., Temperature Rise on Liner Surfaces of Fuel Cell Electric Vehicle Tanks during Fueling Process",
+      "doi": "10.1002/ente.202300239",
+      "url": "https://onlinelibrary.wiley.com/doi/full/10.1002/ente.202300239",
+      "observed_role": "NREL HITRF and Powertech fueling experiments with 36 L and 244 L Type-IV tanks; station-side pressure and inlet-temperature conditions are described.",
+      "decision": "REPORT_SUMMARY_ONLY",
+      "reason": "The article states that research data are not shared. Figures and tabulated operating conditions are available, but no rights-cleared machine-readable synchronized station-to-vehicle logger archive was found."
+    },
+    {
+      "name": "Genovese et al., Hydrogen station in situ back-to-back fueling data for design and modeling",
+      "doi": "10.1016/j.jclepro.2021.129737",
+      "url": "https://www.sciencedirect.com/science/article/pii/S0959652621039135",
+      "observed_role": "One-year Cal State LA HRS operating study describing back-to-back vehicle-bus fueling and station behavior.",
+      "decision": "REPORT_SUMMARY_ONLY",
+      "reason": "The public article record describes a dataset created from operator logs, but no openly downloadable row-level synchronized station/controller/dispenser/vehicle archive or reuse licence was identified in the checked endpoint."
+    },
+    {
+      "name": "NREL Hydrogen Infrastructure Testing and Research Facility",
+      "url": "https://www.nrel.gov/hydrogen/hitrf-animation",
+      "observed_role": "Facility page confirms automated logging of HITRF components and station-performance research.",
+      "decision": "FACILITY_DESCRIPTION_ONLY",
+      "reason": "The page describes data collection and research capabilities but does not publish an eligible synchronized event archive."
+    },
+    {
+      "name": "Thermodynamic Modeling of Hydrogen Fueling Process from High-Pressure Storage Tank to Vehicle Tank",
+      "url": "https://www.osti.gov/pages/servlets/purl/1784885",
+      "observed_role": "Published measurement locations include high-pressure storage, PCV, precooler and vehicle-tank channels.",
+      "decision": "REPORT_SUMMARY_ONLY",
+      "reason": "The public report provides model and measurement descriptions but no rights-cleared row-level synchronized raw trace suitable for an untouched holdout."
+    },
+    {
+      "name": "NREL Heavy-Duty Hydrogen Fueling Performance Demonstration",
+      "url": "https://www.nrel.gov/docs/fy25osti/92352.pdf",
+      "observed_role": "Reported 73 kg heavy-duty vehicle-simulator fill and SAE-protocol performance summaries.",
+      "decision": "REPORT_SUMMARY_ONLY",
+      "reason": "Event-level summaries and plotted results are not a reusable synchronized raw logger archive with a complete channel dictionary and rights statement."
+    },
+    {
+      "name": "MetHyTrucks public records and Hy-SaM subset",
+      "url": "https://zenodo.org/records/20590842",
+      "observed_role": "Public workbooks and a Hy-SaM subset containing station-side or sampling-system measurements.",
+      "decision": "POST_ACCESS_COMPONENT_ONLY",
+      "reason": "The existing intake records confirm missing controller, vehicle-tank geometry and synchronized vehicle-side channel metadata; these records cannot be promoted to a station-to-vehicle holdout."
+    }
+  ],
+  "decision": "NO_NEW_ELIGIBLE_PUBLIC_RAW_STATION_TO_VEHICLE_SET_IDENTIFIED",
+  "primary_goal_impact": {
+    "full_loop_external_validation": "OUT_OF_SCOPE",
+    "paper_limitation": "Do not claim independent station-to-vehicle full-loop accuracy, vehicle-controller validation or field-safety validation from these reports, aggregate products or post-access component records.",
+    "reentry_condition": "Obtain at least three rights-cleared events with station/controller, dispenser/nozzle and vehicle/receptacle channels on a common clock; freeze the scoring protocol before accessing outcomes."
+  },
+  "claim_boundary": "This is a public-access availability audit. It records the checked endpoints and does not prove that restricted, proprietary or unpublished traces do not exist."
+}

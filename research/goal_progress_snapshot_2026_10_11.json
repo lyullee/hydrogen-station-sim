@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-11T16:26:37+00:00",
+  "generated_at": "2026-10-11T16:29:37+00:00",
   "metric_definition": "PASS gates divided by PASS+FAIL+PENDING gates; not a publication-readiness probability",
   "gate_counts": {
     "PASS": 128,
@@ -200,6 +200,13 @@
         "environment_assignments": 0,
         "claim_boundary": "Static tracked-working-tree scan only; runtime host environment, ignored files and Git history remain outside scope.",
         "untracked_dotenv_files_scanned": 0
+      },
+      "public_station_vehicle_search_recheck": {
+        "status": "NO_NEW_ELIGIBLE_PUBLIC_RAW_STATION_TO_VEHICLE_SET_IDENTIFIED",
+        "evidence": "research/public_station_vehicle_search_recheck_2026_10_12.json",
+        "source_count": 6,
+        "runtime_parameter_application": false,
+        "claim_boundary": "Public availability audit only; no synchronized station-to-vehicle full-loop claim is permitted."
       }
     }
   }
