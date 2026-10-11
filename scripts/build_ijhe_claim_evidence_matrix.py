@@ -101,8 +101,9 @@ def build(audit: dict[str, Any], *, audit_sha256: str) -> dict[str, Any]:
 
 
 def _md(matrix: dict[str, Any]) -> str:
+    generated_day = matrix["generated_at"].split("T", 1)[0]
     lines = [
-        "# IJHE claim/evidence matrix (2026-10-11)",
+        f"# IJHE claim/evidence matrix ({generated_day})",
         "",
         "This reviewer-facing companion is generated from `manuscript/ijhe_readiness_audit.json`.",
         "It records bounded component claims and preserves failed or incomplete transfers.",
