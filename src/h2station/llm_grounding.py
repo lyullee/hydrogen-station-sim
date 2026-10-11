@@ -1663,6 +1663,74 @@ def _public_ignited_pressure_peaking_evidence() -> dict[str, Any] | None:
     }
 
 
+def _public_usn_ignited_jet_dataset_evidence() -> dict[str, Any] | None:
+    """Expose the staged USN open-jet dataset without calling it validation.
+
+    The raw archive is public and rights-cleared, but its pressure-channel
+    calibration and sensor geometry are not yet sufficient for a frozen model
+    replay.  This bounded envelope lets SAGA cite the acquisition lead and
+    explain the limitation instead of treating its existence as a passed HRS
+    consequence gate.
+    """
+
+    artifact = "research/usn_ignited_jet_dataset_recheck_2026_10_11.json"
+    path = Path(__file__).resolve().parents[2] / artifact
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, ValueError, json.JSONDecodeError):
+        return None
+    source = record.get("source") or {}
+    access = record.get("access_audit") or {}
+    eligibility = record.get("eligibility") or {}
+    contract = record.get("measurement_contract") or {}
+    if (
+        record.get("schema_version") != 1
+        or record.get("status")
+        != "PUBLIC_RAW_COMPONENT_DATASET_POST_ACCESS_DIAGNOSTIC_ONLY"
+        or source.get("dataset_doi") != "10.18710/X044QK"
+        or source.get("license") != "CC0 1.0"
+        or access.get("raw_csv_file_accessed") is not True
+        or access.get("raw_csv_outcomes_opened_before_protocol") is not True
+        or eligibility.get("current_runtime_validation_status") != "NOT_REPLAYED"
+        or eligibility.get("station_to_vehicle_full_loop_validation") is not False
+    ):
+        return None
+    diagnostic = access.get("streamed_diagnostic") or {}
+    return {
+        "artifact": artifact,
+        "evidence_role": "post_access_public_ignited_jet_component_dataset_diagnostic",
+        "source": {
+            "dataset_doi": source.get("dataset_doi"),
+            "doi": source.get("dataset_doi"),
+            "url": source.get("landing_page"),
+            "license": source.get("license"),
+            "repository": source.get("repository"),
+        },
+        "measurement_contract": {
+            "experiment_count": contract.get("experiment_count"),
+            "documented_channels": list(contract.get("documented_channels") or []),
+            "environment": contract.get("environment"),
+            "raw_time_series_expected": contract.get("raw_time_series_expected") is True,
+        },
+        "access_status": {
+            "raw_csv_count": access.get("raw_csv_count"),
+            "raw_csv_downloaded": access.get("raw_csv_files_downloaded") is True,
+            "post_access_diagnostic_only": True,
+            "calibration_confirmed": False,
+            "sensor_geometry_confirmed": False,
+            "streamed_file_rows": diagnostic.get("rows_read"),
+        },
+        "component_consequence_candidate": eligibility.get(
+            "component_consequence_external_holdout_candidate"
+        ) is True,
+        "current_validation_status": "NOT_REPLAYED",
+        "hrs_dispenser_validation_supported": False,
+        "station_vehicle_full_loop_supported": False,
+        "runtime_parameter_application": False,
+        "claim_limit": str(record.get("claim_boundary") or ""),
+    }
+
+
 def _virtual_response_action_execution_evidence() -> dict[str, Any] | None:
     """Expose the simulation-only command/feedback consistency audit.
 
@@ -5303,6 +5371,22 @@ def _public_source_links(evidence: dict[str, Any]) -> list[dict[str, Any]]:
             "Ignited hydrogen pressure-peaking experiment publication",
             f"https://doi.org/{ignited_publication_doi}",
             "점화 압력상승 실험 방법·범위 출처",
+        )
+
+    ignited_jet_dataset = evidence.get(
+        "public_usn_ignited_jet_dataset_diagnostic"
+    ) or {}
+    ignited_jet_source = ignited_jet_dataset.get("source") or {}
+    ignited_jet_doi = str(ignited_jet_source.get("dataset_doi") or "").strip()
+    if ignited_jet_doi:
+        add(
+            "PUBLIC_USN_IGNITED_JET_DATASET",
+            "USN laboratory ignited hydrogen-jet raw dataset",
+            str(
+                ignited_jet_source.get("url")
+                or f"https://doi.org/{ignited_jet_doi}"
+            ),
+            "공개 원시 점화제트 구성요소 자료(사후 진단, HRS·차량 full-loop 검증 아님)",
         )
 
     tank_trace = evidence.get("public_tank_trace_boundary") or {}
@@ -9211,6 +9295,11 @@ def build_evidence_manifest(
         envelope["response_evidence"][
             "public_ignited_pressure_peaking_validation"
         ] = ignited_pressure_peaking
+    ignited_jet_dataset = _public_usn_ignited_jet_dataset_evidence()
+    if ignited_jet_dataset is not None:
+        envelope["response_evidence"][
+            "public_usn_ignited_jet_dataset_diagnostic"
+        ] = ignited_jet_dataset
     virtual_action_execution = _virtual_response_action_execution_evidence()
     if virtual_action_execution is not None:
         envelope["response_evidence"][
@@ -10651,6 +10740,28 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
             "saga_effectiveness_supported": False,
             "claim_limit": short(ignited_pressure_peaking.get("claim_limit")),
         }
+    ignited_jet_dataset = evidence.get(
+        "public_usn_ignited_jet_dataset_diagnostic"
+    )
+    if isinstance(ignited_jet_dataset, dict):
+        summary["public_usn_ignited_jet_dataset_diagnostic"] = {
+            "evidence_role": ignited_jet_dataset.get("evidence_role"),
+            "source": ignited_jet_dataset.get("source") or {},
+            "measurement_contract": ignited_jet_dataset.get(
+                "measurement_contract"
+            ) or {},
+            "access_status": ignited_jet_dataset.get("access_status") or {},
+            "component_consequence_candidate": ignited_jet_dataset.get(
+                "component_consequence_candidate"
+            ) is True,
+            "current_validation_status": ignited_jet_dataset.get(
+                "current_validation_status"
+            ),
+            "hrs_dispenser_validation_supported": False,
+            "station_vehicle_full_loop_supported": False,
+            "runtime_parameter_application": False,
+            "claim_limit": short(ignited_jet_dataset.get("claim_limit")),
+        }
     virtual_action_execution = evidence.get(
         "virtual_response_action_execution_consistency"
     )
@@ -11620,6 +11731,9 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
     ignited_pressure_peaking = response.get(
         "public_ignited_pressure_peaking_validation"
     ) or {}
+    ignited_jet_dataset = response.get(
+        "public_usn_ignited_jet_dataset_diagnostic"
+    ) or {}
     virtual_action_execution = response.get(
         "virtual_response_action_execution_consistency"
     ) or {}
@@ -11849,6 +11963,22 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                 "폭발", "과압", "압력상승", "점화", "화재", "누출",
                 "overpressure", "pressure peaking", "ignited", "fire",
                 "explosion", "leak", "consequence",
+            ))
+            or (
+                bool(compact_impacts)
+                and bool(manifest.get("question") or manifest.get("selected_sensor"))
+            )
+        )
+    )
+    ignited_jet_dataset_relevant = bool(
+        ignited_jet_dataset
+        and (
+            public_catalog_relevant
+            or any(token in detector_context for token in (
+                "폭발", "과압", "압력상승", "점화", "화재", "누출",
+                "방출", "피해영향", "공개", "원자료", "검증",
+                "overpressure", "ignited", "jet", "fire", "leak",
+                "release", "consequence", "dataset", "validation",
             ))
             or (
                 bool(compact_impacts)
@@ -12839,6 +12969,28 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                     ),
                 }
             } if ignited_pressure_peaking_relevant else {}),
+            **({
+                "public_usn_ignited_jet_dataset_diagnostic": {
+                    "evidence_role": ignited_jet_dataset.get("evidence_role"),
+                    "dataset_doi": (
+                        ignited_jet_dataset.get("source") or {}
+                    ).get("dataset_doi"),
+                    "measurement_contract": ignited_jet_dataset.get(
+                        "measurement_contract"
+                    ) or {},
+                    "access_status": ignited_jet_dataset.get(
+                        "access_status"
+                    ) or {},
+                    "component_consequence_candidate": True,
+                    "current_validation_status": "NOT_REPLAYED",
+                    "hrs_dispenser_validation_supported": False,
+                    "station_vehicle_full_loop_supported": False,
+                    "runtime_parameter_application": False,
+                    "claim_limit": short(
+                        ignited_jet_dataset.get("claim_limit"), 220
+                    ),
+                }
+            } if ignited_jet_dataset_relevant else {}),
             **({
                 "virtual_response_action_execution_consistency": {
                     "evidence_role": virtual_action_execution.get("evidence_role"),
