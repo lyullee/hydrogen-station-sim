@@ -176,6 +176,8 @@ def _primary_scope_progress() -> dict[str, Any]:
         "gate_counts": {},
         "gate_closure_percent": None,
         "excluded_gate_ids": [],
+        "active_scope_open_gate_ids": [],
+        "active_scope_blocking_gate_ids": [],
         "station_to_vehicle_scope": "unknown",
         "ethics_and_expert_review": "unknown",
         "validation_scope_decision": "unavailable",
@@ -227,6 +229,19 @@ def _primary_scope_progress() -> dict[str, Any]:
     }
     if not required_exclusions.issubset(excluded_ids):
         return unavailable
+    # The legacy readiness ledger intentionally keeps every historical gate so
+    # that older audit reports remain reproducible.  The scope snapshot also
+    # publishes the currently actionable bounded-submission blockers.  Expose
+    # that list separately so an assistant does not turn an excluded
+    # station-to-vehicle or human-effectiveness lane into an operator action.
+    active_blockers = payload.get("blocking_bounded_submission_gates")
+    if not isinstance(active_blockers, list) or any(
+        not isinstance(value, str) or not value for value in active_blockers
+    ):
+        return unavailable
+    active_blocker_ids = sorted(set(active_blockers))
+    if any(value in excluded_ids for value in active_blocker_ids):
+        return unavailable
     raw_percent = progress.get("gate_closure_percent")
     if isinstance(raw_percent, bool) or not isinstance(raw_percent, (int, float)):
         return unavailable
@@ -236,13 +251,16 @@ def _primary_scope_progress() -> dict[str, Any]:
         "gate_counts": safe_counts,
         "gate_closure_percent": float(raw_percent),
         "excluded_gate_ids": excluded_ids,
+        "active_scope_open_gate_ids": active_blocker_ids,
+        "active_scope_blocking_gate_ids": active_blocker_ids,
         "station_to_vehicle_scope": "removed_from_primary_goal_after_public_search",
         "ethics_and_expert_review": (
             "optional_for_physics_validation; required only for a claim that SAGA improves human safety guidance"
         ),
         "claim_limit": (
             "92.0%는 범위 조정 보조 지표이며 새 실험 통과나 full-loop 현장검증을 뜻하지 않음. "
-            "원래 전체 게이트 88.2%는 감사 추적용으로 유지함."
+            "원래 전체 게이트 88.2%는 감사 추적용으로 유지함. "
+            "현재 목표 병목은 active_scope_open_gate_ids만 사용하고, legacy open_gate_ids는 감사 추적용으로만 해석함."
         ),
     }
 

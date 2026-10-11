@@ -230,6 +230,19 @@ def test_primary_scope_amendment_reaches_llm_without_reclassifying_audit_gates()
     assert scope["station_to_vehicle_scope"] == (
         "removed_from_primary_goal_after_public_search"
     )
+    assert scope["active_scope_open_gate_ids"] == [
+        "dickens_typeiii_prospective_validation",
+        "grune_2014_pressure_decay_validation",
+        "preslhy_partb_ambient_external_validation",
+        "preslhy_revised_holdout_validation",
+        "proust_independent_release_validation",
+        "schefer_2007_pressure_decay_validation",
+        "schefer_transient_release_validation",
+        "submission_metadata_and_declarations",
+    ]
+    assert scope["active_scope_blocking_gate_ids"] == scope["active_scope_open_gate_ids"]
+    assert "full_loop_external_validation" not in scope["active_scope_open_gate_ids"]
+    assert "institutional_ethics_determination" not in scope["active_scope_open_gate_ids"]
     assert "full_loop_external_validation" in scope["excluded_gate_ids"]
     assert "optional_for_physics_validation" in scope["ethics_and_expert_review"]
 
