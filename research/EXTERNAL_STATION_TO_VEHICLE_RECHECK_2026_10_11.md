@@ -12,7 +12,7 @@ The recheck did not identify a new eligible raw set:
 - [NREL H2FillS](https://www.nrel.gov/hydrogen/h2fills) is a thermodynamic
   fueling simulator. Its time-series fields are generated model outputs, not an
   independent measured station-to-vehicle logger trace.
-- [NREL retail station composite data products](https://www.nlr.gov/hydrogen/infrastructure-cdps-retail)
+- [NREL retail station composite data products](https://www.nrel.gov/hydrogen/infrastructure-cdps-retail.html)
   provide aggregate utilization, reliability, safety and fueling statistics;
   they do not publish synchronized raw station/dispenser/vehicle channels.
 - [MetHyTrucks HySam Group B](https://zenodo.org/records/20590842) is an open,

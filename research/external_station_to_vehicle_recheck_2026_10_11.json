@@ -31,7 +31,7 @@
     },
     {
       "name": "NREL Next Generation Hydrogen Station Composite Data Products: Retail Stations",
-      "url": "https://www.nlr.gov/hydrogen/infrastructure-cdps-retail",
+      "url": "https://www.nrel.gov/hydrogen/infrastructure-cdps-retail.html",
       "observed_role": "aggregate station performance, reliability and safety statistics",
       "decision": "EXCLUDE_FROM_EXTERNAL_VALIDATION",
       "reason": "The published products are aggregate charts and summaries, not synchronized station/dispenser/vehicle raw time series."
