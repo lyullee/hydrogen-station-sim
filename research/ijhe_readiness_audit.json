@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-10T23:41:30.043534+00:00",
+  "generated_at": "2026-10-11T00:06:34.667306+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -1981,7 +1981,7 @@
       "id": "full_loop_external_validation",
       "status": "FAIL",
       "claim": "The complete station controller/cascade/precooler loop meets frozen engineering screens on new external cases.",
-      "evidence": "data\\public_validation\\results\\closed_loop_external_holdout\\validation.json; research\\external_full_loop_data_search.json; research\\public_full_loop_search_recheck_2026_10_05.json; research\\public_operational_benchmark_recheck_2026_10_05.json; research\\public_full_loop_search_sweep_2026_10_05.json; research\\public_full_loop_search_recheck_2026_10_06.json; research\\public_full_loop_search_recheck_2026_10_09.json; research\\public_full_loop_data_update_2026_10_08.json; research\\methytrucks_hysam_postaccess_diagnostic_2026_10_08.json; research\\rheadhy_public_test_matrix_pretrace_protocol_2026_10_08.json; research\\methytrucks_2026_public_measurement_intake.json; research\\methytrucks_group_d_prospective_protocol_2026_10_08.json; research\\methytrucks_group_d_prospective_result_2026_10_08.json; research\\apparatus_resolved_release_protocol.json; research\\controlled_full_loop_cohort_registry.json",
+      "evidence": "data\\public_validation\\results\\closed_loop_external_holdout\\validation.json; research\\external_full_loop_data_search.json; research\\public_full_loop_search_recheck_2026_10_05.json; research\\public_operational_benchmark_recheck_2026_10_05.json; research\\public_full_loop_search_sweep_2026_10_05.json; research\\public_full_loop_search_recheck_2026_10_06.json; research\\public_full_loop_search_recheck_2026_10_09.json; research\\public_full_loop_search_recheck_2026_10_11.json; research\\public_full_loop_data_update_2026_10_08.json; research\\methytrucks_hysam_postaccess_diagnostic_2026_10_08.json; research\\rheadhy_public_test_matrix_pretrace_protocol_2026_10_08.json; research\\methytrucks_2026_public_measurement_intake.json; research\\methytrucks_group_d_prospective_protocol_2026_10_08.json; research\\methytrucks_group_d_prospective_result_2026_10_08.json; research\\apparatus_resolved_release_protocol.json; research\\controlled_full_loop_cohort_registry.json",
       "requirement": "Hash-locked protocol and model, clean-source external holdout with >=8 cases and >=80% screen pass fraction.",
       "observed": {
         "protocol_integrity": true,
@@ -2074,6 +2074,15 @@
           "gate_impact": "full_loop_external_validation_remains_open",
           "candidate_count": 9,
           "claim_boundary": "This artifact documents a current public search and exclusion decision. It adds no numerical validation, does not alter any frozen holdout, and does not support a safety or IJHE full-loop claim."
+        },
+        "search_recheck_2026_10_11": {
+          "status": "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET",
+          "decision": "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET_IDENTIFIED",
+          "gate_impact": "full_loop_external_validation_remains_open",
+          "candidate_count": 7,
+          "prospective_holdout_eligible": false,
+          "runtime_parameter_application": false,
+          "claim_boundary": "This artifact records a current public-access recheck and exclusion decision. It adds no numerical validation, does not alter any frozen holdout or runtime parameter, and does not support an IJHE full-loop or field-safety claim."
         },
         "public_data_update_2026_10_08": {
           "status": "public_synchronized_rows_found_but_full_loop_gate_open",
@@ -8217,7 +8226,7 @@
             75,
             72
           ],
-          "approximate_manuscript_words_before_references": 7994,
+          "approximate_manuscript_words_before_references": 8000,
           "figures": 3,
           "tables": 3,
           "citation_keys": 50,
@@ -8249,7 +8258,7 @@
       "requirement": "Compiler success, exact source/PDF hashes, no unresolved errors, and visual inspection of every rendered page.",
       "observed": {
         "schema_version": 2,
-        "verified_at_utc": "2026-10-08T11:42:52.390631+00:00",
+        "verified_at_utc": "2026-10-10T23:47:12.067400+00:00",
         "success": true,
         "compiler": {
           "name": "Tectonic",
@@ -8259,20 +8268,20 @@
         },
         "source": {
           "path": "manuscript/ijhe_manuscript_draft.tex",
-          "bytes": 76047,
-          "sha256": "09cedae74bcdb164746460c1f550c67ff07674c559dc8c1d215ce2f669227b05"
+          "bytes": 76076,
+          "sha256": "269b455d412b88776028ce719edeb410fc975d9022b10b309594cc13db342be7"
         },
         "pdf": {
           "path": "output/pdf/ijhe_manuscript_working_draft.pdf",
-          "bytes": 834643,
-          "sha256": "ed6c5d98d9c59d094f8ebb433f97fd303c9b2c6c3d7899caeb9b6397c5723e97",
+          "bytes": 834662,
+          "sha256": "ab4cd3652df5a57cd9b07fd7073d42563d495914a68a03a7a8e633f93494d7a8",
           "page_count": 23,
-          "extracted_character_count": 70776
+          "extracted_character_count": 70805
         },
         "compile_log": {
           "path": "output/pdf/ijhe_manuscript_working_draft.compile.txt",
-          "bytes": 3039,
-          "sha256": "774ea30c798430c378d2ef072f4872ea16b9e1910003a4e67a1d698792a7da10",
+          "bytes": 3015,
+          "sha256": "9c0af99ebc1ad923afcf3be0edcb700f2c1fecd19411da9257832d7c51cb2964",
           "unresolved_citations": 0,
           "unresolved_references": 0,
           "fatal_errors": [],

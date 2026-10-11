@@ -2707,6 +2707,8 @@ def audit(root: Path) -> dict[str, object]:
     external_search_latest = _json(external_search_latest_path)
     external_search_recheck_2026_10_09_path = root / "research/public_full_loop_search_recheck_2026_10_09.json"
     external_search_recheck_2026_10_09 = _json(external_search_recheck_2026_10_09_path)
+    external_search_recheck_2026_10_11_path = root / "research/public_full_loop_search_recheck_2026_10_11.json"
+    external_search_recheck_2026_10_11 = _json(external_search_recheck_2026_10_11_path)
     public_full_loop_update_path = root / "research/public_full_loop_data_update_2026_10_08.json"
     public_full_loop_update = _json(public_full_loop_update_path)
     rheadhy_pretrace_path = root / "research/rheadhy_public_test_matrix_pretrace_protocol_2026_10_08.json"
@@ -2765,6 +2767,7 @@ def audit(root: Path) -> dict[str, object]:
         f"{external_search_recheck_path.relative_to(root)}; {external_operational_recheck_path.relative_to(root)}; "
         f"{external_search_sweep_path.relative_to(root)}; {external_search_latest_path.relative_to(root)}; "
         f"{external_search_recheck_2026_10_09_path.relative_to(root)}; "
+        f"{external_search_recheck_2026_10_11_path.relative_to(root)}; "
         f"{public_full_loop_update_path.relative_to(root)}; {methytrucks_path.relative_to(root)}; "
         f"{rheadhy_pretrace_path.relative_to(root)}; "
         f"{methytrucks_complete_path.relative_to(root)}; "
@@ -2797,6 +2800,15 @@ def audit(root: Path) -> dict[str, object]:
                 "gate_impact": (external_search_recheck_2026_10_09 or {}).get("gate_impact"),
                 "candidate_count": len((external_search_recheck_2026_10_09 or {}).get("candidates") or []),
                 "claim_boundary": (external_search_recheck_2026_10_09 or {}).get("claim_boundary"),
+            },
+            "search_recheck_2026_10_11": {
+                "status": (external_search_recheck_2026_10_11 or {}).get("status"),
+                "decision": (external_search_recheck_2026_10_11 or {}).get("decision"),
+                "gate_impact": (external_search_recheck_2026_10_11 or {}).get("gate_impact"),
+                "candidate_count": len((external_search_recheck_2026_10_11 or {}).get("screened_sources") or []),
+                "prospective_holdout_eligible": (external_search_recheck_2026_10_11 or {}).get("prospective_holdout_eligible"),
+                "runtime_parameter_application": (external_search_recheck_2026_10_11 or {}).get("runtime_parameter_application"),
+                "claim_boundary": (external_search_recheck_2026_10_11 or {}).get("claim_boundary"),
             },
             "public_data_update_2026_10_08": {
                 "status": (public_full_loop_update or {}).get("status"),
