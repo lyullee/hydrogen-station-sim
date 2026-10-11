@@ -68,8 +68,15 @@ def build_snapshot(audit: dict[str, Any]) -> dict[str, Any]:
                 "publication_acceptance_or_probability",
             ],
             "next_high_impact_actions": [
+                (
+                    "retry the range-capable KIT LH2 archive fetch after the RADAR rate limit cools, "
+                    "then verify the publisher MD5 before metadata-only inventory"
+                ),
                 "obtain an independent time-resolved measured pressure trace for the pending Grune holdout",
-                "complete blinded expert and prospective SAGA safety-effectiveness evaluation",
+                (
+                    "keep the blinded expert and prospective SAGA safety-effectiveness study optional; "
+                    "start it only if the manuscript claims improved human safety decisions"
+                ),
             ],
             "scope_amendment_2026_10_11": {
                 "in_scope": [
