@@ -2320,3 +2320,17 @@ the full-loop claim pass.
   requires a prospective rights-cleared synchronized apparatus logger.
 - Focused verification: **19 passed** (`test_proust_release_network_development.py`,
   `test_release_network.py`, and `test_release_network_development.py`).
+
+## 2026-10-11 - Explicit virtual operation start commands
+
+- Direct-answer and selected-sensor command parsing now distinguishes start
+  intent from stop/isolation intent. Vehicle 2 fueling, trailer hydrogen
+  supply, and pressure-recharge start requests produce confirmed
+  `operation.start` proposals instead of being misread as stop commands.
+- The safety runtime applies starts through the same operator settings path;
+  trailer supply and pressure recharge are enabled together because they share
+  one compressor path, while vehicle fueling remains independent. Execution
+  still requires the operator's confirmation button and reports completion
+  feedback.
+- Focused verification: **38 passed** across direct Q&A, sensor analysis,
+  virtual safety, grounding, HIAD action consistency, and readiness audit.
