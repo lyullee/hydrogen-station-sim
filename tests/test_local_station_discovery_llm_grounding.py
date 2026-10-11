@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from h2station.llm_grounding import (
     build_evidence_manifest,
+    compact_data_used,
     prompt_decision_evidence,
     prompt_evidence_header,
     prompt_evidence_summary,
@@ -268,6 +269,16 @@ def test_frozen_split_and_ethics_boundaries_reach_all_llm_projections():
     assert summary_scope["same_site_station_side_holdout_supported"] is True
     header_scope = prompt_evidence_header(manifest)["primary_scope_progress"]
     assert header_scope["human_effectiveness_claim_permitted"] is False
+    data_used = compact_data_used(manifest)
+    assert data_used["validation_scope"][
+        "same_site_station_side_holdout_supported"
+    ] is True
+    assert data_used["validation_scope"][
+        "independent_external_full_loop_validation_supported"
+    ] is False
+    assert data_used["validation_scope"][
+        "institutional_ethics_determination"
+    ] == "PENDING"
     assert "C:\\" not in str(scope)
 
 

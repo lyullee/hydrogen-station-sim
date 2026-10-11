@@ -13855,6 +13855,43 @@ def compact_data_used(
                 "expert_effectiveness_evaluation_supported", False
             ),
         }
+        # Surface the frozen scope decision in the UI's "data used" panel as
+        # well as in the provider prompt.  This prevents an operator from
+        # seeing only a generic station-side/full-loop flag while missing the
+        # explicit station-to-vehicle limitation and the pending human-review
+        # boundary.  Counts are aggregate and de-identified; no source paths,
+        # tags, timestamps or raw rows are included.
+        scope = evidence.get("primary_scope_progress")
+        if isinstance(scope, dict):
+            result["validation_scope"] = {
+                "status": scope.get("status"),
+                "gate_closure_percent": scope.get("gate_closure_percent"),
+                "same_site_station_side_holdout_supported": scope.get(
+                    "same_site_station_side_holdout_supported"
+                ) is True,
+                "independent_component_holdout_supported": scope.get(
+                    "independent_component_holdout_supported"
+                ) is True,
+                "independent_external_full_loop_validation_supported": scope.get(
+                    "independent_external_full_loop_validation_supported"
+                ) is True,
+                "station_to_vehicle_raw_data_status": scope.get(
+                    "station_to_vehicle_raw_data_status"
+                ),
+                "station_to_vehicle_scope_decision": scope.get(
+                    "station_to_vehicle_scope_decision"
+                ),
+                "institutional_ethics_determination": scope.get(
+                    "institutional_ethics_determination"
+                ),
+                "independent_expert_review_complete": scope.get(
+                    "independent_expert_review_complete"
+                ),
+                "human_effectiveness_claim_permitted": scope.get(
+                    "human_effectiveness_claim_permitted"
+                ) is True,
+                "claim_limit": scope.get("claim_limit"),
+            }
         if include_references:
             # Keep the evidence scale visible without exposing raw rows,
             # source paths, filenames or site identity.  This is deliberately

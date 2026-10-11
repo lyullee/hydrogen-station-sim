@@ -209,10 +209,32 @@ def _provider_evidence_basis(manifest: dict[str, Any]) -> dict[str, Any]:
             "public_operating_envelope_screen", "public_h2iq_aggregate_reference",
             "public_operational_evidence_leads",
             "station_side_data_scope", "public_h2protocol_validation_boundary",
-            "data_used",
         )
         if key in full
     }
+    # Keep the operator-visible proof that station-side rows exist, but avoid
+    # copying the larger UI ``data_used`` projection into every provider
+    # prompt.  The complete projection remains in the API response; this
+    # aggregate-only subset preserves the key claim boundary within budget.
+    full_data_used = full.get("data_used")
+    if isinstance(full_data_used, dict):
+        compact_data_used_for_provider: dict[str, Any] = {}
+        station_data = full_data_used.get("station_data")
+        if isinstance(station_data, dict):
+            compact_data_used_for_provider["station_data"] = {
+                key: station_data.get(key)
+                for key in (
+                    "status", "deduplicated_rows", "csv_file_count",
+                    "holdout_cases", "full_loop_validation", "claim_limit",
+                )
+                if station_data.get(key) is not None
+            }
+        for key in ("validation", "support_scope", "validation_scope"):
+            value = full_data_used.get(key)
+            if isinstance(value, dict):
+                compact_data_used_for_provider[key] = value
+        if compact_data_used_for_provider:
+            keep["data_used"] = compact_data_used_for_provider
     # The audit manifest keeps stable response-family IDs, but provider
     # prompts use operator-facing situation labels.  This preserves the
     # public accident citations without leaking implementation identifiers
