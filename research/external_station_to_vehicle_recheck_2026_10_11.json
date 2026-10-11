@@ -13,7 +13,11 @@
       "https://ww2.arb.ca.gov/sites/default/files/2024-12/Existing%20Light-Duty%20Hydrogen%20Refueling%20Stations%20In-Use%20Study%20Report%20ADA%20AL.pdf",
       "https://doi.org/10.1016/j.jclepro.2021.129737",
       "https://docs.h2-stations.eu/for-data-users/api-v2/",
-      "https://zenodo.org/records/12737240"
+      "https://zenodo.org/records/12737240",
+      "https://publications.jrc.ec.europa.eu/repository/handle/JRC76380",
+      "https://doi.org/10.3390/en15103811",
+      "https://www.energy.gov/sites/default/files/2024-04/h2iqhour-03262024.pdf",
+      "https://doi.org/10.1016/j.ijhydene.2025.152513"
     ]
   },
   "status": "NO_NEW_ELIGIBLE_PUBLIC_RAW_SET_IDENTIFIED",
@@ -67,6 +71,34 @@
       "observed_role": "open article describing fueling conditions and standards",
       "decision": "EXCLUDE_FROM_EXTERNAL_VALIDATION",
       "reason": "The Zenodo record provides a journal article PDF, not a measured station-to-vehicle logger dataset."
+    },
+    {
+      "name": "JRC GasTeF reference-data record (JRC76380)",
+      "url": "https://publications.jrc.ec.europa.eu/repository/handle/JRC76380",
+      "observed_role": "published description of onboard-tank fast-filling experiments and intended reference data",
+      "decision": "REQUEST_RAW_TRACE",
+      "reason": "The public record describes measured tank temperature histories but exposes no downloadable machine-readable synchronized station/vehicle logger archive or reuse terms. The record itself states that the dataset table is empty."
+    },
+    {
+      "name": "Zhao et al. Type-III fast-filling experiment (Energies 2022)",
+      "url": "https://doi.org/10.3390/en15103811",
+      "observed_role": "Type-III tank thermal experiment and CFD comparison",
+      "decision": "REPORT_SUMMARY_ONLY",
+      "reason": "The open article reports an air test rig and numerical Type-III study, but its data-availability statement provides no machine-readable measured trace for an independent fill holdout. It is a tank-thermal literature lead, not a station-to-vehicle dataset."
+    },
+    {
+      "name": "NREL H2IQ 2024 heavy-duty fueling result",
+      "url": "https://www.energy.gov/sites/default/files/2024-04/h2iqhour-03262024.pdf",
+      "observed_role": "single heavy-duty fueling event summary with plotted station, hose, receptacle, manifold and tank channels",
+      "decision": "REPORT_SUMMARY_ONLY",
+      "reason": "The public slide/report exposes a plotted event and aggregate fill metrics but no downloadable row-level logger export, channel dictionary or reuse terms. It cannot be scored as an untouched full-loop holdout."
+    },
+    {
+      "name": "Empa high-aspect-ratio Type-IV fueling experiment",
+      "url": "https://doi.org/10.1016/j.ijhydene.2025.152513",
+      "observed_role": "recent experimental Type-IV tank thermal campaign at an HRS",
+      "decision": "REQUEST_RAW_TRACE",
+      "reason": "The article describes measured internal thermocouple and filling behavior, but no rights-cleared machine-readable raw station/vehicle logger bundle was found in the public record. It is a high-value custodian request lead only."
     }
   ],
   "primary_goal_decision": {

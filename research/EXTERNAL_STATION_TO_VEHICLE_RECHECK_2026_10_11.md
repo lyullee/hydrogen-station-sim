@@ -34,6 +34,18 @@ The recheck did not identify a new eligible raw set:
 - [Hydrogen Fueling in FCEV: A Study](https://zenodo.org/records/12737240) is
   an open article about fueling conditions and standards, not a measured raw
   station-to-vehicle logger release.
+- The [JRC GasTeF reference-data record](https://publications.jrc.ec.europa.eu/repository/handle/JRC76380)
+  describes measured onboard-tank temperature histories, but its public record
+  contains no downloadable machine-readable dataset or reuse terms.
+- The open [Zhao et al. Type-III study](https://doi.org/10.3390/en15103811)
+  reports an air test rig and Type-III numerical study, but does not publish a
+  machine-readable measured fill trace for an independent holdout.
+- The [NREL H2IQ 2024 heavy-duty fueling summary](https://www.energy.gov/sites/default/files/2024-04/h2iqhour-03262024.pdf)
+  shows a valuable single-event plot and aggregate metrics, but no row-level
+  logger export, channel dictionary or reuse terms.
+- The recent [Empa high-aspect-ratio Type-IV campaign](https://doi.org/10.1016/j.ijhydene.2025.152513)
+  is a strong raw-data request lead, but the public record did not expose a
+  rights-cleared station/vehicle logger bundle.
 
 The primary-goal decision remains **out of scope** for synchronized
 station-to-vehicle full-loop validation. The manuscript must state that no
