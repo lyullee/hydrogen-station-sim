@@ -13,9 +13,13 @@ validation result.
 - [Publisher record](https://www.sciencedirect.com/science/article/pii/S0360319913020521)
 - [KIT publication landing page](https://publikationen.bibliothek.kit.edu/110097219)
 - [Public ICHS conference PDF](https://conference.ing.unipi.it/ichs2011/papers/133.pdf)
+- [Official JHFC/JARI project archive](https://www.jari.or.jp/jhfc/)
+- [Reported JHFC report index](https://www.jari.or.jp/jhfc/data/report/index.html) (unavailable at recheck; HTTP 404)
 
 The search also checked targeted public-data indexes for a rights-cleared
-machine-readable pressure-time archive. No such archive was found.
+machine-readable pressure-time archive. The JHFC/JARI route provides project
+scope and report context, but no Grüne-specific pressure-time file or
+supplementary raw trace was found.
 
 ## Finding
 

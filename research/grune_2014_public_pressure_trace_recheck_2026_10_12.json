@@ -11,8 +11,16 @@
     },
     "publisher_landing": "https://publikationen.bibliothek.kit.edu/110097219",
     "conference_preprint": "https://conference.ing.unipi.it/ichs2011/papers/133.pdf",
+    "jari_jhfc_archive_route": {
+      "project_landing": "https://www.jari.or.jp/jhfc/",
+      "reported_archive_index": "https://www.jari.or.jp/jhfc/data/report/index.html",
+      "project_scope": "JHFC public archive describes station/FCV demonstration reports and seminars",
+      "index_http_status": 404,
+      "machine_readable_grune_pressure_trace": false,
+      "finding": "The public JHFC/JARI route exposes project reports and context, but the reported report index is unavailable and no Grüne 2014 pressure-time file or supplementary raw trace was found."
+    },
     "search_date": "2026-10-12",
-    "search_scope": "publisher and institutional landing pages, the public conference PDF, and targeted public-data searches for a rights-cleared pressure-time archive"
+    "search_scope": "publisher and institutional landing pages, the public conference PDF, the official JHFC/JARI archive route, and targeted public-data searches for a rights-cleared pressure-time archive"
   },
   "existing_trace": {
     "protocol": "research/grune_2014_holdout_protocol.json",

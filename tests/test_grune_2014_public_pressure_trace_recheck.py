@@ -16,10 +16,14 @@ def test_grune_recheck_preserves_missing_trace_boundary():
     assert record["decision"]["promote_to_independent_validation"] is False
     assert record["decision"]["runtime_change"] is False
     assert record["decision"]["readiness_gate_effect"] == "none"
+    route = record["source_review"]["jari_jhfc_archive_route"]
+    assert route["index_http_status"] == 404
+    assert route["machine_readable_grune_pressure_trace"] is False
 
 
 def test_grune_recheck_report_states_the_reentry_condition():
     report = REPORT.read_text(encoding="utf-8")
     assert "complete machine-readable pressure trace" in report
     assert "required half-pressure crossing" in report
+    assert "JHFC/JARI" in report
     assert "runtime model, gate thresholds and manuscript claims are unchanged" in report
