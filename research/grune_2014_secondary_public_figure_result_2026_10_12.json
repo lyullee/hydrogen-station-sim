@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-10-11T23:37:42.856638+00:00",
+  "protocol_sha256": "f3defa89a4e10caa42e308b54ffce9c861ff4111a4b70fe7ac324a482e7ae350",
+  "data_sha256": "20696de991d36bcc27d7063ffc43550839c98e14978ccbbc8047f229054dda43",
+  "result": {
+    "points": 319,
+    "measured_initial_pressure_bar_abs": 200.000033,
+    "predicted_initial_pressure_bar_abs": 200.00000000000395,
+    "pressure_nrmse_percent_initial_measured": 18.62509004294874,
+    "median_absolute_percentage_error_percent": 84.59868751764434,
+    "experimental_half_pressure_time_s": 0.0681760685524108,
+    "predicted_half_pressure_time_s": 0.020939407503808485,
+    "half_pressure_time_relative_error_percent": 69.28627897088084,
+    "nrmse_screen_pass": false,
+    "median_ape_screen_pass": false,
+    "half_pressure_time_screen_pass": false,
+    "joint_primary_screen_pass": false
+  },
+  "claim_supported": false,
+  "claim_boundary": "One 20 MPa, 0.37 L, 4 mm pressure-decay trace; no flame, ignition, dispersion, radiation, station control or safety-distance claim."
+}

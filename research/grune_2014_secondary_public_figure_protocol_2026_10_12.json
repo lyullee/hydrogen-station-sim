@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "artifact_type": "grune_2014_secondary_public_figure_protocol",
+  "frozen_at": "2026-10-12",
+  "status": "secondary_figure_route_locked_before_vector_extraction",
+  "objective": "Check whether a publicly accessible conference reproduction of Grune et al. (2014) contains the complete pressure-decay inset needed to evaluate the already frozen source model.",
+  "claim_boundary": "Figure-derived diagnostic for the same 20 MPa, 0.37 L, 4 mm valve case; it is not a new experiment, not a rights-cleared raw logger archive, and cannot support station, ignition, dispersion, radiation or safety-distance claims.",
+  "source": {
+    "title": "Experimental study of ignited unsteady hydrogen releases from a high pressure reservoir",
+    "authors": [
+      "Joachim Grune",
+      "Karsten Sempert",
+      "Mike Kuznetsov",
+      "Thomas Jordan"
+    ],
+    "venue": "4th International Conference on Hydrogen Safety (ICHS 2011)",
+    "source_url": "https://conference.ing.unipi.it/ichs2011/papers/133.pdf",
+    "source_sha256": "1edb02f2038bd58dd27399b68cb6e0d169f058981ee9e46c4a8340be15210421",
+    "page": 3,
+    "figure": "Figure 2 inset, Pressure decay in the vessel",
+    "reported_case": "4 mm nozzle, 200 bar initial pressure, 0.37 dm3 vessel",
+    "rights_boundary": "Only derived coordinates and extraction metadata are retained; the source PDF is not committed or redistributed. Reuse/licence terms for the plot itself were not independently established."
+  },
+  "extraction": {
+    "method": "PyMuPDF vector-path extraction of the red 4 mm valve curve from the embedded inset; plot axis bounds were read from the vector frame, then mapped linearly to t=0..0.5 s and P=0..200 bar.",
+    "curve_identity": "red 4 mm valve path; the main-plot legend identifies this curve as the valve case",
+    "digitization_uncertainty_bar": 0.5,
+    "derived_csv": "data/public_validation/derived/grune_2014_ichs2011_inset_vector.csv",
+    "derived_csv_sha256": "20696de991d36bcc27d7063ffc43550839c98e14978ccbbc8047f229054dda43",
+    "points_written": 319,
+    "half_pressure_endpoint_visible": true,
+    "runtime_model_changed": false,
+    "thresholds_changed": false,
+    "original_51_point_result_overwritten": false
+  },
+  "decision": {
+    "use_for_primary_gate": false,
+    "reason": "The route provides a complete public figure-derived curve and exposes the missing half-pressure endpoint, but it is not a rights-cleared machine-readable raw archive and is a secondary reproduction of the same experiment.",
+    "next_use": "Use as a transparent post-outcome completeness diagnostic; if adopted into the paper, label it figure-derived and retain the original 51-point result alongside it."
+  }
+}
