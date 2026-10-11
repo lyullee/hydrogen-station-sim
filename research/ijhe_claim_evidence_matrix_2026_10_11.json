@@ -1,0 +1,562 @@
+{
+  "schema_version": 1,
+  "artifact_type": "ijhe_claim_evidence_matrix",
+  "generated_at": "2026-10-11T14:42:14.547747+00:00",
+  "source_audit": "manuscript/ijhe_readiness_audit.json",
+  "source_audit_sha256": "7e6e7fdcc35d6a5cb3d66e79827d5784c23e30e5b85644e6de2371641af01d82",
+  "paper_scope": "objective engineering and physics validation; no human-effectiveness or field-safety claim",
+  "rows": [
+    {
+      "id": "tank_external_validation",
+      "label": "Measured-boundary Type-IV tank thermodynamics",
+      "evidence_summary": "12 independent public fills; pressure, temperature and SOC",
+      "interpretation": "Tank submodel only; not cascade dispatch, precooling or vehicle-control validation.",
+      "status": "PASS",
+      "audit_claim": "Measured-boundary Type-IV tank model is externally evaluated on the frozen public split.",
+      "evidence": "research\\tank_model_validation_v2.json",
+      "requirement": "12 untouched validation fills, three primary errors and 10,000 case-level bootstrap replicates.",
+      "observed": {
+        "case_count": 12,
+        "pressure_rmse_mpa": 3.8413052037435977,
+        "temperature_rmse_c": 4.832748408545587,
+        "soc_rmse_percentage_points": 3.8495521984109318,
+        "bootstrap_replicates": 10000
+      }
+    },
+    {
+      "id": "dickens_typeiii_prospective_validation",
+      "label": "Type-III thermal transfer",
+      "evidence_summary": "Independent prospective fill",
+      "interpretation": "Pressure screens passed, but gas-temperature screens failed; no temperature-transfer claim.",
+      "status": "FAIL",
+      "audit_claim": "The unfitted layered tank model meets every frozen pressure and temperature screen on the prospective public Type-III filling experiment.",
+      "evidence": "research\\dickens_typeiii_prospective_protocol_2026_10_08.json; research\\dickens_typeiii_prospective_result_2026_10_08.json",
+      "requirement": "Protocol frozen before numerical outcome access, exact source hashes, conservation residuals <=1e-6 and all four pressure/temperature screens passed.",
+      "observed": {
+        "protocol_frozen_before_outcome_access": true,
+        "metrics": {
+          "pressure_rmse_mpa": 0.9429227572761019,
+          "pressure_nrmse_percent_measured_span": 3.7416086719855723,
+          "gas_temperature_rmse_k": 19.1789735912541,
+          "gas_temperature_peak_absolute_error_k": 18.71978815209468,
+          "mass_residual_relative": 4.492782269213738e-16,
+          "energy_residual_relative": 1.3725020058686309e-15,
+          "predicted_final_pressure_mpa": 36.320051972159604,
+          "measured_final_pressure_mpa": 35.24797731,
+          "predicted_peak_temperature_k": 360.79269135209466,
+          "measured_peak_temperature_k": 342.0729032
+        },
+        "screen_results": {
+          "pressure_nrmse_percent_measured_span": true,
+          "pressure_rmse_mpa": true,
+          "gas_temperature_rmse_k": false,
+          "gas_temperature_peak_absolute_error_k": false
+        },
+        "integrity_pass": true,
+        "joint_primary_screen_pass": false,
+        "claim_supported": false,
+        "retained_negative_result": true
+      }
+    },
+    {
+      "id": "preslhy_partb_ambient_external_validation",
+      "label": "Ambient PRESLHY source depletion",
+      "evidence_summary": "Five Part-B cases",
+      "interpretation": "Joint screen below the declared threshold; diameter-dependent boundary sensitivity remains unresolved.",
+      "status": "FAIL",
+      "audit_claim": "The frozen release model meets the independent ambient Cryostat Part-B pressure-decay screens.",
+      "evidence": "research\\preslhy_partb_ambient_validation.json; research\\preslhy_partb_holdout_protocol.json",
+      "requirement": "Five public ambient cases across two nozzle and two pressure groups, >=70% joint primary pass fraction, no post-freeze fitting.",
+      "observed": {
+        "eligibility": {
+          "eligible_cases": 5,
+          "excluded_cases": 0,
+          "diameter_groups": [
+            2.0,
+            4.0
+          ],
+          "pressure_groups": [
+            "high",
+            "low"
+          ],
+          "minimum_requirements_met": true
+        },
+        "aggregate": {
+          "joint_primary_pass_fraction": 0.6,
+          "bootstrap_95_percent_ci": [
+            0.2,
+            1.0
+          ],
+          "bootstrap_replicates": 10000,
+          "bootstrap_seed": 20261004,
+          "claim_threshold": 0.7,
+          "ambient_cryostat_part_b_claim_supported": false
+        },
+        "archive_sha256": "2d4fbc6b3d2996a40629c71c6a33a6fdec3fde246ee4cee23de12c86672cd4ff",
+        "claim_boundary": "This protocol evaluates rigid-source discharge and transient jet characteristics for the published ambient-temperature subset of the Cryostat part-B experiments. It does not validate cryogenic two-phase flow, ignition, dispersion, flame/radiation, station control, refuelling, or emergency separation distance.",
+        "protocol_hash_matches": true
+      }
+    },
+    {
+      "id": "proust_independent_release_validation",
+      "label": "90 MPa aperture release",
+      "evidence_summary": "Three INERIS/CEA series",
+      "interpretation": "No series met the joint mass-flow rule; no universal aperture correction is supported.",
+      "status": "FAIL",
+      "audit_claim": "The fixed high-pressure aperture relation meets its prospectively frozen rule on the independent INERIS/CEA 90 MPa campaign.",
+      "evidence": "research\\proust_release_holdout_result.json; research\\proust_release_holdout_protocol.json; data\\public_validation\\derived\\proust_90mpa_release.csv",
+      "requirement": "All 1, 2 and 3 mm series eligible; >=2/3 jointly pass <=15% peak-normalized RMSE and <=20% median absolute percentage error.",
+      "observed": {
+        "aggregate": {
+          "series": 3,
+          "diameter_groups": [
+            1.0,
+            2.0,
+            3.0
+          ],
+          "joint_primary_passes": 0,
+          "joint_primary_pass_fraction": 0.0,
+          "minimum_requirements_met": true,
+          "claim_supported": false
+        },
+        "protocol_hash_matches": true,
+        "data_hash_matches": true,
+        "claim_boundary": "This holdout concerns local gaseous-hydrogen mass flow from measured source pressure and temperature through nominal 1-3 mm terminal orifices. It does not validate the 25 L vessel thermal transient, the 10 m supply-line inventory, valve opening, flame geometry, radiation, dispersion, station separation distance, or a vehicle-fuelling controller."
+      }
+    },
+    {
+      "id": "schefer_transient_release_validation",
+      "label": "Transient blowdown source model",
+      "evidence_summary": "Sandia/SRI 2006 trace",
+      "interpretation": "Peak-normalized NRMSE passed, but median error and half-peak timing failed.",
+      "status": "FAIL",
+      "audit_claim": "The locked adiabatic vessel-discharge model meets all frozen transient mass-flow screens on the independent Sandia/SRI experiment.",
+      "evidence": "research\\schefer_2006_holdout_result.json; research\\schefer_2006_holdout_protocol.json; data\\public_validation\\derived\\schefer_2006_figure3b.csv",
+      "requirement": "At least 15 points; <=15% peak-normalized RMSE, <=20% median absolute percentage error and <=20% half-peak-time error; all screens required.",
+      "observed": {
+        "result": {
+          "points": 25,
+          "measured_peak_mass_flow_g_s": 68.38466373,
+          "predicted_peak_mass_flow_g_s": 60.66607024400885,
+          "mass_flow_nrmse_percent_peak_measured": 5.831534791930556,
+          "median_absolute_percentage_error_percent": 22.852219829947433,
+          "experimental_half_peak_time_s": 13.35459783324615,
+          "predicted_half_peak_time_s": 9.575940157002748,
+          "half_peak_time_relative_error_percent": 28.294806952826896,
+          "nrmse_screen_pass": true,
+          "median_ape_screen_pass": false,
+          "half_peak_time_screen_pass": false,
+          "joint_primary_screen_pass": false
+        },
+        "protocol_hash_matches": true,
+        "data_hash_matches": true,
+        "prior_aggregate_duration_known": true,
+        "claim_boundary": "This holdout tests the time-resolved gaseous-hydrogen mass flow of one 15.5 MPa blowdown through the published 3.175 mm controlling manifold restriction. It does not validate the downstream flame, radiation, dispersion, 7.94 mm tube pressure field, 70-90 MPa storage, refuelling control, or a complete station loop."
+      }
+    },
+    {
+      "id": "ignited_pressure_peaking_external_validation",
+      "label": "Ignited-enclosure consequence endpoint",
+      "evidence_summary": "Installed HyRAM+ API and 27 ignited-enclosure cases",
+      "interpretation": "Adapter and bounded enclosure peak-pressure translation only; not site consequence or separation-distance certification.",
+      "status": "PASS",
+      "audit_claim": "The fixed reacting-enclosure model predicts large-scale ignited hydrogen peak overpressure within the prospectively frozen error boundary.",
+      "evidence": "research\\usn_17934047_ignited_pressure_peaking_protocol_2026_10_08.json; research\\usn_17934047_ignited_pressure_peaking_result_2026_10_08.json",
+      "requirement": "Twenty-seven untouched holdouts, verified raw identities, no exclusions, and >=80% within 2 kPa; timing/trace diagnostics remain secondary.",
+      "observed": {
+        "eligible_case_count": 27,
+        "excluded_case_count": 0,
+        "primary_pass_count": 27,
+        "primary_pass_fraction": 1.0,
+        "peak_overpressure_mae_kpa": 0.6716371499859706,
+        "maximum_peak_overpressure_abs_error_kpa": 1.7959931211202615,
+        "secondary_peak_time_pass_count": 21,
+        "secondary_trace_nrmse_pass_count": 26,
+        "confirmatory_rule_met": true,
+        "claim_boundary": "This result concerns only ignited pressure peaking in a vented enclosure. It does not validate an outdoor H70 station fueling loop, jet-flame radiation distance, emergency controls, operator response, or SAGA effectiveness."
+      }
+    },
+    {
+      "id": "h2safe_spatial_detector_transfer_validation",
+      "label": "Spatial detector transfer",
+      "evidence_summary": "18 actual-hydrogen HyTunnel cases",
+      "interpretation": "Rank/recall screens were not jointly met; geometry-only routing remains disabled at runtime.",
+      "status": "FAIL",
+      "audit_claim": "The exact frozen orientation-class detector ranking must pass every screen on an independent actual-hydrogen spatial holdout before runtime use.",
+      "evidence": "research\\h2safe_spatial_response_diagnostic_2026_10_08.json; research\\hydelta_indoor_spatial_holdout_eligibility_2026_10_08.json; research\\sandia_warehouse_spatial_diagnostic_2026_10_08.json; research\\hytunnel_spatial_holdout_protocol_2026_10_08.json; research\\hytunnel_spatial_format_amendment_2026_10_08.json; research\\hytunnel_spatial_holdout_result_2026_10_08.json; research\\HYTUNNEL_SPATIAL_HOLDOUT_2026_10_08.md",
+      "requirement": "Exact frozen model hash, 18 complete actual-hydrogen cases, unchanged rank/recall screens, retained format amendment and no runtime activation unless every screen passes.",
+      "observed": {
+        "doi": "10.7799/17118570",
+        "method_status": "POST_ACCESS_DEVELOPMENT_DIAGNOSTIC_NOT_VALIDATION",
+        "experiment_count": 5,
+        "median_spearman": 0.5817391304347826,
+        "spearman_at_least_0_4_fraction": 0.8,
+        "mean_top5_recall": 0.56,
+        "nearest_in_response_quartile_fraction": 0.6,
+        "screens": {
+          "median_spearman_at_least_0_5": true,
+          "spearman_at_least_0_4_fraction_at_least_0_6": true,
+          "mean_top5_recall_at_least_0_6": false,
+          "nearest_in_response_quartile_fraction_at_least_0_7": false
+        },
+        "joint_pass": false,
+        "runtime_use": "Do not apply the failed geometry-only ranking to runtime detector routing. Retain the existing zone mapping, 1.0 and 0.45 concentration multipliers, and all alarm/trip thresholds until a new independent spatial holdout passes.",
+        "hydelta_actual_hydrogen_holdout": {
+          "audit_integrity": true,
+          "status": "INELIGIBLE_NO_MODEL_EVALUATION",
+          "eligible": false,
+          "failed_required_fields": [
+            "source_coordinates",
+            "sensor_coordinates_in_same_frame",
+            "release_orientation_class",
+            "per_sensor_numeric_response"
+          ],
+          "model_evaluation_executed": false,
+          "runtime_candidate_enabled": false
+        },
+        "sandia_actual_hydrogen_external_diagnostic": {
+          "audit_integrity": true,
+          "status": "EXTERNAL_POST_ACCESS_DIAGNOSTIC_NOT_VALIDATION",
+          "sensor_count": 6,
+          "baseline_spearman_rho": 0.6,
+          "candidate_spearman_rho": 0.942857142857143,
+          "top3_recall": 1.0,
+          "independent_validation_pass": false,
+          "runtime_candidate_enabled": false
+        },
+        "hytunnel_actual_hydrogen_holdout": {
+          "audit_integrity": true,
+          "dataset_doi": "10.23642/USN.14405903",
+          "experiment_count": 18,
+          "median_spearman": 0.5600876703795867,
+          "spearman_at_least_0_4_fraction": 0.8333333333333334,
+          "mean_top5_recall": 0.5777777777777777,
+          "nearest_in_response_quartile_fraction": 0.9444444444444444,
+          "screens": {
+            "all_18_declared_cases_eligible": true,
+            "median_spearman_at_least_0_5": true,
+            "spearman_at_least_0_4_fraction_at_least_0_6": true,
+            "mean_top5_recall_at_least_0_6": false,
+            "nearest_in_response_quartile_fraction_at_least_0_7": true
+          },
+          "joint_screen_pass": false,
+          "runtime_candidate_enabled": false
+        },
+        "claim_boundary": "This post-access diagnostic supports only a development choice to replace arbitrary near/far detector assignment with a transparent coordinate ranking. It failed the joint spatial screen and is not independent validation."
+      }
+    },
+    {
+      "id": "full_loop_external_validation",
+      "label": "Station-to-vehicle full loop",
+      "evidence_summary": "Public-data search and consumed closed-loop diagnostic",
+      "interpretation": "Out of scope: no rights-cleared synchronized station/controller/dispenser/vehicle raw cohort was found.",
+      "status": "OUT OF SCOPE",
+      "audit_claim": "The complete station controller/cascade/precooler loop meets frozen engineering screens on new external cases.",
+      "evidence": "data\\public_validation\\results\\closed_loop_external_holdout\\validation.json; research\\external_full_loop_data_search.json; research\\public_full_loop_search_recheck_2026_10_05.json; research\\public_operational_benchmark_recheck_2026_10_05.json; research\\public_full_loop_search_sweep_2026_10_05.json; research\\public_full_loop_search_recheck_2026_10_06.json; research\\public_full_loop_search_recheck_2026_10_09.json; research\\public_full_loop_search_recheck_2026_10_11.json; research\\public_station_vehicle_search_recheck_2026_10_11.json; research\\public_full_loop_data_update_2026_10_08.json; research\\methytrucks_hysam_postaccess_diagnostic_2026_10_08.json; research\\rheadhy_public_test_matrix_pretrace_protocol_2026_10_08.json; research\\methytrucks_2026_public_measurement_intake.json; research\\methytrucks_group_d_prospective_protocol_2026_10_08.json; research\\methytrucks_group_d_prospective_result_2026_10_08.json; research\\apparatus_resolved_release_protocol.json; research\\controlled_full_loop_cohort_registry.json",
+      "requirement": "Hash-locked protocol and model, clean-source external holdout with >=8 cases and >=80% screen pass fraction.",
+      "observed": {
+        "protocol_integrity": true,
+        "public_external_loop_pass": false,
+        "aggregate": {
+          "case_count": 8,
+          "screening_pass_count": 0,
+          "screening_pass_fraction": 0.0,
+          "final_stop_reason_counts": {
+            "safety-temperature": 5,
+            "none": 3
+          },
+          "metrics": {
+            "pressure_rmse_mpa": {
+              "mean": 15.861950187335326,
+              "median": 14.49675836414942,
+              "standard_deviation": 3.7476895068277076,
+              "mean_bootstrap_95_ci": [
+                13.637430363691749,
+                18.430827353918872
+              ]
+            },
+            "pressure_mae_mpa": {
+              "mean": 12.590152944442048,
+              "median": 12.590039935822876,
+              "standard_deviation": 2.460904030004179,
+              "mean_bootstrap_95_ci": [
+                10.971963265030352,
+                14.130201668196316
+              ]
+            },
+            "temperature_rmse_c": {
+              "mean": 13.2297713971845,
+              "median": 13.928934952073663,
+              "standard_deviation": 3.3457636590763014,
+              "mean_bootstrap_95_ci": [
+                10.968645460206826,
+                15.25100417461277
+              ]
+            },
+            "temperature_mae_c": {
+              "mean": 11.84433108555098,
+              "median": 12.105033636019115,
+              "standard_deviation": 3.162512329995514,
+              "mean_bootstrap_95_ci": [
+                9.781595031463121,
+                13.84424239055918
+              ]
+            },
+            "soc_rmse_percentage_points": {
+              "mean": 18.082051217903157,
+              "median": 16.836987442919003,
+              "standard_deviation": 3.783989559346659,
+              "mean_bootstrap_95_ci": [
+                15.896878511704957,
+                20.72305267897957
+              ]
+            }
+          }
+        },
+        "controlled_cohort_registry": {
+          "present": true,
+          "integrity_passed": false,
+          "evaluation_scope": "cascade_resolved_station_to_vehicle",
+          "case_count": 0,
+          "case_pass_count": 0,
+          "case_pass_fraction": 0.0,
+          "provenance_screen_passed": false,
+          "full_loop_external_validation_supported": false,
+          "raw_trace_hashes_published": false
+        },
+        "new_external_data_search": {
+          "status": "NO_ELIGIBLE_PUBLIC_RAW_SET_IDENTIFIED",
+          "next_action": "send the prepared CARB/NRC/IJHE high-flow/FCH2RAIL/JRC/NREL/BAM/Empa/DLR data requests through approved custodians, and preserve any received files with pre-access protocol freeze, provenance, license and cryptographic digest",
+          "claim_limit": "The NREL candidate supports an independent tank-submodel screen only. No new external full-loop validation claim is permitted until station controller, hose/nozzle, protocol and vehicle-side traces are obtained and scored under a pre-access freeze."
+        },
+        "search_recheck_2026_10_04": {
+          "result": "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET",
+          "gate_impact": "full_loop_external_validation_remains_open",
+          "candidate_count": 17
+        },
+        "search_recheck_2026_10_06": {
+          "result": "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET",
+          "gate_impact": "full_loop_external_validation_remains_open",
+          "candidate_count": 9,
+          "claim_boundary": "This record documents a current public-data search and exclusion decision. It does not add numerical validation evidence or permit a full-loop readiness claim."
+        },
+        "search_recheck_2026_10_09": {
+          "status": "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET",
+          "gate_impact": "full_loop_external_validation_remains_open",
+          "candidate_count": 9,
+          "claim_boundary": "This artifact documents a current public search and exclusion decision. It adds no numerical validation, does not alter any frozen holdout, and does not support a safety or IJHE full-loop claim."
+        },
+        "search_recheck_2026_10_11": {
+          "status": "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET",
+          "decision": "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET_IDENTIFIED",
+          "gate_impact": "full_loop_external_validation_remains_open",
+          "candidate_count": 9,
+          "prospective_holdout_eligible": false,
+          "runtime_parameter_application": false,
+          "claim_boundary": "This artifact records a current public-access recheck and exclusion decision. It adds no numerical validation, does not alter any frozen holdout or runtime parameter, and does not support an IJHE full-loop or field-safety claim."
+        },
+        "public_station_vehicle_search_recheck_2026_10_11": {
+          "decision": "NO_NEW_ELIGIBLE_PUBLIC_RAW_STATION_TO_VEHICLE_SET_IDENTIFIED",
+          "source_count": 5,
+          "claim_boundary": "This is a public-access availability audit. It does not prove that restricted, proprietary or unpublished traces do not exist."
+        },
+        "public_data_update_2026_10_08": {
+          "status": "public_synchronized_rows_found_but_full_loop_gate_open",
+          "gate_impact": "full_loop_external_validation_remains_open",
+          "eligibility": {
+            "post_access_component_diagnostic": true,
+            "prospective_holdout": false,
+            "quantitative_full_loop_validation": false
+          },
+          "claim_boundary": "The public files improve cross-institution tank-model transfer evidence but do not validate the complete station controller/cascade/precooler loop or field safety."
+        },
+        "rheadhy_public_test_matrix_pretrace": {
+          "status": "FROZEN_BEFORE_SYNCHRONIZED_TRACE_ACCESS_AFTER_AGGREGATE_CAMPAIGN_REPORT",
+          "record_doi": "10.5281/zenodo.16992589",
+          "planned_total_test_count": 300,
+          "machine_readable_test_result_dataset_found": false,
+          "trace_level_protocol_frozen": true,
+          "full_loop_external_validation_supported": false,
+          "claim_boundary": "This artifact freezes a reproducible trace-level evaluation before synchronized rows are available. It is protocol-integrity evidence only. It neither converts the public test matrix or aggregate campaign report into validation data nor closes the full-loop, safety or journal-readiness gates."
+        },
+        "methytrucks_hysam_postaccess_diagnostic": {
+          "status": "completed_post_access_external_diagnostic",
+          "evidence_role": "post_access_external_diagnostic_only",
+          "pressure_rmse_mpa": 2.723997995063285,
+          "temperature_rmse_c": 5.934497478484101,
+          "candidate_session_aggregate": {
+            "case_count": 5,
+            "unique_workbook_count": 2,
+            "independent_event_count_claimed": false,
+            "within_workbook_sessions_may_be_correlated": true,
+            "selection_is_independent_of_model_prediction": true,
+            "selection_criteria": {
+              "flow_to_scale_mass_ratio": [
+                0.8,
+                1.2
+              ],
+              "minimum_integrated_flow_mass_kg": 0.05,
+              "minimum_duration_s": 10.0,
+              "required_candidate_tank_columns": [
+                "PT01 ValueY",
+                "TT08 ValueY",
+                "TT09 ValueY",
+                "TT10 ValueY",
+                "TT11 ValueY"
+              ]
+            },
+            "pressure_rmse_mpa": {
+              "case_mean": 1.2866244910563729,
+              "case_median": 1.2932280909557559,
+              "minimum": 0.3484466291369078,
+              "maximum": 2.723997995063285
+            },
+            "temperature_rmse_c": {
+              "case_mean": 4.57841318799785,
+              "case_median": 4.329121313428847,
+              "minimum": 2.7675302274981193,
+              "maximum": 6.071461579848656
+            },
+            "flow_to_scale_mass_ratio": {
+              "minimum": 0.9906363636363635,
+              "maximum": 1.0734700460829494
+            },
+            "project_screen": {
+              "pressure_rmse_mpa_max": 5.0,
+              "temperature_rmse_c_max": 10.0,
+              "joint_pass_count": 5,
+              "joint_pass_fraction": 1.0,
+              "interpretation": "descriptive post-access screen, not confirmatory validation"
+            }
+          },
+          "eligibility": {
+            "component_diagnostic_eligible": true,
+            "prospective_holdout_eligible": false,
+            "quantitative_full_loop_validation_eligible": false,
+            "reason": "The rows are public and synchronized, but numerical outcomes were inspected before this protocol and the released package lacks a channel dictionary, controller/bank-state mapping and calibration metadata."
+          }
+        },
+        "methytrucks_complete_public_measurement_intake": {
+          "status": "PASS",
+          "aggregate": {
+            "record_count": 3,
+            "workbook_count": 15,
+            "sample_count": 58440,
+            "all_time_axes_monotonic": true,
+            "sampling_intervals_s": [
+              0.5
+            ],
+            "common_headers": [
+              "11TT150A ValueY",
+              "PT03 ValueY",
+              "PTD10 ValueY",
+              "PTD11 ValueY",
+              "PTX05 ValueY",
+              "QT_D02 ValueY",
+              "TEX01 ValueY",
+              "TE_D22 ValueY",
+              "TT24 ValueY",
+              "TT_D04 ValueY",
+              "Zeit",
+              "fwg1 ValueY",
+              "fwg2 ValueY"
+            ],
+            "workbooks_with_flow": 15,
+            "workbooks_with_mass": 6,
+            "workbooks_with_receiving_cylinder_pressure_and_four_temperatures": 2,
+            "mass_closure_session_count": 18,
+            "mass_closure_comparable_session_count": 9,
+            "mass_closure_non_comparable_session_count": 9,
+            "mass_closure_screen_pass_count": 8,
+            "mass_closure_comparable_pass_fraction": 0.8888888888888888,
+            "mass_closure_pass_ratio_median": 1.0018951923076922,
+            "mass_closure_comparable_ratio_median": 1.0028625,
+            "mass_closure_comparable_absolute_relative_difference_pct_median": 0.484745762711869
+          },
+          "eligibility": {
+            "public_real_experimental_measurements": true,
+            "synchronized_component_trace_candidate": true,
+            "flow_mass_consistency_diagnostic_supported": true,
+            "receiving_cylinder_thermal_diagnostic_candidate": true,
+            "prospective_holdout_eligible": false,
+            "full_loop_station_vehicle_validation_eligible": false
+          },
+          "mapping_boundary": {
+            "publisher_channel_dictionary_present": false,
+            "engineering_units_in_workbook_headers": false,
+            "workbook_to_sampling_device_crosswalk_present": false,
+            "vehicle_identity_and_tank_geometry_present": false,
+            "station_controller_bank_valve_states_present": false,
+            "sensor_calibration_uncertainty_present": false,
+            "official_test_context": {
+              "station_storage_pressure_levels_bar": [
+                200,
+                500,
+                900
+              ],
+              "functionality_test_storage_selection": "medium-pressure banks 4+5",
+              "group_a_npl": {
+                "method": "NPL HD direct sampling",
+                "pressure_line_mpa": 35,
+                "flow_class": "high-flow",
+                "protocol": "maintenance/manual pressure setting",
+                "pre_cooling": "T20 heat exchanger",
+                "vehicle_receiving_tank": false,
+                "documented_sink": "sampling cylinder and portable vent"
+              },
+              "group_c_engie": {
+                "method": "ENGIE direct/serial sampling",
+                "pressure_line_mpa": 35,
+                "flow_class": "high-flow",
+                "protocol": "SAE J2601-1",
+                "pre_cooling": "T20 heat exchanger",
+                "vehicle_receiving_tank": false,
+                "documented_sink": "55 L sampling-device tank and vent mast"
+              },
+              "source": "MetHyTrucks D3, sections 2.1.1, 2.1.3 and 3.1, including Table 1"
+            },
+            "guide_use": "D1 supplies operating-practice context but does not define the logger tags, workbook-to-device mapping, sensor units or controller states.",
+            "implementation_report_use": "D3 resolves the physical test class for Groups A and C as 35 MPa direct/serial sampling-system tests supplied from the station's medium storage banks. It does not publish a logger tag/unit dictionary, and the documented receiving systems are sampling hardware rather than vehicle tanks."
+          }
+        },
+        "methytrucks_group_d_prospective_intake": {
+          "status": "completed_prospective_intake_ineligible",
+          "decision": "MODEL_SCREEN_NOT_RUN_INELIGIBLE_METADATA",
+          "sample_count": 720,
+          "unresolved_required": [
+            "engineering_units",
+            "independent_tank_geometry",
+            "vehicle_pressure",
+            "vehicle_temperature"
+          ],
+          "model_executed": false,
+          "full_loop_external_validation_supported": false
+        },
+        "live_public_search_sweep_2026_10_05": {
+          "result": "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET",
+          "gate_impact": "full_loop_external_validation_remains_open",
+          "candidate_count": 9,
+          "claim_boundary": "This sweep records discovery and exclusion decisions. It adds no numerical validation, does not alter frozen holdout results and does not permit IJHE or full-objective completion."
+        },
+        "operational_benchmark_recheck_2026_10_05": {
+          "result": "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET",
+          "gate_impact": "full_loop_external_validation_remains_open",
+          "candidate_count": 18
+        },
+        "operational_benchmark_face_validity_2026_10_05": {
+          "result": "NOMINAL_LIGHT_DUTY_FACE_VALIDITY_CONTEXT_ONLY",
+          "external_validation_status": "NOT_ESTABLISHED",
+          "goal_completion_permitted": false,
+          "claim_boundary": "Nominal operating-range context only; no synchronized full-loop validation claim."
+        },
+        "prospective_apparatus_resolved_release_protocol": {
+          "status": "PROSPECTIVE_PROTOCOL_SPECIFICATION_ONLY",
+          "external_validation_status": "NOT_ESTABLISHED",
+          "full_loop_holdout_eligible": false,
+          "goal_completion_permitted": false
+        }
+      }
+    }
+  ],
+  "decision_rule": "PASS is retained only for the declared component endpoint; FAIL, PENDING and OUT OF SCOPE remain explicit boundaries."
+}
