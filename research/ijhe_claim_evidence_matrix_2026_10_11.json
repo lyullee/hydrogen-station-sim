@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
   "artifact_type": "ijhe_claim_evidence_matrix",
-  "generated_at": "2026-10-11T18:36:52.222671+00:00",
+  "generated_at": "2026-10-11T18:42:49.893294+00:00",
   "source_audit": "manuscript/ijhe_readiness_audit.json",
-  "source_audit_sha256": "d18374a913ce3166a3b34bdc8fa19b3c3e6860f2a1421c7e036fb002a73f4a58",
+  "source_audit_sha256": "277d904da298db7cc952098ddb9e1f1a09bd0b70fd67aeaeb79ab3812540ece1",
   "paper_scope": "objective engineering and physics validation; no human-effectiveness or field-safety claim",
   "rows": [
     {
@@ -29,9 +29,9 @@
       "evidence_summary": "Independent prospective fill",
       "interpretation": "Pressure screens passed, but gas-temperature screens failed; no temperature-transfer claim.",
       "status": "FAIL",
-      "audit_claim": "The unfitted layered tank model meets every frozen pressure and temperature screen on the prospective public Type-III filling experiment.",
+      "audit_claim": "The frozen public Type-III filling experiment is retained as an independent component result: both pressure screens pass, both gas-temperature screens fail, and the joint validation claim is therefore rejected.",
       "evidence": "research\\dickens_typeiii_prospective_protocol_2026_10_08.json; research\\dickens_typeiii_prospective_result_2026_10_08.json",
-      "requirement": "Protocol frozen before numerical outcome access, exact source hashes, conservation residuals <=1e-6 and all four pressure/temperature screens passed.",
+      "requirement": "Protocol frozen before numerical outcome access, exact source hashes and conservation residuals <=1e-6; the negative result must retain the two passing pressure screens and two failing gas-temperature screens without parameter fitting or runtime promotion.",
       "observed": {
         "protocol_frozen_before_outcome_access": true,
         "metrics": {
