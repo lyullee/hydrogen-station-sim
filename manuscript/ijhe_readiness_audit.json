@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-11T18:50:34.202241+00:00",
+  "generated_at": "2026-10-11T19:13:17.262994+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -8348,7 +8348,7 @@
             75,
             72
           ],
-          "approximate_manuscript_words_before_references": 8000,
+          "approximate_manuscript_words_before_references": 7996,
           "figures": 3,
           "tables": 3,
           "citation_keys": 53,
@@ -8380,30 +8380,30 @@
       "requirement": "Compiler success, exact source/PDF hashes, no unresolved errors, and visual inspection of every rendered page.",
       "observed": {
         "schema_version": 2,
-        "verified_at_utc": "2026-10-11T18:24:19.819416+00:00",
+        "verified_at_utc": "2026-10-11T19:13:16.721652+00:00",
         "success": true,
         "compiler": {
           "name": "Tectonic",
           "version": "0.17.0",
-          "official_release_url": "https://github.com/tectonic-typesetting/tectonic/releases/tag/tectonic%400.17.0",
+          "official_release_url": "https://github.com/tectonic-typesetting/tectonic/releases/tag/tectonic@0.17.0",
           "archive_sha256": "f61ce51f0b0ade1015b7de7ef368541c5424e9756ecbd0d7af97d6d48030845"
         },
         "source": {
           "path": "manuscript/ijhe_manuscript_draft.tex",
-          "bytes": 76903,
-          "sha256": "da565db0b96407b5e36dd277b88b6ca1bbbf43c29799cbf043eec45fc626a3a7"
+          "bytes": 76888,
+          "sha256": "d7aa9b1b4d7e147ee72cd5d25dda73cbc0ed35ee369c92d8b6e8bdba2c5982a8"
         },
         "pdf": {
           "path": "output/pdf/ijhe_manuscript_draft.pdf",
-          "bytes": 837099,
-          "sha256": "d0b6c5106ab2a407d87b154ce7fcb79ba0a767bea6d557b3efe1024e43586323",
+          "bytes": 837059,
+          "sha256": "b9e5f97f43a3b26031d6cc49f0936a716c2f6da70f5c5c7471a860e560e852af",
           "page_count": 24,
-          "extracted_character_count": 71323
+          "extracted_character_count": 71306
         },
         "compile_log": {
           "path": "output/pdf/ijhe_manuscript_draft.log",
           "bytes": 19549,
-          "sha256": "aab7016cbb418dfb9e59a0895fc57a8359a1742d49704fc5ad1aa265702929d1",
+          "sha256": "f80cc8061d9cb9a6fe476cd976b53d7b1a99eab9f7a1829d8a88d5f87d6f892b",
           "unresolved_citations": 0,
           "unresolved_references": 0,
           "fatal_errors": [],
