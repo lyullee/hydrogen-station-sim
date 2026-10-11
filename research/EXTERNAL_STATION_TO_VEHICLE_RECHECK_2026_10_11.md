@@ -19,6 +19,21 @@ The recheck did not identify a new eligible raw set:
   synchronized sampling-system measurement release. It has value for the
   existing component diagnostic, but does not contain the vehicle/receptacle
   tank channels or station controller state needed for the full-loop gate.
+- [California ARB's light-duty HRS in-use study](https://ww2.arb.ca.gov/sites/default/files/2024-12/Existing%20Light-Duty%20Hydrogen%20Refueling%20Stations%20In-Use%20Study%20Report%20ADA%20AL.pdf)
+  publishes pressure, temperature and mass-flow figures from station tests,
+  but no reusable machine-readable synchronized logger archive was identified.
+- The [Cal State LA / 3Emotion back-to-back fueling study](https://doi.org/10.1016/j.jclepro.2021.129737)
+  describes multi-year operator logs and station/vehicle metrics. The public
+  article record still does not expose the event rows, channel dictionary,
+  clock alignment and reuse terms needed for an untouched holdout, so it is a
+  custodian request lead only.
+- The [H2-Stations Europe API v2](https://docs.h2-stations.eu/for-data-users/api-v2/)
+  exposes station layout and aggregate availability/usage/storage status. It
+  does not expose synchronized dispenser/controller and vehicle-side pressure,
+  temperature and transfer-flow channels.
+- [Hydrogen Fueling in FCEV: A Study](https://zenodo.org/records/12737240) is
+  an open article about fueling conditions and standards, not a measured raw
+  station-to-vehicle logger release.
 
 The primary-goal decision remains **out of scope** for synchronized
 station-to-vehicle full-loop validation. The manuscript must state that no

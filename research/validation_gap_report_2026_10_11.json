@@ -8,6 +8,22 @@
     "pending": 7,
     "full_user_objective_ready": false
   },
+  "primary_scope": {
+    "definition": "Declared 2026-10-11 primary scope: station-side process/safety, public component holdouts and direct-answer SAGA grounding; full-loop and human-effectiveness lanes remain excluded.",
+    "pass": 127,
+    "fail": 9,
+    "pending": 2,
+    "total": 138,
+    "closure_percent": 92.0,
+    "excluded_gate_ids": [
+      "full_loop_external_validation",
+      "hiad_casebook_frozen",
+      "hiad_holdout_collection",
+      "independent_expert_review_complete",
+      "institutional_ethics_determination",
+      "saga_effectiveness_and_safety_supported"
+    ]
+  },
   "interpretation": {
     "data_volume_is_primary_blocker": false,
     "primary_blocker": "independent component-physics holdouts and protocol provenance",

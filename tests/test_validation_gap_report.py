@@ -38,6 +38,21 @@ def test_gap_report_can_use_dated_readiness_snapshot() -> None:
     assert report["overall"]["pending"] == 7
 
 
+def test_gap_report_exposes_declared_primary_scope_metric() -> None:
+    report = build_report(ROOT, audit_path="research/ijhe_readiness_audit_2026_10_11.json")
+    scope = report["primary_scope"]
+
+    assert (scope["pass"], scope["fail"], scope["pending"], scope["total"]) == (
+        127,
+        9,
+        2,
+        138,
+    )
+    assert scope["closure_percent"] == 92.0
+    assert "full_loop_external_validation" in scope["excluded_gate_ids"]
+    assert "institutional_ethics_determination" in scope["excluded_gate_ids"]
+
+
 def test_gap_report_prioritizes_high_impact_work_without_serializing_tracks() -> None:
     report = build_report(ROOT)
 

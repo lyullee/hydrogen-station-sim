@@ -175,6 +175,32 @@ def build_report(
         bucket = item["bucket"]
         by_bucket.setdefault(bucket, {"FAIL": 0, "PENDING": 0})[item["status"]] += 1
 
+    # Keep the legacy audit totals for traceability, but expose the declared
+    # primary-scope metric beside them.  The full-loop station-to-vehicle lane
+    # and the optional SAGA human-evaluation lane are deliberately excluded
+    # from the active scope; showing only the legacy totals made the progress
+    # report look inconsistent with the documented scope decision.
+    excluded_from_primary_scope = {
+        "full_loop_external_validation",
+        "institutional_ethics_determination",
+        "hiad_casebook_frozen",
+        "hiad_holdout_collection",
+        "independent_expert_review_complete",
+        "saga_effectiveness_and_safety_supported",
+    }
+    scoped_gates = [
+        gate for gate in gates
+        if isinstance(gate, dict) and gate.get("id") not in excluded_from_primary_scope
+    ]
+    scoped_counts = {
+        status: sum(gate.get("status") == status for gate in scoped_gates)
+        for status in ("PASS", "FAIL", "PENDING")
+    }
+    scoped_total = sum(scoped_counts.values())
+    scoped_closure = (
+        scoped_counts["PASS"] / scoped_total * 100.0 if scoped_total else 0.0
+    )
+
     return {
         "schema_version": 1,
         "source_audit_generated_at": audit.get("generated_at"),
@@ -184,6 +210,19 @@ def build_report(
             "fail": (audit.get("gate_counts") or {}).get("FAIL", 0),
             "pending": (audit.get("gate_counts") or {}).get("PENDING", 0),
             "full_user_objective_ready": bool(audit.get("full_user_objective_ready")),
+        },
+        "primary_scope": {
+            "definition": (
+                "Declared 2026-10-11 primary scope: station-side process/safety, "
+                "public component holdouts and direct-answer SAGA grounding; "
+                "full-loop and human-effectiveness lanes remain excluded."
+            ),
+            "pass": scoped_counts["PASS"],
+            "fail": scoped_counts["FAIL"],
+            "pending": scoped_counts["PENDING"],
+            "total": scoped_total,
+            "closure_percent": round(scoped_closure, 1),
+            "excluded_gate_ids": sorted(excluded_from_primary_scope),
         },
         "interpretation": {
             "data_volume_is_primary_blocker": False,
@@ -212,12 +251,18 @@ def build_report(
 
 def _markdown(report: dict[str, Any]) -> str:
     overall = report["overall"]
+    scope = report.get("primary_scope") or {}
     lines = [
         "# Validation gap triage (privacy-bounded)",
         "",
         "현재 검증 게이트를 데이터 공백, 모델 공백, 검토 공백으로 분류한 의사결정용 보고서다. 새로운 수치 검증을 수행하거나 실패 게이트를 승격하지 않는다.",
         "",
         f"- PASS {overall['pass']} / FAIL {overall['fail']} / PENDING {overall['pending']}",
+        (
+            f"- 주 목표 범위: PASS {scope.get('pass', 0)} / "
+            f"FAIL {scope.get('fail', 0)} / PENDING {scope.get('pending', 0)} "
+            f"({scope.get('closure_percent', 0.0):.1f}%)"
+        ),
         f"- 완전한 사용자 목표 준비 여부: {'예' if overall['full_user_objective_ready'] else '아니오'}",
         f"- 주된 병목: {report['interpretation']['primary_blocker']}",
         "",
