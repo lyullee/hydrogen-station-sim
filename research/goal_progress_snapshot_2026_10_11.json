@@ -97,12 +97,12 @@
       },
       "full_regression": {
         "status": "PASS",
-        "tests_passed": 1426,
+        "tests_passed": 1428,
         "tests_failed": 0,
         "evidence": "research/full_regression_test_run_2026_10_11.json",
         "warnings": 20,
-        "elapsed_seconds": 286.27,
-        "source_commit": "1c2b35591da4aa7528a4d6509944f2d3a133d3d9"
+        "elapsed_seconds": 267.02,
+        "source_commit": "cb796262e2e9c36a9bee8aba4a0bcfd22e304c6f"
       },
       "preslhy_partb_boundary_diagnostic": {
         "status": "POST_OUTCOME_DIAGNOSTIC_ONLY",
