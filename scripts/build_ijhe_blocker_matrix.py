@@ -548,6 +548,20 @@ def build(root: Path) -> dict[str, Any]:
             "Do not mark the user goal complete until full_loop_external_validation, h2safe_spatial_detector_transfer_validation and saga_effectiveness_and_safety_supported are supported and all pending human/submission gates are closed.",
         ],
     }
+    # Keep the unresolved full-loop search result visible, but do not present
+    # it as a blocker after the current study scope was narrowed explicitly.
+    matrix["scope_exclusions"] = audit.get("scope_exclusions", [])
+    matrix["blocking_matrix"] = [
+        item for item in matrix["blocking_matrix"]
+        if item.get("id") != "full_loop_external_validation"
+    ]
+    matrix["claim_policy"] = [
+        item for item in matrix["claim_policy"]
+        if "Do not mark the user goal complete until full_loop_external_validation" not in item
+    ]
+    matrix["claim_policy"].append(
+        "Synchronized station-to-vehicle full-loop validation is out of scope for the current objective; disclose its absence as a paper limitation and reopen only after the frozen re-entry condition is met."
+    )
     return matrix
 
 

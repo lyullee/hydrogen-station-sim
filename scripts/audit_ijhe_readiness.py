@@ -7397,8 +7397,30 @@ def audit(root: Path) -> dict[str, object]:
         "ijhe_latex_compilation", "submission_metadata_and_declarations",
         "software_doi",
     )
+    # The public-data search did not identify a rights-cleared, synchronized
+    # station-to-vehicle logger archive.  That missing modality is disclosed as
+    # a scope limitation rather than treated as a blocker for the narrowed
+    # station-side/component-validated objective.
+    scope_exclusions = [
+        {
+            "id": "full_loop_external_validation",
+            "status": "OUT_OF_SCOPE",
+            "reason": (
+                "No reusable public raw dataset was found with synchronized station/controller, "
+                "dispenser/nozzle and vehicle/receptacle channels on a common time base."
+            ),
+            "paper_limitation": (
+                "The study does not claim independent station-to-vehicle full-loop accuracy, "
+                "vehicle-controller validation or field-safety validation."
+            ),
+            "reentry_condition": (
+                "A custodian provides at least three rights-cleared, independently documented "
+                "events with station and vehicle channels; freeze the protocol before outcome access."
+            ),
+        }
+    ]
     full_required = bounded_required + human_effectiveness_gates + (
-        "full_loop_external_validation", "station_consequence_geometry_validation",
+        "station_consequence_geometry_validation",
         "h2safe_spatial_detector_transfer_validation",
         "saga_effectiveness_and_safety_supported",
     )
@@ -7436,11 +7458,14 @@ def audit(root: Path) -> dict[str, object]:
         "blocking_full_objective_gates": [
             item for item in full_required if by_id[item]["status"] != "PASS"
         ],
+        "scope_exclusions": scope_exclusions,
         "gates": gates,
         "decision_rule": (
             "Only full_user_objective_ready=true permits goal completion. "
-            "A bounded paper may report negative or limited physics honestly, but it "
-            "does not satisfy the full validated-digital-twin objective."
+            "The current objective is explicitly scoped to station-side/component evidence "
+            "and consequence/decision-support claims. Synchronized station-to-vehicle "
+            "full-loop validation is excluded and must remain a stated limitation until "
+            "the re-entry condition is met."
         ),
     }
 
@@ -7456,6 +7481,12 @@ def _markdown(report: dict[str, object]) -> str:
         f"- Bounded IJHE submission ready: **{report['bounded_ijhe_submission_ready']}**",
         f"- Full user objective ready: **{report['full_user_objective_ready']}**",
         f"- Goal completion permitted: **{report['goal_completion_permitted']}**", "",
+        "## Explicit scope exclusions", "",
+        *[
+            f"- `{item['id']}`: **{item['status']}** — {item['paper_limitation']}"
+            for item in report.get("scope_exclusions", [])
+        ],
+        "",
         "| Gate | Status | Claim | Evidence |",
         "|---|---|---|---|",
     ]

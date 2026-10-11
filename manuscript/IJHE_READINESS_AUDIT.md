@@ -7,6 +7,10 @@ The local result is an evidence-readiness gate, not a guarantee of editorial acc
 - Full user objective ready: **False**
 - Goal completion permitted: **False**
 
+## Explicit scope exclusions
+
+- `full_loop_external_validation`: **OUT_OF_SCOPE** — The study does not claim independent station-to-vehicle full-loop accuracy, vehicle-controller validation or field-safety validation.
+
 | Gate | Status | Claim | Evidence |
 |---|---|---|---|
 | `tank_external_validation` | **PASS** | Measured-boundary Type-IV tank model is externally evaluated on the frozen public split. | `research\tank_model_validation_v2.json` |
@@ -179,8 +183,7 @@ The local result is an evidence-readiness gate, not a guarantee of editorial acc
 - `hiad_casebook_frozen`
 - `hiad_holdout_collection`
 - `independent_expert_review_complete`
-- `full_loop_external_validation`
 - `h2safe_spatial_detector_transfer_validation`
 - `saga_effectiveness_and_safety_supported`
 
-Only full_user_objective_ready=true permits goal completion. A bounded paper may report negative or limited physics honestly, but it does not satisfy the full validated-digital-twin objective.
+Only full_user_objective_ready=true permits goal completion. The current objective is explicitly scoped to station-side/component evidence and consequence/decision-support claims. Synchronized station-to-vehicle full-loop validation is excluded and must remain a stated limitation until the re-entry condition is met.

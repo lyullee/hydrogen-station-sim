@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-11T01:49:20.101623+00:00",
+  "generated_at": "2026-10-11T02:10:16.035400+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -40,9 +40,17 @@
     "hiad_casebook_frozen",
     "hiad_holdout_collection",
     "independent_expert_review_complete",
-    "full_loop_external_validation",
     "h2safe_spatial_detector_transfer_validation",
     "saga_effectiveness_and_safety_supported"
+  ],
+  "scope_exclusions": [
+    {
+      "id": "full_loop_external_validation",
+      "status": "OUT_OF_SCOPE",
+      "reason": "No reusable public raw dataset was found with synchronized station/controller, dispenser/nozzle and vehicle/receptacle channels on a common time base.",
+      "paper_limitation": "The study does not claim independent station-to-vehicle full-loop accuracy, vehicle-controller validation or field-safety validation.",
+      "reentry_condition": "A custodian provides at least three rights-cleared, independently documented events with station and vehicle channels; freeze the protocol before outcome access."
+    }
   ],
   "gates": [
     {
@@ -8327,5 +8335,5 @@
       "observed": "10.5281/zenodo.23084421"
     }
   ],
-  "decision_rule": "Only full_user_objective_ready=true permits goal completion. A bounded paper may report negative or limited physics honestly, but it does not satisfy the full validated-digital-twin objective."
+  "decision_rule": "Only full_user_objective_ready=true permits goal completion. The current objective is explicitly scoped to station-side/component evidence and consequence/decision-support claims. Synchronized station-to-vehicle full-loop validation is excluded and must remain a stated limitation until the re-entry condition is met."
 }

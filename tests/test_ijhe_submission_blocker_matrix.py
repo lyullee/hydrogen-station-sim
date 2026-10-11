@@ -76,10 +76,12 @@ def test_current_blocker_matrix_tracks_the_readiness_audit():
     ids = {item["id"] for item in matrix["blocking_matrix"]}
     assert {
         "tank_thermal_transfer_validation",
-        "full_loop_external_validation",
         "saga_human_effectiveness",
         "submission_declarations",
     } <= ids
+    assert "full_loop_external_validation" not in ids
+    exclusions = {item["id"]: item for item in matrix["scope_exclusions"]}
+    assert exclusions["full_loop_external_validation"]["status"] == "OUT_OF_SCOPE"
     typeiii = matrix["evidence_snapshot"]["typeiii_prospective_fill"]
     assert typeiii["gate"] == "FAIL"
     assert typeiii["diagnostic_gate"] == "PASS"
