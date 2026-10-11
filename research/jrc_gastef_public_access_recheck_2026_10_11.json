@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "artifact_type": "jrc_gastef_public_access_recheck",
+  "recorded_at": "2026-10-11",
+  "source": {
+    "title": "JRC reference data from experiments of onboard hydrogen tanks fast filling",
+    "doi": "10.1016/j.ijhydene.2014.03.227",
+    "paper_url": "https://doi.org/10.1016/j.ijhydene.2014.03.227",
+    "public_pdf_url": "https://hysafe.info/ichs2013/images/papers/106.pdf",
+    "jrc_record": "https://publications.jrc.ec.europa.eu/repository/handle/JRC76380"
+  },
+  "reported_public_scope": {
+    "type_iii_tank_volume_l": 40,
+    "type_iii_test_count_reported": 23,
+    "pressure_temperature_logging_interval_s": 0.6,
+    "reported_channels": [
+      "tank pressure",
+      "gas-path pressure",
+      "internal gas temperature",
+      "external tank or sleeve temperature"
+    ],
+    "reported_test_condition_tables": true
+  },
+  "access_observation": {
+    "official_record_retrieved": true,
+    "paper_retrieved": true,
+    "machine_readable_raw_trace_retrieved": false,
+    "public_dataset_download_url_found": false,
+    "raw_trace_reuse_terms_found": false,
+    "graph_or_table_only": true
+  },
+  "eligibility_decision": "CONTROLLED_ACCESS_LEAD_NO_PUBLIC_RAW_ARCHIVE",
+  "full_loop_holdout_eligible": false,
+  "numeric_holdout_added": false,
+  "runtime_model_changed": false,
+  "claim_boundary": "The paper supports provenance for GasTeF Type-III instrumentation and test conditions, not independent numerical validation without the raw time series and reuse permission.",
+  "next_action": "Request a de-identified raw export, channel dictionary, calibration metadata and written reuse permission; freeze a separate protocol before reading outcomes."
+}
