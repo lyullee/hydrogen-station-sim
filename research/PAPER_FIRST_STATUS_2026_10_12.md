@@ -25,6 +25,10 @@ is explicitly outside the primary scope after repeated public-data searches.
 - The broad LLM/SAGA, virtual-safety, HAZOP and HIAD software-contract suite
   passed 159 tests with zero failures and two warnings
   (`research/paper_llm_safety_broad_regression_2026_10_12.json`).
+- The separate `saga-py` service repository passed its complete Python suite
+  (**204 passed, 0 failed**) with `pip check` clean; the reproducible record is
+  [`saga-py/docs/TEST_REPORT_2026-10-12.md`](https://github.com/lyullee/saga-py/blob/main/docs/TEST_REPORT_2026-10-12.md)
+  at commit `6eb94e0`.
 - The latest public-data route rechecks found no new rights-cleared,
   common-clock station/controller/dispenser/vehicle logger cohort. Component
   evidence remains usable only within its documented claim boundary.
