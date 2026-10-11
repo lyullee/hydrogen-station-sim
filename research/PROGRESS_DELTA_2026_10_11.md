@@ -52,4 +52,19 @@ two-zone 모델은 원인 진단용 post-outcome 모델로 기록되어 있지�
 이번 문서 갱신 후 focused validation/grounding 테스트는 **9 passed**였다.
 전체 회귀 기록은 1,436 passed, 0 failed, 20 warnings이며, 경고는 의존성·수치
 환경 경고로 기록되어 있다.
+## 최신 impact-first 실행 결과 (2026-10-11)
 
+- 병렬 우선 검증: **PASS**
+  - LLM 근거 경계: 3 passed
+  - full-loop 입력 계약: 19 passed
+  - 가상 안전조치·응답: 24 passed
+  - 산출물: `research/priority_validation_run_2026_10_11_latest.json`
+- 병렬 물리 진단 프로세스: **PASS**, 과학 스크린 상태: **BLOCKED**
+  - MC SOC/EOS 경계: 8/8 진단 스크린 통과
+  - Dickens 혼합대류 민감도: 3/3 통과했지만 사후 진단이므로 원래 holdout 승격 금지
+  - MC 탱크 경계: 0/8
+  - H2SAFE 공간응답: 0/1 진단 스크린
+  - NREL HDVS 수용탱크: 0/7
+  - 산출물: `research/priority_diagnostics_run_2026_10_11_latest.json`
+
+이 실행은 코드 계약과 실패 원인을 갱신한 것이며, 사후 진단을 외부 검증 통과로 바꾸거나 런타임 파라미터를 자동 승격하지 않는다. 물리 실패를 해결하려면 결과를 본 뒤 재튜닝하는 대신, 경계조건·공간좌표·동기화 채널이 명시된 새 사전동결 holdout이 필요하다.
