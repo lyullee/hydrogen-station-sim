@@ -57,6 +57,13 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     assert tank_runtime["runtime"]["validation_case_count"] == 12
     assert tank_runtime["sources_match"] is True
     assert tank_runtime["recheck_matches"] is True
+    mhc = gates["public_mhc_experiment16_component_screen_integrity"]
+    assert mhc["status"] == "PASS"
+    assert mhc["observed"]["source_doi"] == "10.5281/zenodo.18213166"
+    assert mhc["observed"]["record_count"] == 1186
+    assert mhc["observed"]["required_families_present"] is True
+    assert mhc["observed"]["runtime_parameter_application"] is False
+    assert mhc["observed"]["full_loop_external_holdout_eligible"] is False
     assert gates[
         "confidential_station_cascade_sequence_holdout_integrity"
     ]["status"] == "PASS"

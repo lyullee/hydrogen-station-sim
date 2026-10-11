@@ -20,7 +20,7 @@ Audit snapshot: **2026-10-12 KST**
 | Full validated-digital-twin objective ready | **False** |
 | Goal completion permitted | **False** |
 
-Gate counts: **128 PASS · 10 FAIL · 7 PENDING**.
+Gate counts: **129 PASS · 10 FAIL · 7 PENDING**.
 
 The latest clean full-regression evidence is recorded at commit `f24843d79b100a34defb510a0120f40d37a082b8` with **1,454 passed, 0 failed and 20 warnings** in 291.63 s (`research/full_regression_test_run_2026_10_12.json`). This is software implementation evidence only and does not convert the independent physical validation failures or author-confirmation gate into passes. The focused LLM/accident-path regression passed **65 tests with 2 warnings**, and the clean direct LLM route spot check passed **20 tests with 3 warnings**.
 
@@ -45,7 +45,7 @@ The owner-controlled records are evaluated as same-site chronological holdouts;
 the public Type-IV records provide the independent component holdout. The
 synchronized station-to-vehicle full-loop lane is retained in the legacy audit
 for traceability but is excluded from the primary goal because no openly
-reusable raw cohort was found. The scope-adjusted closure is **128 PASS · 9
+reusable raw cohort was found. The scope-adjusted closure is **129 PASS · 9
 FAIL · 2 PENDING = 92.1%**; this is a scope metric, not a new validation result.
 The exact split and the paper limitation are recorded in
 [`VALIDATION_DATA_SPLIT_AND_SCOPE_DECISION_2026_10_11.md`](../research/VALIDATION_DATA_SPLIT_AND_SCOPE_DECISION_2026_10_11.md)

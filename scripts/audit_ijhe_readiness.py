@@ -603,6 +603,74 @@ def audit(root: Path) -> dict[str, object]:
         } if tank_runtime else "missing",
     ))
 
+    mhc_protocol_path = root / "research/public_mhc_experiment16_holdout_protocol_2026_10_12.json"
+    mhc_screen_path = root / "research/public_mhc_experiment16_screen_2026_10_12.json"
+    mhc_protocol = _json(mhc_protocol_path)
+    mhc_screen = _json(mhc_screen_path)
+    mhc_source = (mhc_screen or {}).get("source") or {}
+    mhc_screen_schema = (mhc_screen or {}).get("schema_screen") or {}
+    mhc_screen_decision = (mhc_screen or {}).get("decision") or {}
+    mhc_protocol_source = (mhc_protocol or {}).get("source") or {}
+    mhc_protocol_rules = (mhc_protocol or {}).get("protocol") or {}
+    mhc_integrity_pass = bool(
+        (mhc_protocol or {}).get("artifact_type")
+        == "public_mhc_component_holdout_protocol"
+        and (mhc_protocol or {}).get("status")
+        == "protocol_frozen_before_holdout_access"
+        and mhc_protocol_source.get("doi") == "10.5281/zenodo.18213166"
+        and mhc_protocol_source.get("license") == "CC BY 4.0"
+        and ((mhc_protocol or {}).get("prior_access_check") or {}).get(
+            "prior_row_access_evidence_found"
+        ) is False
+        and mhc_protocol_rules.get("holdout") == "Experiment 16.xlsx"
+        and mhc_protocol_rules.get("raw_rows_persisted") is False
+        and (mhc_screen or {}).get("artifact_type")
+        == "public_mhc_component_holdout_screen"
+        and (mhc_screen or {}).get("status")
+        == "screened_component_only_not_runtime_admitted"
+        and mhc_source.get("accessed_after_protocol_freeze") is True
+        and (mhc_screen.get("protocol") or {}).get(
+            "raw_file_persisted_in_repository"
+        ) is False
+        and mhc_screen_schema.get("required_families_present") is True
+        and mhc_screen_decision.get("schema_screen_pass") is True
+        and mhc_screen_decision.get("direct_runtime_model_compatibility") is False
+        and mhc_screen_decision.get("runtime_parameter_application") is False
+        and mhc_screen_decision.get("full_loop_external_holdout_eligible") is False
+        and "HRS full loop" in str((mhc_screen or {}).get("claim_boundary") or "")
+    )
+    gates.append(_gate(
+        "public_mhc_experiment16_component_screen_integrity",
+        "PASS" if mhc_integrity_pass else (
+            "FAIL" if mhc_protocol or mhc_screen else "PENDING"
+        ),
+        "The protocol-frozen public MHC Experiment 16 trace is retained as independent component compatibility evidence with an explicit bounded-LLM/runtime exclusion boundary.",
+        f"{mhc_protocol_path.relative_to(root)}; {mhc_screen_path.relative_to(root)}",
+        "Selection precedes row access, the required pressure/temperature/flow/time schema is present, raw rows are not committed, and runtime/full-loop promotion remains explicitly false.",
+        {
+            "source_doi": mhc_source.get("doi") or mhc_protocol_source.get("doi"),
+            "record_count": (mhc_screen.get("workbook") or {}).get(
+                "cycle_data_numeric_records"
+            ) if mhc_screen else None,
+            "duration_s": (mhc_screen.get("workbook") or {}).get(
+                "elapsed_time_span_s"
+            ) if mhc_screen else None,
+            "required_families_present": mhc_screen_schema.get(
+                "required_families_present"
+            ) if mhc_screen else None,
+            "schema_screen_pass": mhc_screen_decision.get(
+                "schema_screen_pass"
+            ) if mhc_screen else None,
+            "runtime_parameter_application": mhc_screen_decision.get(
+                "runtime_parameter_application"
+            ) if mhc_screen else None,
+            "full_loop_external_holdout_eligible": mhc_screen_decision.get(
+                "full_loop_external_holdout_eligible"
+            ) if mhc_screen else None,
+            "claim_boundary": (mhc_screen or {}).get("claim_boundary"),
+        } if mhc_screen else "missing",
+    ))
+
     dickens_protocol_path = root / "research/dickens_typeiii_prospective_protocol_2026_10_08.json"
     dickens_result_path = root / "research/dickens_typeiii_prospective_result_2026_10_08.json"
     dickens_diagnostic_candidates = (

@@ -4,19 +4,19 @@
 
 ## 현재 판정
 
-- IJHE 내부 게이트: **PASS 128 / FAIL 10 / PENDING 7**.
+- IJHE 내부 게이트: **PASS 129 / FAIL 10 / PENDING 7**.
 - 제한된 투고 준비: **아직 불가**.
 - 현재 주 목표: **station-side 안전 디지털 트윈·구성요소 검증·근거 기반 SAGA 응답**.
 - 동기화 station-to-vehicle full-loop 검증: **주 목표에서 제외하고 논문 한계로 명시**.
-- 개정 주 목표 보조 지표: **128 PASS / 9 FAIL / 2 PENDING = 92.1%**. 범위 조정 결과이지 새 검증 통과가 아닙니다.
+- 개정 주 목표 보조 지표: **129 PASS / 9 FAIL / 2 PENDING = 92.1%**. 범위 조정 결과이지 새 검증 통과가 아닙니다.
 
 ## 지금 바로 사용할 수 있는 근거
 
 - 비식별 station-side 원자료: 56,854,143개 행, 고압 압력 사이클 16,770건, 중·고압 연계 11,770건, 재충전 압력 예측 1,418건. 압력·cascade·재충전 동역학 진단에 사용합니다.
 - 같은 자료의 시간순 holdout: 압력 경계 30점, cascade 3,664쌍, 재충전 예측 394건. 차량 충전 정확도나 현장 안전한계로 확대하지 않습니다.
 - 공개 Type-IV 탱크 경계 검증: 12건, 탱크 경계 구성요소 검증으로 유지합니다.
-- 공개 MHC Experiment 16 구성요소 screen: 프로토콜 고정 후 1,186개 기록/1,185초 압력·유량·온도 trace를 확인했습니다. 금속수소화물 압축기 경계와 `L/min` 단위가 station compressor와 달라 호환성 근거로만 유지하며 runtime 파라미터에는 반영하지 않습니다.
-- 위 MHC screen은 이제 근거 기반 LLM의 구성요소·공개 검증 질문에만 privacy-safe 요약으로 전달됩니다. `direct_runtime_model_compatibility=false`, `runtime_parameter_application=false`, `full_loop_external_holdout_eligible=false`를 함께 전달해 구성요소 자료가 HRS 전체 검증으로 확장되지 않도록 했습니다.
+- 공개 MHC Experiment 16 구성요소 screen: 1,186개 기록 / 1,185초의 압력·유량·온도 trace입니다. 프로토콜 고정 후 접근했고, 단위·열경계가 station compressor와 달라 호환성 근거로만 사용합니다.
+- MHC screen은 근거 기반 LLM의 구성요소·공개 검증 질문에만 privacy-safe 요약으로 전달합니다. runtime 파라미터, HRS full-loop, 차량 동기화, 안전거리 및 LLM 효과 검증에는 사용하지 않습니다.
 - 사고 전례·대응 플레이북·가상 조치 실행은 시나리오와 단계별 대응 근거로 사용하며, 사고 빈도나 현장 대응 효과를 추정하지 않습니다.
 
 ## 실패 또는 제한된 결과도 그대로 유지

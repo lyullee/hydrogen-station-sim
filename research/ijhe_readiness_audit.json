@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-11T18:33:11.856411+00:00",
+  "generated_at": "2026-10-11T18:36:52.434575+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -13,7 +13,7 @@
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 128,
+    "PASS": 129,
     "FAIL": 10,
     "PENDING": 7
   },
@@ -381,6 +381,23 @@
         },
         "sources_match": true,
         "recheck_matches": true
+      }
+    },
+    {
+      "id": "public_mhc_experiment16_component_screen_integrity",
+      "status": "PASS",
+      "claim": "The protocol-frozen public MHC Experiment 16 trace is retained as independent component compatibility evidence with an explicit bounded-LLM/runtime exclusion boundary.",
+      "evidence": "research\\public_mhc_experiment16_holdout_protocol_2026_10_12.json; research\\public_mhc_experiment16_screen_2026_10_12.json",
+      "requirement": "Selection precedes row access, the required pressure/temperature/flow/time schema is present, raw rows are not committed, and runtime/full-loop promotion remains explicitly false.",
+      "observed": {
+        "source_doi": "10.5281/zenodo.18213166",
+        "record_count": 1186,
+        "duration_s": 1185.0,
+        "required_families_present": true,
+        "schema_screen_pass": true,
+        "runtime_parameter_application": false,
+        "full_loop_external_holdout_eligible": false,
+        "claim_boundary": "This holdout does not validate the HRS full loop, station-to-vehicle synchronization, safety response, HyRAM consequence distance or LLM effectiveness."
       }
     },
     {

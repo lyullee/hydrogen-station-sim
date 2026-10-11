@@ -64,6 +64,15 @@ def build_brief(
         {},
     )
     nrel_cov = nrel.get("coverage", {})
+    mhc = next(
+        (
+            item
+            for item in (readiness.get("gates") or [])
+            if item.get("id") == "public_mhc_experiment16_component_screen_integrity"
+        ),
+        {},
+    )
+    mhc_observed = mhc.get("observed", {})
     full_loop = local_screen.get("coverage_assessment", {})
     minimum = coverage.get("minimum_next_input", {})
 
@@ -129,6 +138,11 @@ def build_brief(
         "차량 충전 정확도나 현장 안전한계로 확대하지 않습니다.",
         f"- 공개 Type-IV 탱크 경계 검증: {_number(tank.get('coverage', {}).get('validation_case_count'), 0)}건, "
         "탱크 경계 구성요소 검증으로 유지합니다.",
+        f"- 공개 MHC Experiment 16 구성요소 screen: {_number(mhc_observed.get('record_count'), 0)}개 기록 / "
+        f"{_number(mhc_observed.get('duration_s'), 0)}초의 압력·유량·온도 trace입니다. "
+        "프로토콜 고정 후 접근했고, 단위·열경계가 station compressor와 달라 호환성 근거로만 사용합니다.",
+        "- MHC screen은 근거 기반 LLM의 구성요소·공개 검증 질문에만 privacy-safe 요약으로 전달합니다. "
+        "runtime 파라미터, HRS full-loop, 차량 동기화, 안전거리 및 LLM 효과 검증에는 사용하지 않습니다.",
         "- 사고 전례·대응 플레이북·가상 조치 실행은 시나리오와 단계별 대응 근거로 사용하며, "
         "사고 빈도나 현장 대응 효과를 추정하지 않습니다.",
         "",
@@ -173,6 +187,8 @@ def build_brief(
         "- `research/PUBLIC_STATION_TO_VEHICLE_SEARCH_2026_10_11.md`",
         "- `research/public_station_vehicle_search_recheck_2026_10_12.json`",
         "- `research/h2safe_oedi_recheck_2026_10_12.json`",
+        "- `research/public_mhc_experiment16_holdout_protocol_2026_10_12.json`",
+        "- `research/public_mhc_experiment16_screen_2026_10_12.json`",
         "- `data/public_validation/results/closed_loop_external_holdout/validation.json`",
         "",
         "이 브리프는 모델이나 검증 게이트를 변경하지 않습니다. 새로운 자료가 들어오면 동일한 동결·시간축·권한 검사를 거친 뒤 다시 생성합니다.",
