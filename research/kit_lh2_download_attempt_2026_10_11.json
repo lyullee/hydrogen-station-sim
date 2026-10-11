@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "artifact_type": "kit_lh2_consequence_download_attempt",
+  "recorded_at": "2026-10-11",
+  "source": {
+    "doi": "10.35097/1483",
+    "archive_bytes_reported": 4971447808,
+    "archive_md5_reported": "0e4ac934ecb973c6f07212e8a80707c9"
+  },
+  "attempt": {
+    "session_route": "RADAR terms-accepted frontend datasetBinaryTreeStream",
+    "response_status": 200,
+    "content_type": "application/tar",
+    "bytes_received_before_disconnect": 964689920,
+    "partial_md5": "5dc3c9898487b08d273ee5b143840677",
+    "partial_sha256": "163274e269ccb35b3649e9b4e5eb2856317de598ea1968215254e9776481b750",
+    "termination": "HTTP chunked stream ended with IncompleteRead before the expected archive size",
+    "resume_supported_by_endpoint": false
+  },
+  "protocol_boundary": {
+    "archive_committed_to_git": false,
+    "numeric_signal_values_opened": false,
+    "video_outcomes_opened": false,
+    "member_headers_scanned_only": true,
+    "stage1_integrity_verified": false,
+    "stage2_eligible": false
+  },
+  "next_action": "Use a stable authenticated download session or obtain the archive from the custodian; verify the complete publisher MD5 before reading any outcome file."
+}

@@ -17,9 +17,9 @@
     "publisher_reported_md5": "0e4ac934ecb973c6f07212e8a80707c9"
   },
   "local_download": {
-    "archive_bytes": 4787420,
-    "archive_md5": "fb955817f010bc406669ab85e9c91887",
-    "archive_sha256": "cbf4a147c0d088e6e90cc1b1de6a3d1322614dcb921f616c0ade2fd76b90178b",
+    "archive_bytes": 964689920,
+    "archive_md5": "5dc3c9898487b08d273ee5b143840677",
+    "archive_sha256": "163274e269ccb35b3649e9b4e5eb2856317de598ea1968215254e9776481b750",
     "md5_matches_publisher": false,
     "archive_member_scan": {
       "members": [
@@ -34,9 +34,57 @@
           "type": "file",
           "size_bytes": 75564208,
           "family_hint": "video_outcome_file"
+        },
+        {
+          "name": "Unnamed entity/ignited_trial_16_28-10-2019alldata.xlsx",
+          "type": "file",
+          "size_bytes": 116121604,
+          "family_hint": "metadata_or_signal_file"
+        },
+        {
+          "name": "Unnamed entity/ignited_trial_17_28-10-2019alldata.xlsx",
+          "type": "file",
+          "size_bytes": 115452290,
+          "family_hint": "metadata_or_signal_file"
+        },
+        {
+          "name": "Unnamed entity/02.mp4",
+          "type": "file",
+          "size_bytes": 152608254,
+          "family_hint": "video_outcome_file"
+        },
+        {
+          "name": "Unnamed entity/ignited_trial_15_28-10-2019alldata.xlsx",
+          "type": "file",
+          "size_bytes": 117388596,
+          "family_hint": "metadata_or_signal_file"
+        },
+        {
+          "name": "Unnamed entity/22.mp4",
+          "type": "file",
+          "size_bytes": 178832040,
+          "family_hint": "video_outcome_file"
+        },
+        {
+          "name": "Unnamed entity/ignited_trial_19_28-10-2019alldata.xlsx",
+          "type": "file",
+          "size_bytes": 112427106,
+          "family_hint": "metadata_or_signal_file"
+        },
+        {
+          "name": "Unnamed entity/13.mp4",
+          "type": "file",
+          "size_bytes": 66109770,
+          "family_hint": "video_outcome_file"
+        },
+        {
+          "name": "Unnamed entity/ignited_trial_5_23-10-2019alldata.xlsx",
+          "type": "file",
+          "size_bytes": 83465030,
+          "family_hint": "metadata_or_signal_file"
         }
       ],
-      "member_count": 2,
+      "member_count": 10,
       "complete": false,
       "error": "ReadError: unexpected end of data",
       "values_opened": false,
