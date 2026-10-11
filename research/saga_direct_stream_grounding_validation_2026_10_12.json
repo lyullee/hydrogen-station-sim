@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "artifact_type": "saga_direct_stream_grounding_validation",
+  "recorded_at": "2026-10-12",
+  "saga_repository": "../saga-system",
+  "saga_commit": "4e1b7ca9b5c4c280717dad788c810d007c12d0e9",
+  "test_command": "..\\hydrogen-station-sim\\.venv\\Scripts\\python.exe -m pytest tests_python/test_digital_twin_direct_chat.py -q",
+  "result": {
+    "passed": 10,
+    "failed": 0,
+    "warnings": 2,
+    "elapsed_seconds": 23.90
+  },
+  "verified_contract": [
+    "direct main and selected-sensor routes use one completion without the RAG/reasoning review pipeline",
+    "unsupported numeric measurement atoms are removed from the final direct answer",
+    "equivalent units and shared-unit ranges remain accepted when present in the supplied context",
+    "no unsupported measurement is present in any SSE token event before the final answer event",
+    "the final answer event carries the same guarded answer that the UI has streamed"
+  ],
+  "claim_boundary": "This is a software grounding contract. It does not validate physical-model accuracy, field safety, operator effectiveness, or expert-rated usefulness."
+}
