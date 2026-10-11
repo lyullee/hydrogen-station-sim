@@ -45,3 +45,15 @@ def test_usn_jet_dataset_is_grounded_as_post_access_component_diagnostic():
     assert provider["public_usn_ignited_jet_dataset_diagnostic"][
         "station_vehicle_full_loop_supported"
     ] is False
+
+
+def test_usn_jet_dataset_stays_out_of_unrelated_provider_turns():
+    manifest = build_evidence_manifest(
+        {"time_s": 0.0},
+        {},
+        [],
+        False,
+        question="현재 저장뱅크 압력과 온도 상태를 알려줘",
+    )
+    provider = _provider_evidence_basis(manifest)
+    assert "public_usn_ignited_jet_dataset_diagnostic" not in provider
