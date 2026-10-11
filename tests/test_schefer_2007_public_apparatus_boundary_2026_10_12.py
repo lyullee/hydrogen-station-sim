@@ -23,5 +23,10 @@ def test_schefer_public_boundary_is_diagnostic_only() -> None:
     assert boundary["valve_opening_profile_publicly_resolved"] is False
     assert boundary["upstream_line_volume_publicly_resolved"] is False
     assert boundary["common_clock_raw_pressure_temperature_mass_flow_file_found"] is False
+    clue = record["related_campaign_boundary_clue"]
+    assert clue["stagnation_chamber_length_cm"] == 26.1
+    assert clue["stagnation_chamber_inside_diameter_cm"] == 15.3
+    assert clue["transfer_to_primary_617_l_campaign_confirmed"] is False
+    assert clue["usable_for_frozen_holdout_recalibration"] is False
     assert record["numeric_holdout_added"] is False
     assert record["runtime_model_changed"] is False

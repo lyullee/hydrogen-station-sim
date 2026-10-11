@@ -21,6 +21,12 @@
       "record_url": "https://www.arma.org.au/wp-content/uploads/2017/03/fundamentals-of-hydrogen-safety-engineering-i.pdf",
       "observed_public_scope": "The chapter summarizes the 2007 campaign as two 617 L storage tubes at approximately 41.3 MPa with a 5.08 mm nozzle and about 500–600 s blowdown through the experimental hydraulic system.",
       "source_role": "secondary_public_technical_summary"
+    },
+    {
+      "title": "Experimental evaluation of barrier walls for risk reduction of unintended hydrogen releases",
+      "record_url": "https://h2tools.org/sites/default/files/2019-08/paper_16.pdf",
+      "observed_public_scope": "A related 2007 tie-back campaign reports a 26.1 cm by 15.3 cm stagnation chamber and an approximately 2–3 s pneumatic-valve opening time. The publication does not establish that these exact boundary values apply to the primary 617 L Schefer 2007 pressure-decay trace.",
+      "source_role": "related_campaign_boundary_clue"
     }
   ],
   "apparatus_boundary": {
@@ -35,6 +41,13 @@
     "line_resistance_or_fitting_loss_publicly_resolved": false,
     "common_clock_raw_pressure_temperature_mass_flow_file_found": false,
     "channel_dictionary_or_calibration_file_found": false
+  },
+  "related_campaign_boundary_clue": {
+    "stagnation_chamber_length_cm": 26.1,
+    "stagnation_chamber_inside_diameter_cm": 15.3,
+    "pneumatic_valve_opening_time_s_approx": "2-3",
+    "transfer_to_primary_617_l_campaign_confirmed": false,
+    "usable_for_frozen_holdout_recalibration": false
   },
   "interpretation": {
     "supports": [
