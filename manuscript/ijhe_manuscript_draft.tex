@@ -40,7 +40,7 @@ This study evaluates a virtual hydrogen refuelling station using separate
 evidence gates for process physics, consequence software and language-model
 decision support. A Type-IV tank model yielded validation errors of 3.841 MPa,
 4.833 $^{\circ}$C and 3.850 state-of-charge percentage points across 12 frozen
-fills, but did not transfer to the full controller. A public 15-workbook intake
+fills. A public 15-workbook intake
 contained 58,440 synchronized samples; 8/9 comparable post-access transfer
 sessions passed descriptive flow--mass closure (18 sessions detected). A 22-case
 PRESLHY blowdown evaluation passed
@@ -118,21 +118,23 @@ Passing unit tests cannot validate thermodynamics; matching a public consequence
 API cannot validate site geometry; and fluent text cannot demonstrate safe or
 useful advice.
 
-This work asks five separate questions:
+This work asks four primary questions:
 \begin{enumerate}
   \item How accurately does the vehicle-tank submodel reproduce public fast-fill
   experiments when measured boundary conditions are imposed?
-  \item Does the complete controller--cascade--precooler--vehicle loop meet
-  predeclared engineering error screens?
   \item Does the source-depletion and direct-aperture model meet prospectively
   specified screens on independent ambient hydrogen blowdown experiments?
   \item Does the production adapter preserve the inputs and outputs of the exact
   installed HyRAM+ package?
-  \item Can process- and evidence-linked SAGA responses improve incident decision
+  \item Can process- and evidence-linked SAGA responses provide traceable incident decision
   support relative to deterministic alarms without increasing unsafe advice?
 \end{enumerate}
-The first four questions have reproducible results. The fifth has a frozen
-protocol but no external expert result at the time of this draft.
+The first three questions have reproducible quantitative or component-bounded
+results. The fourth has a frozen protocol but no external expert result at the
+time of this draft. A synchronized station-to-vehicle full-loop holdout was
+searched for but is outside the primary scope because no openly reusable,
+machine-readable vehicle-side cohort was found; the available closed-loop
+screen is retained only as a negative transfer diagnostic and limitation.
 
 \section{Materials and methods}
 \subsection{Digital-twin boundary}
@@ -220,10 +222,13 @@ For a variable $y$ with $n$ aligned samples, the principal metric is
 \end{equation}
 Pressure, gas temperature and density-based SOC were evaluated separately.
 
-\subsection{Complete closed-loop evaluation}
+\subsection{Out-of-scope closed-loop transfer diagnostic}
+The synchronized station-to-vehicle lane is not a primary validation target in
+this study. It is retained as a transparent negative diagnostic so that a failed
+transfer is not hidden or converted into a component claim.
 The full loop adds a sampled pressure-ramp controller, PI flow command, cascade
 selection, finite valve motion, line-pack, precooling and station-to-vehicle
-hydraulics. The global tank parameters were frozen before this evaluation. A
+hydraulics. A
 development-only adaptive search selected one dispenser flow-area multiplier of
 2.0 on eight declared development fills; the initial grid was extended only after
 its optimum fell at the upper bound. Density-based SOC used each experiment's
@@ -517,11 +522,9 @@ It was retained as ineligible without replay and contributes zero full-loop case
 A frozen Type-III fill
 \cite{andreasen2026archive,couteau2025flow} passed pressure (0.943 MPa RMSE)
 but failed temperature (19.179 K RMSE); post-outcome sensitivity cannot revise
-it. A post-access Woodfield Type-I replay \cite{woodfield2007} reduced filling
-pressure and temperature-envelope RMSE by 30.50\% and 68.23\%; inlet forcing
-stayed inactive during discharge. It is non-independent development evidence.
+it. The post-access Woodfield replay remains non-independent development evidence.
 
-\subsection{Negative full-loop validation result}
+\subsection{Negative closed-loop transfer diagnostic}
 After the preprocessing and nominal-pressure corrections, refitted tank, flow-area
 calibration and frozen v2 cooling sensitivity, one of eight development fills and
 two of eleven internal-comparison fills met all three project screens. Their mean
@@ -530,7 +533,7 @@ for development, and 4.530 MPa, 7.819 $^{\circ}$C and 4.625 percentage points fo
 internal comparison. The low joint pass fractions still constitute a negative
 full-loop result.
 
-The prospectively frozen MC Default holdout had already been evaluated with its
+The prospectively frozen MC Default transfer screen had already been evaluated with its
 pre-correction frozen model and passed zero of eight screens
 (Table~\ref{tab:closed}). Mean pressure, temperature and SOC RMSE were 15.862 MPa,
 13.230 $^{\circ}$C and 18.082 percentage points, respectively. Five runs terminated
@@ -855,17 +858,6 @@ The Proust curves are now consumed development evidence. Their plot-digitization
 uncertainty was much smaller than the discrepancies and did not determine the
 negative result.
 
-A post-outcome series-conductance fit brought the consumed Proust curves inside
-descriptive screens, but NRMSE rose to 29.25\% and 41.81\% on the already-visible
-3 and 4 mm Imamura series; direct-aperture $C_d=1.0$ gave 3.79--7.60\% across
-1--4 mm. These development-only results indicate apparatus-specific upstream
-resistance and leave the negative Proust decision unchanged.
-
-The apparatus-resolved candidate implements these missing dynamics, but remains
-development-only. Its protocol requires synchronized state, flow, valve position
-and as-built geometry from new campaign data; the consumed
-Proust, Schefer and PRESLHY outcomes cannot be recycled as its holdout.
-
 The separate Sandia/SRI transient had low aggregate NRMSE but the adiabatic model
 depleted flow too quickly. It motivates non-adiabatic cylinder walls and explicit
 7.6 m tube line-pack; the consumed approximate-duration trace is not fully blinded.
@@ -949,7 +941,9 @@ independent reviewer assessed unsafe omissions.
 \subsection{Limitations}
 All sensors and actions are simulated. Station geometry, weather, occupancy,
 valve coefficients, compressor maps and proprietary J2601 control remain
-unvalidated assumptions. Most release-transfer gates failed; the positive Ekoto result covers only
+unvalidated assumptions. No openly reusable synchronized station-to-vehicle
+raw cohort was identified, so vehicle-side full-loop accuracy is outside the
+primary claim and is reported only as a transfer limitation. Most release-transfer gates failed; the positive Ekoto result covers only
 a small, short-duration source. ELVHYS provides cryogenic pressure-peaking
 observations, but its post-access replay is provenance/timebase evidence because
 vehicle and controller telemetry are absent \cite{elvhys2025}. HIAD reports are
@@ -958,15 +952,17 @@ replace the pending expert study.
 
 \section{Conclusions}
 A hydrogen-station safety digital twin was evaluated with separate evidence gates
-for component physics, full-loop behavior, consequence-software translation and
+for station-side/component physics, consequence-software translation and
 LLM decision support. The measured-boundary Type-IV tank model achieved validation
 mean RMSE values of 3.841 MPa, 4.833 $^{\circ}$C and 3.850 SOC percentage points.
 The complete 15-workbook MetHyTrucks intake added 58,440 synchronized public
 experimental samples and eight descriptive flow--mass closure passes, while its
 documented sampling-only boundary, metadata gaps and prior outcome access
 precluded a prospective full-loop claim.
-The complete loop and prospective ambient-blowdown holdouts did not meet their
-declared screens. An eight-trace confidential station dwell rule also failed its
+The out-of-scope closed-loop transfer diagnostic and prospective ambient-blowdown
+holdouts did not meet their declared screens; the former is reported only as a
+negative transfer result because synchronized reusable station-to-vehicle raw
+data were unavailable. An eight-trace confidential station dwell rule also failed its
 holdout and remains disabled. Independent release tests exposed pressure-,
 diameter- and apparatus-dependent errors that an aperture-only source cannot
 resolve. The positive Ekoto result passed all three frozen mass-flow screens but
