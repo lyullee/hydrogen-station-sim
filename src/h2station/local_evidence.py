@@ -1103,6 +1103,7 @@ def validation_evidence_summary() -> dict[str, Any]:
             or triage.get("schema_version") != 1
             or not isinstance(coverage.get("validated_or_actionable_now"), list)
             or not isinstance(triage.get("unresolved_gates"), list)
+            or not isinstance(triage.get("scope_exclusions", []), list)
             or overall.get("full_user_objective_ready") is not False
         ):
             raise ValueError("validation evidence artifacts failed provenance checks")
@@ -1129,6 +1130,17 @@ def validation_evidence_summary() -> dict[str, Any]:
                 "next_action": str(item.get("next_action") or ""),
                 "claim_boundary": str(item.get("claim_boundary") or ""),
             })
+        scope_exclusions = []
+        for item in triage.get("scope_exclusions", []):
+            if not isinstance(item, dict) or not item.get("id"):
+                continue
+            scope_exclusions.append({
+                "id": str(item["id"]),
+                "legacy_status": str(item.get("legacy_status") or "UNKNOWN"),
+                "reason": str(item.get("reason") or ""),
+                "paper_limitation": str(item.get("paper_limitation") or ""),
+                "reentry_condition": str(item.get("reentry_condition") or ""),
+            })
         return {
             "status": "available",
             "evidence_role": "privacy_bounded_validation_surface",
@@ -1146,6 +1158,7 @@ def validation_evidence_summary() -> dict[str, Any]:
             },
             "validated_or_actionable_now": usable,
             "unresolved_gates": unresolved,
+            "scope_exclusions": scope_exclusions,
             "minimum_next_input": coverage.get("minimum_next_input") or {},
             "evidence_inventory": public_evidence_inventory_summary(),
             "claim_boundary": str(coverage.get("claim_boundary") or ""),
@@ -1166,6 +1179,7 @@ def validation_evidence_summary() -> dict[str, Any]:
             },
             "validated_or_actionable_now": [],
             "unresolved_gates": [],
+            "scope_exclusions": [],
             "minimum_next_input": {},
             "evidence_inventory": public_evidence_inventory_summary(),
             "claim_boundary": "Evidence artifacts are unavailable; no validation claim is permitted.",

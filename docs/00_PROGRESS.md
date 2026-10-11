@@ -80,19 +80,19 @@ runtime parameters, close the full-loop gate, or support a SAGA effectiveness
 claim. Focused LLM, NREL boundary, event-unit and public-search tests pass (31
 tests).
 
-## 2026-10-11 - Impact-first verification triage
+## 2026-10-11 - Impact-first verification triage (superseded scope)
 
-To avoid spending time on low-impact details before the scientific blockers are
-addressed, the remaining 17 non-PASS gates are now grouped into parallel P0/P1/P2
-lanes. P0 contains the synchronized station--vehicle full-loop evidence and the
-HIAD/SAGA safety-effectiveness evaluation; P1 contains external physics and
-spatial-transfer holdouts; P2 contains submission metadata. The matrix is recorded
-in `research/PRIORITY_GATE_TRIAGE_2026_10_11.md` and its machine-readable
-form in `research/priority_gate_triage_2026_10_11.json`.
+The first triage placed synchronized station--vehicle full-loop evidence in the
+highest-priority lane. The dated matrix remains as an audit trail, but the
+public-data search and scope amendment below supersede that queue: no reusable
+rights-cleared synchronized station-to-vehicle bundle was identified, so the
+full-loop gate is now a documented paper limitation rather than an active goal
+item. The current queue starts with independent component-physics holdouts and
+then governance work; the legacy FAIL is retained for traceability.
 
-This is an execution-order change only. It does not promote post-access
-diagnostics, alter runtime parameters, or change the readiness count
-(127 PASS / 10 FAIL / 7 PENDING; 88.2%).
+The scope change does not promote post-access diagnostics, alter runtime
+parameters, or change the readiness count (127 PASS / 10 FAIL / 7 PENDING;
+88.2%).
 
 
 ## 2026-10-11 - Make the bank-leak regression independent of background recharge
@@ -2206,3 +2206,13 @@ holdout scoring.
 
 Verification: semantic candidate screen and regression test pass (1 focused
 test); runtime behavior and validation parameters are unchanged.
+## 2026-10-11 - Removed station-to-vehicle lane from active validation queue
+
+Status: implemented; the public-data search and scope amendment now keep the
+legacy `full_loop_external_validation` FAIL for audit traceability but classify
+it as `OUT_OF_SCOPE` for the current station-side/component paper. The active
+triage starts with independent component-physics holdouts (P0) and governance
+work (P1). LLM evidence now reads the dated 2026-10-11 triage artifact and
+shows the scope exclusion explicitly, so it does not repeatedly ask for a
+station-to-vehicle bundle that is a documented limitation. This does not make
+the full-loop claim pass.

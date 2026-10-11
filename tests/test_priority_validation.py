@@ -14,7 +14,7 @@ def test_priority_status_exposes_p0_before_lower_tracks() -> None:
     assert status["readiness"]["full_user_objective_ready"] is False
     assert status["data_volume_is_primary_blocker"] is False
     assert status["execution_tracks"][0]["priority"] == "P0"
-    assert status["execution_tracks"][0]["parallel_track"] == "full_loop_intake_and_scoring"
+    assert status["execution_tracks"][0]["parallel_track"] == "component_model_repairs"
 
 
 def test_default_checks_are_focused_and_parallelizable() -> None:

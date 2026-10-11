@@ -14,16 +14,16 @@ def test_gap_report_keeps_failed_gates_and_privacy_boundary() -> None:
     assert report["overall"]["full_user_objective_ready"] is False
     assert report["interpretation"]["data_volume_is_primary_blocker"] is False
     ids = {item["id"] for item in report["unresolved_gates"]}
-    assert "full_loop_external_validation" in ids
+    assert "full_loop_external_validation" not in ids
     assert "dickens_typeiii_prospective_validation" in ids
     assert "hiad_casebook_frozen" in ids
+    assert report["scope_exclusions"][0]["id"] == "full_loop_external_validation"
     assert all("C:\\" not in item["claim_boundary"] for item in report["unresolved_gates"])
 
 
 def test_gap_report_classifies_primary_buckets() -> None:
     report = build_report(ROOT)
     buckets = report["bucket_counts"]
-    assert buckets["full_loop_data"]["FAIL"] == 1
     assert buckets["component_model"]["FAIL"] >= 8
     assert buckets["governance_review"]["PENDING"] >= 5
 
@@ -42,12 +42,11 @@ def test_gap_report_prioritizes_high_impact_work_without_serializing_tracks() ->
     report = build_report(ROOT)
 
     assert report["execution_tracks"][0]["priority"] == "P0"
-    assert report["execution_tracks"][0]["parallel_track"] == "full_loop_intake_and_scoring"
+    assert report["execution_tracks"][0]["parallel_track"] == "component_model_repairs"
     unresolved = report["unresolved_gates"]
-    assert unresolved[0]["id"] == "full_loop_external_validation"
+    assert unresolved[0]["id"] == "dickens_typeiii_prospective_validation"
     assert unresolved[0]["priority"] == "P0"
     assert {item["parallel_track"] for item in unresolved} >= {
-        "full_loop_intake_and_scoring",
         "component_model_repairs",
         "review_and_publication",
     }

@@ -411,8 +411,11 @@ def _validation_gap_triage() -> dict[str, Any]:
         "next_actions": [],
         "claim_limit": "검증 공백 보고서를 읽지 못해 다음 입력을 추정하지 않음",
     }
+    # Keep the assistant aligned with the latest scope decision.  The dated
+    # artifact is intentional: a stale triage file previously kept presenting
+    # the removed station-to-vehicle lane as the next operator action.
     path = Path(__file__).resolve().parents[2] / "research" / (
-        "validation_gap_triage_2026_10_10.json"
+        "validation_gap_report_2026_10_11.json"
     )
     try:
         payload = json.loads(path.read_text(encoding="utf-8"))
@@ -445,6 +448,27 @@ def _validation_gap_triage() -> dict[str, Any]:
     tracks = payload.get("execution_tracks")
     if not isinstance(tracks, list):
         return unavailable
+    raw_exclusions = payload.get("scope_exclusions", [])
+    if not isinstance(raw_exclusions, list):
+        return unavailable
+    scope_exclusions: list[dict[str, str]] = []
+    for exclusion in raw_exclusions:
+        if not isinstance(exclusion, dict):
+            return unavailable
+        exclusion_id = str(exclusion.get("id") or "")
+        legacy_status = str(exclusion.get("legacy_status") or "")
+        reason = str(exclusion.get("reason") or "")
+        paper_limitation = str(exclusion.get("paper_limitation") or "")
+        reentry_condition = str(exclusion.get("reentry_condition") or "")
+        if not exclusion_id or legacy_status not in {"FAIL", "PENDING"} or not reason or not paper_limitation or not reentry_condition:
+            return unavailable
+        scope_exclusions.append({
+            "id": exclusion_id,
+            "legacy_status": legacy_status,
+            "reason": reason,
+            "paper_limitation": paper_limitation,
+            "reentry_condition": reentry_condition,
+        })
     safe_tracks: list[dict[str, str | int]] = []
     track_names: set[str] = set()
     for track in tracks:
@@ -514,6 +538,7 @@ def _validation_gap_triage() -> dict[str, Any]:
         "source_generated_at": payload.get("source_audit_generated_at"),
         "bucket_counts": safe_buckets,
         "execution_tracks": safe_tracks,
+        "scope_exclusions": scope_exclusions,
         "open_gate_count": open_gate_count,
         "next_actions": safe_actions[:8],
         "data_volume_is_primary_blocker": (

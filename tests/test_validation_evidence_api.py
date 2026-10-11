@@ -33,11 +33,12 @@ def test_validation_evidence_surface_is_privacy_bounded_and_claim_limited() -> N
     assert liquid_hrs["coverage"]["numerical_file_access"] == "application_required"
     assert "custodian approval" in liquid_hrs["not_allowed"].lower()
     assert liquid_hrs["coverage"]["raw_synchronized_archive_located"] is False
-    assert any(
+    assert not any(
         item["id"] == "full_loop_external_validation"
-        and item["status"] == "FAIL"
         for item in summary["unresolved_gates"]
     )
+    assert summary["scope_exclusions"][0]["id"] == "full_loop_external_validation"
+    assert summary["scope_exclusions"][0]["legacy_status"] == "FAIL"
     assert summary["minimum_next_input"]["event_count"] == 3
     inventory = summary["evidence_inventory"]
     assert inventory["public_accident_reports"]["report_count"] == 23

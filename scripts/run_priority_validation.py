@@ -60,8 +60,8 @@ class PriorityCheck:
 
 DEFAULT_CHECKS: tuple[PriorityCheck, ...] = (
     PriorityCheck(
-        "full_loop_intake",
-        "P0",
+        "full_loop_intake_boundary",
+        "P1",
         ("-m", "pytest", "tests/test_privacy_safe_full_loop_intake.py", "tests/test_privacy_safe_full_loop_cli.py", "-q"),
     ),
     PriorityCheck(

@@ -22,7 +22,9 @@
 
 - 공개 MC Default full-loop holdout: 0 / 8 통과. 평균 압력 RMSE 15.862 MPa, 온도 RMSE 13.230 °C, SOC RMSE 18.082%p. 이 결과는 숨기거나 재평가로 대체하지 않습니다.
 - NREL 탱크 경계 자료: 압력 RMSE 6.164 MPa로 현재 스크리닝을 통과하지 못해 진단용으로만 유지합니다.
-- 새 full-loop 측정 코호트: **확인되지 않음**. 현재 주된 공백은 동기화된 차량·수용용기 측 채널입니다.
+- 새 full-loop 측정 코호트: **확인되지 않음**. 이 자료 공백은 현재 논문의 범위 제외
+  한계로 남기며, 실행 큐의 주된 작업은 구성요소 물리 실패 holdout과 그에 대한
+  독립 원시 trace 확보입니다.
 
 ## 추가 자료 없이 진행 가능한 작업
 
@@ -37,7 +39,7 @@
 - 공통 경과시간, station/디스펜서 압력, 공급가스 또는 경계 온도, 질량유량/이송질량, 프로토콜 시작·종료 상태.
 - 가능하면 차량·수용용기 압력·온도, cascade 선택 상태, precooler 출구온도, ESD·fault 전이.
 - Units, initial conditions, sensor quality, synchronization and reuse rights must be confirmed by the custodian; raw files need not be published.
-- The synchronized station-to-vehicle data gap is documented as a paper limitation and is no longer a required goal gate.
+- The synchronized station-to-vehicle data gap is documented as a paper limitation and is no longer a required goal gate or an active P0 queue item.
 - 윤리·전문가 평가는 물리 모델 검증이 아니라 SAGA가 사람의 안전 판단을 개선한다고 주장할 때 필요한 별도 사람 대상 평가입니다. 그 주장을 하지 않으면 미실시 한계로 명시합니다.
 
 ## 근거 파일

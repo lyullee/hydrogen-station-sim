@@ -40,22 +40,20 @@ _GOVERNANCE = {
     "submission_metadata_and_declarations",
 }
 
-# Keep the status report usable as an execution queue.  The full-loop gate is
-# the highest-impact blocker, while component and governance work can proceed
-# on independent tracks instead of forcing a serial, all-gates rerun.
+# Keep the status report usable as an execution queue.  The synchronized
+# station-to-vehicle lane was explicitly removed from the primary objective
+# after the public-data search; retain its legacy FAIL only in a separate
+# scope-exclusion list.  The active queue therefore starts with component
+# physics and then governance work instead of repeatedly asking for data that
+# the current paper does not require.
 _TRACKS = {
-    "full_loop_data": {
-        "priority": "P0",
-        "parallel_track": "full_loop_intake_and_scoring",
-        "why_now": "동기화된 수용부·제어기 채널이 들어오면 현재 평가기로 바로 점수화할 수 있는 핵심 게이트",
-    },
     "component_model": {
-        "priority": "P1",
+        "priority": "P0",
         "parallel_track": "component_model_repairs",
-        "why_now": "실패 물리량별 독립 holdout을 병행하되 full-loop 입력 대기를 막지 않음",
+        "why_now": "현재 주 목표에 포함된 실패 물리량별 독립 holdout을 병행하고, 통과 전 런타임 승격을 막음",
     },
     "governance_review": {
-        "priority": "P2",
+        "priority": "P1",
         "parallel_track": "review_and_publication",
         "why_now": "수치 계산과 독립적으로 진행 가능한 검토·기록 작업",
     },
@@ -125,11 +123,33 @@ def build_report(
     audit = _read(root, audit_path)
     gates = audit.get("gates") or []
     unresolved: list[dict[str, Any]] = []
+    scope_exclusions: list[dict[str, Any]] = []
     for gate in gates:
         if not isinstance(gate, dict) or gate.get("status") not in {"FAIL", "PENDING"}:
             continue
         gate_id = str(gate.get("id", "unknown"))
         status = str(gate.get("status"))
+        if gate_id in _FULL_LOOP:
+            scope_exclusions.append(
+                {
+                    "id": gate_id,
+                    "status": "OUT_OF_SCOPE",
+                    "legacy_status": status,
+                    "reason": (
+                        "No reusable synchronized station-to-vehicle raw bundle was identified; "
+                        "the current paper scope is station-side and component validation."
+                    ),
+                    "paper_limitation": (
+                        "Do not claim independent station-to-vehicle full-loop accuracy, "
+                        "vehicle-controller validation or field-safety validation."
+                    ),
+                    "reentry_condition": (
+                        "A custodian provides rights-cleared synchronized station and vehicle "
+                        "channels; then freeze a separate prospective protocol before scoring."
+                    ),
+                }
+            )
+            continue
         unresolved.append(
             {
                 "id": gate_id,
@@ -167,11 +187,12 @@ def build_report(
         },
         "interpretation": {
             "data_volume_is_primary_blocker": False,
-            "primary_blocker": "synchronized receiving-vessel/controller channels and independent protocol provenance",
+            "primary_blocker": "independent component-physics holdouts and protocol provenance",
             "rule": "FAIL은 실패한 주장을 유지하고, PENDING은 증거가 올 때까지 주장하지 않는다.",
             "privacy": "원시 행·경로·회사·사이트·제조사·달력 날짜를 이 보고서에 복사하지 않는다.",
         },
         "bucket_counts": by_bucket,
+        "scope_exclusions": scope_exclusions,
         "execution_tracks": [
             {
                 "priority": config["priority"],
@@ -215,9 +236,9 @@ def _markdown(report: dict[str, Any]) -> str:
             "",
             "## 실행 순서",
             "",
-            "- **P0** full-loop intake와 frozen scoring을 먼저 확인합니다. 이 트랙이 닫히면 전체 목표에 가장 큰 변화가 생깁니다.",
-            "- **P1** 실패한 구성요소 물리는 독립 holdout별로 병행합니다. 하나가 끝날 때까지 다른 트랙을 기다리지 않습니다.",
-            "- **P2** 윤리·전문가 검토·투고 메타데이터는 계산과 별도로 병행합니다.",
+            "- **P0** 현재 주 목표에 포함된 구성요소 물리 실패를 독립 holdout별로 병행합니다. 하나가 끝날 때까지 다른 트랙을 기다리지 않습니다.",
+            "- **P1** 윤리·전문가 검토·투고 메타데이터는 계산과 별도로 병행합니다.",
+            "- station-to-vehicle full-loop FAIL은 아래 범위 제외 목록에 보존하며, 현재 논문의 필수 작업 큐로 반복하지 않습니다.",
             "- 전체 회귀는 코드 변경이 있는 트랙에서만 실행하고, 상태 확인에는 이 보고서와 focused test만 사용합니다.",
             "",
             "## 사용 원칙",
@@ -229,6 +250,21 @@ def _markdown(report: dict[str, Any]) -> str:
             "",
         ]
     )
+    if report.get("scope_exclusions"):
+        lines.extend(
+            [
+                "## 주 목표에서 제외한 게이트",
+                "",
+                "| 게이트 | 감사 상태 | 처리 |",
+                "| --- | --- | --- |",
+            ]
+        )
+        for item in report["scope_exclusions"]:
+            lines.append(
+                f"| `{item['id']}` | {item['legacy_status']} | {item['reason']} "
+                f"논문 한계: {item['paper_limitation']} |"
+            )
+        lines.append("")
     return "\n".join(lines)
 
 
