@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-11T12:31:40+09:00",
+  "generated_at": "2026-10-11T12:51:34+09:00",
   "metric_definition": "PASS gates divided by PASS+FAIL+PENDING gates; not a publication-readiness probability",
   "gate_counts": {
     "PASS": 127,
@@ -108,6 +108,14 @@
         "primary_gate_effect": "none",
         "finding": "2 mm cases retain the frozen half-time failure; measured P-Innen/P-Duese boundary and diameter-dependent implied sensitivity are recorded without runtime fitting.",
         "runtime_parameter_application": false
+      },
+      "llm_direct_route_spot_check": {
+        "status": "PASS",
+        "tests_passed": 19,
+        "tests_failed": 0,
+        "warnings": 3,
+        "evidence": "research/llm_evidence_grounding_validation.json",
+        "claim_boundary": "Software contract only; this does not establish operator effectiveness or human safety benefit."
       }
     }
   }
