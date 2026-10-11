@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "artifact_type": "public_usn_ignited_jet_llm_grounding_validation",
+  "generated_at": "2026-10-11T16:43:46+09:00",
+  "status": "PASS_SOFTWARE_GROUNDING_CONTRACT",
+  "source": {
+    "artifact": "research/usn_ignited_jet_dataset_recheck_2026_10_11.json",
+    "sha256": "2d718f33776becd55ee92a37d45487813afce0ea1ff8c5ff95e607c9be2e5cbd",
+    "dataset_doi": "10.18710/X044QK",
+    "license": "CC0 1.0"
+  },
+  "test": {
+    "command": ".venv\\Scripts\\python.exe -m pytest -q tests/test_llm_usn_jet_evidence.py",
+    "result": "PASS",
+    "assertions": [
+      "response evidence admitted",
+      "prompt decision projection admitted when relevant",
+      "provider prompt projection admitted when relevant",
+      "public source DOI link retained"
+    ]
+  },
+  "runtime_boundary": {
+    "component_consequence_candidate": true,
+    "current_validation_status": "NOT_REPLAYED",
+    "hrs_dispenser_validation_supported": false,
+    "station_vehicle_full_loop_supported": false,
+    "runtime_parameter_application": false
+  },
+  "claim_boundary": "This record verifies only evidence routing into the LLM provider envelope. It does not validate an HRS, dispenser, station-to-vehicle loop, consequence model, operator effectiveness or safety outcome.",
+  "source_commit": "e46e1c3848b5381127cef7a87f2797441dcd2cd9"
+}
