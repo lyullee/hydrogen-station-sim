@@ -117,6 +117,12 @@ def build_report(*, root: Path = ROOT, run_focused_tests: bool = False,
         root / "manuscript/ijhe_manuscript_draft.tex",
         root / "manuscript/Highlights.txt",
     )
+    # The checker reports the paths it was given.  Normalize those fields
+    # before embedding the result in a committed, portable research record.
+    for key in ("manuscript", "highlights"):
+        path_value = format_result.get(key)
+        if path_value:
+            format_result[key] = _relative(Path(path_value))
     stored_compile = json.loads(
         (root / "manuscript/ijhe_compile_status.json").read_text(encoding="utf-8")
     )
@@ -133,6 +139,13 @@ def build_report(*, root: Path = ROOT, run_focused_tests: bool = False,
         compiler_archive_sha256=stored_compile["compiler"]["archive_sha256"],
         visual_pages_inspected=stored_compile["visual_qa"]["pages_inspected"],
     )
+    # ``build_status`` receives absolute paths here because ``root`` is an
+    # absolute Path.  Keep the committed reproduction record portable and
+    # prevent workstation paths from leaking into research metadata.
+    for section in ("source", "pdf", "compile_log"):
+        path_value = (compile_result.get(section) or {}).get("path")
+        if path_value:
+            compile_result[section]["path"] = _relative(Path(path_value))
 
     audit_mirror = json.loads(
         (root / "research/ijhe_readiness_audit.json").read_text(encoding="utf-8")
