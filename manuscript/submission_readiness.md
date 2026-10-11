@@ -37,6 +37,16 @@ The institutional-ethics, HIAD casebook, expert-review and SAGA human-effectiven
 lanes are intentionally optional for this station-side manuscript; they remain
 required only for the broader operator-safety objective.
 
+The latest official-source recheck covered NREL demonstrations and composite
+products, the NBS 70 MPa test catalogue and practical tank-filling literature.
+Those records provide summaries, figures or access-controlled component files,
+not a rights-cleared common-clock station/controller/dispenser/vehicle raw
+bundle. The exclusion decisions and the non-sending custodian request plan are
+recorded in
+[`PUBLIC_STATION_VEHICLE_SEARCH_RECHECK_2026_10_11.md`](../research/PUBLIC_STATION_VEHICLE_SEARCH_RECHECK_2026_10_11.md)
+and
+[`STATION_VEHICLE_CUSTODIAN_REQUEST_PLAN_2026_10_11.md`](../research/STATION_VEHICLE_CUSTODIAN_REQUEST_PLAN_2026_10_11.md).
+
 A fresh privacy-bounded local inventory confirms that data volume is not the
 station-side limitation. The controlled archive contains 33 CSV files,
 59,272,300 physical data rows and 4.749 GiB. One exact duplicate was isolated;
