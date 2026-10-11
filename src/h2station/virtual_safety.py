@@ -143,6 +143,28 @@ class VirtualSafetyRuntime:
                 for operation in operations if target == "all" else (target,):
                     process.stop(operation, "safety-action")
                 self._finish(action, time_s, "confirmed", process.snapshot()["settings"])
+            elif kind == "operation.start":
+                operations = ("trailer_supply", "pressure_recharge", "vehicle_1", "vehicle_2")
+                if target not in (*operations, "all") or process is None:
+                    raise ValueError("Unknown process operation")
+                before = process.snapshot()["settings"]
+                updated = dict(before)
+                # Supply and pressure-recharge are one physical compressor
+                # path in this simulator. Starting either operator command
+                # therefore enables both sides of that path, just as the
+                # remote control does. Vehicle charging remains independent.
+                if target in ("trailer_supply", "pressure_recharge"):
+                    updated["trailer_supply"] = True
+                    updated["pressure_recharge"] = True
+                else:
+                    for operation in operations if target == "all" else (target,):
+                        updated[operation] = True
+                try:
+                    process.configure(updated)
+                except ValueError as exc:
+                    raise ValueError(str(exc)) from exc
+                action["before"] = before
+                self._finish(action, time_s, "confirmed", process.snapshot()["settings"])
             elif kind == "esd.trip":
                 self.esd_requested = True
                 self._finish(action, time_s, "confirmed", {"esd_requested": True})

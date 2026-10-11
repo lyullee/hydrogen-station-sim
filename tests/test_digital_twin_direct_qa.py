@@ -58,6 +58,19 @@ def test_common_korean_command_variants_are_not_downgraded_to_status_answers():
     assert api._requested_virtual_actions("전체 공정 상태를 알려줘") == []
 
 
+def test_start_commands_are_explicit_and_never_mapped_to_stop_actions():
+    trailer = api._requested_virtual_actions("트레일러 수소 공급 시작해줘")
+    assert [(row["kind"], row["target"]) for row in trailer] == [
+        ("operation.start", "trailer_supply")
+    ]
+    vehicle = api._requested_virtual_actions("차량2 충전 시작해줘")
+    assert [(row["kind"], row["target"]) for row in vehicle] == [
+        ("operation.start", "vehicle_2")
+    ]
+    assert all(row["kind"] != "operation.stop" for row in vehicle)
+    assert api._requested_virtual_actions("차량2 충전 중단해줘")[0]["kind"] == "operation.stop"
+
+
 def test_equipment_valve_commands_map_to_specific_virtual_isolation_targets():
     trailer = api._requested_virtual_actions("트레일러 양단 밸브 닫아줘")
     assert [(row["kind"], row["target"]) for row in trailer] == [

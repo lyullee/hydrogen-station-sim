@@ -633,7 +633,7 @@ class SimulationSpeedInput(BaseModel):
 
 class VirtualSafetyActionInput(BaseModel):
     kind: Literal["valve.close", "valve.open", "vent.close", "vent.open",
-                  "operation.stop", "esd.trip", "ventilation.on", "ventilation.off",
+                  "operation.start", "operation.stop", "esd.trip", "ventilation.on", "ventilation.off",
                   "cooling.on", "cooling.off", "power.isolate", "power.restore",
                   "access.restrict", "access.release", "personnel.evacuate", "vehicle.evacuate",
                   "responders.notify", "recovery.record", "repair.leak", "purge.run",
@@ -2944,6 +2944,34 @@ _VIRTUAL_COMMAND_PATTERNS: tuple[tuple[tuple[str, ...], tuple[tuple[str, str, st
      (("ventilation.off", "storage", "저장구역 환기 정지", "Stop storage ventilation"),)),
 )
 
+# Start requests use a separate intent table.  Keeping them out of the
+# stop/isolation table prevents a phrase such as "차량2 충전 시작해줘" from
+# being interpreted as a stop request merely because it contains the vehicle
+# alias.  The same confirmation and feedback path is used for both directions.
+_VIRTUAL_START_COMMAND_PATTERNS: tuple[
+    tuple[tuple[str, ...], tuple[tuple[str, str, str, str], ...]], ...
+] = (
+    (("esd 가동", "esd 작동", "esd 실행", "esd trip", "비상정지 가동", "비상 정지 작동"),
+     (("esd.trip", "station", "가상 ESD 차단", "Virtual ESD trip"),)),
+    (("전체 공정 시작", "전체 공정 가동", "모든 공정 시작", "모든 공정 가동",
+      "공정 전체 시작", "공정 전체 가동", "start all operations", "all operations start"),
+     (("operation.start", "all", "전체 공정 시작", "Start all operations"),)),
+    (("트레일러 공급 시작", "트레일러 공급 가동", "수소 공급 시작", "수소 공급 가동",
+      "start trailer supply", "trailer supply start"),
+     (("operation.start", "trailer_supply", "트레일러 공급 시작", "Start trailer supply"),)),
+    (("압력 보완 시작", "압력보완 시작", "압력 보완 가동", "압력보완 가동",
+      "start pressure recharge", "pressure recharge start"),
+     (("operation.start", "pressure_recharge", "압력 보완 시작", "Start pressure recharge"),)),
+    (("차량 1 충전 시작", "차량1 충전 시작", "차량 1 충전 가동", "차량1 충전 가동",
+      "start vehicle 1 fueling", "vehicle 1 fueling start"),
+     (("operation.start", "vehicle_1", "차량 1 충전 시작", "Start vehicle 1 fueling"),)),
+    (("차량 2 충전 시작", "차량2 충전 시작", "차량 2 충전 가동", "차량2 충전 가동",
+      "start vehicle 2 fueling", "vehicle 2 fueling start"),
+     (("operation.start", "vehicle_2", "차량 2 충전 시작", "Start vehicle 2 fueling"),)),
+    (("환기 가동", "환기 켜", "환기 켜줘", "ventilation on", "start ventilation"),
+     (("ventilation.on", "storage", "저장구역 환기 가동", "Start storage ventilation"),)),
+)
+
 
 class _SkipDirectAssistant(Exception):
     """Internal sentinel for an already-resolved operator command."""
@@ -2982,9 +3010,21 @@ def _requested_virtual_actions(question: str, *, language: str = "ko") -> list[d
         compact,
     ):
         return []
+    # Resolve explicit starts before the legacy stop/isolation table.  This
+    # also makes the decision auditable in the response payload: a start
+    # request can never silently become a stop proposal.
+    start_intent = bool(re.search(
+        r"(?:시작|가동|재개|start|resume|restart)", compact,
+        re.IGNORECASE,
+    ))
+    # ESD wording often includes "가동/작동" even though it is an emergency
+    # trip, not a process start. Resolve it through the safety table first.
+    command_patterns = (_VIRTUAL_COMMAND_PATTERNS if "esd" in compact
+                        else _VIRTUAL_START_COMMAND_PATTERNS
+                        if start_intent else _VIRTUAL_COMMAND_PATTERNS)
     proposals: list[dict[str, Any]] = []
     seen: set[tuple[str, str]] = set()
-    for phrases, actions in _VIRTUAL_COMMAND_PATTERNS:
+    for phrases, actions in command_patterns:
         if not any(phrase in compact for phrase in phrases):
             continue
         for kind, target, label_ko, label_en in actions:

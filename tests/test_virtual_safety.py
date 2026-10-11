@@ -76,6 +76,22 @@ def test_trailer_and_bank_inlet_valves_stop_recharge_and_vent_depletes_bank():
     assert vented.leak_mass_flow_by_release["vent-high"].max() > 0
 
 
+def test_operation_start_action_reenables_requested_transfer_path():
+    settings = ProcessSettings(trailer_supply=False, pressure_recharge=False,
+                               vehicle_1=False).model_dump()
+    built, process = station(settings)
+    action = process.safety.issue("operation.start", "trailer_supply", 0.0,
+                                  process=process)
+    assert action["status"] == "confirmed"
+    assert process.requested("trailer_supply") is True
+    assert process.requested("pressure_recharge") is True
+
+    vehicle = process.safety.issue("operation.start", "vehicle_1", 0.0,
+                                   process=process)
+    assert vehicle["status"] == "confirmed"
+    assert process.requested("vehicle_1") is True
+
+
 def test_actuator_failure_and_recovery_gate():
     safety = VirtualSafetyRuntime()
     safety.set_fault("compressor.discharge", "stuck_open", 0)
@@ -278,6 +294,11 @@ def test_live_safety_api_separates_command_feedback_and_replays():
                                                          "target": "trailer.station"})
             assert command.status_code == 200, command.text
             assert command.json()["action"]["status"] == "commanded"
+            start = client.post(root + "/actions", json={"kind": "operation.start",
+                                                          "target": "vehicle_1"})
+            assert start.status_code == 200, start.text
+            assert start.json()["action"]["status"] == "confirmed"
+            assert client.get(f"/api/simulations/{job_id}/operations").json()["settings"]["vehicle_1"] is True
             deadline = monotonic() + 8
             while monotonic() < deadline:
                 state = client.get(root).json()
@@ -292,7 +313,9 @@ def test_live_safety_api_separates_command_feedback_and_replays():
                                                           "target": "station"}).status_code == 422
             replay = client.get(root + "/replay")
             assert replay.status_code == 200
-            assert replay.json()["actions"][-1]["kind"] == "valve.close"
+            assert {item["kind"] for item in replay.json()["actions"]} >= {
+                "valve.close", "operation.start"
+            }
             assert replay.json()["evaluation"]["training_score"] <= 100
         finally:
             client.post(f"/api/simulations/{job_id}/stop")
