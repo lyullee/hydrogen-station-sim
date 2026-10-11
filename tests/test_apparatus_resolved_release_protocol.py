@@ -66,7 +66,7 @@ def test_protocol_locks_candidate_revision_before_target_data_access():
     assert protocol["protocol_revision"]["target_campaign_outcome_data_accessed"] is False
     assert protocol["protocol_revision"]["physical_trajectory_equations_changed"] is True
     assert protocol["protocol_revision"]["revision_kind"] == (
-        "second pre-holdout apparatus-structure revision"
+        "third pre-holdout apparatus-structure revision"
     )
     assert protocol["quality_controls"]["observed_valve_location_must_be_declared"] == (
         "upstream_or_terminal"
@@ -98,6 +98,7 @@ def test_secondary_protocol_tracks_the_locked_conservation_outputs():
         "instrumentation_added_before_target_campaign_outcome_access": True,
         "physical_trajectory_equations_changed": True,
         "dual_valve_boundary_amended_before_target_campaign_outcome_access": True,
+        "command_to_motion_delay_boundary_amended_before_target_campaign_outcome_access": True,
     }
 
 

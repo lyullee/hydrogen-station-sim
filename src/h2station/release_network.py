@@ -50,12 +50,16 @@ class ReleaseNetworkInputs:
     valve_opening_time_s: float = 0.05
     valve_opening_shape_exponent: float = 1.0
     upstream_valve_initial_fraction: float = 0.0
+    # A pneumatic or motor-operated valve can have a command-to-motion delay.
+    # The default remains zero for backwards compatibility with the v1 model.
+    upstream_valve_delay_s: float = 0.0
     # A terminal fraction of one preserves the original always-open outlet.
     # Set this to zero with a finite opening time for a precharged line whose
     # release valve is located at the nozzle/end of the supply line.
     terminal_valve_initial_fraction: float = 1.0
     terminal_valve_opening_time_s: float = 0.0
     terminal_valve_opening_shape_exponent: float = 1.0
+    terminal_valve_delay_s: float = 0.0
     line_segments: int = 1
     intersegment_diameter_m: float | None = None
     intersegment_discharge_coefficient: float = 1.0
@@ -98,8 +102,10 @@ class ReleaseNetworkInputs:
             "terminal_discharge_coefficient": self.terminal_discharge_coefficient,
             "valve_opening_time_s": self.valve_opening_time_s,
             "upstream_valve_initial_fraction": self.upstream_valve_initial_fraction,
+            "upstream_valve_delay_s": self.upstream_valve_delay_s,
             "terminal_valve_initial_fraction": self.terminal_valve_initial_fraction,
             "terminal_valve_opening_time_s": self.terminal_valve_opening_time_s,
+            "terminal_valve_delay_s": self.terminal_valve_delay_s,
             "source_wall_mass_kg": self.source_wall_mass_kg,
             "line_wall_mass_kg": self.line_wall_mass_kg,
             "source_internal_area_m2": self.source_internal_area_m2,
@@ -197,10 +203,16 @@ def _opening_fraction(
     opening_time_s: float,
     shape_exponent: float = 1.0,
     initial_fraction: float = 0.0,
+    opening_delay_s: float = 0.0,
 ) -> float:
+    if opening_delay_s < 0.0:
+        raise ValueError("opening_delay_s must be non-negative")
+    effective_time_s = time_s - opening_delay_s
+    if effective_time_s <= 0.0:
+        return initial_fraction
     if opening_time_s <= 0.0:
         return 1.0
-    travel = float(np.clip(time_s / opening_time_s, 0.0, 1.0))
+    travel = float(np.clip(effective_time_s / opening_time_s, 0.0, 1.0))
     return initial_fraction + (1.0 - initial_fraction) * travel**shape_exponent
 
 
@@ -305,12 +317,14 @@ def simulate_release_network(
             inputs.valve_opening_time_s,
             inputs.valve_opening_shape_exponent,
             inputs.upstream_valve_initial_fraction,
+            inputs.upstream_valve_delay_s,
         )
         terminal_opening = _opening_fraction(
             time_s,
             inputs.terminal_valve_opening_time_s,
             inputs.terminal_valve_opening_shape_exponent,
             inputs.terminal_valve_initial_fraction,
+            inputs.terminal_valve_delay_s,
         )
         if source_p <= line_p[0] * (1.0 + 1.0e-9):
             upstream = 0.0
@@ -514,6 +528,7 @@ def simulate_release_network(
             inputs.valve_opening_time_s,
             inputs.valve_opening_shape_exponent,
             inputs.upstream_valve_initial_fraction,
+            inputs.upstream_valve_delay_s,
         )
         for time_s in requested
     ])
@@ -523,6 +538,7 @@ def simulate_release_network(
             inputs.terminal_valve_opening_time_s,
             inputs.terminal_valve_opening_shape_exponent,
             inputs.terminal_valve_initial_fraction,
+            inputs.terminal_valve_delay_s,
         )
         for time_s in requested
     ])

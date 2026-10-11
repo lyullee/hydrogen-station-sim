@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "artifact_type": "apparatus_valve_timing_development_evidence",
+  "recorded_at": "2026-10-11",
+  "source": {
+    "title": "Hydrogen blowdown release experiments at KIT",
+    "venue": "ICHS 2021",
+    "url": "https://hysafe.info/uploads/papers/2021/38.pdf",
+    "reported_command_to_motion_delay_s": 0.04,
+    "reported_motion_to_full_open_s": 0.18,
+    "reported_release_time_reference": "first pressure increase in release-line sensor P2",
+    "source_role": "apparatus context; not a calibration outcome"
+  },
+  "model_change": {
+    "path": "src/h2station/release_network.py",
+    "new_inputs": ["upstream_valve_delay_s", "terminal_valve_delay_s"],
+    "default_value_s": 0.0,
+    "backward_compatible": true,
+    "runtime_station_wiring": false,
+    "validation_gate_changed": false
+  },
+  "verification": {
+    "test": "tests/test_release_network.py::test_independent_valve_command_delay_preserves_closed_interval",
+    "conservation_check": true,
+    "external_validation_claim": false
+  },
+  "claim_boundary": "Development model-structure provenance only; no external physical validation, station safety, consequence-distance, vehicle-loop or SAGA-effectiveness claim."
+}

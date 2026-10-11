@@ -2,7 +2,7 @@
   "schema_version": 3,
   "status": "prospective_model_only_no_holdout_received",
   "model": "src/h2station/release_network.py",
-  "model_sha256": "75A454425F131D74BD919F5FE54F468B81C655CC7A185F4EBF6B5E4DDA5E876A",
+  "model_sha256": "FA0267FD6C06450C46651A019FA152BAD599DEFD3EB7C2854DBE638618B0C39A",
   "evaluator": "src/h2station/apparatus_release_validation.py",
   "evaluator_sha256": "A31B9DCEBBB4320749E0F39B9661519626CADBC1624C66C14C6FFA7F0EC2C035",
   "campaign_runner": "scripts/run_apparatus_release_holdout.py",
@@ -16,8 +16,10 @@
     ],
     "boundaries": [
       "independent_finite_upstream_valve_opening",
+      "independent_upstream_command_to_motion_delay",
       "bidirectional_intervolume_restrictions",
       "independent_finite_terminal_valve_opening",
+      "independent_terminal_command_to_motion_delay",
       "terminal_restriction_to_ambient"
     ],
     "states": [
@@ -76,11 +78,13 @@
     "energy_closure_relative_error_max": 0.002,
     "instrumentation_added_before_target_campaign_outcome_access": true,
     "physical_trajectory_equations_changed": true,
-    "dual_valve_boundary_amended_before_target_campaign_outcome_access": true
+    "dual_valve_boundary_amended_before_target_campaign_outcome_access": true,
+    "command_to_motion_delay_boundary_amended_before_target_campaign_outcome_access": true
   },
   "prohibited_after_outcome_access": [
     "case_specific_parameter_fit",
     "discharge_coefficient_fit",
+    "upstream_or_terminal_command_to_motion_delay_fit",
     "upstream_or_terminal_valve_opening_time_fit",
     "line_volume_or_diameter_fit",
     "observed_valve_location_reclassification",

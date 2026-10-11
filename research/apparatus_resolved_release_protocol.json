@@ -1,7 +1,7 @@
 {
   "schema_version": 2,
   "recorded_at": "2026-10-05",
-  "updated_at": "2026-10-08T08:26:24.055910+00:00",
+  "updated_at": "2026-10-11T18:58:00+09:00",
   "status": "PROSPECTIVE_PROTOCOL_SPECIFICATION_ONLY",
   "purpose": "Freeze an apparatus-resolved source-line-valve-terminal release model and its data contract before opening an independent facility logger archive.",
   "claim_boundary": "This artifact is a reproducibility and data-acquisition protocol. It is not external validation, does not repair the frozen Proust holdout, and does not support a safety-distance or controller claim.",
@@ -35,16 +35,16 @@
   },
   "locked_model": {
     "path": "src/h2station/release_network.py",
-    "sha256": "75A454425F131D74BD919F5FE54F468B81C655CC7A185F4EBF6B5E4DDA5E876A",
+    "sha256": "FA0267FD6C06450C46651A019FA152BAD599DEFD3EB7C2854DBE638618B0C39A",
     "state_description": [
       "source vessel mass and internal energy",
       "one or more physically declared line or manifold mass and internal-energy states",
       "source and line wall temperatures",
-      "independent finite upstream and terminal valve opening laws plus bidirectional inter-volume restriction flows",
+      "independent finite upstream and terminal valve opening laws, command-to-motion delays, plus bidirectional inter-volume restriction flows",
       "terminal restriction flow to the declared ambient boundary",
       "cumulative terminal mass/enthalpy and net thermal-boundary energy bookkeeping, which does not feed the physical trajectory"
     ],
-    "parameter_policy": "Freeze geometry, both valve locations and opening laws, discharge coefficients, heat-transfer terms, solver tolerances and boundary semantics before any target-campaign numerical result is inspected.",
+    "parameter_policy": "Freeze geometry, both valve locations, command-to-motion delays, opening laws, discharge coefficients, heat-transfer terms, solver tolerances and boundary semantics before any target-campaign numerical result is inspected.",
     "production_status": "development_only_not_wired_into_station_runtime"
   },
   "locked_evaluator": {
@@ -56,10 +56,10 @@
     "archive_policy": "Persist aliases, hashes, aggregate metrics and all failed-case reasons; never persist raw rows, paths, facility identity, exact dates or manufacturer details."
   },
   "protocol_revision": {
-    "revision_kind": "second pre-holdout apparatus-structure revision",
+    "revision_kind": "third pre-holdout apparatus-structure revision",
     "target_campaign_outcome_data_accessed": false,
     "physical_trajectory_equations_changed": true,
-    "change_scope": "Before any qualifying target campaign was received, the candidate model was amended to distinguish the source-side valve from the terminal release valve. Each valve now has an independent initial position, travel time and opening-law exponent; the evaluator requires the manifest to declare which valve the single synchronized valve trace represents. Legacy defaults preserve the earlier one-opening-boundary behavior. This supersedes the earlier pre-holdout multi-volume revision and requires a new freeze before any target outcomes are opened.",
+    "change_scope": "Before any qualifying target campaign was received, the candidate model was amended to distinguish the source-side valve from the terminal release valve and to represent an independent command-to-motion delay for each. Each valve now has an independent initial position, delay, travel time and opening-law exponent; the evaluator requires the manifest to declare which valve the single synchronized valve trace represents. Legacy defaults preserve the earlier one-opening-boundary behavior. This supersedes the earlier pre-holdout multi-volume revision and requires a new freeze before any target outcomes are opened.",
     "revalidation_required_before_promotion": true
   },
   "required_channels": [

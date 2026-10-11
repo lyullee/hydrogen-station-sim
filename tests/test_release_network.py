@@ -101,6 +101,30 @@ def test_precharged_line_can_open_the_terminal_valve_independently():
     assert np.max(np.abs(result.mass_balance_residual_kg)) < 1.0e-8
 
 
+def test_independent_valve_command_delay_preserves_closed_interval():
+    time = np.linspace(0.0, 0.4, 41)
+    result = simulate_release_network(
+        time,
+        inputs=_inputs(
+            valve_opening_time_s=0.2,
+            upstream_valve_delay_s=0.1,
+            terminal_valve_initial_fraction=0.0,
+            terminal_valve_opening_time_s=0.2,
+            terminal_valve_delay_s=0.05,
+        ),
+    )
+
+    # A command-to-motion delay keeps each boundary closed until its own
+    # declared delay elapses; the ramp then reaches the same full-open state.
+    assert np.all(result.upstream_valve_opening_fraction[:11] == pytest.approx(0.0))
+    assert result.upstream_valve_opening_fraction[20] == pytest.approx(0.5)
+    assert result.upstream_valve_opening_fraction[-1] == pytest.approx(1.0)
+    assert np.all(result.terminal_valve_opening_fraction[:6] == pytest.approx(0.0))
+    assert result.terminal_valve_opening_fraction[15] == pytest.approx(0.5)
+    assert result.terminal_valve_opening_fraction[-1] == pytest.approx(1.0)
+    assert np.max(np.abs(result.mass_balance_residual_kg)) < 1.0e-8
+
+
 def test_release_network_energy_closure_is_explicit_for_wall_and_boundary_heat():
     time = np.linspace(0.0, 0.5, 101)
     result = simulate_release_network(
