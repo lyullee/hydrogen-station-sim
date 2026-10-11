@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "artifact_type": "station_to_vehicle_public_search_addendum",
+  "recorded_at": "2026-10-11",
+  "search_scope": "newly indexed public HRS operational and fueling-data leads checked after the frozen station-to-vehicle exclusion decision",
+  "eligibility_rule": {
+    "required": [
+      "machine-readable raw rows",
+      "station/dispenser and vehicle/receptacle channels",
+      "common time axis",
+      "pressure temperature and mass-flow or transferred-mass fields",
+      "units/protocol metadata",
+      "reuse rights"
+    ],
+    "not_sufficient": [
+      "aggregate refueling summaries",
+      "figures only",
+      "simulator outputs",
+      "station registry or availability API"
+    ]
+  },
+  "candidates": [
+    {
+      "id": "caponi_3emotion_operational_data",
+      "title": "Four years of operational data for five hydrogen refueling stations",
+      "doi": "10.1051/e3sconf/202233406008",
+      "url": "https://www.e3s-conferences.org/articles/e3sconf/pdf/2022/01/e3sconf_efc2022_06008.pdf",
+      "observed": "Real operator logs summarized for four 350-bar bus stations; fill amount, duration, average flow, event counts, daily profiles and availability are reported.",
+      "decision": "AGGREGATE_OPERATIONAL_CONTEXT_ONLY",
+      "reason": "No downloadable row-level synchronized station-to-vehicle pressure/temperature/mass-flow archive or reuse terms were identified."
+    },
+    {
+      "id": "kim_2026_hrssafety_anomaly",
+      "title": "Data-Driven Intelligent Analysis System for Monitoring and Anomaly Detection in Hydrogen Refueling Station",
+      "doi": "10.3390/app16157856",
+      "url": "https://www.mdpi.com/2076-3417/16/15/7856",
+      "observed": "Open article describes pressure, temperature and flow-rate monitoring and a BAM demonstration-station deployment.",
+      "decision": "ARTICLE_AND_CONTEXT_ONLY",
+      "reason": "The public article does not expose a rights-cleared row-level station-to-vehicle raw trace; semi-synthetic anomaly data are not an external fueling holdout."
+    },
+    {
+      "id": "ipcei_europe_hrs_registry",
+      "title": "Hydrogen Refuelling Stations | IPCEI Hydrogen",
+      "url": "https://ipcei.observatory.clean-hydrogen.europa.eu/hydrogen-landscape/distribution-and-storage/hydrogen-refuelling-stations",
+      "observed": "Public station inventory and dispenser-type context.",
+      "decision": "REGISTRY_ONLY",
+      "reason": "No vehicle-tank transient channels or synchronized raw fueling event are provided."
+    }
+  ],
+  "outcome": {
+    "new_eligible_public_synchronized_raw_set": false,
+    "primary_scope_effect": "unchanged",
+    "limitation": "The study still cannot claim independent station-to-vehicle full-loop accuracy, vehicle-controller/ESD validation or field-safety validation.",
+    "reentry": "If a custodian provides de-identified synchronized events with reuse permission, freeze a separate protocol before opening outcomes."
+  }
+}
