@@ -589,6 +589,7 @@ For the active goal, completion is evaluated against the scope-adjusted gate
 set recorded in
 [`VALIDATION_DATA_SPLIT_AND_SCOPE_DECISION_2026_10_11.md`](../research/VALIDATION_DATA_SPLIT_AND_SCOPE_DECISION_2026_10_11.md)
 and `research/goal_progress_snapshot_2026_10_11.json`. The legacy
+Only `full_user_objective_ready=true` permits goal completion. The legacy
 `full_user_objective_ready` flag remains false until the optional re-entry lanes
 are completed; it must not be read as a claim that the current station-side
 manuscript already has station-to-vehicle or human-effectiveness evidence.
@@ -608,3 +609,4 @@ manuscript already has station-to-vehicle or human-effectiveness evidence.
 
 The audit must be regenerated after any evidence, manuscript, or protocol
 change; this summary must retain the same decision flags and gate counts.
+
