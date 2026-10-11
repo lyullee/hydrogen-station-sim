@@ -1,5 +1,16 @@
 # Development Progress
 
+## 2026-10-11 - Make public accident-grounding audit standalone
+
+The public accident-precedent routing audit now adds the source checkout's
+`src` directory before importing the package.  It can therefore be run with
+`python scripts/audit_runtime_public_accident_precedents.py` without relying on
+an editable install or an externally supplied `PYTHONPATH`.  A subprocess test
+executes that documented invocation in a clean environment.  The full Python
+regression remains green at **1,421 passed, 0 failed, 20 warnings**; this
+reproducibility change does not modify process physics, runtime safety actions,
+or LLM claim boundaries.
+
 ## 2026-10-11 - Revalidate the data-split scope boundary
 
 `scripts/verify_validation_scope_manifest.py` was rerun against the current
