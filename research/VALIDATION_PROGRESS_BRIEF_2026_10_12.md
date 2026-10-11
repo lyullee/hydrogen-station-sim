@@ -4,17 +4,18 @@
 
 ## 현재 판정
 
-- IJHE 내부 게이트: **PASS 129 / FAIL 10 / PENDING 7**.
+- IJHE 내부 게이트: **PASS 130 / FAIL 10 / PENDING 7**.
 - 제한된 투고 준비: **아직 불가**.
 - 현재 주 목표: **station-side 안전 디지털 트윈·구성요소 검증·근거 기반 SAGA 응답**.
 - 동기화 station-to-vehicle full-loop 검증: **주 목표에서 제외하고 논문 한계로 명시**.
-- 개정 주 목표 보조 지표: **129 PASS / 9 FAIL / 2 PENDING = 92.1%**. 범위 조정 결과이지 새 검증 통과가 아닙니다.
+- 개정 주 목표 보조 지표: **130 PASS / 9 FAIL / 2 PENDING = 92.2%**. 범위 조정 결과이지 새 검증 통과가 아닙니다.
 
 ## 지금 바로 사용할 수 있는 근거
 
 - 비식별 station-side 원자료: 56,854,143개 행, 고압 압력 사이클 16,770건, 중·고압 연계 11,770건, 재충전 압력 예측 1,418건. 압력·cascade·재충전 동역학 진단에 사용합니다.
 - 같은 자료의 시간순 holdout: 압력 경계 30점, cascade 3,664쌍, 재충전 예측 394건. 차량 충전 정확도나 현장 안전한계로 확대하지 않습니다.
 - 공개 Type-IV 탱크 경계 검증: 12건, 탱크 경계 구성요소 검증으로 유지합니다.
+- 추가로 공개 PRESLHY E3.1 D05·D2 80 K 패키지 11개 workbook을 고정 모델로 읽었으나, 모든 파일에서 측정 대기압 채널이 없어 aggregate eligibility가 0건이었습니다. 대기압을 임의 대체하지 않고 음성 자료가용성 결과로 보존하며 새 검증 주장은 하지 않습니다.
 - 공개 MHC Experiment 16 구성요소 screen: 1,186개 기록 / 1,185초의 압력·유량·온도 trace입니다. 프로토콜 고정 후 접근했고, 단위·열경계가 station compressor와 달라 호환성 근거로만 사용합니다.
 - MHC screen은 근거 기반 LLM의 구성요소·공개 검증 질문에만 privacy-safe 요약으로 전달합니다. runtime 파라미터, HRS full-loop, 차량 동기화, 안전거리 및 LLM 효과 검증에는 사용하지 않습니다.
 - 사고 전례·대응 플레이북·가상 조치 실행은 시나리오와 단계별 대응 근거로 사용하며, 사고 빈도나 현장 대응 효과를 추정하지 않습니다.
@@ -24,7 +25,7 @@
 - 공개 MC Default full-loop holdout: 0 / 8 통과. 평균 압력 RMSE 15.862 MPa, 온도 RMSE 13.230 °C, SOC RMSE 18.082%p. 이 결과는 숨기거나 재평가로 대체하지 않습니다.
 - NREL 탱크 경계 자료: 압력 RMSE 6.164 MPa로 현재 스크리닝을 통과하지 못해 진단용으로만 유지합니다.
 - 새 full-loop 측정 코호트: **확인되지 않음**. 현재 주된 공백은 동기화된 차량·수용용기 측 채널입니다.
-- 2026-10-12 공개자료 재검색에서는 H2-Stations 운영 메타데이터와 보고서·구성요소 자료, JRC GasTeF Type-III 실험 기록을 확인했습니다. JRC는 논문·표·그래프 범위의 controlled-access lead로 남겼고, 공통 시계의 station/controller·dispenser·vehicle 원시 로그는 새로 확인되지 않았습니다.
+- 2026-10-12 공개자료 재검색에서도 H2-Stations 운영 메타데이터와 보고서·구성요소 자료만 확인되었고, 공통 시계의 station/controller·dispenser·vehicle 원시 로그는 새로 확인되지 않았습니다.
 
 ## 추가 자료 없이 진행 가능한 작업
 
@@ -47,12 +48,14 @@
 - `research/data_coverage_summary_2026_10_10.json`
 - `research/ijhe_readiness_audit.json`
 - `research/local_candidate_full_loop_screen_2026_10_09.json`
-- `research/GOAL_SCOPE_AMENDMENT_2026_10_12.md`
+- `research/GOAL_SCOPE_AMENDMENT_2026_10_11.md`
 - `research/PUBLIC_STATION_TO_VEHICLE_SEARCH_2026_10_11.md`
 - `research/public_station_vehicle_search_recheck_2026_10_12.json`
 - `research/h2safe_oedi_recheck_2026_10_12.json`
 - `research/public_mhc_experiment16_holdout_protocol_2026_10_12.json`
 - `research/public_mhc_experiment16_screen_2026_10_12.json`
+- `research/preslhy_e31_80k_d05_d2_holdout_protocol_2026_10_12.json`
+- `research/preslhy_e31_80k_d05_d2_holdout_result_2026_10_12.json`
 - `data/public_validation/results/closed_loop_external_holdout/validation.json`
 
 이 브리프는 모델이나 검증 게이트를 변경하지 않습니다. 새로운 자료가 들어오면 동일한 동결·시간축·권한 검사를 거친 뒤 다시 생성합니다.

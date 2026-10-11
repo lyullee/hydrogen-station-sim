@@ -6617,6 +6617,64 @@ def audit(root: Path) -> dict[str, object]:
         } if e31_80k_result else "missing; 80 K holdout intake has not completed",
     ))
 
+    e31_80k_d05_d2_result_path = root / "research/preslhy_e31_80k_d05_d2_holdout_result_2026_10_12.json"
+    e31_80k_d05_d2_result = _json(e31_80k_d05_d2_result_path)
+    e31_80k_d05_d2_protocol_path = root / "research/preslhy_e31_80k_d05_d2_holdout_protocol_2026_10_12.json"
+    e31_80k_d05_d2_protocol = _json(e31_80k_d05_d2_protocol_path)
+    e31_80k_d05_d2_protocol_hash = (
+        _sha256(e31_80k_d05_d2_protocol_path)
+        if e31_80k_d05_d2_protocol_path.is_file()
+        else None
+    )
+    e31_80k_d05_d2_observed = (e31_80k_d05_d2_result or {}).get("observed") or {}
+    e31_80k_d05_d2_source = (e31_80k_d05_d2_result or {}).get("source") or {}
+    e31_80k_d05_d2_intake_pass = bool(
+        (e31_80k_d05_d2_result or {}).get("status")
+        == "completed_negative_eligibility_result"
+        and (e31_80k_d05_d2_protocol or {}).get("status")
+        == "frozen_before_numerical_outcome_access"
+        and ((e31_80k_d05_d2_protocol or {}).get("source") or {}).get(
+            "numerical_workbook_outcomes_accessed_before_freeze"
+        ) is False
+        and ((e31_80k_d05_d2_protocol or {}).get("independence") or {}).get(
+            "packages_separate_from_consumed_300k_campaign"
+        ) is True
+        and ((e31_80k_d05_d2_protocol or {}).get("independence") or {}).get(
+            "packages_separate_from_consumed_d4_80k_campaign"
+        ) is True
+        and (e31_80k_d05_d2_result or {}).get("protocol_sha256")
+        == e31_80k_d05_d2_protocol_hash
+        and e31_80k_d05_d2_observed.get("workbooks_read") == 11
+        and e31_80k_d05_d2_observed.get("read_errors") == 0
+        and e31_80k_d05_d2_observed.get("gas_temperature_values_measured") == 11
+        and e31_80k_d05_d2_observed.get("ambient_pressure_values_measured") == 0
+        and e31_80k_d05_d2_observed.get("aggregate_eligible_cases") == 0
+        and (e31_80k_d05_d2_result or {}).get("aggregate", {}).get(
+            "claim_supported"
+        ) is False
+        and e31_80k_d05_d2_source.get("raw_rows_persisted") is False
+    )
+    gates.append(_gate(
+        "preslhy_e31_80k_d05_d2_intake_integrity",
+        "PASS" if e31_80k_d05_d2_intake_pass else (
+            "FAIL" if e31_80k_d05_d2_result else "PENDING"
+        ),
+        "The newly screened public PRESLHY E3.1 D05/D2 80 K packages are retained as a negative eligibility result without promoting a validation claim.",
+        f"{e31_80k_d05_d2_result_path.relative_to(root)}; {e31_80k_d05_d2_protocol_path.relative_to(root)}",
+        "Eleven workbooks read without errors, measured gas temperature retained, no ambient-pressure substitution accepted, frozen protocol hash and explicit no-claim boundary.",
+        {
+            "observed": e31_80k_d05_d2_observed,
+            "source_packages": [
+                item.get("name") for item in (e31_80k_d05_d2_source.get("packages") or [])
+            ],
+            "protocol_hash_matches": (
+                (e31_80k_d05_d2_result or {}).get("protocol_sha256")
+                == e31_80k_d05_d2_protocol_hash
+            ),
+            "claim_boundary": (e31_80k_d05_d2_result or {}).get("claim_boundary"),
+        } if e31_80k_d05_d2_result else "missing; D05/D2 80 K intake has not completed",
+    ))
+
     proust_result_path = root / "research/proust_release_holdout_result.json"
     proust_result = _json(proust_result_path)
     proust_protocol_path = root / "research/proust_release_holdout_protocol.json"

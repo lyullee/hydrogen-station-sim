@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "status": "completed_negative_eligibility_result",
+  "generated_at": "2026-10-11T22:14:23.325114+00:00",
+  "protocol_path": "research/preslhy_e31_80k_d05_d2_holdout_protocol_2026_10_12.json",
+  "protocol_sha256": "5a8361db87bd729ab265d99c7d1967e55ec15d28c8bfdff30e742e151d06799b",
+  "runner_git_commit": "a3c0bd15e005fa6c86af34c1ded3b540b2ede047",
+  "source": {
+    "dataset_doi": "10.35097/1187",
+    "packages": [
+      {
+        "name": "PRE3P1A_KIT_D05_80K-DATA.zip",
+        "bytes": 160418597,
+        "sha256": "571052ac1b78274c731cf4f29aa68eac8119a2f5ff0ec46ad7925a2d6a4d3147",
+        "md5": "f0df26e75cb29058454f557825677153"
+      },
+      {
+        "name": "PRE3P1A_KIT_D2_80K-DATA.zip",
+        "bytes": 185741321,
+        "sha256": "d433bd5ee8cfa2ed1b3d729e8eba0a8d6f40a95f3455d357f18b8bb3b956ca60",
+        "md5": "ccdbc0fad4b7308dba86c1569ed22e6d"
+      }
+    ],
+    "raw_rows_persisted": false,
+    "license": "CC BY 4.0 as declared by the public record"
+  },
+  "observed": {
+    "workbooks_read": 11,
+    "read_errors": 0,
+    "gas_temperature_values_measured": 11,
+    "ambient_pressure_values_measured": 0,
+    "ambient_pressure_values_substituted": 11,
+    "package_case_summary": {
+      "PRE3P1A_KIT_D05_80K-DATA.zip": {
+        "case_count": 4,
+        "ambient_pressure_substituted_count": 4,
+        "temperature_substituted_count": 0,
+        "temperature_k_range": [
+          83.822906,
+          87.006182
+        ],
+        "initial_pressure_bar_abs_range": [
+          6.042511,
+          200.79598600000003
+        ]
+      },
+      "PRE3P1A_KIT_D2_80K-DATA.zip": {
+        "case_count": 7,
+        "ambient_pressure_substituted_count": 7,
+        "temperature_substituted_count": 0,
+        "temperature_k_range": [
+          85.05579900000001,
+          87.253262
+        ],
+        "initial_pressure_bar_abs_range": [
+          6.165614000000001,
+          202.221999
+        ]
+      }
+    },
+    "aggregate_eligible_cases": 0
+  },
+  "aggregate": {
+    "joint_primary_passes": 0,
+    "joint_primary_pass_fraction": null,
+    "bootstrap_95_percent_ci": [
+      null,
+      null
+    ],
+    "bootstrap_replicates": 10000,
+    "bootstrap_seed": 20261012,
+    "claim_threshold": 0.7,
+    "claim_supported": false
+  },
+  "claim_boundary": "A pass supports only a bounded 80 K direct-aperture source-depletion component claim for the named PRESLHY packages. It does not validate cryogenic two-phase flow, ignition, dispersion, flame radiation, station control, refuelling, vehicle operation or emergency separation distance.",
+  "interpretation": [
+    "All 11 workbooks in the two newly screened public 80 K packages were read without parser errors and measured gas-side temperatures were retained.",
+    "Every workbook lacked an explicit measured ambient-pressure boundary in the fixed reader, so all cases were correctly excluded from the aggregate rather than evaluated with a substituted boundary.",
+    "No validation claim is promoted; the negative eligibility result is retained as an auditable data-availability finding."
+  ]
+}

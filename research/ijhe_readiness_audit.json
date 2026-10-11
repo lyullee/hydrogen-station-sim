@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-11T21:08:20.402202+00:00",
+  "generated_at": "2026-10-11T22:15:16.558127+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -13,7 +13,7 @@
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 129,
+    "PASS": 130,
     "FAIL": 10,
     "PENDING": 7
   },
@@ -6347,6 +6347,57 @@
         },
         "protocol_hash_matches": true,
         "claim_boundary": "No validation claim is supported by this package. It does not validate cryogenic two-phase flow, ignition, dispersion, flame radiation, station control, refuelling, or emergency separation distance."
+      }
+    },
+    {
+      "id": "preslhy_e31_80k_d05_d2_intake_integrity",
+      "status": "PASS",
+      "claim": "The newly screened public PRESLHY E3.1 D05/D2 80 K packages are retained as a negative eligibility result without promoting a validation claim.",
+      "evidence": "research\\preslhy_e31_80k_d05_d2_holdout_result_2026_10_12.json; research\\preslhy_e31_80k_d05_d2_holdout_protocol_2026_10_12.json",
+      "requirement": "Eleven workbooks read without errors, measured gas temperature retained, no ambient-pressure substitution accepted, frozen protocol hash and explicit no-claim boundary.",
+      "observed": {
+        "observed": {
+          "workbooks_read": 11,
+          "read_errors": 0,
+          "gas_temperature_values_measured": 11,
+          "ambient_pressure_values_measured": 0,
+          "ambient_pressure_values_substituted": 11,
+          "package_case_summary": {
+            "PRE3P1A_KIT_D05_80K-DATA.zip": {
+              "case_count": 4,
+              "ambient_pressure_substituted_count": 4,
+              "temperature_substituted_count": 0,
+              "temperature_k_range": [
+                83.822906,
+                87.006182
+              ],
+              "initial_pressure_bar_abs_range": [
+                6.042511,
+                200.79598600000003
+              ]
+            },
+            "PRE3P1A_KIT_D2_80K-DATA.zip": {
+              "case_count": 7,
+              "ambient_pressure_substituted_count": 7,
+              "temperature_substituted_count": 0,
+              "temperature_k_range": [
+                85.05579900000001,
+                87.253262
+              ],
+              "initial_pressure_bar_abs_range": [
+                6.165614000000001,
+                202.221999
+              ]
+            }
+          },
+          "aggregate_eligible_cases": 0
+        },
+        "source_packages": [
+          "PRE3P1A_KIT_D05_80K-DATA.zip",
+          "PRE3P1A_KIT_D2_80K-DATA.zip"
+        ],
+        "protocol_hash_matches": true,
+        "claim_boundary": "A pass supports only a bounded 80 K direct-aperture source-depletion component claim for the named PRESLHY packages. It does not validate cryogenic two-phase flow, ignition, dispersion, flame radiation, station control, refuelling, vehicle operation or emergency separation distance."
       }
     },
     {
