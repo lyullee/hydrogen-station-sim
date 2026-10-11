@@ -6848,6 +6848,10 @@ def audit(root: Path) -> dict[str, object]:
     grune_data_path = root / "data/public_validation/derived/grune_2014_figure2.csv"
     grune_access_path = root / "research/grune_2014_publisher_access_recheck_2026_10_11.json"
     grune_access = _json(grune_access_path)
+    grune_public_recheck_path = root / (
+        "research/grune_2014_public_pressure_trace_recheck_2026_10_12.json"
+    )
+    grune_public_recheck = _json(grune_public_recheck_path)
     grune_eligibility = (grune_result or {}).get("eligibility") or {}
     grune_observed = (grune_result or {}).get("result") or {}
     grune_hashes_match = bool(
@@ -6872,11 +6876,27 @@ def audit(root: Path) -> dict[str, object]:
         "PENDING" if grune_result and not grune_eligibility.get("minimum_requirements_met")
         else "FAIL" if grune_result else "PENDING"
     )
+    grune_public_recheck_integrity = bool(
+        (grune_public_recheck or {}).get("status")
+        == "NO_NEW_MACHINE_READABLE_FULL_TRACE_FOUND"
+        and (grune_public_recheck or {}).get("findings", {}).get(
+            "machine_readable_full_pressure_trace_found"
+        ) is False
+        and (grune_public_recheck or {}).get("findings", {}).get(
+            "rights_cleared_raw_archive_found"
+        ) is False
+        and (grune_public_recheck or {}).get("decision", {}).get(
+            "promote_to_independent_validation"
+        ) is False
+        and (grune_public_recheck or {}).get("decision", {}).get(
+            "runtime_change"
+        ) is False
+    )
     gates.append(_gate(
         "grune_2014_pressure_decay_validation",
         grune_status,
         "The locked source model meets all pressure-decay screens on the independent KIT small-reservoir release.",
-        f"{grune_result_path.relative_to(root)}; {grune_protocol_path.relative_to(root)}; {grune_data_path.relative_to(root)}; {grune_access_path.relative_to(root)}; research/grune_2014_publisher_access_recheck_2026_10_06.json; research/grune_2014_archive_access_recheck_2026_10_05.json",
+        f"{grune_result_path.relative_to(root)}; {grune_protocol_path.relative_to(root)}; {grune_data_path.relative_to(root)}; {grune_access_path.relative_to(root)}; {grune_public_recheck_path.relative_to(root)}; research/grune_2014_publisher_access_recheck_2026_10_06.json; research/grune_2014_archive_access_recheck_2026_10_05.json",
         "At least 15 points plus an observable half-pressure crossing; <=10% NRMSE, <=15% median error and <=20% half-time error.",
         {
             "eligibility": grune_eligibility,
@@ -6886,6 +6906,20 @@ def audit(root: Path) -> dict[str, object]:
                 "status": (grune_access or {}).get("status"),
                 "raw_trace_found": ((grune_access or {}).get("access_result") or {}).get("machine_readable_pressure_time_trace_found"),
                 "full_raw_holdout_eligible": ((grune_access or {}).get("eligibility") or {}).get("full_raw_holdout_eligible"),
+            },
+            "public_trace_recheck": {
+                "status": (grune_public_recheck or {}).get("status"),
+                "integrity_pass": grune_public_recheck_integrity,
+                "machine_readable_full_pressure_trace_found": (
+                    (grune_public_recheck or {}).get("findings", {}).get(
+                        "machine_readable_full_pressure_trace_found"
+                    )
+                ),
+                "rights_cleared_raw_archive_found": (
+                    (grune_public_recheck or {}).get("findings", {}).get(
+                        "rights_cleared_raw_archive_found"
+                    )
+                ),
             },
             "claim_boundary": (grune_result or {}).get("claim_boundary"),
         } if grune_result else "missing; numeric holdout has not completed",

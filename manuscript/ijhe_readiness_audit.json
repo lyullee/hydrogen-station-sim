@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-11T15:21:04.888128+00:00",
+  "generated_at": "2026-10-11T15:50:30.285777+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -6497,7 +6497,7 @@
       "id": "grune_2014_pressure_decay_validation",
       "status": "PENDING",
       "claim": "The locked source model meets all pressure-decay screens on the independent KIT small-reservoir release.",
-      "evidence": "research\\grune_2014_holdout_result.json; research\\grune_2014_holdout_protocol.json; data\\public_validation\\derived\\grune_2014_figure2.csv; research\\grune_2014_publisher_access_recheck_2026_10_11.json; research/grune_2014_publisher_access_recheck_2026_10_06.json; research/grune_2014_archive_access_recheck_2026_10_05.json",
+      "evidence": "research\\grune_2014_holdout_result.json; research\\grune_2014_holdout_protocol.json; data\\public_validation\\derived\\grune_2014_figure2.csv; research\\grune_2014_publisher_access_recheck_2026_10_11.json; research\\grune_2014_public_pressure_trace_recheck_2026_10_12.json; research/grune_2014_publisher_access_recheck_2026_10_06.json; research/grune_2014_archive_access_recheck_2026_10_05.json",
       "requirement": "At least 15 points plus an observable half-pressure crossing; <=10% NRMSE, <=15% median error and <=20% half-time error.",
       "observed": {
         "eligibility": {
@@ -6526,6 +6526,12 @@
           "status": "publisher_and_repository_recheck_completed",
           "raw_trace_found": false,
           "full_raw_holdout_eligible": false
+        },
+        "public_trace_recheck": {
+          "status": "NO_NEW_MACHINE_READABLE_FULL_TRACE_FOUND",
+          "integrity_pass": true,
+          "machine_readable_full_pressure_trace_found": false,
+          "rights_cleared_raw_archive_found": false
         },
         "claim_boundary": "One 20 MPa, 0.37 L, 4 mm pressure-decay trace; no flame, ignition, dispersion, radiation, station control or safety-distance claim. The digitized measured curve does not provide the required half-pressure crossing, so no validation claim is made."
       }
