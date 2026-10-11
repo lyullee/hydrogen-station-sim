@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "artifact_type": "post_publication_raw_route_protocol",
+  "protocol_id": "CN-HRS-PERFORMANCE-ROUTE-001",
+  "frozen_at": "2026-10-12",
+  "objective": "Determine whether the public article page exposes machine-readable 35 MPa and 70 MPa dispenser/vehicle refueling traces suitable for an auxiliary station-side comparison.",
+  "source": {
+    "title": "Study on comprehensive evaluation of 35 MPa/70 MPa hydrogen dispenser refueling performance",
+    "doi": "10.19799/j.cnki.2095-4239.2020.0049",
+    "landing_page": "https://esst.cip.com.cn/article/2020/2095-4239/2095-4239-2020-9-3-702.shtml",
+    "language": "Chinese",
+    "publisher_page_accessed": true,
+    "article_summary_outcomes_visible_before_freeze": true
+  },
+  "allowed_operations": [
+    "inspect publisher-linked CSV or figure ZIP metadata",
+    "download and hash machine-readable files",
+    "read schema, units, channel labels and rights/citation metadata",
+    "run descriptive or post-publication diagnostic comparisons"
+  ],
+  "prohibited_claims": [
+    "independent outcome-unseen holdout validation",
+    "promotion of a parameter fitted to this article",
+    "universal dispenser or vehicle safety claim",
+    "full station-to-vehicle validation unless all channels and provenance satisfy a new frozen protocol"
+  ],
+  "eligibility_rule": "The route may become an auxiliary data-quality or descriptive benchmark only. It cannot close an existing primary external-validation gate because article outcomes were visible before this route was frozen.",
+  "stage2_requirements": [
+    "publisher-linked file resolves and checksum is recorded",
+    "channel identity, engineering units, time base and tank geometry are explicit",
+    "license or publisher reuse terms are recorded",
+    "no post-access fitting is promoted to runtime"
+  ],
+  "claim_boundary": "This protocol separates source discovery from scientific validation. A successful download does not by itself establish full-loop accuracy, field safety, regulatory compliance or SAGA effectiveness."
+}

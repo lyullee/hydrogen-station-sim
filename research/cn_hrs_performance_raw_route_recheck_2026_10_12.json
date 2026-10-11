@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "artifact_type": "post_publication_raw_route_recheck",
+  "recorded_at": "2026-10-12",
+  "protocol": "research/cn_hrs_performance_raw_route_protocol_2026_10_12.json",
+  "source": {
+    "doi": "10.19799/j.cnki.2095-4239.2020.0049",
+    "landing_page": "https://esst.cip.com.cn/article/2020/2095-4239/2095-4239-2020-9-3-702.shtml"
+  },
+  "publisher_route": {
+    "table_archives": [
+      {"name": "T1.csv.zip", "bytes": 250, "sha256": "b98ac67fcf751801a86228dd8ee8779e50c2832ba5a78ed3c187654dc7725ac3", "member": "T1.csv", "member_bytes": 158},
+      {"name": "T2.csv.zip", "bytes": 262, "sha256": "06beb809e4021e3aee9e641e07ac4cdef98a9ae71a2abfa2ab7009a8ae28ecd0", "member": "T2.csv", "member_bytes": 170},
+      {"name": "T3.csv.zip", "bytes": 246, "sha256": "33d2eeddd627260044b1be28f209372bd4283058afd5837ec95a029ce6bdde02", "member": "T3.csv", "member_bytes": 167},
+      {"name": "T4.csv.zip", "bytes": 247, "sha256": "44c6fc612715ef018ecde9e4a734eee86fa75640b5b91614e21b2bd035537a2e", "member": "T4.csv", "member_bytes": 140}
+    ],
+    "figure_downloads": "Publisher page exposes figure image/PPT downloads; they are presentation assets rather than machine-readable time-series archives."
+  },
+  "eligibility": {
+    "machine_readable_station_vehicle_time_series_found": false,
+    "table_metadata_found": true,
+    "raw_trace_holdout_eligible": false,
+    "primary_gate_effect": "none",
+    "reason": "The linked CSV files contain small table metadata rows only. The article figures report curves, but no synchronized raw pressure-temperature-flow logger export or channel dictionary was exposed. Article outcomes were visible before the route was frozen."
+  },
+  "numeric_outcomes_opened": false,
+  "runtime_parameter_application": false,
+  "claim_boundary": "This is a public-source availability and provenance recheck. It supports citation/context only and does not validate the digital twin, station-to-vehicle loop, safety distance or SAGA."
+}
