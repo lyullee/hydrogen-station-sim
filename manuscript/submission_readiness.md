@@ -648,6 +648,7 @@ manuscript already has station-to-vehicle or human-effectiveness evidence.
 
 ## Reproducibility references
 
+- [One-command reproducibility route](REPRODUCIBILITY.md)
 - [Working manuscript](ijhe_manuscript_draft.tex)
 - [Full audit (Markdown)](IJHE_READINESS_AUDIT.md)
 - [Full audit (JSON)](ijhe_readiness_audit.json)
