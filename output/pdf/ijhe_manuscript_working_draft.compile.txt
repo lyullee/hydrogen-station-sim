@@ -1,32 +1,32 @@
-note: "version 2" Tectonic command-line interface activated
 note: Running TeX ...
 Fontconfig error: Cannot load default config file: No such file: (null)
 warning: lineno.sty:296: Invalid UTF-8 byte or sequence at line 296 replaced by U+FFFD.
-warning: ijhe_manuscript_draft.tex:578: Underfull \hbox (badness 2005) in paragraph at lines 572--578
-warning: ijhe_manuscript_draft.tex:1047: Underfull \hbox (badness 4242) in paragraph at lines 1044--1047
-warning: ijhe_manuscript_draft.tex:1047: Underfull \hbox (badness 10000) in paragraph at lines 1044--1047
-warning: ijhe_manuscript_draft.tex:1062: Underfull \hbox (badness 3417) in paragraph at lines 1060--1062
-warning: ijhe_manuscript_draft.tex:1073: Underfull \hbox (badness 1902) in paragraph at lines 1069--1073
-warning: ijhe_manuscript_draft.tex:1073: Underfull \hbox (badness 2005) in paragraph at lines 1069--1073
-warning: ijhe_manuscript_draft.tex:1073: Underfull \hbox (badness 1990) in paragraph at lines 1069--1073
-warning: ijhe_manuscript_draft.tex:1150: Underfull \hbox (badness 1127) in paragraph at lines 1144--1150
-warning: ijhe_manuscript_draft.tex:1183: Underfull \hbox (badness 2951) in paragraph at lines 1180--1183
-warning: ijhe_manuscript_draft.tex:1183: Underfull \hbox (badness 3158) in paragraph at lines 1180--1183
-warning: ijhe_manuscript_draft.tex:1273: Underfull \hbox (badness 10000) in paragraph at lines 1271--1273
+warning: ijhe_manuscript_draft.tex:581: Underfull \hbox (badness 2005) in paragraph at lines 575--581
+warning: ijhe_manuscript_draft.tex:1043: Underfull \hbox (badness 4242) in paragraph at lines 1040--1043
+warning: ijhe_manuscript_draft.tex:1043: Underfull \hbox (badness 10000) in paragraph at lines 1040--1043
+warning: ijhe_manuscript_draft.tex:1058: Underfull \hbox (badness 3417) in paragraph at lines 1056--1058
+warning: ijhe_manuscript_draft.tex:1069: Underfull \hbox (badness 1902) in paragraph at lines 1065--1069
+warning: ijhe_manuscript_draft.tex:1069: Underfull \hbox (badness 2005) in paragraph at lines 1065--1069
+warning: ijhe_manuscript_draft.tex:1069: Underfull \hbox (badness 1990) in paragraph at lines 1065--1069
+warning: ijhe_manuscript_draft.tex:1146: Underfull \hbox (badness 1127) in paragraph at lines 1140--1146
+warning: ijhe_manuscript_draft.tex:1179: Underfull \hbox (badness 2951) in paragraph at lines 1176--1179
+warning: ijhe_manuscript_draft.tex:1179: Underfull \hbox (badness 3158) in paragraph at lines 1176--1179
+warning: ijhe_manuscript_draft.tex:1269: Underfull \hbox (badness 10000) in paragraph at lines 1267--1269
 note: Rerunning TeX because "ijhe_manuscript_draft.out" changed ...
 warning: lineno.sty:296: Invalid UTF-8 byte or sequence at line 296 replaced by U+FFFD.
-warning: ijhe_manuscript_draft.tex:578: Underfull \hbox (badness 2005) in paragraph at lines 572--578
-warning: ijhe_manuscript_draft.tex:1047: Underfull \hbox (badness 4242) in paragraph at lines 1044--1047
-warning: ijhe_manuscript_draft.tex:1047: Underfull \hbox (badness 10000) in paragraph at lines 1044--1047
-warning: ijhe_manuscript_draft.tex:1062: Underfull \hbox (badness 3417) in paragraph at lines 1060--1062
-warning: ijhe_manuscript_draft.tex:1073: Underfull \hbox (badness 1902) in paragraph at lines 1069--1073
-warning: ijhe_manuscript_draft.tex:1073: Underfull \hbox (badness 2005) in paragraph at lines 1069--1073
-warning: ijhe_manuscript_draft.tex:1073: Underfull \hbox (badness 1990) in paragraph at lines 1069--1073
-warning: ijhe_manuscript_draft.tex:1150: Underfull \hbox (badness 1127) in paragraph at lines 1144--1150
-warning: ijhe_manuscript_draft.tex:1183: Underfull \hbox (badness 2951) in paragraph at lines 1180--1183
-warning: ijhe_manuscript_draft.tex:1183: Underfull \hbox (badness 3158) in paragraph at lines 1180--1183
-warning: ijhe_manuscript_draft.tex:1273: Underfull \hbox (badness 10000) in paragraph at lines 1271--1273
+warning: ijhe_manuscript_draft.tex:581: Underfull \hbox (badness 2005) in paragraph at lines 575--581
+warning: ijhe_manuscript_draft.tex:1043: Underfull \hbox (badness 4242) in paragraph at lines 1040--1043
+warning: ijhe_manuscript_draft.tex:1043: Underfull \hbox (badness 10000) in paragraph at lines 1040--1043
+warning: ijhe_manuscript_draft.tex:1058: Underfull \hbox (badness 3417) in paragraph at lines 1056--1058
+warning: ijhe_manuscript_draft.tex:1069: Underfull \hbox (badness 1902) in paragraph at lines 1065--1069
+warning: ijhe_manuscript_draft.tex:1069: Underfull \hbox (badness 2005) in paragraph at lines 1065--1069
+warning: ijhe_manuscript_draft.tex:1069: Underfull \hbox (badness 1990) in paragraph at lines 1065--1069
+warning: ijhe_manuscript_draft.tex:1146: Underfull \hbox (badness 1127) in paragraph at lines 1140--1146
+warning: ijhe_manuscript_draft.tex:1179: Underfull \hbox (badness 2951) in paragraph at lines 1176--1179
+warning: ijhe_manuscript_draft.tex:1179: Underfull \hbox (badness 3158) in paragraph at lines 1176--1179
+warning: ijhe_manuscript_draft.tex:1269: Underfull \hbox (badness 10000) in paragraph at lines 1267--1269
 note: Running xdvipdfmx ...
 warning: warnings were issued by the TeX engine; use --print and/or --keep-logs for details.
-note: Writing `output\pdf\ijhe_manuscript_draft.pdf` (815.099609375 KiB)
+note: Writing `output/pdf/compile-current\ijhe_manuscript_draft.pdf` (814.787109375 KiB)
+note: Writing `output/pdf/compile-current\ijhe_manuscript_draft.log` (19.0859375 KiB)
 note: Skipped writing 2 intermediate files (use --keep-intermediates to keep them)
