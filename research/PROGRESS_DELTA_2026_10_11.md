@@ -80,3 +80,14 @@ two-zone 모델은 원인 진단용 post-outcome 모델로 기록되어 있지�
 - NREL H2FillS geometry sensitivity (post-access diagnostic): legacy geometry 0/7 screens; declared-capacity EOS without volume fit 7/7, pressure RMSE 0.496 MPa. This does not change the runtime default or any validation gate; an untouched trace is still required before promotion. See `research/nrel_h2fills_geometry_sensitivity_2026_10_12.json`.
 
 - Geometry holdout protocol frozen before outcome access: `research/nrel_h2fills_geometry_prospective_protocol_2026_10_12.json`; it does not change the runtime default or validation gates.
+
+## 2026-10-12 — Grüne public trace recheck
+
+- Publisher, KIT and public conference sources were rechecked for a complete,
+  rights-cleared pressure–time trace. No reusable machine-readable full trace
+  was found; the existing 51-point figure digitisation still stops before the
+  required half-pressure crossing.
+- The Grüne gate remains `PENDING_INELIGIBLE_FOR_JOINT_SCREEN`. Runtime
+  parameters, readiness counts and manuscript claims are unchanged. See
+  `research/grune_2014_public_pressure_trace_recheck_2026_10_12.json` and
+  `research/GRUNE_2014_PUBLIC_PRESSURE_TRACE_RECHECK_2026_10_12.md`.

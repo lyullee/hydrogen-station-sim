@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "artifact_type": "public_grune_2014_pressure_trace_recheck",
+  "recorded_at": "2026-10-12",
+  "status": "NO_NEW_MACHINE_READABLE_FULL_TRACE_FOUND",
+  "source_review": {
+    "primary_paper": {
+      "title": "Experimental investigation of hydrogen release from a high pressure vessel",
+      "url": "https://www.sciencedirect.com/science/article/pii/S0360319913020521",
+      "reviewed_for": ["supplementary files", "machine-readable pressure-time data", "data availability statement"]
+    },
+    "publisher_landing": "https://publikationen.bibliothek.kit.edu/110097219",
+    "conference_preprint": "https://conference.ing.unipi.it/ichs2011/papers/133.pdf",
+    "search_date": "2026-10-12",
+    "search_scope": "publisher and institutional landing pages, the public conference PDF, and targeted public-data searches for a rights-cleared pressure-time archive"
+  },
+  "existing_trace": {
+    "protocol": "research/grune_2014_holdout_protocol.json",
+    "result": "research/grune_2014_holdout_result.json",
+    "digitized_source": "data/public_validation/derived/grune_2014_figure2.csv",
+    "digitized_points": 51,
+    "coverage": "early pressure decay only; the digitized curve does not reach the required half-pressure crossing",
+    "gate_status": "PENDING_INELIGIBLE_FOR_JOINT_SCREEN"
+  },
+  "findings": {
+    "machine_readable_full_pressure_trace_found": false,
+    "rights_cleared_raw_archive_found": false,
+    "paper_only_summary_is_sufficient_for_holdout": false,
+    "conference_pdf_adds_context_but_not_a_reusable_trace": true
+  },
+  "decision": {
+    "promote_to_independent_validation": false,
+    "runtime_change": false,
+    "readiness_gate_effect": "none",
+    "next_evidence": "Obtain a rights-cleared raw pressure-time trace with the complete discharge endpoint and a frozen pre-access protocol before any new Grüne validation run."
+  },
+  "claim_boundary": "This recheck documents a public-source search and preserves the existing negative/insufficient trace result. It does not validate pressure decay, vessel discharge, station control, dispersion, ignition, safety distance, or full-loop fueling."
+}
