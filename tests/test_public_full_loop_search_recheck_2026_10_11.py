@@ -16,7 +16,7 @@ def test_2026_10_11_public_recheck_is_privacy_safe_and_does_not_open_full_loop_g
     assert record["prospective_holdout_eligible"] is False
     assert record["runtime_parameter_application"] is False
     assert record["claim_supported"] is False
-    assert len(record["screened_sources"]) == 4
+    assert len(record["screened_sources"]) == 7
     assert record["privacy"]["private_raw_rows_persisted"] is False
     assert record["privacy"]["local_source_paths_published"] is False
     assert record["minimum_next_input"]["event_count"] == 3
@@ -40,3 +40,17 @@ def test_2026_10_11_public_recheck_is_privacy_safe_and_does_not_open_full_loop_g
     assert h2fills["empirical_validation_dataset_publicly_released"] is False
     assert "vehicle-tank pressure and temperature" in h2fills["manual_output_channels"]
     assert "simulation results rather than" in h2fills["claim_limit"]
+
+    h2fills_model = next(item for item in record["screened_sources"] if item["id"] == "nrel_h2fills_public_model")
+    assert h2fills_model["software_output_not_raw_experimental_archive"] is True
+    assert h2fills_model["empirical_validation_dataset_publicly_released"] is False
+    assert h2fills_model["vehicle_pressure_temperature_channels"] is True
+    assert h2fills_model["decision"] == "SIMULATOR_CONTEXT_ONLY"
+
+    enda = next(item for item in record["screened_sources"] if item["id"] == "enda_hrs_connect_monitoring")
+    assert enda["raw_synchronized_archive_located"] is False
+    assert enda["vehicle_pressure_temperature_channels"] is False
+
+    mh = next(item for item in record["screened_sources"] if item["id"] == "lototskyy_2020_mh_compressor_station")
+    assert mh["raw_synchronized_archive_located"] is False
+    assert mh["decision"] == "REPORT_SUMMARY_ONLY"

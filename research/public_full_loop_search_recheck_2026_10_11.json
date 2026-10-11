@@ -8,7 +8,9 @@
     "official H2-Stations API v2 documentation and data contract",
     "H2Protocol/J2601 public raw-lab-data route",
     "published real-station operational-data records",
-    "NREL HITRF and H2FillS public programme pages"
+    "NREL HITRF and H2FillS public programme pages",
+    "public HRS monitoring-system descriptions",
+    "published real-station long-duration operation reports"
   ],
   "eligibility_rule": {
     "required": [
@@ -97,6 +99,63 @@
       "raw_synchronized_archive_located": false,
       "decision": "CUSTODIAN_REQUEST_LEAD_ONLY",
       "claim_limit": "The programme and manual document a high-value measurement route and model-output channel schema, but H2FillS outputs are simulation results rather than a rights-cleared raw experimental logger archive. No reuse-cleared raw cohort with checksum, common-clock attestation and controller/ESD channels was publicly verified."
+    },
+    {
+      "id": "nrel_h2fills_public_model",
+      "title": "NREL H2FillS public validated simulator",
+      "url": "https://www.nrel.gov/hydrogen/h2fills",
+      "supporting_url": "https://www.nrel.gov/docs/libraries/hydrogen/h2fills-user-manual.pdf?sfvrsn=b2960c3d_1",
+      "license_or_access": "Software registration and license; no raw measurement archive",
+      "observed_scope": [
+        "station-to-vehicle thermodynamic simulation",
+        "vehicle-tank pressure and temperature outputs",
+        "mass-flow and fueling-profile outputs"
+      ],
+      "manual_output_channels": [
+        "vehicle-tank pressure and temperature",
+        "mass flow",
+        "storage-bank pressure and temperature"
+      ],
+      "software_output_not_raw_experimental_archive": true,
+      "empirical_validation_dataset_publicly_released": false,
+      "raw_synchronized_archive_located": false,
+      "vehicle_pressure_temperature_channels": true,
+      "controller_or_esd_channels": false,
+      "decision": "SIMULATOR_CONTEXT_ONLY",
+      "claim_limit": "H2FillS is a useful independent model and protocol reference, but its generated traces are not measured external holdout data and do not establish field safety."
+    },
+    {
+      "id": "enda_hrs_connect_monitoring",
+      "title": "ENDA HRS Connect hydrogen refuelling station monitoring",
+      "url": "https://enda.eu/en/h2_monitoring",
+      "license_or_access": "Real monitoring service description; public raw export and reuse terms not stated",
+      "observed_scope": [
+        "90 monitored hydrogen refuelling stations",
+        "75-400 technical parameters per station",
+        "short-interval time-series recording"
+      ],
+      "raw_synchronized_archive_located": false,
+      "vehicle_pressure_temperature_channels": false,
+      "controller_or_esd_channels": false,
+      "decision": "CUSTODIAN_REQUEST_LEAD_ONLY",
+      "claim_limit": "The page confirms that real station telemetry exists and identifies a custodian lead, but it does not expose a reusable vehicle-side synchronized raw cohort."
+    },
+    {
+      "id": "lototskyy_2020_mh_compressor_station",
+      "title": "Hydrogen refuelling station with integrated metal hydride compressor",
+      "doi": "10.1016/j.ijhydene.2019.05.133",
+      "url": "https://doi.org/10.1016/j.ijhydene.2019.05.133",
+      "license_or_access": "Published article and figures; raw logger reuse terms not identified",
+      "observed_scope": [
+        "38 months of real medium-pressure station operation",
+        "pressure and temperature operating plots",
+        "automated valve and PLC sequence context"
+      ],
+      "raw_synchronized_archive_located": false,
+      "vehicle_pressure_temperature_channels": false,
+      "controller_or_esd_channels": false,
+      "decision": "REPORT_SUMMARY_ONLY",
+      "claim_limit": "The article supports station architecture and operating-range context; figures and aggregate operation reports cannot close a machine-readable synchronized station-to-vehicle holdout."
     }
   ],
   "privacy": {
