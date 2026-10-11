@@ -88,8 +88,6 @@ Pass rates were 45.5\% for general fault, 40.9\% protocol fault,
 dispenser-specific communication faults, startup and pressure-
 corridor termination, T20/T30/T40 checks, and data-loss hold/resume. These
 training controls lack J2601 tables and HGV 4.3 thresholds.
-Aggregates support field relevance, not calibration.
-
 Genovese et al. report more than 4,500 Cal State LA HRFF events and 8,800 kg
 dispensed \cite{genovese2024}; Samuelsen et al. report UCI NFCRC fill summaries
 \cite{samuelsen2020}. Neither releases synchronized raw rows with reuse terms,
@@ -98,8 +96,7 @@ so both provide operating context rather than a numerical holdout.
 PRHYDE reports four instrumented tanks (240 L H70, 350 L H50, 322 L H35 and
 165 L H70) at ZBT and Nikola with aggregate errors, but no synchronized logger
 arrays \cite{prhyde2023}; JHFC/NEDO likewise reports six 35/70 MPa conditions without
-machine-readable runs \cite{monde2012}. Both provide context, not an external
-pass claim.
+machine-readable runs \cite{monde2012}. Both are context only.
 
 Safety-oriented twins add a second model family. Release, dispersion, jet-fire,
 overpressure and quantitative-risk calculations are commonly delegated to a
@@ -120,11 +117,9 @@ This study asks four questions:
   \item Can process- and evidence-linked SAGA responses provide traceable, guardrailed incident
   decision support under a deterministic proxy comparison?
 \end{enumerate}
-The fourth is a frozen machine proxy, not evidence of improved human safety
-decisions. A
-synchronized station-to-vehicle full-loop holdout was not found in a reusable
-public cohort; it is retained only as a negative transfer diagnostic and
-limitation.
+The fourth is a machine proxy, not human-safety evidence. No reusable
+synchronized station-to-vehicle cohort was found; the full-loop result is
+retained as a negative diagnostic.
 
 \section{Materials and methods}
 \subsection{Digital-twin boundary}
@@ -756,6 +751,8 @@ underlying experiments nor validates station layout or exclusion zones. A public
 22-release open-channel dataset \cite{henriksen2025} was not force-fitted because
 its downward 4.6 mm confined jet differs from the outdoor free-jet adapter.
 
+The source contains 22 releases in a 5.8 m $\times$ 0.9 m $\times$ 0.8 m
+open-ended channel, with a 4.6 mm top inlet and 29 probes.
 The 29-channel records replayed the fixed 1.0/2.0 vol\% alarm/trip and 0.5 s
 persistence logic; all 22 tests triggered both levels, yielding 638 sensor-case
 observations. In a post-access stratification, ceiling probes achieved 100\%
@@ -764,7 +761,7 @@ probes nearest the jet responded at median 10.68 s versus 18.01 s at the ceiling
 supports layered ceiling plus jet-path coverage in this geometry, not independent
 station placement, ESD, outdoor transfer or runtime validation.
 
-A physical-H$_2$ benchmark was then run under a protocol committed before the
+A physical-H$_2$ benchmark was run under a protocol committed before the
 public CC BY 4.0 workbook was opened \cite{ferreira2024}. Across 45 observations,
 the portable sniffer and mass-spectrometer vacuum/sniffer modes achieved Spearman
 $\rho=0.943/0.969/0.949$, pairwise concordance 1.000 and complete mapping. All

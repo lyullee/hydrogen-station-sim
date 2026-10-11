@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-11T18:50:34.202241+00:00",
+  "generated_at": "2026-10-11T20:34:13.884153+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -2140,7 +2140,7 @@
         },
         "public_station_vehicle_search_recheck_2026_10_12": {
           "decision": "NO_NEW_ELIGIBLE_PUBLIC_RAW_STATION_TO_VEHICLE_SET_IDENTIFIED",
-          "source_count": 10,
+          "source_count": 11,
           "claim_boundary": "This is a public-access availability audit. It records the checked endpoints and does not prove that restricted, proprietary or unpublished traces do not exist."
         },
         "public_data_update_2026_10_08": {
@@ -8380,30 +8380,30 @@
       "requirement": "Compiler success, exact source/PDF hashes, no unresolved errors, and visual inspection of every rendered page.",
       "observed": {
         "schema_version": 2,
-        "verified_at_utc": "2026-10-11T18:24:19.819416+00:00",
+        "verified_at_utc": "2026-10-11T20:34:13.396239+00:00",
         "success": true,
         "compiler": {
           "name": "Tectonic",
           "version": "0.17.0",
-          "official_release_url": "https://github.com/tectonic-typesetting/tectonic/releases/tag/tectonic%400.17.0",
+          "official_release_url": "https://github.com/tectonic-typesetting/tectonic/releases/tag/tectonic@0.17.0",
           "archive_sha256": "f61ce51f0b0ade1015b7de7ef368541c5424e9756ecbd0d7af97d6d48030845"
         },
         "source": {
           "path": "manuscript/ijhe_manuscript_draft.tex",
-          "bytes": 76903,
-          "sha256": "da565db0b96407b5e36dd277b88b6ca1bbbf43c29799cbf043eec45fc626a3a7"
+          "bytes": 76926,
+          "sha256": "d1ee1fd4ec4b65d77f730ab7631d12d4662e9bd59a2f23c412ae6b087c8cc89f"
         },
         "pdf": {
           "path": "output/pdf/ijhe_manuscript_draft.pdf",
-          "bytes": 837099,
-          "sha256": "d0b6c5106ab2a407d87b154ce7fcb79ba0a767bea6d557b3efe1024e43586323",
+          "bytes": 837361,
+          "sha256": "1042e0af4d4f9c8d6db09df339f6fb5b8634ddfb3706e3bd8c11dc79a61aa166",
           "page_count": 24,
-          "extracted_character_count": 71323
+          "extracted_character_count": 71338
         },
         "compile_log": {
           "path": "output/pdf/ijhe_manuscript_draft.log",
-          "bytes": 19549,
-          "sha256": "aab7016cbb418dfb9e59a0895fc57a8359a1742d49704fc5ad1aa265702929d1",
+          "bytes": 19548,
+          "sha256": "e3a4c1d3f5955421f24b7a4a7e9df72c495bf759f24a5ae018b4b164b812a7e7",
           "unresolved_citations": 0,
           "unresolved_references": 0,
           "fatal_errors": [],
