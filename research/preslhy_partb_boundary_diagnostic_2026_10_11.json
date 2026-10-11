@@ -1,0 +1,131 @@
+{
+  "schema_version": 1,
+  "artifact_type": "preslhy_partb_post_outcome_boundary_diagnostic",
+  "generated_at": "2026-10-11T03:42:22.565670+00:00",
+  "source_commit": "d13899af14ca1ddcd53d68eb470af54c6a4b1995",
+  "primary_result": "research\\preslhy_partb_ambient_validation.json",
+  "protocol": "research\\preslhy_partb_holdout_protocol.json",
+  "protocol_sha256": "fa79e8da4495d0e2c8197e3fe7f98c6bc51cb9a05880d18e65dec5692c80224a",
+  "status": "POST_OUTCOME_DIAGNOSTIC_ONLY",
+  "model_boundary": {
+    "locked_model": "well-mixed adiabatic vessel with free-aperture real-gas discharge",
+    "locked_discharge_coefficient": 0.8,
+    "runtime_parameter_application": false,
+    "primary_gate_effect": "none"
+  },
+  "cases": [
+    {
+      "case_id": "20200520-143038_290K-2mm-5bar_W01-Final",
+      "nozzle_diameter_mm": 2.0,
+      "joint_primary_screen_pass": false,
+      "observed_half_pressure_time_s": 63.27959542743536,
+      "predicted_half_pressure_time_s": 46.11534253783431,
+      "locked_discharge_coefficient": 0.8,
+      "implied_cd_if_only_cd_changed": 0.5830042651358753,
+      "pressure_channel_diagnostic": {
+        "finite_rows": 27576,
+        "release_index": 2001,
+        "initial_vessel_pressure_bar_g": 4.999276,
+        "post_release_median_vessel_nozzle_delta_bar": 0.058061999999999614,
+        "post_release_p05_vessel_nozzle_delta_bar": 0.05535195000000006,
+        "post_release_p95_vessel_nozzle_delta_bar": 0.061141999999999405,
+        "post_release_median_nozzle_to_vessel_ratio": 0.9876141839772332,
+        "post_release_max_nozzle_pressure_bar_g": 4.939038
+      },
+      "source_file_sha256": "ca47c0e229b9ceed09436b4dc65632d01360e43b45efd285bb7e203a9cc4b6ee"
+    },
+    {
+      "case_id": "20200520-144544_290K-2mm-3bar2_W02-Final",
+      "nozzle_diameter_mm": 2.0,
+      "joint_primary_screen_pass": false,
+      "observed_half_pressure_time_s": 55.88964612326045,
+      "predicted_half_pressure_time_s": 40.72786695025514,
+      "locked_discharge_coefficient": 0.8,
+      "implied_cd_if_only_cd_changed": 0.5829754850897838,
+      "pressure_channel_diagnostic": {
+        "finite_rows": 14969,
+        "release_index": 2001,
+        "initial_vessel_pressure_bar_g": 3.152669,
+        "post_release_median_vessel_nozzle_delta_bar": 0.05239499999999997,
+        "post_release_p05_vessel_nozzle_delta_bar": 0.04939494999999992,
+        "post_release_p95_vessel_nozzle_delta_bar": 0.055556999999999856,
+        "post_release_median_nozzle_to_vessel_ratio": 0.9821985198017917,
+        "post_release_max_nozzle_pressure_bar_g": 3.101629
+      },
+      "source_file_sha256": "6f6ea5baf298b00ddc1b7dc25fb77f3c9e8b9c35a25eaee69ee07c60c4d9e5fe"
+    },
+    {
+      "case_id": "20200520-145506_290K-4mm-5bar_W03-Final",
+      "nozzle_diameter_mm": 4.0,
+      "joint_primary_screen_pass": true,
+      "observed_half_pressure_time_s": 13.63819302465424,
+      "predicted_half_pressure_time_s": 11.47584154683386,
+      "locked_discharge_coefficient": 0.8,
+      "implied_cd_if_only_cd_changed": 0.6731590629983651,
+      "pressure_channel_diagnostic": {
+        "finite_rows": 14503,
+        "release_index": 2001,
+        "initial_vessel_pressure_bar_g": 4.9921109999999995,
+        "post_release_median_vessel_nozzle_delta_bar": 0.29260850000000005,
+        "post_release_p05_vessel_nozzle_delta_bar": 0.2525638000000002,
+        "post_release_p95_vessel_nozzle_delta_bar": 0.34365099999999954,
+        "post_release_median_nozzle_to_vessel_ratio": 0.9227161458711017,
+        "post_release_max_nozzle_pressure_bar_g": 4.610252
+      },
+      "source_file_sha256": "19cc3064b320d7e4129ed7044d9f7ac03c5de5dc6838fdba3baec7baf489334d"
+    },
+    {
+      "case_id": "20200520-150010_290K-4mm-3bar2_W04-Final",
+      "nozzle_diameter_mm": 4.0,
+      "joint_primary_screen_pass": true,
+      "observed_half_pressure_time_s": 12.154268784998049,
+      "predicted_half_pressure_time_s": 10.233504182250167,
+      "locked_discharge_coefficient": 0.8,
+      "implied_cd_if_only_cd_changed": 0.6735743211393402,
+      "pressure_channel_diagnostic": {
+        "finite_rows": 10971,
+        "release_index": 2001,
+        "initial_vessel_pressure_bar_g": 3.239536,
+        "post_release_median_vessel_nozzle_delta_bar": 0.2235809999999998,
+        "post_release_p05_vessel_nozzle_delta_bar": 0.19253389999999987,
+        "post_release_p95_vessel_nozzle_delta_bar": 0.26489304999999996,
+        "post_release_median_nozzle_to_vessel_ratio": 0.9068242922293126,
+        "post_release_max_nozzle_pressure_bar_g": 2.957954
+      },
+      "source_file_sha256": "65d2607cca58fe2354c62851d9951504874b216e6f002ef77a76e35959119acb"
+    },
+    {
+      "case_id": "20200520-150332_290K-4mm-4bar8_W05-Final",
+      "nozzle_diameter_mm": 4.0,
+      "joint_primary_screen_pass": true,
+      "observed_half_pressure_time_s": 13.288817812817117,
+      "predicted_half_pressure_time_s": 11.309145371509654,
+      "locked_discharge_coefficient": 0.8,
+      "implied_cd_if_only_cd_changed": 0.6808217574088157,
+      "pressure_channel_diagnostic": {
+        "finite_rows": 11866,
+        "release_index": 2001,
+        "initial_vessel_pressure_bar_g": 4.76132,
+        "post_release_median_vessel_nozzle_delta_bar": 0.28488800000000003,
+        "post_release_p05_vessel_nozzle_delta_bar": 0.24566275000000004,
+        "post_release_p95_vessel_nozzle_delta_bar": 0.33621605000000016,
+        "post_release_median_nozzle_to_vessel_ratio": 0.9209356026163347,
+        "post_release_max_nozzle_pressure_bar_g": 4.392991
+      },
+      "source_file_sha256": "6ffae56c8164243f1202a75e4185b236091c574b59956723af28addb06a70d44"
+    }
+  ],
+  "interpretation": {
+    "observation": "The 2 mm cases fail the frozen half-time screen while showing a smaller measured vessel-to-nozzle pressure difference than the 4 mm cases.",
+    "diagnostic_hypotheses": [
+      "The locked free-aperture boundary may not represent diameter-dependent contraction, valve/orifice coefficient, or instrument location.",
+      "The P-Duese channel is a measured diagnostic boundary and is not substituted into the primary model after outcome access."
+    ],
+    "not_supported": [
+      "No discharge coefficient is fitted or promoted to runtime.",
+      "No primary validation gate is changed.",
+      "No station safety-distance, ignition, dispersion or vehicle-loop claim is made."
+    ]
+  },
+  "claim_boundary": "Post-outcome development diagnostic only. The frozen Part-B result remains a negative 3/5 joint screen and this artifact cannot replace it or authorize a runtime parameter change."
+}
