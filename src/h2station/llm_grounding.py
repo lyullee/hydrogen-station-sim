@@ -806,6 +806,53 @@ def _public_incident_traceability() -> dict[str, Any] | None:
             "case_narrative_used_for_physical_parameters": False,
             "claim_limit": " ".join(str(item) for item in replay.get("claim_boundary") or []),
         }
+    # Keep the public outcome-to-runtime category concordance separate from
+    # the replay trace. It is a retrospective metadata check only: no event
+    # titles, narratives, actions or physical parameters are exposed here.
+    concordance_path = path.parent / "hiad_event_category_concordance_2026_10_11.json"
+    try:
+        concordance = json.loads(concordance_path.read_text(encoding="utf-8"))
+    except (OSError, ValueError, json.JSONDecodeError):
+        concordance = None
+    concordance_source = (concordance or {}).get("source") or {}
+    concordance_aggregate = (concordance or {}).get("aggregate") or {}
+    concordance_counts = concordance_aggregate.get("category_concordance_counts") or {}
+    concordance_cases = (concordance or {}).get("cases") or []
+    if (
+        isinstance(concordance, dict)
+        and concordance.get("artifact_type") == "hiad_public_metadata_to_runtime_family_concordance"
+        and concordance.get("status") == "completed_retrospective_category_concordance"
+        and concordance_source.get("hiad_inventory_sha256")
+        == sha256((path.parent / "hiad_hrs_public_evidence.json").read_bytes()).hexdigest()
+        and concordance_source.get("replay_coverage_sha256")
+        == sha256(replay_path.read_bytes()).hexdigest()
+        and concordance_source.get("incident_narrative_used") is False
+        and concordance_source.get("emergency_action_text_used") is False
+        and concordance_source.get("physical_parameters_from_incident_text") is False
+        and concordance_aggregate.get("case_count") == 34
+        and concordance_aggregate.get("integration_trace_pass_count") == 34
+        and len(concordance_cases) == 34
+        and concordance_counts.get("matched") == 33
+        and concordance_counts.get("metadata_runtime_conflict") == 1
+        and concordance_counts.get("partial") == 0
+        and concordance_counts.get("not_comparable") == 0
+    ):
+        result["category_concordance"] = {
+            "artifact": "research/hiad_event_category_concordance_2026_10_11.json",
+            "artifact_sha256": sha256(concordance_path.read_bytes()).hexdigest(),
+            "case_count": concordance_aggregate.get("case_count"),
+            "matched_case_count": concordance_counts.get("matched"),
+            "metadata_runtime_conflict_count": concordance_counts.get(
+                "metadata_runtime_conflict"
+            ),
+            "integration_trace_pass_count": concordance_aggregate.get(
+                "integration_trace_pass_count"
+            ),
+            "incident_narrative_used": False,
+            "claim_limit": " ".join(
+                str(item) for item in concordance.get("claim_boundary") or []
+            ),
+        }
     return result
 
 
@@ -9469,6 +9516,9 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
             "reported_human_impact": incident_traceability.get(
                 "reported_human_impact"
             ) or {},
+            "category_concordance": incident_traceability.get(
+                "category_concordance"
+            ) or {},
             "digital_twin_replay": {
                 key: replay.get(key)
                 for key in (
@@ -14683,6 +14733,9 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
             "hiad_public_source": incident.get("public_source") or {},
             "hiad_reported_human_impact": incident.get(
                 "reported_human_impact"
+            ) or {},
+            "hiad_category_concordance": incident.get(
+                "category_concordance"
             ) or {},
             "hiad_digital_twin_replay": {
                 key: (incident.get("digital_twin_replay") or {}).get(key)
