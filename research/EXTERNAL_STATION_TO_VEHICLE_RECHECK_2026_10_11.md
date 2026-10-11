@@ -113,4 +113,19 @@ Three further records were checked after the broad recheck:
 - [Directly pressurized hydrogen refuelling process model with compressor](https://doi.org/10.1016/j.renene.2024.120410) reports model comparisons against SAE J2601 fueling experiments. It is a model/reference paper; no rights-cleared synchronized raw logger bundle is available in the public record.
 - [NIST portable field test standard](https://www.nist.gov/programs-projects/portable-field-test-standard-evaluation-hydrogen-gas-dispensers) documents dispenser metrology and a helium demonstration. It is not a measured hydrogen station-to-vehicle event archive with vehicle/receptacle channels.
 
+The publisher page for [Zhao et al. (2020)](https://doi.org/10.19799/j.cnki.2095-4239.2020.0049)
+describes one 35 MPa logistics-vehicle fill and one 70 MPa passenger-vehicle
+fill. The 70 MPa case reports a 122.4 L vehicle boundary, 1.7 MPa initial
+vehicle pressure, 85 MPa source pressure, a 276 s duration, 5.08 kg transferred
+mass and a 36 g/s peak flow. The article also reports station/source and vehicle
+pressure, temperature and flow curves.
+
+The linked T1--T4 CSV ZIP files were downloaded and inspected. They contain
+initial/final condition tables only; the time-dependent curves remain figures.
+The public page did not state a data-reuse licence, expose a channel dictionary,
+or provide synchronized logger rows. This is therefore a report-summary and
+custodian-request lead, not an eligible untouched station-to-vehicle holdout.
+The access hashes and exact boundary are recorded in
+`research/esst_2020_0049_station_vehicle_source_recheck_2026_10_11.json`.
+
 These additions do not change the decision: **zero eligible public synchronized station-to-vehicle raw sets** are available for an untouched full-loop holdout. The records may support model context or a future custodian request, but they cannot be promoted to validation evidence.

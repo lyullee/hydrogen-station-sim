@@ -28,7 +28,8 @@
       "https://datos.gob.es/ca/catalogo/ea0041268-supplementary-material-for-modelling-and-operation-strategy-approaches-for-on-site-hydrogen-refuelling-stations-dataset",
       "https://starfos.tacr.cz/en/vysledky-vyzkumu/RIV%2F25870807%3A_____%2F23%3AN0000009",
       "https://doi.org/10.1016/j.renene.2024.120410",
-      "https://www.nist.gov/programs-projects/portable-field-test-standard-evaluation-hydrogen-gas-dispensers"
+      "https://www.nist.gov/programs-projects/portable-field-test-standard-evaluation-hydrogen-gas-dispensers",
+      "https://esst.cip.com.cn/article/2020/2095-4239/2095-4239-2020-9-3-702.shtml"
     ]
   },
   "status": "NO_NEW_ELIGIBLE_PUBLIC_RAW_SET_IDENTIFIED",
@@ -241,6 +242,15 @@
         "observed_role": "supplementary PDF with one-day and one-year simulated HRS operation results",
         "decision": "MODEL_REFERENCE_NOT_EXTERNAL_RAW",
         "reason": "The catalog describes simulated compressor, storage, electrolyzer and power results under CC BY-NC-ND; it does not provide measured synchronized station/vehicle logger rows or a full-loop physical holdout."
+      },
+      {
+        "name": "Zhao et al. 35/70 MPa dispenser vehicle-fueling performance experiments",
+        "url": "https://esst.cip.com.cn/article/2020/2095-4239/2095-4239-2020-9-3-702.shtml",
+        "doi": "10.19799/j.cnki.2095-4239.2020.0049",
+        "observed_role": "published 35 MPa logistics-vehicle and 70 MPa passenger-vehicle refueling experiments with reported station/source and vehicle boundary values",
+        "decision": "REPORT_SUMMARY_ONLY",
+        "reason": "The publisher provides initial/final-condition CSV tables and figure-level pressure, temperature and flow curves, but no synchronized machine-readable logger rows, channel dictionary or explicit reuse licence. It is a high-value custodian-request lead, not an untouched full-loop holdout.",
+        "source_audit": "research/esst_2020_0049_station_vehicle_source_recheck_2026_10_11.json"
       }
     ],
     "decision": "NO_NEW_ELIGIBLE_PUBLIC_RAW_SET_IDENTIFIED",

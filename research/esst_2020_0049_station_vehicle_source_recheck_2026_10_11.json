@@ -1,0 +1,91 @@
+{
+  "schema_version": 1,
+  "artifact_type": "published_station_vehicle_source_recheck",
+  "recorded_at": "2026-10-11",
+  "source": {
+    "title": "35 MPa/70 MPa hydrogen dispenser refueling performance evaluation",
+    "article_url": "https://esst.cip.com.cn/article/2020/2095-4239/2095-4239-2020-9-3-702.shtml",
+    "doi": "10.19799/j.cnki.2095-4239.2020.0049",
+    "publisher": "Energy Storage Science and Technology",
+    "language": "zh"
+  },
+  "observed_experiments": [
+    {
+      "pressure_class": "35 MPa",
+      "vehicle_boundary": "3 x 140 L Type-III cylinders",
+      "initial_conditions": {
+        "vehicle_pressure_mpa": 2.2,
+        "vehicle_temperature_c": 64.0,
+        "source_pressure_mpa": 43.0,
+        "source_temperature_c": 26.0
+      },
+      "reported_endpoints": {
+        "vehicle_pressure_mpa": 35.4,
+        "vehicle_temperature_c": 64.0,
+        "transferred_mass_kg": 8.21,
+        "duration_s": 470
+      },
+      "time_series_status": "figure_only"
+    },
+    {
+      "pressure_class": "70 MPa",
+      "vehicle_boundary": "2 x Type-IV cylinders, total 122.4 L",
+      "initial_conditions": {
+        "vehicle_pressure_mpa": 1.7,
+        "vehicle_temperature_c": 2.0,
+        "source_pressure_mpa": 85.0,
+        "source_temperature_c": -40.0
+      },
+      "reported_endpoints": {
+        "vehicle_pressure_mpa": 81.6,
+        "vehicle_temperature_c": 65.8,
+        "transferred_mass_kg": 5.08,
+        "duration_s": 276,
+        "peak_mass_flow_g_s": 36.0
+      },
+      "time_series_status": "figure_only"
+    }
+  ],
+  "publisher_downloads": [
+    {
+      "member": "T1.csv.zip",
+      "url": "https://esst.cip.com.cn/article/2020/2095-4239/2095-4239-2020-9-3-702/T1.csv.zip",
+      "bytes": 250,
+      "sha256": "b98ac67fcf751801a86228dd8ee8779e50c2832ba5a78ed3c187654dc7725ac3",
+      "content_role": "35 MPa initial-condition table"
+    },
+    {
+      "member": "T2.csv.zip",
+      "url": "https://esst.cip.com.cn/article/2020/2095-4239/2095-4239-2020-9-3-702/T2.csv.zip",
+      "bytes": 262,
+      "sha256": "06beb809e4021e3aee9e641e07ac4cdef98a9ae71a2abfa2ab7009a8ae28ecd0",
+      "content_role": "35 MPa final-condition table"
+    },
+    {
+      "member": "T3.csv.zip",
+      "url": "https://esst.cip.com.cn/article/2020/2095-4239/2095-4239-2020-9-3-702/T3.csv.zip",
+      "bytes": 246,
+      "sha256": "33d2eeddd627260044b1be28f209372bd4283058afd5837ec95a029ce6bdde02",
+      "content_role": "70 MPa initial-condition table"
+    },
+    {
+      "member": "T4.csv.zip",
+      "url": "https://esst.cip.com.cn/article/2020/2095-4239/2095-4239-2020-9-3-702/T4.csv.zip",
+      "bytes": 247,
+      "sha256": "44c6fc612715ef018ecde9e4a734eee86fa75640b5b91614e21b2bd035537a2e",
+      "content_role": "70 MPa final-condition table"
+    }
+  ],
+  "eligibility": {
+    "station_dispenser_channels_present": false,
+    "vehicle_receptacle_channels_present": false,
+    "common_machine_readable_time_base": false,
+    "raw_time_series_present": false,
+    "channel_dictionary_present": false,
+    "reuse_license_explicitly_found": false,
+    "full_loop_external_validation_eligible": false,
+    "decision": "REPORT_SUMMARY_ONLY_AND_CUSTODIAN_REQUEST_LEAD"
+  },
+  "claim_boundary": "The article is evidence that real 35 MPa and 70 MPa vehicle-fueling experiments were performed and reports useful boundary values. The accessible CSV downloads contain tables, not synchronized logger rows. They cannot validate station-to-vehicle dynamics, controller/ESD behavior, or field safety distance.",
+  "next_action": "Request the original synchronized logger export and reuse terms from the authors or publisher; freeze a new protocol before reading any additional numerical trace."
+}
