@@ -1,5 +1,19 @@
 # Development Progress
 
+## 2026-10-11 - Recheck a published vehicle-fueling experiment lead
+
+The published 35 MPa/70 MPa fueling study (DOI
+`10.19799/j.cnki.2095-4239.2020.0049`) was rechecked as a possible
+station-to-vehicle evidence source.  Its publisher links expose four small
+T1--T4 CSV tables with experiment endpoint summaries, but not a common-clock
+station/vehicle trace with a channel dictionary, state mapping, calibration
+metadata, or an explicit reuse licence.  It is therefore retained as
+operating-context and a custodian-request lead only; it does not close the
+station-to-vehicle validation gate or change any model parameter.
+
+The full-loop lane remains outside the primary objective until an eligible
+raw synchronized archive is received and frozen before model scoring.
+
 ## 2026-10-11 - Make public accident-grounding audit standalone
 
 The public accident-precedent routing audit now adds the source checkout's
