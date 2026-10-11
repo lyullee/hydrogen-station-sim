@@ -2131,6 +2131,64 @@ def _public_reference_leak_detector_evidence() -> dict[str, Any] | None:
     }
 
 
+def _public_elvhys_post_failure_alarm_diagnostic() -> dict[str, Any] | None:
+    """Expose the bounded post-failure ELVHYS alarm-routing replay.
+
+    The prospective fifteen-case intake failed on case 44 because its frozen
+    pre-release baseline contract could not be satisfied.  The fourteen-case
+    replay is intentionally outcome-informed and is useful only for measured
+    signal routing diagnostics; it must never become a detector, dispersion,
+    ESD, consequence or full-loop validation claim.
+    """
+
+    artifact = "research/elvhys_post_failure_alarm_diagnostic_2026_10_11.json"
+    path = Path(__file__).resolve().parents[2] / artifact
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError, json.JSONDecodeError):
+        return None
+    protocol = record.get("protocol") or {}
+    aggregate = record.get("aggregate") or {}
+    if (
+        record.get("artifact_type") != "elvhys_post_failure_alarm_routing_diagnostic"
+        or record.get("status") != "POST_OUTCOME_DIAGNOSTIC_ONLY"
+        or record.get("outcome_informed") is not True
+        or record.get("prospective_gate_changed") is not False
+        or record.get("runtime_parameter_application") is not False
+        or protocol.get("failed_case_id_retained") != 44
+        or aggregate.get("replayed_case_count") != 14
+        or aggregate.get("expected_trigger_count") != 42
+        or aggregate.get("missed_expected_trigger_count") != 0
+        or aggregate.get("unexpected_trigger_count") != 0
+        or aggregate.get("measured_signal_route_diagnostic_pass") is not True
+    ):
+        return None
+    return {
+        "artifact": artifact,
+        "source_doi": "10.18710/JXJP0H",
+        "source_license": "CC0 1.0",
+        "evidence_role": "outcome-informed measured-signal alarm-routing diagnostic",
+        "status": record.get("status"),
+        "outcome_informed": True,
+        "prospective_gate_changed": False,
+        "runtime_parameter_application": False,
+        "failed_case_id_retained": protocol.get("failed_case_id_retained"),
+        "replayed_case_count": aggregate.get("replayed_case_count"),
+        "expected_trigger_count": aggregate.get("expected_trigger_count"),
+        "missed_expected_trigger_count": aggregate.get(
+            "missed_expected_trigger_count"
+        ),
+        "unexpected_trigger_count": aggregate.get("unexpected_trigger_count"),
+        "maximum_trigger_timing_error_s": aggregate.get(
+            "maximum_trigger_timing_error_s"
+        ),
+        "measured_signal_route_diagnostic_pass": True,
+        "independent_holdout": False,
+        "claim_supported": False,
+        "claim_limit": str(record.get("claim_boundary") or ""),
+    }
+
+
 def _public_actual_hydrogen_spatial_stratification_evidence() -> dict[str, Any] | None:
     """Expose bounded physical-H2 detector-height evidence.
 
@@ -5715,6 +5773,17 @@ def _public_source_links(evidence: dict[str, Any]) -> list[dict[str, Any]]:
             "Physical hydrogen reference-leak detector dataset",
             f"https://doi.org/{reference_detector_doi}",
             "실제 수소 기준누출에 대한 검지기 응답 순서 근거(경보값·공간배치 보정 아님)",
+        )
+    elvhys_alarm_diagnostic = evidence.get(
+        "public_elvhys_post_failure_alarm_diagnostic"
+    ) or {}
+    elvhys_doi = str(elvhys_alarm_diagnostic.get("source_doi") or "").strip()
+    if elvhys_doi:
+        add(
+            "PUBLIC_ELVHYS_DETECTOR_DATASET",
+            "ELVHYS hydrogen detector archive",
+            f"https://doi.org/{elvhys_doi}",
+            "측정 신호 경보 라우팅 진단 근거(사후 진단·독립 검증 아님)",
         )
     spatial_stratification = evidence.get(
         "public_actual_hydrogen_spatial_stratification_evidence"
@@ -9588,6 +9657,11 @@ def build_evidence_manifest(
         envelope["response_evidence"][
             "public_reference_leak_detector_evidence"
         ] = reference_detector
+    elvhys_alarm_diagnostic = _public_elvhys_post_failure_alarm_diagnostic()
+    if elvhys_alarm_diagnostic is not None:
+        envelope["response_evidence"][
+            "public_elvhys_post_failure_alarm_diagnostic"
+        ] = elvhys_alarm_diagnostic
     spatial_stratification = _public_actual_hydrogen_spatial_stratification_evidence()
     if spatial_stratification is not None:
         envelope["response_evidence"][
@@ -11116,6 +11190,23 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
             )
             if reference_detector.get(key) is not None
         }
+    elvhys_alarm_diagnostic = evidence.get(
+        "public_elvhys_post_failure_alarm_diagnostic"
+    )
+    if isinstance(elvhys_alarm_diagnostic, dict):
+        summary["public_elvhys_post_failure_alarm_diagnostic"] = {
+            key: elvhys_alarm_diagnostic.get(key)
+            for key in (
+                "artifact", "source_doi", "source_license", "evidence_role", "status", "outcome_informed",
+                "prospective_gate_changed", "runtime_parameter_application",
+                "failed_case_id_retained", "replayed_case_count",
+                "expected_trigger_count", "missed_expected_trigger_count",
+                "unexpected_trigger_count", "maximum_trigger_timing_error_s",
+                "measured_signal_route_diagnostic_pass", "independent_holdout",
+                "claim_supported", "claim_limit",
+            )
+            if elvhys_alarm_diagnostic.get(key) is not None
+        }
     spatial_stratification = evidence.get(
         "public_actual_hydrogen_spatial_stratification_evidence"
     )
@@ -12247,6 +12338,9 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
     spatial_stratification = response.get(
         "public_actual_hydrogen_spatial_stratification_evidence"
     ) or {}
+    elvhys_alarm_diagnostic = response.get(
+        "public_elvhys_post_failure_alarm_diagnostic"
+    ) or {}
     carb_field = response.get("public_carb_hrs_inuse_field_benchmark") or {}
     type_i_filling = response.get("public_type_i_filling_diagnostic") or {}
     detector_context = " ".join((
@@ -12334,6 +12428,17 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
             )
             or any(token in detector_context for token in (
                 "검지", "센서 배치", "누출 감지", "detector", "sensor placement"
+            ))
+        )
+    )
+    elvhys_alarm_relevant = bool(
+        elvhys_alarm_diagnostic
+        and (
+            public_catalog_relevant
+            or hytunnel_relevant
+            or any(token in detector_context for token in (
+                "검지", "검출", "가스", "누출", "화재", "경보",
+                "detector", "gas", "leak", "fire", "alarm",
             ))
         )
     )
@@ -12606,6 +12711,21 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
             "persistence_s", "claim_limit",
         )),
         **({
+            "public_elvhys_post_failure_alarm_diagnostic": {
+                key: elvhys_alarm_diagnostic.get(key)
+                for key in (
+                    "evidence_role", "status", "outcome_informed",
+                    "prospective_gate_changed", "runtime_parameter_application",
+                    "failed_case_id_retained", "replayed_case_count",
+                    "expected_trigger_count", "missed_expected_trigger_count",
+                    "unexpected_trigger_count", "maximum_trigger_timing_error_s",
+                    "measured_signal_route_diagnostic_pass", "independent_holdout",
+                    "claim_supported", "claim_limit",
+                )
+                if elvhys_alarm_diagnostic.get(key) is not None
+            },
+        } if elvhys_alarm_relevant else {}),
+        **({
             "virtual_detector_spatial_proxy": {
                 **selected(
                     manifest.get("virtual_detector_spatial_proxy"),
@@ -12695,6 +12815,21 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
             },
         } if public_h2protocol_validation and h2protocol_validation_relevant else {}),
         "decision_support_evidence": {
+            **({
+                "public_elvhys_post_failure_alarm_diagnostic": {
+                    key: elvhys_alarm_diagnostic.get(key)
+                    for key in (
+                        "evidence_role", "status", "outcome_informed",
+                        "prospective_gate_changed", "runtime_parameter_application",
+                        "failed_case_id_retained", "replayed_case_count",
+                        "expected_trigger_count", "missed_expected_trigger_count",
+                        "unexpected_trigger_count", "maximum_trigger_timing_error_s",
+                        "measured_signal_route_diagnostic_pass", "independent_holdout",
+                        "claim_supported", "claim_limit",
+                    )
+                    if elvhys_alarm_diagnostic.get(key) is not None
+                },
+            } if elvhys_alarm_relevant else {}),
             **({
                 "public_accident_source_recheck": {
                     "recorded_at": accident_source_recheck.get("recorded_at"),
@@ -14741,6 +14876,9 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
     detector = evidence.get("public_detector_logic_evidence") or {}
     detector_aggregate = detector.get("aggregate") or {}
     reference_detector = evidence.get("public_reference_leak_detector_evidence") or {}
+    elvhys_alarm_diagnostic = evidence.get(
+        "public_elvhys_post_failure_alarm_diagnostic"
+    ) or {}
     spatial_stratification = evidence.get(
         "public_actual_hydrogen_spatial_stratification_evidence"
     ) or {}
@@ -15591,6 +15729,19 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
                 "full_loop_validation_supported", "claim_limit",
             )
             if reference_detector.get(key) is not None
+        },
+        "public_elvhys_post_failure_alarm_diagnostic": {
+            key: elvhys_alarm_diagnostic.get(key)
+            for key in (
+                "artifact", "evidence_role", "status", "outcome_informed",
+                "prospective_gate_changed", "runtime_parameter_application",
+                "failed_case_id_retained", "replayed_case_count",
+                "expected_trigger_count", "missed_expected_trigger_count",
+                "unexpected_trigger_count", "maximum_trigger_timing_error_s",
+                "measured_signal_route_diagnostic_pass", "independent_holdout",
+                "claim_supported", "claim_limit",
+            )
+            if elvhys_alarm_diagnostic.get(key) is not None
         },
         "public_actual_hydrogen_spatial_stratification_evidence": {
             key: spatial_stratification.get(key)

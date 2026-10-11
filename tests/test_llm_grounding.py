@@ -2407,3 +2407,26 @@ def test_llm_claim_guard_preserves_confirmed_virtual_action_completion():
     answer, audit = guard_llm_claims("ESD가 작동되었습니다.", manifest)
     assert audit["status"] == "clear"
     assert answer == "ESD가 작동되었습니다."
+
+
+def test_elvhys_post_failure_alarm_diagnostic_is_grounded_without_promotion():
+    manifest = build_evidence_manifest(
+        {"time_s": 1.0}, {}, [], False, selected_sensor="GD-0801",
+        question="수소 누출 검지 경보의 근거와 검증범위를 설명해줘",
+    )
+    evidence = manifest["response_evidence"][
+        "public_elvhys_post_failure_alarm_diagnostic"
+    ]
+    assert evidence["source_doi"] == "10.18710/JXJP0H"
+    assert evidence["replayed_case_count"] == 14
+    assert evidence["failed_case_id_retained"] == 44
+    assert evidence["measured_signal_route_diagnostic_pass"] is True
+    assert evidence["prospective_gate_changed"] is False
+    assert evidence["independent_holdout"] is False
+    compact = prompt_decision_evidence(manifest)
+    assert compact["public_elvhys_post_failure_alarm_diagnostic"][
+        "claim_supported"
+    ] is False
+    assert compact["decision_support_evidence"][
+        "public_elvhys_post_failure_alarm_diagnostic"
+    ]["runtime_parameter_application"] is False
