@@ -24,7 +24,7 @@
 - 공개 MC Default full-loop holdout: 0 / 8 통과. 평균 압력 RMSE 15.862 MPa, 온도 RMSE 13.230 °C, SOC RMSE 18.082%p. 이 결과는 숨기거나 재평가로 대체하지 않습니다.
 - NREL 탱크 경계 자료: 압력 RMSE 6.164 MPa로 현재 스크리닝을 통과하지 못해 진단용으로만 유지합니다.
 - 새 full-loop 측정 코호트: **확인되지 않음**. 현재 주된 공백은 동기화된 차량·수용용기 측 채널입니다.
-- 2026-10-12 공개자료 재검색에서도 H2-Stations 운영 메타데이터와 보고서·구성요소 자료만 확인되었고, 공통 시계의 station/controller·dispenser·vehicle 원시 로그는 새로 확인되지 않았습니다.
+- 2026-10-12 공개자료 재검색에서는 H2-Stations 운영 메타데이터와 보고서·구성요소 자료, JRC GasTeF Type-III 실험 기록을 확인했습니다. JRC는 논문·표·그래프 범위의 controlled-access lead로 남겼고, 공통 시계의 station/controller·dispenser·vehicle 원시 로그는 새로 확인되지 않았습니다.
 
 ## 추가 자료 없이 진행 가능한 작업
 
