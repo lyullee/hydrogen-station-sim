@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "artifact_type": "kit_lh2_consequence_download_attempt",
+  "recorded_at": "2026-10-12",
+  "protocol": "research/kit_lh2_consequence_intake_protocol_2026_10_08.json",
+  "source": {
+    "doi": "10.35097/1483",
+    "record_url": "https://radar.kit.edu/radar/en/dataset/umUTdrjbbQCUDIXE",
+    "publisher_archive_bytes": 4971447808,
+    "publisher_md5": "0e4ac934ecb973c6f07212e8a80707c9",
+    "rights": "CC BY-SA 4.0"
+  },
+  "attempt": {
+    "endpoint": "RADAR BagIt range archive",
+    "resume_prefix_bytes": 964689920,
+    "resume_prefix_md5_verified": true,
+    "chunk_bytes": 8388608,
+    "workers": 1,
+    "additional_ranges_completed": [
+      {
+        "start": 964689920,
+        "bytes": 8388608
+      },
+      {
+        "start": 973078528,
+        "bytes": 8388608
+      }
+    ],
+    "additional_bytes": 16777216,
+    "termination": "subsequent range request stalled and the acquisition was stopped; the archive remains incomplete",
+    "complete_archive_md5_verified": false
+  },
+  "protocol_boundary": {
+    "numeric_signal_values_opened": false,
+    "video_outcomes_opened": false,
+    "member_headers_scanned_only": true,
+    "stage1_integrity_verified": false,
+    "stage2_eligible": false,
+    "raw_archive_committed": false
+  },
+  "decision": "No validation result or runtime change is permitted. Retry only through a stable custodian transfer or after rate limiting clears, then verify the complete publisher MD5 before reading any outcome member."
+}
