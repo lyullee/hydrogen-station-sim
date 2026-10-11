@@ -12,7 +12,7 @@ evidence-readiness decision; it is not a prediction of editorial acceptance.
 
 ## Current decision
 
-Audit snapshot: **2026-10-11 KST**
+Audit snapshot: **2026-10-12 KST**
 
 | Decision | Result |
 |---|---|
@@ -21,6 +21,8 @@ Audit snapshot: **2026-10-11 KST**
 | Goal completion permitted | **False** |
 
 Gate counts: **128 PASS · 10 FAIL · 7 PENDING**.
+
+The clean repository commit `afc4fbe` passed the complete executable test suite with **1,449 passed, 0 failed and 20 warnings** in 279.06 s. This is software implementation evidence only; it does not convert the independent physical validation failures or author-confirmation gate into passes. The clean direct LLM route spot check passed **20 tests with 3 warnings**.
 
 The primary claim scope is now explicitly station-side and component-bounded.
 The owner-controlled records are evaluated as same-site chronological holdouts;
