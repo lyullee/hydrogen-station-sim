@@ -1,0 +1,328 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-11",
+  "purpose": "Make the available public data partition explicit without relabelling a same-source split as an independent station-to-vehicle external holdout.",
+  "decision": {
+    "existing_data_partitioned": true,
+    "station_to_vehicle_external_validation_created": false,
+    "reason": "The 36 Tables-method cases can support a deterministic within-source holdout, but the cases share the same public campaign and the comparison set was inspected during controller iteration. The separate MC Default archive is already consumed as a frozen external holdout and failed its joint screen.",
+    "paper_label": "within-source public holdout plus failed protocol-family external holdout; not independent station-to-vehicle validation"
+  },
+  "tables_method_split": {
+    "index": "data/public_validation/processed/h2protocol_cases.csv",
+    "index_sha256": "f6bcc9a29da4e86f8376f14832192666002d7a9fb046ff00a3eb05d364c3e3ec",
+    "total_cases": 36,
+    "calibration_rule": "lab_test_number modulo 3 != 0",
+    "holdout_rule": "lab_test_number modulo 3 == 0",
+    "calibration_case_count": 24,
+    "within_source_holdout_case_count": 12,
+    "calibration_cases": [
+      {
+        "case_id": "H2P-L01",
+        "lab_test_number": 1,
+        "test_code": "1-2 B",
+        "tank_capacity_kg": 4.7,
+        "source_archive": "SAE J2601 Tables Validation Files 1.zip",
+        "source_member": "BMW J2601-Tables Validation Test (2).xlsx"
+      },
+      {
+        "case_id": "H2P-L02",
+        "lab_test_number": 2,
+        "test_code": "1-2 C",
+        "tank_capacity_kg": 4.7,
+        "source_archive": "SAE J2601 Tables Validation Files 1.zip",
+        "source_member": "BMW J2601-Tables Validation Test (3).xlsx"
+      },
+      {
+        "case_id": "H2P-L04",
+        "lab_test_number": 4,
+        "test_code": "1-3 B",
+        "tank_capacity_kg": 4.7,
+        "source_archive": "SAE J2601 Tables Validation Files 1.zip",
+        "source_member": "BMW J2601-Tables Validation Test (5).xlsx"
+      },
+      {
+        "case_id": "H2P-L05",
+        "lab_test_number": 5,
+        "test_code": "1-3 C",
+        "tank_capacity_kg": 4.7,
+        "source_archive": "SAE J2601 Tables Validation Files 1.zip",
+        "source_member": "BMW J2601-Tables Validation Test (6).xlsx"
+      },
+      {
+        "case_id": "H2P-L07",
+        "lab_test_number": 7,
+        "test_code": "1-4 B",
+        "tank_capacity_kg": 4.7,
+        "source_archive": "SAE J2601 Tables Validation Files 1.zip",
+        "source_member": "BMW J2601-Tables Validation Test (7).xlsx"
+      },
+      {
+        "case_id": "H2P-L08",
+        "lab_test_number": 8,
+        "test_code": "1-6 A",
+        "tank_capacity_kg": 4.7,
+        "source_archive": "SAE J2601 Tables Validation Files 1.zip",
+        "source_member": "BMW J2601-Tables Validation Test (9).xlsx"
+      },
+      {
+        "case_id": "H2P-L10",
+        "lab_test_number": 10,
+        "test_code": "2-1 A",
+        "tank_capacity_kg": 4.7,
+        "source_archive": "SAE J2601 Tables Validation Files 1.zip",
+        "source_member": "BMW J2601-Tables Validation Test (10).xlsx"
+      },
+      {
+        "case_id": "H2P-L11",
+        "lab_test_number": 11,
+        "test_code": "3-1 B",
+        "tank_capacity_kg": 4.7,
+        "source_archive": "SAE J2601 Tables Validation Files 2.zip",
+        "source_member": "BMW J2601-Tables Validation Test (11).xlsx"
+      },
+      {
+        "case_id": "H2P-L13",
+        "lab_test_number": 13,
+        "test_code": "4-1 B",
+        "tank_capacity_kg": 9.8,
+        "source_archive": "SAE J2601 Tables Validation Files 2.zip",
+        "source_member": "BMW J2601-Tables Validation Test (13).xlsx"
+      },
+      {
+        "case_id": "H2P-L14",
+        "lab_test_number": 14,
+        "test_code": "5-1 A",
+        "tank_capacity_kg": 4.7,
+        "source_archive": "SAE J2601 Tables Validation Files 2.zip",
+        "source_member": "BMW J2601-Tables Validation Test (14).xlsx"
+      },
+      {
+        "case_id": "H2P-L16",
+        "lab_test_number": 16,
+        "test_code": "5-3 A",
+        "tank_capacity_kg": 4.7,
+        "source_archive": "SAE J2601 Tables Validation Files 2.zip",
+        "source_member": "BMW J2601-Tables Validation Test (18).xlsx"
+      },
+      {
+        "case_id": "H2P-L17",
+        "lab_test_number": 17,
+        "test_code": "5-2 B",
+        "tank_capacity_kg": 4.7,
+        "source_archive": "SAE J2601 Tables Validation Files 2.zip",
+        "source_member": "BMW J2601-Tables Validation Test (16).xlsx"
+      },
+      {
+        "case_id": "H2P-L19",
+        "lab_test_number": 19,
+        "test_code": "6-1 A",
+        "tank_capacity_kg": 5.9,
+        "source_archive": "SAE J2601 Tables Validation Files 3.zip",
+        "source_member": "BMW J2601-Tables Validation Test (19).xlsx"
+      },
+      {
+        "case_id": "H2P-L20",
+        "lab_test_number": 20,
+        "test_code": "6-2 A",
+        "tank_capacity_kg": 5.9,
+        "source_archive": "SAE J2601 Tables Validation Files 3.zip",
+        "source_member": "BMW J2601-Tables Validation Test (20).xlsx"
+      },
+      {
+        "case_id": "H2P-L22",
+        "lab_test_number": 22,
+        "test_code": "7-1 D",
+        "tank_capacity_kg": 4.7,
+        "source_archive": "SAE J2601 Tables Validation Files 3.zip",
+        "source_member": "BMW J2601-Tables Validation Test (23).xlsx"
+      },
+      {
+        "case_id": "H2P-L23",
+        "lab_test_number": 23,
+        "test_code": "6-4 A",
+        "tank_capacity_kg": 5.9,
+        "source_archive": "SAE J2601 Tables Validation Files 3.zip",
+        "source_member": "BMW J2601-Tables Validation Test (22).xlsx"
+      },
+      {
+        "case_id": "H2P-L25",
+        "lab_test_number": 25,
+        "test_code": "8-1 A",
+        "tank_capacity_kg": 4.7,
+        "source_archive": "SAE J2601 Tables Validation Files 3.zip",
+        "source_member": "BMW J2601-Tables Validation Test (25).xlsx"
+      },
+      {
+        "case_id": "H2P-L26",
+        "lab_test_number": 26,
+        "test_code": "8-2 A",
+        "tank_capacity_kg": 4.7,
+        "source_archive": "SAE J2601 Tables Validation Files 3.zip",
+        "source_member": "BMW J2601-Tables Validation Test (26).xlsx"
+      },
+      {
+        "case_id": "H2P-L28",
+        "lab_test_number": 28,
+        "test_code": "8-3 A",
+        "tank_capacity_kg": 4.7,
+        "source_archive": "SAE J2601 Tables Validation Files 4.zip",
+        "source_member": "BMW J2601-Tables Validation Test (28).xlsx"
+      },
+      {
+        "case_id": "H2P-L29",
+        "lab_test_number": 29,
+        "test_code": "9-1 A",
+        "tank_capacity_kg": 4.6,
+        "source_archive": "SAE J2601 Tables Validation Files 4.zip",
+        "source_member": "BMW J2601-Tables Validation Test (29).xlsx"
+      },
+      {
+        "case_id": "H2P-L31",
+        "lab_test_number": 31,
+        "test_code": "10-1 A",
+        "tank_capacity_kg": 4.7,
+        "source_archive": "SAE J2601 Tables Validation Files 4.zip",
+        "source_member": "BMW J2601-Tables Validation Test (31).xlsx"
+      },
+      {
+        "case_id": "H2P-L32",
+        "lab_test_number": 32,
+        "test_code": "10-2 A",
+        "tank_capacity_kg": 4.7,
+        "source_archive": "SAE J2601 Tables Validation Files 4.zip",
+        "source_member": "BMW J2601-Tables Validation Test (32).xlsx"
+      },
+      {
+        "case_id": "H2P-L34",
+        "lab_test_number": 34,
+        "test_code": "FM 1",
+        "tank_capacity_kg": 4.7,
+        "source_archive": "SAE J2601 Tables Validation Files 5.zip",
+        "source_member": "BMW J2601-Test Flowmeter (34).xlsx"
+      },
+      {
+        "case_id": "H2P-L35",
+        "lab_test_number": 35,
+        "test_code": "FM 2",
+        "tank_capacity_kg": 4.7,
+        "source_archive": "SAE J2601 Tables Validation Files 5.zip",
+        "source_member": "BMW J2601-Test Flowmeter (35).xlsx"
+      }
+    ],
+    "within_source_holdout_cases": [
+      {
+        "case_id": "H2P-L03",
+        "lab_test_number": 3,
+        "test_code": "1-2 D",
+        "tank_capacity_kg": 4.7,
+        "source_archive": "SAE J2601 Tables Validation Files 1.zip",
+        "source_member": "BMW J2601-Tables Validation Test (4).xlsx"
+      },
+      {
+        "case_id": "H2P-L06",
+        "lab_test_number": 6,
+        "test_code": "1-1 B",
+        "tank_capacity_kg": 4.7,
+        "source_archive": "SAE J2601 Tables Validation Files 1.zip",
+        "source_member": "BMW J2601-Tables Validation Test (1).xlsx"
+      },
+      {
+        "case_id": "H2P-L09",
+        "lab_test_number": 9,
+        "test_code": "1-5 A",
+        "tank_capacity_kg": 4.7,
+        "source_archive": "SAE J2601 Tables Validation Files 1.zip",
+        "source_member": "BMW J2601-Tables Validation Test (8).xlsx"
+      },
+      {
+        "case_id": "H2P-L12",
+        "lab_test_number": 12,
+        "test_code": "4-1 A",
+        "tank_capacity_kg": 9.8,
+        "source_archive": "SAE J2601 Tables Validation Files 2.zip",
+        "source_member": "BMW J2601-Tables Validation Test (12).xlsx"
+      },
+      {
+        "case_id": "H2P-L15",
+        "lab_test_number": 15,
+        "test_code": "5-1 B",
+        "tank_capacity_kg": 4.7,
+        "source_archive": "SAE J2601 Tables Validation Files 2.zip",
+        "source_member": "BMW J2601-Tables Validation Test (15).xlsx"
+      },
+      {
+        "case_id": "H2P-L18",
+        "lab_test_number": 18,
+        "test_code": "5-2 C",
+        "tank_capacity_kg": 4.7,
+        "source_archive": "SAE J2601 Tables Validation Files 2.zip",
+        "source_member": "BMW J2601-Tables Validation Test (17).xlsx"
+      },
+      {
+        "case_id": "H2P-L21",
+        "lab_test_number": 21,
+        "test_code": "6-3 A",
+        "tank_capacity_kg": 5.9,
+        "source_archive": "SAE J2601 Tables Validation Files 3.zip",
+        "source_member": "BMW J2601-Tables Validation Test (21).xlsx"
+      },
+      {
+        "case_id": "H2P-L24",
+        "lab_test_number": 24,
+        "test_code": "7-2 A",
+        "tank_capacity_kg": 4.7,
+        "source_archive": "SAE J2601 Tables Validation Files 3.zip",
+        "source_member": "BMW J2601-Tables Validation Test (24).xlsx"
+      },
+      {
+        "case_id": "H2P-L27",
+        "lab_test_number": 27,
+        "test_code": "8-2 B",
+        "tank_capacity_kg": 4.7,
+        "source_archive": "SAE J2601 Tables Validation Files 4.zip",
+        "source_member": "BMW J2601-Tables Validation Test (27).xlsx"
+      },
+      {
+        "case_id": "H2P-L30",
+        "lab_test_number": 30,
+        "test_code": "9-2 A",
+        "tank_capacity_kg": 4.6,
+        "source_archive": "SAE J2601 Tables Validation Files 4.zip",
+        "source_member": "BMW J2601-Tables Validation Test (30).xlsx"
+      },
+      {
+        "case_id": "H2P-L33",
+        "lab_test_number": 33,
+        "test_code": "11-1 A",
+        "tank_capacity_kg": 9.8,
+        "source_archive": "SAE J2601 Tables Validation Files 5.zip",
+        "source_member": "BMW J2601-Tables Validation Test (33).xlsx"
+      },
+      {
+        "case_id": "H2P-L36",
+        "lab_test_number": 36,
+        "test_code": "FM 3",
+        "tank_capacity_kg": 4.7,
+        "source_archive": "SAE J2601 Tables Validation Files 5.zip",
+        "source_member": "BMW J2601-Test Flowmeter (36).xlsx"
+      }
+    ],
+    "outcome_status": "not_promoted_to_pristine_external_validation",
+    "boundary": "Use for source-generalisation diagnostics only. Do not call it independent external station-to-vehicle validation."
+  },
+  "mc_default_external_holdout": {
+    "protocol": "research/mc_default_external_holdout_protocol.json",
+    "protocol_status": "frozen_before_workbook_outcome_extraction",
+    "case_count": 8,
+    "screening_pass_count": 0,
+    "screening_pass_fraction": 0.0,
+    "post_freeze_parameter_tuning": false,
+    "interpretation": "This is the strongest currently available protocol-family external holdout, but it is a consumed negative result (0/8 joint screens), not station-side validation."
+  },
+  "full_loop_boundary": {
+    "synchronized_station_to_vehicle_raw_bundle_count": 0,
+    "status": "excluded_from_primary_goal",
+    "limitation_text": "No reuse-cleared synchronized station-to-vehicle raw bundle was identified. The paper will state this as a limitation and will not claim field or station-to-vehicle external validation."
+  }
+}
