@@ -32,6 +32,14 @@ tank boundary, H2Safe spatial transfer and NREL H2FillS geometry screen. These
 are development diagnostics: they do not alter frozen holdouts, runtime
 parameters or the paper's validation claims.
 
+The cross-dataset geometry-transfer synthesis is recorded in
+[`capacity_geometry_transfer_matrix_2026_10_12.json`](../research/capacity_geometry_transfer_matrix_2026_10_12.json).
+It shows that the frozen tables-method volume multiplier gives 0/8 MC joint
+passes and 0/7 NREL passes, while non-fitted capacity/reference alternatives
+reach only 4/8 on MC and 7/7 on the post-access NREL sample. This is a model
+transferability boundary, not a new validation result or a runtime-parameter
+selection.
+
 The primary claim scope is now explicitly station-side and component-bounded.
 The owner-controlled records are evaluated as same-site chronological holdouts;
 the public Type-IV records provide the independent component holdout. The
