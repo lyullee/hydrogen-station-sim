@@ -45,6 +45,14 @@
       "observed": "Public station inventory and dispenser-type context.",
       "decision": "REGISTRY_ONLY",
       "reason": "No vehicle-tank transient channels or synchronized raw fueling event are provided."
+    },
+    {
+      "id": "nlr_hydrogen_station_composite_products",
+      "title": "Hydrogen Fueling Infrastructure Analysis / Composite Data Products",
+      "url": "https://www.nlr.gov/hydrogen/hydrogen-infrastructure-analysis",
+      "observed": "The official program reports that industry partners share raw station data with the laboratory; raw data are secured and public outputs are aggregated composite products.",
+      "decision": "AGGREGATED_COMPOSITE_PRODUCTS_ONLY",
+      "reason": "Public composite products support utilization and operating-envelope context but cannot provide a rights-cleared synchronized station-to-vehicle raw holdout."
     }
   ],
   "outcome": {
