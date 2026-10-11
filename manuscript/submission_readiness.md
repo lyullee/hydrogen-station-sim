@@ -22,7 +22,15 @@ Audit snapshot: **2026-10-12 KST**
 
 Gate counts: **128 PASS · 10 FAIL · 7 PENDING**.
 
-The clean repository commit `6a5e41a` passed the complete executable test suite with **1,450 passed, 0 failed and 20 warnings** in 283.85 s. This is software implementation evidence only; it does not convert the independent physical validation failures or author-confirmation gate into passes. The clean direct LLM route spot check passed **20 tests with 3 warnings**.
+The last clean full-regression evidence was recorded at commit `6a5e41a` with **1,450 passed, 0 failed and 20 warnings** in 283.85 s. Subsequent commits only add audit/diagnostic records and focused checks; this is software implementation evidence only and does not convert the independent physical validation failures or author-confirmation gate into passes. The clean direct LLM route spot check passed **20 tests with 3 warnings**.
+
+The 2026-10-12 critical-priority diagnostic run completed in 3.2 s and is
+archived as [`priority_diagnostic_run_2026_10_12.json`](../research/priority_diagnostic_run_2026_10_12.json).
+It confirmed the SOC/EOS boundary screen (8/8) and the post-outcome Dickens
+mixed-convection sensitivity (3/3), while retaining failures for the frozen MC
+tank boundary, H2Safe spatial transfer and NREL H2FillS geometry screen. These
+are development diagnostics: they do not alter frozen holdouts, runtime
+parameters or the paper's validation claims.
 
 The primary claim scope is now explicitly station-side and component-bounded.
 The owner-controlled records are evaluated as same-site chronological holdouts;

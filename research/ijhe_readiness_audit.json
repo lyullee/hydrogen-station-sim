@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-11T17:09:37.643686+00:00",
+  "generated_at": "2026-10-11T17:32:39.708951+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -7636,11 +7636,11 @@
           },
           "full_suite": {
             "command": ".venv\\Scripts\\python.exe -m pytest -q",
-            "passed": 1449,
+            "passed": 1450,
             "failed": 0,
             "warnings": 20,
-            "run_recorded_at": "2026-10-11T16:58:50.613934+00:00",
-            "source_commit": "afc4fbe",
+            "run_recorded_at": "2026-10-11T17:17:05.362042+00:00",
+            "source_commit": "6a5e41a",
             "working_tree_dirty_at_run": false
           },
           "latest_direct_route_spot_check": {
