@@ -172,6 +172,7 @@ def build_brief(
         "- `research/GOAL_SCOPE_AMENDMENT_2026_10_11.md`",
         "- `research/PUBLIC_STATION_TO_VEHICLE_SEARCH_2026_10_11.md`",
         "- `research/public_station_vehicle_search_recheck_2026_10_12.json`",
+        "- `research/h2safe_oedi_recheck_2026_10_12.json`",
         "- `data/public_validation/results/closed_loop_external_holdout/validation.json`",
         "",
         "이 브리프는 모델이나 검증 게이트를 변경하지 않습니다. 새로운 자료가 들어오면 동일한 동결·시간축·권한 검사를 거친 뒤 다시 생성합니다.",
@@ -207,7 +208,8 @@ def main() -> int:
         _read(args.coverage), _read(args.readiness), _read(args.local_screen)
     )
     args.output.parent.mkdir(parents=True, exist_ok=True)
-    args.output.write_text(report, encoding="utf-8")
+    with args.output.open("w", encoding="utf-8", newline="\n") as handle:
+        handle.write(report)
     print(args.output)
     return 0
 
