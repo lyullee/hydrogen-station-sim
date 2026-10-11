@@ -3639,7 +3639,11 @@ async def saga_analysis(job_id: str, request: SagaAnalysisInput) -> dict[str, An
                 "relief_valves_open": frame.get("relief_valves_open") or [],
                 "current_signals": selected_values,
                 "active_conditions": matched_rules,
-                "related_conditions": reference_rules[:8],
+                # Keep the direct-answer provider context below the 12 kB
+                # contract even when a bank question selects verbose HAZOP
+                # rows. The complete rule set remains in the API evidence
+                # manifest and sensor view.
+                "related_conditions": reference_rules[:6],
                 "direct_evaluation": {"status": (direct_result or {}).get("status"),
                                       "hits": direct_hits[:8]},
                 "consolidated_response_guidance": _prompt_response_guidance_summary(
