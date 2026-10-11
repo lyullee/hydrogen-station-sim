@@ -272,6 +272,16 @@ amplitudes and alarm thresholds remain unchanged. The failed transfer screen is
 an explicit readiness blocker and is not presented as hydrogen CFD,
 detector-placement, ESD or safety-distance validation.
 
+The NIST TN 1694 reduced-scale garage archive was separately hash-locked and
+audited as a component candidate. It contains 18 one-second legacy Excel
+workbooks spanning two release durations, three vent arrangements and three
+source locations, with eight helium-concentration channels and differential
+pressure. The archive passed schema integrity, but the source is helium and its
+release start is not unambiguously cross-walked to the workbook-relative clock.
+Because the files were opened after the spatial protocol freeze, they are not a
+prospective validation pass and do not change runtime routing or any readiness
+gate. See [`NIST_HELIUM_GARAGE_INTAKE_2026_10_11.md`](../research/NIST_HELIUM_GARAGE_INTAKE_2026_10_11.md).
+
 A post-access orientation-class candidate now corrects that specific horizontal
 release failure: mean top-five recall increases from 0.56 to 0.64 and the
 nearest-ranked sensor success fraction from 0.60 to 0.80, so all four internal

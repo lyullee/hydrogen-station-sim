@@ -1,0 +1,476 @@
+{
+  "schema_version": 1,
+  "artifact_type": "nist_helium_garage_public_archive_intake",
+  "recorded_at": "2026-10-11",
+  "source": {
+    "title": "Experimental Characterization of Helium Dispersion in a 1/4-Scale Two-Car Residential Garage",
+    "authors": [
+      "William M. Pitts",
+      "Jiann C. Yang",
+      "Marco G. Fernandez"
+    ],
+    "publisher": "National Institute of Standards and Technology",
+    "technical_note": "NIST TN 1694 (March 2011)",
+    "doi": "10.6028/NIST.TN.1694",
+    "report_url": "https://www.nist.gov/publications/experimental-characterization-helium-dispersion-scale-two-car-residential-garage-nist",
+    "archive_url": "https://www.nist.gov/el/fire/hydrogen-flammability-detection-and-fire-safety",
+    "workbook_archive_url": "http://www.nist.gov/el/fire_protection/buildings/upload/HeliumDispersionDataSets.zip",
+    "test_gas": "helium surrogate for hydrogen"
+  },
+  "archive": {
+    "bytes": 53895011,
+    "sha256": "fd1c8c6f7b21c092b69b5962f70020ffca6422eff34d21bbdd5cc14cbef0c993",
+    "workbook_count": 18,
+    "file_pattern": "{release_duration}-{vent_configuration}-{release_location}.xls",
+    "release_durations_s": [
+      3600,
+      14400
+    ],
+    "vent_configurations": [
+      "LC",
+      "LR",
+      "UC"
+    ],
+    "release_locations": [
+      "SLV",
+      "SSV",
+      "ULV"
+    ],
+    "workbooks": [
+      {
+        "file": "14400-LC-SLV.xls",
+        "sha256": "cba07b0a6fff8e7e91ab84636cbaeaf5cac583eefd9368f2368294faa4fc48af",
+        "row_count": 30244,
+        "time_start_s": 0.0,
+        "time_end_s": 43259.65813,
+        "median_sample_interval_s": 1.000025999999707,
+        "channels": [
+          "Sensor #1",
+          "Sensor#2",
+          "Sensor #3",
+          "Sensor #4",
+          "Sensor #5",
+          "Sensor #6",
+          "Sensor #7",
+          "Sensor #8",
+          "Pressure"
+        ],
+        "channel_count": 9,
+        "channels_with_finite_values": 9,
+        "permanently_empty_channel_count": 0
+      },
+      {
+        "file": "14400-LC-SSV.xls",
+        "sha256": "ef15d83c31e776abfe8de3873afe5dccbd093ed48afc5cdb13e68b6e628703d4",
+        "row_count": 30245,
+        "time_start_s": 0.0,
+        "time_end_s": 43260.31298,
+        "median_sample_interval_s": 1.0000449999997727,
+        "channels": [
+          "Sensor #1",
+          "Sensor#2",
+          "Sensor #3",
+          "Sensor #4",
+          "Sensor #5",
+          "Sensor #6",
+          "Sensor #7",
+          "Sensor #8",
+          "Pressure"
+        ],
+        "channel_count": 9,
+        "channels_with_finite_values": 9,
+        "permanently_empty_channel_count": 0
+      },
+      {
+        "file": "14400-LC-ULV.xls",
+        "sha256": "87e2e0603c8149cdcd2fdce7a0ae049d2a4f59cbecfda8eb38c831c0712c578a",
+        "row_count": 30246,
+        "time_start_s": 0.0,
+        "time_end_s": 43260.39751,
+        "median_sample_interval_s": 1.000012800000036,
+        "channels": [
+          "Sensor #1",
+          "Sensor#2",
+          "Sensor #3",
+          "Sensor #4",
+          "Sensor #5",
+          "Sensor #6",
+          "Sensor #7",
+          "Sensor #8",
+          "Pressure"
+        ],
+        "channel_count": 9,
+        "channels_with_finite_values": 9,
+        "permanently_empty_channel_count": 0
+      },
+      {
+        "file": "14400-LR-SLV.xls",
+        "sha256": "3293dd7c2291c9d5d3b8e18cfa974a46d85a4e6d1a4f55e7c4eafa3c45919e38",
+        "row_count": 30246,
+        "time_start_s": 0.0,
+        "time_end_s": 43260.18441,
+        "median_sample_interval_s": 1.0000129999998535,
+        "channels": [
+          "Sensor #1",
+          "Sensor#2",
+          "Sensor #3",
+          "Sensor #4",
+          "Sensor #5",
+          "Sensor #6",
+          "Sensor #7",
+          "Sensor #8",
+          "Pressure"
+        ],
+        "channel_count": 9,
+        "channels_with_finite_values": 9,
+        "permanently_empty_channel_count": 0
+      },
+      {
+        "file": "14400-LR-SSV.xls",
+        "sha256": "a32cef68c2c45794f505c7e69713332874a97865d2981707cd43c48b992f9e20",
+        "row_count": 30247,
+        "time_start_s": 0.0,
+        "time_end_s": 43260.45721,
+        "median_sample_interval_s": 1.000025999999707,
+        "channels": [
+          "Sensor #1",
+          "Sensor#2",
+          "Sensor #3",
+          "Sensor #4",
+          "Sensor #5",
+          "Sensor #6",
+          "Sensor #7",
+          "Sensor #8",
+          "Pressure"
+        ],
+        "channel_count": 9,
+        "channels_with_finite_values": 9,
+        "permanently_empty_channel_count": 0
+      },
+      {
+        "file": "14400-LR-ULV.xls",
+        "sha256": "ede95c02700294dd90eabeb9a6f75368fbc4954477b8b4cefb1d876e8c54a691",
+        "row_count": 30246,
+        "time_start_s": 0.0,
+        "time_end_s": 43260.40827,
+        "median_sample_interval_s": 1.0000300000028801,
+        "channels": [
+          "Sensor #1",
+          "Sensor#2",
+          "Sensor #3",
+          "Sensor #4",
+          "Sensor #5",
+          "Sensor #6",
+          "Sensor #7",
+          "Sensor #8",
+          "Pressure"
+        ],
+        "channel_count": 9,
+        "channels_with_finite_values": 9,
+        "permanently_empty_channel_count": 0
+      },
+      {
+        "file": "14400-UC-SLV.xls",
+        "sha256": "8772976daaf8d78103822b54334f26588b8546bbf137232a05cb0311df4bb7ef",
+        "row_count": 30247,
+        "time_start_s": 0.0,
+        "time_end_s": 43260.46681,
+        "median_sample_interval_s": 1.000025999999707,
+        "channels": [
+          "Sensor #1",
+          "Sensor#2",
+          "Sensor #3",
+          "Sensor #4",
+          "Sensor #5",
+          "Sensor #6",
+          "Sensor #7",
+          "Sensor #8",
+          "Pressure"
+        ],
+        "channel_count": 9,
+        "channels_with_finite_values": 9,
+        "permanently_empty_channel_count": 0
+      },
+      {
+        "file": "14400-UC-SSV.xls",
+        "sha256": "f37dffbf6ea42404ce7a6fd872b66cfa9ade9206b709624f0fe2bd901c52060f",
+        "row_count": 30247,
+        "time_start_s": 0.0,
+        "time_end_s": 43260.46681,
+        "median_sample_interval_s": 1.000025999999707,
+        "channels": [
+          "Sensor #1",
+          "Sensor#2",
+          "Sensor #3",
+          "Sensor #4",
+          "Sensor #5",
+          "Sensor #6",
+          "Sensor #7",
+          "Sensor #8",
+          "Pressure"
+        ],
+        "channel_count": 9,
+        "channels_with_finite_values": 9,
+        "permanently_empty_channel_count": 0
+      },
+      {
+        "file": "14400-UC-ULV.xls",
+        "sha256": "3352f1e4a1c1520a635245e7520fbb80a1bba2cdac36789b6e6f40b57ac3f107",
+        "row_count": 30246,
+        "time_start_s": 0.0,
+        "time_end_s": 43260.45322,
+        "median_sample_interval_s": 1.0000300000028801,
+        "channels": [
+          "Sensor #1",
+          "Sensor#2",
+          "Sensor #3",
+          "Sensor #4",
+          "Sensor #5",
+          "Sensor #6",
+          "Sensor #7",
+          "Sensor #8",
+          "Pressure"
+        ],
+        "channel_count": 9,
+        "channels_with_finite_values": 9,
+        "permanently_empty_channel_count": 0
+      },
+      {
+        "file": "3600-LC-SLV.xls",
+        "sha256": "cf7b5b5233f3de2e2b1709ba61dd7a957a30fa497c64333ad6c0367a49587836",
+        "row_count": 29140,
+        "time_start_s": -0.014857299999999185,
+        "time_end_s": 32460.23391,
+        "median_sample_interval_s": 1.000025999999707,
+        "channels": [
+          "Sensor #1",
+          "Sensor#2",
+          "Sensor #3",
+          "Sensor #4",
+          "Sensor #5",
+          "Sensor #6",
+          "Sensor #7",
+          "Sensor #8",
+          "Pressure"
+        ],
+        "channel_count": 9,
+        "channels_with_finite_values": 8,
+        "permanently_empty_channel_count": 1
+      },
+      {
+        "file": "3600-LC-SSV.xls",
+        "sha256": "ac5a7e149aa1bdc4ceee3e5485690acb6d7662a6a65864d3fd1c038bf65010df",
+        "row_count": 29166,
+        "time_start_s": 0.0,
+        "time_end_s": 32460.30933,
+        "median_sample_interval_s": 1.0000449999997727,
+        "channels": [
+          "Sensor #1",
+          "Sensor#2",
+          "Sensor #3",
+          "Sensor #4",
+          "Sensor #5",
+          "Sensor #6",
+          "Sensor #7",
+          "Sensor #8",
+          "Pressure"
+        ],
+        "channel_count": 9,
+        "channels_with_finite_values": 9,
+        "permanently_empty_channel_count": 0
+      },
+      {
+        "file": "3600-LC-ULV.xls",
+        "sha256": "587e0e2e04433450bb06273e1463d1441e2ffc35ec04229fefb8ac869e309bc9",
+        "row_count": 29167,
+        "time_start_s": 0.0,
+        "time_end_s": 32460.31921,
+        "median_sample_interval_s": 1.0000120000004245,
+        "channels": [
+          "Sensor #1",
+          "Sensor#2",
+          "Sensor #3",
+          "Sensor #4",
+          "Sensor #5",
+          "Sensor #6",
+          "Sensor #7",
+          "Sensor #8",
+          "Pressure"
+        ],
+        "channel_count": 9,
+        "channels_with_finite_values": 9,
+        "permanently_empty_channel_count": 0
+      },
+      {
+        "file": "3600-LR-SLV.xls",
+        "sha256": "9142bffa8807d8e33c6a23e0a77bd84713e23287d36224bcba665c6de061d141",
+        "row_count": 5204,
+        "time_start_s": 0.0,
+        "time_end_s": 5208.205468,
+        "median_sample_interval_s": 1.0000260000001617,
+        "channels": [
+          "Sensor #1",
+          "Sensor#2",
+          "Sensor #3",
+          "Sensor #4",
+          "Sensor #5",
+          "Sensor #6",
+          "Sensor #7",
+          "Sensor #8",
+          "Pressure"
+        ],
+        "channel_count": 9,
+        "channels_with_finite_values": 9,
+        "permanently_empty_channel_count": 0
+      },
+      {
+        "file": "3600-LR-SSV.xls",
+        "sha256": "52c722cea17c9be5ce2cebcc7153c0a77bd38c63fa102accee1b1a1282ff8e96",
+        "row_count": 29167,
+        "time_start_s": 0.0,
+        "time_end_s": 32460.34877,
+        "median_sample_interval_s": 1.000025999999707,
+        "channels": [
+          "Sensor #1",
+          "Sensor#2",
+          "Sensor #3",
+          "Sensor #4",
+          "Sensor #5",
+          "Sensor #6",
+          "Sensor #7",
+          "Sensor #8",
+          "Pressure"
+        ],
+        "channel_count": 9,
+        "channels_with_finite_values": 9,
+        "permanently_empty_channel_count": 0
+      },
+      {
+        "file": "3600-LR-ULV.xls",
+        "sha256": "7546469388735c34af2b203429f9cc4ac788103b2b0ae22ea6c57ec62cb69a7c",
+        "row_count": 29167,
+        "time_start_s": 0.0,
+        "time_end_s": 32459.70079,
+        "median_sample_interval_s": 1.0000300000028801,
+        "channels": [
+          "Sensor #1",
+          "Sensor#2",
+          "Sensor #3",
+          "Sensor #4",
+          "Sensor #5",
+          "Sensor #6",
+          "Sensor #7",
+          "Sensor #8",
+          "Pressure"
+        ],
+        "channel_count": 9,
+        "channels_with_finite_values": 9,
+        "permanently_empty_channel_count": 0
+      },
+      {
+        "file": "3600-UC-SLV.xls",
+        "sha256": "f700537268a3e35e67ed3098f756ac0b4a96434fd6225c315381c99dff30a345",
+        "row_count": 29167,
+        "time_start_s": 0.0,
+        "time_end_s": 32460.25284,
+        "median_sample_interval_s": 1.000025999999707,
+        "channels": [
+          "Sensor #1",
+          "Sensor#2",
+          "Sensor #3",
+          "Sensor #4",
+          "Sensor #5",
+          "Sensor #6",
+          "Sensor #7",
+          "Sensor #8",
+          "Pressure"
+        ],
+        "channel_count": 9,
+        "channels_with_finite_values": 9,
+        "permanently_empty_channel_count": 0
+      },
+      {
+        "file": "3600-UC-SSV.xls",
+        "sha256": "38a7a0de9ebef764f90d5abb9ee57daeb3d0632c2bdbbde68e44b39df170fcb1",
+        "row_count": 29165,
+        "time_start_s": 0.0,
+        "time_end_s": 32460.05189,
+        "median_sample_interval_s": 1.000025999999707,
+        "channels": [
+          "Sensor #1",
+          "Sensor#2",
+          "Sensor #3",
+          "Sensor #4",
+          "Sensor #5",
+          "Sensor #6",
+          "Sensor #7",
+          "Sensor #8",
+          "Pressure"
+        ],
+        "channel_count": 9,
+        "channels_with_finite_values": 9,
+        "permanently_empty_channel_count": 0
+      },
+      {
+        "file": "3600-UC-ULV.xls",
+        "sha256": "e643db657782c7ca04c4b2b3fb0dcfc17709767f65bedbc0a5246dc237e7d93c",
+        "row_count": 29166,
+        "time_start_s": 0.0,
+        "time_end_s": 32460.30857,
+        "median_sample_interval_s": 1.0000300000010611,
+        "channels": [
+          "Sensor #1",
+          "Sensor#2",
+          "Sensor #3",
+          "Sensor #4",
+          "Sensor #5",
+          "Sensor #6",
+          "Sensor #7",
+          "Sensor #8",
+          "Pressure"
+        ],
+        "channel_count": 9,
+        "channels_with_finite_values": 9,
+        "permanently_empty_channel_count": 0
+      }
+    ]
+  },
+  "reported_experiment_boundary": {
+    "enclosure_internal_dimensions_m": [
+      1.5,
+      1.5,
+      0.75
+    ],
+    "scaled_from_full_scale": "6.096 m x 6.096 m x 3.048 m two-car garage",
+    "nominal_release_volume_flow_l_min": {
+      "one_hour": 14.8,
+      "four_hour": 3.71
+    },
+    "measured_release_volume_flow_l_min": {
+      "one_hour": {
+        "value": 14.92,
+        "uncertainty": 0.15
+      },
+      "four_hour": {
+        "value": 3.54,
+        "uncertainty": 0.06
+      }
+    },
+    "vent_options": {
+      "LC": "single 2.40 cm square vent, 5.76 cm2",
+      "LR": "single 3.05 cm square vent, 9.30 cm2",
+      "UC": "two 2.15 cm square vents, total 9.25 cm2"
+    },
+    "sensor_channels": "eight helium volume-fraction channels and differential pressure",
+    "sensor_sampling": "approximately 1 s rows in the workbook archive"
+  },
+  "eligibility_decision": {
+    "schema_integrity_pass": true,
+    "component_spatial_ventilation_candidate": true,
+    "prospective_validation_eligible": false,
+    "full_loop_hrs_validation_eligible": false,
+    "runtime_parameter_application": false,
+    "reason": "The archive was opened after the existing spatial protocol was frozen. The report uses helium, and its 60-second delayed release is not cross-walked to the workbook-relative time axis. No post-access outcome may be used to tune detector placement, alarm thresholds, hydrogen concentration conversion, ESD or safety distance."
+  },
+  "claim_boundary": "This intake proves archive integrity and records a reproducible reduced-scale ventilation/spatial component candidate. It does not validate hydrogen magnitude, outdoor station dispersion, detector hardware dynamics, ignition, ESD, safety distance, or synchronized station-to-vehicle performance."
+}

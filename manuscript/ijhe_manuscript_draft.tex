@@ -910,6 +910,14 @@ Raw-file headers confirmed four kPa channels at 500 kHz. The archive omits
 case-resolved obstacle, ignition and sensor coordinates and ambient records; a
 frozen input contract prevents fitting them to consumed peaks.
 
+The NIST reduced-scale garage archive contains 18 one-second workbooks with
+eight helium concentration channels and differential pressure across two release
+durations, three vent arrangements and three source locations \cite{pitts2011}.
+All files passed the archive audit, but were opened after the H2SAFE spatial
+protocol was frozen. Helium and the missing release-to-workbook time crosswalk
+make this a ventilation/spatial component candidate only, not a source for
+fitting, detector placement, hydrogen conversion or full-loop validation.
+
 \subsection{Evidence-gated language-model assistance}
 The LLM is positioned after deterministic calculations and receives structured
 sensor provenance, scenario status, consequence fields and uncertainty flags.
@@ -917,6 +925,8 @@ This order prevents text generation from fabricating a missing damage radius.
 An optional future three-arm incident study could evaluate blinded safety
 ratings, unsafe advice and critical omissions; it is outside the present
 engineering study and no human-effectiveness claim is made here.
+Holdout responses and ratings have not yet been collected, and any expert
+ratings remain pending for a future facility-specific human-effectiveness study.
 
 All 34 HIAD metadata cases route to registered plans. Canonical runtime replay
 adds process-to-detector traceability for 29 direct and four partial-proxy cases;
@@ -1166,6 +1176,12 @@ data record: \href{https://doi.org/10.23642/USN.17934047}{10.23642/USN.17934047}
 A.W. Lach, \textit{Replication dataset for: Large-Scale Hydrogen Explosion
 Experiments: Obstructed Releases in open atmosphere}, DataverseNO (2026),
 \href{https://doi.org/10.18710/WSKBIJ}{doi:10.18710/WSKBIJ}.
+
+\bibitem{pitts2011}
+W.M. Pitts, J.C. Yang, M.G. Fernandez, \textit{Experimental Characterization
+of Helium Dispersion in a 1/4-Scale Two-Car Residential Garage}, NIST Technical
+Note 1694 (2011),
+\href{https://doi.org/10.6028/NIST.TN.1694}{doi:10.6028/NIST.TN.1694}.
 
 \bibitem{lach2025thermal}
 A.W. Lach, K. Vaagsaether, A.V. Gaathaug, Thermal hazards from a downwards
