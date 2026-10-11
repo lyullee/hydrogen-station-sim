@@ -2853,6 +2853,9 @@ def _public_geometry_sensitivity_evidence() -> dict[str, Any] | None:
     path = Path(__file__).resolve().parents[2] / (
         "research/nrel_h2fills_geometry_sensitivity.json"
     )
+    latest_recheck_path = Path(__file__).resolve().parents[2] / (
+        "research/nrel_h2fills_geometry_sensitivity_recheck_2026_10_11.json"
+    )
     transfer_path = Path(__file__).resolve().parents[2] / (
         "research/h2protocol_capacity_eos_diagnostic_2026_10_06.json"
     )
@@ -2861,6 +2864,13 @@ def _public_geometry_sensitivity_evidence() -> dict[str, Any] | None:
     )
     try:
         record = json.loads(path.read_text(encoding="utf-8"))
+        # Keep the historical diagnostic for backwards-compatible evidence
+        # snapshots, while also exposing the latest hash-linked replay when it
+        # is available.  The latter remains diagnostic-only and is never used
+        # to change the runtime default or a validation gate.
+        latest_recheck = json.loads(
+            latest_recheck_path.read_text(encoding="utf-8")
+        ) if latest_recheck_path.is_file() else None
         rule = json.loads(rule_path.read_text(encoding="utf-8"))
         transfer_record = json.loads(transfer_path.read_text(encoding="utf-8"))
     except (OSError, ValueError, json.JSONDecodeError):
@@ -2881,6 +2891,64 @@ def _public_geometry_sensitivity_evidence() -> dict[str, Any] | None:
         or claim_boundary.get("independent_confirmatory_validation") is not False
     ):
         return None
+
+    latest_payload: dict[str, Any] | None = None
+    if isinstance(latest_recheck, dict):
+        latest_variants = latest_recheck.get("variants") or {}
+        latest_claim_limit = str(latest_recheck.get("claim_limit") or "")
+        latest_source = latest_recheck.get("source") or {}
+        if (
+            latest_recheck.get("status") == "exploratory_geometry_sensitivity_only"
+            and "No variant is an independent confirmatory pass" in latest_claim_limit
+            and len(latest_variants) == len(required_variants)
+            and all(isinstance(latest_variants.get(name), dict) for name in required_variants)
+            and latest_source.get("workbook_sha256")
+            and latest_source.get("fit_source_sha256")
+            and latest_recheck.get("source_worktree_dirty") is False
+        ):
+            latest_payload = {
+                "artifact": "research/nrel_h2fills_geometry_sensitivity_recheck_2026_10_11.json",
+                "generated_at": latest_recheck.get("generated_at"),
+                "source": {
+                    "workbook_sha256": latest_source.get("workbook_sha256"),
+                    "fit_source_sha256": latest_source.get("fit_source_sha256"),
+                    "tank_ids": latest_source.get("tank_ids"),
+                    "capacity_kg": latest_source.get("capacity_kg"),
+                    "capacity_eos_volume_m3": latest_source.get("capacity_eos_volume_m3"),
+                },
+                "variants": {
+                    name: {
+                        "screening_pass_count": (
+                            (latest_variants[name].get("aggregate") or {}).get(
+                                "screening_pass_count"
+                            )
+                        ),
+                        "screening_pass_fraction": (
+                            (latest_variants[name].get("aggregate") or {}).get(
+                                "screening_pass_fraction"
+                            )
+                        ),
+                        "pressure_rmse_mpa": (
+                            (latest_variants[name].get("aggregate") or {}).get(
+                                "pressure_rmse_mpa"
+                            )
+                        ),
+                        "temperature_rmse_c": (
+                            (latest_variants[name].get("aggregate") or {}).get(
+                                "temperature_rmse_c"
+                            )
+                        ),
+                        "mass_final_error_kg": (
+                            (latest_variants[name].get("aggregate") or {}).get(
+                                "mass_final_error_kg"
+                            )
+                        ),
+                    }
+                    for name in required_variants
+                },
+                "claim_supported": False,
+                "claim_limit": latest_claim_limit,
+            }
 
     transfer_aggregate = (transfer_record.get("comparison") or {}).get(
         "capacity_eos"
@@ -2953,6 +3021,7 @@ def _public_geometry_sensitivity_evidence() -> dict[str, Any] | None:
         "claim_limit": str(claim.get("claim_limit") or "") + " " + str(
             claim_boundary.get("reason") or ""
         ),
+        "latest_recheck": latest_payload,
     }
 
 

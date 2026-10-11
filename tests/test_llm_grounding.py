@@ -520,6 +520,13 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
         "screening_pass_count"
     ] == 7
     assert geometry["claim_supported"] is False
+    assert geometry["latest_recheck"]["artifact"] == (
+        "research/nrel_h2fills_geometry_sensitivity_recheck_2026_10_11.json"
+    )
+    assert geometry["latest_recheck"]["claim_supported"] is False
+    assert geometry["latest_recheck"]["variants"]["capacity_eos_no_volume_fit"][
+        "screening_pass_count"
+    ] == 7
     tank_trace = idle["response_evidence"]["public_tank_trace_boundary"]
     assert tank_trace["evidence_role"] == "public_tank_thermal_boundary_candidate"
     assert tank_trace["experiment"]["sample_count"] == 2536
