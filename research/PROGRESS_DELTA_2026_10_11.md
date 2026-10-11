@@ -92,8 +92,10 @@ two-zone 모델은 원인 진단용 post-outcome 모델로 기록되어 있지�
   `research/grune_2014_public_pressure_trace_recheck_2026_10_12.json` and
   `research/GRUNE_2014_PUBLIC_PRESSURE_TRACE_RECHECK_2026_10_12.md`.
 
-- Final full regression after the matrix-hash repair: **1,443 passed, 0
-  failed, 20 warnings** (`research/full_regression_test_run_2026_10_11.json`).
+- Final full regression after the provenance-grounding change and audit-hash
+  refresh: **1,446 passed, 0 failed, 20 warnings**
+  (`research/full_regression_test_run_2026_10_11.json`). The additional three
+  tests cover the DataverseNO recheck and its LLM evidence projection.
 
 - LLM·사고경로 회귀를 다시 실행해 **65 passed / 0 failed / 2 warnings**를
   확인했다. 근거 기반 LLM 계약, provider routing, 직접 SAGA 대화, HIAD
@@ -119,3 +121,12 @@ two-zone 모델은 원인 진단용 post-outcome 모델로 기록되어 있지�
 - 이 provenance 재검증 경로를 근거 기반 LLM envelope에도 연결했다. 따라서
   SAGA가 해당 공개 실험의 범위나 재현성을 설명할 때 DataverseNO 체크섬 기록을
   근거로 노출할 수 있지만, spatial holdout 준비 여부는 계속 `false`로 유지한다.
+
+## 2026-10-12 — 전체 회귀 및 기록 해시 재검증
+
+- 전체 `.venv` 회귀에서 처음 발견된 두 기록 불일치(public Type-IV 런타임
+  calibration 해시, KHK 사고 선례 라우팅 manifest 해시)를 현재 코드로
+  재생성했다. 관련 readiness·routing 테스트는 **5/5 통과**했다.
+- 전체 회귀는 **1,446 passed / 0 failed / 20 warnings**로 종료됐다. 경고는
+  기존 FastAPI/httpx 호환성, HyRAM physics warning, openpyxl workbook warning이며,
+  검증 점수나 런타임 파라미터를 변경하지 않았다.
