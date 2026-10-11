@@ -70,6 +70,26 @@
       "claim_boundary": "The public briefing supports face-validity ranges and a data-request lead, but its plots and aggregate endpoints cannot close the full-loop gate."
     },
     {
+      "id": "calstate_la_back_to_back_fueling_2021",
+      "title": "Hydrogen station in situ back-to-back fueling data for design and modeling",
+      "doi": "10.1016/j.jclepro.2021.129737",
+      "source_url": "https://doi.org/10.1016/j.jclepro.2021.129737",
+      "supporting_url": "https://www.osti.gov/biblio/1977265",
+      "source_role": "real station-to-vehicle data acquisition and custodian request lead",
+      "observed": {
+        "physical_experiment": true,
+        "station_and_vehicle_measurements_described": true,
+        "vehicle_pressure_temperature_described": true,
+        "station_storage_hose_flow_and_command_states_described": true,
+        "per_second_dynamic_trend_described": true,
+        "machine_readable_common_timebase_public": false,
+        "raw_trace_public": false,
+        "reuse_terms_for_raw_or_derived_trace": "not identified on public article/OSTI record"
+      },
+      "decision": "REQUEST_RAW_TRACE",
+      "claim_boundary": "This is a high-value custodian lead. The article-level channel inventory and plots cannot close the full-loop gate until raw rows, units, clock alignment, checksum and reuse permission are obtained."
+    },
+    {
       "id": "kit_preslhy_e31_part_a_open_data",
       "title": "PRESLHY Experiment series E3.1 (Cryogenic Hydrogen Blow-down/Discharge) results - part A high pressure",
       "doi": "10.35097/1187",
@@ -131,7 +151,12 @@
         "physical_experiment": false,
         "station_layout_public": true,
         "dispenser_nozzle_storage_entities_public": true,
-        "real_time_signal_types": ["availability", "usage", "hydrogen_storage", "pricing"],
+        "real_time_signal_types": [
+          "availability",
+          "usage",
+          "hydrogen_storage",
+          "pricing"
+        ],
         "vehicle_tank_pressure_temperature_public": false,
         "machine_readable_common_timebase_public": false,
         "raw_controller_or_esd_trace_public": false,

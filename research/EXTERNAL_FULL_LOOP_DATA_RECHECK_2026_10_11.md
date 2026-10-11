@@ -10,6 +10,7 @@ No new public machine-readable station-to-sink trace was identified. The full-lo
 - ZBT/NPL sampling campaign: dispenser and sink data were logged at a real HRS, but the article states that raw data are available from the authors on request.
 - NREL H2IQ heavy-duty fast-flow briefing: useful pressure, hose, receptacle and flow context is shown, but no raw trace is published.
 - NREL H2FillS: the public validated simulator defines station-to-vehicle and vehicle-tank outputs, but simulator traces are not measured external holdouts.
+- Cal State LA back-to-back study (DOI `10.1016/j.jclepro.2021.129737`): the article lists per-second vehicle, hose, storage, flow and valve/command channels, but the logger archive and reuse terms are not public; it is retained as a custodian request lead.
 - ENDA HRS Connect: a real multi-station monitoring system is described (90 stations and 75–400 signals per station), but no public raw export or reuse terms are provided.
 - Lototskyy et al. (2020): 38 months of real medium-pressure station operation and pressure/temperature plots are reported, but the machine-readable logger archive is not public and vehicle channels are absent.
 - KIT/PRESLHY DISCHA release archives: openly downloadable CC-BY component blow-down and jet-fire files exist, but they are rigid-vessel release experiments rather than a synchronized station-to-vehicle fueling loop. They are therefore usable for component external checks only.

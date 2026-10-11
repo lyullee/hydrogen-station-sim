@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-11T00:06:34.667306+00:00",
+  "generated_at": "2026-10-11T00:21:09.034027+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -2079,7 +2079,7 @@
           "status": "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET",
           "decision": "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET_IDENTIFIED",
           "gate_impact": "full_loop_external_validation_remains_open",
-          "candidate_count": 7,
+          "candidate_count": 8,
           "prospective_holdout_eligible": false,
           "runtime_parameter_application": false,
           "claim_boundary": "This artifact records a current public-access recheck and exclusion decision. It adds no numerical validation, does not alter any frozen holdout or runtime parameter, and does not support an IJHE full-loop or field-safety claim."

@@ -16,7 +16,7 @@ def test_2026_10_11_public_recheck_is_privacy_safe_and_does_not_open_full_loop_g
     assert record["prospective_holdout_eligible"] is False
     assert record["runtime_parameter_application"] is False
     assert record["claim_supported"] is False
-    assert len(record["screened_sources"]) == 7
+    assert len(record["screened_sources"]) == 8
     assert record["privacy"]["private_raw_rows_persisted"] is False
     assert record["privacy"]["local_source_paths_published"] is False
     assert record["minimum_next_input"]["event_count"] == 3
@@ -54,3 +54,13 @@ def test_2026_10_11_public_recheck_is_privacy_safe_and_does_not_open_full_loop_g
     mh = next(item for item in record["screened_sources"] if item["id"] == "lototskyy_2020_mh_compressor_station")
     assert mh["raw_synchronized_archive_located"] is False
     assert mh["decision"] == "REPORT_SUMMARY_ONLY"
+
+    calstate = next(
+        item
+        for item in record["screened_sources"]
+        if item["id"] == "calstate_la_back_to_back_fueling_2021"
+    )
+    assert calstate["article_reports_per_second_dynamic_channels"] is True
+    assert calstate["vehicle_pressure_temperature_channels"] is True
+    assert calstate["raw_synchronized_archive_located"] is False
+    assert calstate["decision"] == "CUSTODIAN_REQUEST_LEAD_ONLY"

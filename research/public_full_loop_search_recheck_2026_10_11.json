@@ -10,7 +10,8 @@
     "published real-station operational-data records",
     "NREL HITRF and H2FillS public programme pages",
     "public HRS monitoring-system descriptions",
-    "published real-station long-duration operation reports"
+    "published real-station long-duration operation reports",
+    "Cal State LA 2021 back-to-back article full-text channel inventory and DOI/custodian route"
   ],
   "eligibility_rule": {
     "required": [
@@ -75,6 +76,31 @@
       "raw_synchronized_archive_located": false,
       "decision": "CUSTODIAN_REQUEST_LEAD_ONLY",
       "claim_limit": "The article is useful for operating-envelope and schema-request context, but publication-level summaries are not an independently scorable raw holdout."
+    },
+    {
+      "id": "calstate_la_back_to_back_fueling_2021",
+      "title": "Hydrogen station in situ back-to-back fueling data for design and modeling",
+      "doi": "10.1016/j.jclepro.2021.129737",
+      "url": "https://doi.org/10.1016/j.jclepro.2021.129737",
+      "supporting_url": "https://www.osti.gov/biblio/1977265",
+      "license_or_access": "Accepted manuscript and article are identifiable; operator logger reuse terms and a public machine-readable archive were not identified",
+      "observed_scope": [
+        "real Cal State LA hydrogen research and fueling facility",
+        "per-fueling vehicle pressure and final pressure",
+        "vehicle tank temperature and ambient temperature",
+        "average fill rate and dispensed hydrogen amount",
+        "storage-tank pressures",
+        "35/70 MPa hose pressure and temperature",
+        "flow rate, density and APRR",
+        "tank, hose, blowdown, booster and chiller command/valve states",
+        "per-second dynamic trend described by the article"
+      ],
+      "article_reports_per_second_dynamic_channels": true,
+      "raw_synchronized_archive_located": false,
+      "vehicle_pressure_temperature_channels": true,
+      "station_controller_or_esd_channels": "partial article-reported valve/command states; ESD and reuse attestation not public",
+      "decision": "CUSTODIAN_REQUEST_LEAD_ONLY",
+      "claim_limit": "The article is the strongest newly located station-to-vehicle acquisition lead, but article figures and the reported channel inventory are not a rights-cleared machine-readable holdout. Request de-identified rows and freeze them before scoring."
     },
     {
       "id": "nrel_hitrf_h2fills_programme",

@@ -28,6 +28,7 @@ def test_recheck_preserves_full_loop_gate_boundary():
         "nrel_h2fills_public_model",
         "enda_hrs_connect_monitoring",
         "lototskyy_2020_mh_compressor_station",
+        "calstate_la_back_to_back_fueling_2021",
     } <= candidates.keys()
     assert {
         item["decision"] for item in record["candidates"]
