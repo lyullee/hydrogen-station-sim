@@ -6278,6 +6278,57 @@ def audit(root: Path) -> dict[str, object]:
         } if khk_access else "missing; KHK public report access verification has not been run",
     ))
 
+    nbsdc_protocol_path = root / "research/nbsdc_lh2_station_intake_protocol_2026_10_12.json"
+    nbsdc_result_path = root / "research/nbsdc_lh2_station_intake_result_2026_10_12.json"
+    nbsdc_protocol = _json(nbsdc_protocol_path)
+    nbsdc_result = _json(nbsdc_result_path)
+    nbsdc_aggregate = (nbsdc_result or {}).get("aggregate") or {}
+    nbsdc_source = (nbsdc_result or {}).get("source") or {}
+    nbsdc_files = (nbsdc_result or {}).get("files") or []
+    nbsdc_protocol_hash_matches = nbsdc_protocol_path.is_file() and bool(nbsdc_result) and (
+        (nbsdc_result or {}).get("protocol_sha256") == _sha256(nbsdc_protocol_path)
+    )
+    nbsdc_intake_pass = bool(
+        (nbsdc_protocol or {}).get("artifact_type")
+        == "public_nbsdc_lh2_station_intake_protocol"
+        and (nbsdc_protocol or {}).get("status") == "frozen_before_numerical_access"
+        and (nbsdc_result or {}).get("artifact_type")
+        == "public_nbsdc_lh2_station_intake_result"
+        and (nbsdc_result or {}).get("status")
+        == "metadata_accessed_numerical_files_access_denied"
+        and nbsdc_protocol_hash_matches
+        and nbsdc_source.get("dataset_id") == "67d50e37195d260905af9869"
+        and nbsdc_aggregate.get("file_count") == 7
+        and nbsdc_aggregate.get("downloaded_count") == 1
+        and nbsdc_aggregate.get("access_denied_count") == 6
+        and nbsdc_aggregate.get("all_files_downloaded") is False
+        and nbsdc_aggregate.get("catalogue_byte_mismatch_count") == 0
+        and nbsdc_aggregate.get("raw_rows_persisted") is False
+        and nbsdc_aggregate.get("runtime_parameter_changed") is False
+        and nbsdc_aggregate.get("claim_supported") is False
+        and len(nbsdc_files) == 7
+        and sum(record.get("access_status") == "access_denied" for record in nbsdc_files) == 6
+        and sum(record.get("access_status") == "downloaded" for record in nbsdc_files) == 1
+        and all(record.get("raw_rows_persisted_in_result") is False for record in nbsdc_files)
+        and bool((nbsdc_result or {}).get("claim_boundary"))
+    )
+    gates.append(_gate(
+        "public_nbsdc_lh2_station_intake_integrity",
+        "PASS" if nbsdc_intake_pass else ("FAIL" if nbsdc_result else "PENDING"),
+        "The public NBSDC liquid-hydrogen station record is protocol-frozen and its numerical-file access boundary is recorded without treating catalogue metadata as measured validation.",
+        f"{nbsdc_protocol_path.relative_to(root)}; {nbsdc_result_path.relative_to(root)}",
+        "Seven catalogue entries are retained, the public description file is hash-checked, six numerical files are explicitly access-denied by the record API, no raw rows are committed, and no runtime or validation claim is promoted.",
+        {
+            "file_count": nbsdc_aggregate.get("file_count"),
+            "downloaded_count": nbsdc_aggregate.get("downloaded_count"),
+            "access_denied_count": nbsdc_aggregate.get("access_denied_count"),
+            "protocol_hash_matches": nbsdc_protocol_hash_matches,
+            "raw_rows_persisted": nbsdc_aggregate.get("raw_rows_persisted"),
+            "claim_supported": nbsdc_aggregate.get("claim_supported"),
+            "claim_boundary": (nbsdc_result or {}).get("claim_boundary"),
+        } if nbsdc_result else "missing; NBSDC intake protocol/result has not been run",
+    ))
+
     precedent_routing_path = root / "research/runtime_public_accident_precedent_routing_2026_10_07.json"
     precedent_routing = _json(precedent_routing_path)
     precedent_source = (precedent_routing or {}).get("source") or {}

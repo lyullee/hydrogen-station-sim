@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-11T22:15:16.558127+00:00",
+  "generated_at": "2026-10-11T22:28:43.862469+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -13,7 +13,7 @@
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 130,
+    "PASS": 131,
     "FAIL": 10,
     "PENDING": 7
   },
@@ -6074,6 +6074,22 @@
         ],
         "rights_boundary": "Report PDFs remain local and gitignored. Only URL provenance, hashes, byte counts and page counts are committed; report text and files are not redistributed.",
         "claim_boundary": "This verifies access and provenance of public accident reports for qualitative scenario grounding. It does not provide synchronized process traces, event frequencies, causal inference or physics validation."
+      }
+    },
+    {
+      "id": "public_nbsdc_lh2_station_intake_integrity",
+      "status": "PASS",
+      "claim": "The public NBSDC liquid-hydrogen station record is protocol-frozen and its numerical-file access boundary is recorded without treating catalogue metadata as measured validation.",
+      "evidence": "research\\nbsdc_lh2_station_intake_protocol_2026_10_12.json; research\\nbsdc_lh2_station_intake_result_2026_10_12.json",
+      "requirement": "Seven catalogue entries are retained, the public description file is hash-checked, six numerical files are explicitly access-denied by the record API, no raw rows are committed, and no runtime or validation claim is promoted.",
+      "observed": {
+        "file_count": 7,
+        "downloaded_count": 1,
+        "access_denied_count": 6,
+        "protocol_hash_matches": true,
+        "raw_rows_persisted": false,
+        "claim_supported": false,
+        "claim_boundary": "A positive result would support only a public station-side component screen. A negative or ineligible result does not invalidate the runtime model; it records a dataset-boundary limitation. No full-loop, vehicle, site-distance, accident-frequency or operator-effectiveness claim is permitted."
       }
     },
     {

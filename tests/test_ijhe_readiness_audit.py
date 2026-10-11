@@ -57,6 +57,12 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     assert tank_runtime["runtime"]["validation_case_count"] == 12
     assert tank_runtime["sources_match"] is True
     assert tank_runtime["recheck_matches"] is True
+    nbsdc = gates["public_nbsdc_lh2_station_intake_integrity"]
+    assert nbsdc["status"] == "PASS"
+    assert nbsdc["observed"]["file_count"] == 7
+    assert nbsdc["observed"]["downloaded_count"] == 1
+    assert nbsdc["observed"]["access_denied_count"] == 6
+    assert nbsdc["observed"]["claim_supported"] is False
     mhc = gates["public_mhc_experiment16_component_screen_integrity"]
     assert mhc["status"] == "PASS"
     assert mhc["observed"]["source_doi"] == "10.5281/zenodo.18213166"

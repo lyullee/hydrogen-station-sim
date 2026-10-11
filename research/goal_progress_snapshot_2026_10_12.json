@@ -3,12 +3,12 @@
   "generated_at": "2026-10-11T22:15:43+00:00",
   "metric_definition": "PASS gates divided by PASS+FAIL+PENDING gates; not a publication-readiness probability",
   "gate_counts": {
-    "PASS": 130,
+    "PASS": 131,
     "FAIL": 10,
     "PENDING": 7,
-    "TOTAL": 147
+    "TOTAL": 148
   },
-  "gate_closure_percent": 88.4,
+  "gate_closure_percent": 88.5,
   "primary_scope_progress_2026_10_11": {
     "metric_definition": "Scope-adjusted gate closure after removing the declared station-to-vehicle full-loop and optional SAGA human-evaluation lanes; this is not a scientific improvement claim.",
     "gate_counts": {
@@ -94,6 +94,18 @@
         "sha256": "f1b8bf747b7787f00152ec416940c80a143ea044fc18ee8a69ac9da204d9158e",
         "runtime_parameter_application": false,
         "claim_boundary": "Public-record and byte-integrity recheck only; no new spatial or full-loop validation claim."
+      },
+      "nbsdc_lh2_station_intake_2026_10_12": {
+        "status": "NUMERICAL_FILES_ACCESS_DENIED",
+        "evidence": "research/nbsdc_lh2_station_intake_result_2026_10_12.json",
+        "dataset_id": "67d50e37195d260905af9869",
+        "catalogued_file_count": 7,
+        "description_file_downloaded": true,
+        "numerical_file_access_denied_count": 6,
+        "raw_rows_persisted": false,
+        "runtime_parameter_application": false,
+        "new_validation_holdout": false,
+        "claim_boundary": "Public catalogue/access-boundary recheck only; numerical files require a data application and no station-side validation claim is made."
       }
     }
   }

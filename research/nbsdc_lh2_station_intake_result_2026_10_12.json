@@ -1,0 +1,104 @@
+{
+  "schema_version": 1,
+  "artifact_type": "public_nbsdc_lh2_station_intake_result",
+  "status": "metadata_accessed_numerical_files_access_denied",
+  "protocol": "research/nbsdc_lh2_station_intake_protocol_2026_10_12.json",
+  "protocol_sha256": "dd2559f03f9c478848322ab250861e476a17b0cc229edf62f5a375d1d085fae4",
+  "source": {
+    "record_url": "https://nbsdc.cn/general/dataDetail?id=67d50e37195d260905af9869&type=1",
+    "dataset_id": "67d50e37195d260905af9869",
+    "dataset_name": "Operating Dataset of Liquid Hydrogen Refueling Station",
+    "provider": "Tongji University",
+    "sharing_statement": "complete_share",
+    "catalog_update": "2025-03-03",
+    "declared_time_span": "16 hours",
+    "declared_time_resolution": "1 second",
+    "declared_scope": "35 MPa dispensers, 90 MPa compressor, high-pressure storage banks, liquid-hydrogen pump and storage tank"
+  },
+  "files": [
+    {
+      "tree_id": 11,
+      "name": "35MPa加氢机1.xlsx",
+      "role": "dispenser_1",
+      "access_status": "access_denied",
+      "http_response_code": 403,
+      "access_message": "目前只支持部分数据集的说明文件下载，数据文件请通过数据申请获取。",
+      "catalogue_bytes": 3605593,
+      "raw_rows_persisted_in_result": false
+    },
+    {
+      "tree_id": 12,
+      "name": "35MPa加氢机2.xlsx",
+      "role": "dispenser_2",
+      "access_status": "access_denied",
+      "http_response_code": 403,
+      "access_message": "目前只支持部分数据集的说明文件下载，数据文件请通过数据申请获取。",
+      "catalogue_bytes": 5700855,
+      "raw_rows_persisted_in_result": false
+    },
+    {
+      "tree_id": 13,
+      "name": "70MPa加氢机.csv",
+      "role": "dispenser_70mpa",
+      "access_status": "access_denied",
+      "http_response_code": 403,
+      "access_message": "目前只支持部分数据集的说明文件下载，数据文件请通过数据申请获取。",
+      "catalogue_bytes": 5974368,
+      "raw_rows_persisted_in_result": false
+    },
+    {
+      "tree_id": 14,
+      "name": "90MPa压缩机.xlsx",
+      "role": "compressor_90mpa",
+      "access_status": "access_denied",
+      "http_response_code": 403,
+      "access_message": "目前只支持部分数据集的说明文件下载，数据文件请通过数据申请获取。",
+      "catalogue_bytes": 3922132,
+      "raw_rows_persisted_in_result": false
+    },
+    {
+      "tree_id": 15,
+      "name": "液氢加氢站运行数据集数据说明 .docx",
+      "role": "dataset_description",
+      "access_status": "downloaded",
+      "path": "data/public_validation/raw/nbsdc_lh2_station/dataset_description__液氢加氢站运行数据集数据说明 .docx",
+      "bytes": 15673,
+      "sha256": "669bf3487f07714da3ed08f7d891077841c39ef38497dc2abb307a5877954142",
+      "catalogue_bytes": 15673,
+      "byte_count_matches_catalogue": true,
+      "content_type": "application/octet-stream",
+      "raw_rows_persisted_in_result": false
+    },
+    {
+      "tree_id": 16,
+      "name": "液氢泵-液氢储罐.xlsx",
+      "role": "liquid_hydrogen_pump_tank",
+      "access_status": "access_denied",
+      "http_response_code": 403,
+      "access_message": "目前只支持部分数据集的说明文件下载，数据文件请通过数据申请获取。",
+      "catalogue_bytes": 15458212,
+      "raw_rows_persisted_in_result": false
+    },
+    {
+      "tree_id": 17,
+      "name": "高压储氢瓶组.xlsx",
+      "role": "storage_bank",
+      "access_status": "access_denied",
+      "http_response_code": 403,
+      "access_message": "目前只支持部分数据集的说明文件下载，数据文件请通过数据申请获取。",
+      "catalogue_bytes": 9423277,
+      "raw_rows_persisted_in_result": false
+    }
+  ],
+  "aggregate": {
+    "file_count": 7,
+    "downloaded_count": 1,
+    "access_denied_count": 6,
+    "all_files_downloaded": false,
+    "catalogue_byte_mismatch_count": 0,
+    "raw_rows_persisted": false,
+    "runtime_parameter_changed": false,
+    "claim_supported": false
+  },
+  "claim_boundary": "A positive result would support only a public station-side component screen. A negative or ineligible result does not invalidate the runtime model; it records a dataset-boundary limitation. No full-loop, vehicle, site-distance, accident-frequency or operator-effectiveness claim is permitted."
+}

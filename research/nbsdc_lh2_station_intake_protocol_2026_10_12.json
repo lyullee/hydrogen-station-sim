@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "artifact_type": "public_nbsdc_lh2_station_intake_protocol",
+  "status": "frozen_before_numerical_access",
+  "frozen_at_utc": "2026-10-11T22:26:37.7671834Z",
+  "source": {
+    "record_url": "https://nbsdc.cn/general/dataDetail?id=67d50e37195d260905af9869&type=1",
+    "dataset_id": "67d50e37195d260905af9869",
+    "dataset_name": "Operating Dataset of Liquid Hydrogen Refueling Station",
+    "provider": "Tongji University",
+    "sharing_statement": "complete_share",
+    "catalog_update": "2025-03-03",
+    "declared_time_span": "16 hours",
+    "declared_time_resolution": "1 second",
+    "declared_scope": "35 MPa dispensers, 90 MPa compressor, high-pressure storage banks, liquid-hydrogen pump and storage tank"
+  },
+  "files": [
+    {"tree_id": 11, "name": "35MPa加氢机1.xlsx", "bytes": 3605593, "role": "dispenser_1"},
+    {"tree_id": 12, "name": "35MPa加氢机2.xlsx", "bytes": 5700855, "role": "dispenser_2"},
+    {"tree_id": 13, "name": "70MPa加氢机.csv", "bytes": 5974368, "role": "dispenser_70mpa"},
+    {"tree_id": 14, "name": "90MPa压缩机.xlsx", "bytes": 3922132, "role": "compressor_90mpa"},
+    {"tree_id": 15, "name": "液氢加氢站运行数据集数据说明 .docx", "bytes": 15673, "role": "dataset_description"},
+    {"tree_id": 16, "name": "液氢泵-液氢储罐.xlsx", "bytes": 15458212, "role": "liquid_hydrogen_pump_tank"},
+    {"tree_id": 17, "name": "高压储氢瓶组.xlsx", "bytes": 9423277, "role": "storage_bank"}
+  ],
+  "evaluation": {
+    "purpose": "public station-side intake and fixed-model eligibility screen",
+    "numerical_outcomes_accessed_before_freeze": false,
+    "model_fitting": false,
+    "runtime_parameter_change": false,
+    "raw_rows_committed": false,
+    "candidate_signal_groups": [
+      "timestamp",
+      "pressure",
+      "temperature",
+      "mass_flow_or_refueled_mass",
+      "storage_bank_pressure_and_temperature",
+      "compressor_pressure_and_temperature"
+    ],
+    "eligibility_rules": [
+      "The file must be downloadable from the public record and match the catalogued file identity and byte count.",
+      "A usable time axis must parse without calendar-date substitution and contain at least two ordered observations.",
+      "At least one declared station-side pressure and temperature channel must be present with finite numeric values.",
+      "A flow or cumulative-mass channel is required for a fueling/recharge replay candidate; pressure-only files remain intake diagnostics.",
+      "Unit interpretation must be supported by the public data description; unverified unit conversion disqualifies numerical scoring.",
+      "Liquid-hydrogen pump/tank channels are retained as a domain-boundary diagnostic and cannot be scored by the gaseous-H70 station model without an explicit phase-compatible boundary.",
+      "No vehicle, receptacle, common-clock station-to-vehicle channel or controller-state claim may be inferred from this dataset."
+    ],
+    "planned_outputs": [
+      "file_integrity_and_schema_summary",
+      "eligible_case_count",
+      "mapped_signal_group_count",
+      "fixed_model_screen_if_and_only_if_boundary_rules_pass",
+      "claim_supported_boolean"
+    ],
+    "claim_limit": "A positive result would support only a public station-side component screen. A negative or ineligible result does not invalidate the runtime model; it records a dataset-boundary limitation. No full-loop, vehicle, site-distance, accident-frequency or operator-effectiveness claim is permitted."
+  },
+  "privacy": {
+    "source_identifiers_published": true,
+    "raw_rows_persisted": false,
+    "calendar_dates_published": false,
+    "site_company_location_manufacturer_claimed": false
+  }
+}

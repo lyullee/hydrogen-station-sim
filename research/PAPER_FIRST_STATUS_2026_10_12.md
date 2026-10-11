@@ -6,8 +6,8 @@ does not alter model parameters or acceptance thresholds.
 
 ## Authoritative status
 
-The current readiness audit records **130 PASS, 10 FAIL and 7 PENDING** out of
-146 gates (88.4% gate closure). The declared primary station-side scope is
+The current readiness audit records **131 PASS, 10 FAIL and 7 PENDING** out of
+148 gates (88.5% gate closure). The declared primary station-side scope is
 **130 PASS, 9 FAIL and 2 PENDING** (92.2%). These are bookkeeping ratios, not
 probabilities of publication or scientific accuracy.
 
