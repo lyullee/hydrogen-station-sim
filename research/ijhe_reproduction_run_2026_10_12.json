@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "artifact_type": "ijhe_reproducibility_run",
+  "generated_at_utc": "2026-10-11T19:01:08.740599+00:00",
+  "source_commit": "2ab8c396dde8106c65cb51ea186aadb4d6c5945a",
+  "repository_dirty": false,
+  "status": "SCIENTIFIC_GATES_OPEN",
+  "artifact_integrity": {
+    "passed": true,
+    "manuscript_format": "PASS",
+    "latex_compile": "PASS",
+    "pdf_pages": 24,
+    "visual_qa_pages_inspected": 24,
+    "unresolved_citations": 0,
+    "unresolved_references": 0,
+    "audit_snapshot_matches_research_mirror": true
+  },
+  "software_checks": {
+    "status": "PASS",
+    "tests_passed": 11,
+    "tests_failed": 0,
+    "command": ".venv/Scripts/python -m pytest tests/test_ijhe_readiness_audit.py tests/test_ijhe_audit_snapshot_consistency.py tests/test_ijhe_manuscript_format.py tests/test_ijhe_compile_artifact.py tests/test_goal_progress_snapshot.py tests/test_ijhe_reproduction.py -q"
+  },
+  "scientific_readiness": {
+    "bounded_ijhe_submission_ready": false,
+    "gate_counts": {
+      "PASS": 129,
+      "FAIL": 10,
+      "PENDING": 7,
+      "TOTAL": 146,
+      "closure_percent": 88.4
+    },
+    "primary_scope_closure_percent": 92.1,
+    "blocking_gates_unchanged": true,
+    "claim_boundary": "Reproducibility and software-contract evidence only; this does not establish physical validation, field safety, human effectiveness, regulatory compliance or journal acceptance."
+  }
+}
