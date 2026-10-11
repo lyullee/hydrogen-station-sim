@@ -57,3 +57,14 @@ required channels and metadata, followed by a pre-outcome frozen protocol.
 
 This is a data-availability audit, not evidence that no such data exist behind
 proprietary, restricted or unpublished custodial access.
+
+## Current search additions (2026-10-11)
+
+The current web recheck also found the following related records. They do not change the eligibility decision:
+
+- [European Hydrogen Observatory HRS datastream](https://observatory.clean-hydrogen.europa.eu/hydrogen-landscape/distribution-and-storage/hydrogen-refuelling-stations) provides station availability and infrastructure information, not synchronized station/dispenser/vehicle transients.
+- [USN open-ended rectangular-channel hydrogen dispersion data](https://figshare.com/articles/dataset/Experimental_Data_of_Hydrogen_Dispersion_in_an_Open-ended_Rectangular_Channel/26117989) (DOI [10.23642/usn.26117989.v2](https://doi.org/10.23642/usn.26117989.v2)) is retained for actual-hydrogen consequence/component evidence; it has no vehicle/receptacle fill channels or station controller state.
+- [Robotic hydrogen-filling system design data](https://figshare.com/articles/dataset/Data_of_Design_of_Robotic_Hydrogen-filling_System_for_Hydrogen-powered_Vehicles/20097317) is a design/robotics release, not measured station-to-vehicle filling data.
+- The [SARTA heavy-duty refueling campaign](https://www.sciencedirect.com/science/article/pii/S0360319921036144) and [Lototskyy integrated-metal-hydride station paper](https://zenodo.org/record/3582985/files/Hydrogen%20refuelling%20station%20with%20integrated%20metal.pdf) report valuable operating ranges or aggregate fills, but no rights-cleared synchronized row-level station/vehicle logger archive.
+
+The machine-readable search log is `external_station_to_vehicle_recheck_2026_10_11.json`. This remains a data-availability audit; it does not establish that restricted or unpublished records do not exist.

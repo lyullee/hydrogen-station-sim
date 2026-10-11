@@ -105,5 +105,64 @@
     "full_loop_external_validation": "OUT_OF_SCOPE",
     "paper_limitation": "No openly reusable synchronized station-to-vehicle raw trace was identified in the recheck. The study therefore does not claim independent station-to-vehicle full-loop accuracy, vehicle-controller validation or field-safety validation.",
     "reentry_condition": "A custodian must provide at least three rights-cleared, independently documented events with station/controller, dispenser/nozzle and vehicle/receptacle channels on a common time base, including units, initial conditions, tank capacity and protocol metadata; the analysis protocol must be frozen before outcome access."
+  },
+  "current_search_recheck": {
+    "recorded_at": "2026-10-11",
+    "queries": [
+      "site:zenodo.org hydrogen refuelling station vehicle filling raw time series pressure temperature SOC dataset",
+      "site:dataverse.no hydrogen refuelling station vehicle filling raw data synchronized",
+      "site:data.nrel.gov hydrogen station vehicle fueling time series dataset",
+      "site:figshare.com hydrogen refueling station vehicle filling dataset pressure temperature",
+      "hydrogen refuelling station vehicle tank pressure temperature time series raw dataset refueling",
+      "hydrogen station dispenser vehicle fueling experiment data pressure time synchronized",
+      "HRS FCEV refueling data pressure temperature dataset"
+    ],
+    "additional_hits": [
+      {
+        "name": "NREL H2FillS",
+        "url": "https://www.nrel.gov/hydrogen/h2fills",
+        "observed_role": "full-station fueling thermodynamic simulator",
+        "decision": "EXCLUDE_FROM_EXTERNAL_VALIDATION",
+        "reason": "Model outputs are not an independent measured station-to-vehicle logger archive."
+      },
+      {
+        "name": "European Hydrogen Observatory HRS datastream",
+        "url": "https://observatory.clean-hydrogen.europa.eu/hydrogen-landscape/distribution-and-storage/hydrogen-refuelling-stations",
+        "observed_role": "public station availability and infrastructure datastream",
+        "decision": "EXCLUDE_FROM_EXTERNAL_VALIDATION",
+        "reason": "Station-level availability/type information does not provide synchronized dispenser and vehicle transient channels."
+      },
+      {
+        "name": "USN open-ended rectangular-channel hydrogen dispersion data",
+        "url": "https://figshare.com/articles/dataset/Experimental_Data_of_Hydrogen_Dispersion_in_an_Open-ended_Rectangular_Channel/26117989",
+        "doi": "10.23642/usn.26117989.v2",
+        "observed_role": "actual-hydrogen component release, flow and concentration measurements",
+        "decision": "RETAIN_AS_COMPONENT_CONSEQUENCE_ONLY",
+        "reason": "It has release pressure/flow and spatial concentration channels, but no vehicle/receptacle fill channels or HRS controller state."
+      },
+      {
+        "name": "Robotic hydrogen-filling system design data",
+        "url": "https://figshare.com/articles/dataset/Data_of_Design_of_Robotic_Hydrogen-filling_System_for_Hydrogen-powered_Vehicles/20097317",
+        "observed_role": "robotics design and path-planning data",
+        "decision": "EXCLUDE_FROM_EXTERNAL_VALIDATION",
+        "reason": "The record is a design/robotics dataset, not a measured station-to-vehicle filling logger."
+      },
+      {
+        "name": "SARTA liquid-pump HDV refueling demonstration",
+        "url": "https://www.sciencedirect.com/science/article/pii/S0360319921036144",
+        "observed_role": "real-world campaign and aggregate fill statistics",
+        "decision": "REPORT_SUMMARY_ONLY",
+        "reason": "The public article reports campaign and fill metrics but does not expose a rights-cleared synchronized row-level station/vehicle archive."
+      },
+      {
+        "name": "Lototskyy integrated-metal-hydride HRS operation",
+        "url": "https://zenodo.org/record/3582985/files/Hydrogen%20refuelling%20station%20with%20integrated%20metal.pdf",
+        "observed_role": "station operating-range paper with plotted pressure/temperature traces",
+        "decision": "REPORT_SUMMARY_ONLY",
+        "reason": "The public item is a paper/figure record rather than a reusable synchronized station-to-vehicle raw logger."
+      }
+    ],
+    "decision": "NO_NEW_ELIGIBLE_PUBLIC_RAW_SET_IDENTIFIED",
+    "claim_boundary": "This search log is a data-availability audit. It does not prove that proprietary, restricted or unpublished traces do not exist."
   }
 }
