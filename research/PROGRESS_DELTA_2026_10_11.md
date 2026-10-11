@@ -76,3 +76,5 @@ two-zone 모델은 원인 진단용 post-outcome 모델로 기록되어 있지�
 - Recompiled the exact LaTeX source with Tectonic 0.17.0: 23/23 pages, no fatal errors, unresolved citations/references 0, overfull boxes 0.
 - Re-ran IJHE format and readiness audits: format gate PASS; readiness remains blocked by the existing failed release/holdout validation gates and unconfirmed submission metadata, while ethics/expert review remains optional for this objective engineering paper.
 - Targeted regression: 33 passed (`test_ijhe_readiness_audit.py`, `test_llm_grounding.py`, `test_local_full_loop_schema_inventory.py`).
+
+- NREL H2FillS geometry sensitivity (post-access diagnostic): legacy geometry 0/7 screens; declared-capacity EOS without volume fit 7/7, pressure RMSE 0.496 MPa. This does not change the runtime default or any validation gate; an untouched trace is still required before promotion. See `research/nrel_h2fills_geometry_sensitivity_2026_10_12.json`.

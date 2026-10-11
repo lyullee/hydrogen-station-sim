@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-11T23:56:48+09:00",
+  "generated_at": "2026-10-12T00:00:00+09:00",
   "metric_definition": "PASS gates divided by PASS+FAIL+PENDING gates; not a publication-readiness probability",
   "gate_counts": {
     "PASS": 128,
@@ -166,6 +166,20 @@
         "runtime_parameter_application": false,
         "frozen_gate_effect": "component diagnostic integrity only",
         "claim_boundary": "Actual-hydrogen confined-enclosure pressure-peaking replay; not an independent confirmatory holdout and not HRS station-to-vehicle, outdoor-dispersion or emergency-response validation."
+      },
+      "nrel_h2fills_geometry_sensitivity": {
+        "status": "POST_ACCESS_DEVELOPMENT_DIAGNOSTIC_ONLY",
+        "evidence": "research/nrel_h2fills_geometry_sensitivity_2026_10_12.json",
+        "report": "research/NREL_H2FILLS_GEOMETRY_SENSITIVITY_2026_10_12.md",
+        "tank_count": 7,
+        "legacy_screen_pass_count": "0/7",
+        "capacity_eos_no_volume_fit_screen_pass_count": "7/7",
+        "capacity_eos_no_volume_fit_pressure_rmse_mpa": 0.49577782246935176,
+        "capacity_eos_no_volume_fit_temperature_rmse_c": 4.184657066055385,
+        "runtime_default_changed": false,
+        "validation_gate_effect": "none",
+        "claim_boundary": "Mechanism and geometry sensitivity only; not an independent confirmatory validation result.",
+        "next_required_step": "Freeze the capacity/EOS geometry rule and score a new untouched tank-and-hose trace before runtime promotion."
       },
       "frontend_regression": {
         "status": "PASS",
