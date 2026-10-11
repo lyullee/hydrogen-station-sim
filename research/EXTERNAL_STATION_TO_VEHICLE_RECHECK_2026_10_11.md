@@ -85,3 +85,22 @@ The follow-up search also checked three recent or newly indexed records:
 - The [CSIC on-site HRS supplementary dataset](https://datos.gob.es/ca/catalogo/ea0041268-supplementary-material-for-modelling-and-operation-strategy-approaches-for-on-site-hydrogen-refuelling-stations-dataset) contains simulated one-day and one-year operating results under CC BY-NC-ND, not measured synchronized station/vehicle logger rows.
 
 These records do not change the eligibility decision: the count of public, reuse-cleared synchronized station-to-vehicle raw sets remains zero.
+
+## Official-record follow-up (2026-10-11)
+
+The two most relevant official JRC records were opened again during this
+recheck. JRC76380 describes measured onboard-tank temperature histories and
+says the experimental data were intended to be made public, but its current
+public record shows an empty `Datasets` table and no download or reuse terms.
+JRC88002 similarly describes GasTeF fast-filling measurements and the
+instrumented facility, while its current public record also shows no dataset,
+supporting-file, or machine-readable logger link. These are useful literature
+and custodian-request leads, not evidence of a rights-cleared synchronized
+station-to-vehicle holdout.
+
+- [JRC76380 reference-data record](https://publications.jrc.ec.europa.eu/repository/handle/JRC76380)
+- [JRC88002 GasTeF refuelling record](https://publications.jrc.ec.europa.eu/repository/handle/JRC88002)
+
+The decision is unchanged: the full-loop station-to-vehicle item is excluded
+from the primary goal and is reported as a data-availability limitation. This
+does not prove that restricted or unpublished data do not exist.
