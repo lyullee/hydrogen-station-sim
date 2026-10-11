@@ -59,6 +59,12 @@ def test_llm_evidence_keeps_the_tank_fit_separate_from_full_station_validation()
     assert prompt_evidence_summary(manifest)["runtime_vehicle_tank_calibration"][
         "validation_case_count"
     ] == 12
+    header_calibration = prompt_evidence_header(manifest)[
+        "runtime_vehicle_tank_calibration"
+    ]
+    assert header_calibration["validation_label"] == "independent_component_holdout"
+    assert header_calibration["independent_external_validation"] is True
+    assert header_calibration["full_loop_external_validation"] is False
 
 
 def test_llm_evidence_discloses_unresolved_temperature_observation_semantics():
