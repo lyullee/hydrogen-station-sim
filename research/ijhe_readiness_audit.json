@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-11T15:21:04.888128+00:00",
+  "generated_at": "2026-10-11T16:49:12.000204+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -2018,7 +2018,7 @@
       "id": "full_loop_external_validation",
       "status": "FAIL",
       "claim": "The complete station controller/cascade/precooler loop meets frozen engineering screens on new external cases.",
-      "evidence": "data\\public_validation\\results\\closed_loop_external_holdout\\validation.json; research\\external_full_loop_data_search.json; research\\public_full_loop_search_recheck_2026_10_05.json; research\\public_operational_benchmark_recheck_2026_10_05.json; research\\public_full_loop_search_sweep_2026_10_05.json; research\\public_full_loop_search_recheck_2026_10_06.json; research\\public_full_loop_search_recheck_2026_10_09.json; research\\public_full_loop_search_recheck_2026_10_11.json; research\\public_station_vehicle_search_recheck_2026_10_11.json; research\\public_full_loop_data_update_2026_10_08.json; research\\methytrucks_hysam_postaccess_diagnostic_2026_10_08.json; research\\rheadhy_public_test_matrix_pretrace_protocol_2026_10_08.json; research\\methytrucks_2026_public_measurement_intake.json; research\\methytrucks_group_d_prospective_protocol_2026_10_08.json; research\\methytrucks_group_d_prospective_result_2026_10_08.json; research\\apparatus_resolved_release_protocol.json; research\\controlled_full_loop_cohort_registry.json",
+      "evidence": "data\\public_validation\\results\\closed_loop_external_holdout\\validation.json; research\\external_full_loop_data_search.json; research\\public_full_loop_search_recheck_2026_10_05.json; research\\public_operational_benchmark_recheck_2026_10_05.json; research\\public_full_loop_search_sweep_2026_10_05.json; research\\public_full_loop_search_recheck_2026_10_06.json; research\\public_full_loop_search_recheck_2026_10_09.json; research\\public_full_loop_search_recheck_2026_10_11.json; research\\public_station_vehicle_search_recheck_2026_10_12.json; research\\public_full_loop_data_update_2026_10_08.json; research\\methytrucks_hysam_postaccess_diagnostic_2026_10_08.json; research\\rheadhy_public_test_matrix_pretrace_protocol_2026_10_08.json; research\\methytrucks_2026_public_measurement_intake.json; research\\methytrucks_group_d_prospective_protocol_2026_10_08.json; research\\methytrucks_group_d_prospective_result_2026_10_08.json; research\\apparatus_resolved_release_protocol.json; research\\controlled_full_loop_cohort_registry.json",
       "requirement": "Hash-locked protocol and model, clean-source external holdout with >=8 cases and >=80% screen pass fraction.",
       "observed": {
         "protocol_integrity": true,
@@ -2121,10 +2121,10 @@
           "runtime_parameter_application": false,
           "claim_boundary": "This artifact records a current public-access recheck and exclusion decision. It adds no numerical validation, does not alter any frozen holdout or runtime parameter, and does not support an IJHE full-loop or field-safety claim."
         },
-        "public_station_vehicle_search_recheck_2026_10_11": {
+        "public_station_vehicle_search_recheck_2026_10_12": {
           "decision": "NO_NEW_ELIGIBLE_PUBLIC_RAW_STATION_TO_VEHICLE_SET_IDENTIFIED",
-          "source_count": 5,
-          "claim_boundary": "This is a public-access availability audit. It does not prove that restricted, proprietary or unpublished traces do not exist."
+          "source_count": 6,
+          "claim_boundary": "This is a public-access availability audit. It records the checked endpoints and does not prove that restricted, proprietary or unpublished traces do not exist."
         },
         "public_data_update_2026_10_08": {
           "status": "public_synchronized_rows_found_but_full_loop_gate_open",
@@ -6497,7 +6497,7 @@
       "id": "grune_2014_pressure_decay_validation",
       "status": "PENDING",
       "claim": "The locked source model meets all pressure-decay screens on the independent KIT small-reservoir release.",
-      "evidence": "research\\grune_2014_holdout_result.json; research\\grune_2014_holdout_protocol.json; data\\public_validation\\derived\\grune_2014_figure2.csv; research\\grune_2014_publisher_access_recheck_2026_10_11.json; research/grune_2014_publisher_access_recheck_2026_10_06.json; research/grune_2014_archive_access_recheck_2026_10_05.json",
+      "evidence": "research\\grune_2014_holdout_result.json; research\\grune_2014_holdout_protocol.json; data\\public_validation\\derived\\grune_2014_figure2.csv; research\\grune_2014_publisher_access_recheck_2026_10_11.json; research\\grune_2014_public_pressure_trace_recheck_2026_10_12.json; research/grune_2014_publisher_access_recheck_2026_10_06.json; research/grune_2014_archive_access_recheck_2026_10_05.json",
       "requirement": "At least 15 points plus an observable half-pressure crossing; <=10% NRMSE, <=15% median error and <=20% half-time error.",
       "observed": {
         "eligibility": {
@@ -6526,6 +6526,12 @@
           "status": "publisher_and_repository_recheck_completed",
           "raw_trace_found": false,
           "full_raw_holdout_eligible": false
+        },
+        "public_trace_recheck": {
+          "status": "NO_NEW_MACHINE_READABLE_FULL_TRACE_FOUND",
+          "integrity_pass": true,
+          "machine_readable_full_pressure_trace_found": false,
+          "rights_cleared_raw_archive_found": false
         },
         "claim_boundary": "One 20 MPa, 0.37 L, 4 mm pressure-decay trace; no flame, ignition, dispersion, radiation, station control or safety-distance claim. The digitized measured curve does not provide the required half-pressure crossing, so no validation claim is made."
       }
@@ -7613,7 +7619,7 @@
       "requirement": "Manifest schema, normal/emergency distinction, contradiction guard, bounded tank evidence, CARB field benchmark, mixed release-campaign outcomes and full regression suite.",
       "observed": {
         "schema_version": 1,
-        "recorded_at": "2026-10-11",
+        "recorded_at": "2026-10-12",
         "status": "software_contract_verified",
         "scope": [
           "digital-twin main assistant",
@@ -7630,9 +7636,12 @@
           },
           "full_suite": {
             "command": ".venv\\Scripts\\python.exe -m pytest -q",
-            "passed": 1385,
+            "passed": 1449,
             "failed": 0,
-            "warnings": 20
+            "warnings": 20,
+            "run_recorded_at": "2026-10-11T16:45:53+00:00",
+            "source_commit": "0ec83ab17b789e4d2ce378d1625d9f6779e7c57e",
+            "working_tree_dirty_at_run": true
           },
           "latest_direct_route_spot_check": {
             "command": ".venv\\Scripts\\python.exe -m pytest tests/test_digital_twin_direct_qa.py tests/test_hiad_response_stage_contract.py -q",
@@ -7645,7 +7654,9 @@
               "active alarms receive recognition, immediate, stabilize, restart and prevention stages",
               "main and selected-sensor routes do not call the reasoning endpoint",
               "contradictory direct-provider claims are guarded against confirmed signals"
-            ]
+            ],
+            "source_commit": "0ec83ab17b789e4d2ce378d1625d9f6779e7c57e",
+            "working_tree_dirty_at_run": true
           }
         },
         "verified_properties": [
@@ -8130,7 +8141,8 @@
           "dynamic_model_validation_claimed": false,
           "full_loop_external_holdout_eligible": false,
           "interpretation": "public aggregate field relevance and functional-gap evidence only; no synchronized station-dispenser-vehicle traces"
-        }
+        },
+        "source_commit": "0ec83ab17b789e4d2ce378d1625d9f6779e7c57e"
       }
     },
     {

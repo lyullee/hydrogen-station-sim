@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-11T16:29:02.632838+00:00",
+  "generated_at": "2026-10-11T16:49:12.000204+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -7619,7 +7619,7 @@
       "requirement": "Manifest schema, normal/emergency distinction, contradiction guard, bounded tank evidence, CARB field benchmark, mixed release-campaign outcomes and full regression suite.",
       "observed": {
         "schema_version": 1,
-        "recorded_at": "2026-10-11",
+        "recorded_at": "2026-10-12",
         "status": "software_contract_verified",
         "scope": [
           "digital-twin main assistant",
@@ -7636,9 +7636,12 @@
           },
           "full_suite": {
             "command": ".venv\\Scripts\\python.exe -m pytest -q",
-            "passed": 1385,
+            "passed": 1449,
             "failed": 0,
-            "warnings": 20
+            "warnings": 20,
+            "run_recorded_at": "2026-10-11T16:45:53+00:00",
+            "source_commit": "0ec83ab17b789e4d2ce378d1625d9f6779e7c57e",
+            "working_tree_dirty_at_run": true
           },
           "latest_direct_route_spot_check": {
             "command": ".venv\\Scripts\\python.exe -m pytest tests/test_digital_twin_direct_qa.py tests/test_hiad_response_stage_contract.py -q",
@@ -7651,7 +7654,9 @@
               "active alarms receive recognition, immediate, stabilize, restart and prevention stages",
               "main and selected-sensor routes do not call the reasoning endpoint",
               "contradictory direct-provider claims are guarded against confirmed signals"
-            ]
+            ],
+            "source_commit": "0ec83ab17b789e4d2ce378d1625d9f6779e7c57e",
+            "working_tree_dirty_at_run": true
           }
         },
         "verified_properties": [
@@ -8136,7 +8141,8 @@
           "dynamic_model_validation_claimed": false,
           "full_loop_external_holdout_eligible": false,
           "interpretation": "public aggregate field relevance and functional-gap evidence only; no synchronized station-dispenser-vehicle traces"
-        }
+        },
+        "source_commit": "0ec83ab17b789e4d2ce378d1625d9f6779e7c57e"
       }
     },
     {

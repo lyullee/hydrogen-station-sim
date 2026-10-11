@@ -1,6 +1,6 @@
 # LLM evidence-grounding validation
 
-**Recorded:** 2026-10-11
+**Recorded:** 2026-10-12
 **Scope:** digital-twin main assistant and selected-sensor assistant routes
 
 This record documents a software-level grounding check. It is not a human
@@ -93,13 +93,13 @@ The following tests passed in the repository virtual environment:
 47 passed
 
 .venv\Scripts\python.exe -m pytest -q
-1385 passed, 20 warnings
+1449 passed, 20 warnings
 
 .venv\Scripts\python.exe -m pytest tests/test_digital_twin_direct_qa.py tests/test_hiad_response_stage_contract.py -q
 19 passed, 3 warnings
 ```
 
-The tests verify that normal monitoring keeps impact calculation marked as
+The full-suite result was rechecked on the current validation working tree; the recheck records the source commit and dirty-tree boundary in the JSON artifact. The tests verify that normal monitoring keeps impact calculation marked as
 `not_requested`, emergency or explicit-impact paths preserve calculated
 results and input tags, non-finite values are discarded, the main and sensor
 assistant routes remain isolated, and a generated answer cannot negate a

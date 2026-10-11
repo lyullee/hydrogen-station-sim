@@ -227,6 +227,16 @@
         "runtime_parameter_application": false,
         "gate_effect": "none",
         "claim_boundary": "Public-source availability audit only; no pressure-decay validation claim is made until a rights-cleared complete trace is obtained and a new protocol is frozen."
+      },
+      "llm_evidence_grounding_recheck_2026_10_12": {
+        "status": "PASS_SOFTWARE_CONTRACT",
+        "evidence": "research/llm_evidence_grounding_validation.json",
+        "full_suite_passed": 1449,
+        "full_suite_failed": 0,
+        "full_suite_warnings": 20,
+        "source_commit": "0ec83ab17b789e4d2ce378d1625d9f6779e7c57e",
+        "working_tree_dirty_at_run": true,
+        "claim_boundary": "Software contract and evidence-routing integrity only; no operator-effectiveness, field-safety or independent physical-validation claim."
       }
     }
   }
