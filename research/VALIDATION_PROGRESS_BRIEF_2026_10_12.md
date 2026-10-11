@@ -47,7 +47,7 @@
 - `research/data_coverage_summary_2026_10_10.json`
 - `research/ijhe_readiness_audit.json`
 - `research/local_candidate_full_loop_screen_2026_10_09.json`
-- `research/GOAL_SCOPE_AMENDMENT_2026_10_11.md`
+- `research/GOAL_SCOPE_AMENDMENT_2026_10_12.md`
 - `research/PUBLIC_STATION_TO_VEHICLE_SEARCH_2026_10_11.md`
 - `research/public_station_vehicle_search_recheck_2026_10_12.json`
 - `research/h2safe_oedi_recheck_2026_10_12.json`
