@@ -118,6 +118,14 @@
         "scope": "focused direct-QA, SAGA chat, sensor workbench, grounding and virtual safety handoff regression",
         "claim_boundary": "Software contract only; this does not establish operator effectiveness or human safety benefit."
       },
+      "validation_scope_manifest_audit": {
+        "status": "PASS",
+        "evidence": "research/validation_scope_manifest_verification_2026_10_11.json",
+        "verifier": "scripts/verify_validation_scope_manifest.py",
+        "tests_passed": 6,
+        "tests_failed": 0,
+        "claim_boundary": "Privacy, split metadata and referenced-artifact integrity only; no private rows are published and no station-to-vehicle full-loop claim is created."
+      },
       "priority_diagnostic_run": {
         "status": "COMPLETED_SCIENTIFIC_SCREEN_BLOCKED",
         "evidence": "research/priority_diagnostic_run_2026_10_11.json",
