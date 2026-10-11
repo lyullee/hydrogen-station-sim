@@ -25,6 +25,9 @@ def test_recheck_preserves_full_loop_gate_boundary():
         "kit_preslhy_e31_part_b_open_data",
         "kit_preslhy_e51_ignited_open_data",
         "h2_stations_europe_api_v2",
+        "nrel_h2fills_public_model",
+        "enda_hrs_connect_monitoring",
+        "lototskyy_2020_mh_compressor_station",
     } <= candidates.keys()
     assert {
         item["decision"] for item in record["candidates"]

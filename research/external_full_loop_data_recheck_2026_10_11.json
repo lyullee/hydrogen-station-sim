@@ -139,6 +139,58 @@
       },
       "decision": "STATION_REGISTRY_ONLY_NOT_FULL_LOOP",
       "claim_boundary": "The API is useful for station inventory and operational-context metadata, but it does not publish a synchronized dispenser-to-vehicle measurement trace or a vehicle-tank pressure/temperature holdout."
+    },
+    {
+      "id": "nrel_h2fills_public_model",
+      "title": "NREL H2FillS hydrogen filling simulation",
+      "source_url": "https://www.nrel.gov/hydrogen/h2fills",
+      "source_role": "validated public station-to-vehicle simulator and protocol reference",
+      "observed": {
+        "physical_experiment": false,
+        "vehicle_tank_pressure_temperature_outputs_defined": true,
+        "station_to_vehicle_model_defined": true,
+        "machine_readable_common_timebase_public": false,
+        "raw_experimental_trace_public": false,
+        "simulator_generated_trace": true,
+        "reuse_terms_for_raw_or_derived_trace": "software license and registration; not a raw measurement archive"
+      },
+      "decision": "REPORT_SUMMARY_ONLY",
+      "claim_boundary": "H2FillS is useful as an independent model and protocol benchmark, but simulator output cannot serve as an external measured holdout or establish field safety."
+    },
+    {
+      "id": "enda_hrs_connect_monitoring",
+      "title": "ENDA HRS Connect hydrogen refuelling station monitoring",
+      "source_url": "https://enda.eu/en/h2_monitoring",
+      "source_role": "real multi-station operational monitoring data access lead",
+      "observed": {
+        "physical_experiment": true,
+        "stations_monitored_described": 90,
+        "technical_parameters_per_station_described": "75-400",
+        "short_interval_time_series_recording_described": true,
+        "machine_readable_common_timebase_public": false,
+        "raw_trace_public": false,
+        "reuse_terms_for_raw_or_derived_trace": "not stated; access is described as client monitoring service"
+      },
+      "decision": "REPORT_SUMMARY_ONLY",
+      "claim_boundary": "The monitoring description confirms that real station signals exist and identifies a data-custodian lead, but no reusable public raw trace or vehicle-side channel is available from the page."
+    },
+    {
+      "id": "lototskyy_2020_mh_compressor_station",
+      "title": "Hydrogen refuelling station with integrated metal hydride compressor",
+      "doi": "10.1016/j.ijhydene.2019.05.133",
+      "source_url": "https://www.sciencedirect.com/science/article/pii/S0360319919319895",
+      "source_role": "real station layout, operating-range and control-sequence reference",
+      "observed": {
+        "physical_experiment": true,
+        "station_operation_duration_months": 38,
+        "pressure_temperature_operation_plots": true,
+        "machine_readable_common_timebase_public": false,
+        "raw_trace_public": false,
+        "vehicle_side_pressure_temperature_public": false,
+        "reuse_terms_for_raw_or_derived_trace": "article and figures only"
+      },
+      "decision": "REPORT_SUMMARY_ONLY",
+      "claim_boundary": "The article supports station architecture, operating-range and sequence context; its figures and aggregate operation report cannot close a synchronized station-to-vehicle holdout."
     }
   ],
   "outcome": {

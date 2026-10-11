@@ -10,6 +10,9 @@
 | [JRC reference data](https://www.researchgate.net/publication/262017374_JRC_reference_data_from_experiments_of_on-board_hydrogen_tanks_fast_filling) | 다수 충전 사이클과 압력/온도 trace 설명 | 공개 재사용 가능한 동기화 station-side 파일 미확인 |
 | [ESST 2020 dispenser study](https://esst.cip.com.cn/article/2020/2095-4239/2095-4239-2020-9-3-702.shtml) | 35/70 MPa 실험 요약과 보충 표 | 3행 요약표만 확인, full-loop 원자료 아님 |
 | [H2-Stations API v2](https://docs.h2-stations.eu/for-data-users/api-v2/) | 유럽 충전소 배치·디스펜서·노즐·저장장치와 availability/usage/storage/pricing 신호 | 차량 탱크 압력·온도, 공통 시각축, 원시 제어기·ESD trace가 없어 station registry context만 가능 |
+| [NREL H2FillS](https://www.nrel.gov/hydrogen/h2fills) | station-to-vehicle 열유체 모델과 차량 압력·온도 출력 정의 | 시뮬레이터 출력은 측정 holdout이 아니며 원시 충전 logger archive가 아님 |
+| [ENDA HRS Connect](https://enda.eu/en/h2_monitoring) | 90개 HRS의 75–400개 신호를 짧은 간격으로 기록하는 실제 모니터링 시스템 설명 | 원자료 공개·재사용 경로와 차량 측 채널이 없어 접근 요청 후보로만 기록 |
+| [Lototskyy et al. (2020)](https://doi.org/10.1016/j.ijhydene.2019.05.133) | 38개월 실제 HRS 운전, 압력·온도 그래프와 제어 순서 | 그래프·운영 요약만 공개되어 기계판독 full-loop holdout 불가 |
 
 ## 결론
 
