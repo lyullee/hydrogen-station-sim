@@ -111,10 +111,11 @@
       },
       "llm_direct_route_spot_check": {
         "status": "PASS",
-        "tests_passed": 19,
+        "tests_passed": 84,
         "tests_failed": 0,
         "warnings": 3,
-        "evidence": "research/llm_evidence_grounding_validation.json",
+        "evidence": "research/llm_safety_route_regression_2026_10_11.json",
+        "scope": "focused direct-QA, SAGA chat, sensor workbench, grounding and virtual safety handoff regression",
         "claim_boundary": "Software contract only; this does not establish operator effectiveness or human safety benefit."
       },
       "priority_diagnostic_run": {

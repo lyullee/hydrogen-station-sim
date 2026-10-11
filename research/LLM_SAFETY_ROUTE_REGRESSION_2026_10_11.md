@@ -1,0 +1,34 @@
+# LLM 안전 의사결정 경로 회귀 — 2026-10-11
+
+## 실행 결과
+
+다음 여섯 테스트 모듈을 함께 실행했다.
+
+```text
+python -m pytest -q \
+  tests/test_digital_twin_direct_qa.py \
+  tests/test_saga_chat.py \
+  tests/test_sensor_workbench.py \
+  tests/test_llm_grounding.py \
+  tests/test_hiad_runtime_response_handoff.py \
+  tests/test_hiad_virtual_action_execution.py
+```
+
+- **84 passed, 0 failed**
+- 실행 시간: 13.79 s
+- 경고 3건은 `httpx` 호환성 안내 2건과 CoolProp의 choked-flow 물리 경고 1건이며, 테스트 실패가 아니다.
+
+## 확인 범위
+
+- 정상 주기 분석은 피해영향 결과를 임의로 만들지 않는다.
+- 경보·가스검지·활성 누출·명시적 사고질의는 피해영향 계산 결과를 먼저 구성한 뒤 SAGA 입력에 포함한다.
+- 계산 실패나 입력 부족 결과를 계산 완료로 표시하지 않는다.
+- 측정된 가스 검지·누출을 “감지 없음”으로 부정하는 답변을 차단한다.
+- 사고 위치가 여러 센서에 걸리면 하나의 종합 시나리오와 단계별 대응으로 합친다.
+- 직접 답변형 LLM 경로와 SAGA 8090 결정형 경로가 서로의 상태를 덮어쓰지 않는다.
+- 가상 차단·ESD·대피·복구 조치는 확인 가능한 동작 제안으로만 전달되고, 확인 피드백은 별도 안전 실행 경로에서 처리한다.
+
+## 주장 한계
+
+이 회귀는 소프트웨어 계약, 근거 전달, 안전 응답 선택성을 검증한다. 운영자 대응시간 개선이나 인간 안전효과, station-to-vehicle 현장 정확도를 입증하는 자료가 아니다.
+
