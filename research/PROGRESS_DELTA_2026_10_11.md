@@ -130,3 +130,8 @@ two-zone 모델은 원인 진단용 post-outcome 모델로 기록되어 있지�
 - 전체 회귀는 **1,446 passed / 0 failed / 20 warnings**로 종료됐다. 경고는
   기존 FastAPI/httpx 호환성, HyRAM physics warning, openpyxl workbook warning이며,
   검증 점수나 런타임 파라미터를 변경하지 않았다.
+- 최신 readiness audit를 회귀·해시 기록 이후 다시 생성했다. 게이트 수는
+  **128 PASS / 10 FAIL / 7 PENDING**으로 동일하고, 공개 탱크 런타임 보정과
+  사고 선례 라우팅은 `PASS`로 확인됐다. `bounded_ijhe_submission_ready`와
+  `full_user_objective_ready`는 기존 물리 holdout·full-loop·사람 효과성 조건
+  때문에 계속 `false`다.
