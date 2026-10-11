@@ -913,6 +913,11 @@ Raw-file headers confirmed four kPa channels at 500 kHz. The archive omits
 case-resolved obstacle, ignition and sensor coordinates and ambient records; a
 frozen input contract prevents fitting them to consumed peaks.
 
+H2SAFE provides five controlled helium releases with one-second concentration
+traces and spatial metadata \cite{h2safe2026}; its rechecked archive has no
+synchronized station/controller, dispenser/nozzle or vehicle/receptacle channels
+and cannot validate a station-to-vehicle loop.
+
 The NIST reduced-scale garage archive contains 18 one-second workbooks with
 eight helium concentration channels and differential pressure across two release
 durations, three vent arrangements and three source locations \cite{pitts2011}.
@@ -922,21 +927,19 @@ make this a ventilation/spatial component candidate only, not a source for
 fitting, detector placement, hydrogen conversion or full-loop validation.
 
 \subsection{Evidence-gated language-model assistance}
-The LLM is positioned after deterministic calculations and receives structured
-sensor provenance, scenario status, consequence fields and uncertainty flags.
-This order prevents text generation from fabricating a missing damage radius.
-An optional future three-arm incident study could evaluate blinded safety
-ratings, unsafe advice and critical omissions; it is outside the present
-engineering study and no human-effectiveness claim is made here.
-Holdout responses and ratings have not yet been collected, and any expert
-ratings remain pending for a future facility-specific human-effectiveness study.
+LLM assistance follows deterministic calculations and uses structured provenance,
+scenario state, consequence fields and uncertainty flags, preventing unsupported
+damage radii. A future blinded three-arm incident study could assess safety
+ratings, unsafe advice and omissions; it is outside this study, so no
+human-effectiveness claim is made. Holdout responses and expert ratings remain
+pending.
 
-All 34 HIAD metadata cases route to registered plans. Canonical runtime replay
-adds process-to-detector traceability for 29 direct and four partial-proxy cases;
-structural damage remains response-only. SAGA produced more requested stages and
-action-category terms than alarm-only text, and the API numeric guard blocked
-unsupported value--unit phrases. These are software-traceability results; no
-independent reviewer assessed unsafe omissions.
+All 34 HIAD metadata cases route to registered plans. Runtime replay gives
+process-to-detector traceability for 29 direct and four partial-proxy cases;
+structural damage remains response-only. SAGA produced more staged action terms
+than alarm-only text, while an API numeric guard blocked unsupported value--unit
+phrases. These are traceability results; no independent reviewer assessed unsafe
+omissions.
 
 \subsection{Limitations}
 All sensors and actions are simulated. Station geometry, weather, occupancy,
@@ -1185,6 +1188,11 @@ data record: \href{https://doi.org/10.23642/USN.17934047}{10.23642/USN.17934047}
 A.W. Lach, \textit{Replication dataset for: Large-Scale Hydrogen Explosion
 Experiments: Obstructed Releases in open atmosphere}, DataverseNO (2026),
 \href{https://doi.org/10.18710/WSKBIJ}{doi:10.18710/WSKBIJ}.
+
+\bibitem{h2safe2026}
+H2SAFE consortium, \textit{Dataset for H2SAFE---Controlled Gas Releases and
+Sensor-Response for Indoor Hydrogen Safety}, National Laboratory of the Rockies
+data record (2026), \href{https://doi.org/10.7799/17118570}{doi:10.7799/17118570}.
 
 \bibitem{pitts2011}
 W.M. Pitts, J.C. Yang, M.G. Fernandez, \textit{Experimental Characterization

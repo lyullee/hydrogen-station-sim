@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-11T17:58:26.190410+00:00",
+  "generated_at": "2026-10-11T18:09:38.887031+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -8327,8 +8327,8 @@
           "approximate_manuscript_words_before_references": 8000,
           "figures": 3,
           "tables": 3,
-          "citation_keys": 51,
-          "bibliography_entries": 53,
+          "citation_keys": 52,
+          "bibliography_entries": 54,
           "unresolved_citations": [],
           "missing_figure_assets": []
         },
@@ -8356,7 +8356,7 @@
       "requirement": "Compiler success, exact source/PDF hashes, no unresolved errors, and visual inspection of every rendered page.",
       "observed": {
         "schema_version": 2,
-        "verified_at_utc": "2026-10-11T17:58:13.627571+00:00",
+        "verified_at_utc": "2026-10-11T18:09:21.812504+00:00",
         "success": true,
         "compiler": {
           "name": "Tectonic",
@@ -8366,20 +8366,20 @@
         },
         "source": {
           "path": "manuscript/ijhe_manuscript_draft.tex",
-          "bytes": 76427,
-          "sha256": "f94ec9601d3996a6f690b7c828881be75c48efe6187fc4210d49e9f81c543f3c"
+          "bytes": 76726,
+          "sha256": "473b890179be91d7b1699f7cd03d8632f6404f9b13ed760470905970ff679bb9"
         },
         "pdf": {
           "path": "output/pdf/ijhe_manuscript_draft.pdf",
-          "bytes": 835736,
-          "sha256": "dd9fae25a3155785d4d0cd0884c95e5340a4a71782e2c5a1860a69d208407ff4",
-          "page_count": 23,
-          "extracted_character_count": 71000
+          "bytes": 836733,
+          "sha256": "e2d98aa033b210371af780e6a16817340a2e12255b37428c68ab0c3cf7708b43",
+          "page_count": 24,
+          "extracted_character_count": 71234
         },
         "compile_log": {
           "path": "output/pdf/ijhe_manuscript_draft.log",
-          "bytes": 19544,
-          "sha256": "42606b5e7ee620639e191bcf1065ceff2fdd574ab84fa4c27547d09a94f30ddd",
+          "bytes": 19549,
+          "sha256": "953f089354ca8b115aeef2bae4d85b821221fedc6b6ff408d72321fa58c5f554",
           "unresolved_citations": 0,
           "unresolved_references": 0,
           "fatal_errors": [],
@@ -8395,8 +8395,8 @@
         },
         "visual_qa": {
           "renderer": "Poppler pdftoppm",
-          "pages_rendered": 23,
-          "pages_inspected": 23,
+          "pages_rendered": 24,
+          "pages_inspected": 24,
           "all_pages_rendered_and_inspected": true,
           "clipping_or_overlap_detected": false
         },

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-11T18:02:14+00:00",
+  "generated_at": "2026-10-11T18:09:53+00:00",
   "metric_definition": "PASS gates divided by PASS+FAIL+PENDING gates; not a publication-readiness probability",
   "gate_counts": {
     "PASS": 128,
@@ -83,13 +83,18 @@
     },
     "latest_access_evidence": {
       "h2safe_oedi_recheck_2026_10_12": {
-        "status": "SAME_ARCHIVE_NO_NEW_HOLDOUT",
         "evidence": "research/h2safe_oedi_recheck_2026_10_12.json",
-        "sha256": "f1b8bf747b7787f00152ec416940c80a143ea044fc18ee8a69ac9da204d9158e",
+        "oedi_submission": "https://data.openei.org/submissions/8799",
+        "archive_sha256": "f1b8bf747b7787f00152ec416940c80a143ea044fc18ee8a69ac9da204d9158e",
         "content_changed_since_prior_intake": false,
+        "new_independent_holdout": false,
+        "station_to_vehicle_full_loop": false,
+        "interpretation": "public-record availability and byte-integrity recheck only; no new validation gate",
+        "status": "SAME_ARCHIVE_NO_NEW_HOLDOUT",
+        "sha256": "f1b8bf747b7787f00152ec416940c80a143ea044fc18ee8a69ac9da204d9158e",
         "runtime_parameter_application": false,
         "claim_boundary": "Public-record and byte-integrity recheck only; no new spatial or full-loop validation claim."
       }
     }
   }
-}\n
+}

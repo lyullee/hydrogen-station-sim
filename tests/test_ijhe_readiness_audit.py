@@ -905,7 +905,8 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     assert gates["independent_expert_review_complete"]["status"] == "PENDING"
     assert gates["ijhe_latex_compilation"]["status"] == "PASS"
     compile_result = gates["ijhe_latex_compilation"]["observed"]
-    assert compile_result["pdf"]["page_count"] == 23
+    assert compile_result["pdf"]["page_count"] == compile_result["visual_qa"]["pages_inspected"]
+    assert compile_result["pdf"]["page_count"] > 0
     assert compile_result["compile_log"]["unresolved_citations"] == 0
     assert compile_result["compile_log"]["unresolved_references"] == 0
     assert compile_result["audit_integrity"]["source_hash_matches"] is True
