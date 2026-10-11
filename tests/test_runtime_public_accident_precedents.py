@@ -1,4 +1,6 @@
 import json
+import os
+import subprocess
 import sys
 from pathlib import Path
 
@@ -35,3 +37,26 @@ def test_every_mapped_family_reaches_manifest_and_prompt():
     assert all(row["representative_count"] > 0 for row in result["response_families"])
     assert all(row["runtime_manifest_matches"] for row in result["response_families"])
     assert all(row["prompt_projection_matches"] for row in result["response_families"])
+
+
+def test_audit_script_runs_from_source_checkout_without_pythonpath(tmp_path):
+    """The documented standalone invocation must not depend on an editable install."""
+    output = tmp_path / "routing.json"
+    env = os.environ.copy()
+    env.pop("PYTHONPATH", None)
+    completed = subprocess.run(
+        [
+            sys.executable,
+            str(ROOT / "scripts/audit_runtime_public_accident_precedents.py"),
+            "--output",
+            str(output),
+        ],
+        cwd=ROOT,
+        env=env,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert completed.returncode == 0, completed.stderr
+    report = json.loads(output.read_text(encoding="utf-8"))
+    assert report["status"] == "PASS"
