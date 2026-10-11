@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "artifact_type": "frontend_regression_test_run",
+  "generated_at": "2026-10-12T00:00:00+09:00",
+  "command": "node --test tests/*.test.mjs",
+  "status": "PASS",
+  "tests_passed": 16,
+  "tests_failed": 0,
+  "verified": [
+    "streamed UTF-8 analysis reconstruction",
+    "main and sensor assistant API separation",
+    "mapped equipment flow and overlapping incident bands",
+    "active-release and finished-release risk-range state",
+    "radial and directional consequence geometry separation",
+    "regular-analysis OFF/ON behavior and manual-history isolation",
+    "vehicle-specific fueling route and shutdown signals"
+  ],
+  "source_commit": "4e8d482c120a87900ec0295d7624a08739869890",
+  "claim_boundary": "Frontend and state-contract integrity only; this does not establish physical-model validity, field safety or operator effectiveness."
+}
