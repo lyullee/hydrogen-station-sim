@@ -40,6 +40,14 @@ _GOVERNANCE = {
     "submission_metadata_and_declarations",
 }
 
+_OPTIONAL_HUMAN_EVALUATION = {
+    "institutional_ethics_determination",
+    "hiad_casebook_frozen",
+    "hiad_holdout_collection",
+    "independent_expert_review_complete",
+    "saga_effectiveness_and_safety_supported",
+}
+
 # Keep the status report usable as an execution queue.  The synchronized
 # station-to-vehicle lane was explicitly removed from the primary objective
 # after the public-data search; retain its legacy FAIL only in a separate
@@ -82,12 +90,25 @@ def _next_action(gate_id: str, status: str) -> str:
         )
     if gate_id in {"h2safe_spatial_detector_transfer_validation", "hytunnel_carpark_dispersion_validation"}:
         return "공간좌표·방출방향·센서별 수치응답이 함께 있는 독립 holdout을 추가하고, 통과 전 runtime 자동 라우팅을 유지하지 않는다."
+    if gate_id == "grune_2014_pressure_decay_validation":
+        return (
+            "공식 KIT·출판사 재확인에서도 원시 pressure-time 표가 없어 보류 중이다. "
+            "custodian 원자료와 재사용 조건을 받은 뒤 새 pre-access protocol을 동결한다. "
+            "별도 KIT LH2 원자료는 공식 권리는 확인했지만 전체 아카이브 MD5가 검증되지 않아 "
+            "이 게이트를 닫지 않는다."
+        )
     if gate_id in {"hytunnel_carpark_mass_flow_validation", "preslhy_partb_ambient_external_validation", "preslhy_revised_holdout_validation", "proust_independent_release_validation", "schefer_transient_release_validation", "schefer_2007_pressure_decay_validation", "grune_2014_pressure_decay_validation", "dickens_typeiii_prospective_validation"}:
         return "결과를 재튜닝하지 말고 실패한 물리량·직경·경계조건에 맞는 새 pre-access protocol과 독립 원시 trace를 확보한다."
     if gate_id == "institutional_ethics_determination":
-        return "기관의 승인·면제·비대상 중 하나와 식별자를 확정하고 연구 기록에 보존한다."
+        return (
+            "선택 항목: SAGA가 운영자의 안전 판단을 개선한다고 주장할 때만 기관의 "
+            "승인·면제·비대상 중 하나와 식별자를 확정하고 연구 기록에 보존한다."
+        )
     if gate_id in {"hiad_casebook_frozen", "hiad_holdout_collection", "independent_expert_review_complete", "saga_effectiveness_and_safety_supported"}:
-        return "고정된 HIAD 평가 프로토콜에 따라 casebook·응답·전문가 평가를 수집하고 freeze hash를 남긴다."
+        return (
+            "선택 항목: 사람 대상 SAGA 효과를 주장할 때만 고정된 HIAD 평가 프로토콜에 따라 "
+            "casebook·응답·전문가 평가를 수집하고 freeze hash를 남긴다."
+        )
     if gate_id == "submission_metadata_and_declarations":
         return "저자·기여·이해상충·자금·AI 사용 공개를 확인한 뒤 제출 메타데이터를 잠근다."
     return "게이트 정의와 독립 근거를 확인한 뒤 상태를 갱신한다."
@@ -158,6 +179,11 @@ def build_report(
                 "priority": _TRACKS.get(_bucket(gate_id), {}).get("priority", "P3"),
                 "parallel_track": _TRACKS.get(_bucket(gate_id), {}).get(
                     "parallel_track", "other"
+                ),
+                "scope_role": (
+                    "optional_human_evaluation"
+                    if gate_id in _OPTIONAL_HUMAN_EVALUATION
+                    else "required_primary_scope"
                 ),
                 "claim": str(gate.get("claim", "")),
                 "next_action": _next_action(gate_id, status),
@@ -282,7 +308,7 @@ def _markdown(report: dict[str, Any]) -> str:
             "## 실행 순서",
             "",
             "- **P0** 현재 주 목표에 포함된 구성요소 물리 실패를 독립 holdout별로 병행합니다. 하나가 끝날 때까지 다른 트랙을 기다리지 않습니다.",
-            "- **P1** 윤리·전문가 검토·투고 메타데이터는 계산과 별도로 병행합니다.",
+            "- **P1** 투고 메타데이터는 계산과 별도로 검토하고, 윤리·전문가 평가는 사람 대상 SAGA 효과 주장을 선택할 때만 시작합니다.",
             "- station-to-vehicle full-loop FAIL은 아래 범위 제외 목록에 보존하며, 현재 논문의 필수 작업 큐로 반복하지 않습니다.",
             "- 전체 회귀는 코드 변경이 있는 트랙에서만 실행하고, 상태 확인에는 이 보고서와 focused test만 사용합니다.",
             "",
