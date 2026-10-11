@@ -1,14 +1,14 @@
 {
   "schema_version": 1,
   "artifact_type": "paper_llm_accident_path_regression",
-  "generated_at": "2026-10-11T15:55:35.074456+00:00",
-  "source_commit": "db9c6152671608584bdf9c59b89f20cc1c340559",
+  "generated_at": "2026-10-11T17:38:26.018149+00:00",
+  "source_commit": "1aa792ff9c5fbf8949928464a7c2e13abc627fc1",
   "status": "PASS",
   "pytest": {
     "tests_passed": 65,
     "tests_failed": 0,
     "warnings": 2,
-    "duration_s": 7.15
+    "duration_s": 7.74
   },
   "test_files": [
     "tests/test_llm_grounding.py",

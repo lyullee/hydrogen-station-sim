@@ -1,6 +1,6 @@
 # Paper LLM and accident-path regression — 2026-10-12
 
-- Source commit: `db9c6152671608584bdf9c59b89f20cc1c340559`
+- Source commit: `1aa792ff9c5fbf8949928464a7c2e13abc627fc1`
 - Result: **65 passed, 0 failed, 2 warnings**
 - Scope: evidence-grounded LLM contracts, provider routing, direct SAGA chat, HIAD accident replay coverage, virtual action execution and staged response playbooks.
 
