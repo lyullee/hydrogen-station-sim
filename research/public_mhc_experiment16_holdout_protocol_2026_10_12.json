@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "artifact_type": "public_mhc_component_holdout_protocol",
+  "recorded_at": "2026-10-12",
+  "status": "protocol_frozen_before_holdout_access",
+  "source": {
+    "doi": "10.5281/zenodo.18213166",
+    "version": "v1.1",
+    "repository": "https://github.com/LukasFleming/MHC-Dataset/tree/v1.1",
+    "license": "CC BY 4.0",
+    "repository_path": "Dataset/Experiment 16.xlsx",
+    "selection_rule": "Select the next non-placeholder experiment workbook after Experiment 15 without opening workbook rows"
+  },
+  "prior_access_check": {
+    "repository_search_completed": true,
+    "prior_experiment16_artifact_found": false,
+    "prior_row_access_evidence_found": false
+  },
+  "boundary": {
+    "included": [
+      "laboratory two-stage metal-hydride compressor component plausibility",
+      "time-series pressure, temperature and hydrogen-flow channel consistency"
+    ],
+    "excluded": [
+      "HRS cascade and storage-bank response",
+      "dispenser, vehicle and receptacle response",
+      "SAE J2601 protocol conformance",
+      "ESD, leak, fire or consequence-distance validation",
+      "SAGA or LLM decision-effectiveness"
+    ]
+  },
+  "protocol": {
+    "holdout": "Experiment 16.xlsx",
+    "calibration": "No coefficient fitting, parameter tuning, or runtime update from this holdout",
+    "required_checks": [
+      "workbook opens and contains a declared time-series sheet",
+      "elapsed-time column is monotonic or its violations are reported",
+      "pressure, temperature and flow families are identified with source units",
+      "non-finite values, duplicate timestamps and gaps are reported",
+      "summary statistics and physical sign/range checks are reported without censoring failures"
+    ],
+    "numerical_metrics": [
+      "only if a separately attested metal-hydride component model and unit conversion are available",
+      "pressure RMSE",
+      "temperature RMSE",
+      "integrated mass-flow relative error",
+      "peak-flow relative error"
+    ],
+    "acceptance": "diagnostic only; no readiness gate promotion",
+    "raw_rows_persisted": false
+  },
+  "claim_boundary": "This preregistered holdout can provide independent component schema/compatibility evidence only. It cannot validate the HRS full loop, station-to-vehicle synchronization, safety response, HyRAM consequence distance, or LLM effectiveness."
+}
