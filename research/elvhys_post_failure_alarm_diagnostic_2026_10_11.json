@@ -1,0 +1,777 @@
+{
+  "schema_version": 1,
+  "artifact_type": "elvhys_post_failure_alarm_routing_diagnostic",
+  "generated_at_utc": "2026-10-11T12:32:12.971009+00:00",
+  "status": "POST_OUTCOME_DIAGNOSTIC_ONLY",
+  "outcome_informed": true,
+  "prospective_gate_changed": false,
+  "runtime_parameter_application": false,
+  "protocol": {
+    "path": "research/elvhys_detector_holdout_protocol_v2_2026_10_07.json",
+    "sha256": "d92810d3bfb068d633edb85467873401c7425058fd0949d475925c669f60a8e6",
+    "intake_diagnostic": "research/elvhys_detector_intake_diagnostic_2026_10_08.json",
+    "failed_case_id_retained": 44
+  },
+  "aggregate": {
+    "replayed_case_count": 14,
+    "expected_trigger_count": 42,
+    "missed_expected_trigger_count": 0,
+    "unexpected_trigger_count": 0,
+    "maximum_trigger_timing_error_s": 0.0,
+    "pre_release_event_count": 11,
+    "measured_signal_route_diagnostic_pass": true
+  },
+  "cases": [
+    {
+      "test_id": 6,
+      "nominal_pressure_barg": 8.0,
+      "nozzle_diameter_mm": 0.5,
+      "ventilation": "500 L/min",
+      "orientation": "horizontal",
+      "release_onset_s_relative": 156.850000000001,
+      "concentration_sensor_count": 16,
+      "missing_data": {
+        "published_sensor_count": 16,
+        "retained_sensor_count": 16,
+        "dropped_sensor_count": 0,
+        "invalid_time_sample_count": 0
+      },
+      "maximum_baseline_corrected_grid_concentration_volpct_h2": 19.564174712572438,
+      "checks": [
+        {
+          "rule_id": "HZ-141",
+          "threshold_volpct_h2": 0.4,
+          "persistence_s": 1.0,
+          "expected_trigger_time_s": 207.500000000013,
+          "rule_engine_trigger_time_s": 207.500000000013,
+          "missed_expected_trigger": false,
+          "unexpected_trigger": false,
+          "timing_error_s": 0.0
+        },
+        {
+          "rule_id": "HZ-142",
+          "threshold_volpct_h2": 1.0,
+          "persistence_s": 0.5,
+          "expected_trigger_time_s": 207.800000000013,
+          "rule_engine_trigger_time_s": 207.800000000013,
+          "missed_expected_trigger": false,
+          "unexpected_trigger": false,
+          "timing_error_s": 0.0
+        },
+        {
+          "rule_id": "HZ-143",
+          "threshold_volpct_h2": 2.0,
+          "persistence_s": 0.5,
+          "expected_trigger_time_s": 212.050000000014,
+          "rule_engine_trigger_time_s": 212.050000000014,
+          "missed_expected_trigger": false,
+          "unexpected_trigger": false,
+          "timing_error_s": 0.0
+        }
+      ],
+      "pre_release_events": []
+    },
+    {
+      "test_id": 7,
+      "nominal_pressure_barg": 8.0,
+      "nozzle_diameter_mm": 0.5,
+      "ventilation": "2000 L/min",
+      "orientation": "horizontal",
+      "release_onset_s_relative": 13.5000000000001,
+      "concentration_sensor_count": 16,
+      "missing_data": {
+        "published_sensor_count": 16,
+        "retained_sensor_count": 16,
+        "dropped_sensor_count": 0,
+        "invalid_time_sample_count": 0
+      },
+      "maximum_baseline_corrected_grid_concentration_volpct_h2": 21.812743425146095,
+      "checks": [
+        {
+          "rule_id": "HZ-141",
+          "threshold_volpct_h2": 0.4,
+          "persistence_s": 1.0,
+          "expected_trigger_time_s": 28.6500000000003,
+          "rule_engine_trigger_time_s": 28.6500000000003,
+          "missed_expected_trigger": false,
+          "unexpected_trigger": false,
+          "timing_error_s": 0.0
+        },
+        {
+          "rule_id": "HZ-142",
+          "threshold_volpct_h2": 1.0,
+          "persistence_s": 0.5,
+          "expected_trigger_time_s": 31.4500000000003,
+          "rule_engine_trigger_time_s": 31.4500000000003,
+          "missed_expected_trigger": false,
+          "unexpected_trigger": false,
+          "timing_error_s": 0.0
+        },
+        {
+          "rule_id": "HZ-143",
+          "threshold_volpct_h2": 2.0,
+          "persistence_s": 0.5,
+          "expected_trigger_time_s": 32.3000000000003,
+          "rule_engine_trigger_time_s": 32.3000000000003,
+          "missed_expected_trigger": false,
+          "unexpected_trigger": false,
+          "timing_error_s": 0.0
+        }
+      ],
+      "pre_release_events": []
+    },
+    {
+      "test_id": 9,
+      "nominal_pressure_barg": 2.0,
+      "nozzle_diameter_mm": 0.5,
+      "ventilation": "2000 L/min",
+      "orientation": "horizontal",
+      "release_onset_s_relative": 24.0500000000002,
+      "concentration_sensor_count": 16,
+      "missing_data": {
+        "published_sensor_count": 16,
+        "retained_sensor_count": 16,
+        "dropped_sensor_count": 0,
+        "invalid_time_sample_count": 0
+      },
+      "maximum_baseline_corrected_grid_concentration_volpct_h2": 21.66502781779487,
+      "checks": [
+        {
+          "rule_id": "HZ-141",
+          "threshold_volpct_h2": 0.4,
+          "persistence_s": 1.0,
+          "expected_trigger_time_s": 27.7500000000003,
+          "rule_engine_trigger_time_s": 27.7500000000003,
+          "missed_expected_trigger": false,
+          "unexpected_trigger": false,
+          "timing_error_s": 0.0
+        },
+        {
+          "rule_id": "HZ-142",
+          "threshold_volpct_h2": 1.0,
+          "persistence_s": 0.5,
+          "expected_trigger_time_s": 39.4999999999999,
+          "rule_engine_trigger_time_s": 39.4999999999999,
+          "missed_expected_trigger": false,
+          "unexpected_trigger": false,
+          "timing_error_s": 0.0
+        },
+        {
+          "rule_id": "HZ-143",
+          "threshold_volpct_h2": 2.0,
+          "persistence_s": 0.5,
+          "expected_trigger_time_s": 46.8499999999995,
+          "rule_engine_trigger_time_s": 46.8499999999995,
+          "missed_expected_trigger": false,
+          "unexpected_trigger": false,
+          "timing_error_s": 0.0
+        }
+      ],
+      "pre_release_events": [
+        {
+          "rule_id": "HZ-141",
+          "time_s": 1.0,
+          "diagnostic_only": true
+        },
+        {
+          "rule_id": "HZ-142",
+          "time_s": 0.5,
+          "diagnostic_only": true
+        },
+        {
+          "rule_id": "HZ-143",
+          "time_s": 2.95,
+          "diagnostic_only": true
+        }
+      ]
+    },
+    {
+      "test_id": 10,
+      "nominal_pressure_barg": 2.0,
+      "nozzle_diameter_mm": 1.0,
+      "ventilation": "500 L/min",
+      "orientation": "horizontal",
+      "release_onset_s_relative": 201.050000000011,
+      "concentration_sensor_count": 16,
+      "missing_data": {
+        "published_sensor_count": 16,
+        "retained_sensor_count": 16,
+        "dropped_sensor_count": 0,
+        "invalid_time_sample_count": 0
+      },
+      "maximum_baseline_corrected_grid_concentration_volpct_h2": 40.57270994892307,
+      "checks": [
+        {
+          "rule_id": "HZ-141",
+          "threshold_volpct_h2": 0.4,
+          "persistence_s": 1.0,
+          "expected_trigger_time_s": 211.200000000014,
+          "rule_engine_trigger_time_s": 211.200000000014,
+          "missed_expected_trigger": false,
+          "unexpected_trigger": false,
+          "timing_error_s": 0.0
+        },
+        {
+          "rule_id": "HZ-142",
+          "threshold_volpct_h2": 1.0,
+          "persistence_s": 0.5,
+          "expected_trigger_time_s": 212.200000000014,
+          "rule_engine_trigger_time_s": 212.200000000014,
+          "missed_expected_trigger": false,
+          "unexpected_trigger": false,
+          "timing_error_s": 0.0
+        },
+        {
+          "rule_id": "HZ-143",
+          "threshold_volpct_h2": 2.0,
+          "persistence_s": 0.5,
+          "expected_trigger_time_s": 217.050000000015,
+          "rule_engine_trigger_time_s": 217.050000000015,
+          "missed_expected_trigger": false,
+          "unexpected_trigger": false,
+          "timing_error_s": 0.0
+        }
+      ],
+      "pre_release_events": []
+    },
+    {
+      "test_id": 11,
+      "nominal_pressure_barg": 2.0,
+      "nozzle_diameter_mm": 1.0,
+      "ventilation": "500 L/min",
+      "orientation": "horizontal",
+      "release_onset_s_relative": 106.099999999996,
+      "concentration_sensor_count": 16,
+      "missing_data": {
+        "published_sensor_count": 16,
+        "retained_sensor_count": 16,
+        "dropped_sensor_count": 0,
+        "invalid_time_sample_count": 0
+      },
+      "maximum_baseline_corrected_grid_concentration_volpct_h2": 52.63621867199412,
+      "checks": [
+        {
+          "rule_id": "HZ-141",
+          "threshold_volpct_h2": 0.4,
+          "persistence_s": 1.0,
+          "expected_trigger_time_s": 117.499999999995,
+          "rule_engine_trigger_time_s": 117.499999999995,
+          "missed_expected_trigger": false,
+          "unexpected_trigger": false,
+          "timing_error_s": 0.0
+        },
+        {
+          "rule_id": "HZ-142",
+          "threshold_volpct_h2": 1.0,
+          "persistence_s": 0.5,
+          "expected_trigger_time_s": 120.549999999995,
+          "rule_engine_trigger_time_s": 120.549999999995,
+          "missed_expected_trigger": false,
+          "unexpected_trigger": false,
+          "timing_error_s": 0.0
+        },
+        {
+          "rule_id": "HZ-143",
+          "threshold_volpct_h2": 2.0,
+          "persistence_s": 0.5,
+          "expected_trigger_time_s": 125.249999999995,
+          "rule_engine_trigger_time_s": 125.249999999995,
+          "missed_expected_trigger": false,
+          "unexpected_trigger": false,
+          "timing_error_s": 0.0
+        }
+      ],
+      "pre_release_events": []
+    },
+    {
+      "test_id": 13,
+      "nominal_pressure_barg": 2.0,
+      "nozzle_diameter_mm": 1.0,
+      "ventilation": "2000 L/min",
+      "orientation": "horizontal",
+      "release_onset_s_relative": 121.249999999995,
+      "concentration_sensor_count": 16,
+      "missing_data": {
+        "published_sensor_count": 16,
+        "retained_sensor_count": 16,
+        "dropped_sensor_count": 0,
+        "invalid_time_sample_count": 0
+      },
+      "maximum_baseline_corrected_grid_concentration_volpct_h2": 44.80724688457082,
+      "checks": [
+        {
+          "rule_id": "HZ-141",
+          "threshold_volpct_h2": 0.4,
+          "persistence_s": 1.0,
+          "expected_trigger_time_s": 122.249999999995,
+          "rule_engine_trigger_time_s": 122.249999999995,
+          "missed_expected_trigger": false,
+          "unexpected_trigger": false,
+          "timing_error_s": 0.0
+        },
+        {
+          "rule_id": "HZ-142",
+          "threshold_volpct_h2": 1.0,
+          "persistence_s": 0.5,
+          "expected_trigger_time_s": 128.699999999995,
+          "rule_engine_trigger_time_s": 128.699999999995,
+          "missed_expected_trigger": false,
+          "unexpected_trigger": false,
+          "timing_error_s": 0.0
+        },
+        {
+          "rule_id": "HZ-143",
+          "threshold_volpct_h2": 2.0,
+          "persistence_s": 0.5,
+          "expected_trigger_time_s": 128.999999999995,
+          "rule_engine_trigger_time_s": 128.999999999995,
+          "missed_expected_trigger": false,
+          "unexpected_trigger": false,
+          "timing_error_s": 0.0
+        }
+      ],
+      "pre_release_events": [
+        {
+          "rule_id": "HZ-141",
+          "time_s": 51.9999999999992,
+          "diagnostic_only": true
+        }
+      ]
+    },
+    {
+      "test_id": 14,
+      "nominal_pressure_barg": 8.0,
+      "nozzle_diameter_mm": 1.0,
+      "ventilation": "500 L/min",
+      "orientation": "horizontal",
+      "release_onset_s_relative": 181.650000000007,
+      "concentration_sensor_count": 16,
+      "missing_data": {
+        "published_sensor_count": 16,
+        "retained_sensor_count": 16,
+        "dropped_sensor_count": 0,
+        "invalid_time_sample_count": 0
+      },
+      "maximum_baseline_corrected_grid_concentration_volpct_h2": 106.48721174637146,
+      "checks": [
+        {
+          "rule_id": "HZ-141",
+          "threshold_volpct_h2": 0.4,
+          "persistence_s": 1.0,
+          "expected_trigger_time_s": 189.600000000009,
+          "rule_engine_trigger_time_s": 189.600000000009,
+          "missed_expected_trigger": false,
+          "unexpected_trigger": false,
+          "timing_error_s": 0.0
+        },
+        {
+          "rule_id": "HZ-142",
+          "threshold_volpct_h2": 1.0,
+          "persistence_s": 0.5,
+          "expected_trigger_time_s": 189.250000000009,
+          "rule_engine_trigger_time_s": 189.250000000009,
+          "missed_expected_trigger": false,
+          "unexpected_trigger": false,
+          "timing_error_s": 0.0
+        },
+        {
+          "rule_id": "HZ-143",
+          "threshold_volpct_h2": 2.0,
+          "persistence_s": 0.5,
+          "expected_trigger_time_s": 189.850000000009,
+          "rule_engine_trigger_time_s": 189.850000000009,
+          "missed_expected_trigger": false,
+          "unexpected_trigger": false,
+          "timing_error_s": 0.0
+        }
+      ],
+      "pre_release_events": []
+    },
+    {
+      "test_id": 16,
+      "nominal_pressure_barg": 8.0,
+      "nozzle_diameter_mm": 1.8,
+      "ventilation": "500 L/min",
+      "orientation": "horizontal",
+      "release_onset_s_relative": 180.650000000007,
+      "concentration_sensor_count": 16,
+      "missing_data": {
+        "published_sensor_count": 16,
+        "retained_sensor_count": 16,
+        "dropped_sensor_count": 0,
+        "invalid_time_sample_count": 0
+      },
+      "maximum_baseline_corrected_grid_concentration_volpct_h2": 106.93036431781424,
+      "checks": [
+        {
+          "rule_id": "HZ-141",
+          "threshold_volpct_h2": 0.4,
+          "persistence_s": 1.0,
+          "expected_trigger_time_s": 187.100000000008,
+          "rule_engine_trigger_time_s": 187.100000000008,
+          "missed_expected_trigger": false,
+          "unexpected_trigger": false,
+          "timing_error_s": 0.0
+        },
+        {
+          "rule_id": "HZ-142",
+          "threshold_volpct_h2": 1.0,
+          "persistence_s": 0.5,
+          "expected_trigger_time_s": 187.150000000008,
+          "rule_engine_trigger_time_s": 187.150000000008,
+          "missed_expected_trigger": false,
+          "unexpected_trigger": false,
+          "timing_error_s": 0.0
+        },
+        {
+          "rule_id": "HZ-143",
+          "threshold_volpct_h2": 2.0,
+          "persistence_s": 0.5,
+          "expected_trigger_time_s": 188.000000000008,
+          "rule_engine_trigger_time_s": 188.000000000008,
+          "missed_expected_trigger": false,
+          "unexpected_trigger": false,
+          "timing_error_s": 0.0
+        }
+      ],
+      "pre_release_events": [
+        {
+          "rule_id": "HZ-141",
+          "time_s": 1.45,
+          "diagnostic_only": true
+        }
+      ]
+    },
+    {
+      "test_id": 18,
+      "nominal_pressure_barg": 2.0,
+      "nozzle_diameter_mm": 1.8,
+      "ventilation": "500 L/min",
+      "orientation": "horizontal",
+      "release_onset_s_relative": 180.700000000007,
+      "concentration_sensor_count": 16,
+      "missing_data": {
+        "published_sensor_count": 16,
+        "retained_sensor_count": 16,
+        "dropped_sensor_count": 0,
+        "invalid_time_sample_count": 0
+      },
+      "maximum_baseline_corrected_grid_concentration_volpct_h2": 106.50362583838493,
+      "checks": [
+        {
+          "rule_id": "HZ-141",
+          "threshold_volpct_h2": 0.4,
+          "persistence_s": 1.0,
+          "expected_trigger_time_s": 183.700000000008,
+          "rule_engine_trigger_time_s": 183.700000000008,
+          "missed_expected_trigger": false,
+          "unexpected_trigger": false,
+          "timing_error_s": 0.0
+        },
+        {
+          "rule_id": "HZ-142",
+          "threshold_volpct_h2": 1.0,
+          "persistence_s": 0.5,
+          "expected_trigger_time_s": 188.050000000009,
+          "rule_engine_trigger_time_s": 188.050000000009,
+          "missed_expected_trigger": false,
+          "unexpected_trigger": false,
+          "timing_error_s": 0.0
+        },
+        {
+          "rule_id": "HZ-143",
+          "threshold_volpct_h2": 2.0,
+          "persistence_s": 0.5,
+          "expected_trigger_time_s": 188.450000000009,
+          "rule_engine_trigger_time_s": 188.450000000009,
+          "missed_expected_trigger": false,
+          "unexpected_trigger": false,
+          "timing_error_s": 0.0
+        }
+      ],
+      "pre_release_events": [
+        {
+          "rule_id": "HZ-141",
+          "time_s": 14.9000000000001,
+          "diagnostic_only": true
+        }
+      ]
+    },
+    {
+      "test_id": 19,
+      "nominal_pressure_barg": 2.0,
+      "nozzle_diameter_mm": 1.8,
+      "ventilation": "2000 L/min",
+      "orientation": "horizontal",
+      "release_onset_s_relative": 211.300000000014,
+      "concentration_sensor_count": 16,
+      "missing_data": {
+        "published_sensor_count": 16,
+        "retained_sensor_count": 16,
+        "dropped_sensor_count": 0,
+        "invalid_time_sample_count": 0
+      },
+      "maximum_baseline_corrected_grid_concentration_volpct_h2": 92.45408634249725,
+      "checks": [
+        {
+          "rule_id": "HZ-141",
+          "threshold_volpct_h2": 0.4,
+          "persistence_s": 1.0,
+          "expected_trigger_time_s": 214.200000000014,
+          "rule_engine_trigger_time_s": 214.200000000014,
+          "missed_expected_trigger": false,
+          "unexpected_trigger": false,
+          "timing_error_s": 0.0
+        },
+        {
+          "rule_id": "HZ-142",
+          "threshold_volpct_h2": 1.0,
+          "persistence_s": 0.5,
+          "expected_trigger_time_s": 218.700000000015,
+          "rule_engine_trigger_time_s": 218.700000000015,
+          "missed_expected_trigger": false,
+          "unexpected_trigger": false,
+          "timing_error_s": 0.0
+        },
+        {
+          "rule_id": "HZ-143",
+          "threshold_volpct_h2": 2.0,
+          "persistence_s": 0.5,
+          "expected_trigger_time_s": 219.100000000016,
+          "rule_engine_trigger_time_s": 219.100000000016,
+          "missed_expected_trigger": false,
+          "unexpected_trigger": false,
+          "timing_error_s": 0.0
+        }
+      ],
+      "pre_release_events": [
+        {
+          "rule_id": "HZ-141",
+          "time_s": 7.59999999999998,
+          "diagnostic_only": true
+        }
+      ]
+    },
+    {
+      "test_id": 21,
+      "nominal_pressure_barg": 8.0,
+      "nozzle_diameter_mm": 1.8,
+      "ventilation": "passive",
+      "orientation": "horizontal",
+      "release_onset_s_relative": 211.150000000014,
+      "concentration_sensor_count": 16,
+      "missing_data": {
+        "published_sensor_count": 16,
+        "retained_sensor_count": 16,
+        "dropped_sensor_count": 0,
+        "invalid_time_sample_count": 0
+      },
+      "maximum_baseline_corrected_grid_concentration_volpct_h2": 106.94677599837132,
+      "checks": [
+        {
+          "rule_id": "HZ-141",
+          "threshold_volpct_h2": 0.4,
+          "persistence_s": 1.0,
+          "expected_trigger_time_s": 213.550000000014,
+          "rule_engine_trigger_time_s": 213.550000000014,
+          "missed_expected_trigger": false,
+          "unexpected_trigger": false,
+          "timing_error_s": 0.0
+        },
+        {
+          "rule_id": "HZ-142",
+          "threshold_volpct_h2": 1.0,
+          "persistence_s": 0.5,
+          "expected_trigger_time_s": 218.100000000015,
+          "rule_engine_trigger_time_s": 218.100000000015,
+          "missed_expected_trigger": false,
+          "unexpected_trigger": false,
+          "timing_error_s": 0.0
+        },
+        {
+          "rule_id": "HZ-143",
+          "threshold_volpct_h2": 2.0,
+          "persistence_s": 0.5,
+          "expected_trigger_time_s": 218.400000000015,
+          "rule_engine_trigger_time_s": 218.400000000015,
+          "missed_expected_trigger": false,
+          "unexpected_trigger": false,
+          "timing_error_s": 0.0
+        }
+      ],
+      "pre_release_events": [
+        {
+          "rule_id": "HZ-141",
+          "time_s": 26.3500000000002,
+          "diagnostic_only": true
+        }
+      ]
+    },
+    {
+      "test_id": 22,
+      "nominal_pressure_barg": 2.0,
+      "nozzle_diameter_mm": 1.0,
+      "ventilation": "passive",
+      "orientation": "horizontal",
+      "release_onset_s_relative": 361.300000000048,
+      "concentration_sensor_count": 16,
+      "missing_data": {
+        "published_sensor_count": 16,
+        "retained_sensor_count": 16,
+        "dropped_sensor_count": 0,
+        "invalid_time_sample_count": 0
+      },
+      "maximum_baseline_corrected_grid_concentration_volpct_h2": 37.125995066809814,
+      "checks": [
+        {
+          "rule_id": "HZ-141",
+          "threshold_volpct_h2": 0.4,
+          "persistence_s": 1.0,
+          "expected_trigger_time_s": 372.05000000005,
+          "rule_engine_trigger_time_s": 372.05000000005,
+          "missed_expected_trigger": false,
+          "unexpected_trigger": false,
+          "timing_error_s": 0.0
+        },
+        {
+          "rule_id": "HZ-142",
+          "threshold_volpct_h2": 1.0,
+          "persistence_s": 0.5,
+          "expected_trigger_time_s": 372.40000000005,
+          "rule_engine_trigger_time_s": 372.40000000005,
+          "missed_expected_trigger": false,
+          "unexpected_trigger": false,
+          "timing_error_s": 0.0
+        },
+        {
+          "rule_id": "HZ-143",
+          "threshold_volpct_h2": 2.0,
+          "persistence_s": 0.5,
+          "expected_trigger_time_s": 374.800000000051,
+          "rule_engine_trigger_time_s": 374.800000000051,
+          "missed_expected_trigger": false,
+          "unexpected_trigger": false,
+          "timing_error_s": 0.0
+        }
+      ],
+      "pre_release_events": [
+        {
+          "rule_id": "HZ-141",
+          "time_s": 71.3999999999981,
+          "diagnostic_only": true
+        }
+      ]
+    },
+    {
+      "test_id": 26,
+      "nominal_pressure_barg": 2.0,
+      "nozzle_diameter_mm": 0.2,
+      "ventilation": "passive",
+      "orientation": "horizontal",
+      "release_onset_s_relative": 120.849999999995,
+      "concentration_sensor_count": 16,
+      "missing_data": {
+        "published_sensor_count": 16,
+        "retained_sensor_count": 16,
+        "dropped_sensor_count": 0,
+        "invalid_time_sample_count": 0
+      },
+      "maximum_baseline_corrected_grid_concentration_volpct_h2": 6.220486162568123,
+      "checks": [
+        {
+          "rule_id": "HZ-141",
+          "threshold_volpct_h2": 0.4,
+          "persistence_s": 1.0,
+          "expected_trigger_time_s": 122.099999999995,
+          "rule_engine_trigger_time_s": 122.099999999995,
+          "missed_expected_trigger": false,
+          "unexpected_trigger": false,
+          "timing_error_s": 0.0
+        },
+        {
+          "rule_id": "HZ-142",
+          "threshold_volpct_h2": 1.0,
+          "persistence_s": 0.5,
+          "expected_trigger_time_s": 159.900000000002,
+          "rule_engine_trigger_time_s": 159.900000000002,
+          "missed_expected_trigger": false,
+          "unexpected_trigger": false,
+          "timing_error_s": 0.0
+        },
+        {
+          "rule_id": "HZ-143",
+          "threshold_volpct_h2": 2.0,
+          "persistence_s": 0.5,
+          "expected_trigger_time_s": 174.050000000005,
+          "rule_engine_trigger_time_s": 174.050000000005,
+          "missed_expected_trigger": false,
+          "unexpected_trigger": false,
+          "timing_error_s": 0.0
+        }
+      ],
+      "pre_release_events": [
+        {
+          "rule_id": "HZ-141",
+          "time_s": 2.55,
+          "diagnostic_only": true
+        }
+      ]
+    },
+    {
+      "test_id": 47,
+      "nominal_pressure_barg": 2.0,
+      "nozzle_diameter_mm": 1.0,
+      "ventilation": "passive",
+      "orientation": "vertical",
+      "release_onset_s_relative": 2585.65000000064,
+      "concentration_sensor_count": 16,
+      "missing_data": {
+        "published_sensor_count": 16,
+        "retained_sensor_count": 16,
+        "dropped_sensor_count": 0,
+        "invalid_time_sample_count": 0
+      },
+      "maximum_baseline_corrected_grid_concentration_volpct_h2": 23.322730619850407,
+      "checks": [
+        {
+          "rule_id": "HZ-141",
+          "threshold_volpct_h2": 0.4,
+          "persistence_s": 1.0,
+          "expected_trigger_time_s": 2593.00000000067,
+          "rule_engine_trigger_time_s": 2593.00000000067,
+          "missed_expected_trigger": false,
+          "unexpected_trigger": false,
+          "timing_error_s": 0.0
+        },
+        {
+          "rule_id": "HZ-142",
+          "threshold_volpct_h2": 1.0,
+          "persistence_s": 0.5,
+          "expected_trigger_time_s": 2593.20000000067,
+          "rule_engine_trigger_time_s": 2593.20000000067,
+          "missed_expected_trigger": false,
+          "unexpected_trigger": false,
+          "timing_error_s": 0.0
+        },
+        {
+          "rule_id": "HZ-143",
+          "threshold_volpct_h2": 2.0,
+          "persistence_s": 0.5,
+          "expected_trigger_time_s": 2598.10000000069,
+          "rule_engine_trigger_time_s": 2598.10000000069,
+          "missed_expected_trigger": false,
+          "unexpected_trigger": false,
+          "timing_error_s": 0.0
+        }
+      ],
+      "pre_release_events": [
+        {
+          "rule_id": "HZ-141",
+          "time_s": 2360.04999999982,
+          "diagnostic_only": true
+        }
+      ]
+    }
+  ],
+  "claim_boundary": "This is an outcome-informed diagnostic of fourteen baseline-eligible ELVHYS cases. It does not replace the failed fifteen-case prospective holdout, validate detector placement, dispersion, concentration prediction, ESD effectiveness, consequence distance or the full station-to-vehicle twin."
+}
