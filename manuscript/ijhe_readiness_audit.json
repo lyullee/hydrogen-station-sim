@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-11T01:24:03.436393+00:00",
+  "generated_at": "2026-10-11T01:49:20.101623+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -336,7 +336,10 @@
           "gas_liner_ua_multiplier": 31.460656519273492,
           "llm_evidence_status": "active",
           "llm_evidence_id": "public_type_iv_tank_v1",
-          "validation_case_count": 12
+          "validation_case_count": 12,
+          "validation_label": "independent_component_holdout",
+          "independent_external_validation": true,
+          "full_loop_external_validation": false
         },
         "sources_match": true,
         "recheck_matches": true
