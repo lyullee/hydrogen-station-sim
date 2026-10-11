@@ -17,13 +17,24 @@
     "termination": "HTTP chunked stream ended with IncompleteRead before the expected archive size",
     "resume_supported_by_endpoint": false
   },
+  "range_route_probe": {
+    "endpoint": "RADAR BagIt backend archive content",
+    "status": 206,
+    "content_range_probe": "bytes 0-15/4971447808",
+    "range_resume_supported": true,
+    "one_chunk_probe_bytes": 8388608,
+    "one_chunk_probe_completed": true,
+    "subsequent_rate_limit_status": 429,
+    "subsequent_rate_limit_message": "Too Many Requests"
+  },
   "protocol_boundary": {
     "archive_committed_to_git": false,
     "numeric_signal_values_opened": false,
     "video_outcomes_opened": false,
     "member_headers_scanned_only": true,
     "stage1_integrity_verified": false,
-    "stage2_eligible": false
+    "stage2_eligible": false,
+    "range_download_tool_added": "scripts/fetch_kit_lh2_archive.py"
   },
   "next_action": "Use a stable authenticated download session or obtain the archive from the custodian; verify the complete publisher MD5 before reading any outcome file."
 }

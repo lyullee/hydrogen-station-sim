@@ -21,6 +21,14 @@ read during that probe. The subsequent interrupted download is recorded in
 `research/kit_lh2_download_attempt_2026_10_11.json`, and the access-path probe is
 in `research/kit_lh2_session_access_probe_2026_10_11.json`.
 
+The same session also exposed the RADAR BagIt backend archive endpoint. It
+returned `206 Partial Content` with a complete `Content-Range` and a single
+8-MB range was received successfully. Repeated range requests then reached the
+server's `429 Too Many Requests` limit, so the range downloader is retained for
+a slower, cooled-down retry: `scripts/fetch_kit_lh2_archive.py`. The range probe
+does not change the integrity decision; the complete publisher MD5 is still
+required before any outcome file can be opened.
+
 The provenance and license lead remain the official [KIT RADAR record
 10.35097/1483](https://doi.org/10.35097/1483), reported as CC BY-SA 4.0. The
 machine-readable result is
