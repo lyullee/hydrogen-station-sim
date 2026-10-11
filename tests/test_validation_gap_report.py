@@ -67,6 +67,26 @@ def test_gap_report_prioritizes_high_impact_work_without_serializing_tracks() ->
     }
 
 
+def test_gap_report_keeps_grune_secondary_figure_diagnostic_out_of_primary_gate() -> None:
+    report = build_report(ROOT)
+
+    diagnostics = report["secondary_diagnostics"]
+    assert len(diagnostics) == 1
+    diagnostic = diagnostics[0]
+    assert diagnostic["source_gate"] == "grune_2014_pressure_decay_validation"
+    assert diagnostic["status"] == "DIAGNOSTIC_ONLY"
+    assert diagnostic["points"] == 319
+    assert diagnostic["joint_primary_screen_pass"] is False
+    assert diagnostic["primary_gate_unchanged"] is True
+    grune = next(
+        item
+        for item in report["unresolved_gates"]
+        if item["id"] == "grune_2014_pressure_decay_validation"
+    )
+    assert grune["status"] == "PENDING"
+    assert "figure-derived" in grune["next_action"]
+
+
 def test_markdown_does_not_expose_evidence_paths() -> None:
     markdown = _markdown(build_report(ROOT))
     assert "evidence" not in markdown.lower()

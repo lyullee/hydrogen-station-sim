@@ -48,6 +48,8 @@ _OPTIONAL_HUMAN_EVALUATION = {
     "saga_effectiveness_and_safety_supported",
 }
 
+_GRUNE_SECONDARY_RESULT = "research/grune_2014_secondary_public_figure_result_2026_10_12.json"
+
 # Keep the status report usable as an execution queue.  The synchronized
 # station-to-vehicle lane was explicitly removed from the primary objective
 # after the public-data search; retain its legacy FAIL only in a separate
@@ -72,6 +74,41 @@ def _read(root: Path, relative: str) -> dict[str, Any]:
     return json.loads((root / relative).read_text(encoding="utf-8"))
 
 
+def _secondary_diagnostics(root: Path) -> list[dict[str, Any]]:
+    """Expose transparent secondary diagnostics without changing gate status.
+
+    These are post-outcome figure-derived checks, not primary validation
+    evidence.  Keeping them beside the triage prevents the queue from
+    becoming stale while preserving the frozen primary claim boundary.
+    """
+
+    path = root / _GRUNE_SECONDARY_RESULT
+    if not path.exists():
+        return []
+    result = _read(root, _GRUNE_SECONDARY_RESULT)
+    metrics = result.get("result") or {}
+    return [
+        {
+            "id": "grune_2014_secondary_public_figure_diagnostic",
+            "source_gate": "grune_2014_pressure_decay_validation",
+            "status": "DIAGNOSTIC_ONLY",
+            "points": metrics.get("points"),
+            "pressure_nrmse_percent_initial_measured": metrics.get(
+                "pressure_nrmse_percent_initial_measured"
+            ),
+            "median_absolute_percentage_error_percent": metrics.get(
+                "median_absolute_percentage_error_percent"
+            ),
+            "half_pressure_time_relative_error_percent": metrics.get(
+                "half_pressure_time_relative_error_percent"
+            ),
+            "joint_primary_screen_pass": bool(metrics.get("joint_primary_screen_pass")),
+            "primary_gate_unchanged": True,
+            "claim_boundary": str(result.get("claim_boundary", "")),
+        }
+    ]
+
+
 def _bucket(gate_id: str) -> str:
     if gate_id in _FULL_LOOP:
         return "full_loop_data"
@@ -92,7 +129,9 @@ def _next_action(gate_id: str, status: str) -> str:
         return "공간좌표·방출방향·센서별 수치응답이 함께 있는 독립 holdout을 추가하고, 통과 전 runtime 자동 라우팅을 유지하지 않는다."
     if gate_id == "grune_2014_pressure_decay_validation":
         return (
-            "공식 KIT·출판사 재확인에서도 원시 pressure-time 표가 없어 보류 중이다. "
+            "공식 KIT·출판사 재확인에서도 권리 정리된 원시 pressure-time 표가 없어 1차 게이트는 보류 중이다. "
+            "공개 ICHS 재현 도표의 figure-derived 진단은 완전 곡선을 제공하지만 세 고정 화면을 모두 통과하지 못했으므로 "
+            "1차 근거로 승격하지 않는다. "
             "custodian 원자료와 재사용 조건을 받은 뒤 새 pre-access protocol을 동결한다. "
             "별도 KIT LH2 원자료는 공식 권리는 확인했지만 전체 아카이브 MD5가 검증되지 않아 "
             "이 게이트를 닫지 않는다."
@@ -260,6 +299,7 @@ def build_report(
             "rule": "FAIL은 실패한 주장을 유지하고, PENDING은 증거가 올 때까지 주장하지 않는다.",
             "privacy": "원시 행·경로·회사·사이트·제조사·달력 날짜를 이 보고서에 복사하지 않는다.",
         },
+        "secondary_diagnostics": _secondary_diagnostics(root),
         "bucket_counts": by_bucket,
         "scope_exclusions": scope_exclusions,
         "execution_tracks": [
@@ -296,11 +336,36 @@ def _markdown(report: dict[str, Any]) -> str:
         f"- 완전한 사용자 목표 준비 여부: {'예' if overall['full_user_objective_ready'] else '아니오'}",
         f"- 주된 병목: {report['interpretation']['primary_blocker']}",
         "",
+    ]
+    diagnostics = report.get("secondary_diagnostics") or []
+    if diagnostics:
+        diagnostic = diagnostics[0]
+        lines.extend(
+            [
+                "## 1차 게이트에 반영하지 않은 보조 진단",
+                "",
+                (
+                    "Grüne 사례에는 공개 ICHS 도표에서 추출한 완전 곡선 진단을 보존하지만, "
+                    "권리 정리된 원시 아카이브가 아니며 고정 화면을 통과하지 못해 1차 검증을 닫지 않는다."
+                ),
+                (
+                    f"- {diagnostic['points']} points · NRMSE "
+                    f"{diagnostic['pressure_nrmse_percent_initial_measured']:.2f}% · "
+                    f"median APE {diagnostic['median_absolute_percentage_error_percent']:.2f}% · "
+                    f"half-pressure error {diagnostic['half_pressure_time_relative_error_percent']:.2f}%"
+                ),
+                "- 판정: DIAGNOSTIC_ONLY; 1차 게이트와 전체 진행률은 변경하지 않음",
+                "",
+            ]
+        )
+    lines.extend(
+        [
         "## 미해결 게이트",
         "",
         "| 우선순위 | 병렬 트랙 | 게이트 | 상태 | 다음 최소 행동 |",
         "| --- | --- | --- | --- | --- |",
-    ]
+        ]
+    )
     for item in report["unresolved_gates"]:
         lines.append(
             f"| {item['priority']} | {item['parallel_track']} | `{item['id']}` | "

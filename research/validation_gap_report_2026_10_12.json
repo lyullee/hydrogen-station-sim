@@ -31,6 +31,20 @@
     "rule": "FAIL은 실패한 주장을 유지하고, PENDING은 증거가 올 때까지 주장하지 않는다.",
     "privacy": "원시 행·경로·회사·사이트·제조사·달력 날짜를 이 보고서에 복사하지 않는다."
   },
+  "secondary_diagnostics": [
+    {
+      "id": "grune_2014_secondary_public_figure_diagnostic",
+      "source_gate": "grune_2014_pressure_decay_validation",
+      "status": "DIAGNOSTIC_ONLY",
+      "points": 319,
+      "pressure_nrmse_percent_initial_measured": 18.62509004294874,
+      "median_absolute_percentage_error_percent": 84.59868751764434,
+      "half_pressure_time_relative_error_percent": 69.28627897088084,
+      "joint_primary_screen_pass": false,
+      "primary_gate_unchanged": true,
+      "claim_boundary": "One 20 MPa, 0.37 L, 4 mm pressure-decay trace; no flame, ignition, dispersion, radiation, station control or safety-distance claim."
+    }
+  ],
   "bucket_counts": {
     "component_model": {
       "FAIL": 9,
@@ -88,7 +102,7 @@
       "parallel_track": "component_model_repairs",
       "scope_role": "required_primary_scope",
       "claim": "The locked source model meets all pressure-decay screens on the independent KIT small-reservoir release.",
-      "next_action": "공식 KIT·출판사 재확인에서도 원시 pressure-time 표가 없어 보류 중이다. custodian 원자료와 재사용 조건을 받은 뒤 새 pre-access protocol을 동결한다. 별도 KIT LH2 원자료는 공식 권리는 확인했지만 전체 아카이브 MD5가 검증되지 않아 이 게이트를 닫지 않는다.",
+      "next_action": "공식 KIT·출판사 재확인에서도 권리 정리된 원시 pressure-time 표가 없어 1차 게이트는 보류 중이다. 공개 ICHS 재현 도표의 figure-derived 진단은 완전 곡선을 제공하지만 세 고정 화면을 모두 통과하지 못했으므로 1차 근거로 승격하지 않는다. custodian 원자료와 재사용 조건을 받은 뒤 새 pre-access protocol을 동결한다. 별도 KIT LH2 원자료는 공식 권리는 확인했지만 전체 아카이브 MD5가 검증되지 않아 이 게이트를 닫지 않는다.",
       "why_now": "현재 주 목표에 포함된 실패 물리량별 독립 holdout을 병행하고, 통과 전 런타임 승격을 막음",
       "claim_boundary": "One 20 MPa, 0.37 L, 4 mm pressure-decay trace; no flame, ignition, dispersion, radiation, station control or safety-distance claim. The digitized measured curve does not provide the required half-pressure crossing, so no validation claim is made."
     },
