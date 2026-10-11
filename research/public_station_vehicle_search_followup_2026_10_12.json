@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "artifact_type": "station_to_vehicle_public_search_followup",
+  "recorded_at": "2026-10-12",
+  "purpose": "Record a targeted public-source recheck after the frozen station-to-vehicle search without presenting metadata or plotted summaries as raw validation.",
+  "eligibility_rule": "A new independent holdout must expose rights-cleared station/controller, dispenser/nozzle and vehicle/receptacle channels on one common clock, with units, initial conditions, protocol metadata and reusable data rights.",
+  "sources": [
+    {
+      "name": "European Hydrogen Observatory hydrogen refuelling stations datastream",
+      "url": "https://observatory.clean-hydrogen.europa.eu/hydrogen-landscape/distribution-and-storage/hydrogen-refuelling-stations",
+      "observed_scope": "Public station inventory and infrastructure/dispenser categories.",
+      "decision": "OPERATIONAL_METADATA_ONLY",
+      "reason": "No synchronized engineering transient for a station-to-vehicle fill was exposed."
+    },
+    {
+      "name": "H2-Stations export API v2 documentation",
+      "url": "https://docs.h2-stations.eu/for-data-users/",
+      "observed_scope": "Static layout and operational availability, usage, storage and pricing signal documentation.",
+      "decision": "OPERATIONAL_METADATA_ONLY",
+      "reason": "The documented API does not provide a rights-cleared common-clock pressure, temperature and transfer-flow trace linking station and vehicle."
+    },
+    {
+      "name": "California Air Resources Board in-use light-duty HRS study",
+      "url": "https://ww2.arb.ca.gov/sites/default/files/2024-12/Existing%20Light-Duty%20Hydrogen%20Refueling%20Stations%20In-Use%20Study%20Report%20ADA%20AL.pdf",
+      "observed_scope": "Report figures and aggregate in-use fueling performance, including pressure, temperature and mass-flow plots.",
+      "decision": "REPORT_SUMMARY_ONLY",
+      "reason": "No reusable row-level synchronized logger archive, complete channel dictionary and data-reuse terms were found at the public endpoint."
+    },
+    {
+      "name": "DOE/NREL heavy-duty fueling performance report",
+      "url": "https://www.nrel.gov/docs/fy25osti/92352.pdf",
+      "observed_scope": "Protocol and event-level performance summaries for heavy-duty fueling.",
+      "decision": "REPORT_SUMMARY_ONLY",
+      "reason": "The public report does not expose the common-clock raw station/controller/dispenser/vehicle channels required by the frozen holdout."
+    }
+  ],
+  "decision": "NO_NEW_ELIGIBLE_PUBLIC_RAW_STATION_TO_VEHICLE_SET_IDENTIFIED",
+  "new_holdout_added": false,
+  "runtime_parameter_changed": false,
+  "claim_boundary": "This follow-up is a public-access availability audit. It does not prove that restricted or unpublished traces do not exist and does not support station-to-vehicle accuracy, vehicle-controller validation or field-safety claims."
+}
