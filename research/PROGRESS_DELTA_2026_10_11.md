@@ -50,7 +50,7 @@ two-zone 모델은 원인 진단용 post-outcome 모델로 기록되어 있지�
 ## 검증
 
 이번 문서 갱신 후 focused validation/grounding 테스트는 **9 passed**였다.
-전체 회귀 기록은 1,441 passed, 0 failed, 20 warnings이며, 경고는 의존성·수치
+전체 회귀 기록은 1,443 passed, 0 failed, 20 warnings이며, 경고는 의존성·수치
 환경 경고로 기록되어 있다.
 ## 최신 impact-first 실행 결과 (2026-10-11)
 
@@ -91,3 +91,6 @@ two-zone 모델은 원인 진단용 post-outcome 모델로 기록되어 있지�
   parameters, readiness counts and manuscript claims are unchanged. See
   `research/grune_2014_public_pressure_trace_recheck_2026_10_12.json` and
   `research/GRUNE_2014_PUBLIC_PRESSURE_TRACE_RECHECK_2026_10_12.md`.
+
+- Final full regression after the matrix-hash repair: **1,443 passed, 0
+  failed, 20 warnings** (`research/full_regression_test_run_2026_10_11.json`).
