@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-11T12:52:13+09:00",
+  "generated_at": "2026-10-11T12:56:37+09:00",
   "metric_definition": "PASS gates divided by PASS+FAIL+PENDING gates; not a publication-readiness probability",
   "gate_counts": {
     "PASS": 127,
@@ -124,8 +124,15 @@
         "process_status": "PASS",
         "scientific_screen_status": "FAIL",
         "diagnostic_count": 5,
-        "screen_passes": ["mc_soc_boundary", "dickens_mixed_convection"],
-        "screen_failures": ["mc_tank_boundary", "h2safe_spatial_response", "nrel_h2fills_hdvs_tank"],
+        "screen_passes": [
+          "mc_soc_boundary",
+          "dickens_mixed_convection"
+        ],
+        "screen_failures": [
+          "mc_tank_boundary",
+          "h2safe_spatial_response",
+          "nrel_h2fills_hdvs_tank"
+        ],
         "runtime_parameter_application": false,
         "claim_boundary": "Development diagnostics only; no validation gate or runtime parameter was promoted."
       },
@@ -136,6 +143,17 @@
         "evidence": "research/frontend_regression_test_run_2026_10_11.json",
         "report": "research/FRONTEND_REGRESSION_TEST_RUN_2026_10_11.md",
         "claim_boundary": "Frontend and state-contract integrity only; no physical-model or field-safety claim."
+      },
+      "secret_scan": {
+        "status": "PASS_STATIC_SCAN_ZERO_HIGH_CONFIDENCE_HITS",
+        "evidence": "research/secret_scan_2026_10_11.json",
+        "report": "research/SECRET_SCAN_2026_10_11.md",
+        "tracked_files": 1834,
+        "scanned_text_files": 1725,
+        "dotenv_files": 0,
+        "high_confidence_secret_hits": 0,
+        "environment_assignments": 0,
+        "claim_boundary": "Static tracked-working-tree scan only; runtime host environment, ignored files and Git history remain outside scope."
       }
     }
   }
