@@ -33,6 +33,10 @@ is explicitly outside the primary scope after repeated public-data searches.
   response-family traceability; it does not authorize accident reconstruction,
   frequency/risk estimation, consequence-distance validation or operator-
   effectiveness claims.
+- A static scan of 1,875 tracked text files and working-tree `.env*` files
+  found zero high-confidence secret values. The scan cannot inspect host
+  environment variables or git object history; runtime provider keys therefore
+  remain environment-only inputs and are not evidence artifacts.
 
 ## Highest-impact remaining work
 

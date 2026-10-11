@@ -1,11 +1,11 @@
 {
   "schema_version": 1,
   "artifact_type": "ijhe_reproducibility_run",
-  "generated_at_utc": "2026-10-11T19:37:20.197876+00:00",
+  "generated_at_utc": "2026-10-11T19:39:38.223320+00:00",
   "status": "SCIENTIFIC_GATES_OPEN",
   "repository": {
     "root": ".",
-    "commit": "6ba90e894baa947fa9575d87e245be6c7bf3596a",
+    "commit": "ec9c0ac70d892c3226bce20063369aa3e1dc5e02",
     "dirty": false
   },
   "environment": {
@@ -54,7 +54,7 @@
     },
     "compile_status_rebuilt": {
       "schema_version": 2,
-      "verified_at_utc": "2026-10-11T19:37:17.959212+00:00",
+      "verified_at_utc": "2026-10-11T19:39:36.045804+00:00",
       "success": true,
       "compiler": {
         "name": "Tectonic",
@@ -144,7 +144,7 @@
           "tests/test_goal_progress_snapshot.py",
           "tests/test_ijhe_reproduction.py"
         ],
-        "output_tail": "...........                                                              [100%]\n11 passed in 1.77s"
+        "output_tail": "...........                                                              [100%]\n11 passed in 1.80s"
       }
     ]
   },
