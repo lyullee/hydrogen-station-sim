@@ -1,0 +1,66 @@
+# Paper-first status and execution order — 2026-10-12
+
+This note fixes the International Journal of Hydrogen Energy manuscript as the
+primary deliverable. It is an evidence map, not a new validation result and it
+does not alter model parameters or acceptance thresholds.
+
+## Authoritative status
+
+The current readiness audit records **129 PASS, 10 FAIL and 7 PENDING** out of
+146 gates (88.4% gate closure). The declared primary station-side scope is
+**129 PASS, 9 FAIL and 2 PENDING** (92.1%). These are bookkeeping ratios, not
+probabilities of publication or scientific accuracy.
+
+The bounded submission decision remains **not ready** because eight gates are
+open: seven independent physical-transfer screens and the submission metadata
+and declarations. The full project objective has one additional open gate for
+spatial detector transfer. The synchronized station-to-vehicle full-loop lane
+is explicitly outside the primary scope after repeated public-data searches.
+
+## What is already reproducible
+
+- The manuscript format check, 24-page Tectonic compilation, PDF visual check,
+  audit-mirror integrity check and six focused paper tests passed in the clean
+  reproducibility route (`research/ijhe_reproduction_run_2026_10_12.json`).
+- The broad LLM/SAGA, virtual-safety, HAZOP and HIAD software-contract suite
+  passed 159 tests with zero failures and two warnings
+  (`research/paper_llm_safety_broad_regression_2026_10_12.json`).
+- The latest public-data route rechecks found no new rights-cleared,
+  common-clock station/controller/dispenser/vehicle logger cohort. Component
+  evidence remains usable only within its documented claim boundary.
+
+## Highest-impact remaining work
+
+1. Preserve the negative and partial transfer results and finish the reviewer-
+   facing tables, uncertainty statements and claim-boundary text for the seven
+   open physical screens. A failed screen remains a result; it is not removed
+   by retuning after outcome access.
+2. Complete author-controlled submission metadata: author names, affiliations,
+   corresponding author, funding, acknowledgements, competing interests and
+   CRediT roles. These fields cannot be invented from the repository.
+3. Re-run the clean reproducibility route after any manuscript-only edit and
+   keep the audit counts synchronized with the manuscript.
+4. Keep the absence of synchronized station-to-vehicle raw data as an explicit
+   limitation. Do not present aggregate operating reports or component traces
+   as a full-loop external holdout.
+
+## Claim boundary for the paper
+
+The paper can make a bounded claim about a reproducible virtual station,
+station-side dynamics, selected tank/release/consequence component screens and
+traceable machine-level SAGA responses. It cannot claim SAE-compliant fueling
+control, site safety certification, autonomous emergency management or improved
+human safety decisions without additional evidence and facility-specific review.
+
+The KGS-derived material is reported only as custodian-approved, de-identified
+aggregates. Facility identity, dates, manufacturers, equipment identifiers and
+detailed geometry remain withheld.
+
+## Evidence index
+
+- `manuscript/ijhe_readiness_audit.json`
+- `manuscript/ijhe_manuscript_draft.tex`
+- `research/ijhe_reproduction_run_2026_10_12.json`
+- `research/paper_llm_safety_broad_regression_2026_10_12.json`
+- `research/PROGRESS_DELTA_2026_10_12.md`
+- `research/public_station_vehicle_search_recheck_2026_10_12.json`
