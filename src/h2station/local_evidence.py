@@ -10,6 +10,7 @@ or equipment metadata.
 from __future__ import annotations
 
 import json
+import hashlib
 from functools import lru_cache
 from pathlib import Path
 from typing import Any
@@ -77,6 +78,9 @@ _DICKENS_GEOMETRY_FOLLOWUP = _ROOT / (
 _MHC_COMPONENT_SCREEN = _ROOT / (
     "research/public_mhc_experiment16_screen_2026_10_12.json"
 )
+_INCIDENT_TRACEABILITY = _ROOT / (
+    "research/incident_evidence_traceability_2026_10_12.json"
+)
 
 
 def _read_json(path: Path) -> dict[str, Any]:
@@ -85,6 +89,101 @@ def _read_json(path: Path) -> dict[str, Any]:
     if not isinstance(value, dict):
         raise ValueError("aggregate evidence artifact must contain an object")
     return value
+
+
+def _public_incident_traceability_summary() -> dict[str, Any] | None:
+    """Load the public incident traceability ledger without exposing raw records.
+
+    HIAD and KHK are response-grounding evidence, not accident reconstructions
+    or consequence/risk validation.  The committed source hashes are checked so
+    a stale or partially copied ledger fails closed before entering an LLM
+    evidence envelope.
+    """
+
+    try:
+        record = _read_json(_INCIDENT_TRACEABILITY)
+        sources = record.get("sources") or []
+        root = _ROOT.resolve()
+        hashes_verified = bool(sources) and all(
+            isinstance(item, dict)
+            and isinstance(item.get("path"), str)
+            and isinstance(item.get("sha256"), str)
+            and len(item["sha256"]) == 64
+            and (candidate := (root / item["path"]).resolve()).is_file()
+            and root in candidate.parents
+            and hashlib.sha256(candidate.read_bytes()).hexdigest()
+            == item["sha256"]
+            for item in sources
+        )
+        hiad = record.get("hiad") or {}
+        khk = record.get("khk") or {}
+        response = record.get("response_grounding") or {}
+        valid = (
+            record.get("schema_version") == 1
+            and record.get("artifact_type")
+            == "public_incident_evidence_traceability_summary"
+            and hashes_verified
+            and hiad.get("case_count") == 34
+            and hiad.get("trace_pass_count") == 34
+            and hiad.get("direct_physical_replay_cases") == 29
+            and hiad.get("proxy_partial_replay_cases") == 4
+            and hiad.get("response_only_cases") == 1
+            and hiad.get("passed_family_recipes") == 9
+            and khk.get("public_report_count") == 23
+            and khk.get("incident_code_count") == 26
+            and khk.get("in_scope_report_count") == 22
+            and khk.get("in_scope_incident_code_count") == 25
+            and khk.get("direct_canonical_replay_reports") == 12
+            and khk.get("proxy_partial_replay_reports") == 10
+            and khk.get("passed_family_recipes") == 8
+            and response.get("case_count") == 34
+            and response.get("cases_with_public_action_categories") == 33
+            and response.get("action_category_count") == 8
+            and response.get("covered_action_category_count") == 8
+            and response.get("contract_pass") is True
+        )
+        if not valid:
+            return None
+        return {
+            "status": "available",
+            "evidence_role": "public incident traceability for grounded decision support",
+            "source_count": len(sources),
+            "source_hashes_verified": True,
+            "hiad": {
+                "case_count": 34,
+                "trace_pass_count": 34,
+                "direct_physical_replay_cases": 29,
+                "proxy_partial_replay_cases": 4,
+                "response_only_cases": 1,
+                "passed_family_recipes": 9,
+            },
+            "khk": {
+                "public_report_count": 23,
+                "incident_code_count": 26,
+                "in_scope_report_count": 22,
+                "in_scope_incident_code_count": 25,
+                "direct_canonical_replay_reports": 12,
+                "proxy_partial_replay_reports": 10,
+                "passed_family_recipes": 8,
+            },
+            "response_grounding": {
+                "case_count": 34,
+                "cases_with_public_action_categories": 33,
+                "action_category_count": 8,
+                "covered_action_category_count": 8,
+                "contract_pass": True,
+            },
+            "runtime_parameter_application": False,
+            "full_loop_holdout_eligible": False,
+            "claim_limit": (
+                "Public incident metadata are mapped to registered staged response families "
+                "for grounded decision-support prompts. This does not establish accident "
+                "reconstruction, frequency or calibrated risk, site consequence distance, "
+                "or operator effectiveness."
+            ),
+        }
+    except (OSError, KeyError, TypeError, ValueError, json.JSONDecodeError):
+        return None
 
 
 def _role_aware_full_loop_schema_summary() -> dict[str, Any] | None:
@@ -1199,6 +1298,18 @@ def public_evidence_inventory_summary() -> dict[str, Any]:
     """
 
     result: dict[str, Any] = {
+        "public_incident_traceability": {
+            "status": "unavailable",
+            "evidence_role": "public incident traceability for grounded decision support",
+            "source_count": 0,
+            "source_hashes_verified": False,
+            "hiad": {},
+            "khk": {},
+            "response_grounding": {},
+            "runtime_parameter_application": False,
+            "full_loop_holdout_eligible": False,
+            "claim_limit": "Incident traceability evidence is unavailable; no incident-grounding claim is permitted.",
+        },
         "public_accident_reports": {
             "status": "unavailable",
             "report_count": 0,
@@ -1364,6 +1475,9 @@ def public_evidence_inventory_summary() -> dict[str, Any]:
             "claim_limit": None,
         },
     }
+    incident_traceability = _public_incident_traceability_summary()
+    if incident_traceability is not None:
+        result["public_incident_traceability"] = incident_traceability
     try:
         record = _read_json(_KHK_ACCIDENTS)
         coverage = record.get("coverage") or {}

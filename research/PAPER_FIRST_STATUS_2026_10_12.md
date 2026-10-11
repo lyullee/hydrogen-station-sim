@@ -28,6 +28,11 @@ is explicitly outside the primary scope after repeated public-data searches.
 - The latest public-data route rechecks found no new rights-cleared,
   common-clock station/controller/dispenser/vehicle logger cohort. Component
   evidence remains usable only within its documented claim boundary.
+- The runtime public-evidence envelope now includes a hash-verified aggregate
+  of 34 HIAD and 23 KHK incident records. It is used only to ground staged
+  response-family traceability; it does not authorize accident reconstruction,
+  frequency/risk estimation, consequence-distance validation or operator-
+  effectiveness claims.
 
 ## Highest-impact remaining work
 

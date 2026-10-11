@@ -1797,6 +1797,11 @@ def test_compact_data_used_reports_available_and_applied_station_profile():
         build_evidence_manifest(base_frame, {}, [], False, question="현재 상태"),
         include_references=True,
     )["public_evidence_inventory"]
+    incident_traceability = inventory["public_incident_traceability"]
+    assert incident_traceability["status"] == "available"
+    assert incident_traceability["source_hashes_verified"] is True
+    assert incident_traceability["hiad"]["case_count"] == 34
+    assert incident_traceability["response_grounding"]["contract_pass"] is True
     assert inventory["public_accident_reports"]["report_count"] == 23
     assert inventory["public_accidental_release"]["experiment_count"] == 3
     assert inventory["public_experimental_benchmarks"][

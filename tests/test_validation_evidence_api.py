@@ -41,6 +41,18 @@ def test_validation_evidence_surface_is_privacy_bounded_and_claim_limited() -> N
     assert summary["scope_exclusions"][0]["legacy_status"] == "FAIL"
     assert summary["minimum_next_input"]["event_count"] == 3
     inventory = summary["evidence_inventory"]
+    traceability = inventory["public_incident_traceability"]
+    assert traceability["status"] == "available"
+    assert traceability["source_count"] == 3
+    assert traceability["source_hashes_verified"] is True
+    assert traceability["hiad"]["case_count"] == 34
+    assert traceability["hiad"]["direct_physical_replay_cases"] == 29
+    assert traceability["khk"]["public_report_count"] == 23
+    assert traceability["khk"]["in_scope_incident_code_count"] == 25
+    assert traceability["response_grounding"]["covered_action_category_count"] == 8
+    assert traceability["runtime_parameter_application"] is False
+    assert traceability["full_loop_holdout_eligible"] is False
+    assert "accident reconstruction" in traceability["claim_limit"].lower()
     assert inventory["public_accident_reports"]["report_count"] == 23
     assert inventory["public_accident_reports"]["incident_code_count"] == 26
     assert inventory["public_accidental_release"]["experiment_count"] == 3
