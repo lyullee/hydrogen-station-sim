@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-11T23:27:09+00:00",
+  "generated_at": "2026-10-12T00:00:00+00:00",
   "metric_definition": "PASS gates divided by PASS+FAIL+PENDING gates; not a publication-readiness probability",
   "gate_counts": {
     "PASS": 131,
@@ -127,6 +127,47 @@
         "runtime_parameter_application": false,
         "validation_gate_promoted": false,
         "claim_boundary": "Published aggregate benchmark context and code-access lead only; no independent raw-data or full station-to-vehicle validation claim."
+      },
+      "grune_secondary_public_figure_diagnostic": {
+        "evidence": "research/grune_2014_secondary_public_figure_result_2026_10_12.json",
+        "status": "DIAGNOSTIC_ONLY",
+        "points": 319,
+        "pressure_nrmse_percent_initial_measured": 18.62509004294874,
+        "median_absolute_percentage_error_percent": 84.59868751764434,
+        "half_pressure_time_relative_error_percent": 69.28627897088084,
+        "joint_primary_screen_pass": false,
+        "primary_gate_unchanged": true,
+        "claim_boundary": "Figure-derived diagnostic only; not a rights-cleared raw logger archive and no station, ignition, dispersion, radiation or safety-distance claim."
+      },
+      "validation_gap_report_2026_10_12": {
+        "evidence": "research/validation_gap_report_2026_10_12.json",
+        "status": "REFRESHED_WITH_SECONDARY_DIAGNOSTIC",
+        "overall_gate_counts": {
+          "PASS": 131,
+          "FAIL": 10,
+          "PENDING": 7,
+          "TOTAL": 148
+        },
+        "primary_scope": {
+          "metric_definition": "Scope-adjusted gate closure after removing the declared station-to-vehicle full-loop, optional SAGA human-evaluation lanes and non-validation public access-boundary checks; this is not a scientific improvement claim.",
+          "gate_counts": {
+            "PASS": 130,
+            "FAIL": 9,
+            "PENDING": 2,
+            "TOTAL": 141
+          },
+          "gate_closure_percent": 92.2,
+          "excluded_gate_ids": [
+            "full_loop_external_validation",
+            "hiad_casebook_frozen",
+            "hiad_holdout_collection",
+            "independent_expert_review_complete",
+            "institutional_ethics_determination",
+            "public_nbsdc_lh2_station_intake_integrity",
+            "saga_effectiveness_and_safety_supported"
+          ]
+        },
+        "primary_gate_unchanged": true
       }
     }
   }
