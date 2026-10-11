@@ -288,6 +288,30 @@ def _provider_evidence_basis(manifest: dict[str, Any]) -> dict[str, Any]:
                 "runtime_parameter_application": False,
                 "claim_limit": claim_limit[:240],
             }
+        public_kit = decision_support.get(
+            "public_kit_lh2_exploratory_evidence"
+        )
+        if isinstance(public_kit, dict):
+            source = public_kit.get("source") or {}
+            keep["public_kit_lh2_exploratory_evidence"] = {
+                "source": {
+                    "doi": source.get("doi"),
+                    "url": source.get("url"),
+                    "license": source.get("license"),
+                },
+                "case_count": public_kit.get("case_count"),
+                "channel_families": list(
+                    public_kit.get("channel_families") or []
+                ),
+                "archive_status": public_kit.get("archive_status") or {},
+                "component_consequence_context": True,
+                "validation_gate_effect": "none",
+                "station_vehicle_full_loop_supported": False,
+                "runtime_parameter_application": False,
+                "claim_limit": str(
+                    public_kit.get("claim_limit") or ""
+                )[:240],
+            }
     boundaries = full.get("validation_boundaries")
     if isinstance(boundaries, dict):
         # The station-to-vehicle limitation is the decision-relevant boundary

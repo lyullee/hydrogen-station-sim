@@ -1731,6 +1731,79 @@ def _public_usn_ignited_jet_dataset_evidence() -> dict[str, Any] | None:
     }
 
 
+def _public_kit_lh2_exploratory_evidence() -> dict[str, Any] | None:
+    """Expose the bounded KIT LH2 workbook replay as descriptive context only.
+
+    The reachable archive prefix is incomplete, so this record must never be
+    promoted to a validation result or allowed to inject numeric consequence
+    values into a live answer.  The LLM receives the source, selected-case
+    count and channel families only; the detailed workbook ranges remain in
+    the auditable research artifact.
+    """
+
+    artifact = "research/kit_lh2_exploratory_summary_2026_10_11.json"
+    protocol_artifact = "research/kit_lh2_stage2_exploratory_protocol_2026_10_11.json"
+    root = Path(__file__).resolve().parents[2]
+    try:
+        record = json.loads((root / artifact).read_text(encoding="utf-8"))
+        protocol = json.loads((root / protocol_artifact).read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, ValueError, json.JSONDecodeError):
+        return None
+    if not isinstance(record, dict) or not isinstance(protocol, dict):
+        return None
+    trials = record.get("trials") or []
+    if (
+        record.get("schema_version") != 1
+        or record.get("artifact_type") != "kit_lh2_exploratory_component_summary"
+        or record.get("case_count") != 4
+        or len(trials) != 4
+        or protocol.get("schema_version") != 1
+        or protocol.get("protocol_id") != "KIT-LH2-CONSEQUENCE-STAGE2-EXPLORATORY-001"
+        or protocol.get("status") != "FROZEN_EXPLORATORY_COMPONENT_REPLAY"
+        or (protocol.get("promotion_rule") or {}).get("validation_gate_effect") != "none"
+        or record.get("numeric_values_opened_after_protocol_freeze") is not True
+        or record.get("parameter_fitting_performed") is not False
+        or record.get("runtime_parameter_changes") is not False
+    ):
+        return None
+    channel_sets: list[set[str]] = []
+    for trial in trials:
+        if not isinstance(trial, dict) or not isinstance(trial.get("sheets"), dict):
+            return None
+        channel_sets.append(set(str(name) for name in trial["sheets"]))
+    if not channel_sets:
+        return None
+    common_channels = sorted(set.intersection(*channel_sets))
+    source = protocol.get("source") or {}
+    return {
+        "artifact": artifact,
+        "evidence_role": "public_kit_lh2_exploratory_channel_inventory",
+        "source": {
+            "doi": source.get("doi"),
+            "url": "https://www.radar-service.eu/radar/en/dataset/umUTdrjbbQCUDIXE",
+            "license": source.get("license"),
+            "repository": "RADAR / Karlsruhe Institute of Technology",
+        },
+        "case_count": len(trials),
+        "channel_families": common_channels,
+        "archive_status": {
+            "full_archive_checksum_verified": False,
+            "member_prefix_only": True,
+            "numeric_values_replayed_after_protocol_freeze": True,
+            "raw_rows_committed": False,
+        },
+        "component_consequence_context": True,
+        "validation_gate_effect": "none",
+        "station_vehicle_full_loop_supported": False,
+        "runtime_parameter_application": False,
+        "claim_limit": str(
+            record.get("claim_boundary")
+            or protocol.get("claim_boundary")
+            or ""
+        ),
+    }
+
+
 def _virtual_response_action_execution_evidence() -> dict[str, Any] | None:
     """Expose the simulation-only command/feedback consistency audit.
 
@@ -5387,6 +5460,20 @@ def _public_source_links(evidence: dict[str, Any]) -> list[dict[str, Any]]:
                 or f"https://doi.org/{ignited_jet_doi}"
             ),
             "공개 원시 점화제트 구성요소 자료(사후 진단, HRS·차량 full-loop 검증 아님)",
+        )
+
+    kit_lh2 = evidence.get("public_kit_lh2_exploratory_evidence") or {}
+    kit_source = kit_lh2.get("source") or {}
+    kit_doi = str(kit_source.get("doi") or "").strip()
+    if kit_doi:
+        add(
+            "PUBLIC_KIT_LH2_EXPLORATORY",
+            "KIT LH2 consequence exploratory workbooks",
+            str(
+                kit_source.get("url")
+                or f"https://doi.org/{kit_doi}"
+            ),
+            "공개 LH2 consequence 채널 구성요소 탐색(불완전 archive, 검증 gate 효과 없음)",
         )
 
     tank_trace = evidence.get("public_tank_trace_boundary") or {}
@@ -9300,6 +9387,11 @@ def build_evidence_manifest(
         envelope["response_evidence"][
             "public_usn_ignited_jet_dataset_diagnostic"
         ] = ignited_jet_dataset
+    kit_lh2_exploratory = _public_kit_lh2_exploratory_evidence()
+    if kit_lh2_exploratory is not None:
+        envelope["response_evidence"][
+            "public_kit_lh2_exploratory_evidence"
+        ] = kit_lh2_exploratory
     virtual_action_execution = _virtual_response_action_execution_evidence()
     if virtual_action_execution is not None:
         envelope["response_evidence"][
@@ -10762,6 +10854,27 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
             "runtime_parameter_application": False,
             "claim_limit": short(ignited_jet_dataset.get("claim_limit")),
         }
+    kit_lh2_exploratory = evidence.get("public_kit_lh2_exploratory_evidence")
+    if isinstance(kit_lh2_exploratory, dict):
+        summary["public_kit_lh2_exploratory_evidence"] = {
+            "evidence_role": kit_lh2_exploratory.get("evidence_role"),
+            "artifact": kit_lh2_exploratory.get("artifact"),
+            "source": kit_lh2_exploratory.get("source") or {},
+            "case_count": kit_lh2_exploratory.get("case_count"),
+            "channel_families": list(
+                kit_lh2_exploratory.get("channel_families") or []
+            ),
+            "archive_status": kit_lh2_exploratory.get("archive_status") or {},
+            "component_consequence_context": kit_lh2_exploratory.get(
+                "component_consequence_context"
+            ) is True,
+            "validation_gate_effect": kit_lh2_exploratory.get(
+                "validation_gate_effect"
+            ),
+            "station_vehicle_full_loop_supported": False,
+            "runtime_parameter_application": False,
+            "claim_limit": short(kit_lh2_exploratory.get("claim_limit")),
+        }
     virtual_action_execution = evidence.get(
         "virtual_response_action_execution_consistency"
     )
@@ -11986,6 +12099,25 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
             )
         )
     )
+    kit_lh2_exploratory_relevant = bool(
+        response.get("public_kit_lh2_exploratory_evidence")
+        and (
+            public_catalog_relevant
+            or any(token in detector_context for token in (
+                "액체수소", "lh2", "점화", "화재", "누출", "방출",
+                "피해영향", "공개", "원자료", "검증", "consequence",
+                "cryogenic", "ignited", "fire", "leak", "release",
+                "dataset", "validation",
+            ))
+            or (
+                bool(compact_impacts)
+                and bool(manifest.get("question") or manifest.get("selected_sensor"))
+            )
+        )
+    )
+    kit_lh2_exploratory = response.get(
+        "public_kit_lh2_exploratory_evidence"
+    ) or {}
     spatial_guidance_relevant = bool(
         spatial_stratification
         and (
@@ -12991,6 +13123,27 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                     ),
                 }
             } if ignited_jet_dataset_relevant else {}),
+            **({
+                "public_kit_lh2_exploratory_evidence": {
+                    "evidence_role": kit_lh2_exploratory.get("evidence_role"),
+                    "artifact": kit_lh2_exploratory.get("artifact"),
+                    "source": kit_lh2_exploratory.get("source") or {},
+                    "case_count": kit_lh2_exploratory.get("case_count"),
+                    "channel_families": list(
+                        kit_lh2_exploratory.get("channel_families") or []
+                    ),
+                    "archive_status": kit_lh2_exploratory.get(
+                        "archive_status"
+                    ) or {},
+                    "component_consequence_context": True,
+                    "validation_gate_effect": "none",
+                    "station_vehicle_full_loop_supported": False,
+                    "runtime_parameter_application": False,
+                    "claim_limit": short(
+                        kit_lh2_exploratory.get("claim_limit"), 220
+                    ),
+                }
+            } if kit_lh2_exploratory_relevant else {}),
             **({
                 "virtual_response_action_execution_consistency": {
                     "evidence_role": virtual_action_execution.get("evidence_role"),
