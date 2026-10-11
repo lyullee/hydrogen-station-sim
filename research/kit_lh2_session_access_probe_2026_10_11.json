@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "artifact_type": "kit_lh2_consequence_session_access_probe",
+  "recorded_at": "2026-10-11",
+  "source": {
+    "doi": "10.35097/1483",
+    "official_record": "https://www.radar-service.eu/radar/en/dataset/umUTdrjbbQCUDIXE",
+    "archive_size_reported": "5.0 GB",
+    "archive_md5_reported": "0e4ac934ecb973c6f07212e8a80707c9"
+  },
+  "session_probe": {
+    "landing_page_status": 200,
+    "download_terms_acceptance_status": 200,
+    "temporary_download_link_status": 200,
+    "stream_status": 200,
+    "stream_content_type": "application/tar",
+    "stream_content_disposition": "attachment;filename=umUTdrjbbQCUDIXE.tar",
+    "stream_transfer_encoding": "chunked",
+    "range_request_honored": false,
+    "bytes_read_for_probe": 16,
+    "full_archive_downloaded": false
+  },
+  "boundary": {
+    "numeric_signal_values_opened": false,
+    "video_outcomes_opened": false,
+    "parameter_fitting_performed": false,
+    "raw_archive_committed": false,
+    "terms_and_access_route": "A session-aware browser-equivalent route is available, but the archive endpoint requires a complete 5.0 GB stream; no outcome file was opened during this probe."
+  },
+  "decision": {
+    "access_route_found": true,
+    "stage1_integrity_verified": false,
+    "stage2_eligible": false,
+    "next_action": "Download the complete archive through the session route, verify the publisher MD5, then run the frozen member inventory before reading any outcome file."
+  },
+  "claim_boundary": "This is an access-path probe only. It is not a numerical validation result and cannot support claims about consequence distance, HyRAM, station safety, or SAGA effectiveness."
+}

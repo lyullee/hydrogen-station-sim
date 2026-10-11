@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "artifact_type": "kit_lh2_consequence_stage1_access_audit",
+  "recorded_at": "2026-10-11",
+  "frozen_protocol": {
+    "artifact": "research/kit_lh2_consequence_intake_protocol_2026_10_08.json",
+    "protocol_id": "KIT-LH2-CONSEQUENCE-STAGED-INTAKE-001",
+    "protocol_status": "stage1_inventory_protocol_frozen_before_archive_download",
+    "protocol_sha256": "cc28aaaf49796a60e245ebc7375ed4d3a9c909d8a86ce09d77e088c03470917f"
+  },
+  "source": {
+    "doi": "10.35097/1483",
+    "official_record": "https://radar.kit.edu/radar/en/dataset/umUTdrjbbQCUDIXE",
+    "license": "CC BY-SA 4.0",
+    "archive_version": 1,
+    "publisher_reported_archive_size": "5.0 GB",
+    "publisher_reported_md5": "0e4ac934ecb973c6f07212e8a80707c9"
+  },
+  "local_download": {
+    "archive_bytes": 4787420,
+    "archive_md5": "fb955817f010bc406669ab85e9c91887",
+    "archive_sha256": "cbf4a147c0d088e6e90cc1b1de6a3d1322614dcb921f616c0ade2fd76b90178b",
+    "md5_matches_publisher": false,
+    "archive_member_scan": {
+      "members": [
+        {
+          "name": "Unnamed entity",
+          "type": "directory",
+          "size_bytes": 0,
+          "family_hint": "container_or_other"
+        },
+        {
+          "name": "Unnamed entity/14.mp4",
+          "type": "file",
+          "size_bytes": 75564208,
+          "family_hint": "video_outcome_file"
+        }
+      ],
+      "member_count": 2,
+      "complete": false,
+      "error": "ReadError: unexpected end of data",
+      "values_opened": false,
+      "video_outcomes_opened": false
+    }
+  },
+  "eligibility_decision": {
+    "stage1_integrity_verified": false,
+    "stage1_inventory_complete": false,
+    "stage2_eligible": false,
+    "claim_supported": false,
+    "reason": "The local archive is incomplete or does not match the publisher checksum. Acquire the exact archive through an authenticated/session-aware route and re-run checksum verification before any outcome file is opened."
+  },
+  "privacy_and_protocol_boundary": {
+    "numeric_signal_values_opened": false,
+    "video_outcomes_opened": false,
+    "raw_rows_committed": false,
+    "parameter_fitting_performed": false,
+    "member_headers_only": true
+  },
+  "claim_boundary": "This artifact documents a failed/incomplete stage-1 access attempt only. It does not validate a release, dispersion, ignition, heat-flux or overpressure model, HyRAM, safety distance, station control or SAGA."
+}
