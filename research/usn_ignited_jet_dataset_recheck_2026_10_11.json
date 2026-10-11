@@ -2,7 +2,7 @@
   "schema_version": 1,
   "artifact_type": "public_ignited_hydrogen_jet_dataset_recheck",
   "recorded_at": "2026-10-11",
-  "status": "PUBLIC_RAW_COMPONENT_DATASET_STAGED_NOT_REPLAYED",
+  "status": "PUBLIC_RAW_COMPONENT_DATASET_POST_ACCESS_DIAGNOSTIC_ONLY",
   "source": {
     "title": "Replication data for: Laboratory-Scale Experiments on Ignited Hydrogen Jets: Flame Acceleration and Overpressure Analysis",
     "dataset_doi": "10.18710/X044QK",
@@ -30,9 +30,22 @@
       "sha256": "C50162C995C01BB37C407E7CE0F132301297BF3B2562518C86940FB758AE2557"
     },
     "raw_csv_files_downloaded": false,
-    "raw_csv_outcomes_opened_before_protocol": false,
+    "raw_csv_file_accessed": true,
+    "raw_csv_outcomes_opened_before_protocol": true,
     "aggregate_summary_opened_before_protocol": true,
-    "access_interpretation": "The public metadata and small aggregate matrix were inspected. The 39 raw time-series CSV files were not downloaded or scored. Because aggregate outcomes were already visible, a future replay is exploratory unless a new pre-access protocol is frozen before raw-file access and the prior exposure is disclosed."
+    "streamed_diagnostic": {
+      "datafile_id": 268221,
+      "name": "Ign_pipe_geom_EXP_001.csv",
+      "bytes": 412188772,
+      "md5": "76f57dd1efaf3f20acd8572785ddbccf",
+      "rows_read": 5000004,
+      "time_range_s": [-0.50000202656, 4.50000096082],
+      "raw_pressure_channel_voltage_min": [-0.01739714, -0.03143694, -0.0889696, -0.02243316],
+      "raw_pressure_channel_voltage_max": [0.01724454, 0.05509095, 0.02930045, 0.03830424],
+      "raw_nozzle_voltage_range": [0.3285618, 2.612471],
+      "interpretation": "Descriptive header/unit diagnostic only; no calibrated pressure trace, model score or parameter update was performed."
+    },
+    "access_interpretation": "The public metadata, aggregate matrix and one raw CSV were accessed after the initial intake record. The raw stream was inspected only for row count, time range and voltage ranges. Since outcomes and raw data were seen before a frozen replay protocol, this record is post-access diagnostic evidence, not prospective validation."
   },
   "measurement_contract": {
     "experiment_count": 40,
@@ -63,7 +76,7 @@
     "current_readiness_gate_effect": "none"
   },
   "replay_protocol_requirement": {
-    "status": "NEEDS_FROZEN_PREACCESS_PROTOCOL",
+    "status": "NEEDS_NEW_VERSION_AND_FROZEN_PREACCESS_PROTOCOL",
     "case_selection": "declare eligibility and an experiment-level calibration/holdout split before downloading any selected raw CSV",
     "parameter_policy": "no case-specific fitting, time warping, outcome-based threshold changes or post-hoc source-term selection",
     "required_outputs": [
@@ -74,7 +87,7 @@
       "ignition delay and obstacle metadata",
       "failure and missing-channel accounting"
     ],
-    "promotion_rule": "do not promote to runtime or claim outdoor HRS safety distance unless a frozen component screen passes and its domain boundary is recorded"
+    "promotion_rule": "do not promote to runtime or claim outdoor HRS safety distance unless a new version is frozen before outcome access, a calibrated component screen passes and its domain boundary is recorded"
   },
   "claim_boundary": "This is a public laboratory-scale ignited-jet component dataset candidate. It can support delayed-ignition, flame-acceleration and overpressure component analysis after a frozen replay, but it does not validate an HRS dispenser, station control, vehicle fueling loop, ESD sequence, field safety distance or SAGA operator effectiveness."
 }
