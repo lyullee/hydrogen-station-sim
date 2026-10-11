@@ -101,6 +101,13 @@
         "warnings": 20,
         "elapsed_seconds": 257.52,
         "source_commit": "e2b9ebe9c79af0a6668e6132fc2afdc7f1fa27f9"
+      },
+      "preslhy_partb_boundary_diagnostic": {
+        "status": "POST_OUTCOME_DIAGNOSTIC_ONLY",
+        "evidence": "research/preslhy_partb_boundary_diagnostic_2026_10_11.json",
+        "primary_gate_effect": "none",
+        "finding": "2 mm cases retain the frozen half-time failure; measured P-Innen/P-Duese boundary and diameter-dependent implied sensitivity are recorded without runtime fitting.",
+        "runtime_parameter_application": false
       }
     }
   }
