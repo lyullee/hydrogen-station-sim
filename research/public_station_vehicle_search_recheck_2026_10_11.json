@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "artifact_type": "station_to_vehicle_public_search_recheck",
+  "recorded_at": "2026-10-11",
+  "search_scope": {
+    "queries": [
+      "hydrogen refueling station vehicle filling synchronized pressure temperature time series dataset download",
+      "NREL HDVS fueling data time series station vehicle pressure temperature mass flow",
+      "70 MPa hydrogenation port test dataset raw xlsx"
+    ],
+    "eligibility_rule": "A reusable physical event must expose station/controller and dispenser/nozzle plus vehicle/receptacle channels on a common clock, with units, initial conditions, tank capacity, protocol metadata and rights sufficient for independent scoring."
+  },
+  "sources": [
+    {
+      "name": "NREL Heavy-Duty Hydrogen Fueling Performance Demonstration",
+      "url": "https://www.nrel.gov/docs/fy25osti/92352.pdf",
+      "observed_role": "reported 73 kg HD vehicle-simulator fill using SAE protocol at 70 MPa and 300 g/s",
+      "decision": "REPORT_SUMMARY_ONLY",
+      "reason": "The report provides event-level performance results and plotted/summary values, but no reusable row-level synchronized logger archive, channel dictionary or raw-data reuse terms."
+    },
+    {
+      "name": "NREL Fuel Cell Vehicle Infrastructure CRADA report",
+      "url": "https://www.nrel.gov/docs/fy19osti/73382.pdf",
+      "observed_role": "more than 90 vehicle or simulator fuelings and station/vehicle interaction examples",
+      "decision": "REPORT_SUMMARY_ONLY",
+      "reason": "The report explicitly presents figures and aggregate observations; the underlying detailed partner data are protected and no rights-cleared synchronized raw archive is released."
+    },
+    {
+      "name": "NREL Fuel Cell Electric Vehicle Composite Data Products",
+      "url": "https://www.nrel.gov/hydrogen/fuel-cell-vehicle-cdps",
+      "observed_role": "public aggregate fill duration, fill amount, pressure and temperature products",
+      "decision": "EXCLUDE_FROM_EXTERNAL_VALIDATION",
+      "reason": "Composite statistics are not event-level station/controller/dispenser/vehicle traces and cannot be scored as a prospective raw holdout."
+    },
+    {
+      "name": "70 MPa hydrogenation-port test dataset (NBS DC)",
+      "url": "https://www.nbsdc.cn/general/dataLinks/16666.11.nbsdc.ZjzPghqx",
+      "identifier": "ImageCSTR:16666.11.nbsdc.ZjzPghqx",
+      "observed_role": "73.94 MB, 15-file component test collection with xlsx/mp4/pdf/docx entries",
+      "decision": "CUSTODIAN_ACCESS_REQUIRED",
+      "reason": "The catalog requires account registration/login and does not expose an openly reusable synchronized station-to-vehicle archive or licence in the public record. It is a request lead, not an eligible holdout."
+    },
+    {
+      "name": "Estimation of temperature change in practical hydrogen pressure tanks being filled at high pressures",
+      "url": "https://doi.org/10.1016/j.ijhydene.2011.12.136",
+      "observed_role": "published measured 35/70 MPa practical tank-fill temperature study",
+      "decision": "REPORT_SUMMARY_ONLY",
+      "reason": "The article establishes useful operating context and describes measured station/tank quantities, but the public record does not provide a rights-cleared machine-readable synchronized raw logger bundle."
+    }
+  ],
+  "decision": "NO_NEW_ELIGIBLE_PUBLIC_RAW_STATION_TO_VEHICLE_SET_IDENTIFIED",
+  "primary_goal_impact": {
+    "full_loop_external_validation": "OUT_OF_SCOPE",
+    "paper_limitation": "Do not claim independent station-to-vehicle full-loop accuracy, vehicle-controller validation or field-safety validation from these reports or aggregate products.",
+    "reentry_condition": "Obtain at least three rights-cleared events with station/controller, dispenser/nozzle and vehicle/receptacle channels on a common clock; freeze the scoring protocol before accessing outcomes."
+  },
+  "claim_boundary": "This is a public-access availability audit. It does not prove that restricted, proprietary or unpublished traces do not exist."
+}

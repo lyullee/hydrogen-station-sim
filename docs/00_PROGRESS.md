@@ -1,5 +1,15 @@
 # Development Progress
 
+## 2026-10-11 - Recheck official public station-to-vehicle sources
+
+A focused search of NREL demonstration reports and composite products, the
+NBS data catalogue, and the published practical tank-filling literature found
+no new rights-cleared common-clock raw station/controller/dispenser/vehicle
+bundle.  The available material is retained as summary or custodian-request
+evidence only.  It cannot close the independent station-to-vehicle holdout or
+change runtime parameters.  The search boundary and exclusion reasons are
+recorded in `research/public_station_vehicle_search_recheck_2026_10_11.json`.
+
 ## 2026-10-11 - Recheck a published vehicle-fueling experiment lead
 
 The published 35 MPa/70 MPa fueling study (DOI
