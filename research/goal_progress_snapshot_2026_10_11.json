@@ -102,7 +102,7 @@
         "evidence": "research/full_regression_test_run_2026_10_11.json",
         "warnings": 20,
         "elapsed_seconds": 267.02,
-        "source_commit": "cb796262e2e9c36a9bee8aba4a0bcfd22e304c6f"
+        "source_commit": "ffe67efab362d4a4465195229b170b1ef289cba0"
       },
       "preslhy_partb_boundary_diagnostic": {
         "status": "POST_OUTCOME_DIAGNOSTIC_ONLY",
