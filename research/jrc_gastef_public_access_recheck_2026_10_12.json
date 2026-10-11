@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "artifact_type": "jrc_gastef_public_access_recheck",
+  "recorded_at": "2026-10-12",
+  "evidence_role": "public_access_recheck_only",
+  "source_records": [
+    {
+      "title": "JRC Reference Data from Experiments on Onboard Hydrogen Tanks Fast Filling",
+      "record_url": "https://publications.jrc.ec.europa.eu/repository/handle/JRC76380",
+      "doi": "10.1016/j.ijhydene.2014.03.227",
+      "observed_public_scope": "The record describes measured pressure and temperature histories and reports that reference data were intended for safety and CFD validation."
+    },
+    {
+      "title": "JRC reference data from experiments of onboard hydrogen tanks fast filling",
+      "record_url": "https://publications.jrc.ec.europa.eu/repository/handle/JRC90323",
+      "doi": "10.1016/j.ijhydene.2014.03.227",
+      "observed_public_scope": "The record exposes publication metadata and experimental description; its Datasets and Dataset collections sections do not expose a public raw time-series URL."
+    },
+    {
+      "title": "Hydrogen tank first filling experiments at the JRC-IET GasTeF facility",
+      "record_url": "https://publications.jrc.ec.europa.eu/repository/handle/JRC80910",
+      "doi": "10.1016/j.ijhydene.2013.10.038",
+      "observed_public_scope": "The record describes full-scale tank tests and instrumentation but does not expose a machine-readable synchronized raw trace."
+    }
+  ],
+  "access_observation": {
+    "official_records_retrieved": true,
+    "publication_metadata_retrieved": true,
+    "datasets_table_public_url_found": false,
+    "dataset_collection_public_url_found": false,
+    "machine_readable_raw_trace_retrieved": false,
+    "channel_dictionary_retrieved": false,
+    "reuse_terms_for_derived_metrics_found": false,
+    "graph_or_table_only": true
+  },
+  "eligibility_decision": "CONTROLLED_ACCESS_LEAD_NO_PUBLIC_RAW_ARCHIVE",
+  "full_loop_holdout_eligible": false,
+  "numeric_holdout_added": false,
+  "runtime_model_changed": false,
+  "claim_boundary": "The official records support provenance for GasTeF instrumentation and filling experiments. They do not provide an independently reusable time-resolved trace for numerical validation, station-to-vehicle full-loop validation or site-safety claims.",
+  "next_action": "Use the existing data request draft to request a de-identified raw export, channel dictionary, calibration metadata and written reuse permission. Freeze the holdout protocol before opening numerical outcomes."
+}
