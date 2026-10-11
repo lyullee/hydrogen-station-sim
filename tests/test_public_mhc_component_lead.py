@@ -35,3 +35,21 @@ def test_public_mhc_component_lead_is_explicitly_bounded() -> None:
     assert screen["screen"]["schema_screen_pass"] is True
     assert screen["screen"]["direct_runtime_model_compatibility"] is False
     assert screen["decision"]["runtime_parameter_application"] is False
+
+    protocol16 = json.loads(
+        (root / "research/public_mhc_experiment16_holdout_protocol_2026_10_12.json")
+        .read_text(encoding="utf-8")
+    )
+    assert protocol16["status"] == "protocol_frozen_before_holdout_access"
+    assert protocol16["protocol"]["holdout"] == "Experiment 16.xlsx"
+    assert protocol16["protocol"]["raw_rows_persisted"] is False
+
+    screen16 = json.loads(
+        (root / "research/public_mhc_experiment16_screen_2026_10_12.json")
+        .read_text(encoding="utf-8")
+    )
+    assert screen16["source"]["accessed_after_protocol_freeze"] is True
+    assert screen16["schema_screen"]["required_families_present"] is True
+    assert screen16["quality_checks"]["elapsed_time_monotonic_non_decreasing"] is True
+    assert screen16["decision"]["direct_runtime_model_compatibility"] is False
+    assert screen16["decision"]["runtime_parameter_application"] is False

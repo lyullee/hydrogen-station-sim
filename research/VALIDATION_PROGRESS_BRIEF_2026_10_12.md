@@ -15,6 +15,7 @@
 - 비식별 station-side 원자료: 56,854,143개 행, 고압 압력 사이클 16,770건, 중·고압 연계 11,770건, 재충전 압력 예측 1,418건. 압력·cascade·재충전 동역학 진단에 사용합니다.
 - 같은 자료의 시간순 holdout: 압력 경계 30점, cascade 3,664쌍, 재충전 예측 394건. 차량 충전 정확도나 현장 안전한계로 확대하지 않습니다.
 - 공개 Type-IV 탱크 경계 검증: 12건, 탱크 경계 구성요소 검증으로 유지합니다.
+- 공개 MHC Experiment 16 구성요소 screen: 프로토콜 고정 후 1,186개 기록/1,185초 압력·유량·온도 trace를 확인했습니다. 금속수소화물 압축기 경계와 `L/min` 단위가 station compressor와 달라 호환성 근거로만 유지하며 runtime 파라미터에는 반영하지 않습니다.
 - 사고 전례·대응 플레이북·가상 조치 실행은 시나리오와 단계별 대응 근거로 사용하며, 사고 빈도나 현장 대응 효과를 추정하지 않습니다.
 
 ## 실패 또는 제한된 결과도 그대로 유지
@@ -49,6 +50,8 @@
 - `research/PUBLIC_STATION_TO_VEHICLE_SEARCH_2026_10_11.md`
 - `research/public_station_vehicle_search_recheck_2026_10_12.json`
 - `research/h2safe_oedi_recheck_2026_10_12.json`
+- `research/public_mhc_experiment16_holdout_protocol_2026_10_12.json`
+- `research/public_mhc_experiment16_screen_2026_10_12.json`
 - `data/public_validation/results/closed_loop_external_holdout/validation.json`
 
 이 브리프는 모델이나 검증 게이트를 변경하지 않습니다. 새로운 자료가 들어오면 동일한 동결·시간축·권한 검사를 거친 뒤 다시 생성합니다.

@@ -1,0 +1,147 @@
+{
+  "schema_version": 1,
+  "artifact_type": "public_mhc_component_holdout_screen",
+  "recorded_at": "2026-10-12",
+  "status": "screened_component_only_not_runtime_admitted",
+  "source": {
+    "doi": "10.5281/zenodo.18213166",
+    "version": "v1.1",
+    "repository_path": "Dataset/Experiment 16.xlsx",
+    "repository": "https://github.com/LukasFleming/MHC-Dataset/tree/v1.1",
+    "license": "CC BY 4.0",
+    "source_sha256": "e2be41355e943801747f8e633e2cb165da8f39ae9d2e892cab4e2b6a2401f088",
+    "source_bytes": 13571777,
+    "accessed_after_protocol_freeze": true
+  },
+  "protocol": {
+    "protocol_artifact": "research/public_mhc_experiment16_holdout_protocol_2026_10_12.json",
+    "holdout_selection_before_row_access": true,
+    "raw_file_persisted_in_repository": false,
+    "repository_search_prior_access_found": false
+  },
+  "workbook": {
+    "sheetnames": [
+      "Sensor Overview",
+      "Cycle Definition Exp.16",
+      "Cycle Data Exp.16",
+      "H2 Mass Balance Exp.16",
+      "Heat Balance Exp.16",
+      "Efficiency Exp.16",
+      "Summary Exp.16"
+    ],
+    "cycle_data_sheet": "Cycle Data Exp.16",
+    "cycle_data_rows_including_header": 3612,
+    "cycle_data_numeric_records": 1186,
+    "elapsed_time_span_s": 1185.0,
+    "experiment_type": "Single Tank Compression",
+    "configuration": "Stage I TiZrMn; Stage II absent",
+    "declared_inlet_pressure_bar": 20,
+    "declared_outlet_pressure_min_bar": 60,
+    "declared_cycle_time_min": 20,
+    "declared_productivity_gH2_per_h": 12.843180786053574
+  },
+  "schema_screen": {
+    "required_families_present": true,
+    "required_columns": {
+      "elapsed_time_s": {
+        "header": "Seconds",
+        "unit": "s"
+      },
+      "inlet_pressure_bar": {
+        "header": "P-4",
+        "unit": "bar"
+      },
+      "mass_flow_l_min": {
+        "header": "MF-1",
+        "unit": "l/min"
+      },
+      "htf_temperature_c": {
+        "header": "T_HTF-1",
+        "unit": "°C"
+      },
+      "outlet_pressure_barg": {
+        "header": "P-1",
+        "unit": "barg"
+      },
+      "stage_temperature_c": {
+        "header": "Pt-1_2",
+        "unit": null
+      }
+    },
+    "required_channel_stats": {
+      "elapsed_time_s": {
+        "count": 1186,
+        "min": 1215.0,
+        "max": 2400.0,
+        "mean": 1807.5,
+        "first": 1215.0,
+        "last": 2400.0
+      },
+      "inlet_pressure_bar": {
+        "count": 1186,
+        "min": 0.0,
+        "max": 0.56,
+        "mean": 0.10881112984822935,
+        "first": 0.1,
+        "last": 0.07
+      },
+      "mass_flow_l_min": {
+        "count": 1186,
+        "min": 8.7,
+        "max": 12.1,
+        "mean": 10.175885328836426,
+        "first": 10.7,
+        "last": 10.6
+      },
+      "htf_temperature_c": {
+        "count": 1186,
+        "min": 6.0,
+        "max": 94.0,
+        "mean": 50.11298482293423,
+        "first": 94.0,
+        "last": 93.0
+      },
+      "outlet_pressure_barg": {
+        "count": 1186,
+        "min": 18.4,
+        "max": 62.8,
+        "mean": 39.797301854974705,
+        "first": 60.0,
+        "last": 60.0
+      },
+      "stage_temperature_c": {
+        "count": 1186,
+        "min": 5.13,
+        "max": 92.61,
+        "mean": 49.11849915682968,
+        "first": 92.59,
+        "last": 92.06
+      }
+    }
+  },
+  "quality_checks": {
+    "elapsed_time_monotonic_non_decreasing": true,
+    "elapsed_time_duplicate_count": 0,
+    "elapsed_time_gap_count_over_1_5s": 0,
+    "elapsed_time_max_step_s": 1.0,
+    "error_cells_in_required_channels": 0,
+    "error_cell_examples": [],
+    "failures_retained": true
+  },
+  "decision": {
+    "schema_screen_pass": true,
+    "direct_runtime_model_compatibility": false,
+    "component_validation_score": null,
+    "runtime_parameter_application": false,
+    "full_loop_external_holdout_eligible": false,
+    "use": "independent component schema and boundary compatibility evidence only",
+    "reason": "Experiment 16 is a laboratory single-tank metal-hydride compressor trace. Flow is reported in L/min and the adsorption/thermal boundary is not the station compressor model; a separate attested component model and conversion are required before numerical error metrics."
+  },
+  "privacy": {
+    "site_identity_published": false,
+    "company_or_manufacturer_published": false,
+    "absolute_private_timestamps_published": false,
+    "raw_rows_persisted": false
+  },
+  "claim_boundary": "This holdout does not validate the HRS full loop, station-to-vehicle synchronization, safety response, HyRAM consequence distance or LLM effectiveness."
+}

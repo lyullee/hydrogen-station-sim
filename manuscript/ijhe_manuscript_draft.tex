@@ -926,6 +926,13 @@ protocol was frozen. Helium and the missing release-to-workbook time crosswalk
 make this a ventilation/spatial component candidate only, not a source for
 fitting, detector placement, hydrogen conversion or full-loop validation.
 
+One screen selected Experiment 16 before access from
+29-experiment compressor archive \cite{mhc2025}. Experiment 16 has 1,186 records spanning 1,185 s
+with monotone time and pressure, flow and temperature channels. Flow is
+in L min$^{-1}$ and its adsorption/thermal
+boundary differs from the station compressor, it is retained as compatibility
+evidence only; no coefficients, runtime defaults or HRS claims are derived.
+
 \subsection{Evidence-gated language-model assistance}
 LLM assistance follows deterministic calculations and uses structured provenance,
 scenario state, consequence fields and uncertainty flags, preventing unsupported
@@ -942,17 +949,15 @@ phrases. These are traceability results; no independent reviewer assessed unsafe
 omissions.
 
 \subsection{Limitations}
-All sensors and actions are simulated. Station geometry, weather, occupancy,
-valve coefficients, compressor maps and proprietary J2601 control remain
-unvalidated assumptions. No openly reusable synchronized station-to-vehicle
-raw cohort was identified, so vehicle-side full-loop accuracy is outside the
-primary claim and is reported only as a transfer limitation. Most release-transfer gates failed; the positive Ekoto result covers only
-a small, short-duration source. ELVHYS provides cryogenic pressure-peaking
-observations, but its post-access replay is provenance/timebase evidence because
-vehicle and controller telemetry are absent \cite{elvhys2025}. HIAD reports are
-retrospective, and the 34-case machine proxy and post-outcome guard rerun cannot
-replace the independent expert review that would be required before any
-facility-specific human-effectiveness claim.
+All sensors and actions are simulated. Geometry, weather, occupancy, valve
+coefficients, compressor maps and proprietary J2601 control remain assumptions.
+No reusable synchronized station-to-vehicle cohort was identified, so
+vehicle-side full-loop accuracy is outside the primary claim. Most
+release-transfer gates failed; the positive Ekoto result covers only a small
+source. ELVHYS is provenance/timebase evidence because vehicle and controller
+telemetry are absent \cite{elvhys2025}. HIAD reports are retrospective, and the
+machine proxy cannot replace independent expert review before a facility-specific
+human-effectiveness claim.
 
 \section{Conclusions}
 A hydrogen-station safety digital twin was evaluated with separate evidence gates
@@ -971,16 +976,13 @@ data were unavailable. An eight-trace confidential station dwell rule also faile
 holdout and remains disabled. Independent release tests exposed pressure-,
 diameter- and apparatus-dependent errors that an aperture-only source cannot
 resolve. The positive Ekoto result passed all three frozen mass-flow screens but
-is bounded to its 13.45 MPa, 3.63 L source. The HyRAM+ adapter reproduced its
-installed v6.1 API contract, and all 27 ignited-enclosure holdouts met the 2 kPa
-peak-error screen (MAE 0.672 kPa), supporting only those component endpoints.
-The retrospective 34-event benchmark favored direct SAGA over alarm-only text
-on the frozen structural proxy (0.760 versus 0.401). A post-outcome direct-API
-guard reduced lexical flags from 3/34 to 0/34; a 5/5 regression then preserved
-equivalent grounded units while rejecting an absent value. Expert study remains
-pending. The evidence supports a reproducible research
-prototype and validation workflow, without supporting SAE-compliant fuelling
-control, field safety certification or autonomous emergency management.
+is bounded to its 13.45 MPa, 3.63 L source. All 27 ignited-enclosure holdouts
+met the 2 kPa peak-error screen (MAE 0.672 kPa), supporting only that component
+endpoint. The retrospective 34-event benchmark favored direct SAGA over
+alarm-only text (0.760 versus 0.401), while the API guard rejected an absent
+value in a 5/5 regression. Expert study remains pending. The evidence supports
+a reproducible prototype, without supporting SAE-compliant fuelling control,
+field safety certification or autonomous emergency management.
 
 \section*{Data and code availability}
 Source code, study scripts, frozen machine-readable evidence and documentation are
@@ -1027,6 +1029,10 @@ take full responsibility for the final article.
 A. Andreasen, Supplementary material for ``Open Source Tools for Pressure Vessel
 Thermo-Mechanical Response and Safety Analysis,'' Zenodo (2026),
 \url{https://doi.org/10.5281/zenodo.20728325}.
+\bibitem{mhc2025}
+L. Fleming et al., \textit{Experimental Dataset for a Two-Stage Metal Hydride
+Hydrogen Compressor}, Zenodo (2025), version 1.1,
+\href{https://doi.org/10.5281/zenodo.18213166}{doi:10.5281/zenodo.18213166}.
 \bibitem{couteau2025flow}
 A. Couteau, P. Dimopoulos Eggenschwiler, P. Jenny, Flow patterns and heat
 transfer characterization during large aspect ratio hydrogen tank filling,
