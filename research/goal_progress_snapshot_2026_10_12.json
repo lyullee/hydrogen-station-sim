@@ -1,0 +1,85 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-10-11T18:02:14+00:00",
+  "metric_definition": "PASS gates divided by PASS+FAIL+PENDING gates; not a publication-readiness probability",
+  "gate_counts": {
+    "PASS": 128,
+    "FAIL": 10,
+    "PENDING": 7,
+    "TOTAL": 145
+  },
+  "gate_closure_percent": 88.3,
+  "primary_scope_progress_2026_10_11": {
+    "metric_definition": "Scope-adjusted gate closure after removing the declared station-to-vehicle full-loop and optional SAGA human-evaluation lanes; this is not a scientific improvement claim.",
+    "gate_counts": {
+      "PASS": 128,
+      "FAIL": 9,
+      "PENDING": 2,
+      "TOTAL": 139
+    },
+    "gate_closure_percent": 92.1,
+    "excluded_gate_ids": [
+      "full_loop_external_validation",
+      "hiad_casebook_frozen",
+      "hiad_holdout_collection",
+      "independent_expert_review_complete",
+      "institutional_ethics_determination",
+      "saga_effectiveness_and_safety_supported"
+    ]
+  },
+  "bounded_ijhe_submission_ready": false,
+  "full_user_objective_ready": false,
+  "goal_completion_permitted": false,
+  "blocking_bounded_submission_gates": [
+    "dickens_typeiii_prospective_validation",
+    "preslhy_partb_ambient_external_validation",
+    "preslhy_revised_holdout_validation",
+    "proust_independent_release_validation",
+    "schefer_transient_release_validation",
+    "schefer_2007_pressure_decay_validation",
+    "grune_2014_pressure_decay_validation",
+    "submission_metadata_and_declarations"
+  ],
+  "blocking_full_objective_gates": [
+    "dickens_typeiii_prospective_validation",
+    "preslhy_partb_ambient_external_validation",
+    "preslhy_revised_holdout_validation",
+    "proust_independent_release_validation",
+    "schefer_transient_release_validation",
+    "schefer_2007_pressure_decay_validation",
+    "grune_2014_pressure_decay_validation",
+    "submission_metadata_and_declarations",
+    "h2safe_spatial_detector_transfer_validation"
+  ],
+  "interpretation": {
+    "current_state": "implementation_and_evidence_gates_partially_closed",
+    "do_not_claim": [
+      "validated_full_station_to_vehicle_digital_twin",
+      "publication_acceptance_or_probability"
+    ],
+    "next_high_impact_actions": [
+      "retry the range-capable KIT LH2 archive fetch after the RADAR rate limit cools, then verify the publisher MD5 before metadata-only inventory",
+      "obtain an independent time-resolved measured pressure trace for the pending Grune holdout",
+      "keep the blinded expert and prospective SAGA safety-effectiveness study optional; start it only if the manuscript claims improved human safety decisions"
+    ],
+    "scope_amendment_2026_10_11": {
+      "in_scope": [
+        "station-side HRS process and safety digital-twin behavior",
+        "public Type-IV tank thermodynamics with a frozen independent holdout",
+        "release, dispersion, consequence and risk-model component validation",
+        "SAGA direct-answer response generation with explicit evidence boundaries"
+      ],
+      "excluded_from_primary_goal": [
+        "synchronized station-to-vehicle raw logger validation",
+        "vehicle-side controller/ESD channel validation"
+      ],
+      "paper_limitation": "No openly reusable synchronized station-to-vehicle trace was identified; the paper will state this as a boundary and will not claim full-loop field validation.",
+      "legacy_full_scope_metric": "full_user_objective_ready and its open full-loop gate remain in the audit only for traceability; they are not a required claim in the amended primary scope."
+    },
+    "priority_status_2026_10_11": {
+      "independent_component_holdout": "retained_public_type_iv_split_ready",
+      "station_to_vehicle_raw_data": "removed_from_primary_goal_after_public_search",
+      "ethics_and_expert_review": "optional_for_physics_validation; required only for a claim that SAGA improves human safety guidance"
+    }
+  }
+}

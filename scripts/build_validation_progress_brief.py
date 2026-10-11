@@ -34,7 +34,12 @@ def build_brief(
     readiness: dict[str, Any],
     local_screen: dict[str, Any],
 ) -> str:
-    counts = coverage.get("readiness", {}).get("ijhe_gate_counts", {})
+    # The latest readiness artifact is the authoritative source.  Older
+    # coverage summaries carry a nested ``readiness.ijhe_gate_counts`` block;
+    # accept both layouts so a refresh cannot silently print stale gate totals.
+    counts = readiness.get("gate_counts") or coverage.get("readiness", {}).get(
+        "ijhe_gate_counts", {}
+    )
     actionable = coverage.get("validated_or_actionable_now", [])
     station = next(
         (item for item in actionable if item.get("id") == "owner_station_side_dynamics"),
@@ -67,6 +72,31 @@ def build_brief(
     holdout_aggregate = holdout.get("aggregate", {})
     holdout_metrics = holdout_aggregate.get("metrics", {})
     scoped = readiness.get("primary_scope_progress_2026_10_11", {})
+    if not scoped:
+        excluded = {
+            "full_loop_external_validation",
+            "institutional_ethics_determination",
+            "hiad_casebook_frozen",
+            "hiad_holdout_collection",
+            "independent_expert_review_complete",
+            "saga_effectiveness_and_safety_supported",
+        }
+        scoped_rows = [
+            row for row in (readiness.get("gates") or [])
+            if row.get("id") not in excluded
+        ]
+        scoped_counts = {
+            status: sum(row.get("status") == status for row in scoped_rows)
+            for status in ("PASS", "FAIL", "PENDING")
+        }
+        scoped_total = sum(scoped_counts.values())
+        scoped = {
+            "gate_counts": scoped_counts,
+            "gate_closure_percent": (
+                scoped_counts["PASS"] / scoped_total * 100.0
+                if scoped_total else None
+            ),
+        }
 
     lines = [
         "# 검증 진행 브리프 (privacy-safe)",
@@ -78,11 +108,12 @@ def build_brief(
         "",
         f"- IJHE 내부 게이트: **PASS {_number(counts.get('PASS'), 0)} / "
         f"FAIL {_number(counts.get('FAIL'), 0)} / PENDING {_number(counts.get('PENDING'), 0)}**.",
-        f"- 제한된 투고 준비: **{'가능' if readiness.get('bounded_ijhe_submission_ready') else '아직 불가'}**.",
+        f"- 제한된 투고 준비: **{'가능' if readiness.get('bounded_ijhe_submission_ready', coverage.get('readiness', {}).get('bounded_submission_ready')) else '아직 불가'}**.",
         "- 현재 주 목표: **station-side 안전 디지털 트윈·구성요소 검증·근거 기반 SAGA 응답**.",
         "- 동기화 station-to-vehicle full-loop 검증: **주 목표에서 제외하고 논문 한계로 명시**.",
-        f"- 개정 주 목표 보조 지표: **{_number(scoped.get('PASS'), 0)} PASS / "
-        f"{_number(scoped.get('FAIL'), 0)} FAIL / { _number(scoped.get('PENDING'), 0)} PENDING "
+        f"- 개정 주 목표 보조 지표: **{_number((scoped.get('gate_counts') or {}).get('PASS', scoped.get('PASS')), 0)} PASS / "
+        f"{_number((scoped.get('gate_counts') or {}).get('FAIL', scoped.get('FAIL')), 0)} FAIL / "
+        f"{_number((scoped.get('gate_counts') or {}).get('PENDING', scoped.get('PENDING')), 0)} PENDING "
         f"= {_number(scoped.get('gate_closure_percent'), 1)}%**. 범위 조정 결과이지 새 검증 통과가 아닙니다.",
         "",
         "## 지금 바로 사용할 수 있는 근거",
@@ -113,6 +144,8 @@ def build_brief(
         "현재 스크리닝을 통과하지 못해 진단용으로만 유지합니다.",
         f"- 새 full-loop 측정 코호트: **{'확인됨' if full_loop.get('new_full_loop_measured_cohort_found') else '확인되지 않음'}**. "
         "현재 주된 공백은 동기화된 차량·수용용기 측 채널입니다.",
+        "- 2026-10-12 공개자료 재검색에서도 H2-Stations 운영 메타데이터와 보고서·구성요소 자료만 확인되었고, "
+        "공통 시계의 station/controller·dispenser·vehicle 원시 로그는 새로 확인되지 않았습니다.",
         "",
         "## 추가 자료 없이 진행 가능한 작업",
         "",
@@ -138,6 +171,7 @@ def build_brief(
         "- `research/local_candidate_full_loop_screen_2026_10_09.json`",
         "- `research/GOAL_SCOPE_AMENDMENT_2026_10_11.md`",
         "- `research/PUBLIC_STATION_TO_VEHICLE_SEARCH_2026_10_11.md`",
+        "- `research/public_station_vehicle_search_recheck_2026_10_12.json`",
         "- `data/public_validation/results/closed_loop_external_holdout/validation.json`",
         "",
         "이 브리프는 모델이나 검증 게이트를 변경하지 않습니다. 새로운 자료가 들어오면 동일한 동결·시간축·권한 검사를 거친 뒤 다시 생성합니다.",
