@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-11T08:45:19.385153+00:00",
+  "generated_at": "2026-10-11T09:19:03.546741+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -6466,7 +6466,7 @@
       "id": "grune_2014_pressure_decay_validation",
       "status": "PENDING",
       "claim": "The locked source model meets all pressure-decay screens on the independent KIT small-reservoir release.",
-      "evidence": "research\\grune_2014_holdout_result.json; research\\grune_2014_holdout_protocol.json; data\\public_validation\\derived\\grune_2014_figure2.csv; research\\grune_2014_publisher_access_recheck_2026_10_06.json; research/grune_2014_archive_access_recheck_2026_10_05.json",
+      "evidence": "research\\grune_2014_holdout_result.json; research\\grune_2014_holdout_protocol.json; data\\public_validation\\derived\\grune_2014_figure2.csv; research\\grune_2014_publisher_access_recheck_2026_10_11.json; research/grune_2014_publisher_access_recheck_2026_10_06.json; research/grune_2014_archive_access_recheck_2026_10_05.json",
       "requirement": "At least 15 points plus an observable half-pressure crossing; <=10% NRMSE, <=15% median error and <=20% half-time error.",
       "observed": {
         "eligibility": {
@@ -6492,7 +6492,7 @@
         },
         "hashes_match": true,
         "publisher_access_recheck": {
-          "status": "publisher_access_recheck_completed",
+          "status": "publisher_and_repository_recheck_completed",
           "raw_trace_found": false,
           "full_raw_holdout_eligible": false
         },
@@ -8308,30 +8308,30 @@
       "requirement": "Compiler success, exact source/PDF hashes, no unresolved errors, and visual inspection of every rendered page.",
       "observed": {
         "schema_version": 2,
-        "verified_at_utc": "2026-10-11T01:17:00.098293+00:00",
+        "verified_at_utc": "2026-10-11T09:18:55.168110+00:00",
         "success": true,
         "compiler": {
           "name": "Tectonic",
           "version": "0.17.0",
           "official_release_url": "https://github.com/tectonic-typesetting/tectonic/releases/tag/tectonic%400.17.0",
-          "archive_sha256": "f61ce51f0b0ade1015b7de7ef368541c5424e9756ecbd0d7af97d6d48030845f"
+          "archive_sha256": "f61ce51f0b0ade1015b7de7ef368541c5424e9756ecbd0d7af97d6d48030845"
         },
         "source": {
           "path": "manuscript/ijhe_manuscript_draft.tex",
-          "bytes": 75877,
-          "sha256": "f0f654c56a53202ce9a01d44e6c4348b649e1a42fc89884938ac7ae00914adc1"
+          "bytes": 75950,
+          "sha256": "f85f88a70bcbb73d0539d9efa234dba8e171ca5f4507e365b000c602b518eb3d"
         },
         "pdf": {
           "path": "output/pdf/ijhe_manuscript_working_draft.pdf",
-          "bytes": 834342,
-          "sha256": "4bcdd74ee4999a308fbb47980ff27936cb9851260b4945c352a3cbae968bcefd",
+          "bytes": 834462,
+          "sha256": "3441af966d24fad3c74d09eead8a78bdc502ef1ae44c97834c954c90ab0a4fc4",
           "page_count": 23,
-          "extracted_character_count": 70632
+          "extracted_character_count": 70708
         },
         "compile_log": {
           "path": "output/pdf/ijhe_manuscript_working_draft.compile.txt",
-          "bytes": 3057,
-          "sha256": "41cbbb86d4892825f8ca6a1f38bf1141030901d93d834984f7751b69f6766c31",
+          "bytes": 5309,
+          "sha256": "ea4c18bf6e8193d81cacf4f3ad5a2ba3c25ca141a144ce1dcf7bb3d182c6c3e7",
           "unresolved_citations": 0,
           "unresolved_references": 0,
           "fatal_errors": [],

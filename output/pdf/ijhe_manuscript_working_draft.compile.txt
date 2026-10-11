@@ -1,32 +1,90 @@
 note: Running TeX ...
-Fontconfig error: Cannot load default config file: No such file: (null)
-warning: lineno.sty:296: Invalid UTF-8 byte or sequence at line 296 replaced by U+FFFD.
-warning: ijhe_manuscript_draft.tex:581: Underfull \hbox (badness 2005) in paragraph at lines 575--581
-warning: ijhe_manuscript_draft.tex:1043: Underfull \hbox (badness 4242) in paragraph at lines 1040--1043
-warning: ijhe_manuscript_draft.tex:1043: Underfull \hbox (badness 10000) in paragraph at lines 1040--1043
-warning: ijhe_manuscript_draft.tex:1058: Underfull \hbox (badness 3417) in paragraph at lines 1056--1058
-warning: ijhe_manuscript_draft.tex:1069: Underfull \hbox (badness 1902) in paragraph at lines 1065--1069
-warning: ijhe_manuscript_draft.tex:1069: Underfull \hbox (badness 2005) in paragraph at lines 1065--1069
-warning: ijhe_manuscript_draft.tex:1069: Underfull \hbox (badness 1990) in paragraph at lines 1065--1069
-warning: ijhe_manuscript_draft.tex:1146: Underfull \hbox (badness 1127) in paragraph at lines 1140--1146
-warning: ijhe_manuscript_draft.tex:1179: Underfull \hbox (badness 2951) in paragraph at lines 1176--1179
-warning: ijhe_manuscript_draft.tex:1179: Underfull \hbox (badness 3158) in paragraph at lines 1176--1179
-warning: ijhe_manuscript_draft.tex:1269: Underfull \hbox (badness 10000) in paragraph at lines 1267--1269
 note: Rerunning TeX because "ijhe_manuscript_draft.out" changed ...
+(ijhe_manuscript_draft.tex
+LaTeX2e <2021-11-15> patch level 1
+L3 programming layer <2022-02-24> (article.cls
+Document Class: article 2021/10/04 v1.4n Standard LaTeX document class
+(size12.clo)) (geometry.sty (keyval.sty) (ifvtex.sty (iftex.sty))) (amsmath.sty
+For additional information on amsmath, use the `?' option.
+(amstext.sty (amsgen.sty)) (amsbsy.sty) (amsopn.sty)) (amssymb.sty
+(amsfonts.sty)) (booktabs.sty) (graphicx.sty (graphics.sty (trig.sty)
+(graphics.cfg) (xetex.def))) (hyperref.sty (ltxcmds.sty) (pdftexcmds.sty
+(infwarerr.sty)) (kvsetkeys.sty) (kvdefinekeys.sty) (pdfescape.sty)
+(hycolor.sty) (letltxmacro.sty) (auxhook.sty) (kvoptions.sty) (pd1enc.def)
+(intcalc.sty) (etexcmds.sty) (puenc.def) (url.sty) (bitset.sty (bigintcalc.sty)
+) (atbegshi-ltx.sty)) (hxetex.def (stringenc.sty) (rerunfilecheck.sty
+(atveryend-ltx.sty) (uniquecounter.sty))) (xcolor.sty (color.cfg))
+(enumitem.sty) (microtype.sty (etoolbox.sty) (microtype-xetex.def)
+(microtype.cfg)) (caption.sty (caption3.sty)) (array.sty) (longtable.sty)
 warning: lineno.sty:296: Invalid UTF-8 byte or sequence at line 296 replaced by U+FFFD.
-warning: ijhe_manuscript_draft.tex:581: Underfull \hbox (badness 2005) in paragraph at lines 575--581
-warning: ijhe_manuscript_draft.tex:1043: Underfull \hbox (badness 4242) in paragraph at lines 1040--1043
-warning: ijhe_manuscript_draft.tex:1043: Underfull \hbox (badness 10000) in paragraph at lines 1040--1043
-warning: ijhe_manuscript_draft.tex:1058: Underfull \hbox (badness 3417) in paragraph at lines 1056--1058
-warning: ijhe_manuscript_draft.tex:1069: Underfull \hbox (badness 1902) in paragraph at lines 1065--1069
-warning: ijhe_manuscript_draft.tex:1069: Underfull \hbox (badness 2005) in paragraph at lines 1065--1069
-warning: ijhe_manuscript_draft.tex:1069: Underfull \hbox (badness 1990) in paragraph at lines 1065--1069
-warning: ijhe_manuscript_draft.tex:1146: Underfull \hbox (badness 1127) in paragraph at lines 1140--1146
-warning: ijhe_manuscript_draft.tex:1179: Underfull \hbox (badness 2951) in paragraph at lines 1176--1179
-warning: ijhe_manuscript_draft.tex:1179: Underfull \hbox (badness 3158) in paragraph at lines 1176--1179
-warning: ijhe_manuscript_draft.tex:1269: Underfull \hbox (badness 10000) in paragraph at lines 1267--1269
-note: Running xdvipdfmx ...
+(lineno.sty) (l3backend-xetex.def) (ijhe_manuscript_draft.aux) (ts1cmr.fd)
+*geometry* driver: auto-detecting
+*geometry* detected driver: xetex
+(nameref.sty (refcount.sty) (gettitlestring.sty)) (ijhe_manuscript_draft.out)
+(ijhe_manuscript_draft.out) (mt-LatinModernRoman.cfg) (ltcaption.sty)
+(mt-cmr.cfg) (umsa.fd) (mt-msa.cfg) (umsb.fd) (mt-msb.cfg) [1] [2] [3] [4]
+[5] [6] [7] [8] [9] [10]
+Underfull \hbox (badness 2005) in paragraph at lines 576--582
+[]\TU/lmr/m/n/12 An outcome-independent source-boundary diagnostic also limits
+interpretation.
+warning: ijhe_manuscript_draft.tex:582: Underfull \hbox (badness 2005) in paragraph at lines 576--582
+[11] [12] [13] [14] [15] [16] [17] [18] [19]
+warning: ijhe_manuscript_draft.tex:1044: Underfull \hbox (badness 4242) in paragraph at lines 1041--1044
+warning: ijhe_manuscript_draft.tex:1044: Underfull \hbox (badness 10000) in paragraph at lines 1041--1044
+Underfull \hbox (badness 4242) in paragraph at lines 1041--1044
+[]\TU/lmr/m/n/12 E. Rothuizen et al., Optimization of hydrogen vehicle refuelin
+g via dy-
+
+Underfull \hbox (badness 10000) in paragraph at lines 1041--1044
+\TU/lmr/m/n/12 namic simulation, \TU/lmr/m/it/12 International Journal of Hydro
+gen Energy \TU/lmr/m/n/12 (2013),
+
+Underfull \hbox (badness 3417) in paragraph at lines 1057--1059
+[]\TU/lmr/m/n/12 Sandia National Laboratories, \TU/lmr/m/it/12 HyRAM+ Version 5
+.1.1 Physics Validation\TU/lmr/m/n/12 ,
+warning: ijhe_manuscript_draft.tex:1059: Underfull \hbox (badness 3417) in paragraph at lines 1057--1059
+
+Underfull \hbox (badness 1902) in paragraph at lines 1066--1070
+[]\TU/lmr/m/n/12 D. Cirrone, D. Makarov, A. Friedrich, J. Grune, K. Takeno, V.
+Molkov,
+
+Underfull \hbox (badness 2005) in paragraph at lines 1066--1070
+\TU/lmr/m/n/12 Blast wave generated by delayed ignition of under-expanded hydro
+gen free
+
+warning: ijhe_manuscript_draft.tex:1070: Underfull \hbox (badness 1902) in paragraph at lines 1066--1070
+warning: ijhe_manuscript_draft.tex:1070: Underfull \hbox (badness 2005) in paragraph at lines 1066--1070
+warning: ijhe_manuscript_draft.tex:1070: Underfull \hbox (badness 1990) in paragraph at lines 1066--1070
+Underfull \hbox (badness 1990) in paragraph at lines 1066--1070
+\TU/lmr/m/n/12 jet at ambient and cryogenic temperatures, \TU/lmr/m/it/12 Hydro
+gen \TU/lmr/m/n/12 3(4) (2022) 433–449,
+[20]
+Underfull \hbox (badness 1127) in paragraph at lines 1141--1147
+\TU/lmr/m/n/12 Teodoro, Advancing hydrogen leak detection: Design and calibrati
+on of ref-
+warning: ijhe_manuscript_draft.tex:1147: Underfull \hbox (badness 1127) in paragraph at lines 1141--1147
+[21]
+Underfull \hbox (badness 2951) in paragraph at lines 1177--1180
+[]\TU/lmr/m/n/12 A.W. Lach, \TU/lmr/m/it/12 Replication dataset for: Large-Scal
+e Hydrogen Explosion Ex-
+
+Underfull \hbox (badness 3158) in paragraph at lines 1177--1180
+\TU/lmr/m/it/12 periments: Obstructed Releases in open atmosphere\TU/lmr/m/n/12
+ , DataverseNO (2026),
+warning: ijhe_manuscript_draft.tex:1180: Underfull \hbox (badness 2951) in paragraph at lines 1177--1180
+warning: ijhe_manuscript_draft.tex:1180: Underfull \hbox (badness 3158) in paragraph at lines 1177--1180
+[22]
+Underfull \hbox (badness 10000) in paragraph at lines 1268--1270
+[]\TU/lmr/m/n/12 ENGIE, \TU/lmr/m/it/12 Group C—ENGIE system measurement data\T
+U/lmr/m/n/12 , Zenodo (2026),
+warning: ijhe_manuscript_draft.tex:1270: Underfull \hbox (badness 10000) in paragraph at lines 1268--1270
+[23] (ijhe_manuscript_draft.aux) )
+(see the transcript file for additional information)
+Output written on ijhe_manuscript_draft.xdv (23 pages, 782456 bytes).
+Transcript written on ijhe_manuscript_draft.log.
 warning: warnings were issued by the TeX engine; use --print and/or --keep-logs for details.
-note: Writing `output/pdf/compile-current\ijhe_manuscript_draft.pdf` (814.787109375 KiB)
-note: Writing `output/pdf/compile-current\ijhe_manuscript_draft.log` (19.0859375 KiB)
+note: Running xdvipdfmx ...
+[1][2][3][4][5][6][7][8][9][10][11][12][13][14][15][16][17][18][19][20][21][22][23]834462 bytes written
+note: Writing `output/pdf\ijhe_manuscript_draft.pdf` (814.904296875 KiB)
+note: Writing `output/pdf\ijhe_manuscript_draft.log` (19.0859375 KiB)
 note: Skipped writing 2 intermediate files (use --keep-intermediates to keep them)
