@@ -237,6 +237,16 @@
         "source_commit": "0ec83ab17b789e4d2ce378d1625d9f6779e7c57e",
         "working_tree_dirty_at_run": true,
         "claim_boundary": "Software contract and evidence-routing integrity only; no operator-effectiveness, field-safety or independent physical-validation claim."
+      },
+      "llm_clean_direct_route_recheck_2026_10_12": {
+        "status": "PASS",
+        "tests_passed": 20,
+        "tests_failed": 0,
+        "warnings": 3,
+        "evidence": "research/llm_evidence_grounding_validation.json",
+        "source_commit": "bfe63b6",
+        "working_tree_dirty_at_run": false,
+        "claim_boundary": "Clean current-commit direct-route software check only; no operator-effectiveness, field-safety or independent physical-validation claim."
       }
     }
   }
