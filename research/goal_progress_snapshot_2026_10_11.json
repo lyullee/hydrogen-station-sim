@@ -136,6 +136,16 @@
         "runtime_parameter_application": false,
         "claim_boundary": "Development diagnostics only; no validation gate or runtime parameter was promoted."
       },
+      "hytunnel_line_inventory_diagnostic": {
+        "status": "POST_OUTCOME_DIAGNOSTIC_ONLY",
+        "evidence": "research/hytunnel_line_inventory_diagnostic_2026_10_11.json",
+        "report": "research/HYTUNNEL_LINE_INVENTORY_DIAGNOSTIC_2026_10_11.md",
+        "cases": 15,
+        "runtime_parameter_application": false,
+        "frozen_gate_effect": "none",
+        "finding": "A declared 3.86 m x 3 mm line with a 0.5 mm nozzle produces about 0.39-1.07 g line inventory across the 5/10/20 L source-volume sensitivity envelope; line inventory alone does not explain the frozen HyTunnel mass-flow failure.",
+        "claim_boundary": "Post-outcome development diagnostic only; no source volume, valve law or runtime parameter was promoted."
+      },
       "frontend_regression": {
         "status": "PASS",
         "tests_passed": 16,
