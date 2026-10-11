@@ -1,0 +1,88 @@
+{
+  "schema_version": 1,
+  "frozen_at": "2026-10-12T00:00:00Z",
+  "status": "frozen_before_numerical_outcome_access",
+  "objective": "Prospectively evaluate the unchanged direct-aperture source-depletion implementation on two public PRESLHY E3.1 cryogenic campaigns that were not previously extracted or numerically evaluated in this repository.",
+  "claim_boundary": "A pass supports only a bounded 80 K direct-aperture source-depletion component claim for the named PRESLHY packages. It does not validate cryogenic two-phase flow, ignition, dispersion, flame radiation, station control, refuelling, vehicle operation or emergency separation distance.",
+  "source": {
+    "dataset_doi": "10.35097/1187",
+    "record_url": "https://doi.org/10.35097/1187",
+    "archive_url": "https://www.radar-service.eu/radar-backend/archives/vuyYifgxlfOuFrSP/versions/1/content",
+    "license": "CC BY 4.0 as declared by the public record",
+    "archive_metadata_was_accessed_before_freeze": true,
+    "numerical_workbook_outcomes_accessed_before_freeze": false,
+    "packages": [
+      {
+        "package_name": "PRE3P1A_KIT_D05_80K-DATA.zip",
+        "nozzle_diameter_mm": 0.5,
+        "manifest_md5": "a7ab62971f359a0976333cec86f6738e"
+      },
+      {
+        "package_name": "PRE3P1A_KIT_D2_80K-DATA.zip",
+        "nozzle_diameter_mm": 2.0,
+        "manifest_md5": "2843fe50eac792e18efbb4e77f0cfd28"
+      }
+    ],
+    "rights_boundary": "The public packages are read from the source cache for evaluation. Raw workbook rows are not copied into the repository; only aggregate metrics, case identifiers and source hashes are retained in the result artifact."
+  },
+  "independence": {
+    "packages_separate_from_consumed_300k_campaign": true,
+    "packages_separate_from_consumed_d4_80k_campaign": true,
+    "same_facility_disclosed": true,
+    "outcomes_accessed_before_freeze": false,
+    "parameter_fitting": false,
+    "case_specific_fitting": false,
+    "post_freeze_parameter_tuning": false
+  },
+  "frozen_model": {
+    "git_commit": "9b28a0c3356a1e17d82eef9e24a479cfb5b4ef94",
+    "source_depletion": "real-gas source inventory with measured initial pressure and gas temperature",
+    "release": "DynamicLeakModel direct circular aperture",
+    "discharge_coefficient": 0.8,
+    "vessel_internal_volume_m3": 0.002815,
+    "ambient_boundary": "measured workbook ambient pressure only; substituted ambient pressure is ineligible",
+    "integration": "existing LSODA evaluator with its locked tolerances and bounded max step",
+    "files_sha256": {
+      "src/h2station/preslhy_validation.py": "3b5fe2149c1f5374e89cdabfed90074d0b9b0b2c33aa091526615d8d4f094673",
+      "src/h2station/preslhy_80k_holdout.py": "2f53a5f4c012796a3d8f4b1d3ef8bc3134e33848c67bd5d16aca80d241469c1c"
+    }
+  },
+  "eligibility": {
+    "include": [
+      "finite synchronized source-pressure trace with at least 20 unique time samples",
+      "measured gas-side initial temperature from 60 K through 120 K",
+      "measured ambient pressure and no substituted boundary",
+      "all workbook files in both named packages that satisfy the fixed reader"
+    ],
+    "exclude": [
+      "reader failures, missing ambient pressure, substituted temperature or duplicate records",
+      "files containing only downstream or imaging channels without a source-pressure trace"
+    ],
+    "minimum_evaluable_cases": 4,
+    "minimum_nozzle_diameter_groups": 2,
+    "minimum_initial_pressure_groups": 2,
+    "minimum_unique_pressure_samples": 20,
+    "minimum_initial_temperature_k": 60.0,
+    "maximum_initial_temperature_k": 120.0
+  },
+  "primary_endpoints": {
+    "pressure_nrmse_percent_initial_absolute_pressure": {
+      "case_screen_max": 10.0
+    },
+    "time_to_50_percent_gauge_relative_error_percent": {
+      "case_screen_max": 20.0
+    }
+  },
+  "aggregate_decision": {
+    "minimum_joint_primary_screen_pass_fraction": 0.7,
+    "bootstrap_replicates": 10000,
+    "bootstrap_seed": 20261012,
+    "retain_all_evaluable_failures": true,
+    "negative_result_policy": "A failed result remains archived; no parameter, threshold, case selection or time alignment may be changed after numerical outcomes are opened."
+  },
+  "raw_data_policy": {
+    "raw_rows_persisted": false,
+    "source_package_hashes_retained": true,
+    "case_level_aggregate_metrics_retained": true
+  }
+}
