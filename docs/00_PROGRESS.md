@@ -2307,3 +2307,16 @@ the full-loop claim pass.
   scope-adjusted station-side closure at **92.1%**. The bounded IJHE decision
   remains false because the unresolved consequence and submission gates are
   unchanged.
+
+## 2026-10-11 - Proust apparatus geometry adapter (development only)
+
+- Added `h2station.proust_release_network_development.ProustApparatusGeometry`
+  and a machine-readable protocol that bind the published 25 L source, 10 m ×
+  10 mm nominal line, 1/2/3 mm terminal cases, and approximately 0.1 s valve
+  opening to the existing source-line-valve-terminal development model.
+- The adapter derives the nominal line volume but labels it as geometry-only;
+  it does not add a measured channel, fit a coefficient, wire into station
+  runtime, or change the negative frozen Proust holdout. Promotion still
+  requires a prospective rights-cleared synchronized apparatus logger.
+- Focused verification: **18 passed** (`test_proust_release_network_development.py`,
+  `test_release_network.py`, and `test_release_network_development.py`).

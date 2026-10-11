@@ -34,6 +34,15 @@ The nominal line dimensions imply 0.000785398 m³ of geometric internal volume
 dimensions. An as-built bore, fittings and dead-volume measurement must replace
 it before a confirmatory run.
 
+For reproducible development setup, `src/h2station/proust_release_network_development.py`
+provides `ProustApparatusGeometry` and converts the nominal dimensions into a
+`ReleaseNetworkInputs` instance for a selected 1/2/3 mm terminal case. The
+machine-readable companion is
+`research/proust_release_network_development_protocol_2026_10_11.json`.
+This adapter is explicitly development-only: it is not wired into the station
+runtime, does not fit the consumed curves, and does not change the frozen
+local-aperture holdout.
+
 ## Required logger contract
 
 Every confirmatory run must contain synchronized source pressure and

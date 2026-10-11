@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-11",
+  "status": "DEVELOPMENT_ONLY_NO_VALIDATION",
+  "purpose": "Bind the nominal published Proust apparatus dimensions to the development-only source-line-valve-terminal network without changing the frozen direct-aperture holdout.",
+  "claim_boundary": "This adapter is a reproducibility aid for future apparatus-resolved data. It is not external validation, does not repair the negative Proust holdout, and does not support a safety-distance or controller claim.",
+  "source": {
+    "citation": "Proust, Jamois and Studer, High pressure hydrogen fires, DOI 10.1016/j.ijhydene.2010.04.055",
+    "published_nominal_geometry": {
+      "source_volume_m3": 0.025,
+      "supply_line_length_m": 10.0,
+      "supply_line_diameter_m": 0.01,
+      "terminal_diameter_mm": [1.0, 2.0, 3.0],
+      "valve_opening_time_s": 0.1
+    },
+    "derived_line_volume_m3": 0.0007853981633974483,
+    "derivation": "pi * (0.010 m)^2 / 4 * 10 m",
+    "derived_geometry_warning": "Nominal dimensions only; replace with as-built bore and measured dead volume when available."
+  },
+  "implementation": {
+    "module": "src/h2station/proust_release_network_development.py",
+    "model": "src/h2station/release_network.py",
+    "runtime_application": false,
+    "parameter_fitting": false,
+    "terminal_discharge_coefficient_default": 0.8,
+    "terminal_discharge_coefficient_note": "Inherited development convention from the direct-aperture evaluator; not a measured Proust value."
+  },
+  "missing_evidence": [
+    "rights-cleared synchronized transient logger rows",
+    "as-built line bore and dead volume",
+    "complete valve position trace and valve location declaration",
+    "line pressure and line temperature channels"
+  ],
+  "promotion_rule": "Do not promote this adapter to validation or production until a prospective, rights-cleared apparatus logger satisfies research/apparatus_resolved_release_protocol.json and the frozen holdout is rerun before outcome inspection."
+}
