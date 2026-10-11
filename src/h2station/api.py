@@ -283,6 +283,9 @@ def _provider_evidence_basis(manifest: dict[str, Any]) -> dict[str, Any]:
                 "current_validation_status": public_jet.get(
                     "current_validation_status"
                 ),
+                "publisher_calibration_boundary": public_jet.get(
+                    "publisher_calibration_boundary"
+                ) or {},
                 "hrs_dispenser_validation_supported": False,
                 "station_vehicle_full_loop_supported": False,
                 "runtime_parameter_application": False,

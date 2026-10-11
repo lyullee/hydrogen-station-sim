@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "artifact_type": "public_x044qk_publisher_calibration_boundary_recheck",
+  "recorded_at": "2026-10-12",
+  "status": "CALIBRATION_STILL_INSUFFICIENT_FOR_NUMERICAL_REPLAY",
+  "source": {
+    "dataset_doi": "10.18710/X044QK",
+    "dataset_landing_page": "https://dataverse.no/dataset.xhtml?persistentId=doi:10.18710/X044QK",
+    "dataset_api": "https://dataverse.no/api/datasets/:persistentId/?persistentId=doi:10.18710/X044QK",
+    "dataset_license": "CC0 1.0",
+    "related_article_doi": "10.1016/j.firesaf.2026.104812",
+    "related_article_url": "https://www.sciencedirect.com/science/article/pii/S0379711226001803",
+    "related_article_title": "Experimental results of delayed ignition of impinging high-pressure hydrogen jet on pipe geometry in open atmosphere"
+  },
+  "publisher_reported_measurement_boundary": {
+    "campaign_experiment_count": 40,
+    "release_orifice_mm": 1.69,
+    "reported_discharge_pressure_range_bar_g": [30, 80],
+    "upstream_sensor_family": "AST4000-series pressure transducer",
+    "reported_sensor_range_bar_g": [0, 250],
+    "reported_sensor_uncertainty": "±0.5% FSO (±1.25 bar)",
+    "reported_mass_flow_uncertainty_percent": [2, 5],
+    "paper_scope_note": "The article reports the pressure measurement setup but focuses its presented analysis on flame-front propagation; the released raw CSV pressure channels remain voltage channels."
+  },
+  "raw_archive_observation": {
+    "raw_channel": "Kanal Nozzle pressure",
+    "raw_unit": "V",
+    "raw_dynamic_pressure_channels": 4,
+    "raw_time_unit": "ms",
+    "experiment_specific_voltage_to_pressure_transfer": "not published in the public README, dataset metadata, or reviewed article text",
+    "generic_sensor_datasheet_is_not_substitution": true
+  },
+  "decision": {
+    "numeric_model_replay": false,
+    "pressure_or_overpressure_metric_computed": false,
+    "case_specific_fit": false,
+    "runtime_parameter_changed": false,
+    "validation_gate_promoted": false,
+    "readiness_gate_effect": "none",
+    "next_required_evidence": [
+      "publisher-authenticated AST4000 output range and DAQ/conditioning transfer used for this campaign",
+      "or a released engineering-unit pressure trace with file identity and checksum",
+      "then freeze a new experiment-level calibration/holdout protocol before reading outcome windows"
+    ]
+  },
+  "claim_boundary": "This recheck strengthens the provenance boundary for a public actual-hydrogen delayed-ignition component dataset. It does not validate overpressure magnitude, flame radiation, an HRS, station controls, ESD, safety distance, or SAGA effectiveness. A generic AST4000 datasheet or the article's sensor uncertainty cannot replace the missing campaign-specific voltage-to-pressure transfer."
+}

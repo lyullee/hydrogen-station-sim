@@ -22,6 +22,11 @@ def test_usn_jet_dataset_is_grounded_as_post_access_component_diagnostic():
     assert evidence["source"]["dataset_doi"] == "10.18710/X044QK"
     assert evidence["component_consequence_candidate"] is True
     assert evidence["current_validation_status"] == "NOT_REPLAYED"
+    boundary = evidence["publisher_calibration_boundary"]
+    assert boundary["raw_pressure_unit"] == "V"
+    assert boundary["campaign_voltage_to_pressure_transfer_published"] is False
+    assert boundary["numeric_replay_blocked"] is True
+    assert boundary["validation_gate_promoted"] is False
     assert evidence["hrs_dispenser_validation_supported"] is False
     assert evidence["station_vehicle_full_loop_supported"] is False
     assert evidence["runtime_parameter_application"] is False
@@ -30,6 +35,9 @@ def test_usn_jet_dataset_is_grounded_as_post_access_component_diagnostic():
     assert compact["public_usn_ignited_jet_dataset_diagnostic"][
         "current_validation_status"
     ] == "NOT_REPLAYED"
+    assert compact["public_usn_ignited_jet_dataset_diagnostic"][
+        "publisher_calibration_boundary"
+    ]["numeric_replay_blocked"] is True
     decision = prompt_decision_evidence(manifest)["decision_support_evidence"]
     assert decision["public_usn_ignited_jet_dataset_diagnostic"][
         "station_vehicle_full_loop_supported"
@@ -42,6 +50,9 @@ def test_usn_jet_dataset_is_grounded_as_post_access_component_diagnostic():
     assert provider["public_usn_ignited_jet_dataset_diagnostic"][
         "current_validation_status"
     ] == "NOT_REPLAYED"
+    assert provider["public_usn_ignited_jet_dataset_diagnostic"][
+        "publisher_calibration_boundary"
+    ]["raw_pressure_unit"] == "V"
     assert provider["public_usn_ignited_jet_dataset_diagnostic"][
         "station_vehicle_full_loop_supported"
     ] is False

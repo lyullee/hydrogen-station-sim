@@ -1738,11 +1738,21 @@ def _public_usn_ignited_jet_dataset_evidence() -> dict[str, Any] | None:
     """
 
     artifact = "research/usn_ignited_jet_dataset_recheck_2026_10_11.json"
+    calibration_artifact = (
+        "research/usn_x044qk_calibration_boundary_recheck_2026_10_12.json"
+    )
     path = Path(__file__).resolve().parents[2] / artifact
+    calibration_path = Path(__file__).resolve().parents[2] / calibration_artifact
     try:
         record = json.loads(path.read_text(encoding="utf-8"))
     except (OSError, UnicodeError, ValueError, json.JSONDecodeError):
         return None
+    try:
+        calibration_boundary = json.loads(
+            calibration_path.read_text(encoding="utf-8")
+        )
+    except (OSError, UnicodeError, ValueError, json.JSONDecodeError):
+        calibration_boundary = {}
     source = record.get("source") or {}
     access = record.get("access_audit") or {}
     eligibility = record.get("eligibility") or {}
@@ -1760,6 +1770,12 @@ def _public_usn_ignited_jet_dataset_evidence() -> dict[str, Any] | None:
     ):
         return None
     diagnostic = access.get("streamed_diagnostic") or {}
+    boundary_decision = calibration_boundary.get("decision") or {}
+    measurement_boundary = (
+        calibration_boundary.get("publisher_reported_measurement_boundary")
+        or {}
+    )
+    raw_observation = calibration_boundary.get("raw_archive_observation") or {}
     return {
         "artifact": artifact,
         "evidence_role": "post_access_public_ignited_jet_component_dataset_diagnostic",
@@ -1783,6 +1799,28 @@ def _public_usn_ignited_jet_dataset_evidence() -> dict[str, Any] | None:
             "calibration_confirmed": False,
             "sensor_geometry_confirmed": False,
             "streamed_file_rows": diagnostic.get("rows_read"),
+        },
+        "publisher_calibration_boundary": {
+            "artifact": calibration_artifact,
+            "status": calibration_boundary.get("status"),
+            "related_article_doi": (
+                calibration_boundary.get("source") or {}
+            ).get("related_article_doi"),
+            "sensor_family": measurement_boundary.get("upstream_sensor_family"),
+            "reported_sensor_range_bar_g": measurement_boundary.get(
+                "reported_sensor_range_bar_g"
+            ),
+            "reported_sensor_uncertainty": measurement_boundary.get(
+                "reported_sensor_uncertainty"
+            ),
+            "raw_pressure_unit": raw_observation.get("raw_unit"),
+            "campaign_voltage_to_pressure_transfer_published": False,
+            "numeric_replay_blocked": boundary_decision.get(
+                "numeric_model_replay"
+            ) is False,
+            "validation_gate_promoted": boundary_decision.get(
+                "validation_gate_promoted"
+            ) is True,
         },
         "component_consequence_candidate": eligibility.get(
             "component_consequence_external_holdout_candidate"
@@ -11278,6 +11316,9 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
                 "measurement_contract"
             ) or {},
             "access_status": ignited_jet_dataset.get("access_status") or {},
+            "publisher_calibration_boundary": ignited_jet_dataset.get(
+                "publisher_calibration_boundary"
+            ) or {},
             "component_consequence_candidate": ignited_jet_dataset.get(
                 "component_consequence_candidate"
             ) is True,
@@ -13681,6 +13722,9 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                     ) or {},
                     "access_status": ignited_jet_dataset.get(
                         "access_status"
+                    ) or {},
+                    "publisher_calibration_boundary": ignited_jet_dataset.get(
+                        "publisher_calibration_boundary"
                     ) or {},
                     "component_consequence_candidate": True,
                     "current_validation_status": "NOT_REPLAYED",
