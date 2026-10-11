@@ -73,6 +73,7 @@ detailed geometry remain withheld.
 
 ## Evidence index
 
+- `research/PAPER_OBJECTIVE_SCOPE_LOCK_2026_10_12.md`
 - `manuscript/ijhe_readiness_audit.json`
 - `manuscript/ijhe_manuscript_draft.tex`
 - `research/ijhe_reproduction_run_2026_10_12.json`
