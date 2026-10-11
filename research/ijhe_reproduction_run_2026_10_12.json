@@ -1,37 +1,156 @@
 {
   "schema_version": 1,
   "artifact_type": "ijhe_reproducibility_run",
-  "generated_at_utc": "2026-10-11T19:01:08.740599+00:00",
-  "source_commit": "2ab8c396dde8106c65cb51ea186aadb4d6c5945a",
-  "repository_dirty": false,
+  "generated_at_utc": "2026-10-11T19:14:20.564243+00:00",
   "status": "SCIENTIFIC_GATES_OPEN",
+  "repository": {
+    "root": ".",
+    "commit": "c670788571370c7c9a539e6ea891a66d12ac9e35",
+    "dirty": false
+  },
+  "environment": {
+    "python": "3.14.8",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "interpreter": ".venv/Scripts/python.exe"
+  },
   "artifact_integrity": {
     "passed": true,
-    "manuscript_format": "PASS",
-    "latex_compile": "PASS",
-    "pdf_pages": 24,
-    "visual_qa_pages_inspected": 24,
-    "unresolved_citations": 0,
-    "unresolved_references": 0,
+    "manuscript_format": {
+      "manuscript": "C:\\Users\\lyul\\Desktop\\ProjectData\\hydrogen-station-sim\\manuscript\\ijhe_manuscript_draft.tex",
+      "highlights": "C:\\Users\\lyul\\Desktop\\ProjectData\\hydrogen-station-sim\\manuscript\\Highlights.txt",
+      "counts": {
+        "abstract_words": 147,
+        "keywords": 6,
+        "highlight_bullets": 5,
+        "highlight_characters": [
+          75,
+          74,
+          69,
+          75,
+          72
+        ],
+        "approximate_manuscript_words_before_references": 7996,
+        "figures": 3,
+        "tables": 3,
+        "citation_keys": 53,
+        "bibliography_entries": 55,
+        "unresolved_citations": [],
+        "missing_figure_assets": []
+      },
+      "checks": {
+        "abstract_at_most_150_words": true,
+        "keywords_at_most_6": true,
+        "highlights_count_3_to_5": true,
+        "each_highlight_at_most_85_characters": true,
+        "research_paper_at_most_8000_words_approximate": true,
+        "diagrams_at_most_12": true,
+        "all_citations_resolved": true,
+        "all_figure_assets_present": true,
+        "balanced_braces": true,
+        "document_environment_present": true
+      },
+      "format_gate_passed": true,
+      "scientific_readiness_assessed": false
+    },
+    "compile_status_rebuilt": {
+      "schema_version": 2,
+      "verified_at_utc": "2026-10-11T19:14:18.737390+00:00",
+      "success": true,
+      "compiler": {
+        "name": "Tectonic",
+        "version": "0.17.0",
+        "official_release_url": "https://github.com/tectonic-typesetting/tectonic/releases/tag/tectonic@0.17.0",
+        "archive_sha256": "f61ce51f0b0ade1015b7de7ef368541c5424e9756ecbd0d7af97d6d48030845"
+      },
+      "source": {
+        "path": "C:/Users/lyul/Desktop/ProjectData/hydrogen-station-sim/manuscript/ijhe_manuscript_draft.tex",
+        "bytes": 76888,
+        "sha256": "d7aa9b1b4d7e147ee72cd5d25dda73cbc0ed35ee369c92d8b6e8bdba2c5982a8"
+      },
+      "pdf": {
+        "path": "C:/Users/lyul/Desktop/ProjectData/hydrogen-station-sim/output/pdf/ijhe_manuscript_draft.pdf",
+        "bytes": 837059,
+        "sha256": "b9e5f97f43a3b26031d6cc49f0936a716c2f6da70f5c5c7471a860e560e852af",
+        "page_count": 24,
+        "extracted_character_count": 71306
+      },
+      "compile_log": {
+        "path": "C:/Users/lyul/Desktop/ProjectData/hydrogen-station-sim/output/pdf/ijhe_manuscript_draft.log",
+        "bytes": 19549,
+        "sha256": "f80cc8061d9cb9a6fe476cd976b53d7b1a99eab9f7a1829d8a88d5f87d6f892b",
+        "unresolved_citations": 0,
+        "unresolved_references": 0,
+        "fatal_errors": [],
+        "underfull_hbox_count": 11,
+        "overfull_hbox_count": 0,
+        "maximum_overfull_width_pt": 0.0
+      },
+      "content_checks": {
+        "replacement_characters": 0,
+        "double_question_placeholder_tokens": 0,
+        "references_heading_present": true,
+        "working_manuscript_notice_present": true
+      },
+      "visual_qa": {
+        "renderer": "Poppler pdftoppm",
+        "pages_rendered": 24,
+        "pages_inspected": 24,
+        "all_pages_rendered_and_inspected": true,
+        "clipping_or_overlap_detected": false
+      },
+      "source_matches_pdf_build": true,
+      "format_check_passed": true,
+      "claim_boundary": "This proves that the exact working source compiled and rendered. It does not resolve scientific validation, independent review, authorship metadata, or journal acceptance."
+    },
     "audit_snapshot_matches_research_mirror": true
   },
-  "software_checks": {
-    "status": "PASS",
-    "tests_passed": 11,
-    "tests_failed": 0,
-    "command": ".venv/Scripts/python -m pytest tests/test_ijhe_readiness_audit.py tests/test_ijhe_audit_snapshot_consistency.py tests/test_ijhe_manuscript_format.py tests/test_ijhe_compile_artifact.py tests/test_goal_progress_snapshot.py tests/test_ijhe_reproduction.py -q"
-  },
   "scientific_readiness": {
-    "bounded_ijhe_submission_ready": false,
-    "gate_counts": {
-      "PASS": 129,
-      "FAIL": 10,
-      "PENDING": 7,
-      "TOTAL": 146,
-      "closure_percent": 88.4
+    "bounded_submission_ready": false,
+    "decision": {
+      "bounded_ijhe_submission_ready": false,
+      "full_user_objective_ready": false,
+      "goal_completion_permitted": false,
+      "gate_counts": {
+        "PASS": 129,
+        "FAIL": 10,
+        "PENDING": 7
+      },
+      "blocking_bounded_submission_gates": [
+        "dickens_typeiii_prospective_validation",
+        "preslhy_partb_ambient_external_validation",
+        "preslhy_revised_holdout_validation",
+        "proust_independent_release_validation",
+        "schefer_transient_release_validation",
+        "schefer_2007_pressure_decay_validation",
+        "grune_2014_pressure_decay_validation",
+        "submission_metadata_and_declarations"
+      ]
     },
-    "primary_scope_closure_percent": 92.1,
-    "blocking_gates_unchanged": true,
-    "claim_boundary": "Reproducibility and software-contract evidence only; this does not establish physical validation, field safety, human effectiveness, regulatory compliance or journal acceptance."
+    "claim_boundary": "This is an evidence-readiness result, not a guarantee of peer-review acceptance, field safety, or regulatory compliance."
+  },
+  "software_checks": {
+    "requested": true,
+    "passed": true,
+    "runs": [
+      {
+        "status": "PASS",
+        "exit_code": 0,
+        "command": "-m pytest tests/test_ijhe_readiness_audit.py tests/test_ijhe_audit_snapshot_consistency.py tests/test_ijhe_manuscript_format.py tests/test_ijhe_compile_artifact.py tests/test_goal_progress_snapshot.py tests/test_ijhe_reproduction.py -q",
+        "tests": [
+          "tests/test_ijhe_readiness_audit.py",
+          "tests/test_ijhe_audit_snapshot_consistency.py",
+          "tests/test_ijhe_manuscript_format.py",
+          "tests/test_ijhe_compile_artifact.py",
+          "tests/test_goal_progress_snapshot.py",
+          "tests/test_ijhe_reproduction.py"
+        ],
+        "output_tail": "...........                                                              [100%]\n11 passed in 1.42s"
+      }
+    ]
+  },
+  "reproduction_commands": {
+    "focused": ".venv/Scripts/python -m pytest tests/test_ijhe_readiness_audit.py tests/test_ijhe_audit_snapshot_consistency.py tests/test_ijhe_manuscript_format.py tests/test_ijhe_compile_artifact.py tests/test_goal_progress_snapshot.py tests/test_ijhe_reproduction.py -q",
+    "full": ".venv/Scripts/python -m pytest -q",
+    "audit": ".venv/Scripts/python scripts/audit_ijhe_readiness.py"
   }
 }
