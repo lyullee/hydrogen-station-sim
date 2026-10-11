@@ -55,6 +55,34 @@
       "observed_role": "Public workbooks and a Hy-SaM subset containing station-side or sampling-system measurements.",
       "decision": "POST_ACCESS_COMPONENT_ONLY",
       "reason": "The existing intake records confirm missing controller, vehicle-tank geometry and synchronized vehicle-side channel metadata; these records cannot be promoted to a station-to-vehicle holdout."
+    },
+    {
+      "name": "FCH2RAIL D6.1 KPI assessment",
+      "url": "https://fch2rail.eu/wp-content/uploads/2025/01/FCH2RAIL_D6.1_Report-on-KPI-assessment.pdf",
+      "observed_role": "Report-level measurements for a transportable 300-bar hydrogen refuelling system, including 5/10-s flow observations and train-storage refuelling rates.",
+      "decision": "REPORT_SUMMARY_ONLY",
+      "reason": "The report publishes ranges and operating context (11.54--19.44 g/s average flow) but no rights-cleared row-level station/controller/dispenser/vehicle common-clock archive with channel definitions."
+    },
+    {
+      "name": "NLR H2FillS official release and user manual",
+      "url": "https://www.nrel.gov/hydrogen/h2fills",
+      "observed_role": "Documented thermodynamic station-to-vehicle simulator whose output schema includes bank, PCV, hose, vehicle inlet and vehicle-tank signals.",
+      "decision": "SOFTWARE_REFERENCE_ONLY",
+      "reason": "The software is distributed under a registration/licence workflow and the public page/manual provide model documentation and output definitions, not an openly reusable measured synchronized event archive."
+    },
+    {
+      "name": "European H2-Stations export API v2",
+      "url": "https://docs.h2-stations.eu/for-data-users/api-v2/",
+      "observed_role": "Open station registry, layout and operational signal documentation for European hydrogen stations.",
+      "decision": "OPERATIONAL_METADATA_ONLY",
+      "reason": "The API exposes availability, usage, storage and pricing signals at station level and requires a token for v2; it does not expose synchronized engineering traces for a vehicle fill or a rights-cleared transient validation cohort."
+    },
+    {
+      "name": "NREL FCEV Composite Data Products",
+      "url": "https://www.nrel.gov/hydrogen/fuel-cell-electric-vehicle-cdps",
+      "observed_role": "Curated FCEV fueling indicators such as final pressure and before/after tank temperature products.",
+      "decision": "AGGREGATE_PRODUCT_ONLY",
+      "reason": "The public catalogue lists derived indicators rather than the common-clock raw station/controller/dispenser/vehicle traces required by the frozen independent holdout contract."
     }
   ],
   "decision": "NO_NEW_ELIGIBLE_PUBLIC_RAW_STATION_TO_VEHICLE_SET_IDENTIFIED",

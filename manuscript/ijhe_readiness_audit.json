@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-11T17:32:39.708951+00:00",
+  "generated_at": "2026-10-11T17:34:56.230746+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -2123,7 +2123,7 @@
         },
         "public_station_vehicle_search_recheck_2026_10_12": {
           "decision": "NO_NEW_ELIGIBLE_PUBLIC_RAW_STATION_TO_VEHICLE_SET_IDENTIFIED",
-          "source_count": 6,
+          "source_count": 10,
           "claim_boundary": "This is a public-access availability audit. It records the checked endpoints and does not prove that restricted, proprietary or unpublished traces do not exist."
         },
         "public_data_update_2026_10_08": {

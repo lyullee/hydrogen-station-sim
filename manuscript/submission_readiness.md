@@ -49,8 +49,10 @@ station-side manuscript. The paper states that any facility deployment requires
 a facility-specific ethics determination and qualified independent expert review;
 these remain limitations or optional follow-up work, not measured physics gates.
 
-The latest official-source recheck covered NREL demonstrations and composite
-products, the NBS 70 MPa test catalogue and practical tank-filling literature.
+The latest official-source recheck also covered the FCH2RAIL KPI report, the
+NLR H2FillS release/manual, the European H2-Stations export API and NREL
+composite products, in addition to the NBS 70 MPa test catalogue and practical
+tank-filling literature.
 Those records provide summaries, figures or access-controlled component files,
 not a rights-cleared common-clock station/controller/dispenser/vehicle raw
 bundle. The exclusion decisions and the non-sending custodian request plan are
