@@ -1,7 +1,7 @@
 # Priority diagnostic run — 2026-10-11
 
 This is a parallel development diagnostic, not a validation-gate update. The
-runner completed all five selected diagnostics in 2.865 s. A completed process
+runner completed all five selected diagnostics in 2.916 s. A completed process
 is not treated as a scientific pass.
 
 | Diagnostic | Process | Scientific screen | Result |
