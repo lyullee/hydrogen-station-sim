@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "artifact_type": "public_ignited_hydrogen_jet_dataset_recheck",
+  "recorded_at": "2026-10-11",
+  "status": "PUBLIC_RAW_COMPONENT_DATASET_STAGED_NOT_REPLAYED",
+  "source": {
+    "title": "Replication data for: Laboratory-Scale Experiments on Ignited Hydrogen Jets: Flame Acceleration and Overpressure Analysis",
+    "dataset_doi": "10.18710/X044QK",
+    "landing_page": "https://dataverse.no/dataset.xhtml?persistentId=doi:10.18710/X044QK",
+    "repository": "DataverseNO / University of South-Eastern Norway",
+    "related_publication_doi": "10.5281/zenodo.16621853",
+    "license": "CC0 1.0",
+    "production_date": "2024-04",
+    "distribution_date": "2024-06-04",
+    "deposit_date": "2026-01-21"
+  },
+  "access_audit": {
+    "metadata_endpoint": "https://dataverse.no/api/datasets/:persistentId/?persistentId=doi:10.18710/X044QK",
+    "metadata_http_status": 200,
+    "file_count": 47,
+    "raw_csv_count": 39,
+    "compressed_experiment_bundle_count": 6,
+    "metadata_workbook_count": 1,
+    "readme_count": 1,
+    "total_bytes": 101923431640,
+    "readme_sha256": "BBD042A761FE4C70BFCE5FA4B8FD42E536BD1A545C3C08E6E177C78B67836044",
+    "metadata_workbook": {
+      "name": "Matrix and H2 flow results.xlsx",
+      "bytes": 14199,
+      "sha256": "C50162C995C01BB37C407E7CE0F132301297BF3B2562518C86940FB758AE2557"
+    },
+    "raw_csv_files_downloaded": false,
+    "raw_csv_outcomes_opened_before_protocol": false,
+    "aggregate_summary_opened_before_protocol": true,
+    "access_interpretation": "The public metadata and small aggregate matrix were inspected. The 39 raw time-series CSV files were not downloaded or scored. Because aggregate outcomes were already visible, a future replay is exploratory unless a new pre-access protocol is frozen before raw-file access and the prior exposure is disclosed."
+  },
+  "measurement_contract": {
+    "experiment_count": 40,
+    "documented_channels": [
+      "four high-frequency piezoelectric overpressure sensors",
+      "upstream hydrogen feed-line pressure",
+      "hydrogen mass-flow derived from experimental pressure",
+      "high-speed imaging"
+    ],
+    "documented_controls": [
+      "ignition location",
+      "ignition delay",
+      "mass-flow rate",
+      "obstacle spacing from nozzle"
+    ],
+    "environment": "laboratory-scale open atmospheric delayed-ignition under-expanded hydrogen jet",
+    "raw_time_series_expected": true,
+    "exact_header_and_clock_alignment": "must be verified from selected raw CSV files before replay"
+  },
+  "eligibility": {
+    "public_raw_component_consequence_data": true,
+    "component_consequence_external_holdout_candidate": true,
+    "outdoor_ignition_or_overpressure_relevant": true,
+    "hrs_dispenser_validation": false,
+    "station_to_vehicle_full_loop_validation": false,
+    "vehicle_controller_or_esd_validation": false,
+    "current_runtime_validation_status": "NOT_REPLAYED",
+    "current_readiness_gate_effect": "none"
+  },
+  "replay_protocol_requirement": {
+    "status": "NEEDS_FROZEN_PREACCESS_PROTOCOL",
+    "case_selection": "declare eligibility and an experiment-level calibration/holdout split before downloading any selected raw CSV",
+    "parameter_policy": "no case-specific fitting, time warping, outcome-based threshold changes or post-hoc source-term selection",
+    "required_outputs": [
+      "upstream pressure trace",
+      "mass-flow trace or documented reconstruction",
+      "sensor overpressure traces",
+      "peak overpressure and time-to-peak",
+      "ignition delay and obstacle metadata",
+      "failure and missing-channel accounting"
+    ],
+    "promotion_rule": "do not promote to runtime or claim outdoor HRS safety distance unless a frozen component screen passes and its domain boundary is recorded"
+  },
+  "claim_boundary": "This is a public laboratory-scale ignited-jet component dataset candidate. It can support delayed-ignition, flame-acceleration and overpressure component analysis after a frozen replay, but it does not validate an HRS dispenser, station control, vehicle fueling loop, ESD sequence, field safety distance or SAGA operator effectiveness."
+}
