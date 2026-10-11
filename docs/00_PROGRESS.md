@@ -2318,5 +2318,5 @@ the full-loop claim pass.
   it does not add a measured channel, fit a coefficient, wire into station
   runtime, or change the negative frozen Proust holdout. Promotion still
   requires a prospective rights-cleared synchronized apparatus logger.
-- Focused verification: **18 passed** (`test_proust_release_network_development.py`,
+- Focused verification: **19 passed** (`test_proust_release_network_development.py`,
   `test_release_network.py`, and `test_release_network_development.py`).
