@@ -572,20 +572,26 @@ The bounded paper still has 8 unresolved or failed gates:
 7. `grune_2014_pressure_decay_validation`
 8. `submission_metadata_and_declarations`
 
-The full user objective additionally retains the human-effectiveness gates and
-also requires:
+The legacy audit retains the following broader re-entry lanes for a future
+station-to-vehicle or human-effectiveness study. They are **not requirements of
+the active station-side/component manuscript goal** and are reported as
+limitations or optional follow-up work:
 
 9. `institutional_ethics_determination`
 10. `hiad_casebook_frozen`
 11. `hiad_holdout_collection`
 12. `independent_expert_review_complete`
-13. `full_loop_external_validation`
-14. `h2safe_spatial_detector_transfer_validation`
-15. `saga_effectiveness_and_safety_supported`
+13. `full_loop_external_validation` (future re-entry lane; current goal excludes it)
+14. `h2safe_spatial_detector_transfer_validation` (future detector-transfer lane)
+15. `saga_effectiveness_and_safety_supported` (requires human study)
 
-Only `full_user_objective_ready=true` in the authoritative audit permits the
-project goal to be marked complete. Until then, the correct status is active
-work with explicit negative and pending evidence.
+For the active goal, completion is evaluated against the scope-adjusted gate
+set recorded in
+[`VALIDATION_DATA_SPLIT_AND_SCOPE_DECISION_2026_10_11.md`](../research/VALIDATION_DATA_SPLIT_AND_SCOPE_DECISION_2026_10_11.md)
+and `research/goal_progress_snapshot_2026_10_11.json`. The legacy
+`full_user_objective_ready` flag remains false until the optional re-entry lanes
+are completed; it must not be read as a claim that the current station-side
+manuscript already has station-to-vehicle or human-effectiveness evidence.
 
 ## Reproducibility references
 
