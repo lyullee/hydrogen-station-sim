@@ -14,6 +14,7 @@
 | [H2-Stations 데이터 사용자 문서](https://docs.h2-stations.eu/for-data-users/) | 정적 station 정보와 availability·usage·hydrogen storage·pricing export API | 등록/운영 신호와 집계 수준이며 station·vehicle 동기 원시 충전 trace가 아님 |
 | [European Hydrogen Observatory HRS 데이터](https://observatory.clean-hydrogen.europa.eu/hydrogen-landscape/distribution-and-storage/hydrogen-refuelling-stations) | 위치, 운영 여부, dispenser type 및 XLSX station inventory | 시설 목록·시점별 집계 자료로서 vehicle-side transient 원자료가 아님 |
 | [CARB 2024 HRS in-use study](https://ww2.arb.ca.gov/sites/default/files/2024-12/Existing%20Light-Duty%20Hydrogen%20Refueling%20Stations%20In-Use%20Study%20Report%20ADA%20AL.pdf) | 22개 운영 HRS의 HyStEP 시험. Appendix A에 station/CHSS 압력·온도·질량유량·SOC 결과를 Excel로 정리했다고 명시 | 공개 페이지에는 PDF만 연결되고 Excel/logger 원자료와 재사용 조건은 제공되지 않음. **최우선 데이터 요청 후보** |
+| [OEDI H2SAFE dataset](https://data.openei.org/submissions/8799) | Lab-1·Lab-2의 5개 helium 실내 방출 실험, 센서 시계열·3D 좌표·방출원·환기 메타데이터와 공개 ZIP | 공개 구성요소 자료이지만 차량 수용부·충전소 제어기·공통 station-to-vehicle 충전축이 없음. H2SAFE detector/dispersion 구성요소 자료로만 사용 |
 | [Cal State LA 2017 fueling-data paper](https://www.calstatela.edu/sites/default/files/kscifall2017hydrogenbigdataanalysis.pdf) | 충전 때마다 fueling detail을 기록한 raw dataset을 사용했다고 논문이 명시 | 공개 PDF에 기계판독 파일·다운로드 링크·공통 시각축·재사용 조건이 없음. **custodian 요청 후보** |
 | [Cal State LA back-to-back fueling study](https://doi.org/10.1016/j.jclepro.2021.129737) | 1년간 실제 HRFF의 back-to-back 이벤트, 압력·열역학·냉각 응답·차량 SOC를 분석 | 논문·공개 manuscript 경로에 동기화 logger export와 출판 허가가 없음. **custodian 요청 후보** |
 | [ENDA HRS Connect](https://enda.eu/en/h2_monitoring) | 90개 HRS의 75–400개 신호를 짧은 간격으로 기록하는 실제 모니터링 시스템 설명 | 원자료 공개·재사용 경로와 차량 측 채널이 없어 접근 요청 후보로만 기록 |
@@ -22,6 +23,8 @@
 ## 결론
 
 공개 검색과 로컬 비식별 스키마 점검에서 **station·dispenser·vehicle/receptacle·공통 시각축·제어/ESD 상태·재사용 권한**을 한 묶음으로 충족하는 재사용 가능 원자료는 확인되지 않았다. CARB 보고서는 이런 데이터가 시험 중 수집·Excel로 정리되었음을 보여주는 가장 강한 요청 후보지만, 현재 공개 링크에는 원시 logger/Excel과 재사용 조건이 없다. H2FillS는 station-to-vehicle를 모사하고 경험자료로 검증한 소프트웨어지만, 이번 저장소가 재사용할 수 있는 원시 logger archive를 제공하는 자료원으로 확인되지 않았다. H2-Stations와 European Hydrogen Observatory는 정적·가용성·사용량·저장량 또는 시설 목록을 제공하지만 차량 탱크와 station 제어의 동기 transient를 제공하지 않는다. 따라서 이 항목은 주 목표에서 제거하고, 논문에는 다음 한계를 쓴다.
+
+OEDI의 H2SAFE 공개 ZIP은 실제로 내려받을 수 있는 구성요소 자료지만 helium surrogate 실내 방출 실험이다. 센서 좌표와 시계열은 검지·분산 모델의 구성요소 검증에 유용하나 차량 충전 full-loop 자료로 분류하지 않는다.
 
 > 본 연구는 station-side 수소충전소 디지털 트윈과 구성요소 검증에 초점을 둔다. 공개 재사용 가능한 동기화 station-to-vehicle 원자료가 없어 차량 측 제어기와 완전한 현장 full-loop 검증은 수행하지 않았으며, 해당 결과를 현장 충전소 안전성이나 차량 인증으로 확대 해석하지 않는다.
 
