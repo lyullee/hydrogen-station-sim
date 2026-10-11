@@ -16,12 +16,14 @@
   },
   "model": {
     "enclosure_volume_m3": 14.9,
-    "temperature_assumption": "case metadata T0 held constant",
+    "temperature_assumption": "runner-supplied case T0 held constant; no per-case temperature channel/table is present in the Zenodo metadata snapshot",
+    "temperature_provenance": "unresolved in the public archive; see research/zenodo_4106101_input_provenance_audit_2026_10_11.json",
     "discharge_coefficient": 0.7,
     "coefficient_basis": "fixed value reported by the associated source publication; no per-case fitting",
     "mass_flow_input": "measured CH2 mass-flow channel from source MFR archive",
     "pressure_observation": "raw P1 peak; no per-case signal filtering or outcome selection",
-    "time_step_s": 0.0002
+    "time_step_s": 0.0002,
+    "input_provenance_audit": "research/zenodo_4106101_input_provenance_audit_2026_10_11.json"
   },
   "aggregate": {
     "eligible_case_count": 10,

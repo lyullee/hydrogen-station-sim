@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "artifact_type": "zenodo_4106101_input_provenance_audit",
+  "generated_at": "2026-10-11T11:07:41.560564+00:00",
+  "source": {
+    "doi": "10.5281/zenodo.4106101",
+    "metadata_file": "data/public_validation/raw/zenodo_4106101/HTE242USN000METADATA.DOCX",
+    "archive_md5": {
+      "HTE242USN000METADATA.DOCX": "19ed05ec6b768b91a3accd61952f06ac",
+      "HTE242USN00011MFR.zip": "e210005525700347a43d9cf352e9a39b",
+      "HTE242USN00011PRESS.zip": "85f590964f3dcefba1f4b2a59916a1a3"
+    },
+    "expected_md5_match": true
+  },
+  "documented_boundaries": {
+    "geometry_and_vent_area": {
+      "metadata_case_count": 10,
+      "expected_case_count": 10,
+      "matches_runner_constants": true,
+      "volume_m3": 14.9,
+      "vent_area_m2_by_case": {
+        "2": 0.0012,
+        "3": 0.002,
+        "4": 0.002,
+        "5": 0.0014,
+        "6": 0.0014,
+        "7": 0.0006,
+        "8": 0.0006,
+        "9": 0.0006,
+        "10": 0.0006,
+        "11": 0.0006
+      }
+    },
+    "temperature": {
+      "per_case_temperature_boundary_in_metadata": false,
+      "interpretation": "No temperature channel or initial-temperature table is present in the Zenodo metadata snapshot."
+    }
+  },
+  "runner_boundary_status": {
+    "temperature_constants_in_runner": true,
+    "temperature_constants_source": "undocumented in the Zenodo metadata snapshot; requires separate paper/supplement provenance",
+    "runtime_parameter_changed": false,
+    "result_reclassification": "exploratory_only_until_temperature_provenance_or_channel_is independently archived"
+  },
+  "claim_boundary": "This audit corrects provenance wording only. It does not retune the pressure-peaking model or promote a validation claim."
+}

@@ -8,11 +8,18 @@ associated publication is [10.1016/j.ijhydene.2020.08.221](https://doi.org/10.10
 The protocol was frozen before the raw outcome files were downloaded. All ten
 experiments (cases 2–11) with pressure and mass-flow channels and documented
 vent geometry were retained; no outcome-based case selection or per-case
-parameter fitting was used. The runner uses the fixed 14.9 m³ enclosure,
-case-documented vent areas and initial temperatures, measured mass-flow input,
-constant-temperature ideal-gas balance and fixed discharge coefficient
+parameter fitting was used. The runner uses the fixed 14.9 m³ enclosure and
+case-documented vent areas, measured mass-flow input, a constant-temperature
+ideal-gas balance and fixed discharge coefficient
 `C_d = 0.7` documented by the source publication. Raw archives are hash
 checked and remain outside git.
+
+The Zenodo metadata snapshot does **not** contain a per-case initial or
+ambient-temperature channel/table. The runner's `T0_K` map is therefore an
+external, undocumented boundary in this archive and is not described as a
+measured metadata value. The result remains exploratory until that boundary
+has independent citable provenance; see
+`research/zenodo_4106101_input_provenance_audit_2026_10_11.json`.
 
 The primary thresholds were declared in advance: peak overpressure absolute
 error ≤5 kPa and peak-time relative error ≤20% for each case. All ten cases
