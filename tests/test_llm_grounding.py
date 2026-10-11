@@ -2196,10 +2196,14 @@ def test_manifest_keeps_the_per_result_consequence_validation_boundary():
             "calculation_status": "calculated",
             "maximum_heat_flux_w_m2": 6200.0,
             "consequence_validation_scope": "COMPONENT_SCREENING_BOUNDED",
+            "consequence_validation_status": "COMPONENT_ONLY_NO_FULL_LOOP",
             "geometry_display_mapping_verified": True,
+            "runtime_source_model_external_validation_supported": False,
             "source_depletion_external_holdout_supported": False,
             "full_station_vehicle_validation_supported": False,
             "site_specific_safety_distance_supported": False,
+            "validated_component_families": "outdoor_unconfined_free_jet_geometry",
+            "unvalidated_runtime_families": "source_depletion; station_to_vehicle_full_loop",
             "consequence_validation_artifacts": "research/consequence_geometry_validation.json",
             "consequence_validation_claim_limit": "not a site-specific safety distance",
         }],
@@ -2207,9 +2211,12 @@ def test_manifest_keeps_the_per_result_consequence_validation_boundary():
     )
     impact = manifest["impact"]["results"][0]
     assert impact["consequence_validation_scope"] == "COMPONENT_SCREENING_BOUNDED"
+    assert impact["consequence_validation_status"] == "COMPONENT_ONLY_NO_FULL_LOOP"
     assert impact["geometry_display_mapping_verified"] is True
+    assert impact["runtime_source_model_external_validation_supported"] is False
     assert impact["full_station_vehicle_validation_supported"] is False
     assert impact["site_specific_safety_distance_supported"] is False
+    assert "source_depletion" in impact["unvalidated_runtime_families"]
     assert "site-specific safety distance" in impact["consequence_validation_claim_limit"]
 
 
@@ -2267,8 +2274,12 @@ def test_prompt_decision_evidence_keeps_limits_without_full_audit_payload():
             "calculation_basis": "SENSOR_BASED_HYPOTHESIS",
             "current_pressure_mpa": 88.0,
             "consequence_validation_scope": "COMPONENT_SCREENING_BOUNDED",
+            "consequence_validation_status": "COMPONENT_ONLY_NO_FULL_LOOP",
+            "runtime_source_model_external_validation_supported": False,
             "full_station_vehicle_validation_supported": False,
             "site_specific_safety_distance_supported": False,
+            "validated_component_families": "outdoor_unconfined_free_jet_geometry",
+            "unvalidated_runtime_families": "source_depletion; station_to_vehicle_full_loop",
             "consequence_validation_claim_limit": "not a field safety distance",
         }],
         True,

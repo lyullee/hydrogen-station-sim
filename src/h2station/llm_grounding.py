@@ -9130,10 +9130,13 @@ def _impact_rows(results: Iterable[dict[str, Any]] | None) -> list[dict[str, Any
         "literature_jet_flame_mass_flow_basis",
         "literature_jet_flame_is_harm_distance",
         "literature_jet_flame_doi", "literature_jet_flame_claim_limit",
-        "consequence_validation_scope", "geometry_display_mapping_verified",
+        "consequence_validation_scope", "consequence_validation_status",
+        "geometry_display_mapping_verified",
+        "runtime_source_model_external_validation_supported",
         "source_depletion_external_holdout_supported",
         "full_station_vehicle_validation_supported",
         "site_specific_safety_distance_supported",
+        "validated_component_families", "unvalidated_runtime_families",
         "consequence_validation_artifacts", "consequence_validation_claim_limit",
     )
     rows: list[dict[str, Any]] = []

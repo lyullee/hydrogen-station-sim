@@ -55,10 +55,20 @@ def consequence_validation_context() -> dict[str, str | bool]:
     """
     return {
         "consequence_validation_scope": "COMPONENT_SCREENING_BOUNDED",
+        "consequence_validation_status": "COMPONENT_ONLY_NO_FULL_LOOP",
         "geometry_display_mapping_verified": True,
+        "runtime_source_model_external_validation_supported": False,
         "source_depletion_external_holdout_supported": False,
         "full_station_vehicle_validation_supported": False,
         "site_specific_safety_distance_supported": False,
+        "validated_component_families": (
+            "outdoor_unconfined_free_jet_geometry; "
+            "ignited_vented_enclosure_pressure_peak"
+        ),
+        "unvalidated_runtime_families": (
+            "source_depletion; station_layout; station_to_vehicle_full_loop; "
+            "site_specific_safety_distance"
+        ),
         "consequence_validation_artifacts": (
             "research/consequence_geometry_validation.json; "
             "research/hyram_adapter_verification.json; "

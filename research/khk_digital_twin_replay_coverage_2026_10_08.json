@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "artifact_type": "khk_public_accident_to_digital_twin_canonical_replay_audit",
-  "generated_at_utc": "2026-10-11T10:39:35.114575+00:00",
+  "generated_at_utc": "2026-10-11T17:08:09.107100+00:00",
   "status": "completed_independent_public_accident_integration_audit",
   "evidence_role": "independent_retrospective_metadata_to_canonical_runtime_traceability_only",
   "source": {
@@ -27,7 +27,7 @@
       "src/h2station/hazop/runtime.py": "df8e34d063f886165057c673d887a62ddddf1a6b69a14917dc2f5c7cb0669748",
       "src/h2station/hazop/mapping.py": "0412b597461848964208b415dbb8549c5c7c27d83a50970d7dacc1d29c4a9684",
       "src/h2station/risk/live.py": "73b9d430fd02ccad87758aa206ce2f31fdb78604225f7f3a3579231097fd97d4",
-      "src/h2station/risk/runtime_backend.py": "4f0c1dc774ba1d3407e8eece2587728f6900f823120435c646d0fca98cbabcaa",
+      "src/h2station/risk/runtime_backend.py": "2ccbefcc9be2341653f36445b801170248323f21c4411ec27e9fa6be032e72a2",
       "src/h2station/data/emergency_playbooks.json": "d8fedb036a91b5adae3934f1604a17966b8f0f9200c52f4d40bf2da2243a7c6c"
     },
     "public_report_text_used": false,

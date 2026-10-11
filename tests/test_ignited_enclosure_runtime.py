@@ -4,6 +4,7 @@ from h2station.api import FaultInput
 from h2station.risk.live import HyRAMDynamicReleaseRequest
 from h2station.risk.runtime_backend import (
     NativeHyRAMBackend,
+    consequence_validation_context,
     ignited_enclosure_consequence,
 )
 from h2station.safety_runtime import FaultEvent, FaultKind
@@ -48,6 +49,20 @@ def test_validated_ignited_enclosure_endpoint_is_available_at_runtime():
     assert result["maximum_ignited_enclosure_overpressure_pa"] > 10_000.0
     assert result["ignited_enclosure_external_holdout_supported"] is True
     assert "usn_17934047" in result["ignited_enclosure_validation_artifact"]
+
+
+def test_runtime_consequence_context_exposes_paper_claim_boundary():
+    context = consequence_validation_context()
+
+    assert context["consequence_validation_scope"] == "COMPONENT_SCREENING_BOUNDED"
+    assert context["consequence_validation_status"] == "COMPONENT_ONLY_NO_FULL_LOOP"
+    assert context["geometry_display_mapping_verified"] is True
+    assert context["runtime_source_model_external_validation_supported"] is False
+    assert context["source_depletion_external_holdout_supported"] is False
+    assert context["full_station_vehicle_validation_supported"] is False
+    assert context["site_specific_safety_distance_supported"] is False
+    assert "outdoor_unconfined_free_jet_geometry" in context["validated_component_families"]
+    assert "source_depletion" in context["unvalidated_runtime_families"]
 
 
 def test_runtime_marks_geometry_extrapolation_outside_holdout_domain():
