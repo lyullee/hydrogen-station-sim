@@ -1473,3 +1473,23 @@ The pages inspected expose reports, papers and metadata only. No synchronized st
 ## 2026-10-09 HRS measurement-lead and public-boundary recheck
 
 The Korean HRS digital-twin article reports 885 one-second samples over 24 attributes, and the Hungarian HRS digital-twin article reports an operational 300-second refueling replay with station and vehicle measurements. Their raw synchronized data are not public; the Korean article also discloses that actual abnormal events were not collected. The NIST Transient Flow Facility supplies metrology context for 0–70 MPa, 0–10 kg/min transients at 100 ms or finer resolution, while the NLR composite products are aggregate rates, times, temperatures and safety/maintenance summaries. None is an independent downloadable station-to-vehicle trace. The detailed boundary and request requirements are recorded in [`public_hrs_measurement_leads_recheck_2026_10_09.json`](public_hrs_measurement_leads_recheck_2026_10_09.json). These sources remain data-request and face-validity leads only; the full-loop gate remains open.
+
+## 2026-10-11 Public station-to-vehicle raw-data recheck
+
+A focused recheck covered the official California Air Resources Board in-use
+study, the Cal State LA back-to-back fueling record (DOI
+[10.1016/j.jclepro.2021.129737](https://doi.org/10.1016/j.jclepro.2021.129737)), the
+3Emotion operator-log study (DOI
+[10.1051/e3sconf/202233406008](https://doi.org/10.1051/e3sconf/202233406008)), and
+the open H2-Stations API documentation. These sources provide protocol context,
+selected plots, aggregate throughput or availability signals, and useful
+acquisition leads. None exposed a rights-cleared, machine-readable bundle with
+a common time base for station/dispenser and vehicle/receptacle pressure,
+temperature, mass flow, and controller/ESD state.
+
+The negative result is frozen in
+[`station_to_vehicle_open_data_search_2026_10_11.json`](station_to_vehicle_open_data_search_2026_10_11.json).
+Synchronized station-to-vehicle raw validation is therefore excluded from the
+primary objective and will be stated as a paper limitation. The sources remain
+usable for face-validity and protocol context; they are not used for fitting or
+full-loop validation.

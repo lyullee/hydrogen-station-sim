@@ -14,9 +14,18 @@
       "status": "SAME_SITE_STATION_SIDE_HOLDOUT",
       "source_artifact": "research/confidential_station_side_integrated_validation_2026_10_09.json",
       "deduplicated_rows": 56854143,
-      "pressure_boundary": {"calibration_points": 998, "holdout_points": 30},
-      "cascade_sequence": {"calibration_pairs": 8106, "holdout_pairs": 3664},
-      "recharge_pressure_forecast": {"calibration_cases": 1024, "holdout_cases": 394},
+      "pressure_boundary": {
+        "calibration_points": 998,
+        "holdout_points": 30
+      },
+      "cascade_sequence": {
+        "calibration_pairs": 8106,
+        "holdout_pairs": 3664
+      },
+      "recharge_pressure_forecast": {
+        "calibration_cases": 1024,
+        "holdout_cases": 394
+      },
       "independent_external_validation": false,
       "revised_role": "INDEPENDENT_TIME_ORDERED_SAME_SITE_HOLDOUT",
       "claim_boundary": "Same-site station-side pressure, cascade and recharge diagnostics only; no vehicle-side or field-safety claim."
@@ -46,14 +55,50 @@
       "reuse rights"
     ],
     "reviewed_leads": [
-      {"id": "fch2rail_d61", "url": "https://fch2rail.eu/wp-content/uploads/2025/01/FCH2RAIL_D6.1_Report-on-KPI-assessment.pdf", "decision": "REPORT_OR_REQUEST_ONLY"},
-      {"id": "dlr_fch2rail_refueling", "url": "https://elib.dlr.de/213625/1/manuscript_final_published_version.pdf", "decision": "PLOT_OR_REQUEST_ONLY"},
-      {"id": "calstate_la_back_to_back", "url": "https://doi.org/10.1016/j.jclepro.2021.129737", "decision": "CUSTODIAN_REQUEST_ONLY", "note": "Paper describes station, hose and vehicle channels, but no public machine-readable logger archive or reuse terms were found."},
-      {"id": "calstate_la_osti_station_report", "url": "https://www.osti.gov/servlets/purl/1799187", "decision": "REPORT_OR_REQUEST_ONLY", "note": "Station DAQ and pressure/dispensing summaries are described; a synchronized raw station-to-vehicle export is not published."},
-      {"id": "nrel_h2fills", "url": "https://www.nrel.gov/hydrogen/h2fills", "decision": "MODEL_SOFTWARE_NOT_RAW_HOLDOUT"},
-      {"id": "nrel_h2fills_hdvs_typeiv", "url": "https://www.nlr.gov/hydrogen/h2fills-download", "decision": "PARTIAL_STATION_TO_TANK_BOUNDARY_ONLY", "note": "The local sample workbook has common-clock hose and seven-tank pressure/temperature/mass channels, but no station-controller/cascade, ESD/interlock, nozzle/receptacle or vehicle-protocol trace; internal-use data policy prevents redistribution."},
-      {"id": "h2_stations_europe_api_v2", "url": "https://docs.h2-stations.eu/for-data-users/api-v2/", "decision": "STATION_REGISTRY_NOT_FULL_LOOP", "note": "Layout and aggregate/availability signals are public; vehicle-tank transient channels and a common station-to-vehicle clock are absent."},
-      {"id": "elvhys_42", "url": "https://doi.org/10.18710/JXJP0H", "decision": "OPEN_COMPONENT_RELEASE_DATA_NOT_VEHICLE_LOOP"}
+      {
+        "id": "fch2rail_d61",
+        "url": "https://fch2rail.eu/wp-content/uploads/2025/01/FCH2RAIL_D6.1_Report-on-KPI-assessment.pdf",
+        "decision": "REPORT_OR_REQUEST_ONLY"
+      },
+      {
+        "id": "dlr_fch2rail_refueling",
+        "url": "https://elib.dlr.de/213625/1/manuscript_final_published_version.pdf",
+        "decision": "PLOT_OR_REQUEST_ONLY"
+      },
+      {
+        "id": "calstate_la_back_to_back",
+        "url": "https://doi.org/10.1016/j.jclepro.2021.129737",
+        "decision": "CUSTODIAN_REQUEST_ONLY",
+        "note": "Paper describes station, hose and vehicle channels, but no public machine-readable logger archive or reuse terms were found."
+      },
+      {
+        "id": "calstate_la_osti_station_report",
+        "url": "https://www.osti.gov/servlets/purl/1799187",
+        "decision": "REPORT_OR_REQUEST_ONLY",
+        "note": "Station DAQ and pressure/dispensing summaries are described; a synchronized raw station-to-vehicle export is not published."
+      },
+      {
+        "id": "nrel_h2fills",
+        "url": "https://www.nrel.gov/hydrogen/h2fills",
+        "decision": "MODEL_SOFTWARE_NOT_RAW_HOLDOUT"
+      },
+      {
+        "id": "nrel_h2fills_hdvs_typeiv",
+        "url": "https://www.nlr.gov/hydrogen/h2fills-download",
+        "decision": "PARTIAL_STATION_TO_TANK_BOUNDARY_ONLY",
+        "note": "The local sample workbook has common-clock hose and seven-tank pressure/temperature/mass channels, but no station-controller/cascade, ESD/interlock, nozzle/receptacle or vehicle-protocol trace; internal-use data policy prevents redistribution."
+      },
+      {
+        "id": "h2_stations_europe_api_v2",
+        "url": "https://docs.h2-stations.eu/for-data-users/api-v2/",
+        "decision": "STATION_REGISTRY_NOT_FULL_LOOP",
+        "note": "Layout and aggregate/availability signals are public; vehicle-tank transient channels and a common station-to-vehicle clock are absent."
+      },
+      {
+        "id": "elvhys_42",
+        "url": "https://doi.org/10.18710/JXJP0H",
+        "decision": "OPEN_COMPONENT_RELEASE_DATA_NOT_VEHICLE_LOOP"
+      }
     ],
     "primary_goal_effect": "REMOVE_FULL_LOOP_EXTERNAL_VALIDATION_FROM_PRIMARY_GOAL",
     "paper_limitation": "No openly reusable synchronized station-to-vehicle raw trace was identified; vehicle-side controller/ESD and complete full-loop field validation are outside the claim boundary.",
@@ -64,6 +109,9 @@
     "required_for_saga_human_safety_effect_claim": true,
     "ethics_meaning": "Institutional determination of approval, exemption or not-required status for a human-facing study.",
     "expert_meaning": "Independent blinded qualified reviewers score SAGA versus alarm-only responses for action correctness, priority, stabilization, prevention, grounding, usability and unsafe omissions; no LLM-as-judge.",
-    "current_status": "NOT_COLLECTED_AND_NOT_A_PRIMARY_GOAL_GATE"
+    "current_status": "NOT_COLLECTED_AND_NOT_A_PRIMARY_GOAL_GATE",
+    "deployment_requirement": "Facility-specific ethics determination and qualified independent expert review are required before deployment or any claim of human safety-effectiveness; this is outside the primary physics-paper gate.",
+    "basis_materials": "Initial safety and response materials are drafted from Korea Gas Safety Corporation (KGS)-collected data with AI assistance; authors verify quantitative outputs, references and final claims.",
+    "publication_claim_limit": "The paper reports objective engineering/model evidence and traceable direct-answer generation only; it does not claim operator improvement, universal facility suitability or regulatory compliance."
   }
 }

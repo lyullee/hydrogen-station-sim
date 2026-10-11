@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-11T13:55:47.447108Z",
+  "artifact_type": "station_to_vehicle_public_data_search",
+  "scope": "Synchronized station/dispenser and vehicle/receptacle raw pressure-temperature-mass-flow/protocol data with reuse terms",
+  "search_method": [
+    "official publisher/agency pages",
+    "public repository metadata",
+    "DOI and institutional records",
+    "open HRS data API documentation"
+  ],
+  "candidates": [
+    {
+      "id": "carb_ld_hrs_in_use_2024",
+      "source": "https://ww2.arb.ca.gov/sites/default/files/2024-12/Existing%20Light-Duty%20Hydrogen%20Refueling%20Stations%20In-Use%20Study%20Report%20ADA%20AL.pdf",
+      "content": "CARB HyStEP tests at 22 existing light-duty HRS; report includes selected pressure/temperature/mass-flow graphs and protocol/fault findings.",
+      "raw_synchronized_rows": false,
+      "reason": "report-level plots and summaries; no downloadable logger archive, channel dictionary or reuse terms for the station-to-vehicle rows."
+    },
+    {
+      "id": "genovese_2021_back_to_back",
+      "doi": "10.1016/j.jclepro.2021.129737",
+      "source": "https://doi.org/10.1016/j.jclepro.2021.129737",
+      "content": "One-year Cal State LA station study describing back-to-back fueling, storage pressure, cooling response and vehicle SOC.",
+      "raw_synchronized_rows": false,
+      "reason": "public record exposes article/figures and claims data sharing, but no rights-cleared machine-readable station/dispenser/vehicle logger bundle was located."
+    },
+    {
+      "id": "caponi_2022_3emotion",
+      "doi": "10.1051/e3sconf/202233406008",
+      "source": "https://doi.org/10.1051/e3sconf/202233406008",
+      "content": "Operator logs from five 350-bar bus HRS summarized over multiple years: quantities, fill duration, average flow, event counts and utilization.",
+      "raw_synchronized_rows": false,
+      "reason": "aggregate operational statistics; no synchronized station-side and vehicle-side raw trace or channel/time-base metadata."
+    },
+    {
+      "id": "h2_stations_api",
+      "source": "https://docs.h2-stations.eu/for-data-users/api-v2/",
+      "content": "Open HRS roster/layout and selected availability/usage/storage/pricing signals.",
+      "raw_synchronized_rows": false,
+      "reason": "derived availability and inventory indicators; no transient pressure, temperature, mass-flow or vehicle/receptacle channels."
+    }
+  ],
+  "result": {
+    "eligible_synchronized_station_to_vehicle_bundle_found": false,
+    "primary_goal_action": "exclude_from_primary_goal",
+    "paper_limitation": "No openly reusable synchronized station-to-vehicle raw logger bundle was identified in this recheck; the work does not claim full-loop field validation.",
+    "retained_use": "face-validity context, protocol context and acquisition leads only"
+  },
+  "next_request_fields": [
+    "de-identified station and vehicle/receptacle pressure-temperature-mass-flow rows",
+    "common UTC/monotonic time base",
+    "channel dictionary and calibration metadata",
+    "protocol/controller/ESD state transitions",
+    "written reuse and publication terms"
+  ]
+}

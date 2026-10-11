@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-11T13:46:58.074036+00:00",
+  "generated_at": "2026-10-11T14:04:52.729242+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -8307,7 +8307,7 @@
             75,
             72
           ],
-          "approximate_manuscript_words_before_references": 8000,
+          "approximate_manuscript_words_before_references": 7870,
           "figures": 3,
           "tables": 3,
           "citation_keys": 49,
@@ -8339,7 +8339,7 @@
       "requirement": "Compiler success, exact source/PDF hashes, no unresolved errors, and visual inspection of every rendered page.",
       "observed": {
         "schema_version": 2,
-        "verified_at_utc": "2026-10-11T09:43:02.095812+00:00",
+        "verified_at_utc": "2026-10-11T14:04:45.064156+00:00",
         "success": true,
         "compiler": {
           "name": "Tectonic",
@@ -8349,20 +8349,20 @@
         },
         "source": {
           "path": "manuscript/ijhe_manuscript_draft.tex",
-          "bytes": 75989,
-          "sha256": "91c6ef1a5d292f837906c06a2960d0b83b62345540bab1aece61ce507eb4a640"
+          "bytes": 74902,
+          "sha256": "f6258437c537cc2ffc4448e27543db190a68711b042f4f812428fb934bfa4bcc"
         },
         "pdf": {
           "path": "output/pdf/ijhe_manuscript_draft.pdf",
-          "bytes": 834570,
-          "sha256": "340c6d7e6656f8d3cd18c1bfee4cf97e3988c231dd4356733f4546c5f27a5f9c",
+          "bytes": 833512,
+          "sha256": "88aa10eaae768e855b0723c9a93c87a07ea8f6398ab30f69600d2dae73770e3a",
           "page_count": 23,
-          "extracted_character_count": 70735
+          "extracted_character_count": 69608
         },
         "compile_log": {
           "path": "output/pdf/ijhe_manuscript_draft.log",
-          "bytes": 19544,
-          "sha256": "20b13efeaf9088c8641f6103a92819109141d213c1e970276e56b94ae6066ff5",
+          "bytes": 19545,
+          "sha256": "31fd453e76e7f39c8eca553ebe825e3b23fa24e85066ef50b870ebf3e175f72b",
           "unresolved_citations": 0,
           "unresolved_references": 0,
           "fatal_errors": [],
@@ -8419,11 +8419,11 @@
         "funding_confirmed": false,
         "funding_statement": null,
         "ai_disclosure_confirmed": false,
-        "ai_disclosure_statement": "During preparation of the working draft, AI-assisted tools were used for code and prose support. The authors must review, edit and take responsibility for all content, references, analyses and claims before submission.",
+        "ai_disclosure_statement": "AI-assisted tools were used to organize KGS-collected source material and draft initial safety and emergency-response materials. The authors must review and verify all quantitative calculations, references, evidence boundaries and final claims, and take responsibility for the article.",
         "data_availability_statement_confirmed": false,
-        "data_availability_statement": "Public source identifiers, derived metrics and validation manifests are provided where permitted. Confidential station-side data are not redistributed. No reusable synchronized station-to-vehicle raw trace was identified; this is stated as a limitation.",
+        "data_availability_statement": "Confidential station-side records collected by the Korea Gas Safety Corporation (KGS) are not redistributed. The manuscript reports only custodian-approved de-identified/aggregated metrics and uncertainty intervals; public source identifiers, derived metrics and validation manifests are provided where permitted. No reusable synchronized station-to-vehicle raw trace was identified; this is stated as a limitation.",
         "ethics_statement_confirmed": false,
-        "ethics_statement": "No human participants or operator responses are included in the physics validation study. A separate institutional determination and blinded expert study would be required before claiming human safety effectiveness of SAGA.",
+        "ethics_statement": "No human participants, operator ratings or personal identifiers are included in the physics and engineering validation study. Because suitability depends on each facility, equipment configuration and operating procedure, a facility-specific ethics determination and qualified independent expert review are required before deployment or any claim that SAGA improves human safety decisions.",
         "author_action_required": [
           "Add every author and affiliation.",
           "Confirm institutional email addresses and corresponding-author responsibility.",

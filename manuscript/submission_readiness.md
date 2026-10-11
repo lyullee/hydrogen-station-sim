@@ -34,8 +34,10 @@ The exact split and the paper limitation are recorded in
 and the machine-readable
 [`confidential_validation_split_manifest_2026_10_11.json`](../research/confidential_validation_split_manifest_2026_10_11.json).
 The institutional-ethics, HIAD casebook, expert-review and SAGA human-effectiveness
-lanes are intentionally optional for this station-side manuscript; they remain
-required only for the broader operator-safety objective.
+lanes are intentionally outside the objective engineering scope of this
+station-side manuscript. The paper states that any facility deployment requires
+a facility-specific ethics determination and qualified independent expert review;
+these remain limitations or optional follow-up work, not measured physics gates.
 
 The latest official-source recheck covered NREL demonstrations and composite
 products, the NBS 70 MPa test catalogue and practical tank-filling literature.
@@ -398,8 +400,11 @@ release. All eight family fixtures pass, but liquid-hydrogen, production-
 equipment, explosion and valve-seat cases remain bounded proxies rather than
 accident reconstructions or response-effectiveness evidence.
 
-Confidential real-station data may be used without public redistribution. The
-required route is documented in
+Confidential real-station data collected by the Korea Gas Safety Corporation
+(KGS) may be used under controlled access without public redistribution. Initial
+safety and emergency-response materials were drafted with AI assistance from the
+KGS-collected records; quantitative calculations, references and final claims
+remain author-verified. The required route is documented in
 [`confidential_real_data_validation_protocol_2026_10_05.json`](../research/confidential_real_data_validation_protocol_2026_10_05.json):
 quarantine and hash the archive, freeze the model and scoring protocol before
 outcome access, retain failed cases, publish only approved aggregates, and make
