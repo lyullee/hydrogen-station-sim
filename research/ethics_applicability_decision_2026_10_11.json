@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "artifact_type": "ethics_applicability_decision",
+  "recorded_at": "2026-10-11",
+  "scope": "physics_and_safety-logic validation plus evidence-grounded SAGA response generation",
+  "current_physics_study": {
+    "human_participants": false,
+    "human_identifiers_collected": false,
+    "operator_decision_outcomes_collected": false,
+    "claim_of_saga_human_safety_effect": false,
+    "institutional_approval_claimed": false,
+    "status": "NO_HUMAN_EFFECT_CLAIM_IN_CURRENT_SCOPE"
+  },
+  "ethics_gate": {
+    "required_for_current_physics_paper": false,
+    "required_before_human_effectiveness_claim": true,
+    "required_before_recruitment_or_expert_rating": true,
+    "current_status": "OPTIONAL_PENDING_FOR_SEPARATE_HUMAN_STUDY",
+    "determination_id": null,
+    "approval_or_exemption_claimed": false
+  },
+  "independent_expert_review": {
+    "meaning": "qualified independent reviewers score masked alarm-only and SAGA responses with a frozen rubric",
+    "llm_as_judge": false,
+    "required_for_current_physics_paper": false,
+    "required_for_saga_human_safety_effect_claim": true,
+    "current_status": "NOT_COLLECTED"
+  },
+  "reentry_conditions": [
+    "institutional ethics determination before recruitment or human-response collection",
+    "frozen casebook and allocation key",
+    "masked independent ratings from qualified reviewers",
+    "predeclared analysis of correctness, priority, omissions, unsafe advice and usability"
+  ],
+  "claim_boundary": "This record documents applicability and does not constitute institutional ethics approval, exemption, or a human-effectiveness result."
+}
