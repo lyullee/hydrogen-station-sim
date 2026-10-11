@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "artifact_type": "kit_lh2_selective_member_stage1_inventory",
+  "recorded_at": "2026-10-11",
+  "status": "PARTIAL_ARCHIVE_MEMBER_INVENTORY",
+  "source": {
+    "doi": "10.35097/1483",
+    "official_record": "https://www.radar-service.eu/radar/en/dataset/umUTdrjbbQCUDIXE",
+    "license": "CC BY-SA 4.0",
+    "archive_version": 1,
+    "publisher_reported_archive_bytes": 4971447808,
+    "publisher_reported_archive_md5": "0e4ac934ecb973c6f07212e8a80707c9"
+  },
+  "acquisition": {
+    "local_partial_archive_bytes": 964689920,
+    "local_partial_archive_md5": "5dc3c9898487b08d273ee5b143840677",
+    "local_partial_archive_sha256": "163274e269ccb35b3649e9b4e5eb2856317de598ea1968215254e9776481b750",
+    "selection_rule": "All complete XLSX members encountered in the sequential archive prefix; selection used only member headers and byte completeness, never signal values or model agreement.",
+    "archive_prefix_complete_through_member_data": true,
+    "full_publisher_checksum_verified": false
+  },
+  "members": [
+    {
+      "name": "Unnamed entity/ignited_trial_16_28-10-2019alldata.xlsx",
+      "offset_data": 75566080,
+      "size_bytes": 116121604,
+      "sha256": "c0c9ea848f3d334bb65ab4dfd86e6c87748efdc4dc326d69811a7e3eb9208827",
+      "sheet_names": ["Flexlogger", "Radiometers", "Blastlogger", "BlastloggerClip", "Xensor", "Flowmeter", "LocalWeather"]
+    },
+    {
+      "name": "Unnamed entity/ignited_trial_17_28-10-2019alldata.xlsx",
+      "offset_data": 191688704,
+      "size_bytes": 115452290,
+      "sha256": "524a3578ed3af2e67c122ed346f1cce15a5d6497ee2bea92836f8f1aee81ae60",
+      "sheet_names": ["Flexlogger", "Radiometers", "Blastlogger", "BlastloggerClip", "Xensor", "Flowmeter", "LocalWeather"]
+    },
+    {
+      "name": "Unnamed entity/ignited_trial_15_28-10-2019alldata.xlsx",
+      "offset_data": 459750400,
+      "size_bytes": 117388596,
+      "sha256": "0e68df59e62f349da729f605c7d43bcae784e66b45d08d7b5549943eadc871bc",
+      "sheet_names": ["Flexlogger", "Radiometers", "Blastlogger", "BlastloggerClip", "Xensor", "Flowmeter", "LocalWeather"]
+    },
+    {
+      "name": "Unnamed entity/ignited_trial_19_28-10-2019alldata.xlsx",
+      "offset_data": 755972608,
+      "size_bytes": 112427106,
+      "sha256": "97a9db8325a2dcf2027b33f6cede5fcbe7852ed2a503033b390452bd1f52d8e3",
+      "sheet_names": ["Flexlogger", "Radiometers", "Blastlogger", "BlastloggerClip", "Xensor", "Flowmeter", "LocalWeather"]
+    }
+  ],
+  "stage1_boundary": {
+    "numeric_signal_values_opened": false,
+    "xlsx_cells_read": false,
+    "video_outcomes_opened": false,
+    "raw_rows_committed": false,
+    "parameter_fitting_performed": false,
+    "stage2_eligible": false,
+    "reason_stage2_closed": "The complete publisher archive checksum and full metadata inventory are not yet verified; the prefix is not a complete all-case holdout."
+  },
+  "claim_boundary": "This record proves only that four complete consequence-workbook members and their channel-family sheet names are reachable in an incomplete public archive prefix. It is not a numerical validation result and does not support a station, consequence-distance, HyRAM or SAGA effectiveness claim."
+}
