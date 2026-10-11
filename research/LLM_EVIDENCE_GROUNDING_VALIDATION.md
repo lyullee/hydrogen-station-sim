@@ -77,7 +77,7 @@ contains:
   4.5 MPa candidate is corroborated on a second station-side bundle, while
   vehicle/full-loop validation and runtime parameter application remain false;
 - a SHA-256 digest over the canonical manifest contents.
-- the amended primary-goal scope (92.0% scope-adjusted helper metric) is delivered to interactive prompts without exposing paths; synchronized station-to-vehicle raw data remains a documented limitation, and human expert review is optional unless a SAGA human-guidance claim is made;
+- the amended primary-goal scope (92.1% scope-adjusted gate-closure metric) is delivered to interactive prompts without exposing paths; synchronized station-to-vehicle raw data remains a documented limitation, and human expert review is optional unless a SAGA human-guidance claim is made;
 
 The manifest explicitly states that simulated signals are not field
 measurements and that sampled consequence distances are not confirmed safety
