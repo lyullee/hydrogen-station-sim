@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-11T19:39:32+00:00",
+  "generated_at": "2026-10-11T20:18:18.9143142+00:00",
   "metric_definition": "PASS gates divided by PASS+FAIL+PENDING gates; not a publication-readiness probability",
   "gate_counts": {
     "PASS": 129,
@@ -9,7 +9,7 @@
     "TOTAL": 146
   },
   "gate_closure_percent": 88.4,
-  "primary_scope_progress_2026_10_11": {
+  "primary_scope_progress_2026_10_12": {
     "metric_definition": "Scope-adjusted gate closure after removing the declared station-to-vehicle full-loop and optional SAGA human-evaluation lanes; this is not a scientific improvement claim.",
     "gate_counts": {
       "PASS": 129,
@@ -58,6 +58,7 @@
       "publication_acceptance_or_probability"
     ],
     "next_high_impact_actions": [
+      "retain the negative Proust high-pressure release result and publish the diameter-dependent effective-coefficient/boundary-semantics diagnostic without fitting the production model",
       "retry the range-capable KIT LH2 archive fetch after the RADAR rate limit cools, then verify the publisher MD5 before metadata-only inventory",
       "obtain an independent time-resolved measured pressure trace for the pending Grune holdout",
       "keep the blinded expert and prospective SAGA safety-effectiveness study optional; start it only if the manuscript claims improved human safety decisions"
@@ -76,7 +77,7 @@
       "paper_limitation": "No openly reusable synchronized station-to-vehicle trace was identified; the paper will state this as a boundary and will not claim full-loop field validation.",
       "legacy_full_scope_metric": "full_user_objective_ready and its open full-loop gate remain in the audit only for traceability; they are not a required claim in the amended primary scope."
     },
-    "priority_status_2026_10_11": {
+    "priority_status_2026_10_12": {
       "independent_component_holdout": "retained_public_type_iv_split_ready",
       "station_to_vehicle_raw_data": "removed_from_primary_goal_after_public_search",
       "ethics_and_expert_review": "optional_for_physics_validation; required only for a claim that SAGA improves human safety guidance"

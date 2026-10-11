@@ -28,12 +28,14 @@ Original project software and associated documentation are available under the [
 - [PRESLHY E5.1 holdout protocol](research/PRESLHY_E5_1_HOLDOUT_PROTOCOL.md): model-hash-locked independent evaluation rules frozen before archive access.
 - [PRESLHY E5.1 holdout result](research/PRESLHY_E5_1_HOLDOUT_RESULT.md): retained ineligible negative result; 3 primary ambient cases and 2/3 joint passes did not meet the frozen minimums or 70% rule.
 - [Independent 90 MPa release holdout](research/PROUST_RELEASE_HOLDOUT_RESULT.md): prospectively frozen INERIS/CEA mass-flow transfer test; all three nozzle series were eligible and all failed the joint screens.
+- [Proust boundary-semantics diagnostic](research/PROUST_RELEASE_BOUNDARY_SEMANTICS_DIAGNOSTIC_2026_10_12.md): post-outcome diagnosis of the diameter-dependent effective coefficient and the unresolved supply-line/valve boundary; it does not change the failed holdout.
 - [HIAD expert-review protocol](docs/EXPERT_REVIEW_PROTOCOL.md): frozen casebook, masking, reviewer rubric, endpoints, and analysis plan.
 - [HIAD evaluation readiness](research/hiad_evaluation_readiness.json): machine-checkable status of coordinator review, ethics, holdout collection and independent expert-review gates; advisory prescreen output never counts as approval.
 - [Validation evidence matrix](research/VALIDATION_EVIDENCE_MATRIX_2026_10_11.md): claim-bounded map of the owner-data holdouts, independent component evidence, station-to-vehicle limitation, and SAGA human-study boundary.
 - [Validation split and scope decision](research/VALIDATION_DATA_SPLIT_AND_SCOPE_DECISION_2026_10_11.md): frozen chronology-preserving split of the private station-side archive and the decision to exclude unavailable synchronized station-to-vehicle raw validation from the primary goal.
 - [Ethics and expert-review scope](research/ETHICS_AND_EXPERT_REVIEW_SCOPE_2026_10_11.md): distinguishes institutional ethics determination from independent blinded subject-matter review and defines when each is required.
-- [Current validation progress delta](research/PROGRESS_DELTA_2026_10_11.md): current gate counts, scope-adjusted progress, full-loop exclusion, and unresolved P0 physics gates.
+- [Paper goal and scope amendment](research/GOAL_SCOPE_AMENDMENT_2026_10_12.md): objective claims, KGS/AI-assisted source handling, station-to-vehicle limitation and facility-specific deployment conditions.
+- [Current validation progress delta](research/PROGRESS_DELTA_2026_10_12.md): current gate counts, scope-adjusted progress, full-loop exclusion, and unresolved P0 physics gates.
 - [IJHE working manuscript](manuscript/ijhe_manuscript_draft.tex): claim-bounded English draft, journal-format checks, figures, graphical abstract and the remaining submission gates.
 - [IJHE reproducibility route](manuscript/REPRODUCIBILITY.md): one-command integrity check, focused tests, full-regression option and the scientific-readiness claim boundary.
 
