@@ -243,6 +243,34 @@ def test_primary_scope_amendment_reaches_llm_without_reclassifying_audit_gates()
     assert "C:\\" not in str(scope)
 
 
+def test_frozen_split_and_ethics_boundaries_reach_all_llm_projections():
+    manifest = _manifest()
+    scope = manifest["response_evidence"]["primary_scope_progress"]
+    assert scope["validation_scope_decision"] == "frozen_2026_10_11"
+    assert scope["same_site_station_side_holdout_supported"] is True
+    assert scope["independent_component_holdout_supported"] is True
+    assert scope["independent_external_full_loop_validation_supported"] is False
+    assert scope["station_to_vehicle_raw_data_status"] == (
+        "not_available_in_rights_cleared_machine_readable_form"
+    )
+    assert scope["station_to_vehicle_scope_decision"].startswith("excluded")
+    assert scope["institutional_ethics_determination"] == "PENDING"
+    assert scope["independent_expert_review_complete"] == "PENDING"
+    assert scope["human_effectiveness_claim_permitted"] is False
+    assert scope["owner_station_side_holdout"]["deduplicated_rows"] == 56854143
+    assert scope["public_component_holdout"]["holdout_cases"] == 12
+
+    decision = prompt_decision_evidence(manifest)
+    decision_scope = decision["primary_scope_progress"]
+    assert decision_scope["independent_external_full_loop_validation_supported"] is False
+    assert decision_scope["institutional_ethics_determination"] == "PENDING"
+    summary_scope = prompt_evidence_summary(manifest)["primary_scope_progress"]
+    assert summary_scope["same_site_station_side_holdout_supported"] is True
+    header_scope = prompt_evidence_header(manifest)["primary_scope_progress"]
+    assert header_scope["human_effectiveness_claim_permitted"] is False
+    assert "C:\\" not in str(scope)
+
+
 def test_data_coverage_instruction_uses_available_evidence_before_claim_limits():
     manifest = _manifest()
     instruction = manifest["data_coverage"]["assistant_instruction"]

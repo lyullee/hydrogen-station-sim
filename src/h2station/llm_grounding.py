@@ -178,6 +178,15 @@ def _primary_scope_progress() -> dict[str, Any]:
         "excluded_gate_ids": [],
         "station_to_vehicle_scope": "unknown",
         "ethics_and_expert_review": "unknown",
+        "validation_scope_decision": "unavailable",
+        "same_site_station_side_holdout_supported": False,
+        "independent_component_holdout_supported": False,
+        "independent_external_full_loop_validation_supported": False,
+        "station_to_vehicle_raw_data_status": "unknown",
+        "station_to_vehicle_limitation": "검증 범위 결정을 읽지 못해 station-to-vehicle 외부검증을 주장하지 않음",
+        "institutional_ethics_determination": "unknown",
+        "independent_expert_review_complete": "unknown",
+        "human_effectiveness_claim_permitted": False,
         "claim_limit": (
             "개정 주 목표 범위를 읽지 못했으므로 station-to-vehicle와 "
             "SAGA 효과평가를 필수 검증으로 재분류하지 않음"
@@ -221,7 +230,7 @@ def _primary_scope_progress() -> dict[str, Any]:
     raw_percent = progress.get("gate_closure_percent")
     if isinstance(raw_percent, bool) or not isinstance(raw_percent, (int, float)):
         return unavailable
-    return {
+    scope = {
         "status": "available",
         "artifact_integrity": True,
         "gate_counts": safe_counts,
@@ -236,6 +245,152 @@ def _primary_scope_progress() -> dict[str, Any]:
             "원래 전체 게이트 88.2%는 감사 추적용으로 유지함."
         ),
     }
+
+    # The scope snapshot predates the frozen split and ethics decisions.  Read
+    # those two small, privacy-bounded artifacts as a second integrity layer
+    # so the provider sees the actual current boundary instead of inferring it
+    # from legacy gate exclusions.  Raw rows, source paths and site identity
+    # are deliberately never copied into the prompt.
+    split_path = Path(__file__).resolve().parents[2] / "research" / (
+        "confidential_validation_split_manifest_2026_10_11.json"
+    )
+    ethics_path = Path(__file__).resolve().parents[2] / "research" / (
+        "ethics_and_expert_review_scope_decision_2026_10_11.json"
+    )
+    try:
+        split = json.loads(split_path.read_text(encoding="utf-8"))
+        ethics = json.loads(ethics_path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, json.JSONDecodeError):
+        return scope
+    if not isinstance(split, dict) or not isinstance(ethics, dict):
+        return scope
+    if (
+        split.get("schema_version") != 1
+        or split.get("artifact_type") != "confidential_validation_split_manifest"
+        or ethics.get("schema_version") != 1
+        or ethics.get("artifact_type") != "ethics_and_expert_review_scope_decision"
+    ):
+        return scope
+
+    split_decision = split.get("decision")
+    station_vehicle = split.get("station_to_vehicle_full_loop")
+    owner_split = split.get("owner_station_side_split")
+    component_split = split.get("public_component_split")
+    split_privacy = split.get("privacy")
+    ethics_decision = ethics.get("decision")
+    if not all(
+        isinstance(value, dict)
+        for value in (
+            split_decision,
+            station_vehicle,
+            owner_split,
+            component_split,
+            split_privacy,
+            ethics_decision,
+        )
+    ):
+        return scope
+    if any(value is not False for value in (
+        split_privacy.get("source_identifiers_published"),
+        split_privacy.get("source_paths_published"),
+        split_privacy.get("source_filenames_published"),
+        split_privacy.get("source_headers_published"),
+        split_privacy.get("raw_rows_persisted"),
+        split_privacy.get("absolute_timestamps_published"),
+        split_privacy.get("calendar_dates_published"),
+        split_privacy.get("site_company_location_manufacturer_published"),
+    )):
+        return scope
+
+    required_split_flags = (
+        "same_site_station_side_holdout_supported",
+        "independent_component_holdout_supported",
+        "independent_external_full_loop_validation_supported",
+        "full_loop_external_validation_gate_closed",
+    )
+    if any(not isinstance(split_decision.get(key), bool) for key in required_split_flags):
+        return scope
+    required_ethics_flags = (
+        "ethics_gate_is_not_required_for_existing_archived_data_analysis",
+        "institutional_determination_required_before_human_rating",
+        "expert_review_required_for_operator_effectiveness_claim",
+        "physics_station_side_paper_can_report_without_expert_review",
+    )
+    if any(not isinstance(ethics_decision.get(key), bool) for key in required_ethics_flags):
+        return scope
+
+    scope.update({
+        "validation_scope_decision": "frozen_2026_10_11",
+        "same_site_station_side_holdout_supported": split_decision[
+            "same_site_station_side_holdout_supported"
+        ],
+        "independent_component_holdout_supported": split_decision[
+            "independent_component_holdout_supported"
+        ],
+        "independent_external_full_loop_validation_supported": split_decision[
+            "independent_external_full_loop_validation_supported"
+        ],
+        "full_loop_external_validation_gate_closed": split_decision[
+            "full_loop_external_validation_gate_closed"
+        ],
+        "station_to_vehicle_raw_data_status": station_vehicle.get("status"),
+        "station_to_vehicle_required_channel_count": len(
+            station_vehicle.get("required_channels") or []
+        ),
+        "station_to_vehicle_scope_decision": station_vehicle.get("decision"),
+        "station_to_vehicle_limitation": str(
+            split.get("claim_boundary") or ""
+        ),
+        "owner_station_side_holdout": {
+            "claim_label": owner_split.get("claim_label"),
+            "deduplicated_rows": owner_split.get("deduplicated_rows"),
+            "fit_uses_holdout": owner_split.get("fit_uses_holdout") is True,
+            "default_model_parameters_changed_after_holdout": owner_split.get(
+                "default_model_parameters_changed_after_holdout"
+            ) is True,
+            "cohort_count": len(owner_split.get("cohorts") or []),
+        },
+        "public_component_holdout": {
+            "claim_label": component_split.get("claim_label"),
+            "calibration_cases": component_split.get("calibration_cases"),
+            "holdout_cases": component_split.get("holdout_cases"),
+            "excluded_mass_closure_cases": component_split.get(
+                "excluded_mass_closure_cases"
+            ),
+        },
+        "institutional_ethics_determination": ethics.get(
+            "institutional_ethics_determination"
+        ),
+        "independent_expert_review_complete": ethics.get(
+            "independent_expert_review_complete"
+        ),
+        "human_effectiveness_claim_permitted": ethics.get(
+            "human_effectiveness_claim_permitted"
+        ) is True,
+        "llm_as_judge_permitted": ethics.get("llm_as_judge_permitted") is True,
+        "expert_review_protocol": {
+            "holdout_event_count": (ethics.get("frozen_expert_protocol") or {}).get(
+                "holdout_event_count"
+            ),
+            "reviewer_count": (ethics.get("frozen_expert_protocol") or {}).get(
+                "reviewer_count"
+            ),
+            "reviewer_independence": (ethics.get("frozen_expert_protocol") or {}).get(
+                "reviewer_independence"
+            ) is True,
+        },
+        "ethics_decision": {
+            key: ethics_decision[key] for key in required_ethics_flags
+        },
+        "ethics_claim_boundary": str(ethics.get("claim_boundary") or ""),
+    })
+    scope["claim_limit"] = (
+        str(scope.get("claim_limit") or "")
+        + " 현재 고정된 분할에서는 same-site station-side와 독립 부품 holdout만 주장할 수 있고, "
+        "동기화 station-to-vehicle 원자료가 없어 독립 외부 full-loop 검증은 목표·논문 한계로 남긴다. "
+        "윤리결정과 독립 전문가 평가는 보류되어 SAGA의 인간 안전효과를 주장하지 않는다."
+    )
+    return scope
 
 
 def _validation_gap_triage() -> dict[str, Any]:
