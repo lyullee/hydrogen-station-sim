@@ -204,16 +204,18 @@ least squares in log-parameter space. No case-specific parameter was fitted.
 Case-level uncertainty was estimated with 10,000 nonparametric bootstrap
 resamples using seed 2601.
 
-As an independent operating-range reference, the 3Emotion programme reports
-multi-year operator logs from five 350-bar bus refuelling stations and 34 buses,
-including aggregate fill mass, duration, average flow, availability and
-utilisation indicators \cite{caponi2022}. The reported overall means (14.62 kg
-per fill and 10.28 min) are retained in the repository's public-data inventory
-as an aggregate benchmark. They are not used as a synchronized time-series
-holdout: the public record does not release common-time-base pressure,
-temperature, mass-flow and valve-state rows. This distinction prevents an
-operating-range comparison from being presented as full-loop physics
-validation.
+\subsection{Confidential station-side time-ordered holdout}
+The owner archive was split by episode/time before outcome inspection. It had
+56,854,143 rows: pressure 998/30, cascade 8,106/3,664 pairs, and recharge
+1,024/394 calibration/holdout units. This same-site evidence is not external
+validation and lacks vehicle/controller/receptacle or field-safety channels.
+Public Type-IV 23/12 remains the independent external component lane. Owner
+results are station diagnostics.
+
+The 3Emotion programme reports aggregate fill metrics for five 350-bar stations
+\cite{caponi2022}. Its public record lacks common-time pressure,
+temperature, flow and valve-state rows, so it is operating-range context rather
+than a full-loop holdout.
 
 For a variable $y$ with $n$ aligned samples, the principal metric is
 \begin{equation}
