@@ -44,6 +44,20 @@ def tracked_files(root: Path) -> list[Path]:
     return [root / item for item in raw.decode("utf-8", "surrogateescape").split("\0") if item]
 
 
+def untracked_dotenv_files(root: Path, tracked: set[Path]) -> list[Path]:
+    """Find dotenv files even when Git ignores them, without traversing data/vendor trees."""
+
+    excluded = {root / ".git", root / "data", root / "node_modules", root / "vendor"}
+    found: list[Path] = []
+    for path in root.rglob(".env*"):
+        if not path.is_file() or path in tracked:
+            continue
+        if any(parent in excluded or excluded.intersection(parent.parents) for parent in path.parents):
+            continue
+        found.append(path)
+    return sorted(found)
+
+
 def value_classification(value: str) -> str:
     value = value.strip().strip("\"'")
     if not value or PLACEHOLDER.fullmatch(value):
@@ -53,11 +67,14 @@ def value_classification(value: str) -> str:
 
 def scan(root: Path) -> dict[str, object]:
     files = tracked_files(root)
+    tracked_set = set(files)
+    dotenv_files = untracked_dotenv_files(root, tracked_set)
+    files_to_scan = files + dotenv_files
     scanned = 0
     hits: list[dict[str, object]] = []
     assignments: list[dict[str, object]] = []
     env_files: list[str] = []
-    for path in files:
+    for path in files_to_scan:
         if path.suffix.lower() not in TEXT_SUFFIXES and path.name.lower() not in {".env", ".env.example", ".env.template"}:
             continue
         try:
@@ -85,10 +102,11 @@ def scan(root: Path) -> dict[str, object]:
                 })
     return {
         "generated_at": datetime.now(timezone.utc).isoformat(),
-        "scope": "tracked text files only; values are never emitted",
+        "scope": "tracked text files plus any working-tree .env* files outside data/vendor trees; values are never emitted",
         "tracked_files": len(files),
         "scanned_text_files": scanned,
         "env_files": env_files,
+        "untracked_dotenv_files_scanned": len(dotenv_files),
         "high_confidence_secret_hits": hits,
         "environment_assignments": assignments,
         "provider_boundary": {
@@ -99,7 +117,7 @@ def scan(root: Path) -> dict[str, object]:
             ],
         },
         "limitations": [
-            "This is a static working-tree scan and does not inspect untracked files, host environment variables, or git object history.",
+            "This is a static working-tree scan and does not inspect untracked non-dotenv files, host environment variables, or git object history.",
             "Nonempty values in tracked configuration would require manual review; no secret value is disclosed by this report.",
         ],
     }

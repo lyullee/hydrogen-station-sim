@@ -148,12 +148,13 @@
         "status": "PASS_STATIC_SCAN_ZERO_HIGH_CONFIDENCE_HITS",
         "evidence": "research/secret_scan_2026_10_11.json",
         "report": "research/SECRET_SCAN_2026_10_11.md",
-        "tracked_files": 1834,
-        "scanned_text_files": 1725,
+        "tracked_files": 1837,
+        "scanned_text_files": 1728,
         "dotenv_files": 0,
         "high_confidence_secret_hits": 0,
         "environment_assignments": 0,
-        "claim_boundary": "Static tracked-working-tree scan only; runtime host environment, ignored files and Git history remain outside scope."
+        "claim_boundary": "Static tracked-working-tree scan only; runtime host environment, ignored files and Git history remain outside scope.",
+        "untracked_dotenv_files_scanned": 0
       }
     }
   }
