@@ -1,0 +1,123 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-11T17:36:22.222787+00:00",
+  "source_commit": "108b21c353a2b02839c7fdfddea90f3f45b3d506",
+  "artifact_type": "cross_dataset_capacity_geometry_transfer_matrix",
+  "evidence_role": "post_outcome_development_synthesis_only",
+  "outcomes_accessed_before_synthesis": true,
+  "parameter_fitting": false,
+  "runtime_geometry_changed": false,
+  "datasets": [
+    {
+      "dataset": "Powertech MC Default vehicle-tank boundary",
+      "source_artifact": "research/mc_geometry_transfer_diagnostic_2026_10_08.json",
+      "case_count": 8,
+      "screening_limits": {
+        "pressure_rmse_mpa": 5.0,
+        "temperature_rmse_c": 10.0,
+        "soc_final_abs_error_percentage_points": 5.0
+      },
+      "variants": [
+        {
+          "rule": "frozen_tables_method_effective_volume",
+          "effective_volume_multiplier": 1.0519881596076546,
+          "joint_pass_count": 0,
+          "case_count": 8,
+          "aggregate": {
+            "pressure_rmse_mpa_mean": 4.375922315837227,
+            "temperature_rmse_c_mean": 9.052229650073286,
+            "soc_rmse_percentage_points_mean": 5.583563785890824,
+            "soc_final_abs_error_percentage_points_mean": 9.019375614272029
+          },
+          "source_provenance": "prospectively frozen MC Default model"
+        },
+        {
+          "rule": "unadjusted_reference_volume",
+          "effective_volume_multiplier": 1.0,
+          "joint_pass_count": 4,
+          "case_count": 8,
+          "aggregate": {
+            "pressure_rmse_mpa_mean": 1.7124376949459093,
+            "temperature_rmse_c_mean": 9.142982290856501,
+            "soc_rmse_percentage_points_mean": 2.9175287028712065,
+            "soc_final_abs_error_percentage_points_mean": 4.714213576822861
+          },
+          "source_provenance": "pre-existing 0.122 m3 per 4.7 kg reference geometry"
+        },
+        {
+          "rule": "capacity_eos_volume",
+          "effective_volume_multiplier": 0.9589603918078677,
+          "joint_pass_count": 4,
+          "case_count": 8,
+          "aggregate": {
+            "pressure_rmse_mpa_mean": 2.146246225897314,
+            "temperature_rmse_c_mean": 9.214403019855336,
+            "soc_rmse_percentage_points_mean": 2.0109859573084825,
+            "soc_final_abs_error_percentage_points_mean": 2.8604165225807012
+          },
+          "source_provenance": "pre-existing capacity divided by hydrogen density at nominal working pressure and 15 degC"
+        }
+      ]
+    },
+    {
+      "dataset": "NREL H2FillS HDVS Type-IV tank boundary",
+      "source_artifact": "research/nrel_h2fills_geometry_sensitivity_2026_10_12.json",
+      "case_count": 7,
+      "screening_limits": {
+        "pressure_rmse_mpa_max": 5.0,
+        "temperature_rmse_c_max": 10.0,
+        "mass_final_abs_error_kg_max": 0.5,
+        "joint_rule": "pressure, temperature and final-mass screens per tank"
+      },
+      "variants": [
+        {
+          "rule": "legacy_frozen",
+          "effective_volume_multiplier": 1.052729261198358,
+          "joint_pass_count": 0,
+          "case_count": 7,
+          "aggregate": {
+            "pressure_rmse_mpa": 6.163939306629355,
+            "temperature_rmse_c": 4.624768386874764,
+            "mass_final_abs_error_kg": 0.11989206093515849
+          },
+          "source_provenance": 0.25438297872340426
+        },
+        {
+          "rule": "capacity_eos_with_frozen_fit",
+          "effective_volume_multiplier": 1.052729261198358,
+          "joint_pass_count": 7,
+          "case_count": 7,
+          "aggregate": {
+            "pressure_rmse_mpa": 3.5383969869664886,
+            "temperature_rmse_c": 4.254476204413092,
+            "mass_final_abs_error_kg": 0.10147524635478408
+          },
+          "source_provenance": 0.24394320094584823
+        },
+        {
+          "rule": "capacity_eos_no_volume_fit",
+          "effective_volume_multiplier": 1.0,
+          "joint_pass_count": 7,
+          "case_count": 7,
+          "aggregate": {
+            "pressure_rmse_mpa": 0.49577782246935176,
+            "temperature_rmse_c": 4.184657066055385,
+            "mass_final_abs_error_kg": 0.07981887127926209
+          },
+          "source_provenance": 0.24394320094584823
+        }
+      ]
+    }
+  ],
+  "findings": [
+    "The globally fitted tables-method multiplier does not transfer to the MC Default vessel set: 0/8 joint screens remained after the frozen rule, while two non-fitted geometry rules reached only 4/8.",
+    "The NREL post-access sample is highly sensitive to the declared capacity/EOS geometry basis: both capacity-EOS variants reached 7/7, while the legacy nominal-volume rule reached 0/7.",
+    "No single post-outcome variant may be selected as a universal production rule. The evidence supports requiring source-declared internal volume or a predeclared capacity/EOS rule before a new untouched holdout."
+  ],
+  "next_required_evidence": [
+    "At least one new untouched tank-and-hose cohort with declared capacity, internal volume or traceable geometry, inlet pressure/temperature, common time base and transferred mass.",
+    "Freeze the geometry rule and screening limits before numeric outcomes are opened.",
+    "Retain all cases and do not promote a post-outcome sensitivity to the validation gate."
+  ],
+  "claim_boundary": "This matrix explains geometry-transfer risk and preserves negative evidence. It is not an external validation result, does not revise the frozen MC or NREL outcomes, does not select a runtime default and cannot establish station, vehicle-controller or field-safety validity."
+}
