@@ -4185,6 +4185,68 @@ def _cross_campaign_release_validation_evidence() -> dict[str, Any] | None:
             "안전 검증으로 확대할 수 없습니다."
         ),
     }
+    # Keep the Schefer apparatus-boundary clue visible to the decision-support
+    # model without treating related-campaign geometry as a validated transfer
+    # or a reason to rewrite the frozen pressure-decay result.
+    try:
+        boundary_record = json.loads(
+            (
+                root
+                / "research/schefer_2007_public_apparatus_boundary_2026_10_12.json"
+            ).read_text(encoding="utf-8")
+        )
+        boundary = boundary_record.get("apparatus_boundary") or {}
+        related = boundary_record.get("related_campaign_boundary_clue") or {}
+        if (
+            boundary_record.get("evidence_role")
+            == "post_outcome_boundary_diagnostic_only"
+            and boundary_record.get("eligibility_decision")
+            == "BOUNDARY_DIAGNOSTIC_ONLY_NO_GATE_PROMOTION"
+            and boundary_record.get("numeric_holdout_added") is False
+            and boundary_record.get("runtime_model_changed") is False
+            and related.get("transfer_to_primary_617_l_campaign_confirmed") is False
+        ):
+            result["schefer_2007_apparatus_boundary_diagnostic"] = {
+                "artifact": (
+                    "research/schefer_2007_public_apparatus_boundary_2026_10_12.json"
+                ),
+                "evidence_role": boundary_record.get("evidence_role"),
+                "primary_boundary": {
+                    key: boundary.get(key)
+                    for key in (
+                        "storage_tubes_used_for_blowdown",
+                        "storage_tube_volume_l_each",
+                        "initial_pressure_bar_approx",
+                        "exit_diameter_mm",
+                        "blowdown_duration_s_approx",
+                        "stagnation_chamber_present",
+                        "valve_opening_profile_publicly_resolved",
+                        "upstream_line_volume_publicly_resolved",
+                        "line_resistance_or_fitting_loss_publicly_resolved",
+                    )
+                    if boundary.get(key) is not None
+                },
+                "related_campaign_boundary_clue": {
+                    key: related.get(key)
+                    for key in (
+                        "stagnation_chamber_length_cm",
+                        "stagnation_chamber_inside_diameter_cm",
+                        "pneumatic_valve_opening_time_s_approx",
+                        "transfer_to_primary_617_l_campaign_confirmed",
+                        "usable_for_frozen_holdout_recalibration",
+                    )
+                    if related.get(key) is not None
+                },
+                "runtime_model_changed": False,
+                "validation_gate_promoted": False,
+                "claim_limit": (
+                    "장치 경계 단서는 Schefer 2007 실패의 가능한 원인을 설명하는 진단 자료일 뿐이며, "
+                    "관련 2007 캠페인의 값이 617 L 압력 감쇠 시험에 그대로 적용된다는 증거가 없어 "
+                    "재보정·검증 승격·현장 안전거리 주장을 허용하지 않습니다."
+                ),
+            }
+    except (OSError, ValueError, json.JSONDecodeError):
+        pass
     if posthoc_sensitivity is not None:
         result["posthoc_model_form_diagnostic"] = posthoc_sensitivity
     return result
@@ -10953,6 +11015,7 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
                 "apparatus_resolved_holdout_run",
                 "runtime_model_changed_after_outcomes", "claim_limit",
                 "posthoc_model_form_diagnostic",
+                "schefer_2007_apparatus_boundary_diagnostic",
             )
             if cross_campaign_release.get(key) is not None
         }
@@ -15815,6 +15878,9 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
             ) is True,
             "posthoc_model_form_diagnostic": cross_campaign_release.get(
                 "posthoc_model_form_diagnostic"
+            ) or {},
+            "schefer_2007_apparatus_boundary_diagnostic": cross_campaign_release.get(
+                "schefer_2007_apparatus_boundary_diagnostic"
             ) or {},
             "claim_limit": cross_campaign_release.get("claim_limit"),
         },

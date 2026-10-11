@@ -417,6 +417,23 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert cross_release["apparatus_resolved_holdout_received"] is False
     assert cross_release["apparatus_resolved_holdout_run"] is False
     assert cross_release["runtime_model_changed_after_outcomes"] is False
+    apparatus_boundary = cross_release[
+        "schefer_2007_apparatus_boundary_diagnostic"
+    ]
+    assert apparatus_boundary["evidence_role"] == (
+        "post_outcome_boundary_diagnostic_only"
+    )
+    assert apparatus_boundary["primary_boundary"][
+        "storage_tubes_used_for_blowdown"
+    ] == 2
+    assert apparatus_boundary["primary_boundary"][
+        "valve_opening_profile_publicly_resolved"
+    ] is False
+    assert apparatus_boundary["related_campaign_boundary_clue"][
+        "transfer_to_primary_617_l_campaign_confirmed"
+    ] is False
+    assert apparatus_boundary["runtime_model_changed"] is False
+    assert apparatus_boundary["validation_gate_promoted"] is False
     posthoc = cross_release["posthoc_model_form_diagnostic"]
     assert posthoc["evidence_role"] == "posthoc_development_diagnostic_only"
     assert posthoc["runtime_parameter_changed"] is False
