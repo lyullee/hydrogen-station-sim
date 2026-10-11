@@ -12102,17 +12102,10 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
     kit_lh2_exploratory_relevant = bool(
         response.get("public_kit_lh2_exploratory_evidence")
         and (
-            public_catalog_relevant
-            or any(token in detector_context for token in (
-                "액체수소", "lh2", "점화", "화재", "누출", "방출",
-                "피해영향", "공개", "원자료", "검증", "consequence",
-                "cryogenic", "ignited", "fire", "leak", "release",
-                "dataset", "validation",
+            any(token in detector_context for token in (
+                "액체수소", "액체 수소", "lh2", "cryogenic", "극저온",
+                "kit lh2", "kit-lh2", "karlsruhe", "radar dataset",
             ))
-            or (
-                bool(compact_impacts)
-                and bool(manifest.get("question") or manifest.get("selected_sensor"))
-            )
         )
     )
     kit_lh2_exploratory = response.get(
