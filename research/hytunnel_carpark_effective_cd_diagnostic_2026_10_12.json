@@ -1,0 +1,108 @@
+{
+  "schema_version": 1,
+  "artifact_type": "hytunnel_carpark_post_outcome_effective_cd_diagnostic",
+  "generated_at": "2026-10-11T20:51:25.886867+00:00",
+  "post_outcome_diagnostic": true,
+  "evidence_role": "development_diagnostic_only",
+  "source": {
+    "dataset_doi": "10.23642/USN.14405903",
+    "article_doi": "10.3390/en14113008",
+    "license": "CC BY 4.0",
+    "raw_files_committed": false,
+    "article_reported_mass_flow_uncertainty": "\u00b10.2% of flow rate",
+    "article_reported_flow_regime": "all experiments choked at the nozzle"
+  },
+  "protocol_reference": "research/hytunnel_carpark_holdout_protocol_2026_10_08.json",
+  "holdout_result_reference": "research/hytunnel_carpark_holdout_result_2026_10_08.json",
+  "model_lock": {
+    "nozzle_diameter_m": 0.0005,
+    "frozen_discharge_coefficient": 0.8,
+    "downstream_pressure_pa": 101325.0,
+    "thermophysical_backend": "CoolProp hydrogen",
+    "sample_and_eligibility_rule": "identical to frozen holdout"
+  },
+  "cases": [
+    {
+      "experiment": 19,
+      "eligible_points": 535,
+      "measured_peak_g_s": 7.883228720703571,
+      "frozen_cd": 0.8,
+      "frozen_cd_peak_prediction_g_s": 6.406737940758017,
+      "effective_cd_peak_ratio": 0.9843672450596115,
+      "effective_cd_median": 1.0844178192550822,
+      "effective_cd_q10": 1.0235141291981997,
+      "effective_cd_q90": 1.1309962417552797,
+      "effective_cd_min": 0.2456340597012929,
+      "effective_cd_max": 1.2430396167161064
+    },
+    {
+      "experiment": 20,
+      "eligible_points": 532,
+      "measured_peak_g_s": 7.868900153411667,
+      "frozen_cd": 0.8,
+      "frozen_cd_peak_prediction_g_s": 6.407544169555206,
+      "effective_cd_peak_ratio": 0.9824544249948298,
+      "effective_cd_median": 1.0842185293146098,
+      "effective_cd_q10": 1.027868335908552,
+      "effective_cd_q90": 1.095297234087987,
+      "effective_cd_min": 0.5722467236104691,
+      "effective_cd_max": 1.1120336195172111
+    },
+    {
+      "experiment": 21,
+      "eligible_points": 581,
+      "measured_peak_g_s": 4.210373236507577,
+      "frozen_cd": 0.8,
+      "frozen_cd_peak_prediction_g_s": 3.425843414726991,
+      "effective_cd_peak_ratio": 0.9832027274587168,
+      "effective_cd_median": 1.051429941951492,
+      "effective_cd_q10": 1.010149144837015,
+      "effective_cd_q90": 1.078782358707952,
+      "effective_cd_min": 0.6192405444587776,
+      "effective_cd_max": 1.11769966705946
+    },
+    {
+      "experiment": 22,
+      "eligible_points": 618,
+      "measured_peak_g_s": 2.5114086662029167,
+      "frozen_cd": 0.8,
+      "frozen_cd_peak_prediction_g_s": 2.03632971519961,
+      "effective_cd_peak_ratio": 0.9866412683396852,
+      "effective_cd_median": 1.055686551043396,
+      "effective_cd_q10": 1.0041187478943512,
+      "effective_cd_q90": 1.109166091732198,
+      "effective_cd_min": 0.6633850107549594,
+      "effective_cd_max": 1.195253164023894
+    },
+    {
+      "experiment": 23,
+      "eligible_points": 602,
+      "measured_peak_g_s": 4.272312738130318,
+      "frozen_cd": 0.8,
+      "frozen_cd_peak_prediction_g_s": 3.4296587815322463,
+      "effective_cd_peak_ratio": 0.9965569195712478,
+      "effective_cd_median": 1.065804956776482,
+      "effective_cd_q10": 1.0252228813446795,
+      "effective_cd_q90": 1.091071803776545,
+      "effective_cd_min": 0.6401075782038729,
+      "effective_cd_max": 1.1321492576364993
+    }
+  ],
+  "aggregate": {
+    "case_count": 5,
+    "effective_cd_peak_ratio_median": 0.9843672450596115,
+    "effective_cd_peak_ratio_min": 0.9824544249948298,
+    "effective_cd_peak_ratio_max": 0.9965569195712478,
+    "effective_cd_median_across_cases": 1.065804956776482
+  },
+  "findings": [
+    "The frozen Cd=0.8 model preserves the mass-flow time ordering but underpredicts the measured peak in all five blowdown cases.",
+    "The coefficient implied by the measured source rate is consistently near 0.98-1.00 at the case peak, while the frozen model uses 0.8.",
+    "The source reports choked flow and a \u00b10.2% mass-flow uncertainty; these facts do not justify silently changing the frozen holdout parameter.",
+    "A future pre-registered test may resolve the nozzle/line boundary with a documented coefficient or measured nozzle-upstream state. This artifact does not do that."
+  ],
+  "runtime_parameter_changed": false,
+  "frozen_validation_result_changed": false,
+  "validation_gate_effect": "none",
+  "claim_boundary": "This report diagnoses a post-outcome source-rate mismatch in five public blowdown cases. It does not support a new validation claim, station consequence distance, outdoor dispersion, detector placement, controls, or station-to-vehicle transfer."
+}

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-11T20:28:10.083355+00:00",
+  "generated_at": "2026-10-11T20:54:23.310530+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -8348,7 +8348,7 @@
             75,
             72
           ],
-          "approximate_manuscript_words_before_references": 8000,
+          "approximate_manuscript_words_before_references": 7996,
           "figures": 3,
           "tables": 3,
           "citation_keys": 53,
@@ -8380,7 +8380,7 @@
       "requirement": "Compiler success, exact source/PDF hashes, no unresolved errors, and visual inspection of every rendered page.",
       "observed": {
         "schema_version": 2,
-        "verified_at_utc": "2026-10-11T20:28:05.052472+00:00",
+        "verified_at_utc": "2026-10-11T20:54:09.954623+00:00",
         "success": true,
         "compiler": {
           "name": "Tectonic",
@@ -8390,20 +8390,20 @@
         },
         "source": {
           "path": "manuscript/ijhe_manuscript_draft.tex",
-          "bytes": 76953,
-          "sha256": "6787b8f9836016c11fa0b6479ee3e7899714a5dd10f53bdedfa3a3b735c355b3"
+          "bytes": 76911,
+          "sha256": "913a89d6f11cc9b2f7432706e78f7731b5d851974472e140025efe74d359d8af"
         },
         "pdf": {
           "path": "output/pdf/ijhe_manuscript_draft.pdf",
-          "bytes": 837093,
-          "sha256": "6c2f9e00564db4e388f97ad11122712b8f83022ae0c129b05d9996fb7c5d9a8e",
+          "bytes": 837358,
+          "sha256": "20d7071434bc9bd077b790fba4d30178bd6eb6395f939c447a928a2cc17998b7",
           "page_count": 24,
-          "extracted_character_count": 71378
+          "extracted_character_count": 71320
         },
         "compile_log": {
           "path": "output/pdf/ijhe_manuscript_draft.log",
-          "bytes": 19549,
-          "sha256": "bca8628a19aa6ef187ccb4e0c076d3588faf83f7e5dc65af846fe855413a784c",
+          "bytes": 19548,
+          "sha256": "3ccf030da8aff80f9ca78573efbc5d4fd06b53fab5d6fbc1e1fee602e14476b9",
           "unresolved_citations": 0,
           "unresolved_references": 0,
           "fatal_errors": [],
