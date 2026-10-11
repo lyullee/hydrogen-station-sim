@@ -104,3 +104,13 @@ station-to-vehicle holdout.
 The decision is unchanged: the full-loop station-to-vehicle item is excluded
 from the primary goal and is reported as a data-availability limitation. This
 does not prove that restricted or unpublished data do not exist.
+
+## Additional targeted search (2026-10-11)
+
+Three further records were checked after the broad recheck:
+
+- [Experimentally obtained hydrogen overpumping data for validation of mathematical models](https://starfos.tacr.cz/en/vysledky-vyzkumu/RIV%2F25870807%3A_____%2F23%3AN0000009) describes four experiments with pressure, temperature and flow measurements. The public record does not expose a row-level archive, channel dictionary, common-clock station/vehicle mapping or reuse licence, so it remains a custodian lead.
+- [Directly pressurized hydrogen refuelling process model with compressor](https://doi.org/10.1016/j.renene.2024.120410) reports model comparisons against SAE J2601 fueling experiments. It is a model/reference paper; no rights-cleared synchronized raw logger bundle is available in the public record.
+- [NIST portable field test standard](https://www.nist.gov/programs-projects/portable-field-test-standard-evaluation-hydrogen-gas-dispensers) documents dispenser metrology and a helium demonstration. It is not a measured hydrogen station-to-vehicle event archive with vehicle/receptacle channels.
+
+These additions do not change the decision: **zero eligible public synchronized station-to-vehicle raw sets** are available for an untouched full-loop holdout. The records may support model context or a future custodian request, but they cannot be promoted to validation evidence.
