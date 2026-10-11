@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "artifact_type": "public_usn_ignited_jet_llm_calibration_boundary_validation",
+  "generated_at": "2026-10-12T00:00:00+09:00",
+  "status": "PASS_EVIDENCE_BOUNDARY_ROUTING",
+  "source_commit": "66b6dcc",
+  "source": {
+    "dataset_doi": "10.18710/X044QK",
+    "boundary_artifact": "research/usn_x044qk_calibration_boundary_recheck_2026_10_12.json",
+    "boundary_status": "CALIBRATION_STILL_INSUFFICIENT_FOR_NUMERICAL_REPLAY"
+  },
+  "test": {
+    "command": ".venv\\Scripts\\python.exe -m pytest -q tests/test_usn_x044qk_calibration_boundary.py tests/test_llm_usn_jet_evidence.py tests/test_dataverse_hydrogen_explosion_inventory.py tests/test_llm_grounding.py",
+    "result": "37 passed, 0 failed",
+    "assertions": [
+      "publisher sensor range and uncertainty are retained",
+      "voltage-only raw pressure channel is exposed",
+      "missing campaign transfer blocks numerical replay",
+      "LLM summary and provider projection carry the boundary",
+      "no HRS/full-loop/runtime validation claim is emitted"
+    ]
+  },
+  "runtime_boundary": {
+    "numeric_replay": false,
+    "runtime_parameter_application": false,
+    "validation_gate_promoted": false,
+    "hrs_dispenser_validation_supported": false,
+    "station_vehicle_full_loop_supported": false
+  },
+  "claim_boundary": "This record verifies evidence routing and eligibility guards only. It is not a numerical pressure or overpressure validation and cannot establish field safety distance, HRS control validity, or SAGA effectiveness."
+}
