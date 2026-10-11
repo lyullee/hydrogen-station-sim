@@ -188,8 +188,8 @@ internal gaps. The corrected H2P-L29 trace contains 399 samples over 199 s inste
 of 1,143 samples over 571 s. All tank results below were regenerated after this
 correction; the earlier normalization is superseded.
 
-Every third laboratory test (3, 6, \ldots, 36) forms a frozen 12-fill validation
-set. The remaining 23 admissible fills estimate two global parameters: effective
+Every third test forms a frozen 12-fill validation set. The remaining 23
+admissible fills estimate two global parameters: effective
 volume multiplier and gas-to-liner heat-transfer multiplier. The fitted values
 were 1.05273 and 31.46066, respectively. Optimization used bounded nonlinear
 least squares in log-parameter space. No case-specific parameter was fitted.
@@ -234,8 +234,8 @@ $-20\,^{\circ}$C precooler trip stopped warmer delivery classes; and cascade
 selection could regress to a lower bank. The corrected implementation uses
 conditional-integration anti-windup, a delivery-class-dependent trip while
 preserving the default T40 limit, monotonic low-to-medium-to-high dispatch, and
-independent dispatch state for the two dispenser circuits. No fitted parameter
-was changed after these corrections.
+independent dispatch state for the two dispenser circuits. Parameters were not
+changed afterward.
 
 Engineering screens were fixed at pressure RMSE $\leq5$ MPa, temperature RMSE
 $\leq10\,^{\circ}$C and absolute final SOC error $\leq5$ percentage points. These
@@ -503,8 +503,9 @@ temperature, units, type and volume \cite{methytrucksgroupd2026,methytrucksd4202
 It was retained as ineligible without replay and contributes zero full-loop cases.
 A frozen Type-III fill
 \cite{andreasen2026archive,couteau2025flow} passed pressure (0.943 MPa RMSE)
-but failed temperature (19.179 K RMSE); post-outcome sensitivity cannot revise
-it. The post-access Woodfield replay remains non-independent development evidence.
+but failed temperature (19.179 K RMSE). An outcome-accessed forced-mixing
+sensitivity passed all four screens for three assumed nozzle diameters, but the
+frozen result remains failed and runtime parameters unchanged.
 
 \subsection{Negative closed-loop transfer diagnostic}
 After the preprocessing and nominal-pressure corrections, refitted tank, flow-area
