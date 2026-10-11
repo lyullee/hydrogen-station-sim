@@ -22,7 +22,10 @@
       "https://doi.org/10.1016/j.ijhydene.2025.152513",
       "https://elib.dlr.de/213625/1/manuscript_final_published_version.pdf",
       "https://github.com/DTU-TES/Hydrogen-Fuelling-Station",
-      "https://ipcei.observatory.clean-hydrogen.europa.eu/hydrogen-landscape/distribution-and-storage/hydrogen-refuelling-stations"
+      "https://ipcei.observatory.clean-hydrogen.europa.eu/hydrogen-landscape/distribution-and-storage/hydrogen-refuelling-stations",
+      "https://doi.org/10.3390/app16157856",
+      "https://zenodo.org/records/17871393",
+      "https://datos.gob.es/ca/catalogo/ea0041268-supplementary-material-for-modelling-and-operation-strategy-approaches-for-on-site-hydrogen-refuelling-stations-dataset"
     ]
   },
   "status": "NO_NEW_ELIGIBLE_PUBLIC_RAW_SET_IDENTIFIED",
@@ -191,6 +194,29 @@
         "observed_role": "open thermodynamic station model and parameter files",
         "decision": "MODEL_REFERENCE_NOT_EXTERNAL_RAW",
         "reason": "The repository provides simulation code and parameter files rather than independent measured station-to-vehicle traces; it cannot serve as an external raw holdout."
+      },
+      {
+        "name": "BAM demonstration HRS anomaly-detection study",
+        "url": "https://doi.org/10.3390/app16157856",
+        "doi": "10.3390/app16157856",
+        "observed_role": "article describing three days of one-second normal station data and semi-synthetic anomaly injections",
+        "decision": "REPORT_SUMMARY_ONLY",
+        "reason": "The accessible article record describes a BAM station data collection and injected anomaly benchmark, but no rights-cleared machine-readable synchronized station/controller/dispenser/vehicle archive was identified. It is a method and anomaly-evaluation lead, not a full-loop holdout."
+      },
+      {
+        "name": "H2-SimNet hydrogen-blend transport dataset",
+        "url": "https://zenodo.org/records/17871393",
+        "doi": "10.1016/j.dib.2026.112520",
+        "observed_role": "simulation-generated multivariate anomaly time series for a hydrogen transport network",
+        "decision": "EXCLUDE_FROM_EXTERNAL_VALIDATION",
+        "reason": "The release is explicitly simulation-based and concerns a transport network rather than measured station-to-vehicle fueling. It may support software anomaly tests only and cannot provide independent physical validation."
+      },
+      {
+        "name": "CSIC on-site HRS supplementary material",
+        "url": "https://datos.gob.es/ca/catalogo/ea0041268-supplementary-material-for-modelling-and-operation-strategy-approaches-for-on-site-hydrogen-refuelling-stations-dataset",
+        "observed_role": "supplementary PDF with one-day and one-year simulated HRS operation results",
+        "decision": "MODEL_REFERENCE_NOT_EXTERNAL_RAW",
+        "reason": "The catalog describes simulated compressor, storage, electrolyzer and power results under CC BY-NC-ND; it does not provide measured synchronized station/vehicle logger rows or a full-loop physical holdout."
       }
     ],
     "decision": "NO_NEW_ELIGIBLE_PUBLIC_RAW_SET_IDENTIFIED",

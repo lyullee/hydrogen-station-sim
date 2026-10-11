@@ -75,3 +75,13 @@ The current web recheck also found the following related records. They do not ch
 - The [SARTA heavy-duty refueling campaign](https://www.sciencedirect.com/science/article/pii/S0360319921036144) and [Lototskyy integrated-metal-hydride station paper](https://zenodo.org/record/3582985/files/Hydrogen%20refuelling%20station%20with%20integrated%20metal.pdf) report valuable operating ranges or aggregate fills, but no rights-cleared synchronized row-level station/vehicle logger archive.
 
 The machine-readable search log is `external_station_to_vehicle_recheck_2026_10_11.json`. This remains a data-availability audit; it does not establish that restricted or unpublished records do not exist.
+
+## Additional 2026 search hits
+
+The follow-up search also checked three recent or newly indexed records:
+
+- The BAM demonstration-station anomaly-detection article ([DOI 10.3390/app16157856](https://doi.org/10.3390/app16157856)) describes three days of one-second normal-operation data and semi-synthetic anomaly injections. The accessible article record did not expose a rights-cleared machine-readable station/controller/dispenser/vehicle archive, so it remains a report and custodian-request lead.
+- The [H2-SimNet Zenodo release](https://zenodo.org/records/17871393) is explicitly simulation-generated hydrogen transport-network data. It can support software anomaly tests but is not an independent physical HRS or station-to-vehicle holdout.
+- The [CSIC on-site HRS supplementary dataset](https://datos.gob.es/ca/catalogo/ea0041268-supplementary-material-for-modelling-and-operation-strategy-approaches-for-on-site-hydrogen-refuelling-stations-dataset) contains simulated one-day and one-year operating results under CC BY-NC-ND, not measured synchronized station/vehicle logger rows.
+
+These records do not change the eligibility decision: the count of public, reuse-cleared synchronized station-to-vehicle raw sets remains zero.
