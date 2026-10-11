@@ -493,6 +493,15 @@ sensitivity configuration. The aggregate is archived in
 [`h2protocol_capacity_geometry_no_volume_fit_diagnostic_2026_10_06.json`](../research/h2protocol_capacity_geometry_no_volume_fit_diagnostic_2026_10_06.json)
 as negative development evidence rather than a new validation claim.
 
+The same physical question was isolated on the separately licensed NREL H2FillS
+HDVS sample. The legacy capacity scaling passed 0/7 tank screens, whereas a
+declared-capacity EOS volume with the effective-volume multiplier removed passed
+7/7 pressure, temperature and final-mass screens. Because this comparison was
+performed after the workbook had already been opened, it remains a post-access
+mechanism diagnostic: the runtime default and the frozen Type-IV gate are
+unchanged. The privacy-safe aggregate and the required pre-access follow-up are
+recorded in [`NREL_H2FILLS_GEOMETRY_SENSITIVITY_2026_10_12.md`](../research/NREL_H2FILLS_GEOMETRY_SENSITIVITY_2026_10_12.md).
+
 ## Publication-format checks
 
 The local format gate currently passes:

@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "artifact_type": "nrel_h2fills_geometry_sensitivity_archive",
+  "generated_at": "2026-10-11T15:01:49.484044+00:00",
+  "status": "post_access_development_diagnostic",
+  "evidence_role": "mechanism_and_geometry_sensitivity_only",
+  "source": {
+    "dataset_family": "public NREL H2FillS HDVS Type-IV sample",
+    "source_result_sha256": "a9f786dbda4bd7e0aae30e9399649699d205a8770ddca94b59047d0dd2d1ff97",
+    "tank_count": 7,
+    "capacity_kg_per_tank": 9.8,
+    "reference_pressure_mpa": 70.0,
+    "reference_temperature_c": 15.0,
+    "capacity_eos_volume_m3": 0.24394320094584823
+  },
+  "screening_limits": {
+    "pressure_rmse_mpa_max": 5.0,
+    "temperature_rmse_c_max": 10.0,
+    "mass_final_abs_error_kg_max": 0.5,
+    "joint_rule": "pressure, temperature and final-mass screens per tank"
+  },
+  "variants": {
+    "legacy_frozen": {
+      "screening_pass_count": 0,
+      "screening_pass_fraction": 0.0,
+      "pressure_rmse_mpa": 6.163939306629355,
+      "temperature_rmse_c": 4.624768386874764,
+      "mass_final_error_kg": 0.11989206093515849,
+      "pressure_final_error_mpa": -8.679337444242147,
+      "base_volume_m3": 0.25438297872340426,
+      "effective_volume_multiplier": 1.052729261198358
+    },
+    "capacity_eos_with_frozen_fit": {
+      "screening_pass_count": 7,
+      "screening_pass_fraction": 1.0,
+      "pressure_rmse_mpa": 3.5383969869664886,
+      "temperature_rmse_c": 4.254476204413092,
+      "mass_final_error_kg": 0.10147524635478408,
+      "pressure_final_error_mpa": -4.649447119098917,
+      "base_volume_m3": 0.24394320094584823,
+      "effective_volume_multiplier": 1.052729261198358
+    },
+    "capacity_eos_no_volume_fit": {
+      "screening_pass_count": 7,
+      "screening_pass_fraction": 1.0,
+      "pressure_rmse_mpa": 0.49577782246935176,
+      "temperature_rmse_c": 4.184657066055385,
+      "mass_final_error_kg": 0.07981887127926209,
+      "pressure_final_error_mpa": 0.5688184213020833,
+      "base_volume_m3": 0.24394320094584823,
+      "effective_volume_multiplier": 1.0
+    }
+  },
+  "finding": {
+    "preferred_physical_sensitivity": "capacity_eos_no_volume_fit",
+    "preferred_screen_pass_count": 7,
+    "preferred_screen_total": 7,
+    "interpretation": "The legacy capacity scaling overpredicts the effective gas volume; a declared-capacity EOS volume removes the systematic pressure bias in this post-access sample. This is a mechanism diagnosis, not a confirmatory validation result."
+  },
+  "governance": {
+    "outcomes_accessed_before_diagnostic": true,
+    "parameter_fitting": false,
+    "runtime_default_changed": false,
+    "validation_gate_effect": "none",
+    "next_required_step": "Freeze the capacity/EOS geometry rule and score a new untouched tank-and-hose trace with declared capacity, vessel geometry, inlet pressure/temperature and mass boundary before promotion."
+  },
+  "source_commit": "1fd9e539bd4145bd723fe2aa73f36575e6a88893",
+  "claim_boundary": "Aggregate post-access sensitivity only. It does not validate a full station-to-vehicle loop, station control, safety logic, consequence distance or field operation, and it does not authorize a runtime geometry change."
+}
