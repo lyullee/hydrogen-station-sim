@@ -101,3 +101,18 @@ two-zone 모델은 원인 진단용 post-outcome 모델로 기록되어 있지�
   상세 기록은 `research/paper_llm_accident_path_regression_2026_10_12.json`에
   고정했다. 이는 소프트웨어 계약과 사고자료 연결 증거이며 독립 전문가의
   사람 대상 안전효과나 현장 배포 안전성을 의미하지 않는다.
+
+## 2026-10-12 — 공개 분산자료 provenance 재검증
+
+- 기존 Figshare intake와 동일한 USN 공개 실험 22개 ZIP을 DataverseNO
+  원자료 API에서 다시 확인했다. 22/22 실험 archive의 Dataverse MD5가
+  임시 로컬 사본과 일치하고, CSV 스키마는 22/22 파일에서 37열·수소농도
+  센서 29개로 확인됐다.
+- archive SHA-256과 파일별 checksum은
+  `research/usn_open_channel_dataverseno_recheck_2026_10_12.json`에 고정하고
+  원자료·원시 행은 저장소에 넣지 않았다. 이 작업은 재현성·권리 추적을
+  강화하는 provenance 보완이며 기존 점수, 런타임 파라미터 또는 IJHE 게이트를
+  변경하지 않는다.
+- 이 자료는 실제 수소 개방 채널 분산·유량 구성요소 검증 후보로만 유지한다.
+  station-to-vehicle full-loop, HRS 제어기/ESD, 시설별 안전거리와 SAGA의
+  인간 안전효과 주장을 닫는 근거로 사용하지 않는다.

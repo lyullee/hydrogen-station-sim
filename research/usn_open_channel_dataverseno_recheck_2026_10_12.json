@@ -1,0 +1,310 @@
+{
+  "schema_version": 1,
+  "artifact_type": "dataverseno_recheck_of_usn_open_channel_hydrogen_dispersion",
+  "recorded_at": "2026-10-11T16:00:33.596204+00:00",
+  "source": {
+    "doi": "10.23642/USN.26117989",
+    "dataset_url": "https://doi.org/10.23642/USN.26117989",
+    "api_url": "https://dataverse.no/api/datasets/:persistentId/?persistentId=doi:10.23642/USN.26117989",
+    "title": "Experimental Data of Hydrogen Dispersion in an Open-ended Rectangular Channel",
+    "publisher": "University of South-Eastern Norway / DataverseNO",
+    "version_date": "2025-05-26",
+    "license": "CC BY 4.0",
+    "file_count": 23,
+    "readme_included": true
+  },
+  "archive_download": {
+    "package_sha256": "3b9f0c12d1a19717cec07ea77ab6d58c750e0329df114fcb5b76bf1ecebcc1f5",
+    "package_bytes": 49221232,
+    "raw_files_committed": false,
+    "raw_rows_committed": false,
+    "local_extraction_root": "external_temp_only"
+  },
+  "file_manifest": [
+    {
+      "name": "23_FFI_P101_T00003.zip",
+      "dataverse_file_id": 266549,
+      "persistent_file_id": "doi:10.23642/USN.26117989/8W09R9",
+      "bytes": 2001430,
+      "md5": "aa1c1e37cce76c025ba86808c4e4064a",
+      "local_present": true,
+      "local_bytes": 2001430,
+      "local_md5": "aa1c1e37cce76c025ba86808c4e4064a",
+      "md5_matches": true
+    },
+    {
+      "name": "23_FFI_P101_T00004.zip",
+      "dataverse_file_id": 266539,
+      "persistent_file_id": "doi:10.23642/USN.26117989/XSVROC",
+      "bytes": 2369546,
+      "md5": "625ea03e60cf1aae984a77d26574b1e0",
+      "local_present": true,
+      "local_bytes": 2369546,
+      "local_md5": "625ea03e60cf1aae984a77d26574b1e0",
+      "md5_matches": true
+    },
+    {
+      "name": "23_FFI_P101_T00005.zip",
+      "dataverse_file_id": 266547,
+      "persistent_file_id": "doi:10.23642/USN.26117989/FMHWTW",
+      "bytes": 1893720,
+      "md5": "cd2231ae657141761ca92bb9e3b0aa64",
+      "local_present": true,
+      "local_bytes": 1893720,
+      "local_md5": "cd2231ae657141761ca92bb9e3b0aa64",
+      "md5_matches": true
+    },
+    {
+      "name": "23_FFI_P101_T00006.zip",
+      "dataverse_file_id": 266532,
+      "persistent_file_id": "doi:10.23642/USN.26117989/KCZIOO",
+      "bytes": 2060025,
+      "md5": "c7be30a4ba5f8d63e221ef6c24df5a92",
+      "local_present": true,
+      "local_bytes": 2060025,
+      "local_md5": "c7be30a4ba5f8d63e221ef6c24df5a92",
+      "md5_matches": true
+    },
+    {
+      "name": "23_FFI_P101_T00007.zip",
+      "dataverse_file_id": 266533,
+      "persistent_file_id": "doi:10.23642/USN.26117989/KG2PBC",
+      "bytes": 2116367,
+      "md5": "96e0e5463daa25d306865402e7ffbd3c",
+      "local_present": true,
+      "local_bytes": 2116367,
+      "local_md5": "96e0e5463daa25d306865402e7ffbd3c",
+      "md5_matches": true
+    },
+    {
+      "name": "23_FFI_P101_T00008.zip",
+      "dataverse_file_id": 266535,
+      "persistent_file_id": "doi:10.23642/USN.26117989/6THH8E",
+      "bytes": 2183474,
+      "md5": "bcf8ebe762eeb995f5c53e9a75ec42bf",
+      "local_present": true,
+      "local_bytes": 2183474,
+      "local_md5": "bcf8ebe762eeb995f5c53e9a75ec42bf",
+      "md5_matches": true
+    },
+    {
+      "name": "23_FFI_P101_T00009.zip",
+      "dataverse_file_id": 266552,
+      "persistent_file_id": "doi:10.23642/USN.26117989/INQY2F",
+      "bytes": 2160984,
+      "md5": "9aa668eac2a03466084c20a4509b4fa0",
+      "local_present": true,
+      "local_bytes": 2160984,
+      "local_md5": "9aa668eac2a03466084c20a4509b4fa0",
+      "md5_matches": true
+    },
+    {
+      "name": "23_FFI_P101_T00011.zip",
+      "dataverse_file_id": 266550,
+      "persistent_file_id": "doi:10.23642/USN.26117989/ZUF4RH",
+      "bytes": 2133066,
+      "md5": "d986e4e8986c02d2bcb7e740a547dca8",
+      "local_present": true,
+      "local_bytes": 2133066,
+      "local_md5": "d986e4e8986c02d2bcb7e740a547dca8",
+      "md5_matches": true
+    },
+    {
+      "name": "23_FFI_P101_T00012.zip",
+      "dataverse_file_id": 266554,
+      "persistent_file_id": "doi:10.23642/USN.26117989/TBZFSB",
+      "bytes": 2081982,
+      "md5": "fc68e1c589074ddc395753016dbf262c",
+      "local_present": true,
+      "local_bytes": 2081982,
+      "local_md5": "fc68e1c589074ddc395753016dbf262c",
+      "md5_matches": true
+    },
+    {
+      "name": "23_FFI_P101_T00013.zip",
+      "dataverse_file_id": 266545,
+      "persistent_file_id": "doi:10.23642/USN.26117989/EKZP6T",
+      "bytes": 2140030,
+      "md5": "37f1cb17db40d9bb419da6705169f3f5",
+      "local_present": true,
+      "local_bytes": 2140030,
+      "local_md5": "37f1cb17db40d9bb419da6705169f3f5",
+      "md5_matches": true
+    },
+    {
+      "name": "23_FFI_P101_T00014.zip",
+      "dataverse_file_id": 266540,
+      "persistent_file_id": "doi:10.23642/USN.26117989/G2VYPQ",
+      "bytes": 2084607,
+      "md5": "53af91744c24d544cfddbe47b985d540",
+      "local_present": true,
+      "local_bytes": 2084607,
+      "local_md5": "53af91744c24d544cfddbe47b985d540",
+      "md5_matches": true
+    },
+    {
+      "name": "23_FFI_P101_T00026.zip",
+      "dataverse_file_id": 266553,
+      "persistent_file_id": "doi:10.23642/USN.26117989/RFNYIK",
+      "bytes": 2199349,
+      "md5": "71d5f0a1b39d1204ba479ed9df80e4c1",
+      "local_present": true,
+      "local_bytes": 2199349,
+      "local_md5": "71d5f0a1b39d1204ba479ed9df80e4c1",
+      "md5_matches": true
+    },
+    {
+      "name": "23_FFI_P101_T00027.zip",
+      "dataverse_file_id": 266551,
+      "persistent_file_id": "doi:10.23642/USN.26117989/4AOH45",
+      "bytes": 2034963,
+      "md5": "acea91eedf248dbb19fba32c895c9625",
+      "local_present": true,
+      "local_bytes": 2034963,
+      "local_md5": "acea91eedf248dbb19fba32c895c9625",
+      "md5_matches": true
+    },
+    {
+      "name": "23_FFI_P101_T00028.zip",
+      "dataverse_file_id": 266537,
+      "persistent_file_id": "doi:10.23642/USN.26117989/IWAMPN",
+      "bytes": 2045248,
+      "md5": "4302a40de706afe3448bfae1c5522dae",
+      "local_present": true,
+      "local_bytes": 2045248,
+      "local_md5": "4302a40de706afe3448bfae1c5522dae",
+      "md5_matches": true
+    },
+    {
+      "name": "23_FFI_P101_T00029.zip",
+      "dataverse_file_id": 266543,
+      "persistent_file_id": "doi:10.23642/USN.26117989/PRH0AF",
+      "bytes": 2275908,
+      "md5": "5cdd5c111226ba91c6f4ea10a42dc042",
+      "local_present": true,
+      "local_bytes": 2275908,
+      "local_md5": "5cdd5c111226ba91c6f4ea10a42dc042",
+      "md5_matches": true
+    },
+    {
+      "name": "23_FFI_P101_T00030.zip",
+      "dataverse_file_id": 266536,
+      "persistent_file_id": "doi:10.23642/USN.26117989/UAVIG5",
+      "bytes": 2426741,
+      "md5": "4bc7b36ebe68f8decbc718b9470232cc",
+      "local_present": true,
+      "local_bytes": 2426741,
+      "local_md5": "4bc7b36ebe68f8decbc718b9470232cc",
+      "md5_matches": true
+    },
+    {
+      "name": "23_FFI_P101_T00031.zip",
+      "dataverse_file_id": 266548,
+      "persistent_file_id": "doi:10.23642/USN.26117989/25MH0N",
+      "bytes": 2248254,
+      "md5": "7de8e76a4bc29e9b5ee32254045f7223",
+      "local_present": true,
+      "local_bytes": 2248254,
+      "local_md5": "7de8e76a4bc29e9b5ee32254045f7223",
+      "md5_matches": true
+    },
+    {
+      "name": "23_FFI_P101_T00040.zip",
+      "dataverse_file_id": 266542,
+      "persistent_file_id": "doi:10.23642/USN.26117989/V0MSIK",
+      "bytes": 2428526,
+      "md5": "92c3537747fc3b7ff56943eea0fdacac",
+      "local_present": true,
+      "local_bytes": 2428526,
+      "local_md5": "92c3537747fc3b7ff56943eea0fdacac",
+      "md5_matches": true
+    },
+    {
+      "name": "23_FFI_P101_T00041.zip",
+      "dataverse_file_id": 266544,
+      "persistent_file_id": "doi:10.23642/USN.26117989/RCLQA0",
+      "bytes": 2287912,
+      "md5": "7aafc6c2c5231154b10229dceb9f8312",
+      "local_present": true,
+      "local_bytes": 2287912,
+      "local_md5": "7aafc6c2c5231154b10229dceb9f8312",
+      "md5_matches": true
+    },
+    {
+      "name": "23_FFI_P101_T00042.zip",
+      "dataverse_file_id": 266546,
+      "persistent_file_id": "doi:10.23642/USN.26117989/YSU6KS",
+      "bytes": 2926567,
+      "md5": "2ae8e021de0c25a3e406444b09a24e68",
+      "local_present": true,
+      "local_bytes": 2926567,
+      "local_md5": "2ae8e021de0c25a3e406444b09a24e68",
+      "md5_matches": true
+    },
+    {
+      "name": "23_FFI_P101_T00044.zip",
+      "dataverse_file_id": 266538,
+      "persistent_file_id": "doi:10.23642/USN.26117989/RV5I4F",
+      "bytes": 2840050,
+      "md5": "da93654658cfeb24025b2285b366a858",
+      "local_present": true,
+      "local_bytes": 2840050,
+      "local_md5": "da93654658cfeb24025b2285b366a858",
+      "md5_matches": true
+    },
+    {
+      "name": "23_FFI_P101_T00045.zip",
+      "dataverse_file_id": 266534,
+      "persistent_file_id": "doi:10.23642/USN.26117989/7RAYRV",
+      "bytes": 2302256,
+      "md5": "55f7ca90eecd913031c1d69487e56026",
+      "local_present": true,
+      "local_bytes": 2302256,
+      "local_md5": "55f7ca90eecd913031c1d69487e56026",
+      "md5_matches": true
+    },
+    {
+      "name": "ReadMe.txt",
+      "dataverse_file_id": 266541,
+      "persistent_file_id": "doi:10.23642/USN.26117989/PDF72I",
+      "bytes": 2499,
+      "md5": "7c4fc4e6c97c465034876016db90a075",
+      "local_present": false,
+      "local_bytes": null,
+      "local_md5": null,
+      "md5_matches": null
+    }
+  ],
+  "schema_audit": {
+    "csv_count": 22,
+    "total_data_rows": 417340,
+    "column_counts": [
+      37
+    ],
+    "sensor_count_per_csv": [
+      29
+    ],
+    "flow_time_end_min_s": 88.57999978,
+    "flow_time_end_max_s": 315.26441204,
+    "sensor_observation_rows_min": 332,
+    "sensor_observation_rows_max": 779,
+    "numeric_sensor_values_negative_fraction": 0.10200585259097353
+  },
+  "claim_boundary": {
+    "eligible_for": "new independently frozen actual-hydrogen open-channel dispersion/mass-flow component validation",
+    "not_eligible_for": [
+      "station-to-vehicle full-loop validation",
+      "HRS controller/ESD validation",
+      "site-specific HRS safety-distance certification",
+      "SAGA human-effectiveness claim"
+    ],
+    "runtime_parameter_application": false,
+    "protocol_status": "CANDIDATE_REQUIRES_PREACCESS_PROTOCOL_FREEZE"
+  },
+  "cross_archive_reconciliation": {
+    "figshare_intake": "research/figshare_h2_dispersion_intake_2026_10_10.json",
+    "same_experiment_file_count_22": true,
+    "dataverse_checksum_manifest_available": true,
+    "purpose": "provenance and checksum recheck only; does not change prior validation scores or readiness gates"
+  }
+}
