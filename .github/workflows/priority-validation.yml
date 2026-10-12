@@ -36,4 +36,16 @@ jobs:
         run: python -m pip install --upgrade pip && python -m pip install -e ".[api,test]"
 
       - name: Run focused priority validation
-        run: python scripts/run_priority_focus.py --priority all
+        run: >-
+          python scripts/run_priority_focus.py
+          --priority all
+          --output artifacts/priority-focus.json
+
+      - name: Publish priority report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: priority-validation-${{ github.run_number }}
+          path: artifacts/priority-focus.json
+          if-no-files-found: warn
+          retention-days: 14
