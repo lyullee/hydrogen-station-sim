@@ -1,5 +1,17 @@
 # Development Progress
 
+## 2026-10-12 - Synchronize the public documentation with the evidence ledger
+
+The current machine-readable readiness audit, submission blocker matrix,
+technical report and user manual now share the same snapshot: **131 PASS / 10
+FAIL / 7 PENDING** overall, with **130 PASS / 9 FAIL / 2 PENDING** in the
+declared station-side primary scope. The full objective and bounded IJHE
+submission gate remain open. A documentation-consistency regression now reads
+the authoritative audit and checks the current technical report and user
+manual, preventing stale readiness numbers from being presented as current
+evidence. The latest full repository regression was **1,485 passed, 6 skipped,
+0 failed** (dependency/data-reader warnings only).
+
 ## 2026-10-11 - Recheck official public station-to-vehicle sources
 
 A focused search of NREL demonstration reports and composite products, the

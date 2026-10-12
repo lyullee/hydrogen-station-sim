@@ -74,10 +74,12 @@ For a repeatable exercise, record the Git commit, Python/dependency versions, jo
 
 `manuscript/ijhe_readiness_audit.json` is the authoritative, machine-readable
 readiness ledger. It is an evidence gate, not a prediction of editorial
-acceptance. The current snapshot contains **127 PASS, 10 FAIL and 7 PENDING**
+acceptance. The current snapshot contains **131 PASS, 10 FAIL and 7 PENDING**
 gates; bounded IJHE submission readiness and the full user objective are both
-false. In particular, the frozen station-to-vehicle full-loop screen is not
-supported, and the independent expert-effectiveness evaluation is not complete.
+false. The declared station-side primary scope is **130 PASS, 9 FAIL and 2
+PENDING**. In particular, the frozen station-to-vehicle full-loop screen is
+not supported, and the independent expert-effectiveness evaluation is not
+complete.
 
 `h2station.llm_grounding._ijhe_readiness_ledger()` loads only aggregate,
 privacy-safe fields from that ledger. `build_evidence_manifest()` exposes the
