@@ -51,6 +51,9 @@ _H2SAFE_SPATIAL_DIAGNOSTIC = _ROOT / (
 _H2SAFE_HVAC_INPUT_READINESS = _ROOT / (
     "research/h2safe_hvac_input_readiness_2026_10_12.json"
 )
+_PUBLIC_STATION_VEHICLE_SEARCH_RECHECK = _ROOT / (
+    "research/public_station_vehicle_search_recheck_2026_10_12.json"
+)
 _LOCAL_HRS_CANDIDATE_SCAN = _ROOT / (
     "research/local_hydrogen_station_sim_candidate_scan_2026_10_10.json"
 )
@@ -768,6 +771,67 @@ def _h2safe_hvac_input_readiness_summary() -> dict[str, Any] | None:
             ),
             "promotion_prohibited": True,
             "claim_limit": str(record.get("claim_boundary") or ""),
+        }
+    except (OSError, KeyError, TypeError, ValueError, json.JSONDecodeError):
+        return None
+
+
+def _public_station_vehicle_search_recheck_summary() -> dict[str, Any] | None:
+    """Expose the latest public station-to-vehicle availability boundary.
+
+    The record is a search/access audit, not a numerical validation result.
+    Only publication-level metadata are projected so the validation endpoint
+    and the LLM grounding layer cannot accidentally disclose raw rows or
+    private source locations.
+    """
+
+    try:
+        record = _read_json(_PUBLIC_STATION_VEHICLE_SEARCH_RECHECK)
+        scope = record.get("search_scope") or {}
+        impact = record.get("primary_goal_impact") or {}
+        sources = record.get("sources") or []
+        if not (
+            record.get("artifact_type") == "station_to_vehicle_public_search_recheck"
+            and record.get("decision")
+            == "NO_NEW_ELIGIBLE_PUBLIC_RAW_STATION_TO_VEHICLE_SET_IDENTIFIED"
+            and impact.get("full_loop_external_validation") == "OUT_OF_SCOPE"
+            and isinstance(impact.get("reentry_condition"), str)
+            and isinstance(scope.get("eligibility_rule"), str)
+            and isinstance(sources, list)
+            and sources
+            and all(
+                isinstance(source, dict)
+                and isinstance(source.get("name"), str)
+                and isinstance(source.get("decision"), str)
+                and isinstance(source.get("reason"), str)
+                and isinstance(source.get("url"), str)
+                and not any(
+                    token in source
+                    for token in ("raw_rows", "local_path", "source_path", "headers")
+                )
+                for source in sources
+            )
+        ):
+            return None
+        return {
+            "status": str(record["decision"]),
+            "recorded_at": record.get("recorded_at"),
+            "evidence_role": "public station-to-vehicle data availability boundary",
+            "source_count": len(sources),
+            "sources": [
+                {
+                    key: source.get(key)
+                    for key in ("name", "doi", "url", "observed_role", "decision", "reason")
+                    if source.get(key) is not None
+                }
+                for source in sources
+            ],
+            "full_loop_external_validation_supported": False,
+            "prospective_holdout_eligible": False,
+            "runtime_parameter_application": False,
+            "claim_supported": False,
+            "reentry_condition": impact.get("reentry_condition"),
+            "claim_boundary": str(record.get("claim_boundary") or ""),
         }
     except (OSError, KeyError, TypeError, ValueError, json.JSONDecodeError):
         return None
@@ -1535,6 +1599,19 @@ def public_evidence_inventory_summary() -> dict[str, Any]:
             "promotion_prohibited": True,
             "claim_limit": "H2SAFE HVAC input-readiness evidence is unavailable; no spatial-candidate claim is permitted.",
         },
+        "public_station_vehicle_search_recheck": {
+            "status": "unavailable",
+            "recorded_at": None,
+            "evidence_role": "public station-to-vehicle data availability boundary",
+            "source_count": 0,
+            "sources": [],
+            "full_loop_external_validation_supported": False,
+            "prospective_holdout_eligible": False,
+            "runtime_parameter_application": False,
+            "claim_supported": False,
+            "reentry_condition": "No public station-to-vehicle search recheck is available.",
+            "claim_boundary": "Availability evidence is unavailable; no public full-loop claim is permitted.",
+        },
         "public_dickens_geometry_followup_candidate": {
             "status": "unavailable",
             "runtime_parameter_application": False,
@@ -1920,6 +1997,9 @@ def public_evidence_inventory_summary() -> dict[str, Any]:
     h2safe_hvac = _h2safe_hvac_input_readiness_summary()
     if h2safe_hvac is not None:
         result["public_h2safe_hvac_input_readiness"] = h2safe_hvac
+    station_vehicle_search = _public_station_vehicle_search_recheck_summary()
+    if station_vehicle_search is not None:
+        result["public_station_vehicle_search_recheck"] = station_vehicle_search
     dickens = _dickens_geometry_followup_summary()
     if dickens is not None:
         result["public_dickens_geometry_followup_candidate"] = dickens

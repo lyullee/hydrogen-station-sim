@@ -152,6 +152,15 @@ def test_validation_evidence_surface_is_privacy_bounded_and_claim_limited() -> N
     assert h2safe_hvac["lab_2_duct_count"] == 8
     assert h2safe_hvac["runtime_parameter_application"] is False
     assert h2safe_hvac["promotion_prohibited"] is True
+    station_vehicle_search = inventory["public_station_vehicle_search_recheck"]
+    assert station_vehicle_search["recorded_at"] == "2026-10-12"
+    assert station_vehicle_search["source_count"] == 11
+    assert station_vehicle_search["full_loop_external_validation_supported"] is False
+    assert station_vehicle_search["prospective_holdout_eligible"] is False
+    assert station_vehicle_search["runtime_parameter_application"] is False
+    assert station_vehicle_search["claim_supported"] is False
+    assert "common clock" in station_vehicle_search["reentry_condition"]
+    assert all("C:\\" not in str(item) for item in station_vehicle_search["sources"])
     dickens = inventory["public_dickens_geometry_followup_candidate"]
     assert dickens["status"] == "followup_candidate_only"
     assert dickens["source_reference"]["doi"] == "10.1016/J.JPOWSOUR.2006.11.077"
