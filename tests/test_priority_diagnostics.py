@@ -7,6 +7,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 
 from run_priority_diagnostics import (  # noqa: E402
     DEFAULT_DIAGNOSTICS,
+    _aggregate_process_status,
+    _missing_public_input_reason,
     _readiness_status,
     _scientific_screen,
     select_diagnostics,
@@ -65,3 +67,23 @@ def test_readiness_status_does_not_promote_negative_or_missing_science() -> None
     assert _readiness_status("PASS", "NOT_REPORTED") == "NOT_ASSESSED"
     assert _readiness_status("FAIL", "PASS") == "FAIL"
     assert _readiness_status("PASS", "PASS") == "PASS"
+
+
+def test_missing_public_input_is_an_explicit_availability_skip() -> None:
+    output = (
+        "FileNotFoundError: data/public_validation/raw/example/archive.zip "
+        "not found in this checkout"
+    )
+    assert _missing_public_input_reason(output) is not None
+    assert _missing_public_input_reason(
+        "FileNotFoundError: src/h2station/missing.py"
+    ) is None
+
+
+def test_optional_data_skips_do_not_fail_process_lane() -> None:
+    assert _aggregate_process_status(
+        [{"status": "PASS"}, {"status": "SKIPPED"}]
+    ) == "PASS"
+    assert _aggregate_process_status(
+        [{"status": "PASS"}, {"status": "FAIL"}]
+    ) == "FAIL"

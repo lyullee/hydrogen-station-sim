@@ -116,6 +116,34 @@ def _parse_stdout_payload(stdout: str) -> dict[str, object] | None:
     return payload if isinstance(payload, dict) else None
 
 
+def _missing_public_input_reason(output: str) -> str | None:
+    """Return a stable skip reason when a diagnostic's optional data is absent.
+
+    The repository deliberately ignores ``data/`` because it contains large
+    downloads and controlled/local inputs.  A clean CI checkout therefore
+    cannot run every public-data diagnostic.  A missing public input is an
+    availability boundary, not a failed model or a failed software check.
+    Keep this classifier narrow so ordinary diagnostic errors still fail CI.
+    """
+
+    normalized = output.replace("\\", "/")
+    if "FileNotFoundError" not in normalized:
+        return None
+    if "data/public_validation" not in normalized:
+        return None
+    return "required public-validation input is not present in this checkout"
+
+
+def _aggregate_process_status(results: list[dict[str, object]]) -> str:
+    """Treat explicitly unavailable optional data as skipped, not failed."""
+
+    return (
+        "PASS"
+        if all(item.get("status") in {"PASS", "SKIPPED"} for item in results)
+        else "FAIL"
+    )
+
+
 def _scientific_screen(payload: dict[str, object] | None) -> dict[str, object]:
     """Extract an explicit screening outcome without inventing one.
 
@@ -247,14 +275,28 @@ def _run_one(diagnostic: Diagnostic, timeout_s: float) -> dict[str, object]:
             )
         payload = _parse_stdout_payload(completed.stdout)
         output = _sanitize((completed.stdout + "\n" + completed.stderr).strip())
+        missing_input_reason = (
+            _missing_public_input_reason(output)
+            if completed.returncode != 0
+            else None
+        )
         return {
             "name": diagnostic.name,
             "priority": diagnostic.priority,
             "description": diagnostic.description,
-            "status": "PASS" if completed.returncode == 0 else "FAIL",
+            "status": (
+                "SKIPPED"
+                if missing_input_reason
+                else "PASS" if completed.returncode == 0 else "FAIL"
+            ),
             "exit_code": completed.returncode,
             "duration_s": round(time.perf_counter() - started, 3),
             "scientific_screen": _scientific_screen(payload),
+            **(
+                {"skip_reason": missing_input_reason}
+                if missing_input_reason
+                else {}
+            ),
             "output_tail": output[-1600:],
         }
     except subprocess.TimeoutExpired as exc:
@@ -311,7 +353,10 @@ def run_priority_diagnostics(
         for item in results
         if (item.get("scientific_screen") or {}).get("status") in {"PASS", "FAIL"}
     ]
-    process_status = "PASS" if all(item["status"] == "PASS" for item in results) else "FAIL"
+    process_status = _aggregate_process_status(results)
+    skipped_diagnostics = [
+        str(item["name"]) for item in results if item.get("status") == "SKIPPED"
+    ]
     scientific_screen_status = (
         "FAIL" if scientific_failures else "PASS" if reported_screens else "NOT_REPORTED"
     )
@@ -329,6 +374,7 @@ def run_priority_diagnostics(
             process_status, scientific_screen_status
         ),
         "scientific_screen_failures": scientific_failures,
+        "skipped_diagnostics": skipped_diagnostics,
         "results": results,
         "claim_boundary": (
             "Process status only. These are bounded development diagnostics; "
