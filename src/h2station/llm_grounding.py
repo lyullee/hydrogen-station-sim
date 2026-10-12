@@ -5236,58 +5236,123 @@ def _public_full_loop_candidate_leads() -> dict[str, Any] | None:
     # Keep the contact-lead record stable for existing prompt contracts while
     # also exposing the newest official-source recheck.  The latest record is a
     # negative access decision, not an admitted dataset, so only claim-bounded
-    # source metadata are projected into the evidence envelope.
-    latest_path = Path(__file__).resolve().parents[2] / (
-        "research/public_full_loop_search_recheck_2026_10_11.json"
+    # source metadata are projected into the evidence envelope.  The newer
+    # station-to-vehicle search record uses a deliberately smaller, public-only
+    # schema; retain the older schema as a fallback for partial checkouts.
+    root = Path(__file__).resolve().parents[2]
+    latest_paths = (
+        root / "research/public_station_vehicle_search_recheck_2026_10_12.json",
+        root / "research/public_full_loop_search_recheck_2026_10_11.json",
     )
     latest_search_recheck: dict[str, Any] | None = None
-    try:
-        latest_record = json.loads(latest_path.read_text(encoding="utf-8"))
-    except (OSError, UnicodeError, json.JSONDecodeError):
-        latest_record = None
-    if (
-        isinstance(latest_record, dict)
-        and latest_record.get("artifact_type") == "public_full_loop_search_recheck"
-        and latest_record.get("decision")
-        == "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET_IDENTIFIED"
-        and latest_record.get("gate_impact")
-        == "full_loop_external_validation_remains_open"
-        and latest_record.get("prospective_holdout_eligible") is False
-        and latest_record.get("runtime_parameter_application") is False
-        and latest_record.get("claim_supported") is False
-        and (latest_record.get("privacy") or {}).get("private_raw_rows_persisted")
-        is False
-    ):
-        latest_sources: list[dict[str, Any]] = []
-        for source in latest_record.get("screened_sources") or []:
-            if not isinstance(source, dict) or not source.get("id"):
-                continue
-            latest_sources.append({
-                key: source.get(key)
-                for key in (
-                    "id", "title", "doi", "url", "decision",
-                    "supporting_url", "software_output_not_raw_experimental_archive",
-                    "empirical_validation_dataset_publicly_released",
-                    "manual_output_channels",
-                    "raw_synchronized_archive_located",
-                    "vehicle_pressure_temperature_channels",
-                    "controller_or_esd_channels", "claim_limit",
+    for latest_path in latest_paths:
+        try:
+            latest_record = json.loads(latest_path.read_text(encoding="utf-8"))
+        except (OSError, UnicodeError, json.JSONDecodeError):
+            continue
+        if not isinstance(latest_record, dict):
+            continue
+
+        # 2026-10-12 public search schema.  It intentionally contains only
+        # publication-level metadata and URLs; it is not allowed to imply raw
+        # rows, a licence, or a validation admission.
+        if latest_record.get("artifact_type") == "station_to_vehicle_public_search_recheck":
+            impact = latest_record.get("primary_goal_impact") or {}
+            scope = latest_record.get("search_scope") or {}
+            sources = latest_record.get("sources") or []
+            if not (
+                latest_record.get("decision")
+                == "NO_NEW_ELIGIBLE_PUBLIC_RAW_STATION_TO_VEHICLE_SET_IDENTIFIED"
+                and impact.get("full_loop_external_validation") == "OUT_OF_SCOPE"
+                and isinstance(impact.get("reentry_condition"), str)
+                and isinstance(scope.get("eligibility_rule"), str)
+                and isinstance(sources, list)
+                and sources
+                and all(
+                    isinstance(source, dict)
+                    and isinstance(source.get("name"), str)
+                    and isinstance(source.get("decision"), str)
+                    and isinstance(source.get("reason"), str)
+                    and isinstance(source.get("url"), str)
+                    and not any(
+                        token in source for token in (
+                            "raw_rows", "local_path", "source_path", "headers",
+                        )
+                    )
+                    for source in sources
                 )
-                if source.get(key) is not None
-            })
-        latest_search_recheck = {
-            "artifact": "research/public_full_loop_search_recheck_2026_10_11.json",
-            "recorded_at": latest_record.get("recorded_at"),
-            "decision": latest_record.get("decision"),
-            "sources": latest_sources,
-            "minimum_next_input": latest_record.get("minimum_next_input") or {},
-            "gate_impact": latest_record.get("gate_impact"),
-            "full_loop_external_validation_supported": False,
-            "prospective_holdout_eligible": False,
-            "runtime_parameter_application": False,
-            "claim_supported": False,
-            "claim_limit": str(latest_record.get("claim_boundary") or ""),
-        }
+            ):
+                continue
+            latest_search_recheck = {
+                "artifact": "research/public_station_vehicle_search_recheck_2026_10_12.json",
+                "recorded_at": latest_record.get("recorded_at"),
+                "decision": latest_record.get("decision"),
+                "sources": [
+                    {
+                        key: source.get(key)
+                        for key in ("name", "doi", "url", "observed_role", "decision", "reason")
+                        if source.get(key) is not None
+                    }
+                    for source in sources
+                ],
+                "minimum_next_input": {
+                    "event_count": 3,
+                    "reentry_condition": impact.get("reentry_condition"),
+                    "eligibility_rule": scope.get("eligibility_rule"),
+                },
+                "gate_impact": "full_loop_external_validation_remains_open",
+                "full_loop_external_validation_supported": False,
+                "prospective_holdout_eligible": False,
+                "runtime_parameter_application": False,
+                "claim_supported": False,
+                "claim_limit": str(latest_record.get("claim_boundary") or ""),
+            }
+            break
+
+        # Legacy 2026-10-11 schema retained as a compatibility fallback.
+        if (
+            latest_record.get("artifact_type") == "public_full_loop_search_recheck"
+            and latest_record.get("decision")
+            == "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET_IDENTIFIED"
+            and latest_record.get("gate_impact")
+            == "full_loop_external_validation_remains_open"
+            and latest_record.get("prospective_holdout_eligible") is False
+            and latest_record.get("runtime_parameter_application") is False
+            and latest_record.get("claim_supported") is False
+            and (latest_record.get("privacy") or {}).get("private_raw_rows_persisted")
+            is False
+        ):
+            latest_sources: list[dict[str, Any]] = []
+            for source in latest_record.get("screened_sources") or []:
+                if not isinstance(source, dict) or not source.get("id"):
+                    continue
+                latest_sources.append({
+                    key: source.get(key)
+                    for key in (
+                        "id", "title", "doi", "url", "decision",
+                        "supporting_url", "software_output_not_raw_experimental_archive",
+                        "empirical_validation_dataset_publicly_released",
+                        "manual_output_channels",
+                        "raw_synchronized_archive_located",
+                        "vehicle_pressure_temperature_channels",
+                        "controller_or_esd_channels", "claim_limit",
+                    )
+                    if source.get(key) is not None
+                })
+            latest_search_recheck = {
+                "artifact": "research/public_full_loop_search_recheck_2026_10_11.json",
+                "recorded_at": latest_record.get("recorded_at"),
+                "decision": latest_record.get("decision"),
+                "sources": latest_sources,
+                "minimum_next_input": latest_record.get("minimum_next_input") or {},
+                "gate_impact": latest_record.get("gate_impact"),
+                "full_loop_external_validation_supported": False,
+                "prospective_holdout_eligible": False,
+                "runtime_parameter_application": False,
+                "claim_supported": False,
+                "claim_limit": str(latest_record.get("claim_boundary") or ""),
+            }
+            break
     return {
         "artifact": "research/public_full_loop_candidate_leads_2026_10_10.json",
         "evidence_role": (

@@ -1505,22 +1505,24 @@ def test_full_loop_candidate_leads_are_grounded_without_being_admitted():
     assert leads["privacy"]["raw_rows_persisted"] is False
     assert leads["search_recheck"]["checked_at"] == "2026-10-10"
     assert "synchronized" in leads["search_recheck"]["finding"]
-    assert leads["latest_search_recheck"]["recorded_at"] == "2026-10-11"
+    assert leads["latest_search_recheck"]["recorded_at"] == "2026-10-12"
     assert leads["latest_search_recheck"]["decision"] == (
-        "NO_NEW_ELIGIBLE_PUBLIC_RAW_FULL_LOOP_SET_IDENTIFIED"
+        "NO_NEW_ELIGIBLE_PUBLIC_RAW_STATION_TO_VEHICLE_SET_IDENTIFIED"
     )
     assert leads["latest_search_recheck"][
         "full_loop_external_validation_supported"
     ] is False
     assert leads["latest_search_recheck"]["runtime_parameter_application"] is False
-    h2fills = next(
+    kuroki = next(
         item for item in leads["latest_search_recheck"]["sources"]
-        if item["id"] == "nrel_hitrf_h2fills_programme"
+        if item["name"].startswith("Kuroki et al.")
     )
-    assert h2fills["software_output_not_raw_experimental_archive"] is True
-    assert h2fills["empirical_validation_dataset_publicly_released"] is False
-    assert "vehicle-tank pressure and temperature" in h2fills["manual_output_channels"]
-    assert "simulation results rather than" in h2fills["claim_limit"]
+    assert kuroki["decision"] == "REPORT_SUMMARY_ONLY"
+    assert "synchronized station-to-vehicle logger archive" in kuroki["reason"]
+    assert leads["latest_search_recheck"]["minimum_next_input"]["event_count"] == 3
+    assert "common clock" in leads["latest_search_recheck"]["minimum_next_input"][
+        "reentry_condition"
+    ]
 
     projected = prompt_decision_evidence(manifest)["decision_support_evidence"]
     candidate = projected["public_full_loop_candidate_leads"]["candidates"][0]
@@ -1551,7 +1553,7 @@ def test_full_loop_candidate_leads_are_grounded_without_being_admitted():
     ] == "2026-10-10"
     assert projected["public_full_loop_candidate_leads"]["latest_search_recheck"][
         "recorded_at"
-    ] == "2026-10-11"
+    ] == "2026-10-12"
     assert prompt_evidence_summary(manifest)["public_full_loop_candidate_leads"][
         "latest_search_recheck"
     ]["claim_supported"] is False
