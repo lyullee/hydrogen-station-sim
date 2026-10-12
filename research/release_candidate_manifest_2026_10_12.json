@@ -1,0 +1,60 @@
+{
+  "schema_version": "1.0",
+  "candidate": "hydrogen-station-sim 0.1.1-rc1",
+  "generated_at": "2026-10-12T05:43:15.134910+00:00",
+  "repository": "lyullee/hydrogen-station-sim",
+  "validated_source_commit": "f3c5f30a88aa01fbbe417e5d6564a3b01bf2df0d",
+  "branch": "main",
+  "scope": {
+    "included": [
+      "station-side process and safety simulation",
+      "HAZOP/SAGA direct-answer decision support",
+      "public-data validation evidence and reproducibility tooling",
+      "software regression and CI validation"
+    ],
+    "excluded_or_bounded": [
+      "full synchronized station-to-vehicle raw validation",
+      "unresolved independent physical release/consequence holdouts",
+      "author and submission metadata"
+    ]
+  },
+  "readiness": {
+    "bounded_ijhe_submission_ready": false,
+    "full_user_objective_ready": false,
+    "goal_completion_permitted": false,
+    "overall_gates": {
+      "PASS": 131,
+      "FAIL": 10,
+      "PENDING": 7,
+      "total": 148
+    },
+    "primary_scope_gates": {
+      "PASS": 130,
+      "FAIL": 9,
+      "PENDING": 2,
+      "total": 141,
+      "closure_percent": 92.2
+    }
+  },
+  "software_evidence": {
+    "latest_ci_run_id": "38211947691",
+    "latest_ci_sha": "f3c5f30a88aa01fbbe417e5d6564a3b01bf2df0d",
+    "latest_ci_conclusion": "success",
+    "latest_ci_url": "https://github.com/lyullee/hydrogen-station-sim/actions/runs/38211947691",
+    "local_priority_focus": "PASS",
+    "scientific_screen": "FAIL_WITH_DOCUMENTED_EXTERNAL_DATA_GAPS"
+  },
+  "known_blockers": [
+    "dickens_typeiii_prospective_validation",
+    "preslhy_partb_ambient_external_validation",
+    "preslhy_revised_holdout_validation",
+    "proust_independent_release_validation",
+    "schefer_transient_release_validation",
+    "schefer_2007_pressure_decay_validation",
+    "grune_2014_pressure_decay_validation",
+    "h2safe_spatial_detector_transfer_validation",
+    "consequence_model_external_validation",
+    "submission_metadata_and_declarations"
+  ],
+  "release_rule": "This candidate is reproducible software and bounded research evidence; it must not be described as independently validated or publication-ready until the readiness flags above are true."
+}
