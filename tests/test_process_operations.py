@@ -34,6 +34,35 @@ def test_process_settings_use_observed_high_bank_restart_band():
     assert settings.recharge_restart_margin_high_mpa == 4.5
 
 
+def test_standalone_station_replay_carries_per_bank_restart_bands():
+    built = build_reference_scenario(
+        ReferenceScenario(
+            duration_s=0.4,
+            control_period_s=0.2,
+            station_recharge_restart_margins_pa=(2.0e6, 3.0e6, 4.5e6),
+        ),
+        UnavailableHyRAMBackend(),
+    )
+    assert built.station.recharge_restart_margins_pa == (
+        2.0e6,
+        3.0e6,
+        4.5e6,
+    )
+    calls = []
+    original = built.station.supervisor.select_recharge_bank
+
+    def capture(*args, **kwargs):
+        calls.append(kwargs.get("restart_margins_pa"))
+        return original(*args, **kwargs)
+
+    built.station.supervisor.select_recharge_bank = capture
+    built.station.simulate(built.initial_state, 0.4, 0.2)
+    assert calls
+    assert any(
+        margins == (2.0e6, 3.0e6, 4.5e6) for margins in calls
+    )
+
+
 def test_idle_is_physically_frozen_and_vehicle_paths_are_independent():
     settings = ProcessSettings().model_dump()
     built, process = _station(settings)

@@ -998,6 +998,14 @@ def _execute_simulation(job_id: str, request: SimulationInput) -> None:
             # never weakens the configured per-bank margins.
             station_dispatch_pressure_margin_pa=effective_dispatch_margin_pa,
             station_recharge_hysteresis_pa=effective_dispatch_margin_pa,
+            station_recharge_restart_margins_pa=tuple(
+                float(process_settings_dict.get(key, default_mpa)) * 1.0e6
+                for key, default_mpa in (
+                    ("recharge_restart_margin_low_mpa", 2.0),
+                    ("recharge_restart_margin_medium_mpa", 3.0),
+                    ("recharge_restart_margin_high_mpa", 4.5),
+                )
+            ),
             station_minimum_recharge_off_time_s=(
                 recharge_dynamics_profile.minimum_recharge_off_time_s
                 if recharge_dynamics_profile is not None else 0.0

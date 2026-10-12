@@ -672,6 +672,7 @@ class FullStationModel:
         supervisor: CascadeSupervisor | None = None,
         valve_sequencer: CascadeValveSequencer | None = None,
         ambient_temperature_k: float = 298.15,
+        recharge_restart_margins_pa: tuple[float, ...] | None = None,
     ) -> None:
         if len(banks) < 2:
             raise ValueError("A cascade station requires at least two banks")
@@ -707,6 +708,23 @@ class FullStationModel:
         self.valve_sequencer = valve_sequencer or CascadeValveSequencer()
         self.secondary_valve_sequencer = CascadeValveSequencer()
         self.ambient_temperature_k = ambient_temperature_k
+        if recharge_restart_margins_pa is not None:
+            if len(recharge_restart_margins_pa) != len(banks):
+                raise ValueError(
+                    "recharge_restart_margins_pa must match the bank count"
+                )
+            if any(
+                not np.isfinite(value) or value <= 0.0
+                for value in recharge_restart_margins_pa
+            ):
+                raise ValueError(
+                    "recharge_restart_margins_pa must contain positive finite values"
+                )
+            self.recharge_restart_margins_pa = tuple(
+                float(value) for value in recharge_restart_margins_pa
+            )
+        else:
+            self.recharge_restart_margins_pa = None
 
     def header_gas_state(
         self, state: FullStationState,
@@ -901,6 +919,27 @@ class FullStationModel:
         )
         secondary_rate = None
         secondary_instantaneous = None
+        # The standalone replay API drives the primary dispenser only.  A
+        # dual-dispenser initial state still has eight secondary state values;
+        # retain those values with a zero derivative so the ODE vector shape
+        # remains stable instead of silently dropping the secondary branch.
+        if (
+            self.secondary_partial_station is not None
+            and state.secondary_partial_station is not None
+            and secondary_command is None
+        ):
+            secondary_rate = PartialStationState(
+                coolant_temperature_k=0.0,
+                hose_hydrogen_mass_kg=0.0,
+                hose_hydrogen_internal_energy_j=0.0,
+                hose_wall_temperature_k=0.0,
+                vehicle=state.secondary_partial_station.vehicle.__class__(
+                    hydrogen_mass_kg=0.0,
+                    hydrogen_internal_energy_j=0.0,
+                    liner_temperature_k=0.0,
+                    shell_temperature_k=0.0,
+                ),
+            )
         if (
             self.secondary_partial_station is not None
             and state.secondary_partial_station is not None
@@ -1101,7 +1140,14 @@ class FullStationModel:
                 )
             )
             recharge_index = self.supervisor.select_recharge_bank(
-                self.banks, bank_gases, dispatch_index, time_s=time_s
+                self.banks,
+                bank_gases,
+                dispatch_index,
+                target_pressures_pa=tuple(
+                    bank.parameters.target_pressure_pa for bank in self.banks
+                ),
+                restart_margins_pa=self.recharge_restart_margins_pa,
+                time_s=time_s,
             )
             observation = FuelingObservation(
                 time_s,

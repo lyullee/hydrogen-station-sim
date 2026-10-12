@@ -5,6 +5,8 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Literal
 
+import numpy as np
+
 from .dispenser import (
     DispenserFitParameters,
     HoseParameters,
@@ -130,6 +132,14 @@ class ReferenceScenario:
     # measured restart margin without embedding raw station data.
     station_dispatch_pressure_margin_pa: float | None = None
     station_recharge_hysteresis_pa: float | None = None
+    # Per-bank restart bands used by the standalone station replay.  The
+    # runtime API supplies the operator's three settings explicitly; the
+    # reference defaults preserve the demonstrated low/medium/high bands.
+    station_recharge_restart_margins_pa: tuple[float, ...] = (
+        2.0e6,
+        3.0e6,
+        4.5e6,
+    )
     # Optional owner-attested station-side dynamic calibration.  It represents
     # the observed compressor restart dwell only; it is not a vehicle-fill or
     # compressor-capacity validation result.
@@ -335,6 +345,13 @@ def build_reference_scenario(
         )
     ):
         raise ValueError("station calibration margins must be positive when provided")
+    if len(config.station_recharge_restart_margins_pa) != 3 or any(
+        not np.isfinite(value) or value <= 0.0
+        for value in config.station_recharge_restart_margins_pa
+    ):
+        raise ValueError(
+            "station_recharge_restart_margins_pa must contain three positive finite values"
+        )
     if (
         config.station_minimum_recharge_off_time_s is not None
         and config.station_minimum_recharge_off_time_s < 0.0
@@ -584,6 +601,7 @@ def build_reference_scenario(
             )
         ),
         ambient_temperature_k=config.ambient_temperature_k,
+        recharge_restart_margins_pa=config.station_recharge_restart_margins_pa,
     )
     initial_vehicle = vehicle.initial_state(
         config.initial_vehicle_pressure_pa,
