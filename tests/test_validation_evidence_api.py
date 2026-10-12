@@ -19,11 +19,19 @@ def test_validation_evidence_surface_is_privacy_bounded_and_claim_limited() -> N
             encoding="utf-8"
         )
     )
+    current_audit = json.loads(
+        (ROOT / "manuscript/ijhe_readiness_audit.json").read_text(
+            encoding="utf-8"
+        )
+    )
 
     assert summary["status"] == "available"
     assert summary["readiness"]["ijhe_gate_counts"] == current_coverage[
         "readiness"
     ]["ijhe_gate_counts"]
+    assert current_coverage["readiness"]["ijhe_gate_counts"] == current_audit[
+        "gate_counts"
+    ]
     assert summary["readiness"]["full_user_objective_ready"] is False
     assert summary["interpretation"]["data_volume_is_primary_blocker"] is False
     assert summary["interpretation"]["primary_blocker"]
