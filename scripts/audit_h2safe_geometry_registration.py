@@ -86,6 +86,9 @@ def audit(dataset_root: Path, metadata_path: Path, archive_path: Path | None = N
     source = {
         "title": "Dataset for H2SAFE - Controlled Gas Releases and Sensor-Response for Indoor Hydrogen Safety",
         "doi": "10.7799/17118570",
+        "catalog_url": "https://data.openei.org/submissions/8799",
+        "archive_url": "https://data.nlr.gov/system/files/330/1787856683-Dataset.zip",
+        "hvac_metadata_url": "https://data.nlr.gov/system/files/330/1788206575-HVAC_information.docx",
         "dataset_package": "Dataset.zip",
         "dataset_package_sha256": _sha256(archive_path) if archive_path and archive_path.exists() else None,
         "hvac_metadata_sha256": _sha256(metadata_path) if metadata_path.exists() else None,
