@@ -93,13 +93,13 @@ The following tests passed in the repository virtual environment:
 65 passed, 2 warnings
 
 .venv\Scripts\python.exe -m pytest -q
-1459 passed, 0 failed, 20 warnings in 281.99 s
+1463 passed, 0 failed, 6 skipped, 209 warnings in 268.07 s
 
 .venv\Scripts\python.exe -m pytest tests/test_digital_twin_direct_qa.py tests/test_hiad_response_stage_contract.py -q
 20 passed, 3 warnings
 ```
 
-The latest full-suite result was rerun from clean commit `73b4131a9784f3c5fc3952597109c8c24a20126f`; the JSON artifact `research/full_regression_test_run_2026_10_12_latest.json` records the source commit and `working_tree_dirty_at_run=false`. The focused LLM/accident-path regression and direct-route spot check also remain recorded separately. The tests verify that normal monitoring keeps impact calculation marked as
+The latest full-suite result was rerun from clean commit `4b73ec651bb81d81ce3b11160b6600f59d16d92a`; the JSON artifact `research/full_regression_test_run_2026_10_12_latest.json` records the source commit and `working_tree_dirty_at_run=false`. The focused LLM/accident-path regression and direct-route spot check also remain recorded separately. The tests verify that normal monitoring keeps impact calculation marked as
 `not_requested`, emergency or explicit-impact paths preserve calculated
 results and input tags, non-finite values are discarded, the main and sensor
 assistant routes remain isolated, and a generated answer cannot negate a

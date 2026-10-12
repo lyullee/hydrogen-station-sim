@@ -1,10 +1,10 @@
-# IJHE claim/evidence matrix (2026-10-11)
+# IJHE claim/evidence matrix (2026-10-12)
 
 This reviewer-facing companion is generated from `manuscript/ijhe_readiness_audit.json`.
 It records bounded component claims and preserves failed or incomplete transfers.
 It does not establish journal acceptance, field safety, or human-effectiveness.
 
-Audit SHA-256: `b499af7091dab9d3377d1c8f08bf0232b7be899692ec243fe744017f5fe878d8`
+Audit SHA-256: `c69c38ba8737af642ed44b4d134f6586671057e38808030ac109f471aaa4a6cd`
 
 | Claim boundary | Evidence | Decision | Interpretation |
 |---|---|---|---|

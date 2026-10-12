@@ -19,14 +19,14 @@
       "working_tree_dirty_at_run": false
     },
     "full_suite": {
-      "command": ".venv\\Scripts\\python.exe -m pytest -q",
-      "passed": 1454,
+      "command": "python -m pytest -q",
+      "passed": 1463,
       "failed": 0,
-      "warnings": 20,
-      "run_recorded_at": "2026-10-11T17:51:25.479059+00:00",
-      "source_commit": "f24843d79b100a34defb510a0120f40d37a082b8",
+      "warnings": 209,
+      "run_recorded_at": "2026-10-12T00:02:05.215180+00:00",
+      "source_commit": "4b73ec651bb81d81ce3b11160b6600f59d16d92a",
       "working_tree_dirty_at_run": false,
-      "elapsed_seconds": 291.63
+      "elapsed_seconds": 268.07
     },
     "latest_direct_route_spot_check": {
       "command": ".venv\\Scripts\\python.exe -m pytest tests/test_digital_twin_direct_qa.py tests/test_hiad_response_stage_contract.py -q",

@@ -22,7 +22,7 @@ Audit snapshot: **2026-10-12 KST**
 
 Gate counts: **131 PASS · 10 FAIL · 7 PENDING**.
 
-The latest clean full-regression evidence is recorded at commit `73b4131a9784f3c5fc3952597109c8c24a20126f` with **1,459 passed, 0 failed and 20 warnings** in 281.99 s (`research/full_regression_test_run_2026_10_12_latest.json`). A fresh broad LLM/SAGA, virtual-safety, HAZOP and HIAD accident-path selection passed **159 tests with 2 warnings** (`research/paper_llm_safety_broad_regression_2026_10_12.json`). These are software implementation checks only and do not convert the independent physical validation failures or author-confirmation gate into passes. The focused LLM/accident-path regression passed **65 tests with 2 warnings**, and the clean direct LLM route spot check passed **20 tests with 3 warnings**.
+The latest clean full-regression evidence is recorded at commit `4b73ec651bb81d81ce3b11160b6600f59d16d92a` with **1,463 passed, 0 failed and 6 skipped** plus 209 dependency/data-reader warnings in 268.07 s (`research/full_regression_test_run_2026_10_12_latest.json`). A fresh broad LLM/SAGA, virtual-safety, HAZOP and HIAD accident-path selection passed **159 tests with 2 warnings** (`research/paper_llm_safety_broad_regression_2026_10_12.json`). These are software implementation checks only and do not convert the independent physical validation failures or author-confirmation gate into passes. The focused LLM/accident-path regression passed **65 tests with 2 warnings**, and the clean direct LLM route spot check passed **20 tests with 3 warnings**.
 
 The 2026-10-12 critical-priority diagnostic run completed in 3.2 s and is
 archived as [`priority_diagnostic_run_2026_10_12.json`](../research/priority_diagnostic_run_2026_10_12.json).
