@@ -122,3 +122,29 @@ def test_h2safe_spatial_negative_screen_is_grounded_without_runtime_promotion():
     compact = prompt_evidence_summary(manifest)["public_h2safe_spatial_diagnostic"]
     assert compact["promotion_prohibited"] is True
     assert compact["full_loop_external_validation_ready"] is False
+
+
+def test_h2safe_hvac_input_boundary_is_grounded_without_spatial_promotion():
+    manifest = build_evidence_manifest(
+        {"time_s": 1.0}, {}, [], False, question="H2SAFE 환기 공간 검증 입력 근거"
+    )
+    evidence = manifest["response_evidence"][
+        "public_h2safe_hvac_input_readiness"
+    ]
+    assert evidence["status"] == "NOT_READY_FOR_PREACCESS_SPATIAL_VALIDATION"
+    assert evidence["release_test_count"] == 5
+    assert evidence["lab_1_vent_count"] == 10
+    assert evidence["lab_2_duct_count"] == 8
+    assert evidence["runtime_parameter_application"] is False
+    assert evidence["promotion_prohibited"] is True
+    assert set(evidence["missing_inputs"]) == {
+        "release_direction_vector",
+        "ventilation_velocity_vectors",
+        "obstruction_geometry",
+        "release_to_trace_time_crosswalk",
+    }
+    compact = prompt_evidence_summary(manifest)[
+        "public_h2safe_hvac_input_readiness"
+    ]
+    assert compact["source_doi"] == "10.7799/17118570"
+    assert compact["promotion_prohibited"] is True

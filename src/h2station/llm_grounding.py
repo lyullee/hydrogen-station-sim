@@ -10092,6 +10092,19 @@ def build_evidence_manifest(
         envelope["response_evidence"][
             "public_h2safe_spatial_diagnostic"
         ] = h2safe_spatial
+    h2safe_hvac = (
+        public_inventory.get("public_h2safe_hvac_input_readiness")
+        if isinstance(public_inventory, dict)
+        else None
+    )
+    if (
+        isinstance(h2safe_hvac, dict)
+        and h2safe_hvac.get("status")
+        == "NOT_READY_FOR_PREACCESS_SPATIAL_VALIDATION"
+    ):
+        envelope["response_evidence"][
+            "public_h2safe_hvac_input_readiness"
+        ] = h2safe_hvac
     dickens_followup = (
         public_inventory.get("public_dickens_geometry_followup_candidate")
         if isinstance(public_inventory, dict)
@@ -10880,6 +10893,19 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
                 "claim_limit",
             )
             if h2safe_spatial.get(key) is not None
+        }
+    h2safe_hvac = evidence.get("public_h2safe_hvac_input_readiness")
+    if isinstance(h2safe_hvac, dict):
+        summary["public_h2safe_hvac_input_readiness"] = {
+            key: h2safe_hvac.get(key)
+            for key in (
+                "status", "evidence_role", "source_doi", "test_gas",
+                "release_test_count", "lab_1_vent_count", "lab_2_duct_count",
+                "lab_2_recirculation_fan_count", "missing_inputs",
+                "runtime_parameter_application", "development_candidate_use",
+                "promotion_prohibited", "claim_limit",
+            )
+            if h2safe_hvac.get(key) is not None
         }
     public_measurement = evidence.get("public_measurement_instrumentation")
     if isinstance(public_measurement, dict):
@@ -12538,6 +12564,9 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
     public_h2protocol_validation = response.get(
         "public_h2protocol_validation_boundary"
     ) or {}
+    h2safe_hvac = response.get(
+        "public_h2safe_hvac_input_readiness"
+    ) or {}
     hytunnel_diagnostic = response.get(
         "public_hytunnel_failure_diagnostic"
     ) or {}
@@ -13149,6 +13178,19 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
             "public_h2iq_aggregate_reference": public_h2iq_aggregate,
         } if h2iq_aggregate_relevant else {}),
         **({
+            "public_h2safe_hvac_input_readiness": {
+                key: h2safe_hvac.get(key)
+                for key in (
+                    "status", "evidence_role", "source_doi", "test_gas",
+                    "release_test_count", "lab_1_vent_count", "lab_2_duct_count",
+                    "lab_2_recirculation_fan_count", "missing_inputs",
+                    "runtime_parameter_application", "promotion_prohibited",
+                    "claim_limit",
+                )
+                if h2safe_hvac.get(key) is not None
+            },
+        } if h2safe_hvac else {}),
+        **({
             "station_side_data_scope": station_side_data_scope,
         } if station_side_data_scope is not None else {}),
         **({
@@ -13229,6 +13271,19 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                     ),
                 },
             } if compressor_component and compressor_component_relevant else {}),
+            **({
+                "public_h2safe_hvac_input_readiness": {
+                    key: h2safe_hvac.get(key)
+                    for key in (
+                        "status", "evidence_role", "source_doi", "test_gas",
+                        "release_test_count", "lab_1_vent_count", "lab_2_duct_count",
+                        "lab_2_recirculation_fan_count", "missing_inputs",
+                        "runtime_parameter_application", "promotion_prohibited",
+                        "claim_limit",
+                    )
+                    if h2safe_hvac.get(key) is not None
+                },
+            } if h2safe_hvac else {}),
             **({
                 "public_mhc_component_screen": {
                     key: mhc_component.get(key)

@@ -48,6 +48,9 @@ _NREL_NFCTEC_ACCESS_BOUNDARY = _ROOT / (
 _H2SAFE_SPATIAL_DIAGNOSTIC = _ROOT / (
     "research/h2safe_spatial_response_diagnostic_2026_10_08.json"
 )
+_H2SAFE_HVAC_INPUT_READINESS = _ROOT / (
+    "research/h2safe_hvac_input_readiness_2026_10_12.json"
+)
 _LOCAL_HRS_CANDIDATE_SCAN = _ROOT / (
     "research/local_hydrogen_station_sim_candidate_scan_2026_10_10.json"
 )
@@ -701,6 +704,70 @@ def _h2safe_spatial_diagnostic_summary() -> dict[str, Any] | None:
             "full_loop_external_validation_ready": False,
             "promotion_prohibited": True,
             "claim_limit": str(record["claim_boundary"]),
+        }
+    except (OSError, KeyError, TypeError, ValueError, json.JSONDecodeError):
+        return None
+
+
+def _h2safe_hvac_input_readiness_summary() -> dict[str, Any] | None:
+    """Expose the H2SAFE spatial-input boundary without raw trace metadata.
+
+    This is a provenance/readiness record, not a detector calibration result.
+    Keeping it in the evidence inventory makes the LLM state exactly why a
+    directional/obstruction-aware candidate is still prohibited from runtime.
+    """
+
+    try:
+        record = _read_json(_H2SAFE_HVAC_INPUT_READINESS)
+        source = record.get("source") or {}
+        parsed = record.get("parsed_metadata") or {}
+        decision = record.get("decision") or {}
+        required = record.get("required_common_frame_inputs") or {}
+        if not (
+            record.get("artifact_type") == "h2safe_hvac_spatial_input_readiness_audit"
+            and source.get("doi") == "10.7799/17118570"
+            and source.get("test_gas") == "helium surrogate"
+            and isinstance(source.get("metadata_sha256"), str)
+            and len(source["metadata_sha256"]) == 64
+            and decision.get("status") == "NOT_READY_FOR_PREACCESS_SPATIAL_VALIDATION"
+            and decision.get("runtime_application") is False
+            and set(decision.get("missing_inputs") or {}) == {
+                "release_direction_vector",
+                "ventilation_velocity_vectors",
+                "obstruction_geometry",
+                "release_to_trace_time_crosswalk",
+            }
+            and all(isinstance(required.get(key), dict) for key in (
+                "release_direction_vector",
+                "ventilation_velocity_vectors",
+                "obstruction_geometry",
+                "release_to_trace_time_crosswalk",
+            ))
+        ):
+            return None
+        return {
+            "status": str(decision["status"]),
+            "evidence_role": "public HVAC/spatial input readiness boundary",
+            "source_doi": str(source["doi"]),
+            "test_gas": str(source["test_gas"]),
+            "release_test_count": sum(
+                len(parsed.get(key) or []) for key in ("release_tests",)
+            ) if isinstance(parsed.get("release_tests"), list) else sum(
+                len((parsed.get("release_tests") or {}).get(key) or [])
+                for key in ("lab_1", "lab_2")
+            ),
+            "lab_1_vent_count": int(parsed.get("lab_1_vent_count") or 0),
+            "lab_2_duct_count": int(parsed.get("lab_2_duct_count") or 0),
+            "lab_2_recirculation_fan_count": int(
+                parsed.get("lab_2_recirculation_fan_count") or 0
+            ),
+            "missing_inputs": [str(item) for item in decision["missing_inputs"]],
+            "runtime_parameter_application": False,
+            "development_candidate_use": str(
+                decision.get("development_candidate_use") or ""
+            ),
+            "promotion_prohibited": True,
+            "claim_limit": str(record.get("claim_boundary") or ""),
         }
     except (OSError, KeyError, TypeError, ValueError, json.JSONDecodeError):
         return None
@@ -1454,6 +1521,20 @@ def public_evidence_inventory_summary() -> dict[str, Any]:
             "full_loop_external_validation_ready": False,
             "promotion_prohibited": True,
         },
+        "public_h2safe_hvac_input_readiness": {
+            "status": "unavailable",
+            "evidence_role": "public HVAC/spatial input readiness boundary",
+            "source_doi": None,
+            "test_gas": None,
+            "release_test_count": 0,
+            "lab_1_vent_count": 0,
+            "lab_2_duct_count": 0,
+            "lab_2_recirculation_fan_count": 0,
+            "missing_inputs": [],
+            "runtime_parameter_application": False,
+            "promotion_prohibited": True,
+            "claim_limit": "H2SAFE HVAC input-readiness evidence is unavailable; no spatial-candidate claim is permitted.",
+        },
         "public_dickens_geometry_followup_candidate": {
             "status": "unavailable",
             "runtime_parameter_application": False,
@@ -1836,6 +1917,9 @@ def public_evidence_inventory_summary() -> dict[str, Any]:
     h2safe_spatial = _h2safe_spatial_diagnostic_summary()
     if h2safe_spatial is not None:
         result["public_h2safe_spatial_diagnostic"] = h2safe_spatial
+    h2safe_hvac = _h2safe_hvac_input_readiness_summary()
+    if h2safe_hvac is not None:
+        result["public_h2safe_hvac_input_readiness"] = h2safe_hvac
     dickens = _dickens_geometry_followup_summary()
     if dickens is not None:
         result["public_dickens_geometry_followup_candidate"] = dickens

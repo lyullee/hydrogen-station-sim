@@ -145,6 +145,13 @@ def test_validation_evidence_surface_is_privacy_bounded_and_claim_limited() -> N
     assert source_pressure["full_loop_external_validation_ready"] is False
     assert source_pressure["promotion_prohibited"] is True
     assert "not independent external" in source_pressure["claim_limit"].lower()
+    h2safe_hvac = inventory["public_h2safe_hvac_input_readiness"]
+    assert h2safe_hvac["status"] == "NOT_READY_FOR_PREACCESS_SPATIAL_VALIDATION"
+    assert h2safe_hvac["release_test_count"] == 5
+    assert h2safe_hvac["lab_1_vent_count"] == 10
+    assert h2safe_hvac["lab_2_duct_count"] == 8
+    assert h2safe_hvac["runtime_parameter_application"] is False
+    assert h2safe_hvac["promotion_prohibited"] is True
     dickens = inventory["public_dickens_geometry_followup_candidate"]
     assert dickens["status"] == "followup_candidate_only"
     assert dickens["source_reference"]["doi"] == "10.1016/J.JPOWSOUR.2006.11.077"
