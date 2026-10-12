@@ -2,17 +2,23 @@
 
 현재 검증 게이트를 데이터 공백, 모델 공백, 검토 공백으로 분류한 의사결정용 보고서다. 새로운 수치 검증을 수행하거나 실패 게이트를 승격하지 않는다.
 
-- PASS 129 / FAIL 10 / PENDING 7
-- 주 목표 범위: PASS 129 / FAIL 9 / PENDING 2 (92.1%)
+- PASS 131 / FAIL 10 / PENDING 7
+- 주 목표 범위: PASS 130 / FAIL 9 / PENDING 2 (92.2%)
 - 완전한 사용자 목표 준비 여부: 아니오
 - 주된 병목: independent component-physics holdouts and protocol provenance
+
+## 1차 게이트에 반영하지 않은 보조 진단
+
+Grüne 사례에는 공개 ICHS 도표에서 추출한 완전 곡선 진단을 보존하지만, 권리 정리된 원시 아카이브가 아니며 고정 화면을 통과하지 못해 1차 검증을 닫지 않는다.
+- 319 points · NRMSE 18.63% · median APE 84.60% · half-pressure error 69.29%
+- 판정: DIAGNOSTIC_ONLY; 1차 게이트와 전체 진행률은 변경하지 않음
 
 ## 미해결 게이트
 
 | 우선순위 | 병렬 트랙 | 게이트 | 상태 | 다음 최소 행동 |
 | --- | --- | --- | --- | --- |
 | P0 | component_model_repairs | `dickens_typeiii_prospective_validation` | FAIL | 결과를 재튜닝하지 말고 실패한 물리량·직경·경계조건에 맞는 새 pre-access protocol과 독립 원시 trace를 확보한다. |
-| P0 | component_model_repairs | `grune_2014_pressure_decay_validation` | PENDING | 공식 KIT·출판사 재확인에서도 원시 pressure-time 표가 없어 보류 중이다. custodian 원자료와 재사용 조건을 받은 뒤 새 pre-access protocol을 동결한다. 별도 KIT LH2 원자료는 공식 권리는 확인했지만 전체 아카이브 MD5가 검증되지 않아 이 게이트를 닫지 않는다. |
+| P0 | component_model_repairs | `grune_2014_pressure_decay_validation` | PENDING | 공식 KIT·출판사 재확인에서도 권리 정리된 원시 pressure-time 표가 없어 1차 게이트는 보류 중이다. 공개 ICHS 재현 도표의 figure-derived 진단은 완전 곡선을 제공하지만 세 고정 화면을 모두 통과하지 못했으므로 1차 근거로 승격하지 않는다. custodian 원자료와 재사용 조건을 받은 뒤 새 pre-access protocol을 동결한다. 별도 KIT LH2 원자료는 공식 권리는 확인했지만 전체 아카이브 MD5가 검증되지 않아 이 게이트를 닫지 않는다. |
 | P0 | component_model_repairs | `h2safe_spatial_detector_transfer_validation` | FAIL | 공간좌표·방출방향·센서별 수치응답이 함께 있는 독립 holdout을 추가하고, 통과 전 runtime 자동 라우팅을 유지하지 않는다. |
 | P0 | component_model_repairs | `hytunnel_carpark_dispersion_validation` | FAIL | 공간좌표·방출방향·센서별 수치응답이 함께 있는 독립 holdout을 추가하고, 통과 전 runtime 자동 라우팅을 유지하지 않는다. |
 | P0 | component_model_repairs | `hytunnel_carpark_mass_flow_validation` | FAIL | 결과를 재튜닝하지 말고 실패한 물리량·직경·경계조건에 맞는 새 pre-access protocol과 독립 원시 trace를 확보한다. |

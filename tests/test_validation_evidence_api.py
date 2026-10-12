@@ -1,20 +1,29 @@
 from __future__ import annotations
 
+import json
+from pathlib import Path
+
 from fastapi.testclient import TestClient
 
 from h2station.api import app
 from h2station.local_evidence import validation_evidence_summary
 
 
+ROOT = Path(__file__).resolve().parents[1]
+
+
 def test_validation_evidence_surface_is_privacy_bounded_and_claim_limited() -> None:
     summary = validation_evidence_summary()
+    current_coverage = json.loads(
+        (ROOT / "research/data_coverage_summary_2026_10_11.json").read_text(
+            encoding="utf-8"
+        )
+    )
 
     assert summary["status"] == "available"
-    assert summary["readiness"]["ijhe_gate_counts"] == {
-        "PASS": 129,
-        "FAIL": 10,
-        "PENDING": 7,
-    }
+    assert summary["readiness"]["ijhe_gate_counts"] == current_coverage[
+        "readiness"
+    ]["ijhe_gate_counts"]
     assert summary["readiness"]["full_user_objective_ready"] is False
     assert summary["interpretation"]["data_volume_is_primary_blocker"] is False
     assert summary["interpretation"]["primary_blocker"]
