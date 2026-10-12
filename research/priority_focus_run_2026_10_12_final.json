@@ -1,0 +1,176 @@
+{
+  "schema_version": 1,
+  "artifact_type": "parallel_priority_focus_run",
+  "generated_at": "2026-10-12T06:46:23.468642+00:00",
+  "parallel": true,
+  "selected_priority": "critical",
+  "duration_s": 5.259,
+  "status": "PASS",
+  "scientific_screen_status": "FAIL",
+  "readiness_status": "BLOCKED",
+  "scientific_screen_failures": [
+    "mc_tank_boundary",
+    "h2safe_spatial_response",
+    "nrel_h2fills_hdvs_tank"
+  ],
+  "software_checks": {
+    "schema_version": 1,
+    "artifact_type": "priority_validation_run",
+    "parallel": true,
+    "full_regression_run": false,
+    "duration_s": 4.199,
+    "status": "PASS",
+    "current_status": {
+      "readiness": {
+        "gate_counts": {
+          "PASS": 131,
+          "FAIL": 10,
+          "PENDING": 7
+        },
+        "bounded_ijhe_submission_ready": false,
+        "full_user_objective_ready": false
+      },
+      "execution_tracks": [
+        {
+          "priority": "P0",
+          "parallel_track": "component_model_repairs",
+          "bucket": "component_model",
+          "open_gate_count": 10,
+          "why_now": "현재 주 목표에 포함된 실패 물리량별 독립 holdout을 병행하고, 통과 전 런타임 승격을 막음"
+        },
+        {
+          "priority": "P1",
+          "parallel_track": "review_and_publication",
+          "bucket": "governance_review",
+          "open_gate_count": 6,
+          "why_now": "수치 계산과 독립적으로 진행 가능한 검토·기록 작업"
+        }
+      ],
+      "primary_blocker": "independent component-physics holdouts and protocol provenance",
+      "data_volume_is_primary_blocker": false
+    },
+    "checks": [
+      {
+        "name": "llm_evidence_boundary",
+        "priority": "P0",
+        "status": "PASS",
+        "exit_code": 0,
+        "duration_s": 2.205,
+        "output_tail": "......................                                                   [100%]\n============================== warnings summary ===============================\n.venv\\Lib\\site-packages\\fastapi\\testclient.py:1\n  <repository>\\.venv\\Lib\\site-packages\\fastapi\\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.\n    from starlette.testclient import TestClient as TestClient  # noqa\n\n.venv\\Lib\\site-packages\\starlette\\testclient.py:53\n  <repository>\\.venv\\Lib\\site-packages\\starlette\\testclient.py:53: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.\n    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n22 passed, 2 warnings in 1.74s"
+      },
+      {
+        "name": "full_loop_intake_boundary",
+        "priority": "P1",
+        "status": "PASS",
+        "exit_code": 0,
+        "duration_s": 1.376,
+        "output_tail": "...................                                                      [100%]\n19 passed in 0.96s"
+      },
+      {
+        "name": "virtual_safety_and_response",
+        "priority": "P1",
+        "status": "PASS",
+        "exit_code": 0,
+        "duration_s": 4.198,
+        "output_tail": "........................                                                 [100%]\n============================== warnings summary ===============================\n.venv\\Lib\\site-packages\\fastapi\\testclient.py:1\n  <repository>\\.venv\\Lib\\site-packages\\fastapi\\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.\n    from starlette.testclient import TestClient as TestClient  # noqa\n\n.venv\\Lib\\site-packages\\starlette\\testclient.py:53\n  <repository>\\.venv\\Lib\\site-packages\\starlette\\testclient.py:53: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.\n    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n24 passed, 2 warnings in 3.65s"
+      }
+    ],
+    "claim_boundary": "Focused software checks only. This report does not score external traces, change a frozen protocol, or promote a validation gate."
+  },
+  "physics_diagnostics": {
+    "schema_version": 1,
+    "artifact_type": "parallel_priority_diagnostic_run",
+    "generated_at": "2026-10-12T06:46:23.468478+00:00",
+    "parallel": true,
+    "selected_priority": "critical",
+    "diagnostic_count": 5,
+    "duration_s": 5.258,
+    "status": "PASS",
+    "scientific_screen_status": "FAIL",
+    "readiness_status": "BLOCKED",
+    "scientific_screen_failures": [
+      "mc_tank_boundary",
+      "h2safe_spatial_response",
+      "nrel_h2fills_hdvs_tank"
+    ],
+    "skipped_diagnostics": [],
+    "results": [
+      {
+        "name": "mc_soc_boundary",
+        "priority": "P0",
+        "description": "MC SOC/EOS and mass-closure boundary consistency",
+        "status": "PASS",
+        "exit_code": 0,
+        "duration_s": 0.761,
+        "scientific_screen": {
+          "status": "PASS",
+          "case_count": 8,
+          "screen_pass_count": 8,
+          "screen_pass_fraction": 1.0
+        },
+        "output_tail": "{\n  \"schema_version\": 1,\n  \"generated_at\": \"2026-10-12T06:46:18.877929+00:00\",\n  \"source_commit\": \"185baea8b83e3c75015697024ab4f224ccbdb66e\",\n  \"artifact_type\": \"mc_soc_and_mass_boundary_diagnostic\",\n  \"evidence_role\": \"development_diagnostic_only\",\n  \"post_outcome\": true,\n  \"parameter_fitting\": false,\n  \"runtime_parameter_updated\": false,\n  \"case_count\": 8,\n  \"reference_state\": {\n    \"pressure_mpa\": 70.0,\n    \"temperature_c\": 15.0\n  },\n  \"screening_limits\": {\n    \"soc_definition_rmse_percentage_points\": 1.0,\n    \"soc_definition_final_abs_error_percentage_points\": 1.0\n  },\n  \"aggregate\": {\n    \"soc_definition_rmse_percentage_points_mean\": 0.1404152945188317,\n    \"soc_definition_rmse_percentage_points_max\": 0.3261870059370626,\n    \"soc_definition_final_abs_error_percentage_points_mean\": 0.12372523505790944,\n    \"soc_definition_final_abs_error_percentage_points_max\": 0.3882069382414244,\n    \"inferred_volume_ratio_median\": 1.0003039104605116,\n    \"inferred_volume_ratio_p10\": 0.9513583876584802,\n    \"inferred_volume_ratio_p90\": 1.0196411792126494,\n    \"soc_definition_screen_pass_count\": 8\n  },\n  \"interpretation\": \"The measured SOC channel is checked against EOS density calculated from the co-located observed pressure and tank temperature. The inferred volume ratio is a mass-closure diagnostic only; it is not a post-outcome parameter choice.\",\n  \"claim_boundary\": \"This diagnostic does not validate the station controller, select a vehicle geometry, revise the frozen MC holdout, or support a safety claim.\"\n}"
+      },
+      {
+        "name": "mc_tank_boundary",
+        "priority": "P0",
+        "description": "MC measured-boundary vehicle-tank replay",
+        "status": "PASS",
+        "exit_code": 0,
+        "duration_s": 2.611,
+        "scientific_screen": {
+          "status": "FAIL",
+          "case_count": 8,
+          "joint_screening_pass_fraction": 0.0
+        },
+        "output_tail": "{\"case_count\": 8, \"joint_screening_pass_count\": 0, \"joint_screening_pass_fraction\": 0.0, \"pressure_rmse_mpa_mean\": 4.375922315837227, \"temperature_rmse_c_mean\": 9.052229650073286, \"soc_rmse_percentage_points_mean\": 5.583563785890824}"
+      },
+      {
+        "name": "dickens_mixed_convection",
+        "priority": "P1",
+        "description": "Type-III inlet-jet heat-transfer sensitivity",
+        "status": "PASS",
+        "exit_code": 0,
+        "duration_s": 0.949,
+        "scientific_screen": {
+          "status": "PASS",
+          "screen_pass_count": 3,
+          "screen_case_count": 3,
+          "screen_pass_fraction": 1.0
+        },
+        "output_tail": "709,\n        \"pressure_nrmse_percent_measured_span\": 2.622944110314715,\n        \"gas_temperature_rmse_k\": 7.634245748930577,\n        \"gas_temperature_peak_absolute_error_k\": 8.487690727115876,\n        \"mass_residual_relative\": 1.3478349599618108e-15,\n        \"energy_residual_relative\": 1.3725022901760395e-15\n      },\n      \"screen_results\": {\n        \"pressure_nrmse_percent_measured_span\": true,\n        \"pressure_rmse_mpa\": true,\n        \"gas_temperature_rmse_k\": true,\n        \"gas_temperature_peak_absolute_error_k\": true\n      },\n      \"joint_primary_screen_pass\": true\n    },\n    {\n      \"nozzle_diameter_mm\": 7.0,\n      \"metrics\": {\n        \"pressure_rmse_mpa\": 0.6531593514131298,\n        \"pressure_nrmse_percent_measured_span\": 2.5917994603244447,\n        \"gas_temperature_rmse_k\": 7.915347030876859,\n        \"gas_temperature_peak_absolute_error_k\": 8.697508507942644,\n        \"mass_residual_relative\": 1.0108758853053364e-15,\n        \"energy_residual_relative\": 1.7156272947352298e-15\n      },\n      \"screen_results\": {\n        \"pressure_nrmse_percent_measured_span\": true,\n        \"pressure_rmse_mpa\": true,\n        \"gas_temperature_rmse_k\": true,\n        \"gas_temperature_peak_absolute_error_k\": true\n      },\n      \"joint_primary_screen_pass\": true\n    }\n  ],\n  \"validation_gate_effect\": \"none\",\n  \"claim_boundary\": \"This post-outcome sensitivity identifies whether an omitted inlet-jet heat-transfer mechanism can explain the frozen temperature failure. It cannot select a nozzle diameter, revise the frozen Type-III result, change the runtime model, or support a validation claim.\"\n}"
+      },
+      {
+        "name": "h2safe_spatial_response",
+        "priority": "P1",
+        "description": "Hydrogen detector spatial-response diagnostic",
+        "status": "PASS",
+        "exit_code": 0,
+        "duration_s": 1.018,
+        "scientific_screen": {
+          "status": "FAIL",
+          "screen_pass_count": 0,
+          "screen_case_count": 1,
+          "screen_pass_fraction": 0.0
+        },
+        "output_tail": "{\"output\": \"<local-path>"
+      },
+      {
+        "name": "nrel_h2fills_hdvs_tank",
+        "priority": "P1",
+        "description": "NREL H2FillS HDVS Type-IV tank boundary screen",
+        "status": "PASS",
+        "exit_code": 0,
+        "duration_s": 2.646,
+        "scientific_screen": {
+          "status": "FAIL",
+          "case_count": 7,
+          "screen_pass_count": 0,
+          "screen_pass_fraction": 0.0
+        },
+        "output_tail": "{\n  \"tank_count\": 7,\n  \"sample_count_per_tank\": 351,\n  \"screening_pass_count\": 0,\n  \"screening_pass_fraction\": 0.0,\n  \"pressure_rmse_mpa\": 6.163939306629357,\n  \"temperature_rmse_c\": 4.624768386874764,\n  \"mass_rmse_kg\": 0.045037192069606595,\n  \"pressure_final_error_mpa\": -8.679337444242147,\n  \"temperature_peak_error_c\": -2.289515870412328,\n  \"mass_final_error_kg\": 0.11989206093515849\n}"
+      }
+    ],
+    "claim_boundary": "Process status only. These are bounded development diagnostics; the runner does not promote validation gates, change runtime parameters, or publish raw measurements."
+  },
+  "claim_boundary": "Fast-lane process status only. This report does not score external traces, change runtime parameters, or promote a validation gate."
+}

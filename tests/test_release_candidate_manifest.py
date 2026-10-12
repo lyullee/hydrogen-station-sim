@@ -37,4 +37,12 @@ def test_release_candidate_manifest_matches_repository_and_readiness_ledger() ->
         "total": sum(audit["gate_counts"].values()),
     }
     assert len(manifest["known_blockers"]) >= 8
+    focus = json.loads(
+        (ROOT / manifest["software_evidence"]["local_priority_focus_artifact"]).read_text(
+            encoding="utf-8"
+        )
+    )
+    assert focus["status"] == "PASS"
+    assert focus["software_checks"]["status"] == "PASS"
+    assert focus["readiness_status"] == "BLOCKED"
 
