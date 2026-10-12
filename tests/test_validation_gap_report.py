@@ -11,6 +11,7 @@ ROOT = Path(__file__).resolve().parents[1]
 def test_gap_report_keeps_failed_gates_and_privacy_boundary() -> None:
     report = build_report(ROOT)
 
+    assert report["target_journal"] == "International Journal of Hydrogen Energy"
     assert report["overall"]["full_user_objective_ready"] is False
     assert report["interpretation"]["data_volume_is_primary_blocker"] is False
     ids = {item["id"] for item in report["unresolved_gates"]}

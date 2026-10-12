@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "source_audit_generated_at": "2026-10-12T00:02:12.749170+00:00",
-  "target_journal": null,
+  "target_journal": "International Journal of Hydrogen Energy",
   "overall": {
     "pass": 131,
     "fail": 10,

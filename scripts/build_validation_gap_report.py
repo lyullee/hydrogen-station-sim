@@ -269,10 +269,16 @@ def build_report(
         scoped_counts["PASS"] / scoped_total * 100.0 if scoped_total else 0.0
     )
 
+    target_journal = audit.get("target_journal") or {}
+    # The readiness audit stores the journal display name under ``title``.
+    # Keep a ``name`` fallback for older snapshots so the report never emits
+    # a misleading null journal label.
+    journal_name = target_journal.get("title") or target_journal.get("name")
+
     return {
         "schema_version": 1,
         "source_audit_generated_at": audit.get("generated_at"),
-        "target_journal": audit.get("target_journal", {}).get("name"),
+        "target_journal": journal_name,
         "overall": {
             "pass": (audit.get("gate_counts") or {}).get("PASS", 0),
             "fail": (audit.get("gate_counts") or {}).get("FAIL", 0),
