@@ -1,0 +1,256 @@
+{
+  "schema_version": 1,
+  "artifact_type": "h2safe_hvac_spatial_input_readiness_audit",
+  "recorded_at": "2026-10-12",
+  "source": {
+    "title": "Dataset for H2SAFE - Controlled Gas Releases and Sensor-Response for Indoor Hydrogen Safety",
+    "doi": "10.7799/17118570",
+    "test_gas": "helium surrogate",
+    "metadata_file": "HVAC_information.docx",
+    "metadata_sha256": "e99119f5f9aadac6e0bd8269b3fc7989a6026bc0a4c68221ea2a54b1eeee58bb",
+    "metadata_bytes": 692704
+  },
+  "parsed_metadata": {
+    "release_tests": {
+      "lab_1": [
+        {
+          "test_id": "Test 1",
+          "sensor_count": 24,
+          "nozzle_size": "2 mm",
+          "orientation": "vertical",
+          "pressure": "40 psi",
+          "release_rate": "100 SLM",
+          "release_duration": "1,389 s",
+          "release_location": "Center of room"
+        }
+      ],
+      "lab_2": [
+        {
+          "test_id": "Test 1",
+          "date": "May 9, 2025",
+          "nozzle_size": "0.5 mm",
+          "orientation": "horizontal",
+          "pressure": "220 psi",
+          "release_rate": "92–100 L/min",
+          "release_time": "12:31–12:41 PM"
+        },
+        {
+          "test_id": "Test 2",
+          "date": "May 9, 2025",
+          "nozzle_size": "0.5 mm",
+          "orientation": "vertical",
+          "pressure": "220 psi",
+          "release_rate": "92–100 L/min",
+          "release_time": "2:11–2:40 PM"
+        },
+        {
+          "test_id": "Test 3",
+          "date": "May 13, 2025",
+          "nozzle_size": "1 mm",
+          "orientation": "vertical",
+          "pressure": "45 psi",
+          "release_rate": "100 SLM",
+          "release_time": "10:54:04 AM–11:37 AM"
+        },
+        {
+          "test_id": "Test 4",
+          "date": "May 13, 2025",
+          "nozzle_size": "1 mm",
+          "orientation": "vertical",
+          "pressure": "430 psi",
+          "release_rate": "680–700 SLM",
+          "release_time": "3:29–3:37 PM"
+        }
+      ]
+    },
+    "lab_1_vent_count": 10,
+    "lab_2_duct_count": 8,
+    "lab_2_recirculation_fan_count": 2,
+    "lab_1_vent_speed_area_records": [
+      {
+        "name": "Snorkel Outlet",
+        "flow_role": "Out",
+        "angle_text": "NS",
+        "area_m2": 0.007126,
+        "speed_m_s": 2.59
+      },
+      {
+        "name": "Outlet vent",
+        "flow_role": "Out",
+        "angle_text": "NS",
+        "area_m2": 0.264194,
+        "speed_m_s": 6.05
+      },
+      {
+        "name": "Metal Duct 1 left",
+        "flow_role": "In",
+        "angle_text": "NS",
+        "area_m2": 0.104839,
+        "speed_m_s": 2.33
+      },
+      {
+        "name": "Metal Duct 1 right",
+        "flow_role": "In",
+        "angle_text": "NS",
+        "area_m2": 0.104839,
+        "speed_m_s": 1.86
+      },
+      {
+        "name": "Metal Duct 2 left",
+        "flow_role": "In",
+        "angle_text": "18 up*",
+        "area_m2": 0.104839,
+        "speed_m_s": 2.41
+      },
+      {
+        "name": "Metal Duct 2 right",
+        "flow_role": "In",
+        "angle_text": "18 up*",
+        "area_m2": 0.104839,
+        "speed_m_s": 2.43
+      },
+      {
+        "name": "Metal Duct 3 left",
+        "flow_role": "In",
+        "angle_text": "NS",
+        "area_m2": 0.104839,
+        "speed_m_s": 1.04
+      },
+      {
+        "name": "Metal Duct 3 right",
+        "flow_role": "In",
+        "angle_text": "NS",
+        "area_m2": 0.104839,
+        "speed_m_s": 2.16
+      },
+      {
+        "name": "Metal Duct 4 left",
+        "flow_role": "In",
+        "angle_text": "NS",
+        "area_m2": 0.104839,
+        "speed_m_s": 1.2
+      },
+      {
+        "name": "Metal Duct 4 right",
+        "flow_role": "In",
+        "angle_text": "NS",
+        "area_m2": 0.104839,
+        "speed_m_s": 2.0
+      }
+    ],
+    "lab_2_duct_speed_area_records": [
+      {
+        "duct_number": 1,
+        "location": "door-office",
+        "area_in2": 288.0,
+        "speed_m_s": 1.1684
+      },
+      {
+        "duct_number": 2,
+        "location": null,
+        "area_in2": 288.0,
+        "speed_m_s": 1.09728
+      },
+      {
+        "duct_number": 3,
+        "location": null,
+        "area_in2": 288.0,
+        "speed_m_s": 1.5494
+      },
+      {
+        "duct_number": 4,
+        "location": null,
+        "area_in2": 288.0,
+        "speed_m_s": 0.0
+      },
+      {
+        "duct_number": 5,
+        "location": null,
+        "area_in2": 288.0,
+        "speed_m_s": 0.0
+      },
+      {
+        "duct_number": 6,
+        "location": null,
+        "area_in2": 288.0,
+        "speed_m_s": 2.19964
+      },
+      {
+        "duct_number": 7,
+        "location": null,
+        "area_in2": 288.0,
+        "speed_m_s": 0.0
+      },
+      {
+        "duct_number": 8,
+        "location": "garage",
+        "area_in2": 288.0,
+        "speed_m_s": 1.6764
+      }
+    ],
+    "lab_2_recirculation_fans": [
+      {
+        "name": "Recirculation Fan #1",
+        "speed_m_s": 11.8364,
+        "pressure_drop_pa": 85.8
+      },
+      {
+        "name": "Recirculation Fan #2",
+        "speed_m_s": 14.478,
+        "pressure_drop_pa": 128.0
+      }
+    ],
+    "coordinates": {
+      "coordinates_m": {
+        "lab_1": [
+          -5.186701676,
+          1.580460097,
+          -4.322127
+        ],
+        "lab_2": [
+          -11.63093726,
+          1.566073152,
+          15.86309373
+        ]
+      },
+      "declared_common_sensor_reference_frame": true
+    }
+  },
+  "required_common_frame_inputs": {
+    "release_direction_vector": {
+      "available": false,
+      "declared_orientation_only": true,
+      "reason": "The metadata declares horizontal/vertical orientation but no azimuth or common-frame 3-D jet vector."
+    },
+    "ventilation_velocity_vectors": {
+      "available": false,
+      "lab_1_speed_and_area_records": 10,
+      "lab_2_duct_speed_and_area_records": 8,
+      "lab_2_recirculation_fan_records": 2,
+      "direction_text_records": 2,
+      "reason": "Speeds and areas are published, but the vents/ducts lack origins and common-frame 3-D vectors."
+    },
+    "obstruction_geometry": {
+      "mesh_files_present": true,
+      "coordinate_registration_validated": false,
+      "reason": "STEP/STL meshes are present, but no independently checked registration from mesh coordinates to sensor coordinates is declared."
+    },
+    "release_to_trace_time_crosswalk": {
+      "available": false,
+      "reason": "Release wall-clock/duration metadata is not aligned to the CSV-relative logger time axis."
+    }
+  },
+  "decision": {
+    "status": "NOT_READY_FOR_PREACCESS_SPATIAL_VALIDATION",
+    "missing_inputs": [
+      "release_direction_vector",
+      "ventilation_velocity_vectors",
+      "obstruction_geometry",
+      "release_to_trace_time_crosswalk"
+    ],
+    "runtime_application": false,
+    "development_candidate_use": "permitted only for schema/unit tests; no outcome-based score claims",
+    "next_action": "Obtain a rights-cleared cohort with release vectors, HVAC vectors, registered obstruction geometry, signal units and a release-to-trace time crosswalk, then freeze candidate before outcome access."
+  },
+  "claim_boundary": "This audit parses public HVAC metadata and makes missing common-frame inputs explicit. It is not a hydrogen concentration model, CFD result, detector placement validation, alarm/ESD validation, consequence-distance estimate or HRS full-loop validation."
+}

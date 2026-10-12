@@ -21,5 +21,12 @@ speed as a direction would manufacture validation evidence, so no numerical
 candidate score is reported. The candidate is retained for a new pre-access
 holdout and is prohibited from runtime detector routing.
 
+The parser and input-readiness boundary are frozen in
+`h2safe_hvac_input_readiness_2026_10_12.json` (human-readable summary:
+`H2SAFE_HVAC_INPUT_READINESS_2026_10_12.md`). It records four missing inputs:
+the release direction vector, same-frame HVAC vectors, independently checked
+mesh registration, and the release-to-trace time crosswalk. The artifact is
+metadata-only and does not redistribute trace rows.
+
 The machine-readable boundary and source hash are in
 `h2safe_directional_obstruction_development_2026_10_09.json`.
