@@ -67,7 +67,14 @@ DEFAULT_CHECKS: tuple[PriorityCheck, ...] = (
     PriorityCheck(
         "llm_evidence_boundary",
         "P0",
-        ("-m", "pytest", "tests/test_llm_validation_gap_grounding.py", "tests/test_validation_evidence_api.py", "-q"),
+        (
+            "-m", "pytest",
+            "tests/test_llm_validation_gap_grounding.py",
+            "tests/test_validation_evidence_api.py",
+            "tests/test_ijhe_audit_snapshot_consistency.py",
+            "tests/test_ijhe_claim_evidence_matrix.py",
+            "-q",
+        ),
     ),
     PriorityCheck(
         "virtual_safety_and_response",

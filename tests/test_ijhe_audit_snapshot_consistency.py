@@ -3,6 +3,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+from scripts.audit_ijhe_readiness import audit
+
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -31,3 +33,14 @@ def test_research_and_manuscript_audits_share_the_same_readiness_decision():
     research = _load("research/ijhe_readiness_audit.json")
     assert _decision_snapshot(research) == _decision_snapshot(manuscript)
 
+
+def _without_generated_at(report: dict) -> dict:
+    return {key: value for key, value in report.items() if key != "generated_at"}
+
+
+def test_committed_audit_is_fresh_against_the_current_source_tree():
+    """Prevent a source-hash audit from silently going stale after edits."""
+
+    committed = _load("manuscript/ijhe_readiness_audit.json")
+    current = audit(ROOT)
+    assert _without_generated_at(committed) == _without_generated_at(current)
