@@ -1,4 +1,5 @@
 from pathlib import Path
+import json
 import sys
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
@@ -93,3 +94,20 @@ def test_markdown_does_not_expose_evidence_paths() -> None:
     assert "evidence" not in markdown.lower()
     assert "\\research\\" not in markdown
     assert "원시 데이터" in markdown
+
+
+def test_committed_current_triage_matches_authoritative_audit() -> None:
+    audit = json.loads(
+        (ROOT / "research/ijhe_readiness_audit.json").read_text(encoding="utf-8")
+    )
+    triage = json.loads(
+        (ROOT / "research/validation_gap_triage_current.json").read_text(
+            encoding="utf-8"
+        )
+    )
+
+    assert triage["source_audit_generated_at"] == audit["generated_at"]
+    assert triage["overall"]["pass"] == audit["gate_counts"]["PASS"]
+    assert triage["overall"]["fail"] == audit["gate_counts"]["FAIL"]
+    assert triage["overall"]["pending"] == audit["gate_counts"]["PENDING"]
+    assert triage["overall"]["full_user_objective_ready"] is False

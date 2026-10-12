@@ -24,7 +24,7 @@ from typing import Any, Sequence
 
 ROOT = Path(__file__).resolve().parents[1]
 READINESS = ROOT / "research" / "ijhe_readiness_audit.json"
-TRIAGE = ROOT / "research" / "validation_gap_triage_2026_10_10.json"
+TRIAGE = ROOT / "research" / "validation_gap_triage_current.json"
 
 
 def _test_python() -> str:
