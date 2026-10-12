@@ -170,6 +170,18 @@ def test_validation_evidence_surface_is_privacy_bounded_and_claim_limited() -> N
     assert station_vehicle_search["claim_supported"] is False
     assert "common clock" in station_vehicle_search["reentry_condition"]
     assert all("C:\\" not in str(item) for item in station_vehicle_search["sources"])
+    actual_h2_channel = inventory["public_actual_h2_channel_dataset"]
+    assert actual_h2_channel["status"] == "PUBLIC_ACTUAL_H2_DISPERSION_INVENTORY"
+    assert actual_h2_channel["source_doi"].lower() == "10.23642/usn.26117989.v2"
+    assert actual_h2_channel["experiment_count"] == 22
+    assert actual_h2_channel["sensor_count"] == 29
+    assert actual_h2_channel["schema_screen_pass"] is True
+    assert actual_h2_channel["independent_actual_hydrogen_component_candidate"] is True
+    assert actual_h2_channel["station_to_vehicle_full_loop"] is False
+    assert actual_h2_channel["runtime_parameter_application"] is False
+    assert actual_h2_channel["validation_gate_promoted"] is False
+    assert actual_h2_channel["promotion_prohibited"] is True
+    assert "station twin" in actual_h2_channel["claim_limit"].lower()
     dickens = inventory["public_dickens_geometry_followup_candidate"]
     assert dickens["status"] == "followup_candidate_only"
     assert dickens["source_reference"]["doi"] == "10.1016/J.JPOWSOUR.2006.11.077"

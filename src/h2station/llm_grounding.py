@@ -10183,6 +10183,19 @@ def build_evidence_manifest(
         envelope["response_evidence"][
             "public_h2safe_geometry_containment"
         ] = h2safe_geometry
+    actual_h2_channel = (
+        public_inventory.get("public_actual_h2_channel_dataset")
+        if isinstance(public_inventory, dict)
+        else None
+    )
+    if (
+        isinstance(actual_h2_channel, dict)
+        and actual_h2_channel.get("status")
+        == "PUBLIC_ACTUAL_H2_DISPERSION_INVENTORY"
+    ):
+        envelope["response_evidence"][
+            "public_actual_h2_channel_dataset"
+        ] = actual_h2_channel
     dickens_followup = (
         public_inventory.get("public_dickens_geometry_followup_candidate")
         if isinstance(public_inventory, dict)
@@ -10997,6 +11010,21 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
                 "claim_limit",
             )
             if h2safe_geometry.get(key) is not None
+        }
+    actual_h2_channel = evidence.get("public_actual_h2_channel_dataset")
+    if isinstance(actual_h2_channel, dict):
+        summary["public_actual_h2_channel_dataset"] = {
+            key: actual_h2_channel.get(key)
+            for key in (
+                "status", "evidence_role", "source_doi", "article_doi",
+                "license", "experiment_count", "sensor_count",
+                "channel_families", "geometry_context", "schema_screen_pass",
+                "independent_actual_hydrogen_component_candidate",
+                "station_to_vehicle_full_loop", "runtime_parameter_application",
+                "validation_gate_promoted", "full_loop_external_validation_ready",
+                "promotion_prohibited", "claim_limit",
+            )
+            if actual_h2_channel.get(key) is not None
         }
     public_measurement = evidence.get("public_measurement_instrumentation")
     if isinstance(public_measurement, dict):
@@ -12661,6 +12689,9 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
     h2safe_geometry = response.get(
         "public_h2safe_geometry_containment"
     ) or {}
+    actual_h2_channel = response.get(
+        "public_actual_h2_channel_dataset"
+    ) or {}
     hytunnel_diagnostic = response.get(
         "public_hytunnel_failure_diagnostic"
     ) or {}
@@ -13298,6 +13329,21 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
             },
         } if h2safe_geometry else {}),
         **({
+            "public_actual_h2_channel_dataset": {
+                key: actual_h2_channel.get(key)
+                for key in (
+                    "status", "evidence_role", "source_doi", "article_doi",
+                    "license", "experiment_count", "sensor_count",
+                    "channel_families", "geometry_context", "schema_screen_pass",
+                    "independent_actual_hydrogen_component_candidate",
+                    "station_to_vehicle_full_loop", "runtime_parameter_application",
+                    "validation_gate_promoted", "full_loop_external_validation_ready",
+                    "promotion_prohibited", "claim_limit",
+                )
+                if actual_h2_channel.get(key) is not None
+            },
+        } if actual_h2_channel else {}),
+        **({
             "station_side_data_scope": station_side_data_scope,
         } if station_side_data_scope is not None else {}),
         **({
@@ -13404,6 +13450,21 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                     if h2safe_geometry.get(key) is not None
                 },
             } if h2safe_geometry else {}),
+            **({
+                "public_actual_h2_channel_dataset": {
+                    key: actual_h2_channel.get(key)
+                    for key in (
+                        "status", "evidence_role", "source_doi", "article_doi",
+                        "license", "experiment_count", "sensor_count",
+                        "channel_families", "geometry_context", "schema_screen_pass",
+                        "independent_actual_hydrogen_component_candidate",
+                        "station_to_vehicle_full_loop", "runtime_parameter_application",
+                        "validation_gate_promoted", "full_loop_external_validation_ready",
+                        "promotion_prohibited", "claim_limit",
+                    )
+                    if actual_h2_channel.get(key) is not None
+                },
+            } if actual_h2_channel else {}),
             **({
                 "public_mhc_component_screen": {
                     key: mhc_component.get(key)

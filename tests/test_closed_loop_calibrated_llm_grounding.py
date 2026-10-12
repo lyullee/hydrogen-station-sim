@@ -170,3 +170,21 @@ def test_h2safe_geometry_containment_is_grounded_without_registration_promotion(
     assert compact["preaccess_spatial_validation_ready"] is False
     decision = prompt_decision_evidence(manifest)["decision_support_evidence"]
     assert decision["public_h2safe_geometry_containment"]["sensor_count"] == 61
+
+
+def test_public_actual_h2_channel_dataset_is_grounded_as_component_candidate_only():
+    manifest = build_evidence_manifest(
+        {"time_s": 1.0}, {}, [], False, question="공개 실제 수소 데이터 검증"
+    )
+    evidence = manifest["response_evidence"]["public_actual_h2_channel_dataset"]
+    assert evidence["status"] == "PUBLIC_ACTUAL_H2_DISPERSION_INVENTORY"
+    assert evidence["source_doi"].lower() == "10.23642/usn.26117989.v2"
+    assert evidence["experiment_count"] == 22
+    assert evidence["sensor_count"] == 29
+    assert evidence["schema_screen_pass"] is True
+    assert evidence["runtime_parameter_application"] is False
+    assert evidence["validation_gate_promoted"] is False
+    compact = prompt_evidence_summary(manifest)["public_actual_h2_channel_dataset"]
+    assert compact["station_to_vehicle_full_loop"] is False
+    decision = prompt_decision_evidence(manifest)["decision_support_evidence"]
+    assert decision["public_actual_h2_channel_dataset"]["promotion_prohibited"] is True

@@ -1,0 +1,310 @@
+{
+  "schema_version": 1,
+  "artifact_type": "public_actual_h2_channel_dataset_inventory",
+  "recorded_at": "2026-10-12",
+  "source": {
+    "article_id": 26117989,
+    "doi": "10.23642/usn.26117989.v2",
+    "title": "Experimental Data of Hydrogen Dispersion in an Open-ended Rectangular Channel",
+    "api_url": "https://api.figshare.com/v2/articles/26117989",
+    "landing_url": "https://figshare.com/articles/dataset/Experimental_Data_of_Hydrogen_Dispersion_in_an_Open-ended_Rectangular_Channel/26117989",
+    "license": "CC BY 4.0",
+    "license_url": "https://creativecommons.org/licenses/by/4.0/",
+    "published_date": "2025-05-26T12:45:44Z",
+    "article_doi": "10.1016/j.jlp.2025.105669"
+  },
+  "dataset_scope": {
+    "experiment_count": 22,
+    "file_count": 22,
+    "mapping_count": 22,
+    "actual_hydrogen": true,
+    "sensor_count": 29,
+    "channel_families": [
+      "mass flow",
+      "filling pressure",
+      "hydrogen concentration"
+    ],
+    "geometry_context": "5.8 m x 0.9 m x 0.8 m open-ended rectangular channel; empty and beam-obstruction conditions",
+    "published_test_period": "2023-04"
+  },
+  "publication_file_inventory": [
+    {
+      "name": "23_FFI_P101_T00003.zip",
+      "size_bytes": 2001430,
+      "md5": "aa1c1e37cce76c025ba86808c4e4064a",
+      "download_url": "https://ndownloader.figshare.com/files/54824036"
+    },
+    {
+      "name": "23_FFI_P101_T00004.zip",
+      "size_bytes": 2369546,
+      "md5": "625ea03e60cf1aae984a77d26574b1e0",
+      "download_url": "https://ndownloader.figshare.com/files/54824039"
+    },
+    {
+      "name": "23_FFI_P101_T00005.zip",
+      "size_bytes": 1893720,
+      "md5": "cd2231ae657141761ca92bb9e3b0aa64",
+      "download_url": "https://ndownloader.figshare.com/files/54824042"
+    },
+    {
+      "name": "23_FFI_P101_T00006.zip",
+      "size_bytes": 2060025,
+      "md5": "c7be30a4ba5f8d63e221ef6c24df5a92",
+      "download_url": "https://ndownloader.figshare.com/files/54824045"
+    },
+    {
+      "name": "23_FFI_P101_T00007.zip",
+      "size_bytes": 2116367,
+      "md5": "96e0e5463daa25d306865402e7ffbd3c",
+      "download_url": "https://ndownloader.figshare.com/files/54824048"
+    },
+    {
+      "name": "23_FFI_P101_T00008.zip",
+      "size_bytes": 2183474,
+      "md5": "bcf8ebe762eeb995f5c53e9a75ec42bf",
+      "download_url": "https://ndownloader.figshare.com/files/54824051"
+    },
+    {
+      "name": "23_FFI_P101_T00009.zip",
+      "size_bytes": 2160984,
+      "md5": "9aa668eac2a03466084c20a4509b4fa0",
+      "download_url": "https://ndownloader.figshare.com/files/54824054"
+    },
+    {
+      "name": "23_FFI_P101_T00012.zip",
+      "size_bytes": 2081982,
+      "md5": "fc68e1c589074ddc395753016dbf262c",
+      "download_url": "https://ndownloader.figshare.com/files/54824057"
+    },
+    {
+      "name": "23_FFI_P101_T00011.zip",
+      "size_bytes": 2133066,
+      "md5": "d986e4e8986c02d2bcb7e740a547dca8",
+      "download_url": "https://ndownloader.figshare.com/files/54824060"
+    },
+    {
+      "name": "23_FFI_P101_T00014.zip",
+      "size_bytes": 2084607,
+      "md5": "53af91744c24d544cfddbe47b985d540",
+      "download_url": "https://ndownloader.figshare.com/files/54824063"
+    },
+    {
+      "name": "23_FFI_P101_T00013.zip",
+      "size_bytes": 2140030,
+      "md5": "37f1cb17db40d9bb419da6705169f3f5",
+      "download_url": "https://ndownloader.figshare.com/files/54824066"
+    },
+    {
+      "name": "23_FFI_P101_T00027.zip",
+      "size_bytes": 2034963,
+      "md5": "acea91eedf248dbb19fba32c895c9625",
+      "download_url": "https://ndownloader.figshare.com/files/54824069"
+    },
+    {
+      "name": "23_FFI_P101_T00026.zip",
+      "size_bytes": 2199349,
+      "md5": "71d5f0a1b39d1204ba479ed9df80e4c1",
+      "download_url": "https://ndownloader.figshare.com/files/54824072"
+    },
+    {
+      "name": "23_FFI_P101_T00028.zip",
+      "size_bytes": 2045248,
+      "md5": "4302a40de706afe3448bfae1c5522dae",
+      "download_url": "https://ndownloader.figshare.com/files/54824075"
+    },
+    {
+      "name": "23_FFI_P101_T00029.zip",
+      "size_bytes": 2275908,
+      "md5": "5cdd5c111226ba91c6f4ea10a42dc042",
+      "download_url": "https://ndownloader.figshare.com/files/54824078"
+    },
+    {
+      "name": "23_FFI_P101_T00030.zip",
+      "size_bytes": 2426741,
+      "md5": "4bc7b36ebe68f8decbc718b9470232cc",
+      "download_url": "https://ndownloader.figshare.com/files/54824081"
+    },
+    {
+      "name": "23_FFI_P101_T00031.zip",
+      "size_bytes": 2248254,
+      "md5": "7de8e76a4bc29e9b5ee32254045f7223",
+      "download_url": "https://ndownloader.figshare.com/files/54824084"
+    },
+    {
+      "name": "23_FFI_P101_T00040.zip",
+      "size_bytes": 2428526,
+      "md5": "92c3537747fc3b7ff56943eea0fdacac",
+      "download_url": "https://ndownloader.figshare.com/files/54824087"
+    },
+    {
+      "name": "23_FFI_P101_T00041.zip",
+      "size_bytes": 2287912,
+      "md5": "7aafc6c2c5231154b10229dceb9f8312",
+      "download_url": "https://ndownloader.figshare.com/files/54824090"
+    },
+    {
+      "name": "23_FFI_P101_T00042.zip",
+      "size_bytes": 2926567,
+      "md5": "2ae8e021de0c25a3e406444b09a24e68",
+      "download_url": "https://ndownloader.figshare.com/files/54824093"
+    },
+    {
+      "name": "23_FFI_P101_T00044.zip",
+      "size_bytes": 2840050,
+      "md5": "da93654658cfeb24025b2285b366a858",
+      "download_url": "https://ndownloader.figshare.com/files/54824096"
+    },
+    {
+      "name": "23_FFI_P101_T00045.zip",
+      "size_bytes": 2302256,
+      "md5": "55f7ca90eecd913031c1d69487e56026",
+      "download_url": "https://ndownloader.figshare.com/files/54824099"
+    }
+  ],
+  "experiment_mapping": [
+    {
+      "archive_stem": "23_FFI_P101_T00014",
+      "article_test": "test-01-0"
+    },
+    {
+      "archive_stem": "23_FFI_P101_T00012",
+      "article_test": "test-02-0A"
+    },
+    {
+      "archive_stem": "23_FFI_P101_T00013",
+      "article_test": "test-02-0B"
+    },
+    {
+      "archive_stem": "23_FFI_P101_T00026",
+      "article_test": "test-03-0"
+    },
+    {
+      "archive_stem": "23_FFI_P101_T00006",
+      "article_test": "test-04-0"
+    },
+    {
+      "archive_stem": "23_FFI_P101_T00003",
+      "article_test": "test-05-0A"
+    },
+    {
+      "archive_stem": "23_FFI_P101_T00004",
+      "article_test": "test-05-0B"
+    },
+    {
+      "archive_stem": "23_FFI_P101_T00005",
+      "article_test": "test-05-0C"
+    },
+    {
+      "archive_stem": "23_FFI_P101_T00008",
+      "article_test": "test-06-0A"
+    },
+    {
+      "archive_stem": "23_FFI_P101_T00009",
+      "article_test": "test-06-0B"
+    },
+    {
+      "archive_stem": "23_FFI_P101_T00007",
+      "article_test": "test-07-0"
+    },
+    {
+      "archive_stem": "23_FFI_P101_T00011",
+      "article_test": "test-08-0"
+    },
+    {
+      "archive_stem": "23_FFI_P101_T00027",
+      "article_test": "test-02-1A"
+    },
+    {
+      "archive_stem": "23_FFI_P101_T00028",
+      "article_test": "test-02-1B"
+    },
+    {
+      "archive_stem": "23_FFI_P101_T00029",
+      "article_test": "test-05-1A"
+    },
+    {
+      "archive_stem": "23_FFI_P101_T00030",
+      "article_test": "test-05-1B"
+    },
+    {
+      "archive_stem": "23_FFI_P101_T00031",
+      "article_test": "test-08-1"
+    },
+    {
+      "archive_stem": "23_FFI_P101_T00040",
+      "article_test": "test-02-2A"
+    },
+    {
+      "archive_stem": "23_FFI_P101_T00041",
+      "article_test": "test-02-2B"
+    },
+    {
+      "archive_stem": "23_FFI_P101_T00042",
+      "article_test": "test-05-2"
+    },
+    {
+      "archive_stem": "23_FFI_P101_T00045",
+      "article_test": "test-02-3"
+    },
+    {
+      "archive_stem": "23_FFI_P101_T00044",
+      "article_test": "test-05-3"
+    }
+  ],
+  "sample_schema_checks": [
+    {
+      "archive": "h2channel_T00014.zip",
+      "csv_member": "23_FFI_P101_T00014.csv",
+      "archive_sha256": "c571ba54c3d61faf467b9a85c5707b1983344335d3cd460705759c43ca2eac03",
+      "row_count": 18799,
+      "column_count": 37,
+      "hydrogen_sensor_column_count": 29,
+      "required_time_pressure_flow_headers": true,
+      "concentration_unit_declared": true,
+      "raw_rows_committed": false
+    },
+    {
+      "archive": "h2channel_T00012.zip",
+      "csv_member": "23_FFI_P101_T00012.csv",
+      "archive_sha256": "8dc8a7040b6f894c75a4aed3f8791f3e446a4512a3a3c3c04bc71a735a3a8eeb",
+      "row_count": 19411,
+      "column_count": 37,
+      "hydrogen_sensor_column_count": 29,
+      "required_time_pressure_flow_headers": true,
+      "concentration_unit_declared": true,
+      "raw_rows_committed": false
+    },
+    {
+      "archive": "h2channel_T00045.zip",
+      "csv_member": "23_FFI_P101_T00045.csv",
+      "archive_sha256": "81e31b7262b6f590957bce4129539376a029019c8d858bb3a52013f79dac9e07",
+      "row_count": 31559,
+      "column_count": 37,
+      "hydrogen_sensor_column_count": 29,
+      "required_time_pressure_flow_headers": true,
+      "concentration_unit_declared": true,
+      "raw_rows_committed": false
+    },
+    {
+      "archive": "h2channel_T00040.zip",
+      "csv_member": "23_FFI_P101_T00040.csv",
+      "archive_sha256": "2b0e70df3740f3ebc351e40904d5ed3a4374f72cd066e80a84ad5a55ed9f4e39",
+      "row_count": 30370,
+      "column_count": 37,
+      "hydrogen_sensor_column_count": 29,
+      "required_time_pressure_flow_headers": true,
+      "concentration_unit_declared": true,
+      "raw_rows_committed": false
+    }
+  ],
+  "eligibility": {
+    "schema_screen_pass": true,
+    "independent_actual_hydrogen_component_candidate": true,
+    "spatial_sensor_coordinate_table_present_in_sample": false,
+    "station_to_vehicle_full_loop": false,
+    "runtime_parameter_application": false,
+    "validation_gate_promoted": false
+  },
+  "next_action": "Freeze a geometry-aware, concentration-unit-preserving pre-access protocol using the published Table 1 sensor coordinates and reserve disjoint experiment IDs before reading outcome rows.",
+  "claim_boundary": "This is a public actual-hydrogen component-data inventory and schema screen. It does not validate the station twin, HRS consequence distances, ESD, vehicle filling, SAGA effectiveness, or any runtime parameter."
+}

@@ -57,6 +57,9 @@ _H2SAFE_GEOMETRY_CONTAINMENT = _ROOT / (
 _PUBLIC_STATION_VEHICLE_SEARCH_RECHECK = _ROOT / (
     "research/public_station_vehicle_search_recheck_2026_10_12.json"
 )
+_PUBLIC_ACTUAL_H2_CHANNEL_DATASET = _ROOT / (
+    "research/public_actual_h2_channel_dataset_inventory_2026_10_12.json"
+)
 _LOCAL_HRS_CANDIDATE_SCAN = _ROOT / (
     "research/local_hydrogen_station_sim_candidate_scan_2026_10_10.json"
 )
@@ -878,6 +881,52 @@ def _public_station_vehicle_search_recheck_summary() -> dict[str, Any] | None:
         return None
 
 
+def _public_actual_h2_channel_dataset_summary() -> dict[str, Any] | None:
+    """Expose the actual-H2 component dataset as a bounded candidate only."""
+
+    try:
+        record = _read_json(_PUBLIC_ACTUAL_H2_CHANNEL_DATASET)
+        source = record.get("source") or {}
+        scope = record.get("dataset_scope") or {}
+        eligibility = record.get("eligibility") or {}
+        if not (
+            record.get("artifact_type") == "public_actual_h2_channel_dataset_inventory"
+            and str(source.get("doi") or "").lower() == "10.23642/usn.26117989.v2"
+            and source.get("article_doi") == "10.1016/j.jlp.2025.105669"
+            and source.get("license") == "CC BY 4.0"
+            and scope.get("experiment_count") == 22
+            and scope.get("sensor_count") == 29
+            and eligibility.get("schema_screen_pass") is True
+            and eligibility.get("independent_actual_hydrogen_component_candidate") is True
+            and eligibility.get("station_to_vehicle_full_loop") is False
+            and eligibility.get("runtime_parameter_application") is False
+            and eligibility.get("validation_gate_promoted") is False
+            and isinstance(record.get("claim_boundary"), str)
+        ):
+            return None
+        return {
+            "status": "PUBLIC_ACTUAL_H2_DISPERSION_INVENTORY",
+            "evidence_role": "independent public actual-hydrogen component dataset candidate",
+            "source_doi": str(source["doi"]),
+            "article_doi": str(source["article_doi"]),
+            "license": str(source["license"]),
+            "experiment_count": int(scope["experiment_count"]),
+            "sensor_count": int(scope["sensor_count"]),
+            "channel_families": [str(item) for item in scope.get("channel_families") or []],
+            "geometry_context": str(scope.get("geometry_context") or ""),
+            "schema_screen_pass": True,
+            "independent_actual_hydrogen_component_candidate": True,
+            "station_to_vehicle_full_loop": False,
+            "runtime_parameter_application": False,
+            "validation_gate_promoted": False,
+            "full_loop_external_validation_ready": False,
+            "promotion_prohibited": True,
+            "claim_limit": str(record["claim_boundary"]),
+        }
+    except (OSError, KeyError, TypeError, ValueError, json.JSONDecodeError):
+        return None
+
+
 def _dickens_geometry_followup_summary() -> dict[str, Any] | None:
     """Expose the source-grounded follow-up candidate without promotion."""
 
@@ -1666,6 +1715,25 @@ def public_evidence_inventory_summary() -> dict[str, Any]:
             "reentry_condition": "No public station-to-vehicle search recheck is available.",
             "claim_boundary": "Availability evidence is unavailable; no public full-loop claim is permitted.",
         },
+        "public_actual_h2_channel_dataset": {
+            "status": "unavailable",
+            "evidence_role": "independent public actual-hydrogen component dataset candidate",
+            "source_doi": None,
+            "article_doi": None,
+            "license": None,
+            "experiment_count": 0,
+            "sensor_count": 0,
+            "channel_families": [],
+            "geometry_context": "",
+            "schema_screen_pass": False,
+            "independent_actual_hydrogen_component_candidate": False,
+            "station_to_vehicle_full_loop": False,
+            "runtime_parameter_application": False,
+            "validation_gate_promoted": False,
+            "full_loop_external_validation_ready": False,
+            "promotion_prohibited": True,
+            "claim_limit": "Public actual-H2 channel evidence is unavailable; no component-validation claim is permitted.",
+        },
         "public_dickens_geometry_followup_candidate": {
             "status": "unavailable",
             "runtime_parameter_application": False,
@@ -2057,6 +2125,9 @@ def public_evidence_inventory_summary() -> dict[str, Any]:
     station_vehicle_search = _public_station_vehicle_search_recheck_summary()
     if station_vehicle_search is not None:
         result["public_station_vehicle_search_recheck"] = station_vehicle_search
+    actual_h2_channel = _public_actual_h2_channel_dataset_summary()
+    if actual_h2_channel is not None:
+        result["public_actual_h2_channel_dataset"] = actual_h2_channel
     dickens = _dickens_geometry_followup_summary()
     if dickens is not None:
         result["public_dickens_geometry_followup_candidate"] = dickens
