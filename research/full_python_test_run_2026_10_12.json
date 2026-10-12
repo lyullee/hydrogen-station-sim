@@ -1,17 +1,18 @@
 {
   "schema_version": 1,
   "artifact_type": "full_python_test_run",
-  "generated_at": "2026-10-12T00:02:05.215180+00:00",
+  "generated_at": "2026-10-12T11:18:32+09:00",
   "command": "python -m pytest -q",
   "status": "PASS",
-  "tests_passed": 1463,
+  "tests_passed": 1468,
   "tests_failed": 0,
   "tests_skipped": 6,
   "warnings": 209,
-  "duration_seconds": 268.07,
-  "source_commit": "4b73ec651bb81d81ce3b11160b6600f59d16d92a",
+  "duration_seconds": 239.23,
+  "source_commit": "27a07bf8ccae3337e835d593171e54885f82ffdc",
   "environment_note": "Executed after installing the declared runtime/test dependencies in the local environment; no repository dependency files were changed.",
   "claim_boundary": "Software and evidence-contract regression only; this does not convert pending or failed external physical-validation gates into passes.",
-  "elapsed_seconds": 268.07,
-  "working_tree_dirty_at_run": false
+  "elapsed_seconds": 239.23,
+  "working_tree_dirty_at_run": false,
+  "run_recorded_at": "2026-10-12T11:18:32+09:00"
 }
