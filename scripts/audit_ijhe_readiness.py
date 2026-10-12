@@ -31,6 +31,21 @@ def _sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
+def _repo_path(root: Path, relative: object) -> Path:
+    """Resolve an artifact path independent of the host path separator.
+
+    Evidence manifests are JSON and a few of the older records were produced
+    on Windows, so they contain ``\\`` separators.  ``Path`` treats those as
+    ordinary characters on Linux, which made the readiness audit report a
+    different set of gates in CI than it did locally.  Normalize only the
+    manifest-relative portion; the checked-out repository root remains a
+    native ``Path``.
+    """
+
+    value = str(relative or "").replace("\\", "/")
+    return root / value
+
+
 def _nrel_xlsx_schema_without_openpyxl(path: Path) -> dict[str, Any]:
     """Read the small schema surface needed by the NREL audit from XLSX XML.
 
@@ -168,7 +183,7 @@ def _protocol_integrity(root: Path, manifest: dict[str, Any] | None) -> tuple[bo
         return False, ["protocol manifest missing or invalid"]
     mismatches = []
     for relative, expected in (manifest.get("required_file_sha256") or {}).items():
-        path = root / relative
+        path = _repo_path(root, relative)
         if not path.is_file() or _sha256(path) != expected:
             mismatches.append(relative)
     return not mismatches, mismatches
@@ -570,12 +585,12 @@ def audit(root: Path) -> dict[str, object]:
     tank_runtime_hashes = (tank_runtime or {}).get("source_hashes") or {}
     tank_runtime_sources_match = bool(tank_runtime_hashes) and all(
         isinstance(expected, str)
-        and (root / relative).is_file()
-        and _sha256(root / relative) == expected
+        and _repo_path(root, relative).is_file()
+        and _sha256(_repo_path(root, relative)) == expected
         for relative, expected in tank_runtime_hashes.items()
     )
     tank_runtime_recheck = (tank_runtime or {}).get("recheck") or {}
-    tank_runtime_recheck_path = root / str(tank_runtime_recheck.get("artifact") or "")
+    tank_runtime_recheck_path = _repo_path(root, tank_runtime_recheck.get("artifact"))
     tank_runtime_pass = bool(
         (tank_runtime or {}).get("artifact_type")
         == "public_type_iv_tank_runtime_calibration_audit"
@@ -2698,8 +2713,8 @@ def audit(root: Path) -> dict[str, object]:
         set(integrated_inputs) == set(integrated_expected_inputs)
         and all(
             integrated_inputs[input_id].get("artifact") == relative
-            and (root / relative).is_file()
-            and integrated_inputs[input_id].get("sha256") == _sha256(root / relative)
+            and _repo_path(root, relative).is_file()
+            and integrated_inputs[input_id].get("sha256") == _sha256(_repo_path(root, relative))
             for input_id, relative in integrated_expected_inputs.items()
         )
     )
@@ -3382,7 +3397,7 @@ def audit(root: Path) -> dict[str, object]:
         and "not evidence" in str((acquisition_tracker or {}).get("claim_boundary", "")).lower()
         and all(
             isinstance(candidate.get("draft"), str)
-            and (root / candidate["draft"]).is_file()
+            and _repo_path(root, candidate["draft"]).is_file()
             and str(candidate.get("source", "")).startswith(("http://", "https://"))
             for candidate in acquisition_candidates
         )
@@ -3710,8 +3725,8 @@ def audit(root: Path) -> dict[str, object]:
     elvhys_v1 = _json(elvhys_v1_path)
     elvhys_v2 = _json(elvhys_v2_path)
     elvhys_intake = _json(elvhys_intake_path)
-    elvhys_v1_protocol = root / str(((elvhys_v1 or {}).get("protocol") or {}).get("path") or "")
-    elvhys_v2_protocol = root / str(((elvhys_v2 or {}).get("protocol") or {}).get("path") or "")
+    elvhys_v1_protocol = _repo_path(root, ((elvhys_v1 or {}).get("protocol") or {}).get("path"))
+    elvhys_v2_protocol = _repo_path(root, ((elvhys_v2 or {}).get("protocol") or {}).get("path"))
     elvhys_intake_aggregate = (elvhys_intake or {}).get("aggregate") or {}
     elvhys_holdout_integrity_pass = bool(
         (elvhys_v1 or {}).get("status") == "FAIL"
@@ -4068,7 +4083,7 @@ def audit(root: Path) -> dict[str, object]:
     molkov_aggregate = (molkov or {}).get("aggregate") or {}
     molkov_runtime = (molkov or {}).get("runtime_contract") or {}
     molkov_implementation = (molkov or {}).get("implementation") or {}
-    molkov_implementation_path = root / str(molkov_implementation.get("path") or "")
+    molkov_implementation_path = _repo_path(root, molkov_implementation.get("path"))
     molkov_implementation_hash_matches = bool(
         molkov_implementation.get("sha256")
         and molkov_implementation_path.is_file()
@@ -5408,8 +5423,8 @@ def audit(root: Path) -> dict[str, object]:
     replay_recipes = (replay or {}).get("family_recipes") or {}
     replay_model_hashes = replay_source.get("model_input_sha256") or {}
     replay_hashes_match = bool(replay_model_hashes) and all(
-        (root / relative).is_file()
-        and digest == _sha256(root / relative)
+        _repo_path(root, relative).is_file()
+        and digest == _sha256(_repo_path(root, relative))
         for relative, digest in replay_model_hashes.items()
     )
     replay_pass = bool(
@@ -5641,7 +5656,7 @@ def audit(root: Path) -> dict[str, object]:
     hiad_machine_paired = hiad_machine_aggregate.get("paired_machine_proxy_difference") or {}
     hiad_machine_result_protocol = (hiad_machine_result or {}).get("protocol") or {}
     hiad_machine_sources_match = all(
-        (root / relative).is_file() and _sha256(root / relative) == hiad_machine_frozen.get(key)
+        _repo_path(root, relative).is_file() and _sha256(_repo_path(root, relative)) == hiad_machine_frozen.get(key)
         for relative, key in (
             ("data/public_validation/processed/hiad_hrs_cases.jsonl", "hiad_cases_sha256"),
             ("research/hiad_action_evidence.json", "action_evidence_sha256"),
@@ -6387,13 +6402,13 @@ def audit(root: Path) -> dict[str, object]:
     }
     khk_replay_source_hashes_match = len(khk_source_records) == 4 and all(
         isinstance(record.get("path"), str)
-        and (root / record["path"]).is_file()
-        and record.get("sha256") == _sha256(root / record["path"])
+        and _repo_path(root, record["path"]).is_file()
+        and record.get("sha256") == _sha256(_repo_path(root, record["path"]))
         for record in khk_source_records.values()
     )
     khk_replay_model_hashes = khk_replay_source.get("model_input_sha256") or {}
     khk_replay_model_hashes_match = bool(khk_replay_model_hashes) and all(
-        (root / relative).is_file() and digest == _sha256(root / relative)
+        _repo_path(root, relative).is_file() and digest == _sha256(_repo_path(root, relative))
         for relative, digest in khk_replay_model_hashes.items()
     )
     khk_cases = (khk_replay or {}).get("cases") or []
@@ -7603,8 +7618,8 @@ def audit(root: Path) -> dict[str, object]:
     compile_pdf = (compile_status or {}).get("pdf") or {}
     compile_log = (compile_status or {}).get("compile_log") or {}
     compile_visual = (compile_status or {}).get("visual_qa") or {}
-    compile_source_path = root / str(compile_source.get("path") or "")
-    compile_pdf_path = root / str(compile_pdf.get("path") or "")
+    compile_source_path = _repo_path(root, compile_source.get("path"))
+    compile_pdf_path = _repo_path(root, compile_pdf.get("path"))
     compile_source_hash_matches = bool(
         compile_source_path.is_file()
         and compile_source.get("sha256") == _sha256(compile_source_path)
