@@ -2497,7 +2497,7 @@ def _public_h2safe_indoor_surrogate_evidence() -> dict[str, Any] | None:
         or eligibility.get("numerical_hydrogen_alarm_or_trip_threshold_calibration") is not False
     ):
         return None
-    return {
+    result = {
         "artifact": artifact,
         "doi": str(source.get("doi") or ""),
         "catalog_url": str(source.get("catalog_url") or ""),
@@ -2517,6 +2517,49 @@ def _public_h2safe_indoor_surrogate_evidence() -> dict[str, Any] | None:
         "runtime_parameter_updated": record.get("runtime_parameter_updated") is True,
         "claim_limit": str(record.get("claim_boundary") or ""),
     }
+
+    # Keep the latest public-record integrity recheck beside the evidence that
+    # the assistant cites.  This is provenance only: it must never be treated
+    # as a new spatial holdout or as permission to promote the helium data to
+    # a runtime detector rule.
+    recheck_path = Path(__file__).resolve().parents[2] / (
+        "research/h2safe_oedi_recheck_2026_10_12.json"
+    )
+    try:
+        recheck = json.loads(recheck_path.read_text(encoding="utf-8"))
+    except (OSError, ValueError, json.JSONDecodeError):
+        recheck = None
+    recheck_source = (recheck or {}).get("source") or {}
+    download = (recheck or {}).get("download_recheck") or {}
+    eligibility_recheck = (recheck or {}).get("eligibility_recheck") or {}
+    if (
+        isinstance(recheck, dict)
+        and recheck.get("artifact_type") == "h2safe_oedi_public_record_recheck"
+        and recheck_source.get("oedi_submission")
+        and recheck_source.get("record_title") == source.get("title")
+        and recheck_source.get("test_gas") == "helium surrogate"
+        and download.get("sha256") == source.get("archive_sha256")
+        and download.get("content_changed_since_prior_intake") is False
+        and eligibility_recheck.get("new_independent_holdout") is False
+        and eligibility_recheck.get("runtime_parameter_application") is False
+    ):
+        result["provenance_recheck"] = {
+            "artifact": "research/h2safe_oedi_recheck_2026_10_12.json",
+            "oedi_submission": recheck_source.get("oedi_submission"),
+            "recorded_at": recheck.get("recorded_at"),
+            "archive_sha256": download.get("sha256"),
+            "content_changed_since_prior_intake": False,
+            "new_independent_holdout": False,
+            "release_to_logger_time_crosswalk": eligibility_recheck.get(
+                "release_to_logger_time_crosswalk"
+            ),
+            "station_to_vehicle_full_loop": eligibility_recheck.get(
+                "station_to_vehicle_full_loop"
+            ),
+            "runtime_parameter_application": False,
+            "claim_limit": str(recheck.get("claim_boundary") or ""),
+        }
+    return result
 
 
 def _confidential_measured_boundary_evidence() -> dict[str, Any] | None:
@@ -11539,7 +11582,7 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
                 "qualitative_geometry_hvac_context_available",
                 "numerical_hydrogen_alarm_or_trip_threshold_calibration",
                 "full_loop_station_vehicle_validation",
-                "runtime_parameter_updated", "claim_limit",
+                "runtime_parameter_updated", "provenance_recheck", "claim_limit",
             )
             if h2safe_indoor.get(key) is not None
         }

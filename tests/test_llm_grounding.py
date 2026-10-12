@@ -510,6 +510,12 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert h2safe["lab_sensor_coordinate_counts"] == {"Lab-1": 24, "Lab-2": 37}
     assert h2safe["numerical_hydrogen_alarm_or_trip_threshold_calibration"] is False
     assert h2safe["runtime_parameter_updated"] is False
+    assert h2safe["provenance_recheck"]["artifact"] == (
+        "research/h2safe_oedi_recheck_2026_10_12.json"
+    )
+    assert h2safe["provenance_recheck"]["content_changed_since_prior_intake"] is False
+    assert h2safe["provenance_recheck"]["new_independent_holdout"] is False
+    assert h2safe["provenance_recheck"]["runtime_parameter_application"] is False
     tank_validation = idle["response_evidence"]["public_tank_validation_boundary"]
     assert tank_validation["evidence_role"] == (
         "independent_tank_thermal_external_validation"
@@ -579,6 +585,9 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert niu_summary["aggregate"]["release_pressure_mpa_levels"] == [20, 35, 45, 70]
     assert early["public_grune_ventilation_evidence"]["factor_count"] == 42
     assert early["public_h2safe_indoor_surrogate_evidence"]["case_count"] == 5
+    assert early["public_h2safe_indoor_surrogate_evidence"]["provenance_recheck"][
+        "new_independent_holdout"
+    ] is False
     assert early["public_dispersion_proxy_evidence"]["method"]["case_count"] == 22
     assert early["public_reference_leak_detector_evidence"][
         "observation_count"
