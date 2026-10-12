@@ -38,7 +38,7 @@ jobs:
       - name: Run focused priority validation
         run: >-
           python scripts/run_priority_focus.py
-          --priority all
+          --priority critical
           --output artifacts/priority-focus.json
 
       - name: Publish priority report

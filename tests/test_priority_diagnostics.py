@@ -78,6 +78,14 @@ def test_missing_public_input_is_an_explicit_availability_skip() -> None:
     assert _missing_public_input_reason(
         "FileNotFoundError: src/h2station/missing.py"
     ) is None
+    # The runner must classify the error before its privacy redactor replaces
+    # the checkout prefix with ``<local-path>``.
+    assert _missing_public_input_reason(
+        "FileNotFoundError: C:\\runner\\_work\\repo\\repo\\data\\public_validation\\raw\\input.csv"
+    ) is not None
+    assert _missing_public_input_reason(
+        r"FileNotFoundError: 'data\\public_validation\\processed\\cases.csv'"
+    ) is not None
 
 
 def test_optional_data_skips_do_not_fail_process_lane() -> None:

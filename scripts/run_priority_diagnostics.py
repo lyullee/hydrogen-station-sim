@@ -126,7 +126,10 @@ def _missing_public_input_reason(output: str) -> str | None:
     Keep this classifier narrow so ordinary diagnostic errors still fail CI.
     """
 
-    normalized = output.replace("\\", "/")
+    # Tracebacks render Windows separators inside quoted paths as doubled
+    # backslashes (``data\\\\public_validation``).  Normalize both a single
+    # separator and that repr-style doubled form before matching.
+    normalized = re.sub(r"/+", "/", output.replace("\\", "/"))
     if "FileNotFoundError" not in normalized:
         return None
     if "data/public_validation" not in normalized:
@@ -274,12 +277,17 @@ def _run_one(diagnostic: Diagnostic, timeout_s: float) -> dict[str, object]:
                 check=False,
             )
         payload = _parse_stdout_payload(completed.stdout)
-        output = _sanitize((completed.stdout + "\n" + completed.stderr).strip())
+        raw_output = (completed.stdout + "\n" + completed.stderr).strip()
+        # Classify unavailable public inputs before redacting local paths.  The
+        # redaction intentionally replaces the repository prefix, which would
+        # otherwise remove the ``data/public_validation`` marker used by the
+        # availability classifier and turn an expected CI skip into a failure.
         missing_input_reason = (
-            _missing_public_input_reason(output)
+            _missing_public_input_reason(raw_output)
             if completed.returncode != 0
             else None
         )
+        output = _sanitize(raw_output)
         return {
             "name": diagnostic.name,
             "priority": diagnostic.priority,
