@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "artifact_type": "hyddown_public_artifact_boundary",
+  "generated_at_utc": "2026-10-12T00:00:00Z",
+  "source": {
+    "repository": "https://github.com/andr1976/HydDown",
+    "source_commit": "1040d758b819533451086baa5cf2a47b4292a22f",
+    "repository_license": "MIT",
+    "license_scope_note": "The repository license is recorded; rights for underlying simulator exports and referenced experiments are not inferred beyond the repository statement."
+  },
+  "artifacts": [
+    {
+      "path": "validation/rupture_history.csv",
+      "sha256": "043af6fce972e772d2e9365324928fc6f02830722cc84708eea7d63a77a13c1f",
+      "rows": 1801,
+      "time_s": [0.5, 900.0],
+      "observed_schema": ["vapour_temperature", "vapour_pressure", "vapour_mass_flow", "vapour_out_temperature", "vapour_out_mass_flow", "vessel_vapour_mass", "heat_flow"],
+      "composition_indicator": "VapourOut - Comp Mole Frac (Methane) = 1",
+      "classification": "simulation_output_non_hydrogen",
+      "eligible_for_independent_hydrogen_validation": false,
+      "eligible_for_station_to_vehicle_validation": false,
+      "reason": "The trace is a HydDown methane two-phase/rupture calculation, not a hydrogen experiment or HRS logger export."
+    },
+    {
+      "path": "validation/rupture_history_jet.csv",
+      "sha256": "10f2f3096029d19cf661ca4642efee6c41c0a84ba7f5659b64f3ee681f93cf31",
+      "rows": 1801,
+      "time_s": [0.5, 900.0],
+      "observed_schema": ["vapour_temperature", "vapour_pressure", "vapour_mass_flow", "vapour_out_temperature", "vapour_out_mass_flow", "vessel_vapour_mass", "heat_flow"],
+      "composition_indicator": "VapourOut - Comp Mole Frac (Methane) = 1",
+      "classification": "simulation_output_non_hydrogen",
+      "eligible_for_independent_hydrogen_validation": false,
+      "eligible_for_station_to_vehicle_validation": false,
+      "reason": "The trace is a HydDown methane jet-fire/rupture calculation, not a hydrogen experiment or HRS logger export."
+    },
+    {
+      "path": "validation/Unisim_Type_IV.csv",
+      "sha256": "1b6f7a60ea6dcd59e2400cf508c8155737fcf00f37a612916c1ae4107aaa94dd",
+      "rows": 39,
+      "time_s": [0.1, 760.1],
+      "observed_schema": ["vessel_temperature", "vessel_pressure", "vessel_duty", "gas_pressure", "gas_temperature", "inner_wall_temperature", "outer_wall_temperature", "mass_flow"],
+      "units": {"pressure": "kPa", "temperature": "degC", "mass_flow": "kg/h"},
+      "classification": "commercial_simulator_cross_solver_output",
+      "eligible_for_independent_hydrogen_validation": false,
+      "eligible_for_station_to_vehicle_validation": false,
+      "eligible_for_cross_solver_diagnostic": true,
+      "reason": "The file is a Honeywell Unisim Design comparison export described by the HydDown manual. It has no measured experiment provenance, common station logger channels, or independent physical ground truth."
+    }
+  ],
+  "decision": {
+    "new_independent_public_holdout_found": false,
+    "runtime_parameter_changed": false,
+    "readiness_gate_promoted": false,
+    "raw_files_copied_to_repository": false,
+    "claim_boundary": "These artifacts may support a separately labelled solver-parity or source-boundary discussion only. They must not be presented as independent hydrogen experiment validation, station-to-vehicle validation, or field-safety evidence.",
+    "next_action": "Request a rights-cleared, outcome-unseen hydrogen pressure-temperature-mass trace with declared geometry and synchronized boundary metadata from an experimental custodian."
+  }
+}
