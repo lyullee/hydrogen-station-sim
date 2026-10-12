@@ -11,6 +11,7 @@ Original project software and associated documentation are available under the [
 - [Technical report](docs/TECHNICAL_REPORT.md): architecture, physical model, safety logic, APIs, LLM boundaries, validation and limits.
 - [User manual](docs/USER_MANUAL.md): startup, remote operation, incident exercises, response controls, trends and troubleshooting.
 - [Reproducible release candidate](docs/RELEASE_CANDIDATE_0.1.1_RC1.md): exact source boundary, CI evidence, readiness counts and remaining blockers.
+- [Promotional accuracy snapshot](docs/PROMOTIONAL_ACCURACY_SNAPSHOT_2026_10_12.md): claim-bounded metrics for software, tank, release, consequence and SAGA validation.
 - [Paper evaluation](docs/PAPER_EVALUATION.md): repeatable fueling-boundary metrics and alarm-only versus SAGA-PY A/B scoring.
 - [Public-data validation](docs/PUBLIC_VALIDATION.md): checksum-verified SAE J2601 experiments, HIAD incidents, dispersion data, and the publication-readiness gate.
 - [Local station-data inventory](research/LOCAL_HYDROGEN_STATION_DATA_DISCOVERY_RECHECK_2026_10_09.md): privacy-bounded inventory of the measured station-side archive, its validated uses and the remaining vehicle/full-loop boundary.
