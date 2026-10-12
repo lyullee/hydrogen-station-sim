@@ -28,5 +28,13 @@ the release direction vector, same-frame HVAC vectors, independently checked
 mesh registration, and the release-to-trace time crosswalk. The artifact is
 metadata-only and does not redistribute trace rows.
 
+The public OEDI package does contain ASCII STL/STEP geometry. The follow-up
+containment diagnostic
+`h2safe_geometry_sensor_containment_2026_10_12.json` confirms that all 61
+published sensor coordinates and both documented release coordinates fall inside
+their matching mesh bounding boxes. This is useful evidence for a candidate
+obstruction frame, but bounding-box containment is not an independent mesh
+registration; runtime use and pre-access validation remain closed.
+
 The machine-readable boundary and source hash are in
 `h2safe_directional_obstruction_development_2026_10_09.json`.

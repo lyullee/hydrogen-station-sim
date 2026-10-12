@@ -51,6 +51,9 @@ _H2SAFE_SPATIAL_DIAGNOSTIC = _ROOT / (
 _H2SAFE_HVAC_INPUT_READINESS = _ROOT / (
     "research/h2safe_hvac_input_readiness_2026_10_12.json"
 )
+_H2SAFE_GEOMETRY_CONTAINMENT = _ROOT / (
+    "research/h2safe_geometry_sensor_containment_2026_10_12.json"
+)
 _PUBLIC_STATION_VEHICLE_SEARCH_RECHECK = _ROOT / (
     "research/public_station_vehicle_search_recheck_2026_10_12.json"
 )
@@ -771,6 +774,44 @@ def _h2safe_hvac_input_readiness_summary() -> dict[str, Any] | None:
             ),
             "promotion_prohibited": True,
             "claim_limit": str(record.get("claim_boundary") or ""),
+        }
+    except (OSError, KeyError, TypeError, ValueError, json.JSONDecodeError):
+        return None
+
+
+def _h2safe_geometry_containment_summary() -> dict[str, Any] | None:
+    """Expose public mesh/sensor containment without implying registration."""
+
+    try:
+        record = _read_json(_H2SAFE_GEOMETRY_CONTAINMENT)
+        source = record.get("source") or {}
+        summary = record.get("summary") or {}
+        decision = record.get("decision") or {}
+        if not (
+            record.get("artifact_type") == "h2safe_geometry_sensor_containment_diagnostic"
+            and source.get("doi") == "10.7799/17118570"
+            and summary.get("status") == "CONTAINMENT_CONFIRMED_REGISTRATION_UNPROVEN"
+            and summary.get("all_sensor_points_inside_mesh_bounds") is True
+            and summary.get("all_release_points_inside_mesh_bounds") is True
+            and isinstance(summary.get("sensor_count"), int)
+            and isinstance(summary.get("sensor_containment_fraction"), (int, float))
+            and decision.get("runtime_application") is False
+            and decision.get("preaccess_spatial_validation_ready") is False
+            and isinstance(record.get("claim_boundary"), str)
+        ):
+            return None
+        return {
+            "status": str(summary["status"]),
+            "evidence_role": "public H2SAFE geometry/sensor containment diagnostic",
+            "source_doi": str(source["doi"]),
+            "sensor_count": int(summary["sensor_count"]),
+            "sensor_containment_fraction": float(summary["sensor_containment_fraction"]),
+            "all_sensor_points_inside_mesh_bounds": True,
+            "all_release_points_inside_mesh_bounds": True,
+            "runtime_parameter_application": False,
+            "preaccess_spatial_validation_ready": False,
+            "promotion_prohibited": True,
+            "claim_limit": str(record["claim_boundary"]),
         }
     except (OSError, KeyError, TypeError, ValueError, json.JSONDecodeError):
         return None
@@ -1599,6 +1640,19 @@ def public_evidence_inventory_summary() -> dict[str, Any]:
             "promotion_prohibited": True,
             "claim_limit": "H2SAFE HVAC input-readiness evidence is unavailable; no spatial-candidate claim is permitted.",
         },
+        "public_h2safe_geometry_containment": {
+            "status": "unavailable",
+            "evidence_role": "public H2SAFE geometry/sensor containment diagnostic",
+            "source_doi": None,
+            "sensor_count": 0,
+            "sensor_containment_fraction": 0.0,
+            "all_sensor_points_inside_mesh_bounds": False,
+            "all_release_points_inside_mesh_bounds": False,
+            "runtime_parameter_application": False,
+            "preaccess_spatial_validation_ready": False,
+            "promotion_prohibited": True,
+            "claim_limit": "H2SAFE geometry containment evidence is unavailable; no spatial-registration claim is permitted.",
+        },
         "public_station_vehicle_search_recheck": {
             "status": "unavailable",
             "recorded_at": None,
@@ -1997,6 +2051,9 @@ def public_evidence_inventory_summary() -> dict[str, Any]:
     h2safe_hvac = _h2safe_hvac_input_readiness_summary()
     if h2safe_hvac is not None:
         result["public_h2safe_hvac_input_readiness"] = h2safe_hvac
+    h2safe_geometry = _h2safe_geometry_containment_summary()
+    if h2safe_geometry is not None:
+        result["public_h2safe_geometry_containment"] = h2safe_geometry
     station_vehicle_search = _public_station_vehicle_search_recheck_summary()
     if station_vehicle_search is not None:
         result["public_station_vehicle_search_recheck"] = station_vehicle_search

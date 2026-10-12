@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "artifact_type": "h2safe_geometry_sensor_containment_diagnostic",
+  "recorded_at": "2026-10-12",
+  "source": {
+    "title": "Dataset for H2SAFE - Controlled Gas Releases and Sensor-Response for Indoor Hydrogen Safety",
+    "doi": "10.7799/17118570",
+    "dataset_package": "Dataset.zip",
+    "dataset_package_sha256": "f1b8bf747b7787f00152ec416940c80a143ea044fc18ee8a69ac9da204d9158e",
+    "hvac_metadata_sha256": "e99119f5f9aadac6e0bd8269b3fc7989a6026bc0a4c68221ea2a54b1eeee58bb"
+  },
+  "labs": {
+    "lab_1": {
+      "mesh_file": "extracted/Lab1_Small/Lab1_small.STL",
+      "sensor_file": "extracted/Lab1_Small/sensors.csv",
+      "mesh_bounds_m": {
+        "min_m": [
+          -10.2108,
+          -1.227856e-09,
+          -8.636
+        ],
+        "max_m": [
+          1.776357e-15,
+          10.0584,
+          8.881784e-16
+        ],
+        "vertex_count": 81636
+      },
+      "sensor_bounds_m": {
+        "min_m": [
+          -9.940925,
+          0.6096,
+          -6.905625
+        ],
+        "max_m": [
+          -1.28905,
+          9.87425,
+          -3.769098
+        ]
+      },
+      "sensor_count": 24,
+      "sensor_inside_mesh_count": 24,
+      "sensor_containment_fraction": 1.0,
+      "release_coordinate_m": [
+        -5.186701676,
+        1.580460097,
+        -4.322127
+      ],
+      "release_inside_mesh_bounds": true
+    },
+    "lab_2": {
+      "mesh_file": "extracted/Lab2_Large/Lab2_Large.STL",
+      "sensor_file": "extracted/Lab2_Large/sensors.csv",
+      "mesh_bounds_m": {
+        "min_m": [
+          -16.89554,
+          -2.166748e-07,
+          -1.310486e-08
+        ],
+        "max_m": [
+          6.247754e-07,
+          10.3632,
+          26.8224
+        ],
+        "vertex_count": 108480
+      },
+      "sensor_bounds_m": {
+        "min_m": [
+          -15.68824777,
+          0.6096,
+          10.20410075
+        ],
+        "max_m": [
+          -7.2501125,
+          10.2235,
+          26.7716
+        ]
+      },
+      "sensor_count": 37,
+      "sensor_inside_mesh_count": 37,
+      "sensor_containment_fraction": 1.0,
+      "release_coordinate_m": [
+        -11.63093726,
+        1.566073152,
+        15.86309373
+      ],
+      "release_inside_mesh_bounds": true
+    }
+  },
+  "summary": {
+    "sensor_count": 61,
+    "sensor_inside_mesh_count": 61,
+    "sensor_containment_fraction": 1.0,
+    "release_inside_mesh_bounds": {
+      "lab_1": true,
+      "lab_2": true
+    },
+    "all_sensor_points_inside_mesh_bounds": true,
+    "all_release_points_inside_mesh_bounds": true,
+    "status": "CONTAINMENT_CONFIRMED_REGISTRATION_UNPROVEN"
+  },
+  "decision": {
+    "runtime_application": false,
+    "preaccess_spatial_validation_ready": false,
+    "interpretation": "The public geometry and sensor/release coordinates are mutually contained at bounding-box level. This does not prove mesh-to-sensor registration, vent vectors, release azimuth, obstruction semantics, or time alignment.",
+    "next_action": "Use the published meshes as a candidate obstruction frame only after an independently documented registration and a release-to-trace clock crosswalk are frozen."
+  },
+  "claim_boundary": "This is a geometry-containment diagnostic only. It is not a CFD result, detector-placement validation, hydrogen-model calibration, consequence-distance estimate, or runtime safety claim."
+}

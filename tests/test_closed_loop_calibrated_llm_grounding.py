@@ -1,6 +1,10 @@
 import pytest
 
-from h2station.llm_grounding import build_evidence_manifest, prompt_evidence_summary
+from h2station.llm_grounding import (
+    build_evidence_manifest,
+    prompt_decision_evidence,
+    prompt_evidence_summary,
+)
 
 
 def test_calibrated_confirmatory_diagnostic_is_grounded_as_non_validation():
@@ -148,3 +152,21 @@ def test_h2safe_hvac_input_boundary_is_grounded_without_spatial_promotion():
     ]
     assert compact["source_doi"] == "10.7799/17118570"
     assert compact["promotion_prohibited"] is True
+
+
+def test_h2safe_geometry_containment_is_grounded_without_registration_promotion():
+    manifest = build_evidence_manifest(
+        {"time_s": 1.0}, {}, [], False, question="H2SAFE 형상 좌표 등록 근거"
+    )
+    evidence = manifest["response_evidence"]["public_h2safe_geometry_containment"]
+    assert evidence["status"] == "CONTAINMENT_CONFIRMED_REGISTRATION_UNPROVEN"
+    assert evidence["sensor_count"] == 61
+    assert evidence["sensor_containment_fraction"] == 1.0
+    assert evidence["all_release_points_inside_mesh_bounds"] is True
+    assert evidence["runtime_parameter_application"] is False
+    assert evidence["preaccess_spatial_validation_ready"] is False
+    compact = prompt_evidence_summary(manifest)["public_h2safe_geometry_containment"]
+    assert compact["promotion_prohibited"] is True
+    assert compact["preaccess_spatial_validation_ready"] is False
+    decision = prompt_decision_evidence(manifest)["decision_support_evidence"]
+    assert decision["public_h2safe_geometry_containment"]["sensor_count"] == 61

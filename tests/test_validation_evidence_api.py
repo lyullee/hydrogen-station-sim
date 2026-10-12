@@ -152,6 +152,15 @@ def test_validation_evidence_surface_is_privacy_bounded_and_claim_limited() -> N
     assert h2safe_hvac["lab_2_duct_count"] == 8
     assert h2safe_hvac["runtime_parameter_application"] is False
     assert h2safe_hvac["promotion_prohibited"] is True
+    h2safe_geometry = inventory["public_h2safe_geometry_containment"]
+    assert h2safe_geometry["status"] == "CONTAINMENT_CONFIRMED_REGISTRATION_UNPROVEN"
+    assert h2safe_geometry["sensor_count"] == 61
+    assert h2safe_geometry["sensor_containment_fraction"] == 1.0
+    assert h2safe_geometry["all_sensor_points_inside_mesh_bounds"] is True
+    assert h2safe_geometry["all_release_points_inside_mesh_bounds"] is True
+    assert h2safe_geometry["runtime_parameter_application"] is False
+    assert h2safe_geometry["preaccess_spatial_validation_ready"] is False
+    assert h2safe_geometry["promotion_prohibited"] is True
     station_vehicle_search = inventory["public_station_vehicle_search_recheck"]
     assert station_vehicle_search["recorded_at"] == "2026-10-12"
     assert station_vehicle_search["source_count"] == 11

@@ -10170,6 +10170,19 @@ def build_evidence_manifest(
         envelope["response_evidence"][
             "public_h2safe_hvac_input_readiness"
         ] = h2safe_hvac
+    h2safe_geometry = (
+        public_inventory.get("public_h2safe_geometry_containment")
+        if isinstance(public_inventory, dict)
+        else None
+    )
+    if (
+        isinstance(h2safe_geometry, dict)
+        and h2safe_geometry.get("status")
+        == "CONTAINMENT_CONFIRMED_REGISTRATION_UNPROVEN"
+    ):
+        envelope["response_evidence"][
+            "public_h2safe_geometry_containment"
+        ] = h2safe_geometry
     dickens_followup = (
         public_inventory.get("public_dickens_geometry_followup_candidate")
         if isinstance(public_inventory, dict)
@@ -10971,6 +10984,19 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
                 "promotion_prohibited", "claim_limit",
             )
             if h2safe_hvac.get(key) is not None
+        }
+    h2safe_geometry = evidence.get("public_h2safe_geometry_containment")
+    if isinstance(h2safe_geometry, dict):
+        summary["public_h2safe_geometry_containment"] = {
+            key: h2safe_geometry.get(key)
+            for key in (
+                "status", "evidence_role", "source_doi", "sensor_count",
+                "sensor_containment_fraction", "all_sensor_points_inside_mesh_bounds",
+                "all_release_points_inside_mesh_bounds", "runtime_parameter_application",
+                "preaccess_spatial_validation_ready", "promotion_prohibited",
+                "claim_limit",
+            )
+            if h2safe_geometry.get(key) is not None
         }
     public_measurement = evidence.get("public_measurement_instrumentation")
     if isinstance(public_measurement, dict):
@@ -12632,6 +12658,9 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
     h2safe_hvac = response.get(
         "public_h2safe_hvac_input_readiness"
     ) or {}
+    h2safe_geometry = response.get(
+        "public_h2safe_geometry_containment"
+    ) or {}
     hytunnel_diagnostic = response.get(
         "public_hytunnel_failure_diagnostic"
     ) or {}
@@ -13256,6 +13285,19 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
             },
         } if h2safe_hvac else {}),
         **({
+            "public_h2safe_geometry_containment": {
+                key: h2safe_geometry.get(key)
+                for key in (
+                    "status", "evidence_role", "source_doi", "sensor_count",
+                    "sensor_containment_fraction", "all_sensor_points_inside_mesh_bounds",
+                    "all_release_points_inside_mesh_bounds", "runtime_parameter_application",
+                    "preaccess_spatial_validation_ready", "promotion_prohibited",
+                    "claim_limit",
+                )
+                if h2safe_geometry.get(key) is not None
+            },
+        } if h2safe_geometry else {}),
+        **({
             "station_side_data_scope": station_side_data_scope,
         } if station_side_data_scope is not None else {}),
         **({
@@ -13349,6 +13391,19 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                     if h2safe_hvac.get(key) is not None
                 },
             } if h2safe_hvac else {}),
+            **({
+                "public_h2safe_geometry_containment": {
+                    key: h2safe_geometry.get(key)
+                    for key in (
+                        "status", "evidence_role", "source_doi", "sensor_count",
+                        "sensor_containment_fraction", "all_sensor_points_inside_mesh_bounds",
+                        "all_release_points_inside_mesh_bounds", "runtime_parameter_application",
+                        "preaccess_spatial_validation_ready", "promotion_prohibited",
+                        "claim_limit",
+                    )
+                    if h2safe_geometry.get(key) is not None
+                },
+            } if h2safe_geometry else {}),
             **({
                 "public_mhc_component_screen": {
                     key: mhc_component.get(key)

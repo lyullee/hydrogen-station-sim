@@ -70,6 +70,8 @@ DEFAULT_CHECKS: tuple[PriorityCheck, ...] = (
         (
             "-m", "pytest",
             "tests/test_llm_validation_gap_grounding.py",
+            "tests/test_closed_loop_calibrated_llm_grounding.py",
+            "tests/test_h2safe_geometry_sensor_containment.py",
             "tests/test_validation_evidence_api.py",
             "tests/test_ijhe_claim_evidence_matrix.py",
             "-q",
