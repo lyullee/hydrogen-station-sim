@@ -7,6 +7,13 @@ on:
     branches: [main]
   workflow_dispatch:
 
+# A burst of small evidence commits should leave one authoritative validation
+# run per branch/PR.  Cancelling an obsolete run avoids stale failure emails
+# while preserving the result for the newest commit.
+concurrency:
+  group: priority-validation-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 
