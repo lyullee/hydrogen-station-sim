@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "artifact_type": "public_pressure_decay_candidate_recheck",
+  "recorded_at": "2026-10-12",
+  "purpose": "Record an outcome-unseen public-source check for an additional high-pressure hydrogen release experiment before considering any new validation protocol.",
+  "source": {
+    "title": "Experimental study of pressure dynamics, spontaneous ignition and flame propagation during hydrogen release from high-pressure storage tank through 15 mm diameter tube and exhaust chamber connected to atmosphere",
+    "doi": "10.1016/j.fuel.2016.05.127",
+    "article_url": "https://www.sciencedirect.com/science/article/pii/S0016236116304501",
+    "doi_url": "https://doi.org/10.1016/j.fuel.2016.05.127",
+    "reported_apparatus": "approximately 0.44 L hydrogen tank, 15 mm x 360 mm tube, pressure/light sensing and high-speed video",
+    "reported_cases": 8
+  },
+  "search_actions": [
+    "checked the public publisher article record and DOI metadata",
+    "checked targeted public searches for a machine-readable pressure-time archive, supplementary workbook or repository deposit",
+    "did not transcribe plotted curves or use article-reported outcomes as validation data",
+    "did not alter the frozen model, thresholds or any runtime parameter"
+  ],
+  "access_result": {
+    "machine_readable_pressure_time_trace_found": false,
+    "rights_cleared_raw_archive_found": false,
+    "supplementary_outcome_file_found": false,
+    "apparatus_metadata_found": true,
+    "eligible_for_new_holdout": false
+  },
+  "decision": {
+    "new_protocol_frozen": false,
+    "validation_gate_effect": "none",
+    "runtime_change": false,
+    "next_evidence": "Obtain a rights-cleared complete pressure/light/time export and apparatus channel dictionary from the authors or a public repository, then freeze a protocol before opening numerical outcomes."
+  },
+  "claim_boundary": "This record is a public-access and eligibility recheck only. It does not validate pressure decay, release rate, ignition, flame propagation, consequence distance, station control, or the digital twin."
+}
