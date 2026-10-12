@@ -8,7 +8,7 @@
 
 | 관점 | 검증 결과 | 해석 |
 | --- | --- | --- |
-| 소프트웨어 재현성 | 기록된 전체 회귀 테스트 **1,468 passed / 0 failed**; 현재 커밋 핵심 경로 재실행 **65 passed / 0 failed** | 실행·계약·회귀 오류가 기록된 소스 커밋과 현재 LLM·사고대응 경로를 각각 확인함 |
+| 소프트웨어 재현성 | 기록된 전체 회귀 테스트 **1,487 passed / 0 failed**; 현재 커밋 핵심 경로 재실행 **65 passed / 0 failed** | 실행·계약·회귀 오류가 기록된 소스 커밋과 현재 LLM·사고대응 경로를 각각 확인함 |
 | 1차 연구범위 게이트 | **130 PASS / 141 = 92.2%** | 외부 물리검증과 메타데이터 보류 항목을 포함한 현재 연구범위의 진행도 |
 | 전체 증거 게이트 | **131 PASS / 148 = 88.5%** | 실패·보류 항목까지 포함한 보수적 폐쇄율 |
 | Type-IV 탱크 성능 | 12개 독립 holdout, 압력 RMSE **3.84 MPa**, 온도 RMSE **4.83 °C**, SOC RMSE **3.85 %p** | 공개 탱크 경계조건에 대한 성능. 충전소 전체나 차량 제어 검증은 아님 |
@@ -67,3 +67,4 @@ SAGA는 센서값, 사고 시나리오, 피해영향 계산, 공개 사고근거
 - `research/confidential_station_recharge_pressure_forecast_holdout_2026_10_08.json`
 - `research/hiad_digital_twin_replay_coverage_2026_10_08.json`
 - `research/llm_evidence_grounding_validation.json`
+

@@ -9,8 +9,7 @@ declared station-side primary scope. The full objective and bounded IJHE
 submission gate remain open. A documentation-consistency regression now reads
 the authoritative audit and checks the current technical report and user
 manual, preventing stale readiness numbers from being presented as current
-evidence. The latest full repository regression was **1,485 passed, 6 skipped,
-0 failed** (dependency/data-reader warnings only).
+evidence. The latest full repository regression was **1,487 passed, 6 skipped, 0 failed** (dependency/data-reader warnings only).
 
 ## 2026-10-11 - Recheck official public station-to-vehicle sources
 
@@ -2346,3 +2345,4 @@ the full-loop claim pass.
   feedback.
 - Focused verification: **38 passed** across direct Q&A, sensor analysis,
   virtual safety, grounding, HIAD action consistency, and readiness audit.
+
