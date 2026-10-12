@@ -1,11 +1,11 @@
 {
   "schema_version": 1,
   "artifact_type": "public_incident_evidence_traceability_summary",
-  "generated_at_utc": "2026-10-11T19:16:56.145837+00:00",
+  "generated_at_utc": "2026-10-12T00:19:55.536601+00:00",
   "sources": [
     {
       "path": "research/hiad_digital_twin_replay_coverage_2026_10_08.json",
-      "sha256": "a43f645c8e2fc468eb33edaecde7a31102eced4c9977de6af5e4968ff922f6df"
+      "sha256": "26978656a22337717cac0fca3ec1f88fe84b400b04d10647023fb1d64bfd7a4d"
     },
     {
       "path": "research/khk_digital_twin_replay_coverage_2026_10_08.json",

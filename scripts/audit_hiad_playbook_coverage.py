@@ -28,19 +28,29 @@ def candidate_plans(case: dict) -> list[str]:
         "title", "physical_effect", "consequence_nature", "sub_application", "supply_chain_stage"
     )).lower()
     plans: list[str] = []
+    # Treat an explicit public outcome of no hydrogen release as a negative
+    # observation.  A title such as "Release from the dispenser" can describe
+    # the suspected source, but it must not activate gas-release/fire physics
+    # when the recorded physical effect says that no hydrogen was released.
+    no_hydrogen_release = "no hydrogen release" in effect
     positive_ignition = (
-        "release and ignition" in effect
-        or consequence in {"fire", "explosion", "explosion followed by a fire"}
-        or title.startswith("fire ")
-        or title.startswith("explosion ")
+        not no_hydrogen_release
+        and (
+            "release and ignition" in effect
+            or consequence in {"fire", "explosion", "explosion followed by a fire"}
+            or title.startswith("fire ")
+            or title.startswith("explosion ")
+        )
     )
     if positive_ignition:
         plans.append("hydrogen_fire")
     positive_release = (
-        effect.startswith("unignited hydrogen release")
-        or "release and ignition" in effect
+        (not no_hydrogen_release and effect.startswith("unignited hydrogen release"))
+        or (not no_hydrogen_release and "release and ignition" in effect)
         or ("oil leak" not in title and any(token in title for token in ("release", "leak", "leakage")))
     )
+    if no_hydrogen_release:
+        positive_release = False
     if positive_release:
         plans.append("gas_release")
     if any(token in text for token in ("hose", "nozzle", "filling hose", "threaded joint")):

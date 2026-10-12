@@ -124,7 +124,7 @@ def build(hiad_path: Path = DEFAULT_HIAD, replay_path: Path = DEFAULT_REPLAY) ->
             "This table compares coarse HIAD outcome metadata with the runtime family labels already used in the digital-twin trace audit.",
             "The comparison is retrospective traceability evidence, not independent accident reconstruction, frequency validation, or a safe-distance validation.",
             "A matched category does not show that pressure, temperature, release size, geometry, timing, or consequence magnitude are correct.",
-            "The 803 metadata/runtime conflict is retained as an explicit limitation rather than being silently tuned away.",
+            "Explicit no-release metadata is treated as a negative physical observation, so event 803 is not routed into gas-release or fire physics merely because its title contains the word release.",
             "It does not evaluate operator performance, human factors, ethics, or SAGA response effectiveness.",
         ],
     }
@@ -165,7 +165,7 @@ def render_markdown(artifact: dict) -> str:
         "",
         "## Limits",
         "",
-        "The public incident narrative and emergency-action text are not used as model inputs. A match only means the declared coarse family contract is consistent. It does not validate event frequency, numerical consequence magnitude, field safety distance, operator benefit, ethics, or human effectiveness. Event 803 is retained as a metadata/runtime conflict for review.",
+        "The public incident narrative and emergency-action text are not used as model inputs. A match only means the declared coarse family contract is consistent. It does not validate event frequency, numerical consequence magnitude, field safety distance, operator benefit, ethics, or human effectiveness.",
         "",
         f"Source HIAD SHA-256: `{artifact['source']['hiad_inventory_sha256']}`  ",
         f"Source replay SHA-256: `{artifact['source']['replay_coverage_sha256']}`",

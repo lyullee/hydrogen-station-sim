@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "artifact_type": "hiad_to_digital_twin_canonical_replay_coverage_audit",
-  "generated_at_utc": "2026-10-11T17:06:56.542309+00:00",
+  "generated_at_utc": "2026-10-12T00:16:04.834682+00:00",
   "status": "completed_family_level_integration_audit",
   "evidence_role": "retrospective_metadata_to_canonical_runtime_traceability_only",
   "source": {
@@ -717,12 +717,10 @@
     {
       "event_id": "803",
       "candidate_plan_ids": [
-        "gas_release",
         "fueling_fault"
       ],
       "representation": "direct_physical_replay",
       "executed_recipe_ids": [
-        "gas_release",
         "fueling_fault"
       ],
       "failed_recipe_ids": [],

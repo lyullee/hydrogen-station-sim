@@ -3,9 +3,9 @@
 This artifact compares coarse public HIAD outcome metadata with the already frozen digital-twin replay family IDs. It is a traceability check, not accident reconstruction.
 
 - Cases joined: **34**
-- Category match: **33**
+- Category match: **34**
 - Partial: **0**
-- Metadata/runtime conflict: **1**
+- Metadata/runtime conflict: **0**
 - Integration traces passing: **34 / 34**
 
 ## Mapping contract
@@ -29,7 +29,7 @@ This artifact compares coarse public HIAD outcome metadata with the already froz
 | 454 | No Hydrogen Release | near miss | — | response_only_no_physical_model | matched |
 | 463 | Unignited Hydrogen Release | leak no ignition | `gas_release`, `fueling_fault` | direct_physical_replay | matched |
 | 702 | Unignited Hydrogen Release | leak no ignition | `gas_release`, `hose_connection` | direct_physical_replay | matched |
-| 803 | No Hydrogen Release | Near miss | `gas_release`, `fueling_fault` | direct_physical_replay | metadata_runtime_conflict |
+| 803 | No Hydrogen Release | Near miss | `fueling_fault` | direct_physical_replay | matched |
 | 884 | Hydrogen release and ignition | Explosion | `hydrogen_fire`, `gas_release`, `overpressure` | direct_physical_replay | matched |
 | 953 | Unignited Hydrogen Release | Leak no ignition | `gas_release` | direct_physical_replay | matched |
 | 1038 | No Hydrogen Release | near miss | `hose_connection`, `precooling_fault` | direct_physical_replay | matched |
@@ -57,7 +57,7 @@ This artifact compares coarse public HIAD outcome metadata with the already froz
 
 ## Limits
 
-The public incident narrative and emergency-action text are not used as model inputs. A match only means the declared coarse family contract is consistent. It does not validate event frequency, numerical consequence magnitude, field safety distance, operator benefit, ethics, or human effectiveness. Event 803 is retained as a metadata/runtime conflict for review.
+The public incident narrative and emergency-action text are not used as model inputs. A match only means the declared coarse family contract is consistent. It does not validate event frequency, numerical consequence magnitude, field safety distance, operator benefit, ethics, or human effectiveness.
 
-Source HIAD SHA-256: `27b7fc752fe7ad706eb48854447bb203605be30b745515a259fad89325cc2536`  
-Source replay SHA-256: `a43f645c8e2fc468eb33edaecde7a31102eced4c9977de6af5e4968ff922f6df`
+Source HIAD SHA-256: `27b7fc752fe7ad706eb48854447bb203605be30b745515a259fad89325cc2536`
+Source replay SHA-256: `26978656a22337717cac0fca3ec1f88fe84b400b04d10647023fb1d64bfd7a4d`

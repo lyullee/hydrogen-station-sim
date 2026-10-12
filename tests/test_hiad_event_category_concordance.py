@@ -31,9 +31,9 @@ def test_hiad_category_concordance_is_complete_and_bounded():
     assert len(cases) == 34
     assert len({case["event_id"] for case in cases}) == 34
     assert aggregate["category_concordance_counts"] == {
-        "matched": 33,
+        "matched": 34,
         "partial": 0,
-        "metadata_runtime_conflict": 1,
+        "metadata_runtime_conflict": 0,
         "not_comparable": 0,
     }
     assert aggregate["representation_case_counts"] == {
@@ -42,6 +42,6 @@ def test_hiad_category_concordance_is_complete_and_bounded():
         "response_only_no_physical_model": 1,
     }
     assert all("title" not in case and "narrative" not in case for case in cases)
-    conflict = next(case for case in cases if case["event_id"] == "803")
-    assert conflict["category_concordance"] == "metadata_runtime_conflict"
-    assert "gas_release" in conflict["executed_recipe_ids"]
+    event_803 = next(case for case in cases if case["event_id"] == "803")
+    assert event_803["category_concordance"] == "matched"
+    assert "gas_release" not in event_803["executed_recipe_ids"]

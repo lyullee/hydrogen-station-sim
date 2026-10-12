@@ -1,14 +1,14 @@
 {
   "schema_version": 1,
   "artifact_type": "hiad_public_metadata_to_runtime_family_concordance",
-  "generated_at_utc": "2026-10-11T17:07:36.888180+00:00",
+  "generated_at_utc": "2026-10-12T00:19:55.460271+00:00",
   "status": "completed_retrospective_category_concordance",
   "evidence_role": "supporting_traceability_only",
   "source": {
     "hiad_inventory": "research/hiad_hrs_public_evidence.json",
     "hiad_inventory_sha256": "27b7fc752fe7ad706eb48854447bb203605be30b745515a259fad89325cc2536",
     "replay_coverage": "research/hiad_digital_twin_replay_coverage_2026_10_08.json",
-    "replay_coverage_sha256": "a43f645c8e2fc468eb33edaecde7a31102eced4c9977de6af5e4968ff922f6df",
+    "replay_coverage_sha256": "26978656a22337717cac0fca3ec1f88fe84b400b04d10647023fb1d64bfd7a4d",
     "public_metadata_fields_used": [
       "physical_effect",
       "consequence_nature",
@@ -50,9 +50,9 @@
   "aggregate": {
     "case_count": 34,
     "category_concordance_counts": {
-      "matched": 33,
+      "matched": 34,
       "partial": 0,
-      "metadata_runtime_conflict": 1,
+      "metadata_runtime_conflict": 0,
       "not_comparable": 0
     },
     "representation_case_counts": {
@@ -242,13 +242,12 @@
         "hydrogen_fire"
       ],
       "executed_recipe_ids": [
-        "gas_release",
         "fueling_fault"
       ],
       "representation": "direct_physical_replay",
       "integration_trace_pass": true,
-      "category_concordance": "metadata_runtime_conflict",
-      "concordance_reason": "public metadata indicates no release but the candidate runtime includes a release family"
+      "category_concordance": "matched",
+      "concordance_reason": "required and prohibited family conditions are satisfied"
     },
     {
       "event_id": "884",
@@ -727,7 +726,7 @@
     "This table compares coarse HIAD outcome metadata with the runtime family labels already used in the digital-twin trace audit.",
     "The comparison is retrospective traceability evidence, not independent accident reconstruction, frequency validation, or a safe-distance validation.",
     "A matched category does not show that pressure, temperature, release size, geometry, timing, or consequence magnitude are correct.",
-    "The 803 metadata/runtime conflict is retained as an explicit limitation rather than being silently tuned away.",
+    "Explicit no-release metadata is treated as a negative physical observation, so event 803 is not routed into gas-release or fire physics merely because its title contains the word release.",
     "It does not evaluate operator performance, human factors, ethics, or SAGA response effectiveness."
   ]
 }

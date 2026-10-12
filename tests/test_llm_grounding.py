@@ -193,8 +193,8 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert "does not reconstruct any HIAD accident" in replay["claim_limit"]
     concordance = traceability["category_concordance"]
     assert concordance["case_count"] == 34
-    assert concordance["matched_case_count"] == 33
-    assert concordance["metadata_runtime_conflict_count"] == 1
+    assert concordance["matched_case_count"] == 34
+    assert concordance["metadata_runtime_conflict_count"] == 0
     assert concordance["incident_narrative_used"] is False
     assert "not independent accident reconstruction" in concordance["claim_limit"]
     summary_replay = prompt_evidence_summary(idle)["public_incident_traceability"][

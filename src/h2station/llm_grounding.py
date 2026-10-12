@@ -1127,8 +1127,8 @@ def _public_incident_traceability() -> dict[str, Any] | None:
         and concordance_aggregate.get("case_count") == 34
         and concordance_aggregate.get("integration_trace_pass_count") == 34
         and len(concordance_cases) == 34
-        and concordance_counts.get("matched") == 33
-        and concordance_counts.get("metadata_runtime_conflict") == 1
+        and concordance_counts.get("matched") == 34
+        and concordance_counts.get("metadata_runtime_conflict") == 0
         and concordance_counts.get("partial") == 0
         and concordance_counts.get("not_comparable") == 0
     ):
