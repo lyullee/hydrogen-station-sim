@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "artifact_type": "external_station_to_vehicle_public_raw_recheck",
+  "recorded_at": "2026-10-12",
+  "status": "NO_NEW_ELIGIBLE_PUBLIC_RAW_SET_IDENTIFIED",
+  "search_scope": {
+    "eligibility_rule": "A reusable measured experiment or in-use fill must expose station/controller and dispenser/nozzle plus vehicle/receptacle channels on one common time base, with units, initial conditions, tank capacity, protocol metadata and reuse terms.",
+    "fresh_sources_checked": [
+      "https://docs.h2-stations.eu/for-data-users/",
+      "https://observatory.clean-hydrogen.europa.eu/hydrogen-landscape/distribution-and-storage/hydrogen-refuelling-stations",
+      "https://doi.org/10.1016/j.jclepro.2021.129737",
+      "https://doi.org/10.1016/j.ijhydene.2023.04.084",
+      "https://www.energy.gov/sites/default/files/2024-04/h2iqhour-03262024.pdf",
+      "https://www.osti.gov/servlets/purl/1436732",
+      "https://www.osti.gov/servlets/purl/1799187",
+      "https://www.osti.gov/pages/biblio/2418489-experimental-comparison-hydrogen-refueling-directly-pressurized-vs-cascade-method"
+    ]
+  },
+  "findings": [
+    {
+      "source": "H2-Stations API and European Hydrogen Observatory",
+      "urls": [
+        "https://docs.h2-stations.eu/for-data-users/",
+        "https://observatory.clean-hydrogen.europa.eu/hydrogen-landscape/distribution-and-storage/hydrogen-refuelling-stations"
+      ],
+      "decision": "EXCLUDE_FROM_EXTERNAL_VALIDATION",
+      "role": "public station registry, layout and availability/usage/storage-status context",
+      "reason": "The published interfaces provide station metadata and status streams, not synchronized dispenser/controller, vehicle-side pressure/temperature and transferred-mass/flow logger rows."
+    },
+    {
+      "source": "Cal State LA HRFF back-to-back and multi-year operation studies",
+      "urls": [
+        "https://doi.org/10.1016/j.jclepro.2021.129737",
+        "https://doi.org/10.1016/j.ijhydene.2023.04.084",
+        "https://www.osti.gov/servlets/purl/1799187"
+      ],
+      "decision": "REQUEST_RAW_TRACE",
+      "role": "independent real-station operating-range and data-custodian lead",
+      "reason": "The public articles describe one-year or multi-year station logs and vehicle/fueling variables, but the accessible records do not provide reusable synchronized event rows, channel dictionary, calibration metadata and reuse terms."
+    },
+    {
+      "source": "NREL H2IQ 2024 heavy-duty fueling result",
+      "url": "https://www.energy.gov/sites/default/files/2024-04/h2iqhour-03262024.pdf",
+      "decision": "REPORT_SUMMARY_ONLY",
+      "role": "independent single-event protocol and operating-range context",
+      "reason": "The public presentation contains plotted station, hose, receptacle, manifold and tank signals plus aggregate fill metrics, but no row-level archive or reuse-cleared channel package."
+    },
+    {
+      "source": "DOE/OSTI Cal State LA data-program records",
+      "urls": [
+        "https://www.osti.gov/servlets/purl/1436732",
+        "https://www.osti.gov/servlets/purl/1799187",
+        "https://www.osti.gov/pages/biblio/2418489-experimental-comparison-hydrogen-refueling-directly-pressurized-vs-cascade-method"
+      ],
+      "decision": "REQUEST_RAW_TRACE",
+      "role": "provenance and acquisition lead",
+      "reason": "The records corroborate a real station, data-acquisition system and fueling experiments, but the public artifacts do not contain a rights-cleared synchronized station-to-vehicle raw export."
+    }
+  ],
+  "decision": {
+    "eligible_public_synchronized_station_to_vehicle_set_count": 0,
+    "full_loop_external_validation": "OUT_OF_SCOPE",
+    "primary_gate_changed": false,
+    "claim_boundary": "This is a data-availability audit. It does not prove that restricted, proprietary or unpublished traces do not exist, and it does not support a station-to-vehicle accuracy, vehicle-controller or field-safety validation claim.",
+    "reentry_condition": "A custodian supplies at least three rights-cleared common-clock events with station/controller, dispenser/nozzle and vehicle/receptacle channels, units, initial conditions, tank capacity and protocol metadata; freeze the scoring protocol before numerical outcome access."
+  }
+}
