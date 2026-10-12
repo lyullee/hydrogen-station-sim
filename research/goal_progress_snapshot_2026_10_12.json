@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-12T00:57:32+00:00",
+  "generated_at": "2026-10-12T01:39:08+00:00",
   "metric_definition": "PASS gates divided by PASS+FAIL+PENDING gates; not a publication-readiness probability",
   "gate_counts": {
     "PASS": 131,
@@ -59,7 +59,7 @@
       "publication_acceptance_or_probability"
     ],
     "next_high_impact_actions": [
-      "retry the range-capable KIT LH2 archive fetch after the RADAR rate limit cools, then verify the publisher MD5 before metadata-only inventory",
+      "obtain a stable KIT LH2 custodian/session transfer or retry after the RADAR rate limit cools, then verify the publisher MD5 before metadata-only inventory",
       "obtain an independent time-resolved measured pressure trace for the pending Grune holdout",
       "keep the blinded expert and prospective SAGA safety-effectiveness study optional; start it only if the manuscript claims improved human safety decisions"
     ],
@@ -168,6 +168,17 @@
           ]
         },
         "primary_gate_unchanged": true
+      },
+      "kit_lh2_download_recheck_2026_10_12": {
+        "evidence": "research/kit_lh2_download_recheck_2026_10_12.json",
+        "status": "RATE_LIMITED_HTTP_429",
+        "range_probe": "PASS",
+        "partial_archive_bytes": 964689920,
+        "publisher_bytes": 4971447808,
+        "publisher_md5_verified": false,
+        "numeric_signal_values_opened": false,
+        "stage1_promoted": false,
+        "claim_boundary": "This recheck establishes only intermittent range access and preserves the incomplete archive boundary. It does not validate release, dispersion, ignition, heat-flux, overpressure, HyRAM, station control or SAGA."
       }
     }
   }

@@ -77,7 +77,7 @@ def build_snapshot(
             ],
             "next_high_impact_actions": [
                 (
-                    "retry the range-capable KIT LH2 archive fetch after the RADAR rate limit cools, "
+                    "obtain a stable KIT LH2 custodian/session transfer or retry after the RADAR rate limit cools, "
                     "then verify the publisher MD5 before metadata-only inventory"
                 ),
                 "obtain an independent time-resolved measured pressure trace for the pending Grune holdout",
