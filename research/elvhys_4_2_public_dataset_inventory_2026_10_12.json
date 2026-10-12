@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "artifact_type": "public_elvhys_4_2_actual_cryogenic_hydrogen_inventory",
+  "recorded_at": "2026-10-12",
+  "source": {
+    "persistent_id": "doi:10.18710/JXJP0H",
+    "doi": "10.18710/JXJP0H",
+    "api_url": "https://dataverse.no/api/datasets/:persistentId/?persistentId=doi:10.18710/JXJP0H",
+    "landing_url": "https://dataverse.no/dataset.xhtml?persistentId=doi:10.18710/JXJP0H",
+    "title": "ELVHYS 4.2 - Leakage into cold room/tank connection space considering barriers and obstacles",
+    "license": "CC0 1.0",
+    "publication_date": "2025-07-01",
+    "version": "1.0"
+  },
+  "dataset_scope": {
+    "actual_cryogenic_hydrogen": true,
+    "experimental_campaign": "ELVHYS WP4.2",
+    "transfer_connection_space_volume_m3": 1.0,
+    "data_file_count": 198,
+    "case_id_count_with_public_data": 40,
+    "case_ids_with_public_data_min_max": [
+      3,
+      48
+    ],
+    "file_family_counts": {
+      "concentration": 40,
+      "flow_rate": 35,
+      "miscellaneous_weather": 40,
+      "pressure": 40,
+      "temperature": 40,
+      "metadata_or_readme": 3
+    },
+    "measured_channel_families": [
+      "hydrogen concentration",
+      "pressure",
+      "temperature",
+      "release flow rate",
+      "weather/ventilation",
+      "flame/ignition"
+    ],
+    "sampling_context": "mostly 20 Hz; selected pressure-peaking and ignition channels at higher rates",
+    "published_test_plan_count": 48,
+    "test_plan_rows_parsed": 48,
+    "test_plan_type_counts": {
+      "dispersion_horizontal": 28,
+      "pressure_peaking": 3,
+      "ignition": 11,
+      "dispersion_vertical": 6
+    },
+    "invalid_or_commissioning_count": 8,
+    "valid_or_usable_plan_count": 40
+  },
+  "integrity": {
+    "api_file_manifest_sha256": "d30a0c5668cfd9ea95abcf944a65ba62fdca18c5acf75733dfe8348284347cd9",
+    "readme_sha256": "c6166236c7087ba4a457990470a69c125df436ac20e67b4b35d94e3a3df3fc42",
+    "readme_bytes": 11305,
+    "raw_rows_committed": false,
+    "source_filenames_committed": false
+  },
+  "eligibility": {
+    "schema_screen_pass": true,
+    "independent_actual_cryogenic_hydrogen_component_candidate": true,
+    "dispersion_candidate": true,
+    "pressure_peaking_candidate": true,
+    "ignition_consequence_candidate": true,
+    "station_to_vehicle_full_loop": false,
+    "runtime_parameter_application": false,
+    "validation_gate_promoted": false
+  },
+  "next_action": "Freeze a pre-access channel/unit protocol and reserve disjoint test IDs before numerical outcome scoring.",
+  "claim_boundary": "Public ELVHYS 4.2 actual-cryogenic-hydrogen component evidence only. It does not validate the HRS station twin, vehicle fueling, ESD logic, site-specific consequence distances, or runtime parameters."
+}

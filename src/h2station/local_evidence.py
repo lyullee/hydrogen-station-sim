@@ -60,6 +60,9 @@ _PUBLIC_STATION_VEHICLE_SEARCH_RECHECK = _ROOT / (
 _PUBLIC_ACTUAL_H2_CHANNEL_DATASET = _ROOT / (
     "research/public_actual_h2_channel_dataset_inventory_2026_10_12.json"
 )
+_PUBLIC_ELVHYS_DATASET = _ROOT / (
+    "research/elvhys_4_2_public_dataset_inventory_2026_10_12.json"
+)
 _LOCAL_HRS_CANDIDATE_SCAN = _ROOT / (
     "research/local_hydrogen_station_sim_candidate_scan_2026_10_10.json"
 )
@@ -927,6 +930,78 @@ def _public_actual_h2_channel_dataset_summary() -> dict[str, Any] | None:
         return None
 
 
+def _public_elvhys_dataset_summary() -> dict[str, Any] | None:
+    """Expose public actual-cryogenic-hydrogen evidence without raw files."""
+
+    try:
+        record = _read_json(_PUBLIC_ELVHYS_DATASET)
+        source = record.get("source") or {}
+        scope = record.get("dataset_scope") or {}
+        families = scope.get("file_family_counts") or {}
+        eligibility = record.get("eligibility") or {}
+        if not (
+            record.get("artifact_type")
+            == "public_elvhys_4_2_actual_cryogenic_hydrogen_inventory"
+            and source.get("doi") == "10.18710/JXJP0H"
+            and source.get("license") == "CC0 1.0"
+            and scope.get("actual_cryogenic_hydrogen") is True
+            and scope.get("published_test_plan_count") == 48
+            and scope.get("case_id_count_with_public_data") == 40
+            and families.get("concentration") == 40
+            and families.get("pressure") == 40
+            and families.get("temperature") == 40
+            and eligibility.get(
+                "independent_actual_cryogenic_hydrogen_component_candidate"
+            ) is True
+            and eligibility.get("station_to_vehicle_full_loop") is False
+            and eligibility.get("runtime_parameter_application") is False
+            and eligibility.get("validation_gate_promoted") is False
+            and isinstance(record.get("claim_boundary"), str)
+        ):
+            return None
+        return {
+            "status": "PUBLIC_ELVHYS_ACTUAL_CRYOGENIC_H2_INVENTORY",
+            "evidence_role": "independent public actual-cryogenic-hydrogen component dataset candidate",
+            "source_doi": str(source["doi"]),
+            "license": str(source["license"]),
+            "experimental_campaign": str(scope.get("experimental_campaign") or ""),
+            "transfer_connection_space_volume_m3": float(
+                scope.get("transfer_connection_space_volume_m3") or 0.0
+            ),
+            "data_file_count": int(scope.get("data_file_count") or 0),
+            "case_id_count_with_public_data": int(
+                scope.get("case_id_count_with_public_data") or 0
+            ),
+            "published_test_plan_count": int(
+                scope.get("published_test_plan_count") or 0
+            ),
+            "test_plan_type_counts": {
+                str(key): int(value)
+                for key, value in (scope.get("test_plan_type_counts") or {}).items()
+            },
+            "measured_channel_families": [
+                str(item) for item in scope.get("measured_channel_families") or []
+            ],
+            "schema_screen_pass": True,
+            "independent_actual_cryogenic_hydrogen_component_candidate": True,
+            "dispersion_candidate": bool(eligibility.get("dispersion_candidate")),
+            "pressure_peaking_candidate": bool(
+                eligibility.get("pressure_peaking_candidate")
+            ),
+            "ignition_consequence_candidate": bool(
+                eligibility.get("ignition_consequence_candidate")
+            ),
+            "station_to_vehicle_full_loop": False,
+            "runtime_parameter_application": False,
+            "validation_gate_promoted": False,
+            "full_loop_external_validation_ready": False,
+            "promotion_prohibited": True,
+            "claim_limit": str(record["claim_boundary"]),
+        }
+    except (OSError, KeyError, TypeError, ValueError, json.JSONDecodeError):
+        return None
+
+
 def _dickens_geometry_followup_summary() -> dict[str, Any] | None:
     """Expose the source-grounded follow-up candidate without promotion."""
 
@@ -1734,6 +1809,30 @@ def public_evidence_inventory_summary() -> dict[str, Any]:
             "promotion_prohibited": True,
             "claim_limit": "Public actual-H2 channel evidence is unavailable; no component-validation claim is permitted.",
         },
+        "public_elvhys_dataset": {
+            "status": "unavailable",
+            "evidence_role": "independent public actual-cryogenic-hydrogen component dataset candidate",
+            "source_doi": None,
+            "license": None,
+            "experimental_campaign": "",
+            "transfer_connection_space_volume_m3": 0.0,
+            "data_file_count": 0,
+            "case_id_count_with_public_data": 0,
+            "published_test_plan_count": 0,
+            "test_plan_type_counts": {},
+            "measured_channel_families": [],
+            "schema_screen_pass": False,
+            "independent_actual_cryogenic_hydrogen_component_candidate": False,
+            "dispersion_candidate": False,
+            "pressure_peaking_candidate": False,
+            "ignition_consequence_candidate": False,
+            "station_to_vehicle_full_loop": False,
+            "runtime_parameter_application": False,
+            "validation_gate_promoted": False,
+            "full_loop_external_validation_ready": False,
+            "promotion_prohibited": True,
+            "claim_limit": "Public ELVHYS evidence is unavailable; no component-validation claim is permitted.",
+        },
         "public_dickens_geometry_followup_candidate": {
             "status": "unavailable",
             "runtime_parameter_application": False,
@@ -2128,6 +2227,9 @@ def public_evidence_inventory_summary() -> dict[str, Any]:
     actual_h2_channel = _public_actual_h2_channel_dataset_summary()
     if actual_h2_channel is not None:
         result["public_actual_h2_channel_dataset"] = actual_h2_channel
+    elvhys = _public_elvhys_dataset_summary()
+    if elvhys is not None:
+        result["public_elvhys_dataset"] = elvhys
     dickens = _dickens_geometry_followup_summary()
     if dickens is not None:
         result["public_dickens_geometry_followup_candidate"] = dickens

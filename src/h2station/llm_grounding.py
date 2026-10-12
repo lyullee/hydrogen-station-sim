@@ -10196,6 +10196,17 @@ def build_evidence_manifest(
         envelope["response_evidence"][
             "public_actual_h2_channel_dataset"
         ] = actual_h2_channel
+    elvhys = (
+        public_inventory.get("public_elvhys_dataset")
+        if isinstance(public_inventory, dict)
+        else None
+    )
+    if (
+        isinstance(elvhys, dict)
+        and elvhys.get("status")
+        == "PUBLIC_ELVHYS_ACTUAL_CRYOGENIC_H2_INVENTORY"
+    ):
+        envelope["response_evidence"]["public_elvhys_dataset"] = elvhys
     dickens_followup = (
         public_inventory.get("public_dickens_geometry_followup_candidate")
         if isinstance(public_inventory, dict)
@@ -11025,6 +11036,25 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
                 "promotion_prohibited", "claim_limit",
             )
             if actual_h2_channel.get(key) is not None
+        }
+    elvhys = evidence.get("public_elvhys_dataset")
+    if isinstance(elvhys, dict):
+        summary["public_elvhys_dataset"] = {
+            key: elvhys.get(key)
+            for key in (
+                "status", "evidence_role", "source_doi", "license",
+                "experimental_campaign", "transfer_connection_space_volume_m3",
+                "data_file_count", "case_id_count_with_public_data",
+                "published_test_plan_count", "test_plan_type_counts",
+                "measured_channel_families", "schema_screen_pass",
+                "independent_actual_cryogenic_hydrogen_component_candidate",
+                "dispersion_candidate", "pressure_peaking_candidate",
+                "ignition_consequence_candidate", "station_to_vehicle_full_loop",
+                "runtime_parameter_application", "validation_gate_promoted",
+                "full_loop_external_validation_ready", "promotion_prohibited",
+                "claim_limit",
+            )
+            if elvhys.get(key) is not None
         }
     public_measurement = evidence.get("public_measurement_instrumentation")
     if isinstance(public_measurement, dict):
@@ -12692,6 +12722,7 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
     actual_h2_channel = response.get(
         "public_actual_h2_channel_dataset"
     ) or {}
+    elvhys = response.get("public_elvhys_dataset") or {}
     hytunnel_diagnostic = response.get(
         "public_hytunnel_failure_diagnostic"
     ) or {}
@@ -13344,6 +13375,25 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
             },
         } if actual_h2_channel else {}),
         **({
+            "public_elvhys_dataset": {
+                key: elvhys.get(key)
+                for key in (
+                    "status", "evidence_role", "source_doi", "license",
+                    "experimental_campaign", "transfer_connection_space_volume_m3",
+                    "data_file_count", "case_id_count_with_public_data",
+                    "published_test_plan_count", "test_plan_type_counts",
+                    "measured_channel_families", "schema_screen_pass",
+                    "independent_actual_cryogenic_hydrogen_component_candidate",
+                    "dispersion_candidate", "pressure_peaking_candidate",
+                    "ignition_consequence_candidate", "station_to_vehicle_full_loop",
+                    "runtime_parameter_application", "validation_gate_promoted",
+                    "full_loop_external_validation_ready", "promotion_prohibited",
+                    "claim_limit",
+                )
+                if elvhys.get(key) is not None
+            },
+        } if elvhys else {}),
+        **({
             "station_side_data_scope": station_side_data_scope,
         } if station_side_data_scope is not None else {}),
         **({
@@ -13465,6 +13515,25 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                     if actual_h2_channel.get(key) is not None
                 },
             } if actual_h2_channel else {}),
+            **({
+                "public_elvhys_dataset": {
+                    key: elvhys.get(key)
+                    for key in (
+                        "status", "evidence_role", "source_doi", "license",
+                        "experimental_campaign", "transfer_connection_space_volume_m3",
+                        "data_file_count", "case_id_count_with_public_data",
+                        "published_test_plan_count", "test_plan_type_counts",
+                        "measured_channel_families", "schema_screen_pass",
+                        "independent_actual_cryogenic_hydrogen_component_candidate",
+                        "dispersion_candidate", "pressure_peaking_candidate",
+                        "ignition_consequence_candidate", "station_to_vehicle_full_loop",
+                        "runtime_parameter_application", "validation_gate_promoted",
+                        "full_loop_external_validation_ready", "promotion_prohibited",
+                        "claim_limit",
+                    )
+                    if elvhys.get(key) is not None
+                },
+            } if elvhys else {}),
             **({
                 "public_mhc_component_screen": {
                     key: mhc_component.get(key)

@@ -73,6 +73,7 @@ DEFAULT_CHECKS: tuple[PriorityCheck, ...] = (
             "tests/test_closed_loop_calibrated_llm_grounding.py",
             "tests/test_h2safe_geometry_sensor_containment.py",
             "tests/test_public_actual_h2_channel_dataset.py",
+            "tests/test_elvhys_public_dataset_inventory.py",
             "tests/test_validation_evidence_api.py",
             "tests/test_ijhe_claim_evidence_matrix.py",
             "-q",

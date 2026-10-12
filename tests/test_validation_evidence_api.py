@@ -182,6 +182,19 @@ def test_validation_evidence_surface_is_privacy_bounded_and_claim_limited() -> N
     assert actual_h2_channel["validation_gate_promoted"] is False
     assert actual_h2_channel["promotion_prohibited"] is True
     assert "station twin" in actual_h2_channel["claim_limit"].lower()
+    elvhys = inventory["public_elvhys_dataset"]
+    assert elvhys["status"] == "PUBLIC_ELVHYS_ACTUAL_CRYOGENIC_H2_INVENTORY"
+    assert elvhys["source_doi"] == "10.18710/JXJP0H"
+    assert elvhys["published_test_plan_count"] == 48
+    assert elvhys["case_id_count_with_public_data"] == 40
+    assert elvhys["schema_screen_pass"] is True
+    assert elvhys["independent_actual_cryogenic_hydrogen_component_candidate"] is True
+    assert elvhys["pressure_peaking_candidate"] is True
+    assert elvhys["ignition_consequence_candidate"] is True
+    assert elvhys["station_to_vehicle_full_loop"] is False
+    assert elvhys["runtime_parameter_application"] is False
+    assert elvhys["promotion_prohibited"] is True
+    assert "runtime parameters" in elvhys["claim_limit"].lower()
     dickens = inventory["public_dickens_geometry_followup_candidate"]
     assert dickens["status"] == "followup_candidate_only"
     assert dickens["source_reference"]["doi"] == "10.1016/J.JPOWSOUR.2006.11.077"

@@ -188,3 +188,21 @@ def test_public_actual_h2_channel_dataset_is_grounded_as_component_candidate_onl
     assert compact["station_to_vehicle_full_loop"] is False
     decision = prompt_decision_evidence(manifest)["decision_support_evidence"]
     assert decision["public_actual_h2_channel_dataset"]["promotion_prohibited"] is True
+
+
+def test_elvhys_actual_cryogenic_hydrogen_dataset_is_grounded_without_promotion():
+    manifest = build_evidence_manifest(
+        {"time_s": 1.0}, {}, [], False, question="극저온 수소 누출과 점화 근거"
+    )
+    evidence = manifest["response_evidence"]["public_elvhys_dataset"]
+    assert evidence["status"] == "PUBLIC_ELVHYS_ACTUAL_CRYOGENIC_H2_INVENTORY"
+    assert evidence["source_doi"] == "10.18710/JXJP0H"
+    assert evidence["published_test_plan_count"] == 48
+    assert evidence["case_id_count_with_public_data"] == 40
+    assert evidence["pressure_peaking_candidate"] is True
+    assert evidence["ignition_consequence_candidate"] is True
+    assert evidence["runtime_parameter_application"] is False
+    compact = prompt_evidence_summary(manifest)["public_elvhys_dataset"]
+    assert compact["schema_screen_pass"] is True
+    decision = prompt_decision_evidence(manifest)["decision_support_evidence"]
+    assert decision["public_elvhys_dataset"]["promotion_prohibited"] is True
