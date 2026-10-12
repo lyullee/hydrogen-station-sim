@@ -12748,6 +12748,19 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
         "public", "measurement", "experiment", "dataset", "validation",
         "data", "raw",
     ))
+    # Keep public evidence inventories out of ordinary operational prompts,
+    # while still exposing a named inventory when the operator explicitly
+    # asks about that dataset family (for example, an H2SAFE or ELVHYS
+    # question whose wording does not contain the generic "data" token).
+    h2safe_evidence_relevant = public_catalog_relevant or "h2safe" in lead_context
+    actual_h2_evidence_relevant = public_catalog_relevant or any(
+        token in lead_context
+        for token in ("actual hydrogen", "실제 수소", "actual_h2")
+    )
+    elvhys_evidence_relevant = public_catalog_relevant or any(
+        token in lead_context
+        for token in ("elvhys", "극저온", "cryogenic")
+    )
     accident_sources_relevant = any(token in lead_context for token in (
         "사고", "누출", "화재", "폭발", "대응", "안전", "accident", "leak",
         "fire", "explosion", "response", "safety", "incident",
@@ -13345,7 +13358,7 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                 )
                 if h2safe_hvac.get(key) is not None
             },
-        } if h2safe_hvac else {}),
+        } if h2safe_hvac and h2safe_evidence_relevant else {}),
         **({
             "public_h2safe_geometry_containment": {
                 key: h2safe_geometry.get(key)
@@ -13358,7 +13371,7 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                 )
                 if h2safe_geometry.get(key) is not None
             },
-        } if h2safe_geometry else {}),
+        } if h2safe_geometry and h2safe_evidence_relevant else {}),
         **({
             "public_actual_h2_channel_dataset": {
                 key: actual_h2_channel.get(key)
@@ -13373,7 +13386,7 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                 )
                 if actual_h2_channel.get(key) is not None
             },
-        } if actual_h2_channel else {}),
+        } if actual_h2_channel and actual_h2_evidence_relevant else {}),
         **({
             "public_elvhys_dataset": {
                 key: elvhys.get(key)
@@ -13392,7 +13405,7 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                 )
                 if elvhys.get(key) is not None
             },
-        } if elvhys else {}),
+        } if elvhys and elvhys_evidence_relevant else {}),
         **({
             "station_side_data_scope": station_side_data_scope,
         } if station_side_data_scope is not None else {}),
@@ -13486,7 +13499,7 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                     )
                     if h2safe_hvac.get(key) is not None
                 },
-            } if h2safe_hvac else {}),
+            } if h2safe_hvac and h2safe_evidence_relevant else {}),
             **({
                 "public_h2safe_geometry_containment": {
                     key: h2safe_geometry.get(key)
@@ -13499,7 +13512,7 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                     )
                     if h2safe_geometry.get(key) is not None
                 },
-            } if h2safe_geometry else {}),
+            } if h2safe_geometry and h2safe_evidence_relevant else {}),
             **({
                 "public_actual_h2_channel_dataset": {
                     key: actual_h2_channel.get(key)
@@ -13514,7 +13527,7 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                     )
                     if actual_h2_channel.get(key) is not None
                 },
-            } if actual_h2_channel else {}),
+            } if actual_h2_channel and actual_h2_evidence_relevant else {}),
             **({
                 "public_elvhys_dataset": {
                     key: elvhys.get(key)
@@ -13533,7 +13546,7 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                     )
                     if elvhys.get(key) is not None
                 },
-            } if elvhys else {}),
+            } if elvhys and elvhys_evidence_relevant else {}),
             **({
                 "public_mhc_component_screen": {
                     key: mhc_component.get(key)
