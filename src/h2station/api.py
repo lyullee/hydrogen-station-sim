@@ -212,6 +212,40 @@ def _provider_evidence_basis(manifest: dict[str, Any]) -> dict[str, Any]:
         )
         if key in full
     }
+    # Public operational leads are useful grounding, but their UI projection
+    # contains long prose and repeated allowed/not-allowed lists.  The
+    # provider only needs the source identity, decision and claim boundary;
+    # keep the complete projection in the API response for the evidence view
+    # while sending this bounded form to the interactive model.
+    operational_leads = keep.get("public_operational_evidence_leads")
+    if isinstance(operational_leads, dict):
+        compact_sources = []
+        for source in operational_leads.get("sources") or []:
+            if not isinstance(source, dict):
+                continue
+            compact_sources.append({
+                key: source.get(key)
+                for key in (
+                    "id", "publisher", "url", "reported_scope",
+                    "raw_synchronized_archive_located", "decision",
+                    "claim_limit",
+                )
+                if source.get(key) is not None
+            })
+        keep["public_operational_evidence_leads"] = {
+            "evidence_role": operational_leads.get("evidence_role"),
+            "sources": compact_sources,
+            "decision": operational_leads.get("decision"),
+            "minimum_full_loop_input": {
+                key: (operational_leads.get("minimum_full_loop_input") or {}).get(key)
+                for key in ("event_count", "required_channels")
+                if (operational_leads.get("minimum_full_loop_input") or {}).get(key)
+                is not None
+            },
+            "full_loop_external_validation_supported": False,
+            "dynamic_model_parameter_calibration_eligible": False,
+            "claim_limit": str(operational_leads.get("claim_limit") or "")[:280],
+        }
     # Keep the operator-visible proof that station-side rows exist, but avoid
     # copying the larger UI ``data_used`` projection into every provider
     # prompt.  The complete projection remains in the API response; this
