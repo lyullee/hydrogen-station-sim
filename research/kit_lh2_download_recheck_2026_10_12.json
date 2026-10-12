@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "artifact_type": "kit_lh2_consequence_download_recheck",
+  "recorded_at": "2026-10-12",
+  "source": {
+    "doi": "10.35097/1483",
+    "official_record": "https://radar.kit.edu/radar/en/dataset/umUTdrjbbQCUDIXE",
+    "archive_url": "https://www.radar-service.eu/radar-backend/archives/umUTdrjbbQCUDIXE/versions/1/content",
+    "publisher_reported_bytes": 4971447808,
+    "publisher_reported_md5": "0e4ac934ecb973c6f07212e8a80707c9",
+    "license": "CC BY-SA 4.0"
+  },
+  "recheck": {
+    "session_range_probe": "PASS",
+    "range_probe_content_range": "bytes 0-0/4971447808",
+    "sparse_resume_probe": {
+      "requested_range": "bytes 964689920-965738495",
+      "status": "PASS",
+      "bytes_received": 1048576,
+      "signal_values_opened": false
+    },
+    "full_resume_attempt": {
+      "chunk_bytes": 8388608,
+      "workers": 1,
+      "retries": 1,
+      "status": "RATE_LIMITED_HTTP_429",
+      "failed_range": "bytes 964689920-973078527",
+      "bytes_added_to_archive": 0,
+      "signal_values_opened": false
+    }
+  },
+  "local_partial_archive": {
+    "path": "data/public_validation/raw/kit_lh2_consequence_1483/archive.tar",
+    "bytes": 964689920,
+    "md5": "5dc3c9898487b08d273ee5b143840677",
+    "sha256": "163274e269ccb35b3649e9b4e5eb2856317de598ea1968215254e9776481b750",
+    "matches_publisher_md5": false,
+    "unchanged_after_recheck": true
+  },
+  "eligibility": {
+    "stage1_integrity_verified": false,
+    "stage1_inventory_complete": false,
+    "stage2_eligible": false,
+    "promoted_to_validation": false,
+    "reason": "The range route is usable for sparse probes but the complete publisher archive remains unavailable because resumed transfer is rate-limited. Keep outcome files unread and retry only after a stable authenticated session or custodian transfer."
+  },
+  "claim_boundary": "This recheck establishes only intermittent range access and preserves the incomplete archive boundary. It does not validate release, dispersion, ignition, heat-flux, overpressure, HyRAM, station control or SAGA."
+}

@@ -473,7 +473,8 @@
       "draft": "research/KIT_H2_RELEASE_DATA_REUSE_NOTE.md",
       "source": "https://doi.org/10.35097/1483",
       "candidate_type": "independent hydrogen release and consequence experiment",
-      "status": "public_consequence_candidate",
+      "status": "partial_archive_range_recheck_rate_limited",
+      "latest_recheck": "research/kit_lh2_download_recheck_2026_10_12.json",
       "requested_fields": [
         "common_time_base",
         "release_pressure",
@@ -486,7 +487,7 @@
       ],
       "minimum_acceptance": "Archive metadata and digest retained; consequence cases have synchronized pressure/flow/effect channels, geometry and calibration information.",
       "rights": "Record states CC BY-SA 4.0; verify derived-figure and repository-deposit scope before use.",
-      "next_action": "Quarantine the archive, record its immutable digest, and prepare a consequence-only pre-outcome protocol before numerical inspection.",
+      "next_action": "Retry the range-capable session after the RADAR rate limit cools, or obtain a stable custodian transfer; verify the complete publisher MD5 before opening any outcome file.",
       "claim_boundary": "This candidate can support release, detector or consequence submodels only; it cannot establish station controller or vehicle-fueling full-loop validity."
     },
     {
