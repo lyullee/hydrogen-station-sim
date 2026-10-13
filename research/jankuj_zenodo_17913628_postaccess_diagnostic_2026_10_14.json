@@ -1,0 +1,146 @@
+{
+  "schema_version": 1,
+  "artifact_type": "post_access_zenodo_17913628_actual_hydrogen_release_diagnostic",
+  "generated_at": "2026-10-13T23:41:05.221168+00:00",
+  "status": "POST_ACCESS_DESCRIPTIVE_RELEASE_DIAGNOSTIC_NOT_INDEPENDENT_MODEL_VALIDATION",
+  "source": {
+    "dataset_doi": "10.5281/zenodo.17913628",
+    "landing_page": "https://zenodo.org/records/17913628",
+    "title": "Dataset for: Accidental self-ignition of hydrogen released from pressurized cylinder (Figures 7-9)",
+    "publisher": "Zenodo / Jankuj, Lepik, Salzano and Mynarz",
+    "license": "CC BY 4.0",
+    "actual_hydrogen": true,
+    "cylinder_volume_l": 50.0,
+    "initial_pressure_bar": 200.0,
+    "raw_files_external_only": true
+  },
+  "provenance_boundary": {
+    "raw_accessed_before_this_artifact": true,
+    "independent_holdout": false,
+    "prospective_validation": false,
+    "parameter_fitting": false,
+    "runtime_parameter_change": false,
+    "readiness_gate_effect": false,
+    "reason": "The archive was accessed after the current validation program was frozen; the penetration/breach geometry is not documented as a calibrated nozzle."
+  },
+  "protocol_reference": "research/jankuj_zenodo_17913628_pressure_holdout_protocol_2026_10_14.json",
+  "analysis_contract": {
+    "pressure": "aggregate replay of both published pressure channels; channel n2 is retained as the continuous descriptive release trace",
+    "temperature": "aggregate extrema and baseline/end medians for the spark-ignition and no-ignition workbooks",
+    "raw_rows_exposed": false,
+    "no_fit_or_interpolation": true
+  },
+  "pressure": {
+    "file": "Figure 7. Pressure drop during hydrogen release.xlsx",
+    "file_md5": "c6c8fbf2a4b65d4ca06a03d480daed66",
+    "time_unit": "s",
+    "pressure_unit": "bar as published",
+    "channels": [
+      {
+        "channel": "pressure_n1",
+        "sample_count": 2754,
+        "time_start_s": 0.002,
+        "time_end_s": 5.508,
+        "initial_median_bar": 186.45999999999998,
+        "final_median_bar": 186.22,
+        "minimum_bar": -0.94,
+        "maximum_bar": 188.91,
+        "half_pressure_time_s": 0.62,
+        "ten_percent_pressure_time_s": 1.238,
+        "large_jump_count_gt_20_bar": 1,
+        "interpretation": "channel contains a >20 bar reset after the first release and is retained as a segmented diagnostic"
+      },
+      {
+        "channel": "pressure_n2",
+        "sample_count": 2754,
+        "time_start_s": 0.002,
+        "time_end_s": 5.508,
+        "initial_median_bar": 187.07999999999998,
+        "final_median_bar": -0.575,
+        "minimum_bar": -1.94,
+        "maximum_bar": 188.5,
+        "half_pressure_time_s": 1.304,
+        "ten_percent_pressure_time_s": 2.284,
+        "large_jump_count_gt_20_bar": 0,
+        "interpretation": "continuous pressure-release channel retained for descriptive replay"
+      }
+    ],
+    "primary_descriptive_channel": "pressure_n2"
+  },
+  "temperature": [
+    {
+      "file": "Figure 8. Hydrogen release and subsequent spark ignition.xlsx",
+      "file_md5": "2771b8471693dcd8695b4a2aa8a60f5f",
+      "scenario": "spark_ignition",
+      "channel_count": 6,
+      "sample_count_by_channel": [
+        116,
+        116,
+        116,
+        116,
+        116,
+        116
+      ],
+      "minimum_c": 3.0,
+      "maximum_c": 1148.1,
+      "first_window_median_c": [
+        3.4,
+        3.9,
+        3.5,
+        4.0,
+        3.9,
+        4.0
+      ],
+      "last_window_median_c": [
+        3.8,
+        3.1,
+        3.1,
+        3.3,
+        3.2,
+        3.7
+      ]
+    },
+    {
+      "file": "Figure 9. Hydrogen release without ignition.xlsx",
+      "file_md5": "76bb3e9d8a519d12876261401e25ca4e",
+      "scenario": "no_ignition",
+      "channel_count": 6,
+      "sample_count_by_channel": [
+        113,
+        113,
+        113,
+        113,
+        113,
+        9
+      ],
+      "minimum_c": -67.0,
+      "maximum_c": 4.0,
+      "first_window_median_c": [
+        4.0,
+        1.6,
+        2.0,
+        2.7,
+        2.7,
+        3.6
+      ],
+      "last_window_median_c": [
+        2.2,
+        2.0,
+        0.6,
+        1.7,
+        1.9,
+        -49.7
+      ]
+    }
+  ],
+  "eligibility": {
+    "descriptive_actual_hydrogen_release_evidence": true,
+    "quantitative_release_model_validation": false,
+    "reason": "No documented breach diameter, upstream restriction state or discharge coefficient is supplied for a locked release-model comparison.",
+    "component_consequence_context": true,
+    "ignition_scenario_context": true,
+    "runtime_parameter_application": false
+  },
+  "claim_supported": false,
+  "claim_limit": "This artifact supports descriptive actual-hydrogen pressure-depletion, cooling and ignition-scenario context. It does not validate a release coefficient, pressure model, heat flux, radiation, dispersion, detector placement, ESD effectiveness, safety distance or station-to-vehicle behavior."
+}

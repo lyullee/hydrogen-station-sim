@@ -2570,3 +2570,34 @@ the full-loop claim pass.
   focused consistency suite passes 15/15. The authoritative counts remain
   134 PASS / 11 FAIL / 7 PENDING and both bounded and full objective readiness
   remain false.
+
+## 2026-10-14 - Zenodo 17913628 actual-hydrogen release diagnostic
+
+- Added a frozen-protocol, post-access diagnostic for the open Jankuj et al.
+  archive (`10.5281/zenodo.17913628`), containing pressure depletion from a
+  50-L, 200-bar cylinder penetration experiment and temperature channels for
+  spark-ignition/no-ignition scenarios.
+- The pressure summary retains both published channels and identifies the
+  continuous `pressure_n2` trace (2,754 samples; descriptive half-pressure
+  time 1.304 s). Temperature summaries correctly exclude the elapsed-time
+  column and retain six thermocouple channels per workbook.
+- Raw workbooks stay outside version control; the repository stores only MD5,
+  aggregate descriptors and provenance. Because the breach geometry and
+  discharge coefficient are not documented, this evidence is descriptive
+  actual-hydrogen release/cooling/ignition context only. It is not a release
+  model holdout, parameter fit, safety-distance result or readiness-gate input.
+
+## 2026-10-14 - Jankuj release evidence routed to LLM decision support
+
+- Routed the claim-bounded Jankuj diagnostic into the response manifest,
+  compact evidence summary, source-link header and decision-support envelope.
+  Questions about pressure release, leakage, self-ignition or hydrogen
+  discharge now receive the aggregate actual-hydrogen context without raw
+  rows or private paths.
+- Every route carries `independent_holdout=false`,
+  `prospective_validation=false`, `runtime_parameter_application=false` and
+  `validation_gate_effect=none`; it cannot override the current model or
+  readiness audit.
+- Verification: 35 focused grounding/diagnostic tests pass. Readiness remains
+  134 PASS / 11 FAIL / 7 PENDING (88.2% gate closure); no scientific gate was
+  promoted.

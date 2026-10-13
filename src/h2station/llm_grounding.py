@@ -5973,6 +5973,107 @@ def _public_zenodo_7895795_jetfire_evidence() -> dict[str, Any] | None:
     }
 
 
+def _public_zenodo_17913628_release_evidence() -> dict[str, Any] | None:
+    """Expose bounded actual-H2 pressure-depletion and ignition context.
+
+    The Jankuj Zenodo workbooks were accessed after the current validation
+    protocol was frozen.  They contain useful aggregate observations from a
+    50-L, 200-bar cylinder penetration experiment, but no calibrated breach
+    geometry or discharge coefficient.  Keep them available to the assistant
+    for scenario explanation and consequence-response context only; never
+    promote them to a holdout, runtime calibration, or safety-distance claim.
+    """
+
+    root = Path(__file__).resolve().parents[2]
+    path = root / "research/jankuj_zenodo_17913628_postaccess_diagnostic_2026_10_14.json"
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError, json.JSONDecodeError):
+        return None
+    source = record.get("source") or {}
+    provenance = record.get("provenance_boundary") or {}
+    eligibility = record.get("eligibility") or {}
+    pressure = record.get("pressure") or {}
+    temperature = record.get("temperature") or []
+    if (
+        record.get("schema_version") != 1
+        or record.get("artifact_type")
+        != "post_access_zenodo_17913628_actual_hydrogen_release_diagnostic"
+        or record.get("status")
+        != "POST_ACCESS_DESCRIPTIVE_RELEASE_DIAGNOSTIC_NOT_INDEPENDENT_MODEL_VALIDATION"
+        or source.get("dataset_doi") != "10.5281/zenodo.17913628"
+        or source.get("actual_hydrogen") is not True
+        or source.get("raw_files_external_only") is not True
+        or provenance.get("independent_holdout") is not False
+        or provenance.get("prospective_validation") is not False
+        or provenance.get("parameter_fitting") is not False
+        or provenance.get("runtime_parameter_change") is not False
+        or provenance.get("readiness_gate_effect") is not False
+        or eligibility.get("quantitative_release_model_validation") is not False
+        or record.get("claim_supported") is not False
+    ):
+        return None
+    channels = []
+    for channel in pressure.get("channels") or []:
+        if not isinstance(channel, dict):
+            continue
+        channels.append({
+            key: channel.get(key)
+            for key in (
+                "channel", "sample_count", "time_start_s", "time_end_s",
+                "initial_median_bar", "final_median_bar", "minimum_bar",
+                "maximum_bar", "half_pressure_time_s",
+                "ten_percent_pressure_time_s", "large_jump_count_gt_20_bar",
+                "interpretation",
+            )
+            if channel.get(key) is not None
+        })
+    temperature_summary = []
+    for item in temperature:
+        if not isinstance(item, dict):
+            continue
+        temperature_summary.append({
+            key: item.get(key)
+            for key in (
+                "scenario", "file", "channel_count", "sample_count_by_channel",
+                "minimum_c", "maximum_c", "first_window_median_c",
+                "last_window_median_c",
+            )
+            if item.get(key) is not None
+        })
+    return {
+        "artifact": "research/jankuj_zenodo_17913628_postaccess_diagnostic_2026_10_14.json",
+        "evidence_role": "post-access actual-hydrogen pressure-depletion, cooling and ignition-scenario context",
+        "source": {
+            key: source.get(key)
+            for key in (
+                "dataset_doi", "landing_page", "title", "publisher", "license",
+                "actual_hydrogen", "cylinder_volume_l", "initial_pressure_bar",
+            )
+            if source.get(key) is not None
+        },
+        "pressure": {
+            "primary_descriptive_channel": pressure.get("primary_descriptive_channel"),
+            "channels": channels,
+        },
+        "temperature": temperature_summary,
+        "descriptive_actual_hydrogen_release_evidence": (
+            eligibility.get("descriptive_actual_hydrogen_release_evidence") is True
+        ),
+        "component_consequence_context": eligibility.get(
+            "component_consequence_context"
+        ) is True,
+        "ignition_scenario_context": eligibility.get("ignition_scenario_context") is True,
+        "independent_holdout": False,
+        "prospective_validation": False,
+        "parameter_fitting": False,
+        "runtime_parameter_application": False,
+        "validation_gate_effect": "none",
+        "claim_supported": False,
+        "claim_limit": str(record.get("claim_limit") or ""),
+    }
+
+
 def _public_usn_actual_h2_spatial_diagnostic_evidence() -> dict[str, Any] | None:
     """Expose the bounded actual-H2 USN spatial diagnostic to decision support.
 
@@ -6088,6 +6189,22 @@ def _public_source_links(evidence: dict[str, Any]) -> list[dict[str, Any]]:
                 or f"https://doi.org/{jetfire_doi}"
             ),
             "공개 실제 수소 jet-fire 열·압력 대응 근거(사후 진단, heat-flux·안전거리 검증 아님)",
+        )
+
+    jankuj_release = evidence.get(
+        "public_jankuj_actual_hydrogen_release_diagnostic"
+    ) or {}
+    jankuj_source = jankuj_release.get("source") or {}
+    jankuj_doi = str(jankuj_source.get("dataset_doi") or "").strip()
+    if jankuj_doi:
+        add(
+            "PUBLIC_JANKUJ_ZENODO_17913628_RELEASE",
+            "Actual-hydrogen pressurized-cylinder release and ignition dataset",
+            str(
+                jankuj_source.get("landing_page")
+                or f"https://doi.org/{jankuj_doi}"
+            ),
+            "공개 실제 수소 압력감소·냉각·점화 시나리오 근거(사후 진단, 방출계수·안전거리 검증 아님)",
         )
 
     usn_actual_h2_spatial = evidence.get(
@@ -10741,6 +10858,11 @@ def build_evidence_manifest(
         envelope["response_evidence"][
             "public_hydrogen_jetfire_postaccess_diagnostic"
         ] = jetfire_diagnostic
+    jankuj_release = _public_zenodo_17913628_release_evidence()
+    if jankuj_release is not None:
+        envelope["response_evidence"][
+            "public_jankuj_actual_hydrogen_release_diagnostic"
+        ] = jankuj_release
     usn_actual_h2_spatial = _public_usn_actual_h2_spatial_diagnostic_evidence()
     if usn_actual_h2_spatial is not None:
         envelope["response_evidence"][
@@ -11594,6 +11716,37 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
             ) is True,
             "claim_supported": jetfire_diagnostic.get("claim_supported") is True,
             "claim_limit": short(jetfire_diagnostic.get("claim_limit"), 320),
+        }
+    jankuj_release = evidence.get(
+        "public_jankuj_actual_hydrogen_release_diagnostic"
+    )
+    if isinstance(jankuj_release, dict):
+        summary["public_jankuj_actual_hydrogen_release_diagnostic"] = {
+            "evidence_role": jankuj_release.get("evidence_role"),
+            "source": jankuj_release.get("source") or {},
+            "pressure": jankuj_release.get("pressure") or {},
+            "temperature": jankuj_release.get("temperature") or [],
+            "descriptive_actual_hydrogen_release_evidence": jankuj_release.get(
+                "descriptive_actual_hydrogen_release_evidence"
+            ) is True,
+            "component_consequence_context": jankuj_release.get(
+                "component_consequence_context"
+            ) is True,
+            "ignition_scenario_context": jankuj_release.get(
+                "ignition_scenario_context"
+            ) is True,
+            "independent_holdout": jankuj_release.get(
+                "independent_holdout"
+            ) is True,
+            "prospective_validation": jankuj_release.get(
+                "prospective_validation"
+            ) is True,
+            "runtime_parameter_application": jankuj_release.get(
+                "runtime_parameter_application"
+            ) is True,
+            "validation_gate_effect": jankuj_release.get("validation_gate_effect"),
+            "claim_supported": jankuj_release.get("claim_supported") is True,
+            "claim_limit": short(jankuj_release.get("claim_limit"), 320),
         }
     usn_actual_h2_spatial = evidence.get(
         "public_usn_actual_h2_spatial_diagnostic"
@@ -13297,6 +13450,9 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
     jetfire_diagnostic = response.get(
         "public_hydrogen_jetfire_postaccess_diagnostic"
     ) or {}
+    jankuj_release = response.get(
+        "public_jankuj_actual_hydrogen_release_diagnostic"
+    ) or {}
     usn_actual_h2_spatial = response.get(
         "public_usn_actual_h2_spatial_diagnostic"
     ) or {}
@@ -13461,6 +13617,12 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
     jetfire_relevant = hytunnel_relevant or any(token in lead_context for token in (
         "jet fire", "jetfire", "제트화염", "화염", "열복사", "복사열",
         "fire", "flame", "radiation", "heat flux", "열유속",
+    ))
+    jankuj_release_relevant = any(token in lead_context for token in (
+        "자발점화", "자기점화", "압력강하", "압력 방출", "수소 방출",
+        "방출", "점화", "누출", "누설", "실제 수소", "사고",
+        "self-ignition", "pressure drop", "pressure release", "release",
+        "ignition", "hydrogen",
     ))
     usn_actual_h2_spatial_relevant = hytunnel_relevant or any(token in lead_context for token in (
         "검지기", "검지", "센서 위치", "공간", "detector", "sensor placement",
@@ -14867,6 +15029,33 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                     ),
                 },
             } if jetfire_diagnostic and jetfire_relevant else {}),
+            **({
+                "public_jankuj_actual_hydrogen_release": {
+                    "evidence_role": jankuj_release.get("evidence_role"),
+                    "source": jankuj_release.get("source") or {},
+                    "pressure": jankuj_release.get("pressure") or {},
+                    "temperature": jankuj_release.get("temperature") or [],
+                    "descriptive_actual_hydrogen_release_evidence": (
+                        jankuj_release.get(
+                            "descriptive_actual_hydrogen_release_evidence"
+                        ) is True
+                    ),
+                    "component_consequence_context": jankuj_release.get(
+                        "component_consequence_context"
+                    ) is True,
+                    "ignition_scenario_context": jankuj_release.get(
+                        "ignition_scenario_context"
+                    ) is True,
+                    "independent_holdout": False,
+                    "prospective_validation": False,
+                    "runtime_parameter_application": False,
+                    "validation_gate_effect": "none",
+                    "claim_supported": False,
+                    "claim_limit": short(
+                        jankuj_release.get("claim_limit"), 320
+                    ),
+                },
+            } if jankuj_release and jankuj_release_relevant else {}),
         },
         "validation_boundaries": {
             # Keep this projection compact because it is sent on every
@@ -15633,6 +15822,29 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                 },
             } if jetfire_diagnostic and jetfire_relevant else {}),
             **({
+                "public_jankuj_actual_hydrogen_release": {
+                    "descriptive_actual_hydrogen_release_evidence": (
+                        jankuj_release.get(
+                            "descriptive_actual_hydrogen_release_evidence"
+                        ) is True
+                    ),
+                    "component_consequence_context": jankuj_release.get(
+                        "component_consequence_context"
+                    ) is True,
+                    "ignition_scenario_context": jankuj_release.get(
+                        "ignition_scenario_context"
+                    ) is True,
+                    "independent_holdout": False,
+                    "prospective_validation": False,
+                    "runtime_parameter_application": False,
+                    "validation_gate_effect": "none",
+                    "claim_supported": False,
+                    "claim_limit": short(
+                        jankuj_release.get("claim_limit"), 320
+                    ),
+                },
+            } if jankuj_release and jankuj_release_relevant else {}),
+            **({
                 "public_usn_actual_h2_spatial": {
                     "claim_supported": usn_actual_h2_spatial.get(
                         "claim_supported"
@@ -16396,6 +16608,9 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
     jetfire_diagnostic = evidence.get(
         "public_hydrogen_jetfire_postaccess_diagnostic"
     ) or {}
+    jankuj_release = evidence.get(
+        "public_jankuj_actual_hydrogen_release_diagnostic"
+    ) or {}
     usn_actual_h2_spatial = evidence.get(
         "public_usn_actual_h2_spatial_diagnostic"
     ) or {}
@@ -16771,6 +16986,33 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
             ) is True,
             "claim_supported": jetfire_diagnostic.get("claim_supported") is True,
             "claim_limit": jetfire_diagnostic.get("claim_limit"),
+        },
+        "public_jankuj_actual_hydrogen_release_diagnostic": {
+            "evidence_role": jankuj_release.get("evidence_role"),
+            "source": jankuj_release.get("source") or {},
+            "pressure": jankuj_release.get("pressure") or {},
+            "temperature": jankuj_release.get("temperature") or [],
+            "descriptive_actual_hydrogen_release_evidence": jankuj_release.get(
+                "descriptive_actual_hydrogen_release_evidence"
+            ) is True,
+            "component_consequence_context": jankuj_release.get(
+                "component_consequence_context"
+            ) is True,
+            "ignition_scenario_context": jankuj_release.get(
+                "ignition_scenario_context"
+            ) is True,
+            "independent_holdout": jankuj_release.get(
+                "independent_holdout"
+            ) is True,
+            "prospective_validation": jankuj_release.get(
+                "prospective_validation"
+            ) is True,
+            "runtime_parameter_application": jankuj_release.get(
+                "runtime_parameter_application"
+            ) is True,
+            "validation_gate_effect": jankuj_release.get("validation_gate_effect"),
+            "claim_supported": jankuj_release.get("claim_supported") is True,
+            "claim_limit": jankuj_release.get("claim_limit"),
         },
         "public_usn_actual_h2_spatial_diagnostic": {
             "evidence_role": usn_actual_h2_spatial.get("evidence_role"),
