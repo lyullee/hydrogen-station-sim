@@ -70,6 +70,15 @@
       "blocking_reason": "Reported aggregate/model results cannot close a prospective independent temperature-pressure holdout without the raw trace, channel dictionary and pre-outcome access order."
     },
     {
+      "id": "ichs_2011_full_scale_hydrogen_garage_sensor_response",
+      "title": "Detection of hydrogen released in a full-scale residential garage",
+      "url": "https://conference.ing.unipi.it/ichs2011/papers/151.pdf",
+      "data_type": "full-scale hydrogen/forming-gas release with four sensor locations and time-response plots",
+      "access_observation": "The public conference PDF reports sensor layout, response times and plotted concentration histories for repeated garage experiments. It does not expose a machine-readable raw time-series table or explicit redistribution terms.",
+      "eligibility": "BOUNDARY_EVIDENCE_ONLY",
+      "blocking_reason": "The source was opened after the frozen spatial-transfer protocol and its plotted/aggregate results cannot close the independent detector-placement holdout."
+    },
+    {
       "id": "already_opened_sources",
       "title": "H2SAFE, ELVHYS, USN open-channel and other current repository sources",
       "data_type": "already accessed repository evidence",
