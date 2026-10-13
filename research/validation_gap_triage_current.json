@@ -47,16 +47,12 @@
   ],
   "bucket_counts": {
     "component_model": {
-      "FAIL": 9,
+      "FAIL": 10,
       "PENDING": 1
     },
     "governance_review": {
       "FAIL": 0,
       "PENDING": 6
-    },
-    "other": {
-      "FAIL": 1,
-      "PENDING": 0
     }
   },
   "scope_exclusions": [
@@ -74,7 +70,7 @@
       "priority": "P0",
       "parallel_track": "component_model_repairs",
       "bucket": "component_model",
-      "open_gate_count": 10,
+      "open_gate_count": 11,
       "why_now": "현재 주 목표에 포함된 실패 물리량별 독립 holdout을 병행하고, 통과 전 런타임 승격을 막음"
     },
     {
@@ -145,6 +141,18 @@
       "next_action": "결과를 재튜닝하지 말고 실패한 물리량·직경·경계조건에 맞는 새 pre-access protocol과 독립 원시 trace를 확보한다.",
       "why_now": "현재 주 목표에 포함된 실패 물리량별 독립 holdout을 병행하고, 통과 전 런타임 승격을 막음",
       "claim_boundary": "현재 게이트 상태 이상의 주장은 허용하지 않는다."
+    },
+    {
+      "id": "preslhy_blowdown_external_validation",
+      "status": "FAIL",
+      "bucket": "component_model",
+      "priority": "P0",
+      "parallel_track": "component_model_repairs",
+      "scope_role": "required_primary_scope",
+      "claim": "The source-depletion and direct-aperture release model is evaluated against prospectively frozen screens on public PRESLHY ambient blowdown experiments.",
+      "next_action": "최초 동결 11/22(50.0%) 실패를 유지하고 16/22 사후 재실행은 개발 진단으로만 사용한다. 밸브·배관 재고와 열전달을 포함한 후보 모델을 소비된 자료로 진단한 뒤 구현과 화면을 다시 동결하고, 수치 결과를 열지 않은 독립 방출 캠페인에서 새 pre-access 프로토콜로 평가한다.",
+      "why_now": "현재 주 목표에 포함된 실패 물리량별 독립 holdout을 병행하고, 통과 전 런타임 승격을 막음",
+      "claim_boundary": "This protocol evaluates a rigid source vessel discharging through a nominal circular aperture. It does not validate a vehicle-fueling loop, cryogenic two-phase release, a site vent stack, pipe backpressure, ignition, dispersion, or emergency separation distance."
     },
     {
       "id": "preslhy_partb_ambient_external_validation",
@@ -277,18 +285,6 @@
       "next_action": "저자·기여·이해상충·자금·AI 사용 공개를 확인한 뒤 제출 메타데이터를 잠근다.",
       "why_now": "수치 계산과 독립적으로 진행 가능한 검토·기록 작업",
       "claim_boundary": "현재 게이트 상태 이상의 주장은 허용하지 않는다."
-    },
-    {
-      "id": "preslhy_blowdown_external_validation",
-      "status": "FAIL",
-      "bucket": "other",
-      "priority": "P3",
-      "parallel_track": "other",
-      "scope_role": "required_primary_scope",
-      "claim": "The source-depletion and direct-aperture release model is evaluated against prospectively frozen screens on public PRESLHY ambient blowdown experiments.",
-      "next_action": "게이트 정의와 독립 근거를 확인한 뒤 상태를 갱신한다.",
-      "why_now": "게이트 정의와 독립 근거를 먼저 확인",
-      "claim_boundary": "This protocol evaluates a rigid source vessel discharging through a nominal circular aperture. It does not validate a vehicle-fueling loop, cryogenic two-phase release, a site vent stack, pipe backpressure, ignition, dispersion, or emergency separation distance."
     }
   ]
 }

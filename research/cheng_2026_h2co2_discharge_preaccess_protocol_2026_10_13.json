@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "artifact_type": "preaccess_public_candidate_protocol",
+  "recorded_at": "2026-10-13",
+  "candidate_id": "cheng_2026_h2co2_orifice_discharge",
+  "source": {
+    "title": "Transient temperature, pressure, and flow characteristics of high-pressure hydrogen-containing mixtures during discharge from an orifice",
+    "doi": "10.1016/j.ijhydene.2026.156114",
+    "journal": "International Journal of Hydrogen Energy",
+    "volume": "250",
+    "article_number": "156114",
+    "publication_date": "2026-07-13",
+    "pii": "S0360319926027527",
+    "publisher_page": "https://www.sciencedirect.com/science/article/pii/S0360319926027527",
+    "supplement_candidate_url": "https://ars.els-cdn.com/content/image/1-s2.0-S0360319926027527-mmc1.pdf",
+    "supplement_head_observation": {
+      "http_status": 200,
+      "content_type": "application/pdf",
+      "content_length_bytes": 200172,
+      "numerical_content_opened_before_this_protocol": false
+    },
+    "abstract_only_observation": "The new apparatus is reported for a 0.7 H2 + 0.3 CO2 mole-fraction mixture through a needle valve; pure-H2 validation is described as reuse of existing literature data."
+  },
+  "freeze": {
+    "repository_commit_before_source_access": "592ac325bc1eeba9eef63b9c9a6cf6357804324e",
+    "model": "src/h2station/release_network.py",
+    "model_sha256": "FA0267FD6C06450C46651A019FA152BAD599DEFD3EB7C2854DBE638618B0C39A",
+    "evaluator": "src/h2station/apparatus_release_validation.py",
+    "evaluator_sha256": "A31B9DCEBBB4320749E0F39B9661519626CADBC1624C66C14C6FFA7F0EC2C035",
+    "campaign_runner": "scripts/run_apparatus_release_holdout.py",
+    "campaign_runner_sha256": "4A9A12B2B771C634EBCDF7E5CA660DA51C78B85505BFF421FDBAC0F2CC01397C",
+    "parent_protocol": "research/release_network_prospective_protocol.json"
+  },
+  "preaccess_eligibility": {
+    "required_for_numerical_holdout": [
+      "supplement provides reusable numerical time-series rather than plotted images only",
+      "common time base for source pressure and source temperature",
+      "terminal mass flow or cumulative released mass on the same time base",
+      "initial gas composition and uncertainty",
+      "source volume, initial pressure and initial temperature",
+      "needle-valve or effective terminal restriction geometry and valve actuation semantics",
+      "ambient pressure and temperature",
+      "at least four independent cases spanning at least two initial-pressure groups",
+      "license or publisher terms permit local reproducible analysis"
+    ],
+    "mixture_domain_rule": "The frozen production model is pure-H2. A 0.7 H2 + 0.3 CO2 outcome cannot be scored as pure-H2 HRS validation unless a mixture-property implementation is frozen before numerical outcome access. Without that implementation it is metadata or development evidence only.",
+    "independence_rule": "Existing pure-H2 literature curves reused by the article are ineligible when they duplicate Sakoda/PRESLHY or any other dataset already inspected in this repository.",
+    "minimum_cases": 4,
+    "minimum_initial_pressure_groups": 2
+  },
+  "frozen_primary_screens_if_eligible": {
+    "mass_flow_nrmse_percent_peak_max": 15.0,
+    "mass_flow_median_ape_percent_max": 20.0,
+    "pressure_nrmse_percent_initial_max": 10.0,
+    "temperature_rmse_k_max": 10.0,
+    "half_time_relative_error_percent_max": 20.0,
+    "aggregate_joint_pass_fraction_min": 0.7
+  },
+  "prohibited_after_numerical_access": [
+    "case_specific_parameter_fit",
+    "discharge_coefficient_fit",
+    "heat_transfer_coefficient_fit",
+    "valve_delay_or_opening_time_fit",
+    "time_shift_or_dynamic_time_warping",
+    "failed_case_exclusion",
+    "treating H2-CO2 mixture traces as pure hydrogen"
+  ],
+  "decision_states": [
+    "eligible_untouched_numerical_holdout",
+    "metadata_or_method_only",
+    "postaccess_development_only",
+    "duplicate_consumed_source",
+    "ineligible_composition_domain",
+    "unavailable_or_nonreusable"
+  ],
+  "current_status": "protocol_frozen_before_supplement_download",
+  "claim_boundary": "This protocol freezes an intake decision before opening the publisher supplement. It is not a validation result and does not alter any current IJHE readiness gate."
+}

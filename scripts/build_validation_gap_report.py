@@ -23,6 +23,7 @@ _MODEL = {
     "h2safe_spatial_detector_transfer_validation",
     "hytunnel_carpark_dispersion_validation",
     "hytunnel_carpark_mass_flow_validation",
+    "preslhy_blowdown_external_validation",
     "preslhy_partb_ambient_external_validation",
     "preslhy_revised_holdout_validation",
     "proust_independent_release_validation",
@@ -135,6 +136,12 @@ def _next_action(gate_id: str, status: str) -> str:
             "custodian 원자료와 재사용 조건을 받은 뒤 새 pre-access protocol을 동결한다. "
             "별도 KIT LH2 원자료는 공식 권리는 확인했지만 전체 아카이브 MD5가 검증되지 않아 "
             "이 게이트를 닫지 않는다."
+        )
+    if gate_id == "preslhy_blowdown_external_validation":
+        return (
+            "최초 동결 11/22(50.0%) 실패를 유지하고 16/22 사후 재실행은 개발 진단으로만 사용한다. "
+            "밸브·배관 재고와 열전달을 포함한 후보 모델을 소비된 자료로 진단한 뒤 구현과 화면을 다시 동결하고, "
+            "수치 결과를 열지 않은 독립 방출 캠페인에서 새 pre-access 프로토콜로 평가한다."
         )
     if gate_id in {"hytunnel_carpark_mass_flow_validation", "preslhy_partb_ambient_external_validation", "preslhy_revised_holdout_validation", "proust_independent_release_validation", "schefer_transient_release_validation", "schefer_2007_pressure_decay_validation", "grune_2014_pressure_decay_validation", "dickens_typeiii_prospective_validation"}:
         return "결과를 재튜닝하지 말고 실패한 물리량·직경·경계조건에 맞는 새 pre-access protocol과 독립 원시 trace를 확보한다."

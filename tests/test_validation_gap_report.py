@@ -28,6 +28,15 @@ def test_gap_report_classifies_primary_buckets() -> None:
     buckets = report["bucket_counts"]
     assert buckets["component_model"]["FAIL"] >= 8
     assert buckets["governance_review"]["PENDING"] >= 5
+    preslhy = next(
+        item
+        for item in report["unresolved_gates"]
+        if item["id"] == "preslhy_blowdown_external_validation"
+    )
+    assert preslhy["priority"] == "P0"
+    assert preslhy["parallel_track"] == "component_model_repairs"
+    assert "11/22(50.0%)" in preslhy["next_action"]
+    assert "16/22" in preslhy["next_action"]
 
 
 def test_gap_report_can_use_dated_readiness_snapshot() -> None:

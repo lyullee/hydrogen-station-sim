@@ -22,6 +22,7 @@ Grüne 사례에는 공개 ICHS 도표에서 추출한 완전 곡선 진단을 �
 | P0 | component_model_repairs | `h2safe_spatial_detector_transfer_validation` | FAIL | 공간좌표·방출방향·센서별 수치응답이 함께 있는 독립 holdout을 추가하고, 통과 전 runtime 자동 라우팅을 유지하지 않는다. |
 | P0 | component_model_repairs | `hytunnel_carpark_dispersion_validation` | FAIL | 공간좌표·방출방향·센서별 수치응답이 함께 있는 독립 holdout을 추가하고, 통과 전 runtime 자동 라우팅을 유지하지 않는다. |
 | P0 | component_model_repairs | `hytunnel_carpark_mass_flow_validation` | FAIL | 결과를 재튜닝하지 말고 실패한 물리량·직경·경계조건에 맞는 새 pre-access protocol과 독립 원시 trace를 확보한다. |
+| P0 | component_model_repairs | `preslhy_blowdown_external_validation` | FAIL | 최초 동결 11/22(50.0%) 실패를 유지하고 16/22 사후 재실행은 개발 진단으로만 사용한다. 밸브·배관 재고와 열전달을 포함한 후보 모델을 소비된 자료로 진단한 뒤 구현과 화면을 다시 동결하고, 수치 결과를 열지 않은 독립 방출 캠페인에서 새 pre-access 프로토콜로 평가한다. |
 | P0 | component_model_repairs | `preslhy_partb_ambient_external_validation` | FAIL | 결과를 재튜닝하지 말고 실패한 물리량·직경·경계조건에 맞는 새 pre-access protocol과 독립 원시 trace를 확보한다. |
 | P0 | component_model_repairs | `preslhy_revised_holdout_validation` | FAIL | 결과를 재튜닝하지 말고 실패한 물리량·직경·경계조건에 맞는 새 pre-access protocol과 독립 원시 trace를 확보한다. |
 | P0 | component_model_repairs | `proust_independent_release_validation` | FAIL | 결과를 재튜닝하지 말고 실패한 물리량·직경·경계조건에 맞는 새 pre-access protocol과 독립 원시 trace를 확보한다. |
@@ -33,7 +34,6 @@ Grüne 사례에는 공개 ICHS 도표에서 추출한 완전 곡선 진단을 �
 | P1 | review_and_publication | `institutional_ethics_determination` | PENDING | 선택 항목: SAGA가 운영자의 안전 판단을 개선한다고 주장할 때만 기관의 승인·면제·비대상 중 하나와 식별자를 확정하고 연구 기록에 보존한다. |
 | P1 | review_and_publication | `saga_effectiveness_and_safety_supported` | PENDING | 선택 항목: 사람 대상 SAGA 효과를 주장할 때만 고정된 HIAD 평가 프로토콜에 따라 casebook·응답·전문가 평가를 수집하고 freeze hash를 남긴다. |
 | P1 | review_and_publication | `submission_metadata_and_declarations` | PENDING | 저자·기여·이해상충·자금·AI 사용 공개를 확인한 뒤 제출 메타데이터를 잠근다. |
-| P3 | other | `preslhy_blowdown_external_validation` | FAIL | 게이트 정의와 독립 근거를 확인한 뒤 상태를 갱신한다. |
 
 ## 실행 순서
 
