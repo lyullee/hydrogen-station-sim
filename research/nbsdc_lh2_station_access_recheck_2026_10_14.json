@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "artifact_type": "public_dataset_access_boundary_recheck",
+  "recorded_at": "2026-10-13T17:12:58.341157+00:00",
+  "source": {
+    "catalog_url": "https://nbsdc.cn/general/dataDetail?id=67d50e37195d260905af9869&type=1",
+    "dataset_id": "67d50e37195d260905af9869",
+    "dataset_title": "2020YFB1506204-003 液氢加氢站运行数据集",
+    "license_or_access_note": "Catalog metadata is public; raw files require a data application."
+  },
+  "catalog": {
+    "root_endpoint": "https://www.nbsdc.cn/api/general/v1/getFileTree?dataId=67d50e37195d260905af9869&pid=0&pageOffset=0&pageSize=100",
+    "file_endpoint": "https://www.nbsdc.cn/api/general/v1/getFileTree?dataId=67d50e37195d260905af9869&pid=1&pageOffset=0&pageSize=100",
+    "root_status": 200,
+    "file_status": 200,
+    "file_count": 7,
+    "files": [
+      {
+        "name": "35MPa加氢机1.xlsx",
+        "size_bytes": 3605593,
+        "id": "67bc96ed34eb407463579069",
+        "tree_id": 11
+      },
+      {
+        "name": "35MPa加氢机2.xlsx",
+        "size_bytes": 5700855,
+        "id": "67bc96ed34eb40746357906a",
+        "tree_id": 12
+      },
+      {
+        "name": "70MPa加氢机.csv",
+        "size_bytes": 5974368,
+        "id": "67bc96ed34eb40746357906b",
+        "tree_id": 13
+      },
+      {
+        "name": "90MPa压缩机.xlsx",
+        "size_bytes": 3922132,
+        "id": "67bc96ed34eb40746357906c",
+        "tree_id": 14
+      },
+      {
+        "name": "液氢加氢站运行数据集数据说明 .docx",
+        "size_bytes": 15673,
+        "id": "67bc96ed34eb40746357906d",
+        "tree_id": 15
+      },
+      {
+        "name": "液氢泵-液氢储罐.xlsx",
+        "size_bytes": 15458212,
+        "id": "67bc96ed34eb40746357906e",
+        "tree_id": 16
+      },
+      {
+        "name": "高压储氢瓶组.xlsx",
+        "size_bytes": 9423277,
+        "id": "67bc96ed34eb40746357906f",
+        "tree_id": 17
+      }
+    ]
+  },
+  "download_probe": {
+    "endpoint": "https://www.nbsdc.cn/api/general/v1/checkAndDownloadFile?dataId=67d50e37195d260905af9869&id=67bc96ed34eb407463579069&pid=1&pageOffset=0&pageSize=12",
+    "content_type": "application/json;charset=UTF-8",
+    "response": {
+      "code": 403,
+      "message": "目前只支持部分数据集的说明文件下载，数据文件请通过数据申请获取。"
+    },
+    "raw_rows_downloaded": false
+  },
+  "eligibility": {
+    "actual_station_operational_channels_described": true,
+    "metadata_file_inventory_visible": true,
+    "raw_rows_rights_cleared_and_downloadable_without_application": false,
+    "independent_validation_eligible": false,
+    "runtime_parameter_application": false
+  },
+  "decision": "ACCESS_BOUNDARY_ONLY",
+  "next_action": "Obtain custodian-approved raw files and reuse conditions, then freeze a pre-access protocol before numerical inspection.",
+  "claim_boundary": "This recheck proves public catalog metadata and an application-gated download boundary only; it does not validate the digital twin or any runtime parameter."
+}

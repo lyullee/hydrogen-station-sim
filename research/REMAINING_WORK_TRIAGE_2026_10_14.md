@@ -15,6 +15,7 @@
 - Figshare 실제 수소 개방형 채널 22개 archive에 고정 공간순위 후보를 재현 실행했다.
 - 결과: 중앙 Spearman ρ `0.658`, 평균 top-5 recall `0.727`; 최근접 센서 사분위 적중률은 `0.545`로 전체 joint screen은 실패했다.
 - 자료를 과거 진단에서 이미 열어 보았으므로 이번 결과는 `POST_ACCESS_TRANSFER_DIAGNOSTIC`이며 독립 검증 게이트·runtime 라우팅·진행률을 변경하지 않는다. 재현 결과는 `research/figshare_h2_channel_spatial_holdout_result_2026_10_14.json`에 고정했다.
+- NBSDC 액체수소 충전소 운영 데이터 후보도 공식 카탈로그 API로 재확인했다. 35 MPa 충전기, 70 MPa 충전기, 90 MPa 압축기, 고압 저장용기, 액체수소 펌프·저장탱크 파일 목록은 공개되어 있지만 원자료 다운로드는 데이터 신청으로 제한된다. 따라서 수치 검증·독립 holdout·runtime 승격에는 사용하지 않았고, 접근 경계는 `research/nbsdc_lh2_station_access_recheck_2026_10_14.json`에 고정했다.
 
 ## 먼저 처리할 수 있는 작업
 
