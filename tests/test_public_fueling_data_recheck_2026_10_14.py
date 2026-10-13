@@ -22,3 +22,4 @@ def test_public_fueling_recheck_is_fail_closed() -> None:
     assert decisions["kuroki_hitrf_36l"] == "PUBLISHED_EXPERIMENT_DESCRIPTION_DATA_NOT_SHARED"
     assert decisions["nrel_h2fills_hdvs"] == "PARTIAL_TANK_BOUNDARY_ONLY"
     assert decisions["nrel_retail_composite_products"] == "CONTEXT_ONLY"
+    assert decisions["nist_hydrogen_field_test_standard"] == "CONTACT_REQUEST_CANDIDATE_ONLY"

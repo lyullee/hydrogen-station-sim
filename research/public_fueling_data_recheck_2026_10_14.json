@@ -32,6 +32,14 @@
       "channels_described": ["aggregate fueling counts", "final pressure distributions", "fueling time distributions"],
       "decision": "CONTEXT_ONLY",
       "reason": "Aggregate products do not provide synchronized event-level station-to-vehicle traces."
+    },
+    {
+      "id": "nist_hydrogen_field_test_standard",
+      "source": "https://www.nist.gov/programs-projects/portable-field-test-standard-evaluation-hydrogen-gas-dispensers",
+      "doi": "10.6028/NIST.TN.1888",
+      "channels_described": ["field-test tank pressure", "field-test tank temperature", "independent gravimetric/meter mass"],
+      "decision": "CONTACT_REQUEST_CANDIDATE_ONLY",
+      "reason": "NIST reports seven field drafts and synchronized measurement methods, but the public technical report does not expose the machine-readable logger files needed for a frozen holdout."
     }
   ],
   "result": "NO_NEW_PUBLIC_SYNCHRONIZED_STATION_TO_VEHICLE_HOLDOUT_ADMITTED",
