@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "artifact_type": "local_controlled_hrs_schema_recheck",
+  "generated_at": "2026-10-13T20:25:07.581072+00:00",
+  "input_root_count": 2,
+  "source_identifiers_published": false,
+  "original_headers_published": false,
+  "raw_rows_persisted": false,
+  "source_files_scanned": 21,
+  "source_tables_scanned": 21,
+  "semantic_channel_table_counts": {
+    "controller_state": 8,
+    "mass_flow": 12,
+    "pressure": 12,
+    "temperature": 11,
+    "time": 12
+  },
+  "time_overlap_candidate_summary": {
+    "usable_table_count": 9,
+    "absolute_clock_table_count": 9,
+    "relative_clock_table_count": 0,
+    "multi_table_cluster_count": 0,
+    "tables_in_clusters": 0,
+    "largest_cluster_tables": 0,
+    "exact_full_loop_cluster_count": 0,
+    "header_only_missing_family_histogram": {},
+    "path_assisted_candidate_count": 0,
+    "path_assisted_missing_family_histogram": {},
+    "minimum_shorter_interval_overlap_fraction": 0.8,
+    "maximum_cadence_ratio": 10.0,
+    "path_semantics_are_unattested": true,
+    "source_identifiers_published": false,
+    "original_headers_published": false,
+    "absolute_time_samples_published": false
+  },
+  "candidate_schema_counts": {
+    "full_loop_candidate": 0,
+    "co_located_full_loop_candidate": 0,
+    "near_full_loop_missing_one_semantic_group": 0,
+    "station_recharge_candidate": 0,
+    "vehicle_fill_candidate": 0,
+    "synchronized_flat_full_loop_candidate": 0,
+    "synchronized_flat_station_recharge_candidate": 0,
+    "synchronized_flat_vehicle_fill_candidate": 0,
+    "time_overlap_full_loop_candidate": 0,
+    "time_overlap_path_assisted_full_loop_candidate": 0,
+    "rejected_nonmeasurement_candidate_container": 0
+  },
+  "decision": {
+    "full_loop_candidate_found": false,
+    "station_recharge_candidate_found": false,
+    "vehicle_fill_candidate_found": false,
+    "eligible_for_model_validation": false,
+    "reason": "Header-level and bounded time-shape screening found no common-clock station-to-vehicle candidate. Custodian unit, calibration, event and rights attestations are absent from this recheck."
+  },
+  "claim_boundary": "De-identified header-level schema and bounded time-shape screening only. This is not a validation result, does not interpret tags or units, and does not publish paths, headers, timestamps or measurements.",
+  "next_action": "Use the validation data request specification and obtain a custodian-mapped, rights-cleared holdout before numerical outcomes are read."
+}

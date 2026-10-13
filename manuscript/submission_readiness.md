@@ -127,6 +127,13 @@ inventory and the broader file/header screen. It is recorded as
 parameter application and station-to-vehicle full-loop validation explicitly
 false.
 
+An additional de-identified schema recheck of two controlled quarantine roots
+on 2026-10-14 scanned 21 files/tables. It found pressure, temperature,
+flow, time and controller-like headers, but zero common-clock station-to-
+vehicle, station-recharge or vehicle-fill candidates. The aggregate result is
+in [`local_controlled_hrs_schema_recheck_2026_10_14.json`](../research/local_controlled_hrs_schema_recheck_2026_10_14.json);
+it is an intake screen only and does not interpret units or validate the model.
+
 The companion privacy-bounded asset screen adds a separate passing integrity
 gate: 52 operational scenario steps have populated leak, fire, explosion and
 hazard-classification fields, with references to KGS, KOSHA, NFPA, ASME, IEC,
