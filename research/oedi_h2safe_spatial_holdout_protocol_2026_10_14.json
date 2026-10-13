@@ -1,0 +1,92 @@
+{
+  "schema_version": 1,
+  "artifact_type": "dataset_specific_preaccess_spatial_holdout_protocol",
+  "protocol_id": "oedi_h2safe_pooled_spatial_rank_v1",
+  "prepared_at_utc": "2026-10-13T15:27:00Z",
+  "authoritative_freeze": {
+    "event": "first git commit containing this artifact",
+    "commit": null,
+    "resolution": "Resolve the immutable commit from git history after the commit; do not rewrite this protocol after numerical access."
+  },
+  "source": {
+    "title": "OEDI: Dataset for H2SAFE - Controlled Gas Releases and Sensor-Response for Indoor Hydrogen Safety",
+    "landing_url": "https://data.openei.org/submissions/8799",
+    "metadata_seen_before_freeze": [
+      "Search-result title and public landing URL",
+      "Description that the archive includes time-series gas concentrations, sensor coordinates, release-source coordinates, geometry and HVAC documentation",
+      "Description that multiple nozzle sizes, orientations, pressures and flow rates are represented"
+    ],
+    "detailed_landing_page_opened": false,
+    "file_inventory_opened": false,
+    "numerical_time_series_opened": false,
+    "sensor_or_source_coordinate_values_opened": false,
+    "outcome_plot_or_metric_opened": false,
+    "eligibility_status": "UNASSESSED_UNTIL_AFTER_FREEZE_COMMIT"
+  },
+  "locked_candidate": {
+    "candidate_id": "pooled_spatial_rank_v1",
+    "implementation": "src/h2station/prospective_spatial_rank.py",
+    "implementation_sha256": "7ec8658fa729b1b8817e86314d7d178ee1ad3772f00e1f2b76e10f95d636b387",
+    "parent_protocol": "research/prospective_spatial_rank_protocol_2026_10_13.json",
+    "parent_protocol_sha256": "a0ef3e23142e953fe67e5fd9eb1cb7b214a4cf0ac636c73763ceb7b1951c6e70",
+    "vertical_axis": "y",
+    "coordinate_unit": "m",
+    "parameters": [0.3, 0.1, 0.2, 1.0, 1.25],
+    "denominator_offset": 0.25,
+    "formula": "exp(0.3*max(dy,0)-0.1*max(-dy,0))/(0.25+horizontal_distance_m^1.25+0.2*abs(dy))",
+    "output_semantics": "within-case sensor rank only"
+  },
+  "eligibility": {
+    "required_test_gas": "hydrogen",
+    "minimum_eligible_case_count": 18,
+    "minimum_usable_sensor_count_per_case": 8,
+    "required_fields": [
+      "publisher-authenticated source coordinates",
+      "publisher-authenticated sensor coordinates in the same Cartesian frame",
+      "declared elevation axis and coordinate units",
+      "release start and stop or publisher-authenticated time crosswalk",
+      "per-sensor numerical hydrogen concentration response",
+      "release orientation",
+      "ventilation state",
+      "test-gas identity for every case",
+      "source provenance, file digest and reuse terms"
+    ],
+    "excluded_cases": [
+      "helium or other surrogate releases",
+      "hydrogen blends without a separable hydrogen response",
+      "CFD-only or synthetic cases",
+      "cases overlapping the candidate-development cohorts",
+      "cases missing source coordinates, sensor coordinates or numerical sensor response"
+    ],
+    "case_selection": "Include every case in the publisher-authenticated archive that satisfies the frozen requirements; do not exclude a case after viewing response metrics.",
+    "overlap_rule": "Hash and identity-check cases against the HyTunnel-CS, legacy H2SAFE and USN open-channel development cohorts before scoring. Any overlap is ineligible.",
+    "ineligible_effect": "Record the exact failed fields and do not execute the candidate."
+  },
+  "response": {
+    "definition": "q99 minus q10 hydrogen concentration during the publisher-authenticated release/evaluation interval",
+    "sensor_pool": "all eligible numerical hydrogen-concentration sensors in the common coordinate frame",
+    "missing_value_policy": "No imputation of a sensor response or coordinate; report the case as ineligible.",
+    "format_amendment_policy": "A format-only amendment may repair parsing or axis naming but may not change case scope, candidate, response definition or thresholds."
+  },
+  "decision_rule": {
+    "all_screens_must_pass": true,
+    "parameter_tuning_after_access_permitted": false,
+    "screens": {
+      "all_declared_cases_eligible": true,
+      "median_spearman_at_least": 0.5,
+      "fraction_of_cases_with_spearman_at_least_0_4_at_least": 0.6,
+      "mean_top5_recall_of_observed_top_quartile_at_least": 0.6,
+      "nearest_predicted_sensor_in_observed_top_quartile_fraction_at_least": 0.7
+    },
+    "failure_effect": "Retain the negative holdout and keep runtime spatial routing disabled.",
+    "pass_effect": "Support only cross-facility sensor-rank transfer in the tested indoor domain; runtime use still requires an explicit safety review."
+  },
+  "runtime_policy": {
+    "enabled": false,
+    "api_import_permitted": false,
+    "hazop_runtime_import_permitted": false,
+    "alarm_or_trip_setpoint_change_permitted": false,
+    "concentration_or_distance_calibration_permitted": false
+  },
+  "claim_boundary": "A passing result would support only the frozen rank heuristic across the eligible OEDI indoor actual-hydrogen cases. It would not validate concentration magnitude, alarm time, detector coverage completeness, CFD, ESD effectiveness, outdoor HRS dispersion, consequence distance or field safety."
+}
