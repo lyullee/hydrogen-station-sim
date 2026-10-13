@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "artifact_type": "public_hydrogen_validation_data_search_recheck",
+  "recorded_at": "2026-10-14",
+  "purpose": "Close or rule out newly discoverable independent public raw data for the remaining IJHE validation gates without reusing an already opened holdout.",
+  "search_policy": {
+    "independent_holdout_required": true,
+    "outcome_access_before_protocol_freeze_disqualifies_holdout": true,
+    "figure_only_or_aggregate_data_is_not_raw_trace": true,
+    "model_code_is_not_experimental_validation": true
+  },
+  "sources": [
+    {
+      "id": "jrc_gastef_reference_record",
+      "title": "JRC Reference Data from Experiments on Onboard Hydrogen Tanks Fast Filling",
+      "url": "https://publications.jrc.ec.europa.eu/repository/handle/JRC76380",
+      "article_doi": "10.1016/j.ijhydene.2014.03.227",
+      "data_type": "full-scale hydrogen tank filling and emptying experiments",
+      "access_observation": "The JRC publication record describes a reference database, but its Datasets and Dataset collections fields contain no public machine-readable URL. The linked public material is a publication/figure record.",
+      "eligibility": "NOT_ELIGIBLE_AS_NEW_RAW_HOLDOUT",
+      "blocking_reason": "No rights-cleared pressure-temperature time-series export was available from the public record."
+    },
+    {
+      "id": "jrc_gastef_open_papers",
+      "title": "JRC GasTeF experimental papers and facility records",
+      "urls": [
+        "https://publications.jrc.ec.europa.eu/repository/handle/JRC80910",
+        "https://joint-research-centre.ec.europa.eu/what-we-do/laboratories/high-pressure-gas-testing-facility_en"
+      ],
+      "data_type": "experimental descriptions and plotted results",
+      "access_observation": "The records document Type III/IV filling conditions and instrumentation, but do not expose a downloadable raw logger archive for a new frozen score.",
+      "eligibility": "BOUNDARY_EVIDENCE_ONLY",
+      "blocking_reason": "A plotted range or paper figure cannot close the Type-III prospective temperature gate."
+    },
+    {
+      "id": "eu_h2_stations_api",
+      "title": "H2-Stations European hydrogen refuelling station export API",
+      "url": "https://docs.h2-stations.eu/for-data-users/",
+      "data_type": "station metadata, availability, events and aggregate operational signals",
+      "access_observation": "The public API provides station and availability information; it does not provide synchronized pressure, temperature and mass-flow logger traces for a component holdout.",
+      "eligibility": "NOT_ELIGIBLE_FOR_PHYSICAL_COMPONENT_VALIDATION",
+      "blocking_reason": "No raw process trace or apparatus boundary is available."
+    },
+    {
+      "id": "dtu_hydrogen_fuelling_station_library",
+      "title": "DTU-TES Hydrogen-Fuelling-Station Modelica library",
+      "url": "https://github.com/DTU-TES/Hydrogen-Fuelling-Station",
+      "data_type": "open simulation/model library",
+      "access_observation": "The repository contains Modelica components and property files, not independent measured pressure, temperature or release traces.",
+      "eligibility": "NOT_ELIGIBLE_AS_EXPERIMENTAL_HOLDOUT",
+      "blocking_reason": "Simulation code cannot be counted as an external experimental validation dataset."
+    },
+    {
+      "id": "california_hrsf_report",
+      "title": "Existing Light-Duty Hydrogen Refueling Stations In-Use Study Report",
+      "url": "https://ww2.arb.ca.gov/sites/default/files/2024-12/Existing%20Light-Duty%20Hydrogen%20Refueling%20Stations%20In-Use%20Study%20Report%20ADA%20AL.pdf",
+      "data_type": "operational study report and plotted station examples",
+      "access_observation": "The report contains station-use and fueling figures, but no rights-cleared common-clock station/controller/vehicle raw bundle was exposed in the public report.",
+      "eligibility": "BOUNDARY_EVIDENCE_ONLY",
+      "blocking_reason": "It cannot close the station-side component holdout or the excluded station-to-vehicle full-loop gate."
+    },
+    {
+      "id": "already_opened_sources",
+      "title": "H2SAFE, ELVHYS, USN open-channel and other current repository sources",
+      "data_type": "already accessed repository evidence",
+      "access_observation": "These sources are already represented by frozen protocols and retained outcomes in the repository. Recounting them as new holdouts would violate the access-order rule.",
+      "eligibility": "DO_NOT_REUSE_AS_NEW_HOLDOUT",
+      "blocking_reason": "Outcome access and prior diagnostics are already recorded."
+    }
+  ],
+  "conclusion": {
+    "new_eligible_raw_dataset_found": false,
+    "remaining_gate_status_changed": false,
+    "runtime_model_changed": false,
+    "progress_percent_changed": false,
+    "next_action": "Obtain a rights-cleared, previously uninspected Type-III temperature-pressure trace or a new independent pressure-decay/release campaign, then freeze the scoring protocol before opening outcomes.",
+    "claim_boundary": "The current study may report the existing bounded component results and retained negative findings, but may not claim full independent Type-III thermal, outdoor consequence-distance, spatial detector-transfer or station-to-vehicle validation."
+  }
+}

@@ -19,6 +19,7 @@
 - Schefer 2007 장치 경계의 누락 원인을 분리하기 위해 벽 열용량·외부 열전달계수 16개 조합의 비단열 민감도 진단을 실행했다. 최선 조합도 압력 NRMSE `10.98%`, 중앙 APE `24.92%`로 고정 화면을 통과하지 못했다. 이 결과는 `research/schefer_2007_nonadiabatic_diagnostic_2026_10_14.json`에 보존했으며, 기존 holdout·런타임·진행률은 변경하지 않았다.
 - Grune 2014의 KIT 서지 기록과 공개 ICHS/HyTunnel 요약을 다시 확인했지만, 권리 정리된 원시 pressure-time 표나 전체 logger export는 찾지 못했다. 공개 자료는 0.37 dm³ 저장조, 최대 약 200 bar, 3/4/10 mm 노즐과 밸브 개방 조건을 설명하는 경계자료로만 사용하고, 검증 게이트는 계속 보류한다.
 - PRESLHY E3.1 공개 워크북 6개 아카이브(33개 시험, 5개 실제 수소 농도 채널)를 사용해 농도 검지 수송지연의 사후 진단을 추가했다. 압력 기반 방출시점 대비 농도 검지 onset 중앙 지연은 보정 전 `4.40 s`, 문헌상 3.75 s 타임스탬프 보정 후 `0.65 s`였다. 이 결과는 시간표시·불확실성 문맥만 보완하며, 독립 검증 게이트·알람 임계값·런타임 검지기 배치는 변경하지 않는다. 결과는 `research/preslhy_e31_concentration_transport_diagnostic_2026_10_14.json`에 고정했다.
+- 2026-10-14 공개자료 재검색에서 JRC/GasTeF 원시 시계열, 유럽 H2-Stations API, DTU Modelica 라이브러리, California in-use 보고서를 확인했다. 새 권리정리 원자료 holdout은 발견되지 않았고, 이미 개방한 H2SAFE·ELVHYS·USN 자료는 재사용하지 않았다. 상세 경계와 다음 수집 조건은 `research/public_data_search_recheck_2026_10_14.json`에 고정했다.
 
 ## 먼저 처리할 수 있는 작업
 
