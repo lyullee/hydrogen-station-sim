@@ -12,7 +12,7 @@ evidence-readiness decision; it is not a prediction of editorial acceptance.
 
 ## Current decision
 
-Audit snapshot: **2026-10-13 KST**
+Audit snapshot: **2026-10-14 KST**
 
 | Decision | Result |
 |---|---|
@@ -22,7 +22,7 @@ Audit snapshot: **2026-10-13 KST**
 
 Gate counts: **133 PASS · 11 FAIL · 7 PENDING**.
 
-The latest full working-tree regression passed **1,510 tests with 0 failures and 6 skipped** plus 209 dependency/data-reader warnings in 220.44 s (`research/full_regression_test_run_2026_10_13.json`). It was run from commit `27cfc11bd4aed64a8535433d8a16891d2851aff1` with the new third-cohort transfer diagnostic and refreshed evidence files still uncommitted, so it is an implementation-integrity record rather than a clean-release attestation. The last clean full-regression record remains `research/full_regression_test_run_2026_10_12_latest.json`. A broad LLM/SAGA, virtual-safety, HAZOP and HIAD accident-path selection passed **159 tests with 2 warnings** (`research/paper_llm_safety_broad_regression_2026_10_12.json`). These software checks do not convert independent physical-validation failures or the author-confirmation gate into passes.
+The latest full working-tree regression passed **1,561 tests with 0 failures and 0 skips** plus 23 dependency/data-reader warnings in 222.86 s (`research/full_regression_test_run_2026_10_14.json`). It was run from commit `3e8288b16cbc7cb79df186e71dfb5e9aeb40f5a0` with the MC sensor-envelope diagnostic and refreshed evidence files present, so it is an implementation-integrity record rather than a clean-release attestation. The last clean full-regression record remains `research/full_regression_test_run_2026_10_12_latest.json`. A broad LLM/SAGA, virtual-safety, HAZOP and HIAD accident-path selection passed **159 tests with 2 warnings** (`research/paper_llm_safety_broad_regression_2026_10_12.json`). These software checks do not convert independent physical-validation failures or the author-confirmation gate into passes.
 
 The 2026-10-12 critical-priority diagnostic run completed in 3.2 s and is
 archived as [`priority_diagnostic_run_2026_10_12.json`](../research/priority_diagnostic_run_2026_10_12.json).

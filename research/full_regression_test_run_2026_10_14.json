@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "artifact_type": "full_regression_test_run",
+  "generated_at": "2026-10-14T01:27:56+09:00",
+  "command": ".venv\\Scripts\\python.exe -m pytest -q",
+  "status": "PASS",
+  "tests_passed": 1561,
+  "tests_failed": 0,
+  "tests_skipped": 0,
+  "warnings": 23,
+  "elapsed_seconds": 222.86,
+  "duration_seconds": 222.86,
+  "source_commit": "3e8288b16cbc7cb79df186e71dfb5e9aeb40f5a0",
+  "readiness_snapshot": "research/ijhe_readiness_audit.json",
+  "interpretation": "All executable tests pass for the recorded working-tree state. This verifies implementation integrity only; it does not convert independent validation FAIL/PENDING gates to PASS.",
+  "working_tree_dirty_at_run": true,
+  "run_recorded_at": "2026-10-14T01:27:56+09:00"
+}
