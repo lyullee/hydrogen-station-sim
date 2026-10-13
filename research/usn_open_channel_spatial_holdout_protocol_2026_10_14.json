@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "frozen_at": "2026-10-14",
+  "status": "FROZEN_BEFORE_USN_OPEN_CHANNEL_RAW_ACCESS",
+  "objective": "Screen the already frozen orientation-class spatial detector against a new public actual-hydrogen open-channel release dataset without fitting coordinates, source strength, alarm thresholds or rank coefficients.",
+  "claim_boundary": "This is a component spatial-ranking holdout only. It does not validate HRS outdoor detector placement, concentration amplitudes, alarm/trip setpoints, CFD, ESD effectiveness, consequence distance or a station-to-vehicle loop.",
+  "source": {
+    "title": "Experimental Data of Hydrogen Dispersion in an Open-ended Rectangular Channel",
+    "dataset_doi": "10.23642/USN.26117989.v2",
+    "article_doi": "10.1016/j.jlp.2025.105669",
+    "repository": "USN Figshare",
+    "dataset_version": "2",
+    "license": "CC BY 4.0",
+    "test_gas": "hydrogen",
+    "metadata_url": "https://api.figshare.com/v2/articles/26117989"
+  },
+  "prior_access": {
+    "public_metadata_viewed": true,
+    "documentation_viewed": false,
+    "raw_archives_downloaded": false,
+    "raw_archives_opened": false,
+    "individual_sensor_responses_computed": false,
+    "model_frozen_before_raw_access": true,
+    "model_freeze_commit": "TO_BE_RECORDED_ON_COMMIT"
+  },
+  "eligibility": {
+    "minimum_independent_experiments": 18,
+    "required_fields": [
+      "actual hydrogen confirmation",
+      "common time base",
+      "release start or release marker",
+      "source position and release orientation",
+      "sensor positions in the same coordinate frame",
+      "per-sensor concentration time series",
+      "filling pressure and temporal mass-flow context"
+    ],
+    "independence_rule": "No experiment may be used for model development, coordinate selection, amplitude calibration or alarm threshold selection before this protocol is frozen.",
+    "failure_rule": "If source/sensor coordinates or per-sensor numeric concentration traces are unavailable, retain the dataset as context-only and do not execute a spatial score.",
+    "raw_file_policy": "Raw archives remain outside the repository; only hashes, metadata and derived aggregate results may be committed."
+  },
+  "model_lock": {
+    "candidate": "orientation_class_rank_v2",
+    "implementation": "src/h2station/spatial_detector.py",
+    "implementation_sha256": "d01b4378a43b3dc233d7093733119963c11db208f604160eba0fa7f962d7580a",
+    "parameter_fitting": "prohibited",
+    "coordinate_fitting": "prohibited",
+    "amplitude_fitting": "prohibited",
+    "alarm_threshold_fitting": "prohibited",
+    "runtime_application_before_result": false
+  },
+  "evaluation_contract": {
+    "response_window": "Frozen release marker onward; no manual crop or time shift.",
+    "per_sensor_response": "q99(concentration) minus q10(concentration), with at least 30 finite samples.",
+    "primary_endpoints": [
+      "Spearman rank correlation between frozen geometry score and robust sensor response",
+      "top-five predictor recall of observed top response quartile",
+      "nearest-predicted sensor in observed top response quartile"
+    ],
+    "aggregate_screens": {
+      "median_spearman_min": 0.5,
+      "fraction_spearman_at_least_0_4_min": 0.6,
+      "mean_top5_recall_min": 0.6,
+      "nearest_success_fraction_min": 0.7
+    },
+    "promotion_rule": "Every eligible experiment and every aggregate screen must pass; otherwise retain the negative result and keep runtime routing unchanged."
+  }
+}
