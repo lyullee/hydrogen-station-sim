@@ -1,0 +1,2227 @@
+{
+  "schema_version": 1,
+  "diagnostic_type": "POST_ACCESS_CONCENTRATION_TRANSPORT_DELAY_DIAGNOSTIC",
+  "runtime_promotion": false,
+  "independent_validation_gate_impact": "none",
+  "source_description": {
+    "dataset": "PRESLHY E3.1 DisCha public workbooks",
+    "doi": "10.35097/1187",
+    "concentration_channels": [
+      "C3",
+      "C2",
+      "C1",
+      "C1-",
+      "C4"
+    ],
+    "documented_transport_delay_s": 3.75
+  },
+  "archive_count": 6,
+  "trace_count": 33,
+  "error_count": 0,
+  "raw_onset_lag": {
+    "count": 165,
+    "median_s": 4.400000000000006,
+    "p10_s": 3.4399999999999995,
+    "p90_s": 7.479999999999999
+  },
+  "corrected_onset_lag": {
+    "count": 165,
+    "median_s": 0.6500000000000057,
+    "p10_s": -0.3100000000000006,
+    "p90_s": 3.7299999999999986
+  },
+  "raw_peak_lag": {
+    "count": 165,
+    "median_s": 6.100000000000001,
+    "p10_s": 4.640000000000007,
+    "p90_s": 15.92
+  },
+  "corrected_peak_lag": {
+    "count": 165,
+    "median_s": 2.3500000000000014,
+    "p10_s": 0.8900000000000065,
+    "p90_s": 12.17
+  },
+  "traces": [
+    {
+      "case_id": "PRE3P1A_KIT_D05_300K_DATA.zip:20190523_152309.xlsx",
+      "source_package": "PRE3P1A_KIT_D05_300K_DATA.zip",
+      "source_member": "20190523_152309.xlsx",
+      "thermal_domain": "300 K",
+      "nozzle_diameter_mm": 0.5,
+      "samples": 1620,
+      "release_onset_time_s": 27.5,
+      "sensors": [
+        {
+          "channel": "C3",
+          "baseline_vol_percent": 0.46725799999999995,
+          "peak_vol_percent": 4.956143,
+          "onset_time_s": 32.1,
+          "peak_time_s": 35.1,
+          "raw_onset_lag_s": 4.600000000000001,
+          "corrected_onset_lag_s": 0.8500000000000014,
+          "raw_peak_lag_s": 7.600000000000001,
+          "corrected_peak_lag_s": 3.8500000000000014
+        },
+        {
+          "channel": "C2",
+          "baseline_vol_percent": 0.528931,
+          "peak_vol_percent": 7.169107,
+          "onset_time_s": 31.8,
+          "peak_time_s": 33.5,
+          "raw_onset_lag_s": 4.300000000000001,
+          "corrected_onset_lag_s": 0.5500000000000007,
+          "raw_peak_lag_s": 6.0,
+          "corrected_peak_lag_s": 2.25
+        },
+        {
+          "channel": "C1",
+          "baseline_vol_percent": 0.540232,
+          "peak_vol_percent": 11.835073,
+          "onset_time_s": 30.7,
+          "peak_time_s": 33.0,
+          "raw_onset_lag_s": 3.1999999999999993,
+          "corrected_onset_lag_s": -0.5500000000000007,
+          "raw_peak_lag_s": 5.5,
+          "corrected_peak_lag_s": 1.75
+        },
+        {
+          "channel": "C1-",
+          "baseline_vol_percent": 0.448642,
+          "peak_vol_percent": 11.203959,
+          "onset_time_s": 34.3,
+          "peak_time_s": 36.9,
+          "raw_onset_lag_s": 6.799999999999997,
+          "corrected_onset_lag_s": 3.049999999999997,
+          "raw_peak_lag_s": 9.399999999999999,
+          "corrected_peak_lag_s": 5.649999999999999
+        },
+        {
+          "channel": "C4",
+          "baseline_vol_percent": 0.452584,
+          "peak_vol_percent": 4.472205,
+          "onset_time_s": 31.6,
+          "peak_time_s": 34.8,
+          "raw_onset_lag_s": 4.100000000000001,
+          "corrected_onset_lag_s": 0.3500000000000014,
+          "raw_peak_lag_s": 7.299999999999997,
+          "corrected_peak_lag_s": 3.549999999999997
+        }
+      ]
+    },
+    {
+      "case_id": "PRE3P1A_KIT_D05_300K_DATA.zip:20190523_153415.xlsx",
+      "source_package": "PRE3P1A_KIT_D05_300K_DATA.zip",
+      "source_member": "20190523_153415.xlsx",
+      "thermal_domain": "300 K",
+      "nozzle_diameter_mm": 0.5,
+      "samples": 1650,
+      "release_onset_time_s": 30.7,
+      "sensors": [
+        {
+          "channel": "C3",
+          "baseline_vol_percent": 0.591108,
+          "peak_vol_percent": 3.715773,
+          "onset_time_s": 35.5,
+          "peak_time_s": 37.8,
+          "raw_onset_lag_s": 4.800000000000001,
+          "corrected_onset_lag_s": 1.0500000000000007,
+          "raw_peak_lag_s": 7.099999999999998,
+          "corrected_peak_lag_s": 3.349999999999998
+        },
+        {
+          "channel": "C2",
+          "baseline_vol_percent": 0.6168135,
+          "peak_vol_percent": 5.329923,
+          "onset_time_s": 35.2,
+          "peak_time_s": 37.2,
+          "raw_onset_lag_s": 4.5000000000000036,
+          "corrected_onset_lag_s": 0.7500000000000036,
+          "raw_peak_lag_s": 6.5000000000000036,
+          "corrected_peak_lag_s": 2.7500000000000036
+        },
+        {
+          "channel": "C1",
+          "baseline_vol_percent": 0.6241965,
+          "peak_vol_percent": 9.071898,
+          "onset_time_s": 34.3,
+          "peak_time_s": 36.3,
+          "raw_onset_lag_s": 3.599999999999998,
+          "corrected_onset_lag_s": -0.15000000000000213,
+          "raw_peak_lag_s": 5.599999999999998,
+          "corrected_peak_lag_s": 1.8499999999999979
+        },
+        {
+          "channel": "C1-",
+          "baseline_vol_percent": 0.533228,
+          "peak_vol_percent": 8.744227,
+          "onset_time_s": 36.0,
+          "peak_time_s": 38.9,
+          "raw_onset_lag_s": 5.300000000000001,
+          "corrected_onset_lag_s": 1.5500000000000007,
+          "raw_peak_lag_s": 8.2,
+          "corrected_peak_lag_s": 4.449999999999999
+        },
+        {
+          "channel": "C4",
+          "baseline_vol_percent": 0.539575,
+          "peak_vol_percent": 3.460378,
+          "onset_time_s": 34.9,
+          "peak_time_s": 39.3,
+          "raw_onset_lag_s": 4.199999999999999,
+          "corrected_onset_lag_s": 0.4499999999999993,
+          "raw_peak_lag_s": 8.599999999999998,
+          "corrected_peak_lag_s": 4.849999999999998
+        }
+      ]
+    },
+    {
+      "case_id": "PRE3P1A_KIT_D05_300K_DATA.zip:20190523_154414.xlsx",
+      "source_package": "PRE3P1A_KIT_D05_300K_DATA.zip",
+      "source_member": "20190523_154414.xlsx",
+      "thermal_domain": "300 K",
+      "nozzle_diameter_mm": 0.5,
+      "samples": 1180,
+      "release_onset_time_s": 29.6,
+      "sensors": [
+        {
+          "channel": "C3",
+          "baseline_vol_percent": 0.5123255,
+          "peak_vol_percent": 1.896213,
+          "onset_time_s": 34.8,
+          "peak_time_s": 43.9,
+          "raw_onset_lag_s": 5.199999999999996,
+          "corrected_onset_lag_s": 1.4499999999999957,
+          "raw_peak_lag_s": 14.299999999999997,
+          "corrected_peak_lag_s": 10.549999999999997
+        },
+        {
+          "channel": "C2",
+          "baseline_vol_percent": 0.5707774999999999,
+          "peak_vol_percent": 2.804279,
+          "onset_time_s": 34.3,
+          "peak_time_s": 36.6,
+          "raw_onset_lag_s": 4.699999999999996,
+          "corrected_onset_lag_s": 0.9499999999999957,
+          "raw_peak_lag_s": 7.0,
+          "corrected_peak_lag_s": 3.25
+        },
+        {
+          "channel": "C1",
+          "baseline_vol_percent": 0.5775684999999999,
+          "peak_vol_percent": 4.942891,
+          "onset_time_s": 33.7,
+          "peak_time_s": 36.4,
+          "raw_onset_lag_s": 4.100000000000001,
+          "corrected_onset_lag_s": 0.3500000000000014,
+          "raw_peak_lag_s": 6.799999999999997,
+          "corrected_peak_lag_s": 3.049999999999997
+        },
+        {
+          "channel": "C1-",
+          "baseline_vol_percent": 0.48646,
+          "peak_vol_percent": 4.764192,
+          "onset_time_s": 34.0,
+          "peak_time_s": 36.6,
+          "raw_onset_lag_s": 4.399999999999999,
+          "corrected_onset_lag_s": 0.6499999999999986,
+          "raw_peak_lag_s": 7.0,
+          "corrected_peak_lag_s": 3.25
+        },
+        {
+          "channel": "C4",
+          "baseline_vol_percent": 0.505016,
+          "peak_vol_percent": 1.64433,
+          "onset_time_s": 34.0,
+          "peak_time_s": 45.6,
+          "raw_onset_lag_s": 4.399999999999999,
+          "corrected_onset_lag_s": 0.6499999999999986,
+          "raw_peak_lag_s": 16.0,
+          "corrected_peak_lag_s": 12.25
+        }
+      ]
+    },
+    {
+      "case_id": "PRE3P1A_KIT_D05_300K_DATA.zip:20190523_155208.xlsx",
+      "source_package": "PRE3P1A_KIT_D05_300K_DATA.zip",
+      "source_member": "20190523_155208.xlsx",
+      "thermal_domain": "300 K",
+      "nozzle_diameter_mm": 0.5,
+      "samples": 760,
+      "release_onset_time_s": 25.5,
+      "sensors": [
+        {
+          "channel": "C3",
+          "baseline_vol_percent": 0.4985265,
+          "peak_vol_percent": 1.230298,
+          "onset_time_s": 31.1,
+          "peak_time_s": 33.9,
+          "raw_onset_lag_s": 5.600000000000001,
+          "corrected_onset_lag_s": 1.8500000000000014,
+          "raw_peak_lag_s": 8.399999999999999,
+          "corrected_peak_lag_s": 4.649999999999999
+        },
+        {
+          "channel": "C2",
+          "baseline_vol_percent": 0.5517785,
+          "peak_vol_percent": 1.870239,
+          "onset_time_s": 30.4,
+          "peak_time_s": 32.6,
+          "raw_onset_lag_s": 4.899999999999999,
+          "corrected_onset_lag_s": 1.1499999999999986,
+          "raw_peak_lag_s": 7.100000000000001,
+          "corrected_peak_lag_s": 3.3500000000000014
+        },
+        {
+          "channel": "C1",
+          "baseline_vol_percent": 0.5607225,
+          "peak_vol_percent": 3.041082,
+          "onset_time_s": 29.8,
+          "peak_time_s": 32.3,
+          "raw_onset_lag_s": 4.300000000000001,
+          "corrected_onset_lag_s": 0.5500000000000007,
+          "raw_peak_lag_s": 6.799999999999997,
+          "corrected_peak_lag_s": 3.049999999999997
+        },
+        {
+          "channel": "C1-",
+          "baseline_vol_percent": 0.46820300000000004,
+          "peak_vol_percent": 2.929681,
+          "onset_time_s": 29.8,
+          "peak_time_s": 32.2,
+          "raw_onset_lag_s": 4.300000000000001,
+          "corrected_onset_lag_s": 0.5500000000000007,
+          "raw_peak_lag_s": 6.700000000000003,
+          "corrected_peak_lag_s": 2.950000000000003
+        },
+        {
+          "channel": "C4",
+          "baseline_vol_percent": 0.480448,
+          "peak_vol_percent": 1.161168,
+          "onset_time_s": 30.2,
+          "peak_time_s": 31.9,
+          "raw_onset_lag_s": 4.699999999999999,
+          "corrected_onset_lag_s": 0.9499999999999993,
+          "raw_peak_lag_s": 6.399999999999999,
+          "corrected_peak_lag_s": 2.6499999999999986
+        }
+      ]
+    },
+    {
+      "case_id": "PRE3P1A_KIT_D05_80K-DATA.zip:20190604_134534.xlsx",
+      "source_package": "PRE3P1A_KIT_D05_80K-DATA.zip",
+      "source_member": "20190604_134534.xlsx",
+      "thermal_domain": "80 K",
+      "nozzle_diameter_mm": 0.5,
+      "samples": 2800,
+      "release_onset_time_s": 11.2,
+      "sensors": [
+        {
+          "channel": "C3",
+          "baseline_vol_percent": 0.565453,
+          "peak_vol_percent": 9.24722,
+          "onset_time_s": 17.5,
+          "peak_time_s": 19.7,
+          "raw_onset_lag_s": 6.300000000000001,
+          "corrected_onset_lag_s": 2.5500000000000007,
+          "raw_peak_lag_s": 8.5,
+          "corrected_peak_lag_s": 4.75
+        },
+        {
+          "channel": "C2",
+          "baseline_vol_percent": 0.6311435000000001,
+          "peak_vol_percent": 13.355711,
+          "onset_time_s": 17.2,
+          "peak_time_s": 19.2,
+          "raw_onset_lag_s": 6.0,
+          "corrected_onset_lag_s": 2.25,
+          "raw_peak_lag_s": 8.0,
+          "corrected_peak_lag_s": 4.25
+        },
+        {
+          "channel": "C1",
+          "baseline_vol_percent": 0.639084,
+          "peak_vol_percent": 22.482778,
+          "onset_time_s": 16.1,
+          "peak_time_s": 18.4,
+          "raw_onset_lag_s": 4.900000000000002,
+          "corrected_onset_lag_s": 1.1500000000000021,
+          "raw_peak_lag_s": 7.199999999999999,
+          "corrected_peak_lag_s": 3.4499999999999993
+        },
+        {
+          "channel": "C1-",
+          "baseline_vol_percent": 0.5478544999999999,
+          "peak_vol_percent": 21.839732,
+          "onset_time_s": 18.1,
+          "peak_time_s": 20.2,
+          "raw_onset_lag_s": 6.900000000000002,
+          "corrected_onset_lag_s": 3.150000000000002,
+          "raw_peak_lag_s": 9.0,
+          "corrected_peak_lag_s": 5.25
+        },
+        {
+          "channel": "C4",
+          "baseline_vol_percent": 0.554011,
+          "peak_vol_percent": 7.531556,
+          "onset_time_s": 17.1,
+          "peak_time_s": 22.4,
+          "raw_onset_lag_s": 5.900000000000002,
+          "corrected_onset_lag_s": 2.150000000000002,
+          "raw_peak_lag_s": 11.2,
+          "corrected_peak_lag_s": 7.449999999999999
+        }
+      ]
+    },
+    {
+      "case_id": "PRE3P1A_KIT_D05_80K-DATA.zip:20190604_142752.xlsx",
+      "source_package": "PRE3P1A_KIT_D05_80K-DATA.zip",
+      "source_member": "20190604_142752.xlsx",
+      "thermal_domain": "80 K",
+      "nozzle_diameter_mm": 0.5,
+      "samples": 2820,
+      "release_onset_time_s": 19.9,
+      "sensors": [
+        {
+          "channel": "C3",
+          "baseline_vol_percent": 0.5635129999999999,
+          "peak_vol_percent": 6.890672,
+          "onset_time_s": 24.5,
+          "peak_time_s": 35.7,
+          "raw_onset_lag_s": 4.600000000000001,
+          "corrected_onset_lag_s": 0.8500000000000014,
+          "raw_peak_lag_s": 15.800000000000004,
+          "corrected_peak_lag_s": 12.050000000000004
+        },
+        {
+          "channel": "C2",
+          "baseline_vol_percent": 0.628188,
+          "peak_vol_percent": 10.089211,
+          "onset_time_s": 24.3,
+          "peak_time_s": 26.2,
+          "raw_onset_lag_s": 4.400000000000002,
+          "corrected_onset_lag_s": 0.6500000000000021,
+          "raw_peak_lag_s": 6.300000000000001,
+          "corrected_peak_lag_s": 2.5500000000000007
+        },
+        {
+          "channel": "C1",
+          "baseline_vol_percent": 0.6362075,
+          "peak_vol_percent": 17.867777,
+          "onset_time_s": 23.5,
+          "peak_time_s": 25.4,
+          "raw_onset_lag_s": 3.6000000000000014,
+          "corrected_onset_lag_s": -0.14999999999999858,
+          "raw_peak_lag_s": 5.5,
+          "corrected_peak_lag_s": 1.75
+        },
+        {
+          "channel": "C1-",
+          "baseline_vol_percent": 0.5446765,
+          "peak_vol_percent": 17.411426,
+          "onset_time_s": 24.4,
+          "peak_time_s": 26.4,
+          "raw_onset_lag_s": 4.5,
+          "corrected_onset_lag_s": 0.75,
+          "raw_peak_lag_s": 6.5,
+          "corrected_peak_lag_s": 2.75
+        },
+        {
+          "channel": "C4",
+          "baseline_vol_percent": 0.552826,
+          "peak_vol_percent": 7.383045,
+          "onset_time_s": 24.0,
+          "peak_time_s": 36.0,
+          "raw_onset_lag_s": 4.100000000000001,
+          "corrected_onset_lag_s": 0.3500000000000014,
+          "raw_peak_lag_s": 16.1,
+          "corrected_peak_lag_s": 12.350000000000001
+        }
+      ]
+    },
+    {
+      "case_id": "PRE3P1A_KIT_D05_80K-DATA.zip:20190604_152254.xlsx",
+      "source_package": "PRE3P1A_KIT_D05_80K-DATA.zip",
+      "source_member": "20190604_152254.xlsx",
+      "thermal_domain": "80 K",
+      "nozzle_diameter_mm": 0.5,
+      "samples": 1740,
+      "release_onset_time_s": 31.0,
+      "sensors": [
+        {
+          "channel": "C3",
+          "baseline_vol_percent": 0.5465565,
+          "peak_vol_percent": 3.164506,
+          "onset_time_s": 35.9,
+          "peak_time_s": 39.3,
+          "raw_onset_lag_s": 4.899999999999999,
+          "corrected_onset_lag_s": 1.1499999999999986,
+          "raw_peak_lag_s": 8.299999999999997,
+          "corrected_peak_lag_s": 4.549999999999997
+        },
+        {
+          "channel": "C2",
+          "baseline_vol_percent": 0.6155075,
+          "peak_vol_percent": 4.435992,
+          "onset_time_s": 35.5,
+          "peak_time_s": 43.6,
+          "raw_onset_lag_s": 4.5,
+          "corrected_onset_lag_s": 0.75,
+          "raw_peak_lag_s": 12.600000000000001,
+          "corrected_peak_lag_s": 8.850000000000001
+        },
+        {
+          "channel": "C1",
+          "baseline_vol_percent": 0.622498,
+          "peak_vol_percent": 8.631067,
+          "onset_time_s": 34.9,
+          "peak_time_s": 40.8,
+          "raw_onset_lag_s": 3.8999999999999986,
+          "corrected_onset_lag_s": 0.14999999999999858,
+          "raw_peak_lag_s": 9.799999999999997,
+          "corrected_peak_lag_s": 6.049999999999997
+        },
+        {
+          "channel": "C1-",
+          "baseline_vol_percent": 0.5306615,
+          "peak_vol_percent": 8.331494,
+          "onset_time_s": 35.0,
+          "peak_time_s": 39.3,
+          "raw_onset_lag_s": 4.0,
+          "corrected_onset_lag_s": 0.25,
+          "raw_peak_lag_s": 8.299999999999997,
+          "corrected_peak_lag_s": 4.549999999999997
+        },
+        {
+          "channel": "C4",
+          "baseline_vol_percent": 0.537865,
+          "peak_vol_percent": 2.815358,
+          "onset_time_s": 35.1,
+          "peak_time_s": 43.5,
+          "raw_onset_lag_s": 4.100000000000001,
+          "corrected_onset_lag_s": 0.3500000000000014,
+          "raw_peak_lag_s": 12.5,
+          "corrected_peak_lag_s": 8.75
+        }
+      ]
+    },
+    {
+      "case_id": "PRE3P1A_KIT_D05_80K-DATA.zip:20190604_153521.xlsx",
+      "source_package": "PRE3P1A_KIT_D05_80K-DATA.zip",
+      "source_member": "20190604_153521.xlsx",
+      "thermal_domain": "80 K",
+      "nozzle_diameter_mm": 0.5,
+      "samples": 1100,
+      "release_onset_time_s": 20.2,
+      "sensors": [
+        {
+          "channel": "C3",
+          "baseline_vol_percent": 0.5614055,
+          "peak_vol_percent": 2.142615,
+          "onset_time_s": 25.6,
+          "peak_time_s": 29.1,
+          "raw_onset_lag_s": 5.400000000000002,
+          "corrected_onset_lag_s": 1.6500000000000021,
+          "raw_peak_lag_s": 8.900000000000002,
+          "corrected_peak_lag_s": 5.150000000000002
+        },
+        {
+          "channel": "C2",
+          "baseline_vol_percent": 0.6298945,
+          "peak_vol_percent": 2.975854,
+          "onset_time_s": 24.9,
+          "peak_time_s": 28.6,
+          "raw_onset_lag_s": 4.699999999999999,
+          "corrected_onset_lag_s": 0.9499999999999993,
+          "raw_peak_lag_s": 8.400000000000002,
+          "corrected_peak_lag_s": 4.650000000000002
+        },
+        {
+          "channel": "C1",
+          "baseline_vol_percent": 0.643695,
+          "peak_vol_percent": 5.427829,
+          "onset_time_s": 24.3,
+          "peak_time_s": 26.9,
+          "raw_onset_lag_s": 4.100000000000001,
+          "corrected_onset_lag_s": 0.3500000000000014,
+          "raw_peak_lag_s": 6.699999999999999,
+          "corrected_peak_lag_s": 2.9499999999999993
+        },
+        {
+          "channel": "C1-",
+          "baseline_vol_percent": 0.5508765,
+          "peak_vol_percent": 5.248986,
+          "onset_time_s": 24.2,
+          "peak_time_s": 26.9,
+          "raw_onset_lag_s": 4.0,
+          "corrected_onset_lag_s": 0.25,
+          "raw_peak_lag_s": 6.699999999999999,
+          "corrected_peak_lag_s": 2.9499999999999993
+        },
+        {
+          "channel": "C4",
+          "baseline_vol_percent": 0.552943,
+          "peak_vol_percent": 1.874261,
+          "onset_time_s": 24.6,
+          "peak_time_s": 25.9,
+          "raw_onset_lag_s": 4.400000000000002,
+          "corrected_onset_lag_s": 0.6500000000000021,
+          "raw_peak_lag_s": 5.699999999999999,
+          "corrected_peak_lag_s": 1.9499999999999993
+        }
+      ]
+    },
+    {
+      "case_id": "PRE3P1A_KIT_D1_300K_DATA.zip:20190523_144939.xlsx",
+      "source_package": "PRE3P1A_KIT_D1_300K_DATA.zip",
+      "source_member": "20190523_144939.xlsx",
+      "thermal_domain": "300 K",
+      "nozzle_diameter_mm": 1.0,
+      "samples": 860,
+      "release_onset_time_s": 29.3,
+      "sensors": [
+        {
+          "channel": "C3",
+          "baseline_vol_percent": 0.4602255,
+          "peak_vol_percent": 7.898787,
+          "onset_time_s": 33.7,
+          "peak_time_s": 35.3,
+          "raw_onset_lag_s": 4.400000000000002,
+          "corrected_onset_lag_s": 0.6500000000000021,
+          "raw_peak_lag_s": 5.9999999999999964,
+          "corrected_peak_lag_s": 2.2499999999999964
+        },
+        {
+          "channel": "C2",
+          "baseline_vol_percent": 0.5252335,
+          "peak_vol_percent": 10.952981,
+          "onset_time_s": 33.1,
+          "peak_time_s": 35.2,
+          "raw_onset_lag_s": 3.8000000000000007,
+          "corrected_onset_lag_s": 0.05000000000000071,
+          "raw_peak_lag_s": 5.900000000000002,
+          "corrected_peak_lag_s": 2.150000000000002
+        },
+        {
+          "channel": "C1",
+          "baseline_vol_percent": 0.535601,
+          "peak_vol_percent": 17.543647,
+          "onset_time_s": 31.7,
+          "peak_time_s": 33.9,
+          "raw_onset_lag_s": 2.3999999999999986,
+          "corrected_onset_lag_s": -1.3500000000000014,
+          "raw_peak_lag_s": 4.599999999999998,
+          "corrected_peak_lag_s": 0.8499999999999979
+        },
+        {
+          "channel": "C1-",
+          "baseline_vol_percent": 0.4426915,
+          "peak_vol_percent": 12.995914,
+          "onset_time_s": 39.9,
+          "peak_time_s": 41.7,
+          "raw_onset_lag_s": 10.599999999999998,
+          "corrected_onset_lag_s": 6.849999999999998,
+          "raw_peak_lag_s": 12.400000000000002,
+          "corrected_peak_lag_s": 8.650000000000002
+        },
+        {
+          "channel": "C4",
+          "baseline_vol_percent": 0.447158,
+          "peak_vol_percent": 7.57187,
+          "onset_time_s": 33.3,
+          "peak_time_s": 35.3,
+          "raw_onset_lag_s": 3.9999999999999964,
+          "corrected_onset_lag_s": 0.24999999999999645,
+          "raw_peak_lag_s": 5.9999999999999964,
+          "corrected_peak_lag_s": 2.2499999999999964
+        }
+      ]
+    },
+    {
+      "case_id": "PRE3P1A_KIT_D1_300K_DATA.zip:20190523_150133.xlsx",
+      "source_package": "PRE3P1A_KIT_D1_300K_DATA.zip",
+      "source_member": "20190523_150133.xlsx",
+      "thermal_domain": "300 K",
+      "nozzle_diameter_mm": 1.0,
+      "samples": 890,
+      "release_onset_time_s": 31.5,
+      "sensors": [
+        {
+          "channel": "C3",
+          "baseline_vol_percent": 0.589453,
+          "peak_vol_percent": 5.995666,
+          "onset_time_s": 36.1,
+          "peak_time_s": 37.8,
+          "raw_onset_lag_s": 4.600000000000001,
+          "corrected_onset_lag_s": 0.8500000000000014,
+          "raw_peak_lag_s": 6.299999999999997,
+          "corrected_peak_lag_s": 2.549999999999997
+        },
+        {
+          "channel": "C2",
+          "baseline_vol_percent": 0.656087,
+          "peak_vol_percent": 8.497681,
+          "onset_time_s": 35.7,
+          "peak_time_s": 37.8,
+          "raw_onset_lag_s": 4.200000000000003,
+          "corrected_onset_lag_s": 0.45000000000000284,
+          "raw_peak_lag_s": 6.299999999999997,
+          "corrected_peak_lag_s": 2.549999999999997
+        },
+        {
+          "channel": "C1",
+          "baseline_vol_percent": 0.6732955,
+          "peak_vol_percent": 13.669854,
+          "onset_time_s": 34.5,
+          "peak_time_s": 36.6,
+          "raw_onset_lag_s": 3.0,
+          "corrected_onset_lag_s": -0.75,
+          "raw_peak_lag_s": 5.100000000000001,
+          "corrected_peak_lag_s": 1.3500000000000014
+        },
+        {
+          "channel": "C1-",
+          "baseline_vol_percent": 0.5797915,
+          "peak_vol_percent": 12.127358,
+          "onset_time_s": 38.6,
+          "peak_time_s": 40.5,
+          "raw_onset_lag_s": 7.100000000000001,
+          "corrected_onset_lag_s": 3.3500000000000014,
+          "raw_peak_lag_s": 9.0,
+          "corrected_peak_lag_s": 5.25
+        },
+        {
+          "channel": "C4",
+          "baseline_vol_percent": 0.581602,
+          "peak_vol_percent": 5.875115,
+          "onset_time_s": 35.6,
+          "peak_time_s": 38.2,
+          "raw_onset_lag_s": 4.100000000000001,
+          "corrected_onset_lag_s": 0.3500000000000014,
+          "raw_peak_lag_s": 6.700000000000003,
+          "corrected_peak_lag_s": 2.950000000000003
+        }
+      ]
+    },
+    {
+      "case_id": "PRE3P1A_KIT_D1_300K_DATA.zip:20190523_151013.xlsx",
+      "source_package": "PRE3P1A_KIT_D1_300K_DATA.zip",
+      "source_member": "20190523_151013.xlsx",
+      "thermal_domain": "300 K",
+      "nozzle_diameter_mm": 1.0,
+      "samples": 620,
+      "release_onset_time_s": 23.2,
+      "sensors": [
+        {
+          "channel": "C3",
+          "baseline_vol_percent": 0.5246005,
+          "peak_vol_percent": 3.030935,
+          "onset_time_s": 28.1,
+          "peak_time_s": 31.0,
+          "raw_onset_lag_s": 4.900000000000002,
+          "corrected_onset_lag_s": 1.1500000000000021,
+          "raw_peak_lag_s": 7.800000000000001,
+          "corrected_peak_lag_s": 4.050000000000001
+        },
+        {
+          "channel": "C2",
+          "baseline_vol_percent": 0.5826735000000001,
+          "peak_vol_percent": 4.454465,
+          "onset_time_s": 27.8,
+          "peak_time_s": 30.4,
+          "raw_onset_lag_s": 4.600000000000001,
+          "corrected_onset_lag_s": 0.8500000000000014,
+          "raw_peak_lag_s": 7.199999999999999,
+          "corrected_peak_lag_s": 3.4499999999999993
+        },
+        {
+          "channel": "C1",
+          "baseline_vol_percent": 0.6211725,
+          "peak_vol_percent": 7.210447,
+          "onset_time_s": 27.2,
+          "peak_time_s": 29.1,
+          "raw_onset_lag_s": 4.0,
+          "corrected_onset_lag_s": 0.25,
+          "raw_peak_lag_s": 5.900000000000002,
+          "corrected_peak_lag_s": 2.150000000000002
+        },
+        {
+          "channel": "C1-",
+          "baseline_vol_percent": 0.5307925,
+          "peak_vol_percent": 6.988973,
+          "onset_time_s": 27.9,
+          "peak_time_s": 30.4,
+          "raw_onset_lag_s": 4.699999999999999,
+          "corrected_onset_lag_s": 0.9499999999999993,
+          "raw_peak_lag_s": 7.199999999999999,
+          "corrected_peak_lag_s": 3.4499999999999993
+        },
+        {
+          "channel": "C4",
+          "baseline_vol_percent": 0.5028455000000001,
+          "peak_vol_percent": 3.091881,
+          "onset_time_s": 27.5,
+          "peak_time_s": 29.5,
+          "raw_onset_lag_s": 4.300000000000001,
+          "corrected_onset_lag_s": 0.5500000000000007,
+          "raw_peak_lag_s": 6.300000000000001,
+          "corrected_peak_lag_s": 2.5500000000000007
+        }
+      ]
+    },
+    {
+      "case_id": "PRE3P1A_KIT_D1_300K_DATA.zip:20190523_151618.xlsx",
+      "source_package": "PRE3P1A_KIT_D1_300K_DATA.zip",
+      "source_member": "20190523_151618.xlsx",
+      "thermal_domain": "300 K",
+      "nozzle_diameter_mm": 1.0,
+      "samples": 520,
+      "release_onset_time_s": 22.5,
+      "sensors": [
+        {
+          "channel": "C3",
+          "baseline_vol_percent": 0.5275894999999999,
+          "peak_vol_percent": 2.129021,
+          "onset_time_s": 27.7,
+          "peak_time_s": 29.2,
+          "raw_onset_lag_s": 5.199999999999999,
+          "corrected_onset_lag_s": 1.4499999999999993,
+          "raw_peak_lag_s": 6.699999999999999,
+          "corrected_peak_lag_s": 2.9499999999999993
+        },
+        {
+          "channel": "C2",
+          "baseline_vol_percent": 0.5831815,
+          "peak_vol_percent": 2.955104,
+          "onset_time_s": 27.2,
+          "peak_time_s": 29.0,
+          "raw_onset_lag_s": 4.699999999999999,
+          "corrected_onset_lag_s": 0.9499999999999993,
+          "raw_peak_lag_s": 6.5,
+          "corrected_peak_lag_s": 2.75
+        },
+        {
+          "channel": "C1",
+          "baseline_vol_percent": 0.592318,
+          "peak_vol_percent": 4.791095,
+          "onset_time_s": 26.7,
+          "peak_time_s": 28.9,
+          "raw_onset_lag_s": 4.199999999999999,
+          "corrected_onset_lag_s": 0.4499999999999993,
+          "raw_peak_lag_s": 6.399999999999999,
+          "corrected_peak_lag_s": 2.6499999999999986
+        },
+        {
+          "channel": "C1-",
+          "baseline_vol_percent": 0.4995235,
+          "peak_vol_percent": 4.640644,
+          "onset_time_s": 26.8,
+          "peak_time_s": 28.9,
+          "raw_onset_lag_s": 4.300000000000001,
+          "corrected_onset_lag_s": 0.5500000000000007,
+          "raw_peak_lag_s": 6.399999999999999,
+          "corrected_peak_lag_s": 2.6499999999999986
+        },
+        {
+          "channel": "C4",
+          "baseline_vol_percent": 0.509907,
+          "peak_vol_percent": 2.154477,
+          "onset_time_s": 26.8,
+          "peak_time_s": 29.4,
+          "raw_onset_lag_s": 4.300000000000001,
+          "corrected_onset_lag_s": 0.5500000000000007,
+          "raw_peak_lag_s": 6.899999999999999,
+          "corrected_peak_lag_s": 3.1499999999999986
+        }
+      ]
+    },
+    {
+      "case_id": "PRE3P1A_KIT_D2_300K_DATA.zip:20190523_143501.xlsx",
+      "source_package": "PRE3P1A_KIT_D2_300K_DATA.zip",
+      "source_member": "20190523_143501.xlsx",
+      "thermal_domain": "300 K",
+      "nozzle_diameter_mm": 2.0,
+      "samples": 850,
+      "release_onset_time_s": 54.1,
+      "sensors": [
+        {
+          "channel": "C3",
+          "baseline_vol_percent": 0.48201150000000004,
+          "peak_vol_percent": 6.938259,
+          "onset_time_s": 58.6,
+          "peak_time_s": 59.9,
+          "raw_onset_lag_s": 4.5,
+          "corrected_onset_lag_s": 0.75,
+          "raw_peak_lag_s": 5.799999999999997,
+          "corrected_peak_lag_s": 2.049999999999997
+        },
+        {
+          "channel": "C2",
+          "baseline_vol_percent": 0.5576369999999999,
+          "peak_vol_percent": 10.280907,
+          "onset_time_s": 58.2,
+          "peak_time_s": 59.5,
+          "raw_onset_lag_s": 4.100000000000001,
+          "corrected_onset_lag_s": 0.3500000000000014,
+          "raw_peak_lag_s": 5.399999999999999,
+          "corrected_peak_lag_s": 1.6499999999999986
+        },
+        {
+          "channel": "C1",
+          "baseline_vol_percent": 0.5695185,
+          "peak_vol_percent": 17.078464,
+          "onset_time_s": 57.0,
+          "peak_time_s": 58.2,
+          "raw_onset_lag_s": 2.8999999999999986,
+          "corrected_onset_lag_s": -0.8500000000000014,
+          "raw_peak_lag_s": 4.100000000000001,
+          "corrected_peak_lag_s": 0.3500000000000014
+        },
+        {
+          "channel": "C1-",
+          "baseline_vol_percent": 0.47720700000000005,
+          "peak_vol_percent": 10.898116,
+          "onset_time_s": 60.2,
+          "peak_time_s": 61.5,
+          "raw_onset_lag_s": 6.100000000000001,
+          "corrected_onset_lag_s": 2.3500000000000014,
+          "raw_peak_lag_s": 7.399999999999999,
+          "corrected_peak_lag_s": 3.6499999999999986
+        },
+        {
+          "channel": "C4",
+          "baseline_vol_percent": 0.473939,
+          "peak_vol_percent": 6.559238,
+          "onset_time_s": 58.2,
+          "peak_time_s": 59.2,
+          "raw_onset_lag_s": 4.100000000000001,
+          "corrected_onset_lag_s": 0.3500000000000014,
+          "raw_peak_lag_s": 5.100000000000001,
+          "corrected_peak_lag_s": 1.3500000000000014
+        }
+      ]
+    },
+    {
+      "case_id": "PRE3P1A_KIT_D2_300K_DATA.zip:20190523_143801.xlsx",
+      "source_package": "PRE3P1A_KIT_D2_300K_DATA.zip",
+      "source_member": "20190523_143801.xlsx",
+      "thermal_domain": "300 K",
+      "nozzle_diameter_mm": 2.0,
+      "samples": 540,
+      "release_onset_time_s": 33.0,
+      "sensors": [
+        {
+          "channel": "C3",
+          "baseline_vol_percent": 0.502808,
+          "peak_vol_percent": 5.063239,
+          "onset_time_s": 37.6,
+          "peak_time_s": 39.0,
+          "raw_onset_lag_s": 4.600000000000001,
+          "corrected_onset_lag_s": 0.8500000000000014,
+          "raw_peak_lag_s": 6.0,
+          "corrected_peak_lag_s": 2.25
+        },
+        {
+          "channel": "C2",
+          "baseline_vol_percent": 0.5625945,
+          "peak_vol_percent": 7.352824,
+          "onset_time_s": 37.3,
+          "peak_time_s": 38.7,
+          "raw_onset_lag_s": 4.299999999999997,
+          "corrected_onset_lag_s": 0.5499999999999972,
+          "raw_peak_lag_s": 5.700000000000003,
+          "corrected_peak_lag_s": 1.9500000000000028
+        },
+        {
+          "channel": "C1",
+          "baseline_vol_percent": 0.5774485,
+          "peak_vol_percent": 12.214575,
+          "onset_time_s": 36.5,
+          "peak_time_s": 37.9,
+          "raw_onset_lag_s": 3.5,
+          "corrected_onset_lag_s": -0.25,
+          "raw_peak_lag_s": 4.899999999999999,
+          "corrected_peak_lag_s": 1.1499999999999986
+        },
+        {
+          "channel": "C1-",
+          "baseline_vol_percent": 0.4868625,
+          "peak_vol_percent": 9.869724,
+          "onset_time_s": 37.9,
+          "peak_time_s": 39.2,
+          "raw_onset_lag_s": 4.899999999999999,
+          "corrected_onset_lag_s": 1.1499999999999986,
+          "raw_peak_lag_s": 6.200000000000003,
+          "corrected_peak_lag_s": 2.450000000000003
+        },
+        {
+          "channel": "C4",
+          "baseline_vol_percent": 0.4859245,
+          "peak_vol_percent": 4.879566,
+          "onset_time_s": 37.1,
+          "peak_time_s": 38.5,
+          "raw_onset_lag_s": 4.100000000000001,
+          "corrected_onset_lag_s": 0.3500000000000014,
+          "raw_peak_lag_s": 5.5,
+          "corrected_peak_lag_s": 1.75
+        }
+      ]
+    },
+    {
+      "case_id": "PRE3P1A_KIT_D2_300K_DATA.zip:20190523_144022.xlsx",
+      "source_package": "PRE3P1A_KIT_D2_300K_DATA.zip",
+      "source_member": "20190523_144022.xlsx",
+      "thermal_domain": "300 K",
+      "nozzle_diameter_mm": 2.0,
+      "samples": 500,
+      "release_onset_time_s": 26.3,
+      "sensors": [
+        {
+          "channel": "C3",
+          "baseline_vol_percent": 0.54025,
+          "peak_vol_percent": 3.620845,
+          "onset_time_s": 31.0,
+          "peak_time_s": 32.2,
+          "raw_onset_lag_s": 4.699999999999999,
+          "corrected_onset_lag_s": 0.9499999999999993,
+          "raw_peak_lag_s": 5.900000000000002,
+          "corrected_peak_lag_s": 2.150000000000002
+        },
+        {
+          "channel": "C2",
+          "baseline_vol_percent": 0.5984825,
+          "peak_vol_percent": 5.284191,
+          "onset_time_s": 30.8,
+          "peak_time_s": 32.1,
+          "raw_onset_lag_s": 4.5,
+          "corrected_onset_lag_s": 0.75,
+          "raw_peak_lag_s": 5.800000000000001,
+          "corrected_peak_lag_s": 2.0500000000000007
+        },
+        {
+          "channel": "C1",
+          "baseline_vol_percent": 0.601785,
+          "peak_vol_percent": 8.945303,
+          "onset_time_s": 30.2,
+          "peak_time_s": 31.9,
+          "raw_onset_lag_s": 3.8999999999999986,
+          "corrected_onset_lag_s": 0.14999999999999858,
+          "raw_peak_lag_s": 5.599999999999998,
+          "corrected_peak_lag_s": 1.8499999999999979
+        },
+        {
+          "channel": "C1-",
+          "baseline_vol_percent": 0.5103905,
+          "peak_vol_percent": 8.331386,
+          "onset_time_s": 30.8,
+          "peak_time_s": 32.2,
+          "raw_onset_lag_s": 4.5,
+          "corrected_onset_lag_s": 0.75,
+          "raw_peak_lag_s": 5.900000000000002,
+          "corrected_peak_lag_s": 2.150000000000002
+        },
+        {
+          "channel": "C4",
+          "baseline_vol_percent": 0.523367,
+          "peak_vol_percent": 3.542422,
+          "onset_time_s": 30.5,
+          "peak_time_s": 31.5,
+          "raw_onset_lag_s": 4.199999999999999,
+          "corrected_onset_lag_s": 0.4499999999999993,
+          "raw_peak_lag_s": 5.199999999999999,
+          "corrected_peak_lag_s": 1.4499999999999993
+        }
+      ]
+    },
+    {
+      "case_id": "PRE3P1A_KIT_D2_300K_DATA.zip:20190523_144219.xlsx",
+      "source_package": "PRE3P1A_KIT_D2_300K_DATA.zip",
+      "source_member": "20190523_144219.xlsx",
+      "thermal_domain": "300 K",
+      "nozzle_diameter_mm": 2.0,
+      "samples": 380,
+      "release_onset_time_s": 19.9,
+      "sensors": [
+        {
+          "channel": "C3",
+          "baseline_vol_percent": 0.5150345000000001,
+          "peak_vol_percent": 3.099628,
+          "onset_time_s": 24.8,
+          "peak_time_s": 25.9,
+          "raw_onset_lag_s": 4.900000000000002,
+          "corrected_onset_lag_s": 1.1500000000000021,
+          "raw_peak_lag_s": 6.0,
+          "corrected_peak_lag_s": 2.25
+        },
+        {
+          "channel": "C2",
+          "baseline_vol_percent": 0.5699455,
+          "peak_vol_percent": 4.488807,
+          "onset_time_s": 24.5,
+          "peak_time_s": 25.7,
+          "raw_onset_lag_s": 4.600000000000001,
+          "corrected_onset_lag_s": 0.8500000000000014,
+          "raw_peak_lag_s": 5.800000000000001,
+          "corrected_peak_lag_s": 2.0500000000000007
+        },
+        {
+          "channel": "C1",
+          "baseline_vol_percent": 0.55721,
+          "peak_vol_percent": 7.923204,
+          "onset_time_s": 24.0,
+          "peak_time_s": 26.0,
+          "raw_onset_lag_s": 4.100000000000001,
+          "corrected_onset_lag_s": 0.3500000000000014,
+          "raw_peak_lag_s": 6.100000000000001,
+          "corrected_peak_lag_s": 2.3500000000000014
+        },
+        {
+          "channel": "C1-",
+          "baseline_vol_percent": 0.4645825,
+          "peak_vol_percent": 7.51148,
+          "onset_time_s": 24.3,
+          "peak_time_s": 26.0,
+          "raw_onset_lag_s": 4.400000000000002,
+          "corrected_onset_lag_s": 0.6500000000000021,
+          "raw_peak_lag_s": 6.100000000000001,
+          "corrected_peak_lag_s": 2.3500000000000014
+        },
+        {
+          "channel": "C4",
+          "baseline_vol_percent": 0.49398850000000005,
+          "peak_vol_percent": 2.991583,
+          "onset_time_s": 24.1,
+          "peak_time_s": 25.4,
+          "raw_onset_lag_s": 4.200000000000003,
+          "corrected_onset_lag_s": 0.45000000000000284,
+          "raw_peak_lag_s": 5.5,
+          "corrected_peak_lag_s": 1.75
+        }
+      ]
+    },
+    {
+      "case_id": "PRE3P1A_KIT_D2_300K_DATA.zip:20190624_151045.xlsx",
+      "source_package": "PRE3P1A_KIT_D2_300K_DATA.zip",
+      "source_member": "20190624_151045.xlsx",
+      "thermal_domain": "300 K",
+      "nozzle_diameter_mm": 2.0,
+      "samples": 1610,
+      "release_onset_time_s": 45.9,
+      "sensors": [
+        {
+          "channel": "C3",
+          "baseline_vol_percent": 0.5883445,
+          "peak_vol_percent": 12.069086,
+          "onset_time_s": 50.1,
+          "peak_time_s": 51.5,
+          "raw_onset_lag_s": 4.200000000000003,
+          "corrected_onset_lag_s": 0.45000000000000284,
+          "raw_peak_lag_s": 5.600000000000001,
+          "corrected_peak_lag_s": 1.8500000000000014
+        },
+        {
+          "channel": "C2",
+          "baseline_vol_percent": 0.6561144999999999,
+          "peak_vol_percent": 18.74323,
+          "onset_time_s": 48.8,
+          "peak_time_s": 50.3,
+          "raw_onset_lag_s": 2.8999999999999986,
+          "corrected_onset_lag_s": -0.8500000000000014,
+          "raw_peak_lag_s": 4.399999999999999,
+          "corrected_peak_lag_s": 0.6499999999999986
+        },
+        {
+          "channel": "C1",
+          "baseline_vol_percent": 0.6616945000000001,
+          "peak_vol_percent": 28.828782,
+          "onset_time_s": 47.2,
+          "peak_time_s": 48.6,
+          "raw_onset_lag_s": 1.3000000000000043,
+          "corrected_onset_lag_s": -2.4499999999999957,
+          "raw_peak_lag_s": 2.700000000000003,
+          "corrected_peak_lag_s": -1.0499999999999972
+        },
+        {
+          "channel": "C1-",
+          "baseline_vol_percent": 0.575368,
+          "peak_vol_percent": 13.253109,
+          "onset_time_s": 53.5,
+          "peak_time_s": 54.6,
+          "raw_onset_lag_s": 7.600000000000001,
+          "corrected_onset_lag_s": 3.8500000000000014,
+          "raw_peak_lag_s": 8.700000000000003,
+          "corrected_peak_lag_s": 4.950000000000003
+        },
+        {
+          "channel": "C4",
+          "baseline_vol_percent": 0.5756195,
+          "peak_vol_percent": 11.865652,
+          "onset_time_s": 50.2,
+          "peak_time_s": 51.4,
+          "raw_onset_lag_s": 4.300000000000004,
+          "corrected_onset_lag_s": 0.5500000000000043,
+          "raw_peak_lag_s": 5.5,
+          "corrected_peak_lag_s": 1.75
+        }
+      ]
+    },
+    {
+      "case_id": "PRE3P1A_KIT_D2_300K_DATA.zip:20190624_151944.xlsx",
+      "source_package": "PRE3P1A_KIT_D2_300K_DATA.zip",
+      "source_member": "20190624_151944.xlsx",
+      "thermal_domain": "300 K",
+      "nozzle_diameter_mm": 2.0,
+      "samples": 730,
+      "release_onset_time_s": 35.3,
+      "sensors": [
+        {
+          "channel": "C3",
+          "baseline_vol_percent": 0.6027530000000001,
+          "peak_vol_percent": 11.38157,
+          "onset_time_s": 39.5,
+          "peak_time_s": 40.9,
+          "raw_onset_lag_s": 4.200000000000003,
+          "corrected_onset_lag_s": 0.45000000000000284,
+          "raw_peak_lag_s": 5.600000000000001,
+          "corrected_peak_lag_s": 1.8500000000000014
+        },
+        {
+          "channel": "C2",
+          "baseline_vol_percent": 0.671392,
+          "peak_vol_percent": 16.560177,
+          "onset_time_s": 38.6,
+          "peak_time_s": 39.8,
+          "raw_onset_lag_s": 3.3000000000000043,
+          "corrected_onset_lag_s": -0.44999999999999574,
+          "raw_peak_lag_s": 4.5,
+          "corrected_peak_lag_s": 0.75
+        },
+        {
+          "channel": "C1",
+          "baseline_vol_percent": 0.6804445,
+          "peak_vol_percent": 26.370561,
+          "onset_time_s": 36.9,
+          "peak_time_s": 38.2,
+          "raw_onset_lag_s": 1.6000000000000014,
+          "corrected_onset_lag_s": -2.1499999999999986,
+          "raw_peak_lag_s": 2.9000000000000057,
+          "corrected_peak_lag_s": -0.8499999999999943
+        },
+        {
+          "channel": "C1-",
+          "baseline_vol_percent": 0.5935174999999999,
+          "peak_vol_percent": 12.564144,
+          "onset_time_s": 42.3,
+          "peak_time_s": 43.5,
+          "raw_onset_lag_s": 7.0,
+          "corrected_onset_lag_s": 3.25,
+          "raw_peak_lag_s": 8.200000000000003,
+          "corrected_peak_lag_s": 4.450000000000003
+        },
+        {
+          "channel": "C4",
+          "baseline_vol_percent": 0.589478,
+          "peak_vol_percent": 10.552989,
+          "onset_time_s": 39.4,
+          "peak_time_s": 40.7,
+          "raw_onset_lag_s": 4.100000000000001,
+          "corrected_onset_lag_s": 0.3500000000000014,
+          "raw_peak_lag_s": 5.400000000000006,
+          "corrected_peak_lag_s": 1.6500000000000057
+        }
+      ]
+    },
+    {
+      "case_id": "PRE3P1A_KIT_D2_300K_DATA.zip:20190624_152500.xlsx",
+      "source_package": "PRE3P1A_KIT_D2_300K_DATA.zip",
+      "source_member": "20190624_152500.xlsx",
+      "thermal_domain": "300 K",
+      "nozzle_diameter_mm": 2.0,
+      "samples": 490,
+      "release_onset_time_s": 24.3,
+      "sensors": [
+        {
+          "channel": "C3",
+          "baseline_vol_percent": 0.6044134999999999,
+          "peak_vol_percent": 9.255879,
+          "onset_time_s": 28.6,
+          "peak_time_s": 29.7,
+          "raw_onset_lag_s": 4.300000000000001,
+          "corrected_onset_lag_s": 0.5500000000000007,
+          "raw_peak_lag_s": 5.399999999999999,
+          "corrected_peak_lag_s": 1.6499999999999986
+        },
+        {
+          "channel": "C2",
+          "baseline_vol_percent": 0.683155,
+          "peak_vol_percent": 14.164902,
+          "onset_time_s": 27.8,
+          "peak_time_s": 29.1,
+          "raw_onset_lag_s": 3.5,
+          "corrected_onset_lag_s": -0.25,
+          "raw_peak_lag_s": 4.800000000000001,
+          "corrected_peak_lag_s": 1.0500000000000007
+        },
+        {
+          "channel": "C1",
+          "baseline_vol_percent": 0.6912865,
+          "peak_vol_percent": 22.881405,
+          "onset_time_s": 26.3,
+          "peak_time_s": 27.7,
+          "raw_onset_lag_s": 2.0,
+          "corrected_onset_lag_s": -1.75,
+          "raw_peak_lag_s": 3.3999999999999986,
+          "corrected_peak_lag_s": -0.3500000000000014
+        },
+        {
+          "channel": "C1-",
+          "baseline_vol_percent": 0.6008150000000001,
+          "peak_vol_percent": 12.660293,
+          "onset_time_s": 30.7,
+          "peak_time_s": 31.8,
+          "raw_onset_lag_s": 6.399999999999999,
+          "corrected_onset_lag_s": 2.6499999999999986,
+          "raw_peak_lag_s": 7.5,
+          "corrected_peak_lag_s": 3.75
+        },
+        {
+          "channel": "C4",
+          "baseline_vol_percent": 0.6008709999999999,
+          "peak_vol_percent": 9.236475,
+          "onset_time_s": 28.4,
+          "peak_time_s": 29.5,
+          "raw_onset_lag_s": 4.099999999999998,
+          "corrected_onset_lag_s": 0.34999999999999787,
+          "raw_peak_lag_s": 5.199999999999999,
+          "corrected_peak_lag_s": 1.4499999999999993
+        }
+      ]
+    },
+    {
+      "case_id": "PRE3P1A_KIT_D2_80K-DATA.zip:20190531_094951.xlsx",
+      "source_package": "PRE3P1A_KIT_D2_80K-DATA.zip",
+      "source_member": "20190531_094951.xlsx",
+      "thermal_domain": "80 K",
+      "nozzle_diameter_mm": 2.0,
+      "samples": 1880,
+      "release_onset_time_s": 3.4,
+      "sensors": [
+        {
+          "channel": "C3",
+          "baseline_vol_percent": 0.5258395,
+          "peak_vol_percent": 24.49678,
+          "onset_time_s": 150.9,
+          "peak_time_s": 152.5,
+          "raw_onset_lag_s": 147.5,
+          "corrected_onset_lag_s": 143.75,
+          "raw_peak_lag_s": 149.1,
+          "corrected_peak_lag_s": 145.35
+        },
+        {
+          "channel": "C2",
+          "baseline_vol_percent": 0.57568,
+          "peak_vol_percent": 34.657063,
+          "onset_time_s": 149.2,
+          "peak_time_s": 150.8,
+          "raw_onset_lag_s": 145.79999999999998,
+          "corrected_onset_lag_s": 142.04999999999998,
+          "raw_peak_lag_s": 147.4,
+          "corrected_peak_lag_s": 143.65
+        },
+        {
+          "channel": "C1",
+          "baseline_vol_percent": 0.5749215,
+          "peak_vol_percent": 51.215056,
+          "onset_time_s": 146.7,
+          "peak_time_s": 148.3,
+          "raw_onset_lag_s": 143.29999999999998,
+          "corrected_onset_lag_s": 139.54999999999998,
+          "raw_peak_lag_s": 144.9,
+          "corrected_peak_lag_s": 141.15
+        },
+        {
+          "channel": "C1-",
+          "baseline_vol_percent": 0.480425,
+          "peak_vol_percent": 30.384956,
+          "onset_time_s": 156.9,
+          "peak_time_s": 158.4,
+          "raw_onset_lag_s": 153.5,
+          "corrected_onset_lag_s": 149.75,
+          "raw_peak_lag_s": 155.0,
+          "corrected_peak_lag_s": 151.25
+        },
+        {
+          "channel": "C4",
+          "baseline_vol_percent": 0.48677099999999995,
+          "peak_vol_percent": 22.400432,
+          "onset_time_s": 150.8,
+          "peak_time_s": 152.4,
+          "raw_onset_lag_s": 147.4,
+          "corrected_onset_lag_s": 143.65,
+          "raw_peak_lag_s": 149.0,
+          "corrected_peak_lag_s": 145.25
+        }
+      ]
+    },
+    {
+      "case_id": "PRE3P1A_KIT_D2_80K-DATA.zip:20190531_100257.xlsx",
+      "source_package": "PRE3P1A_KIT_D2_80K-DATA.zip",
+      "source_member": "20190531_100257.xlsx",
+      "thermal_domain": "80 K",
+      "nozzle_diameter_mm": 2.0,
+      "samples": 1070,
+      "release_onset_time_s": 7.0,
+      "sensors": [
+        {
+          "channel": "C3",
+          "baseline_vol_percent": 0.5465945000000001,
+          "peak_vol_percent": 22.93737,
+          "onset_time_s": 75.3,
+          "peak_time_s": 76.9,
+          "raw_onset_lag_s": 68.3,
+          "corrected_onset_lag_s": 64.55,
+          "raw_peak_lag_s": 69.9,
+          "corrected_peak_lag_s": 66.15
+        },
+        {
+          "channel": "C2",
+          "baseline_vol_percent": 0.6077795,
+          "peak_vol_percent": 32.044254,
+          "onset_time_s": 73.8,
+          "peak_time_s": 75.5,
+          "raw_onset_lag_s": 66.8,
+          "corrected_onset_lag_s": 63.05,
+          "raw_peak_lag_s": 68.5,
+          "corrected_peak_lag_s": 64.75
+        },
+        {
+          "channel": "C1",
+          "baseline_vol_percent": 0.6086590000000001,
+          "peak_vol_percent": 47.243501,
+          "onset_time_s": 71.2,
+          "peak_time_s": 72.8,
+          "raw_onset_lag_s": 64.2,
+          "corrected_onset_lag_s": 60.45,
+          "raw_peak_lag_s": 65.8,
+          "corrected_peak_lag_s": 62.05
+        },
+        {
+          "channel": "C1-",
+          "baseline_vol_percent": 0.5085565,
+          "peak_vol_percent": 29.815926,
+          "onset_time_s": 80.4,
+          "peak_time_s": 81.9,
+          "raw_onset_lag_s": 73.4,
+          "corrected_onset_lag_s": 69.65,
+          "raw_peak_lag_s": 74.9,
+          "corrected_peak_lag_s": 71.15
+        },
+        {
+          "channel": "C4",
+          "baseline_vol_percent": 0.5105044999999999,
+          "peak_vol_percent": 20.348441,
+          "onset_time_s": 75.0,
+          "peak_time_s": 76.7,
+          "raw_onset_lag_s": 68.0,
+          "corrected_onset_lag_s": 64.25,
+          "raw_peak_lag_s": 69.7,
+          "corrected_peak_lag_s": 65.95
+        }
+      ]
+    },
+    {
+      "case_id": "PRE3P1A_KIT_D2_80K-DATA.zip:20190531_101249.xlsx",
+      "source_package": "PRE3P1A_KIT_D2_80K-DATA.zip",
+      "source_member": "20190531_101249.xlsx",
+      "thermal_domain": "80 K",
+      "nozzle_diameter_mm": 2.0,
+      "samples": 620,
+      "release_onset_time_s": 6.8,
+      "sensors": [
+        {
+          "channel": "C3",
+          "baseline_vol_percent": 0.5687975,
+          "peak_vol_percent": 19.512969,
+          "onset_time_s": 32.2,
+          "peak_time_s": 33.9,
+          "raw_onset_lag_s": 25.400000000000002,
+          "corrected_onset_lag_s": 21.650000000000002,
+          "raw_peak_lag_s": 27.099999999999998,
+          "corrected_peak_lag_s": 23.349999999999998
+        },
+        {
+          "channel": "C2",
+          "baseline_vol_percent": 0.6324145000000001,
+          "peak_vol_percent": 27.334577,
+          "onset_time_s": 31.0,
+          "peak_time_s": 32.5,
+          "raw_onset_lag_s": 24.2,
+          "corrected_onset_lag_s": 20.45,
+          "raw_peak_lag_s": 25.7,
+          "corrected_peak_lag_s": 21.95
+        },
+        {
+          "channel": "C1",
+          "baseline_vol_percent": 0.640706,
+          "peak_vol_percent": 42.812563,
+          "onset_time_s": 28.5,
+          "peak_time_s": 30.4,
+          "raw_onset_lag_s": 21.7,
+          "corrected_onset_lag_s": 17.95,
+          "raw_peak_lag_s": 23.599999999999998,
+          "corrected_peak_lag_s": 19.849999999999998
+        },
+        {
+          "channel": "C1-",
+          "baseline_vol_percent": 0.545268,
+          "peak_vol_percent": 27.851572,
+          "onset_time_s": 36.2,
+          "peak_time_s": 37.8,
+          "raw_onset_lag_s": 29.400000000000002,
+          "corrected_onset_lag_s": 25.650000000000002,
+          "raw_peak_lag_s": 30.999999999999996,
+          "corrected_peak_lag_s": 27.249999999999996
+        },
+        {
+          "channel": "C4",
+          "baseline_vol_percent": 0.5474615,
+          "peak_vol_percent": 18.397364,
+          "onset_time_s": 31.8,
+          "peak_time_s": 33.3,
+          "raw_onset_lag_s": 25.0,
+          "corrected_onset_lag_s": 21.25,
+          "raw_peak_lag_s": 26.499999999999996,
+          "corrected_peak_lag_s": 22.749999999999996
+        }
+      ]
+    },
+    {
+      "case_id": "PRE3P1A_KIT_D2_80K-DATA.zip:20190531_101948.xlsx",
+      "source_package": "PRE3P1A_KIT_D2_80K-DATA.zip",
+      "source_member": "20190531_101948.xlsx",
+      "thermal_domain": "80 K",
+      "nozzle_diameter_mm": 2.0,
+      "samples": 600,
+      "release_onset_time_s": 12.4,
+      "sensors": [
+        {
+          "channel": "C3",
+          "baseline_vol_percent": 0.5462039999999999,
+          "peak_vol_percent": 14.565471,
+          "onset_time_s": 17.6,
+          "peak_time_s": 19.3,
+          "raw_onset_lag_s": 5.200000000000001,
+          "corrected_onset_lag_s": 1.450000000000001,
+          "raw_peak_lag_s": 6.9,
+          "corrected_peak_lag_s": 3.1500000000000004
+        },
+        {
+          "channel": "C2",
+          "baseline_vol_percent": 0.621309,
+          "peak_vol_percent": 21.395715,
+          "onset_time_s": 16.9,
+          "peak_time_s": 18.4,
+          "raw_onset_lag_s": 4.499999999999998,
+          "corrected_onset_lag_s": 0.7499999999999982,
+          "raw_peak_lag_s": 5.999999999999998,
+          "corrected_peak_lag_s": 2.2499999999999982
+        },
+        {
+          "channel": "C1",
+          "baseline_vol_percent": 0.6209975,
+          "peak_vol_percent": 33.40634,
+          "onset_time_s": 14.9,
+          "peak_time_s": 16.3,
+          "raw_onset_lag_s": 2.5,
+          "corrected_onset_lag_s": -1.25,
+          "raw_peak_lag_s": 3.9000000000000004,
+          "corrected_peak_lag_s": 0.15000000000000036
+        },
+        {
+          "channel": "C1-",
+          "baseline_vol_percent": 0.5241005000000001,
+          "peak_vol_percent": 25.927084,
+          "onset_time_s": 19.7,
+          "peak_time_s": 21.4,
+          "raw_onset_lag_s": 7.299999999999999,
+          "corrected_onset_lag_s": 3.549999999999999,
+          "raw_peak_lag_s": 8.999999999999998,
+          "corrected_peak_lag_s": 5.249999999999998
+        },
+        {
+          "channel": "C4",
+          "baseline_vol_percent": 0.5373145,
+          "peak_vol_percent": 14.379535,
+          "onset_time_s": 17.1,
+          "peak_time_s": 18.8,
+          "raw_onset_lag_s": 4.700000000000001,
+          "corrected_onset_lag_s": 0.9500000000000011,
+          "raw_peak_lag_s": 6.4,
+          "corrected_peak_lag_s": 2.6500000000000004
+        }
+      ]
+    },
+    {
+      "case_id": "PRE3P1A_KIT_D2_80K-DATA.zip:20190531_102810.xlsx",
+      "source_package": "PRE3P1A_KIT_D2_80K-DATA.zip",
+      "source_member": "20190531_102810.xlsx",
+      "thermal_domain": "80 K",
+      "nozzle_diameter_mm": 2.0,
+      "samples": 800,
+      "release_onset_time_s": 52.0,
+      "sensors": [
+        {
+          "channel": "C3",
+          "baseline_vol_percent": 0.5369015,
+          "peak_vol_percent": 9.840802,
+          "onset_time_s": 57.0,
+          "peak_time_s": 58.6,
+          "raw_onset_lag_s": 5.0,
+          "corrected_onset_lag_s": 1.25,
+          "raw_peak_lag_s": 6.600000000000001,
+          "corrected_peak_lag_s": 2.8500000000000014
+        },
+        {
+          "channel": "C2",
+          "baseline_vol_percent": 0.60126,
+          "peak_vol_percent": 14.23076,
+          "onset_time_s": 56.7,
+          "peak_time_s": 58.0,
+          "raw_onset_lag_s": 4.700000000000003,
+          "corrected_onset_lag_s": 0.9500000000000028,
+          "raw_peak_lag_s": 6.0,
+          "corrected_peak_lag_s": 2.25
+        },
+        {
+          "channel": "C1",
+          "baseline_vol_percent": 0.605137,
+          "peak_vol_percent": 24.026961,
+          "onset_time_s": 55.4,
+          "peak_time_s": 57.0,
+          "raw_onset_lag_s": 3.3999999999999986,
+          "corrected_onset_lag_s": -0.3500000000000014,
+          "raw_peak_lag_s": 5.0,
+          "corrected_peak_lag_s": 1.25
+        },
+        {
+          "channel": "C1-",
+          "baseline_vol_percent": 0.512158,
+          "peak_vol_percent": 21.590118,
+          "onset_time_s": 57.4,
+          "peak_time_s": 59.0,
+          "raw_onset_lag_s": 5.399999999999999,
+          "corrected_onset_lag_s": 1.6499999999999986,
+          "raw_peak_lag_s": 7.0,
+          "corrected_peak_lag_s": 3.25
+        },
+        {
+          "channel": "C4",
+          "baseline_vol_percent": 0.5153810000000001,
+          "peak_vol_percent": 9.663437,
+          "onset_time_s": 56.5,
+          "peak_time_s": 57.8,
+          "raw_onset_lag_s": 4.5,
+          "corrected_onset_lag_s": 0.75,
+          "raw_peak_lag_s": 5.799999999999997,
+          "corrected_peak_lag_s": 2.049999999999997
+        }
+      ]
+    },
+    {
+      "case_id": "PRE3P1A_KIT_D2_80K-DATA.zip:20190531_103408.xlsx",
+      "source_package": "PRE3P1A_KIT_D2_80K-DATA.zip",
+      "source_member": "20190531_103408.xlsx",
+      "thermal_domain": "80 K",
+      "nozzle_diameter_mm": 2.0,
+      "samples": 550,
+      "release_onset_time_s": 31.4,
+      "sensors": [
+        {
+          "channel": "C3",
+          "baseline_vol_percent": 0.5558055,
+          "peak_vol_percent": 7.368514,
+          "onset_time_s": 36.5,
+          "peak_time_s": 38.3,
+          "raw_onset_lag_s": 5.100000000000001,
+          "corrected_onset_lag_s": 1.3500000000000014,
+          "raw_peak_lag_s": 6.899999999999999,
+          "corrected_peak_lag_s": 3.1499999999999986
+        },
+        {
+          "channel": "C2",
+          "baseline_vol_percent": 0.6367830000000001,
+          "peak_vol_percent": 10.382823,
+          "onset_time_s": 36.2,
+          "peak_time_s": 37.9,
+          "raw_onset_lag_s": 4.800000000000004,
+          "corrected_onset_lag_s": 1.0500000000000043,
+          "raw_peak_lag_s": 6.5,
+          "corrected_peak_lag_s": 2.75
+        },
+        {
+          "channel": "C1",
+          "baseline_vol_percent": 0.661567,
+          "peak_vol_percent": 18.375007,
+          "onset_time_s": 35.3,
+          "peak_time_s": 37.1,
+          "raw_onset_lag_s": 3.8999999999999986,
+          "corrected_onset_lag_s": 0.14999999999999858,
+          "raw_peak_lag_s": 5.700000000000003,
+          "corrected_peak_lag_s": 1.9500000000000028
+        },
+        {
+          "channel": "C1-",
+          "baseline_vol_percent": 0.5669085,
+          "peak_vol_percent": 17.410944,
+          "onset_time_s": 36.2,
+          "peak_time_s": 37.9,
+          "raw_onset_lag_s": 4.800000000000004,
+          "corrected_onset_lag_s": 1.0500000000000043,
+          "raw_peak_lag_s": 6.5,
+          "corrected_peak_lag_s": 2.75
+        },
+        {
+          "channel": "C4",
+          "baseline_vol_percent": 0.5541495,
+          "peak_vol_percent": 6.877332,
+          "onset_time_s": 35.9,
+          "peak_time_s": 37.7,
+          "raw_onset_lag_s": 4.5,
+          "corrected_onset_lag_s": 0.75,
+          "raw_peak_lag_s": 6.300000000000004,
+          "corrected_peak_lag_s": 2.5500000000000043
+        }
+      ]
+    },
+    {
+      "case_id": "PRE3P1A_KIT_D2_80K-DATA.zip:20190531_103828.xlsx",
+      "source_package": "PRE3P1A_KIT_D2_80K-DATA.zip",
+      "source_member": "20190531_103828.xlsx",
+      "thermal_domain": "80 K",
+      "nozzle_diameter_mm": 2.0,
+      "samples": 640,
+      "release_onset_time_s": 35.7,
+      "sensors": [
+        {
+          "channel": "C3",
+          "baseline_vol_percent": 0.5228075000000001,
+          "peak_vol_percent": 5.750068,
+          "onset_time_s": 40.8,
+          "peak_time_s": 42.5,
+          "raw_onset_lag_s": 5.099999999999994,
+          "corrected_onset_lag_s": 1.3499999999999943,
+          "raw_peak_lag_s": 6.799999999999997,
+          "corrected_peak_lag_s": 3.049999999999997
+        },
+        {
+          "channel": "C2",
+          "baseline_vol_percent": 0.6007035000000001,
+          "peak_vol_percent": 8.513206,
+          "onset_time_s": 40.5,
+          "peak_time_s": 42.3,
+          "raw_onset_lag_s": 4.799999999999997,
+          "corrected_onset_lag_s": 1.0499999999999972,
+          "raw_peak_lag_s": 6.599999999999994,
+          "corrected_peak_lag_s": 2.8499999999999943
+        },
+        {
+          "channel": "C1",
+          "baseline_vol_percent": 0.6033765,
+          "peak_vol_percent": 15.281043,
+          "onset_time_s": 39.9,
+          "peak_time_s": 41.7,
+          "raw_onset_lag_s": 4.199999999999996,
+          "corrected_onset_lag_s": 0.44999999999999574,
+          "raw_peak_lag_s": 6.0,
+          "corrected_peak_lag_s": 2.25
+        },
+        {
+          "channel": "C1-",
+          "baseline_vol_percent": 0.51353,
+          "peak_vol_percent": 14.820192,
+          "onset_time_s": 40.3,
+          "peak_time_s": 42.0,
+          "raw_onset_lag_s": 4.599999999999994,
+          "corrected_onset_lag_s": 0.8499999999999943,
+          "raw_peak_lag_s": 6.299999999999997,
+          "corrected_peak_lag_s": 2.549999999999997
+        },
+        {
+          "channel": "C4",
+          "baseline_vol_percent": 0.5183679999999999,
+          "peak_vol_percent": 5.43428,
+          "onset_time_s": 40.2,
+          "peak_time_s": 41.4,
+          "raw_onset_lag_s": 4.5,
+          "corrected_onset_lag_s": 0.75,
+          "raw_peak_lag_s": 5.699999999999996,
+          "corrected_peak_lag_s": 1.9499999999999957
+        }
+      ]
+    },
+    {
+      "case_id": "PRE3P1A_KIT_D4_300K_DATA.zip:20190523_140705.xlsx",
+      "source_package": "PRE3P1A_KIT_D4_300K_DATA.zip",
+      "source_member": "20190523_140705.xlsx",
+      "thermal_domain": "300 K",
+      "nozzle_diameter_mm": 4.0,
+      "samples": 640,
+      "release_onset_time_s": 26.0,
+      "sensors": [
+        {
+          "channel": "C3",
+          "baseline_vol_percent": 0.533109,
+          "peak_vol_percent": 5.757524,
+          "onset_time_s": 30.6,
+          "peak_time_s": 31.6,
+          "raw_onset_lag_s": 4.600000000000001,
+          "corrected_onset_lag_s": 0.8500000000000014,
+          "raw_peak_lag_s": 5.600000000000001,
+          "corrected_peak_lag_s": 1.8500000000000014
+        },
+        {
+          "channel": "C2",
+          "baseline_vol_percent": 0.595845,
+          "peak_vol_percent": 8.532479,
+          "onset_time_s": 30.3,
+          "peak_time_s": 31.3,
+          "raw_onset_lag_s": 4.300000000000001,
+          "corrected_onset_lag_s": 0.5500000000000007,
+          "raw_peak_lag_s": 5.300000000000001,
+          "corrected_peak_lag_s": 1.5500000000000007
+        },
+        {
+          "channel": "C1",
+          "baseline_vol_percent": 0.6056779999999999,
+          "peak_vol_percent": 15.324612,
+          "onset_time_s": 29.7,
+          "peak_time_s": 31.0,
+          "raw_onset_lag_s": 3.6999999999999993,
+          "corrected_onset_lag_s": -0.05000000000000071,
+          "raw_peak_lag_s": 5.0,
+          "corrected_peak_lag_s": 1.25
+        },
+        {
+          "channel": "C1-",
+          "baseline_vol_percent": 0.5136545,
+          "peak_vol_percent": 10.234492,
+          "onset_time_s": 30.6,
+          "peak_time_s": 31.6,
+          "raw_onset_lag_s": 4.600000000000001,
+          "corrected_onset_lag_s": 0.8500000000000014,
+          "raw_peak_lag_s": 5.600000000000001,
+          "corrected_peak_lag_s": 1.8500000000000014
+        },
+        {
+          "channel": "C4",
+          "baseline_vol_percent": 0.5123435000000001,
+          "peak_vol_percent": 4.492621,
+          "onset_time_s": 30.2,
+          "peak_time_s": 31.2,
+          "raw_onset_lag_s": 4.199999999999999,
+          "corrected_onset_lag_s": 0.4499999999999993,
+          "raw_peak_lag_s": 5.199999999999999,
+          "corrected_peak_lag_s": 1.4499999999999993
+        }
+      ]
+    },
+    {
+      "case_id": "PRE3P1A_KIT_D4_300K_DATA.zip:20190523_141008.xlsx",
+      "source_package": "PRE3P1A_KIT_D4_300K_DATA.zip",
+      "source_member": "20190523_141008.xlsx",
+      "thermal_domain": "300 K",
+      "nozzle_diameter_mm": 4.0,
+      "samples": 660,
+      "release_onset_time_s": 45.3,
+      "sensors": [
+        {
+          "channel": "C3",
+          "baseline_vol_percent": 0.5480959999999999,
+          "peak_vol_percent": 4.323969,
+          "onset_time_s": 49.9,
+          "peak_time_s": 50.8,
+          "raw_onset_lag_s": 4.600000000000001,
+          "corrected_onset_lag_s": 0.8500000000000014,
+          "raw_peak_lag_s": 5.5,
+          "corrected_peak_lag_s": 1.75
+        },
+        {
+          "channel": "C2",
+          "baseline_vol_percent": 0.6231765,
+          "peak_vol_percent": 7.039975,
+          "onset_time_s": 49.7,
+          "peak_time_s": 50.6,
+          "raw_onset_lag_s": 4.400000000000006,
+          "corrected_onset_lag_s": 0.6500000000000057,
+          "raw_peak_lag_s": 5.300000000000004,
+          "corrected_peak_lag_s": 1.5500000000000043
+        },
+        {
+          "channel": "C1",
+          "baseline_vol_percent": 0.6210025,
+          "peak_vol_percent": 13.39098,
+          "onset_time_s": 49.2,
+          "peak_time_s": 50.4,
+          "raw_onset_lag_s": 3.9000000000000057,
+          "corrected_onset_lag_s": 0.15000000000000568,
+          "raw_peak_lag_s": 5.100000000000001,
+          "corrected_peak_lag_s": 1.3500000000000014
+        },
+        {
+          "channel": "C1-",
+          "baseline_vol_percent": 0.5357845,
+          "peak_vol_percent": 9.842474,
+          "onset_time_s": 49.7,
+          "peak_time_s": 50.6,
+          "raw_onset_lag_s": 4.400000000000006,
+          "corrected_onset_lag_s": 0.6500000000000057,
+          "raw_peak_lag_s": 5.300000000000004,
+          "corrected_peak_lag_s": 1.5500000000000043
+        },
+        {
+          "channel": "C4",
+          "baseline_vol_percent": 0.5439125,
+          "peak_vol_percent": 3.76935,
+          "onset_time_s": 49.5,
+          "peak_time_s": 50.1,
+          "raw_onset_lag_s": 4.200000000000003,
+          "corrected_onset_lag_s": 0.45000000000000284,
+          "raw_peak_lag_s": 4.800000000000004,
+          "corrected_peak_lag_s": 1.0500000000000043
+        }
+      ]
+    },
+    {
+      "case_id": "PRE3P1A_KIT_D4_300K_DATA.zip:20190523_141327.xlsx",
+      "source_package": "PRE3P1A_KIT_D4_300K_DATA.zip",
+      "source_member": "20190523_141327.xlsx",
+      "thermal_domain": "300 K",
+      "nozzle_diameter_mm": 4.0,
+      "samples": 440,
+      "release_onset_time_s": 26.4,
+      "sensors": [
+        {
+          "channel": "C3",
+          "baseline_vol_percent": 0.5166014999999999,
+          "peak_vol_percent": 2.809857,
+          "onset_time_s": 31.1,
+          "peak_time_s": 32.0,
+          "raw_onset_lag_s": 4.700000000000003,
+          "corrected_onset_lag_s": 0.9500000000000028,
+          "raw_peak_lag_s": 5.600000000000001,
+          "corrected_peak_lag_s": 1.8500000000000014
+        },
+        {
+          "channel": "C2",
+          "baseline_vol_percent": 0.579835,
+          "peak_vol_percent": 4.918869,
+          "onset_time_s": 30.9,
+          "peak_time_s": 31.7,
+          "raw_onset_lag_s": 4.5,
+          "corrected_onset_lag_s": 0.75,
+          "raw_peak_lag_s": 5.300000000000001,
+          "corrected_peak_lag_s": 1.5500000000000007
+        },
+        {
+          "channel": "C1",
+          "baseline_vol_percent": 0.5908545000000001,
+          "peak_vol_percent": 9.396694,
+          "onset_time_s": 30.6,
+          "peak_time_s": 31.5,
+          "raw_onset_lag_s": 4.200000000000003,
+          "corrected_onset_lag_s": 0.45000000000000284,
+          "raw_peak_lag_s": 5.100000000000001,
+          "corrected_peak_lag_s": 1.3500000000000014
+        },
+        {
+          "channel": "C1-",
+          "baseline_vol_percent": 0.497628,
+          "peak_vol_percent": 7.842304,
+          "onset_time_s": 30.6,
+          "peak_time_s": 31.5,
+          "raw_onset_lag_s": 4.200000000000003,
+          "corrected_onset_lag_s": 0.45000000000000284,
+          "raw_peak_lag_s": 5.100000000000001,
+          "corrected_peak_lag_s": 1.3500000000000014
+        },
+        {
+          "channel": "C4",
+          "baseline_vol_percent": 0.5001855,
+          "peak_vol_percent": 2.676499,
+          "onset_time_s": 30.6,
+          "peak_time_s": 31.5,
+          "raw_onset_lag_s": 4.200000000000003,
+          "corrected_onset_lag_s": 0.45000000000000284,
+          "raw_peak_lag_s": 5.100000000000001,
+          "corrected_peak_lag_s": 1.3500000000000014
+        }
+      ]
+    },
+    {
+      "case_id": "PRE3P1A_KIT_D4_300K_DATA.zip:20190624_143040.xlsx",
+      "source_package": "PRE3P1A_KIT_D4_300K_DATA.zip",
+      "source_member": "20190624_143040.xlsx",
+      "thermal_domain": "300 K",
+      "nozzle_diameter_mm": 4.0,
+      "samples": 630,
+      "release_onset_time_s": 33.6,
+      "sensors": [
+        {
+          "channel": "C3",
+          "baseline_vol_percent": 0.5971255,
+          "peak_vol_percent": 15.634421,
+          "onset_time_s": 37.7,
+          "peak_time_s": 38.7,
+          "raw_onset_lag_s": 4.100000000000001,
+          "corrected_onset_lag_s": 0.3500000000000014,
+          "raw_peak_lag_s": 5.100000000000001,
+          "corrected_peak_lag_s": 1.3500000000000014
+        },
+        {
+          "channel": "C2",
+          "baseline_vol_percent": 0.6649625,
+          "peak_vol_percent": 26.72433,
+          "onset_time_s": 36.7,
+          "peak_time_s": 37.8,
+          "raw_onset_lag_s": 3.1000000000000014,
+          "corrected_onset_lag_s": -0.6499999999999986,
+          "raw_peak_lag_s": 4.199999999999996,
+          "corrected_peak_lag_s": 0.44999999999999574
+        },
+        {
+          "channel": "C1",
+          "baseline_vol_percent": 0.6713819999999999,
+          "peak_vol_percent": 38.597457,
+          "onset_time_s": 35.1,
+          "peak_time_s": 36.5,
+          "raw_onset_lag_s": 1.5,
+          "corrected_onset_lag_s": -2.25,
+          "raw_peak_lag_s": 2.8999999999999986,
+          "corrected_peak_lag_s": -0.8500000000000014
+        },
+        {
+          "channel": "C1-",
+          "baseline_vol_percent": 0.5826134999999999,
+          "peak_vol_percent": 13.652692,
+          "onset_time_s": 38.9,
+          "peak_time_s": 40.0,
+          "raw_onset_lag_s": 5.299999999999997,
+          "corrected_onset_lag_s": 1.5499999999999972,
+          "raw_peak_lag_s": 6.399999999999999,
+          "corrected_peak_lag_s": 2.6499999999999986
+        },
+        {
+          "channel": "C4",
+          "baseline_vol_percent": 0.5787445,
+          "peak_vol_percent": 10.170741,
+          "onset_time_s": 37.9,
+          "peak_time_s": 38.7,
+          "raw_onset_lag_s": 4.299999999999997,
+          "corrected_onset_lag_s": 0.5499999999999972,
+          "raw_peak_lag_s": 5.100000000000001,
+          "corrected_peak_lag_s": 1.3500000000000014
+        }
+      ]
+    },
+    {
+      "case_id": "PRE3P1A_KIT_D4_300K_DATA.zip:20190624_144245.xlsx",
+      "source_package": "PRE3P1A_KIT_D4_300K_DATA.zip",
+      "source_member": "20190624_144245.xlsx",
+      "thermal_domain": "300 K",
+      "nozzle_diameter_mm": 4.0,
+      "samples": 730,
+      "release_onset_time_s": 47.9,
+      "sensors": [
+        {
+          "channel": "C3",
+          "baseline_vol_percent": 0.614907,
+          "peak_vol_percent": 13.975878,
+          "onset_time_s": 51.9,
+          "peak_time_s": 52.9,
+          "raw_onset_lag_s": 4.0,
+          "corrected_onset_lag_s": 0.25,
+          "raw_peak_lag_s": 5.0,
+          "corrected_peak_lag_s": 1.25
+        },
+        {
+          "channel": "C2",
+          "baseline_vol_percent": 0.6806145,
+          "peak_vol_percent": 22.403836,
+          "onset_time_s": 51.1,
+          "peak_time_s": 52.2,
+          "raw_onset_lag_s": 3.200000000000003,
+          "corrected_onset_lag_s": -0.5499999999999972,
+          "raw_peak_lag_s": 4.300000000000004,
+          "corrected_peak_lag_s": 0.5500000000000043
+        },
+        {
+          "channel": "C1",
+          "baseline_vol_percent": 0.6848734999999999,
+          "peak_vol_percent": 31.864058,
+          "onset_time_s": 50.3,
+          "peak_time_s": 51.5,
+          "raw_onset_lag_s": 2.3999999999999986,
+          "corrected_onset_lag_s": -1.3500000000000014,
+          "raw_peak_lag_s": 3.6000000000000014,
+          "corrected_peak_lag_s": -0.14999999999999858
+        },
+        {
+          "channel": "C1-",
+          "baseline_vol_percent": 0.5967579999999999,
+          "peak_vol_percent": 12.597465,
+          "onset_time_s": 52.9,
+          "peak_time_s": 53.9,
+          "raw_onset_lag_s": 5.0,
+          "corrected_onset_lag_s": 1.25,
+          "raw_peak_lag_s": 6.0,
+          "corrected_peak_lag_s": 2.25
+        },
+        {
+          "channel": "C4",
+          "baseline_vol_percent": 0.5966885,
+          "peak_vol_percent": 9.772319,
+          "onset_time_s": 51.8,
+          "peak_time_s": 52.6,
+          "raw_onset_lag_s": 3.8999999999999986,
+          "corrected_onset_lag_s": 0.14999999999999858,
+          "raw_peak_lag_s": 4.700000000000003,
+          "corrected_peak_lag_s": 0.9500000000000028
+        }
+      ]
+    },
+    {
+      "case_id": "PRE3P1A_KIT_D4_300K_DATA.zip:20190624_145052.xlsx",
+      "source_package": "PRE3P1A_KIT_D4_300K_DATA.zip",
+      "source_member": "20190624_145052.xlsx",
+      "thermal_domain": "300 K",
+      "nozzle_diameter_mm": 4.0,
+      "samples": 720,
+      "release_onset_time_s": 51.0,
+      "sensors": [
+        {
+          "channel": "C3",
+          "baseline_vol_percent": 0.606509,
+          "peak_vol_percent": 11.569984,
+          "onset_time_s": 55.0,
+          "peak_time_s": 55.9,
+          "raw_onset_lag_s": 4.0,
+          "corrected_onset_lag_s": 0.25,
+          "raw_peak_lag_s": 4.899999999999999,
+          "corrected_peak_lag_s": 1.1499999999999986
+        },
+        {
+          "channel": "C2",
+          "baseline_vol_percent": 0.680313,
+          "peak_vol_percent": 18.821074,
+          "onset_time_s": 54.5,
+          "peak_time_s": 55.5,
+          "raw_onset_lag_s": 3.5,
+          "corrected_onset_lag_s": -0.25,
+          "raw_peak_lag_s": 4.5,
+          "corrected_peak_lag_s": 0.75
+        },
+        {
+          "channel": "C1",
+          "baseline_vol_percent": 0.6854454999999999,
+          "peak_vol_percent": 28.353808,
+          "onset_time_s": 53.5,
+          "peak_time_s": 54.7,
+          "raw_onset_lag_s": 2.5,
+          "corrected_onset_lag_s": -1.25,
+          "raw_peak_lag_s": 3.700000000000003,
+          "corrected_peak_lag_s": -0.04999999999999716
+        },
+        {
+          "channel": "C1-",
+          "baseline_vol_percent": 0.5970015,
+          "peak_vol_percent": 12.921231,
+          "onset_time_s": 55.8,
+          "peak_time_s": 56.8,
+          "raw_onset_lag_s": 4.799999999999997,
+          "corrected_onset_lag_s": 1.0499999999999972,
+          "raw_peak_lag_s": 5.799999999999997,
+          "corrected_peak_lag_s": 2.049999999999997
+        },
+        {
+          "channel": "C4",
+          "baseline_vol_percent": 0.5940259999999999,
+          "peak_vol_percent": 8.84348,
+          "onset_time_s": 54.8,
+          "peak_time_s": 55.6,
+          "raw_onset_lag_s": 3.799999999999997,
+          "corrected_onset_lag_s": 0.04999999999999716,
+          "raw_peak_lag_s": 4.600000000000001,
+          "corrected_peak_lag_s": 0.8500000000000014
+        }
+      ]
+    },
+    {
+      "case_id": "PRE3P1A_KIT_D4_300K_DATA.zip:20190624_145615.xlsx",
+      "source_package": "PRE3P1A_KIT_D4_300K_DATA.zip",
+      "source_member": "20190624_145615.xlsx",
+      "thermal_domain": "300 K",
+      "nozzle_diameter_mm": 4.0,
+      "samples": 1060,
+      "release_onset_time_s": 64.6,
+      "sensors": [
+        {
+          "channel": "C3",
+          "baseline_vol_percent": 0.6265075,
+          "peak_vol_percent": 8.080502,
+          "onset_time_s": 68.8,
+          "peak_time_s": 69.7,
+          "raw_onset_lag_s": 4.200000000000003,
+          "corrected_onset_lag_s": 0.45000000000000284,
+          "raw_peak_lag_s": 5.1000000000000085,
+          "corrected_peak_lag_s": 1.3500000000000085
+        },
+        {
+          "channel": "C2",
+          "baseline_vol_percent": 0.6963545,
+          "peak_vol_percent": 13.362051,
+          "onset_time_s": 68.4,
+          "peak_time_s": 69.3,
+          "raw_onset_lag_s": 3.8000000000000114,
+          "corrected_onset_lag_s": 0.05000000000001137,
+          "raw_peak_lag_s": 4.700000000000003,
+          "corrected_peak_lag_s": 0.9500000000000028
+        },
+        {
+          "channel": "C1",
+          "baseline_vol_percent": 0.702588,
+          "peak_vol_percent": 23.310334,
+          "onset_time_s": 67.5,
+          "peak_time_s": 68.6,
+          "raw_onset_lag_s": 2.9000000000000057,
+          "corrected_onset_lag_s": -0.8499999999999943,
+          "raw_peak_lag_s": 4.0,
+          "corrected_peak_lag_s": 0.25
+        },
+        {
+          "channel": "C1-",
+          "baseline_vol_percent": 0.6157975,
+          "peak_vol_percent": 11.86227,
+          "onset_time_s": 69.2,
+          "peak_time_s": 70.2,
+          "raw_onset_lag_s": 4.6000000000000085,
+          "corrected_onset_lag_s": 0.8500000000000085,
+          "raw_peak_lag_s": 5.6000000000000085,
+          "corrected_peak_lag_s": 1.8500000000000085
+        },
+        {
+          "channel": "C4",
+          "baseline_vol_percent": 0.6134225,
+          "peak_vol_percent": 6.512883,
+          "onset_time_s": 68.5,
+          "peak_time_s": 69.2,
+          "raw_onset_lag_s": 3.9000000000000057,
+          "corrected_onset_lag_s": 0.15000000000000568,
+          "raw_peak_lag_s": 4.6000000000000085,
+          "corrected_peak_lag_s": 0.8500000000000085
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "interpretation": "Subtracting the documented transport delay is a timestamp diagnostic only. It must not be used to advance an alarm, change detector routing, or claim independent station validation without a pre-access frozen protocol and a separate holdout."
+}
