@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "protocol_id": "FIGSHARE-H2-CHANNEL-SPATIAL-HOLDOUT-2601",
+  "frozen_at": "2026-10-14T00:00:00+09:00",
+  "status": "FROZEN_BEFORE_NUMERIC_OUTCOME_ACCESS",
+  "objective": "Evaluate the frozen transparent spatial detector ranking against an independent actual-hydrogen open-ended-channel cohort.",
+  "source": {
+    "dataset_doi": "10.23642/usn.26117989.v2",
+    "article_doi": "10.1016/j.jlp.2025.105669",
+    "title": "Experimental Data of Hydrogen Dispersion in an Open-ended Rectangular Channel",
+    "repository": "USN Figshare",
+    "license": "CC BY 4.0",
+    "test_gas": "hydrogen",
+    "reported_sensor_count": 29,
+    "reported_channels": ["temporal mass flow", "filling pressure", "hydrogen concentration"],
+    "local_raw_directory": "data/public_validation/raw/figshare_26117989",
+    "local_raw_rows_committed": false
+  },
+  "cohort": {
+    "selection_rule": "Every locally present experiment archive whose filename matches 23_FFI_P101_T*.zip at protocol freeze.",
+    "expected_archive_count": 22,
+    "case_replacement_permitted": false,
+    "exclusion_rule": "Exclude only a file that fails publisher identity, cannot be parsed without ambiguity, lacks a monotonic time base, lacks finite per-sensor concentration values, or lacks an independently documented source/sensor coordinate frame. Report every exclusion and do not replace it.",
+    "source_names_are_metadata_only": true
+  },
+  "frozen_model": {
+    "implementation": "src/h2station/spatial_detector.py",
+    "candidate": "coordinate_distance_with_orientation_and_release_boundary_features",
+    "parameter_fitting": false,
+    "outcome_dependent_sensor_selection": false,
+    "runtime_application": false,
+    "ranking_output": "ordered sensor identifiers per case"
+  },
+  "minimum_input_contract": [
+    "common_elapsed_time_s",
+    "source_orifice_or_release_location_coordinates",
+    "sensor_coordinates_in_the_same_frame",
+    "release_orientation_or_declared_channel_axis",
+    "per_sensor_hydrogen_concentration_series",
+    "mass_flow_or_source_pressure_series",
+    "engineering_units_and_sampling_metadata"
+  ],
+  "endpoints": {
+    "primary": [
+      {"name": "case_spearman_rho", "minimum": 0.4},
+      {"name": "mean_top5_recall", "minimum": 0.6}
+    ],
+    "secondary": [
+      {"name": "median_case_spearman_rho", "minimum": 0.5},
+      {"name": "nearest_in_response_quartile_fraction", "minimum": 0.7}
+    ],
+    "joint_rule": "All primary screens must pass; secondary screens are reported for transfer diagnosis."
+  },
+  "decision_rule": {
+    "minimum_eligible_cases": 10,
+    "confirmatory_success": "At least 10 eligible cases and both primary screens pass across the fixed cohort.",
+    "ineligible_result": "Retain the data-access or metadata failure without claiming model failure.",
+    "negative_result": "Retain the numerical negative result; do not tune or promote the candidate to runtime.",
+    "positive_result": "A pass supports only bounded spatial-ranking transfer to this channel geometry and requires a separate runtime review."
+  },
+  "claim_boundary": "This protocol concerns actual-hydrogen concentration ordering in an open-ended rectangular channel. It cannot validate an outdoor station detector map, alarm or ESD setpoints, release magnitude, consequence distance, evacuation radius, station control, or SAGA effectiveness.",
+  "freeze_integrity": {
+    "model_commit": "be7e6284165ff4cbb8f3dbd8728631a79017de47",
+    "numeric_outcomes_opened_before_freeze": false,
+    "source_archive_member_values_opened_before_freeze": false
+  },
+  "runner": "scripts/run_figshare_h2_channel_spatial_holdout.py",
+  "result": "research/figshare_h2_channel_spatial_holdout_result_2026_10_14.json"
+}
