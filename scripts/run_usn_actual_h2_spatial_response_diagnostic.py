@@ -17,7 +17,7 @@ import math
 import re
 import zipfile
 from pathlib import Path
-from typing import Any
+from typing import Any, Callable
 
 import numpy as np
 from scipy.stats import spearmanr
@@ -74,6 +74,9 @@ def _evaluate_member(
     source: tuple[float, float, float],
     *,
     model: str,
+    score_function: Callable[
+        [tuple[float, float, float], tuple[float, float, float]], float
+    ] | None = None,
 ) -> dict[str, Any]:
     with zipfile.ZipFile(archive) as package:
         csv_members = [name for name in package.namelist() if name.lower().endswith(".csv")]
@@ -102,7 +105,11 @@ def _evaluate_member(
             continue
         evaluated.append({
             "sensor": sensor_id,
-            "score": _score(source, coordinate, model=model),
+            "score": (
+                score_function(source, coordinate)
+                if score_function is not None
+                else _score(source, coordinate, model=model)
+            ),
             "response": _response(values),
         })
     scores = np.asarray([item["score"] for item in evaluated], dtype=float)

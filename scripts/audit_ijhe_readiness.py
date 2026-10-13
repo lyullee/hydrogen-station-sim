@@ -4399,6 +4399,9 @@ def audit(root: Path) -> dict[str, object]:
     prospective_spatial_module_path = root / (
         "src/h2station/prospective_spatial_rank.py"
     )
+    prospective_spatial_transfer_path = root / (
+        "research/usn_frozen_spatial_candidate_transfer_2026_10_13.json"
+    )
     h2safe_spatial = _json(h2safe_spatial_path)
     hydelta_spatial_eligibility = _json(hydelta_spatial_eligibility_path)
     sandia_spatial = _json(sandia_spatial_path)
@@ -4407,6 +4410,7 @@ def audit(root: Path) -> dict[str, object]:
     hytunnel_spatial_result = _json(hytunnel_spatial_result_path)
     prospective_spatial_development = _json(prospective_spatial_development_path)
     prospective_spatial_protocol = _json(prospective_spatial_protocol_path)
+    prospective_spatial_transfer = _json(prospective_spatial_transfer_path)
     h2safe_spatial_source = (h2safe_spatial or {}).get("source") or {}
     h2safe_spatial_method = (h2safe_spatial or {}).get("method") or {}
     h2safe_spatial_results = (
@@ -4679,6 +4683,17 @@ def audit(root: Path) -> dict[str, object]:
     prospective_runtime = (prospective_spatial_protocol or {}).get(
         "runtime_policy", {}
     )
+    prospective_transfer_candidate = (prospective_spatial_transfer or {}).get(
+        "candidate", {}
+    )
+    prospective_transfer_aggregate = (
+        (prospective_spatial_transfer or {}).get("result", {}).get(
+            "aggregate", {}
+        )
+    )
+    prospective_transfer_classification = (
+        (prospective_spatial_transfer or {}).get("evidence_classification", {})
+    )
     runtime_sources_exclude_prospective = bool(
         "prospective_spatial_rank" not in (
             root / "src/h2station/api.py"
@@ -4735,6 +4750,40 @@ def audit(root: Path) -> dict[str, object]:
         and prospective_runtime.get("enabled") is False
         and prospective_runtime.get("api_import_permitted") is False
         and prospective_runtime.get("hazop_runtime_import_permitted") is False
+        and (prospective_spatial_transfer or {}).get("artifact_type")
+        == "post_access_usn_frozen_spatial_candidate_transfer"
+        and (prospective_spatial_transfer or {}).get("source", {}).get(
+            "dataset_doi"
+        ) == "10.23642/USN.26117989"
+        and (prospective_spatial_transfer or {}).get("source", {}).get(
+            "archive_count"
+        ) == 22
+        and prospective_transfer_candidate.get("implementation_sha256")
+        == _sha256(prospective_spatial_module_path)
+        and prospective_transfer_candidate.get("protocol_sha256")
+        == _sha256(prospective_spatial_protocol_path)
+        and prospective_transfer_candidate.get("development_artifact_sha256")
+        == _sha256(prospective_spatial_development_path)
+        and prospective_transfer_candidate.get(
+            "parameter_tuning_in_this_evaluation"
+        ) is False
+        and prospective_transfer_candidate.get(
+            "dataset_included_in_parameter_search"
+        ) is False
+        and prospective_transfer_aggregate.get("experiment_count") == 22
+        and prospective_transfer_aggregate.get("joint_pass") is False
+        and prospective_transfer_aggregate.get("screens", {}).get(
+            "nearest_in_response_quartile_fraction_at_least_0_7"
+        ) is False
+        and prospective_transfer_classification.get(
+            "outcomes_accessed_before_candidate_freeze"
+        ) is True
+        and prospective_transfer_classification.get("independent_holdout") is False
+        and prospective_transfer_classification.get("prospective_validation") is False
+        and prospective_transfer_classification.get("readiness_gate_effect") is False
+        and prospective_transfer_classification.get(
+            "runtime_parameter_application"
+        ) is False
         and runtime_sources_exclude_prospective
     )
     gates.append(_gate(
@@ -4745,8 +4794,9 @@ def audit(root: Path) -> dict[str, object]:
             str(prospective_spatial_development_path.relative_to(root)),
             str(prospective_spatial_protocol_path.relative_to(root)),
             str(prospective_spatial_module_path.relative_to(root)),
+            str(prospective_spatial_transfer_path.relative_to(root)),
         )),
-        "15,120-candidate search, retained 7/8 screen result, exact implementation and development hashes, untouched future cohort contract, and no API or HAZOP runtime import.",
+        "15,120-candidate search, retained 7/8 screen result, exact implementation and development hashes, untouched future cohort contract, retained 22-case post-access transfer failure, and no API or HAZOP runtime import.",
         {
             "candidate_count": (
                 (prospective_spatial_development or {}).get("selection", {}).get(
@@ -4764,6 +4814,30 @@ def audit(root: Path) -> dict[str, object]:
             ),
             "runtime_enabled": prospective_runtime.get("enabled"),
             "runtime_sources_exclude_candidate": runtime_sources_exclude_prospective,
+            "usn_post_access_transfer": {
+                "experiment_count": prospective_transfer_aggregate.get(
+                    "experiment_count"
+                ),
+                "median_spearman": prospective_transfer_aggregate.get(
+                    "median_spearman"
+                ),
+                "mean_top5_recall": prospective_transfer_aggregate.get(
+                    "mean_top5_recall"
+                ),
+                "nearest_in_response_quartile_fraction": (
+                    prospective_transfer_aggregate.get(
+                        "nearest_in_response_quartile_fraction"
+                    )
+                ),
+                "screens": prospective_transfer_aggregate.get("screens"),
+                "joint_pass": prospective_transfer_aggregate.get("joint_pass"),
+                "independent_holdout": prospective_transfer_classification.get(
+                    "independent_holdout"
+                ),
+                "readiness_gate_effect": prospective_transfer_classification.get(
+                    "readiness_gate_effect"
+                ),
+            },
             "claim_boundary": (prospective_spatial_protocol or {}).get(
                 "claim_boundary"
             ),

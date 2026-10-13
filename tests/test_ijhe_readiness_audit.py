@@ -514,6 +514,17 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     assert prospective_observed["future_holdout_outcomes_accessed"] is False
     assert prospective_observed["runtime_enabled"] is False
     assert prospective_observed["runtime_sources_exclude_candidate"] is True
+    transfer = prospective_observed["usn_post_access_transfer"]
+    assert transfer["experiment_count"] == 22
+    assert transfer["joint_pass"] is False
+    assert transfer["screens"] == {
+        "median_spearman_at_least_0_5": True,
+        "spearman_at_least_0_4_fraction_at_least_0_6": True,
+        "mean_top5_recall_at_least_0_6": True,
+        "nearest_in_response_quartile_fraction_at_least_0_7": False,
+    }
+    assert transfer["independent_holdout"] is False
+    assert transfer["readiness_gate_effect"] is False
     assert gates["hytunnel_spatial_holdout_execution_integrity"]["status"] == "PASS"
     assert gates["dataverse_hydrogen_explosion_component_inventory"]["status"] == "PASS"
     explosion_inventory = gates["dataverse_hydrogen_explosion_component_inventory"]["observed"]

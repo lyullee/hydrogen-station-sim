@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-13T06:57:33.608560+00:00",
+  "generated_at": "2026-10-13T07:22:11.080113+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -3236,8 +3236,8 @@
       "id": "prospective_spatial_rank_candidate_freeze_integrity",
       "status": "PASS",
       "claim": "The pooled post-outcome spatial candidate and its future actual-hydrogen holdout rule are hash-frozen without entering runtime routing.",
-      "evidence": "research\\pooled_spatial_rank_development_2026_10_13.json; research\\prospective_spatial_rank_protocol_2026_10_13.json; src\\h2station\\prospective_spatial_rank.py",
-      "requirement": "15,120-candidate search, retained 7/8 screen result, exact implementation and development hashes, untouched future cohort contract, and no API or HAZOP runtime import.",
+      "evidence": "research\\pooled_spatial_rank_development_2026_10_13.json; research\\prospective_spatial_rank_protocol_2026_10_13.json; src\\h2station\\prospective_spatial_rank.py; research\\usn_frozen_spatial_candidate_transfer_2026_10_13.json",
+      "requirement": "15,120-candidate search, retained 7/8 screen result, exact implementation and development hashes, untouched future cohort contract, retained 22-case post-access transfer failure, and no API or HAZOP runtime import.",
       "observed": {
         "candidate_count": 15120,
         "parameters": [
@@ -3279,6 +3279,21 @@
         "future_holdout_outcomes_accessed": false,
         "runtime_enabled": false,
         "runtime_sources_exclude_candidate": true,
+        "usn_post_access_transfer": {
+          "experiment_count": 22,
+          "median_spearman": 0.6578396404129025,
+          "mean_top5_recall": 0.7272727272727273,
+          "nearest_in_response_quartile_fraction": 0.5454545454545454,
+          "screens": {
+            "median_spearman_at_least_0_5": true,
+            "spearman_at_least_0_4_fraction_at_least_0_6": true,
+            "mean_top5_recall_at_least_0_6": true,
+            "nearest_in_response_quartile_fraction_at_least_0_7": false
+          },
+          "joint_pass": false,
+          "independent_holdout": false,
+          "readiness_gate_effect": false
+        },
         "claim_boundary": "This freeze does not validate detector placement, hydrogen concentration, alarm time, flammable volume, ESD performance, CFD, outdoor HRS dispersion, or any site safety distance. A dataset-specific protocol must identify and hash a new untouched cohort before numerical outcomes are accessed."
       }
     },
