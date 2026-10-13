@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "artifact_type": "source_metadata_recheck",
+  "generated_at": "2026-10-14",
+  "case_id": "dickens_typeIII",
+  "source": {
+    "title": "Numerical investigations on the fast filling of hydrogen tanks",
+    "public_source_url": "https://conference.ing.unipi.it/ichs2009/images/stories/papers/238.pdf",
+    "related_experiment_doi": "10.1016/j.jpowsour.2006.11.077",
+    "local_source_sha256": "1f713333b2a738c5f6c9e18c1c4cc8463c3ef4204e4828ac0211d78572c384d",
+    "source_role": "primary setup and observation-method metadata; not a new numerical holdout"
+  },
+  "resolved_metadata": {
+    "inlet_tube_internal_diameter_mm": 5.0,
+    "inlet_tube_insertion_length_mm": 82.0,
+    "temperature_sensor_count": 63,
+    "temperature_sensor_accuracy_k": 1.0,
+    "reported_mean_observation": "weighted mean of the 63 thermocouple readings using vertical distance from the central axis and an area factor",
+    "tank_internal_volume_l": 74.0,
+    "liner_thickness_mm": 4.0,
+    "insulation_thickness_mm": 15.0
+  },
+  "remaining_unknowns": [
+    "machine-readable individual thermocouple coordinates and weights",
+    "time-resolved inlet-gas temperature trace used as the model boundary",
+    "sensor response/averaging window and synchronization uncertainty",
+    "an outcome-unseen independent case to test the repaired observation mapping"
+  ],
+  "eligibility": {
+    "prospective_holdout_eligible": false,
+    "reason": "The Dickens numerical outcomes and the existing validation result were accessed before this metadata recheck.",
+    "repair_design_use": true,
+    "runtime_parameter_promotion": false,
+    "validation_gate_change": false
+  },
+  "next_protocol_inputs": [
+    "freeze the 5 mm inlet geometry and weighted-thermocouple observation rule before opening a new case",
+    "obtain an authenticated inlet-temperature time series or define an outcome-unseen boundary rule",
+    "retain the original Dickens result as a negative temperature-screen result"
+  ],
+  "claim_boundary": "This artifact resolves source setup metadata and narrows the model-repair uncertainty. It does not revise the frozen Dickens gate, validate the runtime model, or support a safety-distance claim."
+}
