@@ -1,0 +1,97 @@
+{
+  "schema_version": 1,
+  "artifact_type": "dataset_specific_preaccess_spatial_holdout_protocol",
+  "protocol_id": "kouchi_2007_actual_hydrogen_spatial_rank_intake",
+  "frozen_at": "2026-10-13T15:24:00Z",
+  "status": "FROZEN_BEFORE_DETAILED_NUMERICAL_OUTCOME_ACCESS",
+  "objective": "Determine whether the official ICHS 2007 Kouchi et al. actual-hydrogen experiment supplies an untouched, machine-recoverable cohort that is eligible for the already frozen pooled_spatial_rank_v1 confirmatory spatial-rank evaluation, and run that evaluation only if every eligibility requirement is met.",
+  "source": {
+    "title": "Dispersion Tests on Concentration and its Fluctuations for 40MPa Pressurized Hydrogen",
+    "authors": [
+      "Akinori Kouchi",
+      "Kazuki Okabayashi",
+      "Keiji Takeno",
+      "Keiko Chitose"
+    ],
+    "conference": "Second International Conference on Hydrogen Safety (ICHS 2007)",
+    "paper_id": "1.1.54",
+    "official_conference_index": "https://conference.ing.unipi.it/ichs2007/index4b61.html?id=121",
+    "official_conference_pdf": "https://conference.ing.unipi.it/ichs2007/fileadmin/user_upload/CD/PAPERS/12SEPT/1.1.54.pdf",
+    "h2tools_mirror_pdf": "https://h2tools.org/sites/default/files/ICHS_import/Dispersion%20Tests%20on%20Concentration%20and%20its%20Fluctuations%20For%2040MPa%20Pressurized%20Hydrogen.pdf",
+    "test_gas": "hydrogen",
+    "publication_year": 2007,
+    "license": "not yet established; evaluation may use public facts and derived metrics, but redistribution of the PDF or extracted figures is prohibited until rights are confirmed"
+  },
+  "preaccess_record": {
+    "official_index_metadata_viewed": true,
+    "search_result_snippets_viewed": true,
+    "detailed_pdf_opened_or_downloaded": false,
+    "tables_or_figures_digitized": false,
+    "numerical_sensor_concentrations_viewed": false,
+    "per_case_rank_outcomes_computed": false,
+    "aggregate_rank_metrics_computed": false,
+    "known_before_freeze": [
+      "The source is an actual-hydrogen high-pressure dispersion experiment.",
+      "Public snippets describe nominal pressures up to 40 MPa and pinhole releases.",
+      "Public snippets describe time-averaged and fast concentration measurements and a horizontally directed release in part of the campaign.",
+      "Search snippets exposed qualitative method descriptions but no machine-readable per-sensor concentration table, no complete case count, and no numerical rank outcome."
+    ],
+    "classification": "DETAILED_NUMERICAL_ENDPOINT_PREACCESS_WITH_PUBLIC_METHOD_METADATA_VISIBLE"
+  },
+  "locked_candidate": {
+    "candidate_id": "pooled_spatial_rank_v1",
+    "parent_protocol": "research/prospective_spatial_rank_protocol_2026_10_13.json",
+    "parent_protocol_sha256": "a0ef3e23142e953fe67e5fd9eb1cb7b214a4cf0ac636c73763ceb7b1951c6e70",
+    "implementation": "src/h2station/prospective_spatial_rank.py",
+    "implementation_sha256": "7ec8658fa729b1b8817e86314d7d178ee1ad3772f00e1f2b76e10f95d636b387",
+    "formula": "exp(0.3*max(dy,0)-0.1*max(-dy,0))/(0.25+horizontal_distance_m^1.25+0.2*abs(dy))",
+    "output_semantics": "within-case sensor rank only",
+    "parameter_or_coordinate_fitting_after_access": "prohibited"
+  },
+  "eligibility_screen": {
+    "required_test_gas": "hydrogen",
+    "minimum_eligible_case_count": 10,
+    "minimum_usable_sensor_or_spatial_point_count_per_case": 8,
+    "required_fields": [
+      "publisher-authenticated source coordinates",
+      "publisher-authenticated observation coordinates in the same Cartesian frame",
+      "declared coordinate units and elevation axis",
+      "release orientation for every case",
+      "numerical time-averaged or time-resolved hydrogen concentration for every scored observation",
+      "release pressure and aperture or measured mass flow for domain reporting",
+      "a reproducible case-to-observation mapping"
+    ],
+    "numerical_recovery_policy": "Use publisher tables, supplementary machine-readable files, embedded vector values, or reproducible plot digitization with a recorded calibration and uncertainty audit. Do not estimate values visually from raster screenshots.",
+    "case_selection": "Include every case in the declared paper scope that satisfies the locked fields. Do not remove a case after viewing model or response ranks.",
+    "independence_policy": "If fewer than 10 cases or fewer than eight observations per case are recoverable, record INELIGIBLE_NO_MODEL_EVALUATION. Do not pool spatial points from different release cases to manufacture the required case count.",
+    "rights_policy": "Record the source hash and citation. Do not commit the publisher PDF or extracted copyrighted figures unless redistribution rights are explicit."
+  },
+  "locked_response_and_metrics": {
+    "per_observation_response": "publisher-reported time-averaged hydrogen concentration during the declared steady release interval; if only time series are available, q99 minus q10 during the publisher-authenticated release interval",
+    "rank_statistic": "Spearman rho between the frozen geometry score and the observed response within each case",
+    "top5_recall": "fraction of the five highest-scored observations contained in the observed top response quartile",
+    "nearest_success": "highest-scored observation is in the observed top response quartile",
+    "tie_break": "ascending publisher observation identifier after descending score or response",
+    "aggregate_screens": {
+      "all_declared_cases_eligible": true,
+      "median_spearman_at_least": 0.5,
+      "fraction_of_cases_with_spearman_at_least_0_4_at_least": 0.6,
+      "mean_top5_recall_of_observed_top_quartile_at_least": 0.6,
+      "nearest_predicted_observation_in_observed_top_quartile_fraction_at_least": 0.7
+    },
+    "all_screens_must_pass": true
+  },
+  "decision_policy": {
+    "eligible_and_all_screens_pass": "Record a confirmatory transfer result limited to spatial rank in the tested geometry. Runtime promotion still requires a separate safety review and regression evidence.",
+    "eligible_and_any_screen_fails": "Retain a negative holdout result. Do not tune the candidate, coordinates, thresholds, case scope, or response definition and do not enable runtime routing.",
+    "ineligible": "Record the exact missing fields and INELIGIBLE_NO_MODEL_EVALUATION. The source may support a bounded post-access concentration diagnostic but cannot alter the spatial validation gate.",
+    "format_only_amendment": "A pre-outcome amendment may document parsing or coordinate conventions only. It may not change the model, cases, response definition, thresholds, or minimum sample requirements."
+  },
+  "runtime_policy": {
+    "enabled": false,
+    "api_import_permitted": false,
+    "hazop_runtime_import_permitted": false,
+    "alarm_or_trip_setpoint_change_permitted": false
+  },
+  "claim_boundary": "This protocol can test only within-case spatial response ordering in the published Kouchi et al. geometry. It cannot validate concentration magnitude, detector response time, alarm or trip thresholds, outdoor HRS detector placement, CFD, ignition probability, flame or blast consequence distance, ESD performance, field safety, or a station-to-vehicle loop."
+}
