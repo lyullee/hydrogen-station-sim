@@ -2559,3 +2559,14 @@ the full-loop claim pass.
 - Verification: the new routing test plus the existing HyTunnel and grounding
   tests pass (32 passed, one environment deprecation warning). Readiness remains
   134 PASS / 11 FAIL / 7 PENDING; no scientific gate was promoted.
+
+## 2026-10-14 - Hash-linked evidence projections refreshed
+
+- Rebuilt the deterministic evidence chain after the LLM grounding source hash
+  changed. This refreshed the readiness mirror, public accident routing hash,
+  validation-gap triage and dependent publication matrices without changing any
+  acceptance rule or scientific result.
+- The four stale-snapshot failures in the full test run are resolved; the
+  focused consistency suite passes 15/15. The authoritative counts remain
+  134 PASS / 11 FAIL / 7 PENDING and both bounded and full objective readiness
+  remain false.
