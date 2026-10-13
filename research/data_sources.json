@@ -947,6 +947,18 @@
       "public_raw_data": false,
       "access_recheck": "research/nbsdc_static_compressor_access_recheck_2026_10_12.json",
       "eligibility_note": "Metadata-only high-value request candidate. A representative numerical XLS request returned portal code 403; no raw bytes or numerical cells were used. It cannot close any external holdout or station-to-vehicle claim until authorized files and reuse terms are supplied."
+    },
+    "hytunnel_cs_zenodo_7895795_jetfire": {
+      "title": "Effects of hydrogen jet fires on the erosion of tunnel road materials and lining materials",
+      "publisher": "HyTunnel-CS / HSE Science and Research Centre via Zenodo",
+      "landing_page": "https://doi.org/10.5281/zenodo.7895795",
+      "doi": "10.5281/zenodo.7895795",
+      "license": "CC BY 4.0",
+      "actual_hydrogen": true,
+      "experiment_scope": "Nine retained XLSX workbooks from the publisher's 13-test programme: vessel blowdown pressure, free-jet thermocouples, impeded-jet temperature/pressure plates and concrete tests.",
+      "diagnostic_artifact": "research/zenodo_7895795_jetfire_postaccess_diagnostic_2026_10_14.json",
+      "rights_note": "The record is CC BY 4.0. Raw workbooks remain in the external quarantine tree; the repository retains source identity, hashes and derived diagnostics only.",
+      "eligibility_note": "Actual-hydrogen thermal and pressure trends support a post-access diagnostic. The files were opened before this artifact was written, so they are not an independent holdout and do not calibrate HyRAM, release coefficients, safety distances or ESD performance."
     }
   }
 }

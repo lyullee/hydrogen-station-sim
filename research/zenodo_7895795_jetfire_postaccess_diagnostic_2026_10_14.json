@@ -1,0 +1,738 @@
+{
+  "schema_version": 1,
+  "artifact_type": "post_access_zenodo_7895795_hydrogen_jetfire_diagnostic",
+  "generated_at": "2026-10-13T23:06:54.851386+00:00",
+  "status": "POST_ACCESS_THERMAL_PRESSURE_DIAGNOSTIC_NOT_INDEPENDENT_VALIDATION",
+  "source": {
+    "dataset_doi": "10.5281/zenodo.7895795",
+    "landing_page": "https://zenodo.org/records/7895795",
+    "title": "Effects of hydrogen jet fires on the erosion of tunnel road materials and lining materials",
+    "publisher": "HyTunnel-CS / HSE Science and Research Centre",
+    "license": "CC BY 4.0",
+    "actual_hydrogen": true,
+    "publisher_reported_scope": "700 bar TPRD-mimicking ignited releases with 2.1 mm and 0.57 mm nozzles; one 350 bar, 5 mm test",
+    "raw_files_external_only": true
+  },
+  "provenance_boundary": {
+    "raw_accessed_before_this_artifact": true,
+    "independent_holdout": false,
+    "prospective_validation": false,
+    "parameter_fitting": false,
+    "runtime_parameter_change": false,
+    "readiness_gate_effect": false,
+    "reason": "The publisher workbooks were opened before this artifact was created, so the result is a post-access diagnostic and cannot be used as a new independent holdout."
+  },
+  "analysis_contract": {
+    "pressure": "publisher vessel-pressure channel; median initial/final values and descriptive half-pressure sample index",
+    "temperature": "published thermocouple channels; peak minus first-window median; free-jet axial trend only where distances are explicitly published",
+    "units": "pressure retained on the publisher scale described as bar; temperatures retained as published degrees C where identified",
+    "no_fit_or_interpolation": true
+  },
+  "tests": [
+    {
+      "test_id": 1,
+      "file": "HTE344HSE001MIXED_220309.xlsx",
+      "sha256": "7e4bc78477f5682e72c33fb557d8bff5c26b8805333c46f0fd1d9a0f199e36e1",
+      "publisher_test_metadata": {
+        "kind": "free_jet",
+        "nozzle_mm": 2.1,
+        "volume_l": 49,
+        "pressure_bar": 700
+      },
+      "sheets": [
+        {
+          "sheet": "Test 1_free jet",
+          "row_count": 401,
+          "pressure": {
+            "available": true,
+            "channel": "Vessel pressure (PS02)",
+            "unit": "published pressure scale (metadata describes bar)",
+            "sample_count": 120,
+            "initial_median": 581.423400878906,
+            "final_median": 3.112887978553765,
+            "drop": 578.3105129003523,
+            "half_pressure_sample_index": 10,
+            "half_pressure_time_s": 11.0
+          },
+          "thermal": {
+            "channels": [
+              {
+                "channel": "R1 (1.08 m from nozzle)",
+                "distance_m": 1.08,
+                "sample_count": 244,
+                "baseline_median": 1127.61244387438,
+                "peak": 1669.76682120876,
+                "peak_delta": 542.1543773343799
+              },
+              {
+                "channel": "R2 (1.58 m from nozzle)",
+                "distance_m": 1.58,
+                "sample_count": 276,
+                "baseline_median": 1374.78651984209,
+                "peak": 1670.59848081109,
+                "peak_delta": 295.811960969
+              },
+              {
+                "channel": "R3 (2.08 m from nozzle)",
+                "distance_m": 2.08,
+                "sample_count": 345,
+                "baseline_median": 1498.11083374574,
+                "peak": 1645.97448324005,
+                "peak_delta": 147.86364949431004
+              },
+              {
+                "channel": "R4 (2.58 m from nozzle)",
+                "distance_m": 2.58,
+                "sample_count": 393,
+                "baseline_median": 1524.02976186641,
+                "peak": 1637.97620560135,
+                "peak_delta": 113.9464437349402
+              },
+              {
+                "channel": "R5 (3.08 m from nozzle)",
+                "distance_m": 3.08,
+                "sample_count": 401,
+                "baseline_median": 1388.53582408496,
+                "peak": 1611.54570369094,
+                "peak_delta": 223.0098796059799
+              }
+            ],
+            "distance_trend": {
+              "available": true,
+              "distance_peak_delta_spearman": -0.7,
+              "expected_decreasing_with_distance": true,
+              "channel_count": 5
+            }
+          }
+        }
+      ]
+    },
+    {
+      "test_id": 2,
+      "file": "HTE344HSE002MIXED_211124.xlsx",
+      "sha256": "3dd382b5b90ee7b798a85c1f9c4e583847ad85a3ff2340201957e4d224fe6f0c",
+      "publisher_test_metadata": {
+        "kind": "free_jet",
+        "nozzle_mm": 0.57,
+        "volume_l": 49,
+        "pressure_bar": 700
+      },
+      "sheets": [
+        {
+          "sheet": "Test 2_free jet",
+          "row_count": 1089,
+          "pressure": {
+            "available": true,
+            "channel": "Vessel Pressure (PS01)",
+            "unit": "published pressure scale (metadata describes bar)",
+            "sample_count": 97,
+            "initial_median": 629.306945800781,
+            "final_median": 42.420726776123004,
+            "drop": 586.886219024658,
+            "half_pressure_sample_index": 17,
+            "half_pressure_time_s": 18.0
+          },
+          "thermal": {
+            "channels": [
+              {
+                "channel": "R1 (0.5 m from nozzle)",
+                "distance_m": 0.5,
+                "sample_count": 1089,
+                "baseline_median": 14.2594333252012,
+                "peak": 1712.65535352288,
+                "peak_delta": 1698.3959201976788
+              },
+              {
+                "channel": "R2 (1 m from nozzle)",
+                "distance_m": 1.0,
+                "sample_count": 1089,
+                "baseline_median": 5.2890460161937956,
+                "peak": 1136.48569076882,
+                "peak_delta": 1131.196644752626
+              },
+              {
+                "channel": "R3 (1.5 m from nozzle)",
+                "distance_m": 1.5,
+                "sample_count": 1089,
+                "baseline_median": 4.614008275926575,
+                "peak": 613.786561978186,
+                "peak_delta": 609.1725537022594
+              },
+              {
+                "channel": "R4 (2 m from nozzle)",
+                "distance_m": 2.0,
+                "sample_count": 1089,
+                "baseline_median": 4.691340301279871,
+                "peak": 307.540844009772,
+                "peak_delta": 302.84950370849214
+              },
+              {
+                "channel": "R5 (2.5 m from nozzle)",
+                "distance_m": 2.5,
+                "sample_count": 1089,
+                "baseline_median": 4.47135477183485,
+                "peak": 108.692082594284,
+                "peak_delta": 104.22072782244915
+              }
+            ],
+            "distance_trend": {
+              "available": true,
+              "distance_peak_delta_spearman": -0.9999999999999999,
+              "expected_decreasing_with_distance": true,
+              "channel_count": 5
+            }
+          }
+        }
+      ]
+    },
+    {
+      "test_id": 3,
+      "file": "HTE344HSE003MIXED_220301.xlsx",
+      "sha256": "bb6c697adb552a429cc0d67e51980db140f5fa61997b7f0632e5b54ca7bdc439",
+      "publisher_test_metadata": {
+        "kind": "impeded_temperature_plate",
+        "nozzle_mm": 2.1,
+        "volume_l": 49,
+        "stand_off_m": 0.95,
+        "pressure_bar": 700
+      },
+      "sheets": [
+        {
+          "sheet": "Test 3_impeded jet",
+          "row_count": 741,
+          "pressure": {
+            "available": true,
+            "channel": "Vessel Pressure (PS01)",
+            "unit": "published pressure scale (metadata describes bar)",
+            "sample_count": 109,
+            "initial_median": 595.568725585937,
+            "final_median": 6.13422060012817,
+            "drop": 589.4345049858089,
+            "half_pressure_sample_index": 10,
+            "half_pressure_time_s": 11.0
+          },
+          "thermal": {
+            "channels": [
+              {
+                "channel": "Temperature (far bottom)",
+                "distance_m": null,
+                "sample_count": 721,
+                "baseline_median": 1111.358263240655,
+                "peak": 1406.72808889949,
+                "peak_delta": 295.369825658835
+              },
+              {
+                "channel": "Temperature (far right)",
+                "distance_m": null,
+                "sample_count": 721,
+                "baseline_median": 977.7954646642811,
+                "peak": 1210.50593309913,
+                "peak_delta": 232.71046843484896
+              },
+              {
+                "channel": "Temperature (far top)",
+                "distance_m": null,
+                "sample_count": 721,
+                "baseline_median": 1122.68926110468,
+                "peak": 1340.46278080441,
+                "peak_delta": 217.77351969972983
+              },
+              {
+                "channel": "Temperature (far left)",
+                "distance_m": null,
+                "sample_count": 721,
+                "baseline_median": 1103.44284977304,
+                "peak": 1393.35390544299,
+                "peak_delta": 289.91105566995
+              },
+              {
+                "channel": "Temperature (centre)",
+                "distance_m": null,
+                "sample_count": 721,
+                "baseline_median": 679.7748245353215,
+                "peak": 1193.74334024201,
+                "peak_delta": 513.9685157066884
+              },
+              {
+                "channel": "Temperature (right)",
+                "distance_m": null,
+                "sample_count": 721,
+                "baseline_median": 838.828097516757,
+                "peak": 1255.57820334917,
+                "peak_delta": 416.75010583241306
+              },
+              {
+                "channel": "Temperature (left)",
+                "distance_m": null,
+                "sample_count": 721,
+                "baseline_median": 786.006455342678,
+                "peak": 1234.40450697345,
+                "peak_delta": 448.398051630772
+              },
+              {
+                "channel": "Temperature (top)",
+                "distance_m": null,
+                "sample_count": 721,
+                "baseline_median": 714.3614325117135,
+                "peak": 1193.14243089156,
+                "peak_delta": 478.78099837984655
+              },
+              {
+                "channel": "Temperature (bottom)",
+                "distance_m": null,
+                "sample_count": 721,
+                "baseline_median": 909.2821649447494,
+                "peak": 1301.92424258787,
+                "peak_delta": 392.6420776431205
+              }
+            ],
+            "distance_trend": {
+              "available": false,
+              "reason": "fewer than three channels with published axial distances"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "test_id": 4,
+      "file": "HTE344HSE004MIXED_220301.xlsx",
+      "sha256": "a29ada6dcad649f244745171bf019b168f0906707fcf48d0e96b53e35bf3d9ac",
+      "publisher_test_metadata": {
+        "kind": "impeded_temperature_plate",
+        "nozzle_mm": 0.57,
+        "volume_l": 49,
+        "stand_off_m": 1.0,
+        "pressure_bar": 700
+      },
+      "sheets": [
+        {
+          "sheet": "Test 4_impeded jet",
+          "row_count": 1493,
+          "pressure": {
+            "available": true,
+            "channel": "Vessel pressure (PS01)",
+            "unit": "published pressure scale (metadata describes bar)",
+            "sample_count": 1493,
+            "initial_median": 650.196838378906,
+            "final_median": 14.450514316558749,
+            "drop": 635.7463240623473,
+            "half_pressure_sample_index": 178,
+            "half_pressure_time_s": 179.0
+          },
+          "thermal": {
+            "channels": [
+              {
+                "channel": "Temperature (far bottom)",
+                "distance_m": null,
+                "sample_count": 957,
+                "baseline_median": 1070.9432647885,
+                "peak": 1203.00098768245,
+                "peak_delta": 132.05772289394986
+              },
+              {
+                "channel": "Temperature (far right)",
+                "distance_m": null,
+                "sample_count": 957,
+                "baseline_median": 598.3696051427265,
+                "peak": 740.930041373929,
+                "peak_delta": 142.56043623120252
+              },
+              {
+                "channel": "Temperature (far top)",
+                "distance_m": null,
+                "sample_count": 957,
+                "baseline_median": 795.6720917522309,
+                "peak": 913.028823391023,
+                "peak_delta": 117.3567316387921
+              },
+              {
+                "channel": "Temperature (far left)",
+                "distance_m": null,
+                "sample_count": 957,
+                "baseline_median": 1079.08960912349,
+                "peak": 1227.52836084364,
+                "peak_delta": 148.4387517201501
+              },
+              {
+                "channel": "Temperature (centre)",
+                "distance_m": null,
+                "sample_count": 957,
+                "baseline_median": 628.226300830364,
+                "peak": 918.31915917914,
+                "peak_delta": 290.09285834877596
+              },
+              {
+                "channel": "Temperature (right)",
+                "distance_m": null,
+                "sample_count": 957,
+                "baseline_median": 543.6639689494615,
+                "peak": 771.14553780771,
+                "peak_delta": 227.48156885824847
+              },
+              {
+                "channel": "Temperature (left)",
+                "distance_m": null,
+                "sample_count": 957,
+                "baseline_median": 721.644682418352,
+                "peak": 1017.48473539355,
+                "peak_delta": 295.840052975198
+              },
+              {
+                "channel": "Temperature (top)",
+                "distance_m": null,
+                "sample_count": 957,
+                "baseline_median": 633.5959462826705,
+                "peak": 904.483774854077,
+                "peak_delta": 270.88782857140643
+              },
+              {
+                "channel": "Temperature (bottom)",
+                "distance_m": null,
+                "sample_count": 957,
+                "baseline_median": 658.6571784527615,
+                "peak": 836.036511964601,
+                "peak_delta": 177.3793335118395
+              }
+            ],
+            "distance_trend": {
+              "available": false,
+              "reason": "fewer than three channels with published axial distances"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "test_id": 5,
+      "file": "HTE344HSE005MIXED_220223.xlsx",
+      "sha256": "5bb8618c4ac5882c8822f78fd470deb28ba93e58b8d24562d523d931a51adc6d",
+      "publisher_test_metadata": {
+        "kind": "impeded_pressure_plate",
+        "nozzle_mm": 2.1,
+        "volume_l": 49,
+        "stand_off_m": 0.972,
+        "pressure_bar": 700
+      },
+      "sheets": [
+        {
+          "sheet": "Test 5_impeded jet",
+          "row_count": 8310,
+          "pressure": {
+            "available": true,
+            "channel": "Vessel pressure (PS02)",
+            "unit": "published pressure scale (metadata describes bar)",
+            "sample_count": 8310,
+            "initial_median": 315.5156097412105,
+            "final_median": 7.04977560043335,
+            "drop": 308.46583414077713,
+            "half_pressure_sample_index": 20,
+            "half_pressure_time_s": 21.0
+          },
+          "thermal": {
+            "channels": [],
+            "distance_trend": {
+              "available": false,
+              "reason": "fewer than three channels with published axial distances"
+            }
+          }
+        },
+        {
+          "sheet": "Plot for report",
+          "row_count": 183,
+          "pressure": {
+            "available": true,
+            "channel": "Vessel pressure PS02",
+            "unit": "published pressure scale (metadata describes bar)",
+            "sample_count": 107,
+            "initial_median": 674.825256347656,
+            "final_median": 5.98162794113159,
+            "drop": 668.8436284065244,
+            "half_pressure_sample_index": 9,
+            "half_pressure_time_s": 10.0
+          },
+          "thermal": {
+            "channels": [],
+            "distance_trend": {
+              "available": false,
+              "reason": "fewer than three channels with published axial distances"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "test_id": 7,
+      "file": "HTE344HSE007PRES07_220216.xlsx",
+      "sha256": "381ebb7279a24bf1e9ea299cfba3045eaeb1d051436405871cfda88ed461822e",
+      "publisher_test_metadata": {
+        "kind": "impeded_concrete",
+        "nozzle_mm": 2.1,
+        "volume_l": 98,
+        "stand_off_m": 1.06,
+        "pressure_bar": 700
+      },
+      "sheets": [
+        {
+          "sheet": "Test 7_impeded jet concrete",
+          "row_count": 11799,
+          "pressure": {
+            "available": true,
+            "channel": "Vessel pressure (PS01)",
+            "unit": "published pressure scale (metadata describes bar)",
+            "sample_count": 11799,
+            "initial_median": 417.950988769531,
+            "final_median": 2.74666595458984,
+            "drop": 415.2043228149412,
+            "half_pressure_sample_index": 29,
+            "half_pressure_time_s": 30.0
+          },
+          "thermal": {
+            "channels": [],
+            "distance_trend": {
+              "available": false,
+              "reason": "fewer than three channels with published axial distances"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "test_id": 9,
+      "file": "HTE344HSE009PRES09_220215.xlsx",
+      "sha256": "e2e19f7880b1e70d481a53088e1f35a480efbe84ecf11de424467b56ec84baf1",
+      "publisher_test_metadata": {
+        "kind": "impeded_concrete_pp_fibre",
+        "nozzle_mm": 2.1,
+        "volume_l": 98,
+        "stand_off_m": 1.06,
+        "pressure_bar": 700
+      },
+      "sheets": [
+        {
+          "sheet": "Test 9_impeded jet concrete",
+          "row_count": 241,
+          "pressure": {
+            "available": true,
+            "channel": "Vessel pressure (PS01)",
+            "unit": "published pressure scale (metadata describes bar)",
+            "sample_count": 241,
+            "initial_median": 525.3303527832026,
+            "final_median": 3.78429508209228,
+            "drop": 521.5460577011103,
+            "half_pressure_sample_index": 23,
+            "half_pressure_time_s": 24.0
+          },
+          "thermal": {
+            "channels": [],
+            "distance_trend": {
+              "available": false,
+              "reason": "fewer than three channels with published axial distances"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "test_id": 11,
+      "file": "HTE344HSE011PRES11_220316.xlsx",
+      "sha256": "3685e8d8443b009e2cb0e9a78a0d95761b08e16f598d41ce70c9838422809705",
+      "publisher_test_metadata": {
+        "kind": "concrete_core_indicative",
+        "nozzle_mm": 2.1,
+        "volume_l": 49,
+        "stand_off_m": 1.09,
+        "pressure_bar": 700
+      },
+      "sheets": [
+        {
+          "sheet": "Test 11_impeded jet concrete  ",
+          "row_count": 606,
+          "pressure": {
+            "available": true,
+            "channel": "Vessel pressure (PS01)",
+            "unit": "published pressure scale (metadata describes bar)",
+            "sample_count": 606,
+            "initial_median": 292.10791015624955,
+            "final_median": 3.23496198654174,
+            "drop": 288.8729481697078,
+            "half_pressure_sample_index": 21,
+            "half_pressure_time_s": 22.0
+          },
+          "thermal": {
+            "channels": [
+              {
+                "channel": "Temp 1 (40 mm from front)",
+                "distance_m": null,
+                "sample_count": 386,
+                "baseline_median": 8.798962749388124,
+                "peak": 84.0515358491445,
+                "peak_delta": 75.25257309975638
+              },
+              {
+                "channel": "Temp 2 (22 mm from front)",
+                "distance_m": null,
+                "sample_count": 389,
+                "baseline_median": 9.180718872680526,
+                "peak": 40.667946720267,
+                "peak_delta": 31.48722784758647
+              },
+              {
+                "channel": "Temp 3 (18 mm from front)",
+                "distance_m": null,
+                "sample_count": 389,
+                "baseline_median": 8.905587269094024,
+                "peak": 90.5867083217154,
+                "peak_delta": 81.68112105262138
+              },
+              {
+                "channel": "Temp 4 (9 mm from front)",
+                "distance_m": null,
+                "sample_count": 383,
+                "baseline_median": 9.168411692992951,
+                "peak": 93.8627199661646,
+                "peak_delta": 84.69430827317166
+              }
+            ],
+            "distance_trend": {
+              "available": false,
+              "reason": "fewer than three channels with published axial distances"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "test_id": 12,
+      "file": "HTE344HSE012PRES12_220303.xlsx",
+      "sha256": "d35e37c2812b14540e2700861452ca29d26bac5260a255c6b2e73882bfc964b1",
+      "publisher_test_metadata": {
+        "kind": "impeded_temperature_plate",
+        "nozzle_mm": 5.0,
+        "volume_l": 49,
+        "stand_off_m": 3.3,
+        "pressure_bar": 350
+      },
+      "sheets": [
+        {
+          "sheet": "Test 12_impeded jet",
+          "row_count": 109,
+          "pressure": {
+            "available": true,
+            "channel": "Vessel Pressure (PS01)",
+            "unit": "published pressure scale (metadata describes bar)",
+            "sample_count": 50,
+            "initial_median": 344.889678955078,
+            "final_median": 4.05896186828613,
+            "drop": 340.8307170867919,
+            "half_pressure_sample_index": 6,
+            "half_pressure_time_s": 7.0
+          },
+          "thermal": {
+            "channels": [
+              {
+                "channel": "Temperature (degC)",
+                "distance_m": null,
+                "sample_count": 109,
+                "baseline_median": 5.56492226250001,
+                "peak": 5.61633385,
+                "peak_delta": 0.051411587499989864
+              },
+              {
+                "channel": "Temp N-type (far-bottom) degC",
+                "distance_m": null,
+                "sample_count": 109,
+                "baseline_median": 1167.0339520919001,
+                "peak": 1182.62612979379,
+                "peak_delta": 15.592177701889796
+              },
+              {
+                "channel": "Temp N-type (far-right) degC",
+                "distance_m": null,
+                "sample_count": 109,
+                "baseline_median": 1336.3651370693851,
+                "peak": 1372.64887116822,
+                "peak_delta": 36.283734098834884
+              },
+              {
+                "channel": "Temp N-type (far-top) degC",
+                "distance_m": null,
+                "sample_count": 109,
+                "baseline_median": 1356.1895789086848,
+                "peak": 1388.32183116635,
+                "peak_delta": 32.132252257665186
+              },
+              {
+                "channel": "Temp N-type (far-left) degC",
+                "distance_m": null,
+                "sample_count": 109,
+                "baseline_median": 1343.90929436891,
+                "peak": 1372.74150510356,
+                "peak_delta": 28.83221073465006
+              },
+              {
+                "channel": "Temp R-type (centre) degC",
+                "distance_m": null,
+                "sample_count": 109,
+                "baseline_median": 823.1302879139265,
+                "peak": 941.637245287489,
+                "peak_delta": 118.5069573735625
+              },
+              {
+                "channel": "Temp R-type (right) degC",
+                "distance_m": null,
+                "sample_count": 109,
+                "baseline_median": 803.8447107860695,
+                "peak": 912.862426948499,
+                "peak_delta": 109.01771616242945
+              },
+              {
+                "channel": "Temp R-type (left) degC",
+                "distance_m": null,
+                "sample_count": 109,
+                "baseline_median": 1028.588633315255,
+                "peak": 1158.80241002071,
+                "peak_delta": 130.21377670545507
+              },
+              {
+                "channel": "Temp R-type (top) degC",
+                "distance_m": null,
+                "sample_count": 109,
+                "baseline_median": 894.3543148437104,
+                "peak": 1019.47476189306,
+                "peak_delta": 125.12044704934954
+              },
+              {
+                "channel": "Temp R-type (bottom) degC",
+                "distance_m": null,
+                "sample_count": 109,
+                "baseline_median": 539.428532114776,
+                "peak": 606.334029083661,
+                "peak_delta": 66.90549696888502
+              }
+            ],
+            "distance_trend": {
+              "available": false,
+              "reason": "fewer than three channels with published axial distances"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "aggregate": {
+    "workbook_count": 9,
+    "free_jet_distance_trend_count": 2,
+    "free_jet_distance_trend_expected_decreasing_count": 2,
+    "pressure_workbook_count": 9,
+    "thermal_workbook_count": 6
+  },
+  "decision": {
+    "descriptive_replay": "PASS",
+    "independent_validation": "NOT_ASSESSED",
+    "runtime_risk_distance_calibration": false,
+    "fire_heat_flux_validation": false,
+    "gate_changed": false
+  },
+  "claim_boundary": "This artifact inventories and replays publisher-reported pressure and thermal trends from actual-hydrogen jet-fire experiments. It does not validate HyRAM heat flux, radiation, overpressure, HRS release coefficients, detector placement, safety distance, structural failure, ESD effectiveness or station-to-vehicle behavior."
+}

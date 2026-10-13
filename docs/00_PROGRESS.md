@@ -2525,3 +2525,23 @@ the full-loop claim pass.
   station-leak validation or safety distance. The frozen 3/5 validation result
   and every scientific readiness gate remain unchanged.
 
+
+## 2026-10-14 - HyTunnel-CS Zenodo 7895795 jet-fire archive diagnostic
+
+- Added a claim-bounded replay of nine publisher workbooks from the actual-hydrogen
+  high-pressure jet-fire campaign (`10.5281/zenodo.7895795`). The retained files
+  include vessel blowdown pressure, free-jet thermocouples, impeded-jet sensing
+  plates and concrete-test pressure traces. Raw workbooks remain outside version
+  control.
+- The diagnostic reports nine pressure-bearing workbooks and six with thermal
+  channels. The two free-jet tests with explicit axial distances both show a
+  decreasing peak-temperature rise with distance (Spearman rho -0.70 and -1.00).
+  These are descriptive thermal/pressure observations; no release or heat-flux
+  coefficient was fitted and no runtime parameter changed.
+- Because the workbooks were opened before this artifact was written, the result
+  is explicitly `POST_ACCESS_THERMAL_PRESSURE_DIAGNOSTIC_NOT_INDEPENDENT_VALIDATION`.
+  It does not close or alter any readiness gate, HyRAM consequence calibration,
+  safety-distance claim, detector-placement claim, ESD claim or station-to-vehicle
+  validation claim.
+- Verification: the new artifact schema test passes and the source inventory now
+  records the DOI, license, provenance boundary and diagnostic path.
