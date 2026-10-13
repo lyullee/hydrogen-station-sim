@@ -2346,3 +2346,24 @@ the full-loop claim pass.
 - Focused verification: **38 passed** across direct Q&A, sensor analysis,
   virtual safety, grounding, HIAD action consistency, and readiness audit.
 
+## 2026-10-13 - Public-experiment release-flow sensitivity in runtime evidence
+
+- Preserved the configured high-pressure release point model and added a
+  separate source-flow sensitivity envelope from the independent Proust
+  1--3 mm campaign. The envelope retains the failed single-$C_d$ holdout as a
+  negative result instead of silently fitting production parameters.
+- Propagated the point, lower/upper flow, applicability status, DOI, artifact
+  and claim limit through native and unavailable consequence backends, sensor
+  assessments, the main assistant evidence manifest and the operator impact
+  card. Out-of-domain use is marked as extrapolated; flow-limited lines keep
+  their process cap and do not inherit terminal-orifice coefficients.
+- Replayed the hash-bound public accident integration after the physical source
+  code change: HIAD remains 34/34 traceable cases and KHK remains 22/22 in-scope
+  reports with all executable family recipes passing. These are traceability
+  checks, not reconstruction or response-effectiveness validation.
+- Verification: the full suite reached 1,522 passes with two stale generated
+  projections; both were rebuilt from the current readiness audit and all 17
+  manuscript, projection and documentation checks then passed. The final audit
+  remains 131 PASS / 11 FAIL / 7 PENDING, preserving every negative external
+  transfer rather than promoting the new sensitivity range to validation.
+

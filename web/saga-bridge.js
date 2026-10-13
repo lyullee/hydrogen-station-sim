@@ -75,6 +75,13 @@
     const plume=Number(row.flammable_plume_streamline_distance_m);
     if(plume>0)extent.textContent+=` · 4 vol% 비점화 플룸 중심선 ${fmt(plume)} m`;
     card.append(extent);
+    const flowLow=Number(row.release_flow_lower_bound_kg_s),flowHigh=Number(row.release_flow_upper_bound_kg_s);
+    if(Number.isFinite(flowLow)&&Number.isFinite(flowHigh)&&flowHigh>0){
+      const flowRange=document.createElement('p');flowRange.className='saga-impact-literature';
+      const extrapolated=row.release_flow_uncertainty_status==='PUBLIC_EXPERIMENT_ENVELOPE_EXTRAPOLATED';
+      flowRange.textContent=`방출유량 근거 범위 · ${fmt(flowLow*1000,2)}–${fmt(flowHigh*1000,2)} g/s${extrapolated?' · 공개 실험범위 밖 외삽':''} · 민감도 범위이며 신뢰구간·현장 측정값 아님`;
+      card.append(flowRange);
+    }
     const literatureRadius=Number(row.literature_delayed_ignition_5kpa_radial_distance_m);
     if(literatureRadius>0){
       const comparison=document.createElement('p');comparison.className='saga-impact-literature';

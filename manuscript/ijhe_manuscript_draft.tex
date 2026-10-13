@@ -678,15 +678,19 @@ station control or separation distance.
 
 \subsection{High-pressure aperture-flow transfer}
 The three INERIS/CEA 1, 2 and 3 mm series supplied 13, 10 and 12 states; none
-passed both screens. NRMSE was 16.27\%, 16.01\% and 32.62\%, and median error was
-25.07\%, 15.85\% and 32.88\%. Pressure-basis and digitization sensitivities did
-not change the 0/3 decision. Diagnostic effective coefficients were 1.141,
-0.657 and 0.533 and were not used for refitting. Separately, seven post-access
-1 mm round-nozzle points at 11.124--63.999 MPa \cite{liang2026} gave 28.43\%
-NRMSE, 39.05\% median error and +38.45\% bias with production $C_d=0.8$; the
-$C_d=1$ equation matched the paper's theory within 0.81\% median error. This
-localizes the latter mismatch to discharge loss, adds no validation pass and
-does not change runtime.
+passed both screens. NRMSE was 16.27\%, 16.01\% and 32.62\%, with median errors
+of 25.07\%, 15.85\% and 32.88\%. Sensitivity checks left the decision at 0/3.
+Diagnostic effective coefficients (1.141, 0.657 and 0.533) were not fitted.
+Seven post-access 1 mm points at 11.124--63.999 MPa \cite{liang2026} gave
+28.43\% NRMSE, 39.05\% median error and +38.45\% bias with production
+$C_d=0.8$; $C_d=1$ matched the paper's theory within 0.81\% median error. This
+diagnoses discharge loss but adds no pass and leaves the runtime point model
+unchanged. Operator and LLM payloads instead expose a model--experiment
+sensitivity interval spanning that point and the post-outcome P10--P90 effective
+coefficient range (1~mm: 1.022--1.178; 2~mm: 0.619--0.747; 3~mm:
+0.497--0.653). Values are interpolated between apertures and marked extrapolated
+outside the experiment. The interval is not a confidence interval or fitted site
+coefficient and does not validate consequence or separation distances.
 
 \subsection{Negative Sandia/SRI transient mass-flow transfer}
 The Figure 3b digitization supplied 25 unique experimental coordinates. The
@@ -782,14 +786,13 @@ orientation and per-sensor numbers were absent; figures were not digitised.
 
 \subsection{Decision-support study status}
 No human-effectiveness or expert-rated safety result is reported. The machine
-benchmark is limited to response structure and evidence traceability; it does not
-measure operator accuracy, usability or safety. Facility-specific ethics and
-expert review remain deployment conditions and are outside this paper's objective
-engineering claim.
+benchmark covers response structure and traceability, not operator accuracy,
+usability or safety. Facility-specific ethics and expert review remain deployment
+conditions outside this engineering claim.
 
-KGS records informed de-identified scenario mapping and operating-envelope
-context. AI assisted material organization and initial safety-text drafting;
-authors verified the calculations, sources and claim boundaries.
+KGS records informed de-identified scenarios and operating-envelope context.
+AI assisted organization and safety-text drafting; authors verified calculations,
+sources and claim boundaries.
 
 The 34-case retrospective machine benchmark gave SAGA versus alarm-only recall
 of 0.524/0.189, five-stage coverage of 0.982/0.600 and proxy scores of
@@ -800,25 +803,19 @@ software checks do not establish expert-judged effectiveness.
 
 \section{Discussion}
 \subsection{What is externally supported}
-The strongest independent result concerns vehicle-tank thermodynamics under
-measured inlet mass flow and temperature. It supports use of the tank submodel for
-research comparisons within the tested fast-fill envelope, subject to the
-effective geometry and heat-transfer assumptions. The result is strengthened by
-a deterministic split, experiment-only exclusion rule, global rather than case-
-specific fitting, trace alignment on the original clock and case-level bootstrap
-intervals.
+The strongest independent evidence concerns vehicle-tank thermodynamics under
+measured inlet mass flow and temperature. It supports comparisons in the tested
+fast-fill envelope under stated geometry and heat-transfer assumptions. A frozen
+split, global fitting, clock alignment and case-level bootstrap strengthen it.
 
-The complete-loop result is informative precisely because it is negative. A
-visually plausible pressure ramp and a stable numerical integration are
-insufficient evidence for a station controller. The prospective MC Default result
-also shows that freezing the analysis alone cannot rescue a structurally inadequate
-protocol representation. The retained failures identify the missing information
-needed for the next experiment: dispenser valve command and position, upstream
-and downstream pressure at the PCV, delivered-gas temperature, bank-selection
-state and high-rate vehicle inlet mass flow. The eight MC Default and eleven
-previously inspected comparison cases are now consumed evaluation evidence and
-cannot be used as a new holdout. Model redesign must use development evidence or
-physical invariants, followed by a separately acquired and pre-frozen external set.
+The negative complete-loop result shows that a plausible pressure ramp and stable
+integration do not validate a station controller. Freezing the prospective MC
+Default analysis likewise could not rescue an inadequate protocol. Required
+next-experiment signals are dispenser valve command and position, pressures on
+both sides of the PCV, delivered-gas temperature, bank selection and high-rate
+vehicle inlet mass flow. The eight MC Default and eleven comparison cases are
+consumed evidence; redesign must precede a separately acquired, frozen external
+set.
 
 The negative PRESLHY result places an additional boundary on the release path.
 The published DisCha vessel weighs about 28 kg, whereas the frozen validation

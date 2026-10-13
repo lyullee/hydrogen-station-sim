@@ -25,6 +25,7 @@ from .hyram_adapter import (
 from .delayed_ignition import delayed_ignition_envelope
 from .jet_flame import jet_flame_envelope
 from .live import CallableHyRAMBackend, HyRAMDynamicReleaseRequest
+from .release_uncertainty import release_flow_uncertainty_envelope
 
 
 # The default is a one-direction screening transect at 1.5 m elevation,
@@ -324,7 +325,7 @@ class UnavailableHyRAMBackend:
         self,
         request: HyRAMDynamicReleaseRequest,
     ) -> Mapping[str, float | str | bool | None]:
-        return {
+        output: dict[str, float | str | bool | None] = {
             "status": "unavailable",
             "reason": self.reason,
             "mass_flow_override_kg_s": request.mass_flow_override_kg_s,
@@ -332,6 +333,17 @@ class UnavailableHyRAMBackend:
             "release_source_boundary": request.release_boundary,
             "process_flow_limit_kg_s": request.process_flow_limit_kg_s,
         }
+        output.update(release_flow_uncertainty_envelope(
+            source_pressure_pa=request.source_pressure_pa,
+            source_temperature_k=request.source_temperature_k,
+            ambient_pressure_pa=request.ambient_pressure_pa,
+            orifice_diameter_m=request.orifice_diameter_m,
+            model_discharge_coefficient=request.discharge_coefficient,
+            point_mass_flow_kg_s=request.mass_flow_override_kg_s,
+            release_boundary=request.release_boundary,
+            process_flow_limit_kg_s=request.process_flow_limit_kg_s,
+        ))
+        return output
 
 
 class LoadedHyRAMBackend(CallableHyRAMBackend):
@@ -424,6 +436,16 @@ class NativeHyRAMBackend:
         output.update(source_boundary)
         output.update(mass_flow_override_metadata(
             result.requested_mass_flow_rate, result.mass_flow_rate,
+        ))
+        output.update(release_flow_uncertainty_envelope(
+            source_pressure_pa=request.source_pressure_pa,
+            source_temperature_k=request.source_temperature_k,
+            ambient_pressure_pa=request.ambient_pressure_pa,
+            orifice_diameter_m=request.orifice_diameter_m,
+            model_discharge_coefficient=request.discharge_coefficient,
+            point_mass_flow_kg_s=request.mass_flow_override_kg_s,
+            release_boundary=request.release_boundary,
+            process_flow_limit_kg_s=request.process_flow_limit_kg_s,
         ))
         output.update(delayed_ignition_envelope(
             storage_pressure_pa=request.source_pressure_pa,

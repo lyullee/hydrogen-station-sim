@@ -60,6 +60,12 @@ def test_default_samples_resolve_the_old_one_metre_artifact(monkeypatch):
     assert result["release_angle_rad"] == pytest.approx(0.0)
     assert result["release_source_boundary"] == "flow_limited_line"
     assert result["process_flow_limit_kg_s"] == pytest.approx(mass_flow)
+    assert result["release_flow_uncertainty_status"] == (
+        "PROCESS_FLOW_LIMIT_PRESERVED"
+    )
+    assert result["release_flow_point_kg_s"] == pytest.approx(mass_flow)
+    assert result["release_flow_lower_bound_kg_s"] == pytest.approx(mass_flow)
+    assert result["release_flow_upper_bound_kg_s"] == pytest.approx(mass_flow)
     assert result["observation_locations_m"] == backend.observation_locations
     assert result["observation_point_count"] == len(backend.observation_locations)
 
@@ -127,3 +133,12 @@ def test_free_orifice_exposes_claim_bounded_delayed_ignition_comparison(monkeypa
     assert result["literature_delayed_ignition_doi"] == "10.3390/hydrogen3040027"
     assert result["literature_jet_flame_length_m"] > 0.0
     assert result["literature_jet_flame_doi"] == "10.3801/IAFSS.FSS.10-933"
+    assert result["release_flow_uncertainty_status"] == (
+        "PUBLIC_EXPERIMENT_ENVELOPE_IN_DOMAIN"
+    )
+    assert result["release_flow_public_domain"] is True
+    assert result["release_flow_lower_bound_kg_s"] <= result["release_flow_point_kg_s"]
+    assert result["release_flow_upper_bound_kg_s"] >= result["release_flow_point_kg_s"]
+    assert result["release_flow_evidence_doi"] == (
+        "10.1016/j.ijhydene.2010.04.055"
+    )

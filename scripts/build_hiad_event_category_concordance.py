@@ -167,7 +167,7 @@ def render_markdown(artifact: dict) -> str:
         "",
         "The public incident narrative and emergency-action text are not used as model inputs. A match only means the declared coarse family contract is consistent. It does not validate event frequency, numerical consequence magnitude, field safety distance, operator benefit, ethics, or human effectiveness.",
         "",
-        f"Source HIAD SHA-256: `{artifact['source']['hiad_inventory_sha256']}`  ",
+        f"Source HIAD SHA-256: `{artifact['source']['hiad_inventory_sha256']}`",
         f"Source replay SHA-256: `{artifact['source']['replay_coverage_sha256']}`",
         "",
     ]
@@ -180,8 +180,10 @@ def main() -> None:
     parser.add_argument("--markdown", type=Path, default=DEFAULT_MD)
     args = parser.parse_args()
     artifact = build()
-    args.json.write_text(json.dumps(artifact, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    args.markdown.write_text(render_markdown(artifact), encoding="utf-8")
+    with args.json.open("w", encoding="utf-8", newline="\n") as handle:
+        handle.write(json.dumps(artifact, ensure_ascii=False, indent=2) + "\n")
+    with args.markdown.open("w", encoding="utf-8", newline="\n") as handle:
+        handle.write(render_markdown(artifact))
     print(json.dumps(artifact["aggregate"], ensure_ascii=False))
 
 

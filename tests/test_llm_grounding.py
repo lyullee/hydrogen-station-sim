@@ -2294,6 +2294,17 @@ def test_manifest_keeps_the_per_result_consequence_validation_boundary():
             "unvalidated_runtime_families": "source_depletion; station_to_vehicle_full_loop",
             "consequence_validation_artifacts": "research/consequence_geometry_validation.json",
             "consequence_validation_claim_limit": "not a site-specific safety distance",
+            "release_flow_point_kg_s": 0.031,
+            "release_flow_lower_bound_kg_s": 0.031,
+            "release_flow_upper_bound_kg_s": 0.045,
+            "release_flow_model_discharge_coefficient": 0.8,
+            "release_flow_empirical_cd_lower": 1.0218,
+            "release_flow_empirical_cd_upper": 1.1777,
+            "release_flow_uncertainty_status": "PUBLIC_EXPERIMENT_ENVELOPE_IN_DOMAIN",
+            "release_flow_public_domain": True,
+            "release_flow_evidence_doi": "10.1016/j.ijhydene.2010.04.055",
+            "release_flow_envelope_kind": "MODEL_AND_PUBLIC_EXPERIMENT_SENSITIVITY",
+            "release_flow_claim_limit": "not a confidence interval or safety distance",
         }],
         True,
     )
@@ -2306,6 +2317,11 @@ def test_manifest_keeps_the_per_result_consequence_validation_boundary():
     assert impact["site_specific_safety_distance_supported"] is False
     assert "source_depletion" in impact["unvalidated_runtime_families"]
     assert "site-specific safety distance" in impact["consequence_validation_claim_limit"]
+    assert impact["release_flow_lower_bound_kg_s"] == 0.031
+    assert impact["release_flow_upper_bound_kg_s"] == 0.045
+    assert impact["release_flow_public_domain"] is True
+    assert impact["release_flow_evidence_doi"] == "10.1016/j.ijhydene.2010.04.055"
+    assert "confidence interval" in impact["release_flow_claim_limit"]
 
 
 def test_manifest_and_prompt_keep_validated_ignited_enclosure_evidence():

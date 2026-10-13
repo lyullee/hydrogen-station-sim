@@ -14,6 +14,24 @@ Outdoor calculations use the actual network mass flow as an override for HyRAM
 jet, flame, and overpressure models. This prevents a partially open PRV from being
 treated as a fully open hole.
 
+## Release-flow evidence range
+
+Every free-orifice consequence result keeps the configured point calculation
+and also reports `release_flow_lower_bound_kg_s` and
+`release_flow_upper_bound_kg_s`. The additional range spans that point and the
+aperture-specific P10--P90 effective-coefficient diagnostic from the independent
+Proust 1--3 mm, approximately 10--90 MPa campaign. It exists because the frozen
+single-coefficient transfer failed all three joint series screens; it is not a
+post-outcome calibration. Results outside the public aperture, pressure, or
+temperature domain are marked `PUBLIC_EXPERIMENT_ENVELOPE_EXTRAPOLATED`.
+
+A `flow_limited_line` source preserves its declared process cap and reports
+`PROCESS_FLOW_LIMIT_PRESERVED`; terminal-orifice evidence is not used to widen
+a line/valve-controlled source. The range is a sensitivity screen rather than
+a confidence interval, station measurement, consequence-distance validation,
+or separation distance. The evidence and claim contract are recorded in
+`research/RELEASE_FLOW_UNCERTAINTY_CONTRACT_2026_10_13.md`.
+
 ## Indoor accumulation
 
 HyRAM+ 6.1 `analyze_accumulation` accepts an initial source state and volume,
