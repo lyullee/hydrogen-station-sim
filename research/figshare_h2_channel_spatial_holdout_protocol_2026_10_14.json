@@ -2,7 +2,7 @@
   "schema_version": 1,
   "protocol_id": "FIGSHARE-H2-CHANNEL-SPATIAL-HOLDOUT-2601",
   "frozen_at": "2026-10-14T00:00:00+09:00",
-  "status": "FROZEN_BEFORE_NUMERIC_OUTCOME_ACCESS",
+  "status": "POST_ACCESS_TRANSFER_DIAGNOSTIC",
   "objective": "Evaluate the frozen transparent spatial detector ranking against an independent actual-hydrogen open-ended-channel cohort.",
   "source": {
     "dataset_doi": "10.23642/usn.26117989.v2",
@@ -24,8 +24,8 @@
     "source_names_are_metadata_only": true
   },
   "frozen_model": {
-    "implementation": "src/h2station/spatial_detector.py",
-    "candidate": "coordinate_distance_with_orientation_and_release_boundary_features",
+    "implementation": "src/h2station/prospective_spatial_rank.py",
+    "candidate": "pooled_spatial_rank_v1",
     "parameter_fitting": false,
     "outcome_dependent_sensor_selection": false,
     "runtime_application": false,
@@ -61,8 +61,9 @@
   "claim_boundary": "This protocol concerns actual-hydrogen concentration ordering in an open-ended rectangular channel. It cannot validate an outdoor station detector map, alarm or ESD setpoints, release magnitude, consequence distance, evacuation radius, station control, or SAGA effectiveness.",
   "freeze_integrity": {
     "model_commit": "be7e6284165ff4cbb8f3dbd8728631a79017de47",
-    "numeric_outcomes_opened_before_freeze": false,
-    "source_archive_member_values_opened_before_freeze": false
+    "numeric_outcomes_opened_before_freeze": true,
+    "source_archive_member_values_opened_before_freeze": true,
+    "correction": "Earlier repository diagnostics had already opened this public archive; this protocol is retained as a reproducibility contract and cannot be called independent or prospective."
   },
   "runner": "scripts/run_figshare_h2_channel_spatial_holdout.py",
   "result": "research/figshare_h2_channel_spatial_holdout_result_2026_10_14.json"

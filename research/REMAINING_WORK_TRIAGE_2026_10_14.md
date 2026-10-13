@@ -10,6 +10,12 @@
 - 런타임 승격이 금지된 후보: Type-III 열전달 수정안, H2SAFE 공간 검지기 후보, 사후 보정된 누출·영향 모델
 - NREL H2FillS: `nrel_h2fills_2022_hdvs_typeiv.xlsx` 한 파일만 보유하며 이미 수치 결과를 확인했다. 따라서 새 독립 holdout으로 재사용하지 않는다.
 
+## 이번 즉시 처리 완료
+
+- Figshare 실제 수소 개방형 채널 22개 archive에 고정 공간순위 후보를 재현 실행했다.
+- 결과: 중앙 Spearman ρ `0.658`, 평균 top-5 recall `0.727`; 최근접 센서 사분위 적중률은 `0.545`로 전체 joint screen은 실패했다.
+- 자료를 과거 진단에서 이미 열어 보았으므로 이번 결과는 `POST_ACCESS_TRANSFER_DIAGNOSTIC`이며 독립 검증 게이트·runtime 라우팅·진행률을 변경하지 않는다. 재현 결과는 `research/figshare_h2_channel_spatial_holdout_result_2026_10_14.json`에 고정했다.
+
 ## 먼저 처리할 수 있는 작업
 
 ### 1. 투고 메타데이터 잠금 — 즉시 가능
