@@ -1,18 +1,18 @@
 {
   "schema_version": 1,
   "artifact_type": "full_regression_test_run",
-  "generated_at": "2026-10-14T12:00:00+09:00",
+  "generated_at": "2026-10-14T05:41:50.822212+09:00",
   "command": "python -m pytest -q",
   "status": "PASS",
-  "tests_passed": 1570,
+  "tests_passed": 1571,
   "tests_failed": 0,
   "tests_skipped": 0,
   "warnings": 222,
-  "elapsed_seconds": 221.93,
-  "duration_seconds": 221.93,
-  "source_commit": "5b5f6cf9d6956851027d0bb7ab2cc0aad7d3b225",
+  "elapsed_seconds": 305.05,
+  "duration_seconds": 305.05,
+  "source_commit": "c2d9b2f31667f68b556365d0c11823bba8341e15",
   "readiness_snapshot": "research/ijhe_readiness_audit.json",
-  "interpretation": "All executable tests pass for the current working-tree state. This verifies implementation integrity only; it does not convert independent validation FAIL/PENDING gates to PASS.",
+  "interpretation": "All 1,571 executable tests pass for the current working-tree state. This verifies implementation integrity only; it does not convert independent validation FAIL/PENDING gates to PASS.",
   "working_tree_dirty_at_run": true,
-  "run_recorded_at": "2026-10-14T12:00:00+09:00"
+  "run_recorded_at": "2026-10-14T05:41:50.822221+09:00"
 }
