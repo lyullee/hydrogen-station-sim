@@ -6,12 +6,12 @@
 
 ## 현재 판정
 
-- 전체 게이트: **133 PASS / 11 FAIL / 7 PENDING = 88.1%**
-- 범위 조정 후 1차 station-side/component 범위: **132 PASS / 10 FAIL / 2 PENDING = 91.7%**
+- 전체 게이트: **134 PASS / 11 FAIL / 7 PENDING = 88.2%**
+- 범위 조정 후 1차 station-side/component 범위: **133 PASS / 10 FAIL / 2 PENDING = 91.7%**
 - `bounded_ijhe_submission_ready`: **false**
 - `full_user_objective_ready`: **false**
 - 목표 완료 허용: **false**
-- 최근 전체 회귀: **1,571 passed / 0 failed / 0 skipped**
+- 최근 전체 회귀: **1,572 passed / 0 failed / 0 skipped**
 - 최근 SAGA·LLM 집중 회귀: **55 passed / 0 failed / 0 skipped**
 - 최신 GitHub priority workflow: **success**
 
