@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-10-14",
+  "artifact_type": "public_pressure_decay_access_recheck",
+  "routes": [
+    {
+      "gate_id": "grune_2014_pressure_decay_validation",
+      "record_url": "https://publikationen.bibliothek.kit.edu/110097219",
+      "doi": "10.1016/j.ijhydene.2013.08.076",
+      "raw_pressure_time_found": false,
+      "decision": "PENDING"
+    },
+    {
+      "gate_id": "schefer_2007_pressure_decay_validation",
+      "record_url": "https://doi.org/10.1016/j.ijhydene.2006.08.037",
+      "doi": "10.1016/j.ijhydene.2006.08.037",
+      "raw_pressure_time_found": false,
+      "decision": "FAIL_UNCHANGED"
+    }
+  ],
+  "runtime_parameter_changed": false,
+  "validation_gate_changed": false,
+  "required_next_evidence": [
+    "rights-cleared machine-readable pressure-time trace",
+    "fixed protocol inputs and units",
+    "custodian reuse permission"
+  ]
+}
