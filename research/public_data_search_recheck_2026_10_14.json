@@ -60,6 +60,16 @@
       "blocking_reason": "It cannot close the station-side component holdout or the excluded station-to-vehicle full-loop gate."
     },
     {
+      "id": "ijhe_2026_typeiii_typeiv_refueling_experiment",
+      "title": "Experimental investigation and thermodynamic model improvement of the refueling process in type III and type IV hydrogen storage cylinders",
+      "url": "https://www.sciencedirect.com/science/article/abs/pii/S0360319926030442",
+      "article_doi": "10.1016/j.ijhydene.2026.156406",
+      "data_type": "recent Type III/IV cylinder refueling experiments and thermodynamic model study",
+      "access_observation": "The public abstract and indexing records describe the experimental campaign and model results, but the publisher page is abstract-only in the available access path and no rights-cleared machine-readable pressure-temperature-time supplement or repository archive was found.",
+      "eligibility": "BOUNDARY_EVIDENCE_ONLY",
+      "blocking_reason": "Reported aggregate/model results cannot close a prospective independent temperature-pressure holdout without the raw trace, channel dictionary and pre-outcome access order."
+    },
+    {
       "id": "already_opened_sources",
       "title": "H2SAFE, ELVHYS, USN open-channel and other current repository sources",
       "data_type": "already accessed repository evidence",
