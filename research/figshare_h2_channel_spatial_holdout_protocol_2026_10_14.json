@@ -3,7 +3,7 @@
   "protocol_id": "FIGSHARE-H2-CHANNEL-SPATIAL-HOLDOUT-2601",
   "frozen_at": "2026-10-14T00:00:00+09:00",
   "status": "POST_ACCESS_TRANSFER_DIAGNOSTIC",
-  "objective": "Evaluate the frozen transparent spatial detector ranking against an independent actual-hydrogen open-ended-channel cohort.",
+  "objective": "Reproduce the frozen transparent spatial detector ranking on the previously accessed actual-hydrogen open-ended-channel cohort as a bounded transfer diagnostic.",
   "source": {
     "dataset_doi": "10.23642/usn.26117989.v2",
     "article_doi": "10.1016/j.jlp.2025.105669",

@@ -31,7 +31,7 @@
       "CFD or ESD validation"
     ],
     "implementation_sha256": "7ec8658fa729b1b8817e86314d7d178ee1ad3772f00e1f2b76e10f95d636b387",
-    "protocol_sha256": "5919a48613177ff5d59a555465560c89a4e7dc661b57e4114f922dfde1769f0f",
+    "protocol_sha256": "922a9eb1b50eab79185672761da06cc33a60db0cb19296e9a5bee9c3383e5f7d",
     "parameter_tuning_in_this_evaluation": false,
     "outcomes_accessed_before_protocol_freeze": true
   },
