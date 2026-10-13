@@ -21,7 +21,7 @@
     "raw_archives_opened": false,
     "individual_sensor_responses_computed": false,
     "model_frozen_before_raw_access": true,
-    "model_freeze_commit": "TO_BE_RECORDED_ON_COMMIT"
+    "model_freeze_commit": "7f36e23"
   },
   "eligibility": {
     "minimum_independent_experiments": 18,
