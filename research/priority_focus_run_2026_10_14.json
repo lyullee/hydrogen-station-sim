@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
   "artifact_type": "parallel_priority_focus_run",
-  "generated_at": "2026-10-13T21:48:54.242127+00:00",
+  "generated_at": "2026-10-13T22:32:02.276240+00:00",
   "parallel": true,
   "selected_priority": "critical",
-  "duration_s": 4.934,
+  "duration_s": 4.867,
   "status": "PASS",
   "scientific_screen_status": "FAIL",
   "readiness_status": "BLOCKED",
@@ -18,7 +18,7 @@
     "artifact_type": "priority_validation_run",
     "parallel": true,
     "full_regression_run": false,
-    "duration_s": 4.119,
+    "duration_s": 4.323,
     "status": "PASS",
     "current_status": {
       "readiness": {
@@ -55,24 +55,24 @@
         "priority": "P0",
         "status": "PASS",
         "exit_code": 0,
-        "duration_s": 2.157,
-        "output_tail": "........................                                                 [100%]\n============================== warnings summary ===============================\n.venv\\Lib\\site-packages\\fastapi\\testclient.py:1\n  <repository>\\.venv\\Lib\\site-packages\\fastapi\\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.\n    from starlette.testclient import TestClient as TestClient  # noqa\n\n.venv\\Lib\\site-packages\\starlette\\testclient.py:53\n  <repository>\\.venv\\Lib\\site-packages\\starlette\\testclient.py:53: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.\n    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n24 passed, 2 warnings in 1.75s"
+        "duration_s": 2.177,
+        "output_tail": "........................                                                 [100%]\n============================== warnings summary ===============================\n.venv\\Lib\\site-packages\\fastapi\\testclient.py:1\n  <repository>\\.venv\\Lib\\site-packages\\fastapi\\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.\n    from starlette.testclient import TestClient as TestClient  # noqa\n\n.venv\\Lib\\site-packages\\starlette\\testclient.py:53\n  <repository>\\.venv\\Lib\\site-packages\\starlette\\testclient.py:53: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.\n    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n24 passed, 2 warnings in 1.76s"
       },
       {
         "name": "full_loop_intake_boundary",
         "priority": "P1",
         "status": "PASS",
         "exit_code": 0,
-        "duration_s": 1.158,
-        "output_tail": "...................                                                      [100%]\n19 passed in 0.80s"
+        "duration_s": 1.26,
+        "output_tail": "...................                                                      [100%]\n19 passed in 0.91s"
       },
       {
         "name": "virtual_safety_and_response",
         "priority": "P1",
         "status": "PASS",
         "exit_code": 0,
-        "duration_s": 4.118,
-        "output_tail": ".........................                                                [100%]\n============================== warnings summary ===============================\n.venv\\Lib\\site-packages\\fastapi\\testclient.py:1\n  <repository>\\.venv\\Lib\\site-packages\\fastapi\\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.\n    from starlette.testclient import TestClient as TestClient  # noqa\n\n.venv\\Lib\\site-packages\\starlette\\testclient.py:53\n  <repository>\\.venv\\Lib\\site-packages\\starlette\\testclient.py:53: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.\n    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n25 passed, 2 warnings in 3.59s"
+        "duration_s": 4.322,
+        "output_tail": ".........................                                                [100%]\n============================== warnings summary ===============================\n.venv\\Lib\\site-packages\\fastapi\\testclient.py:1\n  <repository>\\.venv\\Lib\\site-packages\\fastapi\\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.\n    from starlette.testclient import TestClient as TestClient  # noqa\n\n.venv\\Lib\\site-packages\\starlette\\testclient.py:53\n  <repository>\\.venv\\Lib\\site-packages\\starlette\\testclient.py:53: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.\n    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n25 passed, 2 warnings in 3.70s"
       }
     ],
     "claim_boundary": "Focused software checks only. This report does not score external traces, change a frozen protocol, or promote a validation gate."
@@ -80,11 +80,11 @@
   "physics_diagnostics": {
     "schema_version": 1,
     "artifact_type": "parallel_priority_diagnostic_run",
-    "generated_at": "2026-10-13T21:48:54.241910+00:00",
+    "generated_at": "2026-10-13T22:32:02.276014+00:00",
     "parallel": true,
     "selected_priority": "critical",
     "diagnostic_count": 5,
-    "duration_s": 4.933,
+    "duration_s": 4.866,
     "status": "PASS",
     "scientific_screen_status": "FAIL",
     "readiness_status": "BLOCKED",
@@ -101,14 +101,14 @@
         "description": "MC SOC/EOS and mass-closure boundary consistency",
         "status": "PASS",
         "exit_code": 0,
-        "duration_s": 0.653,
+        "duration_s": 0.639,
         "scientific_screen": {
           "status": "PASS",
           "case_count": 8,
           "screen_pass_count": 8,
           "screen_pass_fraction": 1.0
         },
-        "output_tail": "{\n  \"schema_version\": 1,\n  \"generated_at\": \"2026-10-13T21:48:49.889495+00:00\",\n  \"source_commit\": \"ac924a8358a5ac70bfe89af2389e9556c149e6a0\",\n  \"artifact_type\": \"mc_soc_and_mass_boundary_diagnostic\",\n  \"evidence_role\": \"development_diagnostic_only\",\n  \"post_outcome\": true,\n  \"parameter_fitting\": false,\n  \"runtime_parameter_updated\": false,\n  \"case_count\": 8,\n  \"reference_state\": {\n    \"pressure_mpa\": 70.0,\n    \"temperature_c\": 15.0\n  },\n  \"screening_limits\": {\n    \"soc_definition_rmse_percentage_points\": 1.0,\n    \"soc_definition_final_abs_error_percentage_points\": 1.0\n  },\n  \"aggregate\": {\n    \"soc_definition_rmse_percentage_points_mean\": 0.1404152945188317,\n    \"soc_definition_rmse_percentage_points_max\": 0.3261870059370626,\n    \"soc_definition_final_abs_error_percentage_points_mean\": 0.12372523505790944,\n    \"soc_definition_final_abs_error_percentage_points_max\": 0.3882069382414244,\n    \"inferred_volume_ratio_median\": 1.0003039104605116,\n    \"inferred_volume_ratio_p10\": 0.9513583876584802,\n    \"inferred_volume_ratio_p90\": 1.0196411792126494,\n    \"soc_definition_screen_pass_count\": 8\n  },\n  \"interpretation\": \"The measured SOC channel is checked against EOS density calculated from the co-located observed pressure and tank temperature. The inferred volume ratio is a mass-closure diagnostic only; it is not a post-outcome parameter choice.\",\n  \"claim_boundary\": \"This diagnostic does not validate the station controller, select a vehicle geometry, revise the frozen MC holdout, or support a safety claim.\"\n}"
+        "output_tail": "{\n  \"schema_version\": 1,\n  \"generated_at\": \"2026-10-13T22:31:57.967074+00:00\",\n  \"source_commit\": \"d51a285762eaa8da907515ed43732ecef513af16\",\n  \"artifact_type\": \"mc_soc_and_mass_boundary_diagnostic\",\n  \"evidence_role\": \"development_diagnostic_only\",\n  \"post_outcome\": true,\n  \"parameter_fitting\": false,\n  \"runtime_parameter_updated\": false,\n  \"case_count\": 8,\n  \"reference_state\": {\n    \"pressure_mpa\": 70.0,\n    \"temperature_c\": 15.0\n  },\n  \"screening_limits\": {\n    \"soc_definition_rmse_percentage_points\": 1.0,\n    \"soc_definition_final_abs_error_percentage_points\": 1.0\n  },\n  \"aggregate\": {\n    \"soc_definition_rmse_percentage_points_mean\": 0.1404152945188317,\n    \"soc_definition_rmse_percentage_points_max\": 0.3261870059370626,\n    \"soc_definition_final_abs_error_percentage_points_mean\": 0.12372523505790944,\n    \"soc_definition_final_abs_error_percentage_points_max\": 0.3882069382414244,\n    \"inferred_volume_ratio_median\": 1.0003039104605116,\n    \"inferred_volume_ratio_p10\": 0.9513583876584802,\n    \"inferred_volume_ratio_p90\": 1.0196411792126494,\n    \"soc_definition_screen_pass_count\": 8\n  },\n  \"interpretation\": \"The measured SOC channel is checked against EOS density calculated from the co-located observed pressure and tank temperature. The inferred volume ratio is a mass-closure diagnostic only; it is not a post-outcome parameter choice.\",\n  \"claim_boundary\": \"This diagnostic does not validate the station controller, select a vehicle geometry, revise the frozen MC holdout, or support a safety claim.\"\n}"
       },
       {
         "name": "mc_tank_boundary",
@@ -116,7 +116,7 @@
         "description": "MC measured-boundary vehicle-tank replay",
         "status": "PASS",
         "exit_code": 0,
-        "duration_s": 2.451,
+        "duration_s": 2.437,
         "scientific_screen": {
           "status": "FAIL",
           "case_count": 8,
@@ -145,7 +145,7 @@
         "description": "Hydrogen detector spatial-response diagnostic",
         "status": "PASS",
         "exit_code": 0,
-        "duration_s": 0.955,
+        "duration_s": 0.939,
         "scientific_screen": {
           "status": "FAIL",
           "screen_pass_count": 0,
@@ -160,7 +160,7 @@
         "description": "NREL H2FillS HDVS Type-IV tank boundary screen",
         "status": "PASS",
         "exit_code": 0,
-        "duration_s": 2.48,
+        "duration_s": 2.441,
         "scientific_screen": {
           "status": "FAIL",
           "case_count": 7,
