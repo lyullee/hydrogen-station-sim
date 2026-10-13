@@ -165,6 +165,35 @@ def test_plan_mapping_exposes_equipment_specific_actions():
                for item in guidance["plans"][0]["executable_actions"])
 
 
+def test_incident_templates_cover_virtual_notification_ventilation_and_structural_response():
+    gas_actions = suggested_actions("gas_release", "N08")
+    assert any(item["kind"] == "responders.notify" for item in gas_actions)
+    assert "가상" in next(
+        item["label"] for item in gas_actions if item["kind"] == "responders.notify"
+    )
+
+    compressor_actions = suggested_actions("compressor_thermal")
+    assert {item["target"] for item in compressor_actions
+            if item["kind"] == "ventilation.on"} == {"compressor"}
+    fueling_actions = suggested_actions("fueling_fault")
+    assert {item["target"] for item in fueling_actions
+            if item["kind"] == "ventilation.on"} == {"dispenser"}
+
+    structural_actions = suggested_actions("structural_damage")
+    assert {item["kind"] for item in structural_actions} >= {
+        "operation.stop", "access.restrict", "personnel.evacuate",
+        "responders.notify",
+    }
+    assert {item["target"] for item in structural_actions
+            if item["kind"] == "access.restrict"} == {"storage"}
+
+    safety = VirtualSafetyRuntime()
+    action = safety.issue("responders.notify", "virtual_response_team", 0)
+    assert action["status"] == "confirmed"
+    assert action["after"] == {"virtual_notification": True}
+    assert safety.snapshot()["responders_notified"] is True
+
+
 def test_recovery_tests_require_isolation_and_complete_in_sequence():
     safety = VirtualSafetyRuntime()
     safety.issue("recovery.record", "source_removed", 0)

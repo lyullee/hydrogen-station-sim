@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "artifact_type": "public_incident_evidence_traceability_summary",
-  "generated_at_utc": "2026-10-12T00:19:55.536601+00:00",
+  "generated_at_utc": "2026-10-13T08:54:38.845096+00:00",
   "sources": [
     {
       "path": "research/hiad_digital_twin_replay_coverage_2026_10_08.json",
@@ -13,7 +13,7 @@
     },
     {
       "path": "research/hiad_accident_response_coverage_evaluation_2026_10_05.json",
-      "sha256": "ce2b10c44e585d44975736f78c2b25d6cb1e003b05be11f543c9459eddb2aad3"
+      "sha256": "2f47bbd8e48764450fff01632d47b16cf08fb22698a22c77fe6119b931d211b5"
     }
   ],
   "hiad": {
@@ -43,6 +43,11 @@
     "cases_with_public_action_categories": 33,
     "action_category_count": 8,
     "covered_action_category_count": 8,
+    "active_action_category_count": 5,
+    "executable_case_category_count": 72,
+    "executable_uncovered_case_category_count": 0,
+    "virtual_actions_are_simulation_only": true,
+    "external_notification_performed": false,
     "contract_pass": true
   },
   "supported_claim": "Public incident metadata can be mapped to registered staged response families and used as traceability evidence for grounded decision-support prompts.",

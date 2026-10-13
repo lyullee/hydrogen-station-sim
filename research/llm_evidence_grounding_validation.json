@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "recorded_at": "2026-10-12",
+  "recorded_at": "2026-10-13",
   "status": "software_contract_verified",
   "scope": [
     "digital-twin main assistant",
@@ -20,13 +20,13 @@
     },
     "full_suite": {
       "command": "python -m pytest -q",
-      "passed": 1463,
+      "passed": 1521,
       "failed": 0,
-      "warnings": 209,
-      "run_recorded_at": "2026-10-12T00:02:05.215180+00:00",
-      "source_commit": "4b73ec651bb81d81ce3b11160b6600f59d16d92a",
-      "working_tree_dirty_at_run": false,
-      "elapsed_seconds": 268.07
+      "warnings": 20,
+      "run_recorded_at": "2026-10-13T09:32:55.927093+00:00",
+      "source_commit": "f459d983ea4f786d497204b3f7790e5b8b5bb0c7",
+      "working_tree_dirty_at_run": true,
+      "elapsed_seconds": 432.58
     },
     "latest_direct_route_spot_check": {
       "command": ".venv\\Scripts\\python.exe -m pytest tests/test_digital_twin_direct_qa.py tests/test_hiad_response_stage_contract.py -q",
@@ -59,6 +59,7 @@
     "active response families now receive only their integrity-checked KHK public-accident precedents in the runtime evidence manifest, compact LLM prompt and staged operator guidance",
     "consequence flow-boundary mismatches are exposed when HyRAM recomputes a high-pressure choked flow instead of silently presenting it as the supplied process flow",
     "public HIAD action categories are evaluated case-by-case against required staged response plans without using raw action text or making an effectiveness claim",
+    "five active HIAD response categories cover all 72 event-category command obligations, and 52 simulation-only commands across ten response families complete with virtual feedback; notification never contacts an external service",
     "derived HIAD action-category counts and the action-evidence artifact digest are carried into the hashed runtime envelope without raw incident prose",
     "public CC BY accidental-release/ignition archive metadata is carried into the hashed envelope without raw traces, ignition-probability claims or full-loop validation claims",
     "public CC BY sampling-workbook instrumentation context is carried into the evidence envelope without inferring vehicle or receptacle channels",
@@ -131,11 +132,26 @@
       "covered_category_count": 8,
       "category_count": 8,
       "uncovered_case_category_count": 0,
+      "active_action_category_count": 5,
+      "executable_case_category_count": 72,
+      "executable_uncovered_case_category_count": 0,
+      "virtual_actions_are_simulation_only": true,
+      "external_notification_performed": false,
       "raw_action_text_used": false,
       "effectiveness_claimed": false,
       "safety_claimed": false,
       "holdout_use": false,
-      "interpretation": "public accident action-category to staged-plan interface coverage only; cases without a recorded category are not treated as having no response"
+      "interpretation": "public accident action-category to staged-plan and simulation-command interface coverage only; cases without a recorded category are not treated as having no response; no action-correctness or field-effectiveness claim"
+    },
+    "virtual_action_execution": {
+      "evidence": "research/hiad_virtual_action_execution_2026_10_10.json",
+      "response_family_count": 10,
+      "response_family_pass_count": 10,
+      "simulation_command_count": 52,
+      "failure_feedback_guard_passed": true,
+      "structural_damage_physics_modeled": false,
+      "external_notification_performed": false,
+      "interpretation": "simulation-only command acceptance, completion feedback and process-state change; no historical reconstruction, field action correctness or effectiveness claim"
     },
     "confidential_local_accident_response_coverage": {
       "evidence": "research/confidential_local_accident_response_coverage_2026_10_06.json",

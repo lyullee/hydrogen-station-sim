@@ -16,8 +16,8 @@ from audit_hiad_virtual_action_execution import build_audit  # noqa: E402
 def test_public_response_templates_execute_and_confirm_in_virtual_runtime():
     report = build_audit()
     runtime = report["runtime"]
-    assert runtime["family_count"] == 9
-    assert runtime["family_pass_count"] == 9
+    assert runtime["family_count"] == 10
+    assert runtime["family_pass_count"] == 10
     assert runtime["action_count"] > runtime["family_count"]
     assert runtime["all_family_sequences_passed"] is True
     assert runtime["failure_feedback_guard"]["status"] == "passed"
@@ -29,7 +29,8 @@ def test_virtual_action_audit_is_explicitly_not_field_effectiveness():
     boundary = " ".join(report["claim_boundary"])
     assert "operator benefit" in boundary
     assert "field safety" in boundary
-    assert report["excluded_response_only_families"] == ["structural_damage"]
+    assert report["excluded_response_only_families"] == []
+    assert "no structural mechanics" in boundary
 
 
 def test_committed_artifact_matches_current_bounded_result():

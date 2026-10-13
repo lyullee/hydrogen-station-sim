@@ -155,6 +155,11 @@ def _public_incident_traceability_summary() -> dict[str, Any] | None:
             and response.get("cases_with_public_action_categories") == 33
             and response.get("action_category_count") == 8
             and response.get("covered_action_category_count") == 8
+            and response.get("active_action_category_count") == 5
+            and response.get("executable_case_category_count") == 72
+            and response.get("executable_uncovered_case_category_count") == 0
+            and response.get("virtual_actions_are_simulation_only") is True
+            and response.get("external_notification_performed") is False
             and response.get("contract_pass") is True
         )
         if not valid:
@@ -186,13 +191,20 @@ def _public_incident_traceability_summary() -> dict[str, Any] | None:
                 "cases_with_public_action_categories": 33,
                 "action_category_count": 8,
                 "covered_action_category_count": 8,
+                "active_action_category_count": 5,
+                "executable_case_category_count": 72,
+                "executable_uncovered_case_category_count": 0,
+                "virtual_actions_are_simulation_only": True,
+                "external_notification_performed": False,
                 "contract_pass": True,
             },
             "runtime_parameter_application": False,
             "full_loop_holdout_eligible": False,
             "claim_limit": (
-                "Public incident metadata are mapped to registered staged response families "
-                "for grounded decision-support prompts. This does not establish accident "
+                "Public incident metadata are mapped to registered staged response families, "
+                "and active categories expose simulation-only commands for grounded "
+                "decision-support prompts. Virtual notification contacts no external service. "
+                "This does not establish accident "
                 "reconstruction, frequency or calibrated risk, site consequence distance, "
                 "or operator effectiveness."
             ),

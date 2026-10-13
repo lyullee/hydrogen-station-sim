@@ -567,12 +567,27 @@ class VirtualSafetyRuntime:
 
 
 def suggested_actions(plan_id: str, node_id: str | None = None) -> list[dict[str, str]]:
-    """Reviewed, executable templates used by HAZOP and LLM displays."""
+    """Reviewed, simulation-only templates used by HAZOP and LLM displays.
+
+    ``responders.notify`` records a virtual exercise event only.  It never
+    contacts a public emergency service or another external system.
+    """
     bank = {"N07": "low", "N08": "medium", "N09": "high"}.get(node_id or "")
     dispenser = "2" if node_id in ("N15", "N16", "N17", "N18") else "1"
+    default_zone = (
+        "compressor" if plan_id in (
+            "compressor_thermal", "low_supply_or_blockage", "flow_anomaly",
+        ) else
+        "unloading" if plan_id == "supply_connection" else
+        "dispenser" if plan_id in (
+            "fueling_fault", "hose_connection", "precooling_fault",
+        ) else
+        "storage"
+    )
     zone = ("storage" if bank or node_id in ("N10", "N22") else
             "unloading" if node_id in ("N01", "N02") else
-            "compressor" if node_id in ("N03", "N04", "N05", "N06", "N21") else "dispenser")
+            "compressor" if node_id in ("N03", "N04", "N05", "N06", "N21") else
+            "dispenser" if node_id is not None else default_zone)
     actions: list[tuple[str, str, str]] = []
     if plan_id in ("gas_release", "hydrogen_fire", "external_fire", "overpressure",
                    "relief_discharge", "isolation_failure"):
@@ -605,6 +620,12 @@ def suggested_actions(plan_id: str, node_id: str | None = None) -> list[dict[str
         actions.append(("operation.stop", "pressure_recharge", "재충전 중지"))
     elif plan_id == "sensor_fault":
         actions.append(("operation.stop", "all", "계측 확인까지 운전 보류"))
+    elif plan_id == "structural_damage":
+        actions.extend((
+            ("operation.stop", "all", "구조 건전성 확인까지 전체 운전 정지"),
+            ("access.restrict", zone, "손상 의심 구역 출입 통제"),
+            ("personnel.evacuate", zone, "손상 의심 구역 인원 대피"),
+        ))
     if zone == "dispenser" and plan_id in ("fueling_fault", "hose_connection", "gas_release"):
         actions.append(("vehicle.evacuate", f"vehicle_{dispenser}",
                         f"차량 {dispenser} 연결 해제·차단 확인 후 대피"))
@@ -612,6 +633,18 @@ def suggested_actions(plan_id: str, node_id: str | None = None) -> list[dict[str
         actions.append(("vehicle.evacuate", "trailer", "트레일러 양단 차단 확인 후 대피"))
     if plan_id in ("hydrogen_fire", "external_fire") and bank:
         actions.append(("cooling.on", bank, "인접 용기 가상 냉각 가동"))
-    if plan_id == "gas_release":
-        actions.append(("ventilation.on", zone, "해당 구역 환기 가동"))
+    if plan_id in ("gas_release", "compressor_thermal", "fueling_fault"):
+        actions.append((
+            "ventilation.on", zone,
+            "점화·화재가 없음을 확인한 뒤 해당 구역 방폭 환기 가동",
+        ))
+    if plan_id in (
+        "gas_release", "hydrogen_fire", "external_fire", "overpressure",
+        "relief_discharge", "fueling_fault", "hose_connection",
+        "compressor_thermal", "structural_damage",
+    ):
+        actions.append((
+            "responders.notify", "virtual_response_team",
+            "훈련용 가상 비상대응조직 통보 기록",
+        ))
     return [{"kind": kind, "target": target, "label": label} for kind, target, label in actions]

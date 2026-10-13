@@ -1,6 +1,6 @@
 {
-  "schema_version": 1,
-  "generated_at_utc": "2026-10-10T23:19:40.033040+00:00",
+  "schema_version": 2,
+  "generated_at_utc": "2026-10-13T08:52:33.548098+00:00",
   "status": "completed_public_accident_response_coverage_evaluation",
   "evidence_role": "public_accident_grounded_interface_evaluation",
   "source": {
@@ -8,11 +8,13 @@
     "response_stage_contract": "research/hiad_response_stage_contract.json",
     "action_playbook_coverage": "research/hiad_action_playbook_coverage.json",
     "playbook_catalog": "src/h2station/data/emergency_playbooks.json",
+    "virtual_safety_runtime": "src/h2station/virtual_safety.py",
     "hashes": {
       "action_evidence_sha256": "72f2550eabea6a4207a5d59c98bd99520e217fd2d4f8597e5d1d72f2ef87e1dd",
       "response_stage_contract_sha256": "0ec90cde957dbbae4622f5339a432b1ea6593300f9ebc851c6e7a83cd67662a3",
       "action_playbook_coverage_sha256": "9ce617a70c128497c8bfcd49cb2d97cec3e1855cdfa2bf82d7b21045626174ad",
-      "playbook_catalog_sha256": "d8fedb036a91b5adae3934f1604a17966b8f0f9200c52f4d40bf2da2243a7c6c"
+      "playbook_catalog_sha256": "d8fedb036a91b5adae3934f1604a17966b8f0f9200c52f4d40bf2da2243a7c6c",
+      "virtual_safety_runtime_sha256": "5d55b14ab716417ec0eb92086e0bd5c9e6a7db7f48da6baa866834db4915f775"
     },
     "action_evidence_source_hash_matches": true
   },
@@ -85,6 +87,61 @@
         "rationale": "minimum interface stages for presenting this public action category; not a source-action correctness claim"
       }
     },
+    "category_execution_contract": {
+      "shutdown_isolation_depressurization": {
+        "mode": "virtual_command_required",
+        "accepted_action_kinds": [
+          "operation.stop",
+          "valve.close",
+          "esd.trip",
+          "vent.open"
+        ]
+      },
+      "detection_alarm_monitoring": {
+        "mode": "staged_workflow_only",
+        "accepted_action_kinds": []
+      },
+      "fire_response_cooling": {
+        "mode": "virtual_command_required",
+        "accepted_action_kinds": [
+          "cooling.on",
+          "operation.stop",
+          "valve.close",
+          "esd.trip"
+        ]
+      },
+      "evacuation_perimeter_access": {
+        "mode": "virtual_command_required",
+        "accepted_action_kinds": [
+          "personnel.evacuate",
+          "access.restrict",
+          "vehicle.evacuate"
+        ]
+      },
+      "emergency_communication_coordination": {
+        "mode": "virtual_command_required",
+        "accepted_action_kinds": [
+          "responders.notify"
+        ]
+      },
+      "inspection_leak_test_repair": {
+        "mode": "staged_workflow_only",
+        "accepted_action_kinds": []
+      },
+      "procedure_interlock_training_design": {
+        "mode": "staged_workflow_only",
+        "accepted_action_kinds": []
+      },
+      "ventilation_purge": {
+        "mode": "virtual_command_required",
+        "accepted_action_kinds": [
+          "ventilation.on",
+          "purge.run"
+        ]
+      }
+    },
+    "virtual_actions_are_simulation_only": true,
+    "external_notification_performed": false,
     "raw_action_text_used": false,
     "effectiveness_claimed": false,
     "safety_claimed": false,
@@ -98,6 +155,9 @@
     "category_count": 8,
     "covered_category_count": 8,
     "uncovered_case_category_count": 0,
+    "active_action_category_count": 5,
+    "executable_case_category_count": 72,
+    "executable_uncovered_case_category_count": 0,
     "category_counts": {
       "shutdown_isolation_depressurization": 22,
       "detection_alarm_monitoring": 14,
@@ -122,6 +182,10 @@
         "stabilize",
         "prevention"
       ],
+      "execution_requirement": "staged_workflow_only",
+      "accepted_action_kinds": [],
+      "executable_covered_case_count": null,
+      "executable_uncovered_case_count": null,
       "coverage_fraction": 1.0,
       "category_present_in_source_taxonomy": true
     },
@@ -135,6 +199,12 @@
         "immediate",
         "prevention"
       ],
+      "execution_requirement": "virtual_command_required",
+      "accepted_action_kinds": [
+        "responders.notify"
+      ],
+      "executable_covered_case_count": 17,
+      "executable_uncovered_case_count": 0,
       "coverage_fraction": 1.0,
       "category_present_in_source_taxonomy": true
     },
@@ -148,6 +218,14 @@
         "immediate",
         "stabilize"
       ],
+      "execution_requirement": "virtual_command_required",
+      "accepted_action_kinds": [
+        "personnel.evacuate",
+        "access.restrict",
+        "vehicle.evacuate"
+      ],
+      "executable_covered_case_count": 6,
+      "executable_uncovered_case_count": 0,
       "coverage_fraction": 1.0,
       "category_present_in_source_taxonomy": true
     },
@@ -162,6 +240,15 @@
         "stabilize",
         "prevention"
       ],
+      "execution_requirement": "virtual_command_required",
+      "accepted_action_kinds": [
+        "cooling.on",
+        "operation.stop",
+        "valve.close",
+        "esd.trip"
+      ],
+      "executable_covered_case_count": 6,
+      "executable_uncovered_case_count": 0,
       "coverage_fraction": 1.0,
       "category_present_in_source_taxonomy": true
     },
@@ -175,6 +262,10 @@
         "restart",
         "prevention"
       ],
+      "execution_requirement": "staged_workflow_only",
+      "accepted_action_kinds": [],
+      "executable_covered_case_count": null,
+      "executable_uncovered_case_count": null,
       "coverage_fraction": 1.0,
       "category_present_in_source_taxonomy": true
     },
@@ -187,6 +278,10 @@
       "required_stages": [
         "prevention"
       ],
+      "execution_requirement": "staged_workflow_only",
+      "accepted_action_kinds": [],
+      "executable_covered_case_count": null,
+      "executable_uncovered_case_count": null,
       "coverage_fraction": 1.0,
       "category_present_in_source_taxonomy": true
     },
@@ -201,6 +296,15 @@
         "stabilize",
         "restart"
       ],
+      "execution_requirement": "virtual_command_required",
+      "accepted_action_kinds": [
+        "operation.stop",
+        "valve.close",
+        "esd.trip",
+        "vent.open"
+      ],
+      "executable_covered_case_count": 22,
+      "executable_uncovered_case_count": 0,
       "coverage_fraction": 1.0,
       "category_present_in_source_taxonomy": true
     },
@@ -215,6 +319,13 @@
         "stabilize",
         "prevention"
       ],
+      "execution_requirement": "virtual_command_required",
+      "accepted_action_kinds": [
+        "ventilation.on",
+        "purge.run"
+      ],
+      "executable_covered_case_count": 21,
+      "executable_uncovered_case_count": 0,
       "coverage_fraction": 1.0,
       "category_present_in_source_taxonomy": true
     }
@@ -246,6 +357,10 @@
           "covering_plan_ids": [
             "gas_release"
           ],
+          "execution_requirement": "staged_workflow_only",
+          "accepted_action_kinds": [],
+          "executable_plan_ids": [],
+          "executable_covered": null,
           "covered": true
         }
       ],
@@ -280,6 +395,10 @@
           "covering_plan_ids": [
             "gas_release"
           ],
+          "execution_requirement": "staged_workflow_only",
+          "accepted_action_kinds": [],
+          "executable_plan_ids": [],
+          "executable_covered": null,
           "covered": true
         },
         {
@@ -290,6 +409,10 @@
           "covering_plan_ids": [
             "gas_release"
           ],
+          "execution_requirement": "staged_workflow_only",
+          "accepted_action_kinds": [],
+          "executable_plan_ids": [],
+          "executable_covered": null,
           "covered": true
         }
       ],
@@ -328,6 +451,17 @@
           "covering_plan_ids": [
             "compressor_thermal"
           ],
+          "execution_requirement": "virtual_command_required",
+          "accepted_action_kinds": [
+            "esd.trip",
+            "operation.stop",
+            "valve.close",
+            "vent.open"
+          ],
+          "executable_plan_ids": [
+            "compressor_thermal"
+          ],
+          "executable_covered": true,
           "covered": true
         },
         {
@@ -340,6 +474,10 @@
           "covering_plan_ids": [
             "compressor_thermal"
           ],
+          "execution_requirement": "staged_workflow_only",
+          "accepted_action_kinds": [],
+          "executable_plan_ids": [],
+          "executable_covered": null,
           "covered": true
         },
         {
@@ -351,6 +489,10 @@
           "covering_plan_ids": [
             "compressor_thermal"
           ],
+          "execution_requirement": "staged_workflow_only",
+          "accepted_action_kinds": [],
+          "executable_plan_ids": [],
+          "executable_covered": null,
           "covered": true
         },
         {
@@ -361,6 +503,10 @@
           "covering_plan_ids": [
             "compressor_thermal"
           ],
+          "execution_requirement": "staged_workflow_only",
+          "accepted_action_kinds": [],
+          "executable_plan_ids": [],
+          "executable_covered": null,
           "covered": true
         },
         {
@@ -373,6 +519,15 @@
           "covering_plan_ids": [
             "compressor_thermal"
           ],
+          "execution_requirement": "virtual_command_required",
+          "accepted_action_kinds": [
+            "purge.run",
+            "ventilation.on"
+          ],
+          "executable_plan_ids": [
+            "compressor_thermal"
+          ],
+          "executable_covered": true,
           "covered": true
         }
       ],
@@ -429,6 +584,17 @@
           "covering_plan_ids": [
             "fueling_fault"
           ],
+          "execution_requirement": "virtual_command_required",
+          "accepted_action_kinds": [
+            "esd.trip",
+            "operation.stop",
+            "valve.close",
+            "vent.open"
+          ],
+          "executable_plan_ids": [
+            "fueling_fault"
+          ],
+          "executable_covered": true,
           "covered": true
         },
         {
@@ -441,6 +607,15 @@
           "covering_plan_ids": [
             "fueling_fault"
           ],
+          "execution_requirement": "virtual_command_required",
+          "accepted_action_kinds": [
+            "purge.run",
+            "ventilation.on"
+          ],
+          "executable_plan_ids": [
+            "fueling_fault"
+          ],
+          "executable_covered": true,
           "covered": true
         }
       ],
@@ -475,6 +650,10 @@
           "covering_plan_ids": [
             "compressor_thermal"
           ],
+          "execution_requirement": "staged_workflow_only",
+          "accepted_action_kinds": [],
+          "executable_plan_ids": [],
+          "executable_covered": null,
           "covered": true
         }
       ],
@@ -509,6 +688,14 @@
           "covering_plan_ids": [
             "structural_damage"
           ],
+          "execution_requirement": "virtual_command_required",
+          "accepted_action_kinds": [
+            "responders.notify"
+          ],
+          "executable_plan_ids": [
+            "structural_damage"
+          ],
+          "executable_covered": true,
           "covered": true
         },
         {
@@ -520,6 +707,10 @@
           "covering_plan_ids": [
             "structural_damage"
           ],
+          "execution_requirement": "staged_workflow_only",
+          "accepted_action_kinds": [],
+          "executable_plan_ids": [],
+          "executable_covered": null,
           "covered": true
         }
       ],
@@ -559,6 +750,18 @@
             "gas_release",
             "fueling_fault"
           ],
+          "execution_requirement": "virtual_command_required",
+          "accepted_action_kinds": [
+            "cooling.on",
+            "esd.trip",
+            "operation.stop",
+            "valve.close"
+          ],
+          "executable_plan_ids": [
+            "gas_release",
+            "fueling_fault"
+          ],
+          "executable_covered": true,
           "covered": true
         },
         {
@@ -571,6 +774,10 @@
             "gas_release",
             "fueling_fault"
           ],
+          "execution_requirement": "staged_workflow_only",
+          "accepted_action_kinds": [],
+          "executable_plan_ids": [],
+          "executable_covered": null,
           "covered": true
         },
         {
@@ -582,6 +789,10 @@
             "gas_release",
             "fueling_fault"
           ],
+          "execution_requirement": "staged_workflow_only",
+          "accepted_action_kinds": [],
+          "executable_plan_ids": [],
+          "executable_covered": null,
           "covered": true
         }
       ],
@@ -622,6 +833,18 @@
             "gas_release",
             "hose_connection"
           ],
+          "execution_requirement": "virtual_command_required",
+          "accepted_action_kinds": [
+            "esd.trip",
+            "operation.stop",
+            "valve.close",
+            "vent.open"
+          ],
+          "executable_plan_ids": [
+            "gas_release",
+            "hose_connection"
+          ],
+          "executable_covered": true,
           "covered": true
         },
         {
@@ -635,6 +858,10 @@
             "gas_release",
             "hose_connection"
           ],
+          "execution_requirement": "staged_workflow_only",
+          "accepted_action_kinds": [],
+          "executable_plan_ids": [],
+          "executable_covered": null,
           "covered": true
         },
         {
@@ -647,6 +874,10 @@
             "gas_release",
             "hose_connection"
           ],
+          "execution_requirement": "staged_workflow_only",
+          "accepted_action_kinds": [],
+          "executable_plan_ids": [],
+          "executable_covered": null,
           "covered": true
         },
         {
@@ -658,6 +889,10 @@
             "gas_release",
             "hose_connection"
           ],
+          "execution_requirement": "staged_workflow_only",
+          "accepted_action_kinds": [],
+          "executable_plan_ids": [],
+          "executable_covered": null,
           "covered": true
         }
       ],
@@ -695,6 +930,18 @@
             "gas_release",
             "fueling_fault"
           ],
+          "execution_requirement": "virtual_command_required",
+          "accepted_action_kinds": [
+            "esd.trip",
+            "operation.stop",
+            "valve.close",
+            "vent.open"
+          ],
+          "executable_plan_ids": [
+            "gas_release",
+            "fueling_fault"
+          ],
+          "executable_covered": true,
           "covered": true
         }
       ],
@@ -739,6 +986,19 @@
             "gas_release",
             "overpressure"
           ],
+          "execution_requirement": "virtual_command_required",
+          "accepted_action_kinds": [
+            "esd.trip",
+            "operation.stop",
+            "valve.close",
+            "vent.open"
+          ],
+          "executable_plan_ids": [
+            "hydrogen_fire",
+            "gas_release",
+            "overpressure"
+          ],
+          "executable_covered": true,
           "covered": true
         },
         {
@@ -753,6 +1013,19 @@
             "gas_release",
             "overpressure"
           ],
+          "execution_requirement": "virtual_command_required",
+          "accepted_action_kinds": [
+            "cooling.on",
+            "esd.trip",
+            "operation.stop",
+            "valve.close"
+          ],
+          "executable_plan_ids": [
+            "hydrogen_fire",
+            "gas_release",
+            "overpressure"
+          ],
+          "executable_covered": true,
           "covered": true
         },
         {
@@ -766,6 +1039,18 @@
             "gas_release",
             "overpressure"
           ],
+          "execution_requirement": "virtual_command_required",
+          "accepted_action_kinds": [
+            "access.restrict",
+            "personnel.evacuate",
+            "vehicle.evacuate"
+          ],
+          "executable_plan_ids": [
+            "hydrogen_fire",
+            "gas_release",
+            "overpressure"
+          ],
+          "executable_covered": true,
           "covered": true
         },
         {
@@ -779,6 +1064,10 @@
             "gas_release",
             "overpressure"
           ],
+          "execution_requirement": "staged_workflow_only",
+          "accepted_action_kinds": [],
+          "executable_plan_ids": [],
+          "executable_covered": null,
           "covered": true
         },
         {
@@ -791,6 +1080,10 @@
             "gas_release",
             "overpressure"
           ],
+          "execution_requirement": "staged_workflow_only",
+          "accepted_action_kinds": [],
+          "executable_plan_ids": [],
+          "executable_covered": null,
           "covered": true
         }
       ],
@@ -829,6 +1122,17 @@
           "covering_plan_ids": [
             "gas_release"
           ],
+          "execution_requirement": "virtual_command_required",
+          "accepted_action_kinds": [
+            "esd.trip",
+            "operation.stop",
+            "valve.close",
+            "vent.open"
+          ],
+          "executable_plan_ids": [
+            "gas_release"
+          ],
+          "executable_covered": true,
           "covered": true
         },
         {
@@ -841,6 +1145,10 @@
           "covering_plan_ids": [
             "gas_release"
           ],
+          "execution_requirement": "staged_workflow_only",
+          "accepted_action_kinds": [],
+          "executable_plan_ids": [],
+          "executable_covered": null,
           "covered": true
         },
         {
@@ -852,6 +1160,14 @@
           "covering_plan_ids": [
             "gas_release"
           ],
+          "execution_requirement": "virtual_command_required",
+          "accepted_action_kinds": [
+            "responders.notify"
+          ],
+          "executable_plan_ids": [
+            "gas_release"
+          ],
+          "executable_covered": true,
           "covered": true
         },
         {
@@ -862,6 +1178,10 @@
           "covering_plan_ids": [
             "gas_release"
           ],
+          "execution_requirement": "staged_workflow_only",
+          "accepted_action_kinds": [],
+          "executable_plan_ids": [],
+          "executable_covered": null,
           "covered": true
         },
         {
@@ -874,6 +1194,15 @@
           "covering_plan_ids": [
             "gas_release"
           ],
+          "execution_requirement": "virtual_command_required",
+          "accepted_action_kinds": [
+            "purge.run",
+            "ventilation.on"
+          ],
+          "executable_plan_ids": [
+            "gas_release"
+          ],
+          "executable_covered": true,
           "covered": true
         }
       ],
@@ -909,6 +1238,10 @@
             "hose_connection",
             "precooling_fault"
           ],
+          "execution_requirement": "staged_workflow_only",
+          "accepted_action_kinds": [],
+          "executable_plan_ids": [],
+          "executable_covered": null,
           "covered": true
         }
       ],
@@ -949,6 +1282,18 @@
             "gas_release",
             "overpressure"
           ],
+          "execution_requirement": "virtual_command_required",
+          "accepted_action_kinds": [
+            "cooling.on",
+            "esd.trip",
+            "operation.stop",
+            "valve.close"
+          ],
+          "executable_plan_ids": [
+            "gas_release",
+            "overpressure"
+          ],
+          "executable_covered": true,
           "covered": true
         },
         {
@@ -961,6 +1306,17 @@
             "gas_release",
             "overpressure"
           ],
+          "execution_requirement": "virtual_command_required",
+          "accepted_action_kinds": [
+            "access.restrict",
+            "personnel.evacuate",
+            "vehicle.evacuate"
+          ],
+          "executable_plan_ids": [
+            "gas_release",
+            "overpressure"
+          ],
+          "executable_covered": true,
           "covered": true
         },
         {
@@ -973,6 +1329,15 @@
             "gas_release",
             "overpressure"
           ],
+          "execution_requirement": "virtual_command_required",
+          "accepted_action_kinds": [
+            "responders.notify"
+          ],
+          "executable_plan_ids": [
+            "gas_release",
+            "overpressure"
+          ],
+          "executable_covered": true,
           "covered": true
         },
         {
@@ -986,6 +1351,15 @@
             "gas_release",
             "overpressure"
           ],
+          "execution_requirement": "virtual_command_required",
+          "accepted_action_kinds": [
+            "purge.run",
+            "ventilation.on"
+          ],
+          "executable_plan_ids": [
+            "gas_release"
+          ],
+          "executable_covered": true,
           "covered": true
         }
       ],
@@ -1024,6 +1398,10 @@
           "covering_plan_ids": [
             "gas_release"
           ],
+          "execution_requirement": "staged_workflow_only",
+          "accepted_action_kinds": [],
+          "executable_plan_ids": [],
+          "executable_covered": null,
           "covered": true
         },
         {
@@ -1035,6 +1413,16 @@
           "covering_plan_ids": [
             "gas_release"
           ],
+          "execution_requirement": "virtual_command_required",
+          "accepted_action_kinds": [
+            "access.restrict",
+            "personnel.evacuate",
+            "vehicle.evacuate"
+          ],
+          "executable_plan_ids": [
+            "gas_release"
+          ],
+          "executable_covered": true,
           "covered": true
         },
         {
@@ -1046,6 +1434,14 @@
           "covering_plan_ids": [
             "gas_release"
           ],
+          "execution_requirement": "virtual_command_required",
+          "accepted_action_kinds": [
+            "responders.notify"
+          ],
+          "executable_plan_ids": [
+            "gas_release"
+          ],
+          "executable_covered": true,
           "covered": true
         },
         {
@@ -1056,6 +1452,10 @@
           "covering_plan_ids": [
             "gas_release"
           ],
+          "execution_requirement": "staged_workflow_only",
+          "accepted_action_kinds": [],
+          "executable_plan_ids": [],
+          "executable_covered": null,
           "covered": true
         },
         {
@@ -1068,6 +1468,15 @@
           "covering_plan_ids": [
             "gas_release"
           ],
+          "execution_requirement": "virtual_command_required",
+          "accepted_action_kinds": [
+            "purge.run",
+            "ventilation.on"
+          ],
+          "executable_plan_ids": [
+            "gas_release"
+          ],
+          "executable_covered": true,
           "covered": true
         }
       ],
@@ -1105,6 +1514,17 @@
           "covering_plan_ids": [
             "gas_release"
           ],
+          "execution_requirement": "virtual_command_required",
+          "accepted_action_kinds": [
+            "esd.trip",
+            "operation.stop",
+            "valve.close",
+            "vent.open"
+          ],
+          "executable_plan_ids": [
+            "gas_release"
+          ],
+          "executable_covered": true,
           "covered": true
         },
         {
@@ -1117,6 +1537,10 @@
           "covering_plan_ids": [
             "gas_release"
           ],
+          "execution_requirement": "staged_workflow_only",
+          "accepted_action_kinds": [],
+          "executable_plan_ids": [],
+          "executable_covered": null,
           "covered": true
         },
         {
@@ -1128,6 +1552,14 @@
           "covering_plan_ids": [
             "gas_release"
           ],
+          "execution_requirement": "virtual_command_required",
+          "accepted_action_kinds": [
+            "responders.notify"
+          ],
+          "executable_plan_ids": [
+            "gas_release"
+          ],
+          "executable_covered": true,
           "covered": true
         },
         {
@@ -1140,6 +1572,15 @@
           "covering_plan_ids": [
             "gas_release"
           ],
+          "execution_requirement": "virtual_command_required",
+          "accepted_action_kinds": [
+            "purge.run",
+            "ventilation.on"
+          ],
+          "executable_plan_ids": [
+            "gas_release"
+          ],
+          "executable_covered": true,
           "covered": true
         }
       ],
@@ -1181,6 +1622,18 @@
             "hydrogen_fire",
             "gas_release"
           ],
+          "execution_requirement": "virtual_command_required",
+          "accepted_action_kinds": [
+            "esd.trip",
+            "operation.stop",
+            "valve.close",
+            "vent.open"
+          ],
+          "executable_plan_ids": [
+            "hydrogen_fire",
+            "gas_release"
+          ],
+          "executable_covered": true,
           "covered": true
         },
         {
@@ -1194,6 +1647,18 @@
             "hydrogen_fire",
             "gas_release"
           ],
+          "execution_requirement": "virtual_command_required",
+          "accepted_action_kinds": [
+            "cooling.on",
+            "esd.trip",
+            "operation.stop",
+            "valve.close"
+          ],
+          "executable_plan_ids": [
+            "hydrogen_fire",
+            "gas_release"
+          ],
+          "executable_covered": true,
           "covered": true
         },
         {
@@ -1206,6 +1671,17 @@
             "hydrogen_fire",
             "gas_release"
           ],
+          "execution_requirement": "virtual_command_required",
+          "accepted_action_kinds": [
+            "access.restrict",
+            "personnel.evacuate",
+            "vehicle.evacuate"
+          ],
+          "executable_plan_ids": [
+            "hydrogen_fire",
+            "gas_release"
+          ],
+          "executable_covered": true,
           "covered": true
         },
         {
@@ -1218,6 +1694,15 @@
             "hydrogen_fire",
             "gas_release"
           ],
+          "execution_requirement": "virtual_command_required",
+          "accepted_action_kinds": [
+            "responders.notify"
+          ],
+          "executable_plan_ids": [
+            "hydrogen_fire",
+            "gas_release"
+          ],
+          "executable_covered": true,
           "covered": true
         },
         {
@@ -1231,6 +1716,15 @@
             "hydrogen_fire",
             "gas_release"
           ],
+          "execution_requirement": "virtual_command_required",
+          "accepted_action_kinds": [
+            "purge.run",
+            "ventilation.on"
+          ],
+          "executable_plan_ids": [
+            "gas_release"
+          ],
+          "executable_covered": true,
           "covered": true
         }
       ],
@@ -1271,6 +1765,18 @@
             "gas_release",
             "overpressure"
           ],
+          "execution_requirement": "virtual_command_required",
+          "accepted_action_kinds": [
+            "esd.trip",
+            "operation.stop",
+            "valve.close",
+            "vent.open"
+          ],
+          "executable_plan_ids": [
+            "gas_release",
+            "overpressure"
+          ],
+          "executable_covered": true,
           "covered": true
         },
         {
@@ -1283,6 +1789,15 @@
             "gas_release",
             "overpressure"
           ],
+          "execution_requirement": "virtual_command_required",
+          "accepted_action_kinds": [
+            "responders.notify"
+          ],
+          "executable_plan_ids": [
+            "gas_release",
+            "overpressure"
+          ],
+          "executable_covered": true,
           "covered": true
         },
         {
@@ -1294,6 +1809,10 @@
             "gas_release",
             "overpressure"
           ],
+          "execution_requirement": "staged_workflow_only",
+          "accepted_action_kinds": [],
+          "executable_plan_ids": [],
+          "executable_covered": null,
           "covered": true
         },
         {
@@ -1307,6 +1826,15 @@
             "gas_release",
             "overpressure"
           ],
+          "execution_requirement": "virtual_command_required",
+          "accepted_action_kinds": [
+            "purge.run",
+            "ventilation.on"
+          ],
+          "executable_plan_ids": [
+            "gas_release"
+          ],
+          "executable_covered": true,
           "covered": true
         }
       ],
@@ -1346,6 +1874,18 @@
             "gas_release",
             "overpressure"
           ],
+          "execution_requirement": "virtual_command_required",
+          "accepted_action_kinds": [
+            "esd.trip",
+            "operation.stop",
+            "valve.close",
+            "vent.open"
+          ],
+          "executable_plan_ids": [
+            "gas_release",
+            "overpressure"
+          ],
+          "executable_covered": true,
           "covered": true
         },
         {
@@ -1357,6 +1897,10 @@
             "gas_release",
             "overpressure"
           ],
+          "execution_requirement": "staged_workflow_only",
+          "accepted_action_kinds": [],
+          "executable_plan_ids": [],
+          "executable_covered": null,
           "covered": true
         },
         {
@@ -1370,6 +1914,15 @@
             "gas_release",
             "overpressure"
           ],
+          "execution_requirement": "virtual_command_required",
+          "accepted_action_kinds": [
+            "purge.run",
+            "ventilation.on"
+          ],
+          "executable_plan_ids": [
+            "gas_release"
+          ],
+          "executable_covered": true,
           "covered": true
         }
       ],
@@ -1411,6 +1964,19 @@
             "gas_release",
             "overpressure"
           ],
+          "execution_requirement": "virtual_command_required",
+          "accepted_action_kinds": [
+            "cooling.on",
+            "esd.trip",
+            "operation.stop",
+            "valve.close"
+          ],
+          "executable_plan_ids": [
+            "hydrogen_fire",
+            "gas_release",
+            "overpressure"
+          ],
+          "executable_covered": true,
           "covered": true
         },
         {
@@ -1424,6 +1990,16 @@
             "gas_release",
             "overpressure"
           ],
+          "execution_requirement": "virtual_command_required",
+          "accepted_action_kinds": [
+            "responders.notify"
+          ],
+          "executable_plan_ids": [
+            "hydrogen_fire",
+            "gas_release",
+            "overpressure"
+          ],
+          "executable_covered": true,
           "covered": true
         }
       ],
@@ -1471,6 +2047,19 @@
             "gas_release",
             "overpressure"
           ],
+          "execution_requirement": "virtual_command_required",
+          "accepted_action_kinds": [
+            "esd.trip",
+            "operation.stop",
+            "valve.close",
+            "vent.open"
+          ],
+          "executable_plan_ids": [
+            "hydrogen_fire",
+            "gas_release",
+            "overpressure"
+          ],
+          "executable_covered": true,
           "covered": true
         },
         {
@@ -1485,6 +2074,10 @@
             "gas_release",
             "overpressure"
           ],
+          "execution_requirement": "staged_workflow_only",
+          "accepted_action_kinds": [],
+          "executable_plan_ids": [],
+          "executable_covered": null,
           "covered": true
         },
         {
@@ -1499,6 +2092,19 @@
             "gas_release",
             "overpressure"
           ],
+          "execution_requirement": "virtual_command_required",
+          "accepted_action_kinds": [
+            "cooling.on",
+            "esd.trip",
+            "operation.stop",
+            "valve.close"
+          ],
+          "executable_plan_ids": [
+            "hydrogen_fire",
+            "gas_release",
+            "overpressure"
+          ],
+          "executable_covered": true,
           "covered": true
         },
         {
@@ -1512,6 +2118,18 @@
             "gas_release",
             "overpressure"
           ],
+          "execution_requirement": "virtual_command_required",
+          "accepted_action_kinds": [
+            "access.restrict",
+            "personnel.evacuate",
+            "vehicle.evacuate"
+          ],
+          "executable_plan_ids": [
+            "hydrogen_fire",
+            "gas_release",
+            "overpressure"
+          ],
+          "executable_covered": true,
           "covered": true
         },
         {
@@ -1525,6 +2143,16 @@
             "gas_release",
             "overpressure"
           ],
+          "execution_requirement": "virtual_command_required",
+          "accepted_action_kinds": [
+            "responders.notify"
+          ],
+          "executable_plan_ids": [
+            "hydrogen_fire",
+            "gas_release",
+            "overpressure"
+          ],
+          "executable_covered": true,
           "covered": true
         },
         {
@@ -1538,6 +2166,10 @@
             "gas_release",
             "overpressure"
           ],
+          "execution_requirement": "staged_workflow_only",
+          "accepted_action_kinds": [],
+          "executable_plan_ids": [],
+          "executable_covered": null,
           "covered": true
         },
         {
@@ -1550,6 +2182,10 @@
             "gas_release",
             "overpressure"
           ],
+          "execution_requirement": "staged_workflow_only",
+          "accepted_action_kinds": [],
+          "executable_plan_ids": [],
+          "executable_covered": null,
           "covered": true
         },
         {
@@ -1564,6 +2200,15 @@
             "gas_release",
             "overpressure"
           ],
+          "execution_requirement": "virtual_command_required",
+          "accepted_action_kinds": [
+            "purge.run",
+            "ventilation.on"
+          ],
+          "executable_plan_ids": [
+            "gas_release"
+          ],
+          "executable_covered": true,
           "covered": true
         }
       ],
@@ -1607,6 +2252,19 @@
             "gas_release",
             "overpressure"
           ],
+          "execution_requirement": "virtual_command_required",
+          "accepted_action_kinds": [
+            "esd.trip",
+            "operation.stop",
+            "valve.close",
+            "vent.open"
+          ],
+          "executable_plan_ids": [
+            "hydrogen_fire",
+            "gas_release",
+            "overpressure"
+          ],
+          "executable_covered": true,
           "covered": true
         },
         {
@@ -1620,6 +2278,10 @@
             "gas_release",
             "overpressure"
           ],
+          "execution_requirement": "staged_workflow_only",
+          "accepted_action_kinds": [],
+          "executable_plan_ids": [],
+          "executable_covered": null,
           "covered": true
         },
         {
@@ -1632,6 +2294,10 @@
             "gas_release",
             "overpressure"
           ],
+          "execution_requirement": "staged_workflow_only",
+          "accepted_action_kinds": [],
+          "executable_plan_ids": [],
+          "executable_covered": null,
           "covered": true
         },
         {
@@ -1646,6 +2312,15 @@
             "gas_release",
             "overpressure"
           ],
+          "execution_requirement": "virtual_command_required",
+          "accepted_action_kinds": [
+            "purge.run",
+            "ventilation.on"
+          ],
+          "executable_plan_ids": [
+            "gas_release"
+          ],
+          "executable_covered": true,
           "covered": true
         }
       ],
@@ -1684,6 +2359,17 @@
           "covering_plan_ids": [
             "gas_release"
           ],
+          "execution_requirement": "virtual_command_required",
+          "accepted_action_kinds": [
+            "esd.trip",
+            "operation.stop",
+            "valve.close",
+            "vent.open"
+          ],
+          "executable_plan_ids": [
+            "gas_release"
+          ],
+          "executable_covered": true,
           "covered": true
         },
         {
@@ -1695,6 +2381,14 @@
           "covering_plan_ids": [
             "gas_release"
           ],
+          "execution_requirement": "virtual_command_required",
+          "accepted_action_kinds": [
+            "responders.notify"
+          ],
+          "executable_plan_ids": [
+            "gas_release"
+          ],
+          "executable_covered": true,
           "covered": true
         },
         {
@@ -1706,6 +2400,10 @@
           "covering_plan_ids": [
             "gas_release"
           ],
+          "execution_requirement": "staged_workflow_only",
+          "accepted_action_kinds": [],
+          "executable_plan_ids": [],
+          "executable_covered": null,
           "covered": true
         },
         {
@@ -1716,6 +2414,10 @@
           "covering_plan_ids": [
             "gas_release"
           ],
+          "execution_requirement": "staged_workflow_only",
+          "accepted_action_kinds": [],
+          "executable_plan_ids": [],
+          "executable_covered": null,
           "covered": true
         },
         {
@@ -1728,6 +2430,15 @@
           "covering_plan_ids": [
             "gas_release"
           ],
+          "execution_requirement": "virtual_command_required",
+          "accepted_action_kinds": [
+            "purge.run",
+            "ventilation.on"
+          ],
+          "executable_plan_ids": [
+            "gas_release"
+          ],
+          "executable_covered": true,
           "covered": true
         }
       ],
@@ -1762,6 +2473,10 @@
           "covering_plan_ids": [
             "gas_release"
           ],
+          "execution_requirement": "staged_workflow_only",
+          "accepted_action_kinds": [],
+          "executable_plan_ids": [],
+          "executable_covered": null,
           "covered": true
         },
         {
@@ -1772,6 +2487,10 @@
           "covering_plan_ids": [
             "gas_release"
           ],
+          "execution_requirement": "staged_workflow_only",
+          "accepted_action_kinds": [],
+          "executable_plan_ids": [],
+          "executable_covered": null,
           "covered": true
         }
       ],
@@ -1810,6 +2529,17 @@
           "covering_plan_ids": [
             "gas_release"
           ],
+          "execution_requirement": "virtual_command_required",
+          "accepted_action_kinds": [
+            "esd.trip",
+            "operation.stop",
+            "valve.close",
+            "vent.open"
+          ],
+          "executable_plan_ids": [
+            "gas_release"
+          ],
+          "executable_covered": true,
           "covered": true
         },
         {
@@ -1821,6 +2551,14 @@
           "covering_plan_ids": [
             "gas_release"
           ],
+          "execution_requirement": "virtual_command_required",
+          "accepted_action_kinds": [
+            "responders.notify"
+          ],
+          "executable_plan_ids": [
+            "gas_release"
+          ],
+          "executable_covered": true,
           "covered": true
         },
         {
@@ -1832,6 +2570,10 @@
           "covering_plan_ids": [
             "gas_release"
           ],
+          "execution_requirement": "staged_workflow_only",
+          "accepted_action_kinds": [],
+          "executable_plan_ids": [],
+          "executable_covered": null,
           "covered": true
         },
         {
@@ -1842,6 +2584,10 @@
           "covering_plan_ids": [
             "gas_release"
           ],
+          "execution_requirement": "staged_workflow_only",
+          "accepted_action_kinds": [],
+          "executable_plan_ids": [],
+          "executable_covered": null,
           "covered": true
         },
         {
@@ -1854,6 +2600,15 @@
           "covering_plan_ids": [
             "gas_release"
           ],
+          "execution_requirement": "virtual_command_required",
+          "accepted_action_kinds": [
+            "purge.run",
+            "ventilation.on"
+          ],
+          "executable_plan_ids": [
+            "gas_release"
+          ],
+          "executable_covered": true,
           "covered": true
         }
       ],
@@ -1896,6 +2651,18 @@
             "gas_release",
             "hose_connection"
           ],
+          "execution_requirement": "virtual_command_required",
+          "accepted_action_kinds": [
+            "esd.trip",
+            "operation.stop",
+            "valve.close",
+            "vent.open"
+          ],
+          "executable_plan_ids": [
+            "gas_release",
+            "hose_connection"
+          ],
+          "executable_covered": true,
           "covered": true
         },
         {
@@ -1909,6 +2676,10 @@
             "gas_release",
             "hose_connection"
           ],
+          "execution_requirement": "staged_workflow_only",
+          "accepted_action_kinds": [],
+          "executable_plan_ids": [],
+          "executable_covered": null,
           "covered": true
         },
         {
@@ -1921,6 +2692,15 @@
             "gas_release",
             "hose_connection"
           ],
+          "execution_requirement": "virtual_command_required",
+          "accepted_action_kinds": [
+            "responders.notify"
+          ],
+          "executable_plan_ids": [
+            "gas_release",
+            "hose_connection"
+          ],
+          "executable_covered": true,
           "covered": true
         },
         {
@@ -1933,6 +2713,10 @@
             "gas_release",
             "hose_connection"
           ],
+          "execution_requirement": "staged_workflow_only",
+          "accepted_action_kinds": [],
+          "executable_plan_ids": [],
+          "executable_covered": null,
           "covered": true
         },
         {
@@ -1944,6 +2728,10 @@
             "gas_release",
             "hose_connection"
           ],
+          "execution_requirement": "staged_workflow_only",
+          "accepted_action_kinds": [],
+          "executable_plan_ids": [],
+          "executable_covered": null,
           "covered": true
         },
         {
@@ -1957,6 +2745,15 @@
             "gas_release",
             "hose_connection"
           ],
+          "execution_requirement": "virtual_command_required",
+          "accepted_action_kinds": [
+            "purge.run",
+            "ventilation.on"
+          ],
+          "executable_plan_ids": [
+            "gas_release"
+          ],
+          "executable_covered": true,
           "covered": true
         }
       ],
@@ -2002,6 +2799,19 @@
             "gas_release",
             "hose_connection"
           ],
+          "execution_requirement": "virtual_command_required",
+          "accepted_action_kinds": [
+            "esd.trip",
+            "operation.stop",
+            "valve.close",
+            "vent.open"
+          ],
+          "executable_plan_ids": [
+            "hydrogen_fire",
+            "gas_release",
+            "hose_connection"
+          ],
+          "executable_covered": true,
           "covered": true
         },
         {
@@ -2016,6 +2826,10 @@
             "gas_release",
             "hose_connection"
           ],
+          "execution_requirement": "staged_workflow_only",
+          "accepted_action_kinds": [],
+          "executable_plan_ids": [],
+          "executable_covered": null,
           "covered": true
         },
         {
@@ -2029,6 +2843,16 @@
             "gas_release",
             "hose_connection"
           ],
+          "execution_requirement": "virtual_command_required",
+          "accepted_action_kinds": [
+            "responders.notify"
+          ],
+          "executable_plan_ids": [
+            "hydrogen_fire",
+            "gas_release",
+            "hose_connection"
+          ],
+          "executable_covered": true,
           "covered": true
         },
         {
@@ -2042,6 +2866,10 @@
             "gas_release",
             "hose_connection"
           ],
+          "execution_requirement": "staged_workflow_only",
+          "accepted_action_kinds": [],
+          "executable_plan_ids": [],
+          "executable_covered": null,
           "covered": true
         },
         {
@@ -2054,6 +2882,10 @@
             "gas_release",
             "hose_connection"
           ],
+          "execution_requirement": "staged_workflow_only",
+          "accepted_action_kinds": [],
+          "executable_plan_ids": [],
+          "executable_covered": null,
           "covered": true
         },
         {
@@ -2068,6 +2900,15 @@
             "gas_release",
             "hose_connection"
           ],
+          "execution_requirement": "virtual_command_required",
+          "accepted_action_kinds": [
+            "purge.run",
+            "ventilation.on"
+          ],
+          "executable_plan_ids": [
+            "gas_release"
+          ],
+          "executable_covered": true,
           "covered": true
         }
       ],
@@ -2109,6 +2950,18 @@
             "gas_release",
             "hose_connection"
           ],
+          "execution_requirement": "virtual_command_required",
+          "accepted_action_kinds": [
+            "esd.trip",
+            "operation.stop",
+            "valve.close",
+            "vent.open"
+          ],
+          "executable_plan_ids": [
+            "gas_release",
+            "hose_connection"
+          ],
+          "executable_covered": true,
           "covered": true
         },
         {
@@ -2122,6 +2975,10 @@
             "gas_release",
             "hose_connection"
           ],
+          "execution_requirement": "staged_workflow_only",
+          "accepted_action_kinds": [],
+          "executable_plan_ids": [],
+          "executable_covered": null,
           "covered": true
         },
         {
@@ -2134,6 +2991,10 @@
             "gas_release",
             "hose_connection"
           ],
+          "execution_requirement": "staged_workflow_only",
+          "accepted_action_kinds": [],
+          "executable_plan_ids": [],
+          "executable_covered": null,
           "covered": true
         },
         {
@@ -2145,6 +3006,10 @@
             "gas_release",
             "hose_connection"
           ],
+          "execution_requirement": "staged_workflow_only",
+          "accepted_action_kinds": [],
+          "executable_plan_ids": [],
+          "executable_covered": null,
           "covered": true
         },
         {
@@ -2158,6 +3023,15 @@
             "gas_release",
             "hose_connection"
           ],
+          "execution_requirement": "virtual_command_required",
+          "accepted_action_kinds": [
+            "purge.run",
+            "ventilation.on"
+          ],
+          "executable_plan_ids": [
+            "gas_release"
+          ],
+          "executable_covered": true,
           "covered": true
         }
       ],
@@ -2200,6 +3074,18 @@
             "gas_release",
             "compressor_thermal"
           ],
+          "execution_requirement": "virtual_command_required",
+          "accepted_action_kinds": [
+            "esd.trip",
+            "operation.stop",
+            "valve.close",
+            "vent.open"
+          ],
+          "executable_plan_ids": [
+            "gas_release",
+            "compressor_thermal"
+          ],
+          "executable_covered": true,
           "covered": true
         },
         {
@@ -2213,6 +3099,10 @@
             "gas_release",
             "compressor_thermal"
           ],
+          "execution_requirement": "staged_workflow_only",
+          "accepted_action_kinds": [],
+          "executable_plan_ids": [],
+          "executable_covered": null,
           "covered": true
         },
         {
@@ -2225,6 +3115,15 @@
             "gas_release",
             "compressor_thermal"
           ],
+          "execution_requirement": "virtual_command_required",
+          "accepted_action_kinds": [
+            "responders.notify"
+          ],
+          "executable_plan_ids": [
+            "gas_release",
+            "compressor_thermal"
+          ],
+          "executable_covered": true,
           "covered": true
         },
         {
@@ -2237,6 +3136,10 @@
             "gas_release",
             "compressor_thermal"
           ],
+          "execution_requirement": "staged_workflow_only",
+          "accepted_action_kinds": [],
+          "executable_plan_ids": [],
+          "executable_covered": null,
           "covered": true
         },
         {
@@ -2248,6 +3151,10 @@
             "gas_release",
             "compressor_thermal"
           ],
+          "execution_requirement": "staged_workflow_only",
+          "accepted_action_kinds": [],
+          "executable_plan_ids": [],
+          "executable_covered": null,
           "covered": true
         },
         {
@@ -2261,6 +3168,16 @@
             "gas_release",
             "compressor_thermal"
           ],
+          "execution_requirement": "virtual_command_required",
+          "accepted_action_kinds": [
+            "purge.run",
+            "ventilation.on"
+          ],
+          "executable_plan_ids": [
+            "gas_release",
+            "compressor_thermal"
+          ],
+          "executable_covered": true,
           "covered": true
         }
       ],
@@ -2302,6 +3219,18 @@
             "gas_release",
             "hose_connection"
           ],
+          "execution_requirement": "virtual_command_required",
+          "accepted_action_kinds": [
+            "esd.trip",
+            "operation.stop",
+            "valve.close",
+            "vent.open"
+          ],
+          "executable_plan_ids": [
+            "gas_release",
+            "hose_connection"
+          ],
+          "executable_covered": true,
           "covered": true
         },
         {
@@ -2314,6 +3243,15 @@
             "gas_release",
             "hose_connection"
           ],
+          "execution_requirement": "virtual_command_required",
+          "accepted_action_kinds": [
+            "responders.notify"
+          ],
+          "executable_plan_ids": [
+            "gas_release",
+            "hose_connection"
+          ],
+          "executable_covered": true,
           "covered": true
         },
         {
@@ -2326,6 +3264,10 @@
             "gas_release",
             "hose_connection"
           ],
+          "execution_requirement": "staged_workflow_only",
+          "accepted_action_kinds": [],
+          "executable_plan_ids": [],
+          "executable_covered": null,
           "covered": true
         },
         {
@@ -2337,6 +3279,10 @@
             "gas_release",
             "hose_connection"
           ],
+          "execution_requirement": "staged_workflow_only",
+          "accepted_action_kinds": [],
+          "executable_plan_ids": [],
+          "executable_covered": null,
           "covered": true
         },
         {
@@ -2350,6 +3296,15 @@
             "gas_release",
             "hose_connection"
           ],
+          "execution_requirement": "virtual_command_required",
+          "accepted_action_kinds": [
+            "purge.run",
+            "ventilation.on"
+          ],
+          "executable_plan_ids": [
+            "gas_release"
+          ],
+          "executable_covered": true,
           "covered": true
         }
       ],
@@ -2391,6 +3346,18 @@
             "gas_release",
             "compressor_thermal"
           ],
+          "execution_requirement": "virtual_command_required",
+          "accepted_action_kinds": [
+            "esd.trip",
+            "operation.stop",
+            "valve.close",
+            "vent.open"
+          ],
+          "executable_plan_ids": [
+            "gas_release",
+            "compressor_thermal"
+          ],
+          "executable_covered": true,
           "covered": true
         },
         {
@@ -2403,6 +3370,15 @@
             "gas_release",
             "compressor_thermal"
           ],
+          "execution_requirement": "virtual_command_required",
+          "accepted_action_kinds": [
+            "responders.notify"
+          ],
+          "executable_plan_ids": [
+            "gas_release",
+            "compressor_thermal"
+          ],
+          "executable_covered": true,
           "covered": true
         },
         {
@@ -2415,6 +3391,10 @@
             "gas_release",
             "compressor_thermal"
           ],
+          "execution_requirement": "staged_workflow_only",
+          "accepted_action_kinds": [],
+          "executable_plan_ids": [],
+          "executable_covered": null,
           "covered": true
         },
         {
@@ -2426,6 +3406,10 @@
             "gas_release",
             "compressor_thermal"
           ],
+          "execution_requirement": "staged_workflow_only",
+          "accepted_action_kinds": [],
+          "executable_plan_ids": [],
+          "executable_covered": null,
           "covered": true
         },
         {
@@ -2439,6 +3423,16 @@
             "gas_release",
             "compressor_thermal"
           ],
+          "execution_requirement": "virtual_command_required",
+          "accepted_action_kinds": [
+            "purge.run",
+            "ventilation.on"
+          ],
+          "executable_plan_ids": [
+            "gas_release",
+            "compressor_thermal"
+          ],
+          "executable_covered": true,
           "covered": true
         }
       ],
@@ -2479,6 +3473,10 @@
             "gas_release",
             "hose_connection"
           ],
+          "execution_requirement": "staged_workflow_only",
+          "accepted_action_kinds": [],
+          "executable_plan_ids": [],
+          "executable_covered": null,
           "covered": true
         },
         {
@@ -2491,6 +3489,17 @@
             "gas_release",
             "hose_connection"
           ],
+          "execution_requirement": "virtual_command_required",
+          "accepted_action_kinds": [
+            "access.restrict",
+            "personnel.evacuate",
+            "vehicle.evacuate"
+          ],
+          "executable_plan_ids": [
+            "gas_release",
+            "hose_connection"
+          ],
+          "executable_covered": true,
           "covered": true
         },
         {
@@ -2503,6 +3512,15 @@
             "gas_release",
             "hose_connection"
           ],
+          "execution_requirement": "virtual_command_required",
+          "accepted_action_kinds": [
+            "responders.notify"
+          ],
+          "executable_plan_ids": [
+            "gas_release",
+            "hose_connection"
+          ],
+          "executable_covered": true,
           "covered": true
         },
         {
@@ -2515,6 +3533,10 @@
             "gas_release",
             "hose_connection"
           ],
+          "execution_requirement": "staged_workflow_only",
+          "accepted_action_kinds": [],
+          "executable_plan_ids": [],
+          "executable_covered": null,
           "covered": true
         }
       ],
@@ -2556,6 +3578,18 @@
             "gas_release",
             "fueling_fault"
           ],
+          "execution_requirement": "virtual_command_required",
+          "accepted_action_kinds": [
+            "esd.trip",
+            "operation.stop",
+            "valve.close",
+            "vent.open"
+          ],
+          "executable_plan_ids": [
+            "gas_release",
+            "fueling_fault"
+          ],
+          "executable_covered": true,
           "covered": true
         },
         {
@@ -2569,6 +3603,10 @@
             "gas_release",
             "fueling_fault"
           ],
+          "execution_requirement": "staged_workflow_only",
+          "accepted_action_kinds": [],
+          "executable_plan_ids": [],
+          "executable_covered": null,
           "covered": true
         },
         {
@@ -2581,6 +3619,10 @@
             "gas_release",
             "fueling_fault"
           ],
+          "execution_requirement": "staged_workflow_only",
+          "accepted_action_kinds": [],
+          "executable_plan_ids": [],
+          "executable_covered": null,
           "covered": true
         },
         {
@@ -2592,6 +3634,10 @@
             "gas_release",
             "fueling_fault"
           ],
+          "execution_requirement": "staged_workflow_only",
+          "accepted_action_kinds": [],
+          "executable_plan_ids": [],
+          "executable_covered": null,
           "covered": true
         },
         {
@@ -2605,6 +3651,16 @@
             "gas_release",
             "fueling_fault"
           ],
+          "execution_requirement": "virtual_command_required",
+          "accepted_action_kinds": [
+            "purge.run",
+            "ventilation.on"
+          ],
+          "executable_plan_ids": [
+            "gas_release",
+            "fueling_fault"
+          ],
+          "executable_covered": true,
           "covered": true
         }
       ],
@@ -2646,6 +3702,18 @@
             "gas_release",
             "fueling_fault"
           ],
+          "execution_requirement": "virtual_command_required",
+          "accepted_action_kinds": [
+            "esd.trip",
+            "operation.stop",
+            "valve.close",
+            "vent.open"
+          ],
+          "executable_plan_ids": [
+            "gas_release",
+            "fueling_fault"
+          ],
+          "executable_covered": true,
           "covered": true
         },
         {
@@ -2659,6 +3727,10 @@
             "gas_release",
             "fueling_fault"
           ],
+          "execution_requirement": "staged_workflow_only",
+          "accepted_action_kinds": [],
+          "executable_plan_ids": [],
+          "executable_covered": null,
           "covered": true
         },
         {
@@ -2671,6 +3743,10 @@
             "gas_release",
             "fueling_fault"
           ],
+          "execution_requirement": "staged_workflow_only",
+          "accepted_action_kinds": [],
+          "executable_plan_ids": [],
+          "executable_covered": null,
           "covered": true
         },
         {
@@ -2682,6 +3758,10 @@
             "gas_release",
             "fueling_fault"
           ],
+          "execution_requirement": "staged_workflow_only",
+          "accepted_action_kinds": [],
+          "executable_plan_ids": [],
+          "executable_covered": null,
           "covered": true
         },
         {
@@ -2695,6 +3775,16 @@
             "gas_release",
             "fueling_fault"
           ],
+          "execution_requirement": "virtual_command_required",
+          "accepted_action_kinds": [
+            "purge.run",
+            "ventilation.on"
+          ],
+          "executable_plan_ids": [
+            "gas_release",
+            "fueling_fault"
+          ],
+          "executable_covered": true,
           "covered": true
         }
       ],
@@ -2704,5 +3794,6 @@
     }
   ],
   "uncovered": [],
-  "claim_boundary": "This artifact shows only that action categories derived from public HIAD metadata can be routed to registered staged response plans. A case with no recorded public category is not treated as having no response. The result does not judge source actions, validate physics, estimate risk, or demonstrate SAGA/LLM/operator effectiveness or safety. Independent expert review and blinded holdout testing remain required."
+  "executable_uncovered": [],
+  "claim_boundary": "This artifact shows only that action categories derived from public HIAD metadata can be routed to registered staged response plans and that active response categories expose at least one simulation-only command. Virtual responder notification never contacts an external service. A case with no recorded public category is not treated as having no response. The result does not judge source actions, validate physics, estimate risk, or demonstrate SAGA/LLM/operator effectiveness or safety. Independent expert review and blinded holdout testing remain required."
 }

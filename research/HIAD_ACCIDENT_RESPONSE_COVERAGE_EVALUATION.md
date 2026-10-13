@@ -9,23 +9,25 @@
 - 범주가 기록되지 않은 사례: **1** (대응 없음으로 해석하지 않음)
 - 범주 커버리지: **8/8**
 - 미커버 사례-범주 쌍: **0**
+- 실행명령 필수 범주: **5**
+- 실행명령 미커버 사례-범주 쌍: **0**
 
 ## 범주별 단계 계약
 
-| 공개 조치 범주 | 사례 수 | 커버 사례 | 필수 단계 |
-|---|---:|---:|---|
-| `detection_alarm_monitoring` | 14 | 14 | recognition, stabilize, prevention |
-| `emergency_communication_coordination` | 17 | 17 | immediate, prevention |
-| `evacuation_perimeter_access` | 6 | 6 | immediate, stabilize |
-| `fire_response_cooling` | 6 | 6 | immediate, stabilize, prevention |
-| `inspection_leak_test_repair` | 21 | 21 | restart, prevention |
-| `procedure_interlock_training_design` | 23 | 23 | prevention |
-| `shutdown_isolation_depressurization` | 22 | 22 | immediate, stabilize, restart |
-| `ventilation_purge` | 21 | 21 | immediate, stabilize, prevention |
+| 공개 조치 범주 | 사례 수 | 커버 사례 | 실행 계약 | 실행 미커버 | 필수 단계 |
+|---|---:|---:|---|---:|---|
+| `detection_alarm_monitoring` | 14 | 14 | `staged_workflow_only` | 해당 없음 | recognition, stabilize, prevention |
+| `emergency_communication_coordination` | 17 | 17 | `virtual_command_required` | 0 | immediate, prevention |
+| `evacuation_perimeter_access` | 6 | 6 | `virtual_command_required` | 0 | immediate, stabilize |
+| `fire_response_cooling` | 6 | 6 | `virtual_command_required` | 0 | immediate, stabilize, prevention |
+| `inspection_leak_test_repair` | 21 | 21 | `staged_workflow_only` | 해당 없음 | restart, prevention |
+| `procedure_interlock_training_design` | 23 | 23 | `staged_workflow_only` | 해당 없음 | prevention |
+| `shutdown_isolation_depressurization` | 22 | 22 | `virtual_command_required` | 0 | immediate, stabilize, restart |
+| `ventilation_purge` | 21 | 21 | `virtual_command_required` | 0 | immediate, stabilize, prevention |
 
 ## 해석 경계
 
-This artifact shows only that action categories derived from public HIAD metadata can be routed to registered staged response plans. A case with no recorded public category is not treated as having no response. The result does not judge source actions, validate physics, estimate risk, or demonstrate SAGA/LLM/operator effectiveness or safety. Independent expert review and blinded holdout testing remain required.
+This artifact shows only that action categories derived from public HIAD metadata can be routed to registered staged response plans and that active response categories expose at least one simulation-only command. Virtual responder notification never contacts an external service. A case with no recorded public category is not treated as having no response. The result does not judge source actions, validate physics, estimate risk, or demonstrate SAGA/LLM/operator effectiveness or safety. Independent expert review and blinded holdout testing remain required.
 
 입력 해시:
 
@@ -33,3 +35,4 @@ This artifact shows only that action categories derived from public HIAD metadat
 - `response_stage_contract_sha256`: `0ec90cde957dbbae4622f5339a432b1ea6593300f9ebc851c6e7a83cd67662a3`
 - `action_playbook_coverage_sha256`: `9ce617a70c128497c8bfcd49cb2d97cec3e1855cdfa2bf82d7b21045626174ad`
 - `playbook_catalog_sha256`: `d8fedb036a91b5adae3934f1604a17966b8f0f9200c52f4d40bf2da2243a7c6c`
+- `virtual_safety_runtime_sha256`: `5d55b14ab716417ec0eb92086e0bd5c9e6a7db7f48da6baa866834db4915f775`

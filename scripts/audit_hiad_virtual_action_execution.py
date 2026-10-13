@@ -46,6 +46,7 @@ FAMILY_NODES = {
     "compressor_thermal": "N06",
     "external_fire": "N08",
     "isolation_failure": "N11",
+    "structural_damage": "N08",
 }
 
 
@@ -185,10 +186,15 @@ def build_audit() -> dict[str, Any]:
     families = {
         str(family): row
         for family, row in (replay.get("family_recipes") or {}).items()
-        if str(family) in FAMILY_NODES and row.get("status") == "passed"
+        if str(family) in FAMILY_NODES
+        and row.get("status") in {"passed", "not_run_no_physical_model"}
     }
     results = {
-        family: _run_family(family, FAMILY_NODES[family])
+        family: {
+            **_run_family(family, FAMILY_NODES[family]),
+            "source_representation": families[family].get("representation"),
+            "physical_scenario_replay_run": families[family].get("status") == "passed",
+        }
         for family in sorted(families)
     }
     failed_feedback = _failure_feedback_guard()
@@ -226,7 +232,7 @@ def build_audit() -> dict[str, Any]:
             "A pass means the registered template is accepted by the virtual runtime, changes the requested process/safety state, and reports completion feedback.",
             "The stuck-open check confirms command and feedback are kept separate; it does not estimate field valve reliability or diagnostic sensitivity.",
             "No operator benefit, LLM effectiveness, accident frequency, consequence distance or field safety claim is made.",
-            "Structural damage remains excluded because the current process model has no structural mechanics.",
+            "Structural-damage response verifies virtual stop, isolation, evacuation and notification controls only; the current process model still has no structural mechanics.",
         ],
     }
 
@@ -248,12 +254,13 @@ def write_outputs(result: dict[str, Any]) -> None:
         f"- 실행 명령 수: **{runtime['action_count']}**",
         f"- 피드백 고장 분리 검사: **{runtime['failure_feedback_guard']['status']}**",
         "",
-        "| Family | 대표 노드 | 명령 수 | 피드백 | 상태 |",
-        "|---|---|---:|---|---|",
+        "| Family | 표현 범위 | 대표 노드 | 명령 수 | 피드백 | 상태 |",
+        "|---|---|---|---:|---|---|",
     ]
     for family, row in result["family_results"].items():
         lines.append(
-            f"| `{family}` | `{row['representative_node_id']}` | "
+            f"| `{family}` | `{row['source_representation']}` | "
+            f"`{row['representative_node_id']}` | "
             f"{row['action_count']} | {row['confirmed_action_count']}/{row['action_count']} | "
             f"`{row['status']}` |"
         )

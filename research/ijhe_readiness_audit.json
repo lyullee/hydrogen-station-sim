@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-13T08:42:23.759444+00:00",
+  "generated_at": "2026-10-13T09:33:35.247673+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -5566,9 +5566,9 @@
     {
       "id": "hiad_accident_response_coverage_evaluation",
       "status": "PASS",
-      "claim": "Public HIAD action categories are routed case-by-case to staged response plans with an explicit non-evaluative boundary.",
+      "claim": "Public HIAD action categories are routed case-by-case to staged plans, and active categories expose simulation-only response commands.",
       "evidence": "research\\hiad_accident_response_coverage_evaluation_2026_10_05.json",
-      "requirement": "34 cases, 33 cases with public action categories, 8/8 categories covered with zero uncovered case-category pairs, current input hashes, no raw action text or holdout use.",
+      "requirement": "34 cases, 33 cases with public action categories, 8/8 staged categories and 72/72 active case-category command obligations covered; current hashes, no raw action text, external notification or holdout use.",
       "observed": {
         "aggregate": {
           "case_count": 34,
@@ -5578,6 +5578,9 @@
           "category_count": 8,
           "covered_category_count": 8,
           "uncovered_case_category_count": 0,
+          "active_action_category_count": 5,
+          "executable_case_category_count": 72,
+          "executable_uncovered_case_category_count": 0,
           "category_counts": {
             "shutdown_isolation_depressurization": 22,
             "detection_alarm_monitoring": 14,
@@ -5659,6 +5662,61 @@
               "rationale": "minimum interface stages for presenting this public action category; not a source-action correctness claim"
             }
           },
+          "category_execution_contract": {
+            "shutdown_isolation_depressurization": {
+              "mode": "virtual_command_required",
+              "accepted_action_kinds": [
+                "operation.stop",
+                "valve.close",
+                "esd.trip",
+                "vent.open"
+              ]
+            },
+            "detection_alarm_monitoring": {
+              "mode": "staged_workflow_only",
+              "accepted_action_kinds": []
+            },
+            "fire_response_cooling": {
+              "mode": "virtual_command_required",
+              "accepted_action_kinds": [
+                "cooling.on",
+                "operation.stop",
+                "valve.close",
+                "esd.trip"
+              ]
+            },
+            "evacuation_perimeter_access": {
+              "mode": "virtual_command_required",
+              "accepted_action_kinds": [
+                "personnel.evacuate",
+                "access.restrict",
+                "vehicle.evacuate"
+              ]
+            },
+            "emergency_communication_coordination": {
+              "mode": "virtual_command_required",
+              "accepted_action_kinds": [
+                "responders.notify"
+              ]
+            },
+            "inspection_leak_test_repair": {
+              "mode": "staged_workflow_only",
+              "accepted_action_kinds": []
+            },
+            "procedure_interlock_training_design": {
+              "mode": "staged_workflow_only",
+              "accepted_action_kinds": []
+            },
+            "ventilation_purge": {
+              "mode": "virtual_command_required",
+              "accepted_action_kinds": [
+                "ventilation.on",
+                "purge.run"
+              ]
+            }
+          },
+          "virtual_actions_are_simulation_only": true,
+          "external_notification_performed": false,
           "raw_action_text_used": false,
           "effectiveness_claimed": false,
           "safety_claimed": false,
@@ -7848,7 +7906,7 @@
       "requirement": "Manifest schema, normal/emergency distinction, contradiction guard, bounded tank evidence, CARB field benchmark, mixed release-campaign outcomes and full regression suite.",
       "observed": {
         "schema_version": 1,
-        "recorded_at": "2026-10-12",
+        "recorded_at": "2026-10-13",
         "status": "software_contract_verified",
         "scope": [
           "digital-twin main assistant",
@@ -7868,13 +7926,13 @@
           },
           "full_suite": {
             "command": "python -m pytest -q",
-            "passed": 1463,
+            "passed": 1521,
             "failed": 0,
-            "warnings": 209,
-            "run_recorded_at": "2026-10-12T00:02:05.215180+00:00",
-            "source_commit": "4b73ec651bb81d81ce3b11160b6600f59d16d92a",
-            "working_tree_dirty_at_run": false,
-            "elapsed_seconds": 268.07
+            "warnings": 20,
+            "run_recorded_at": "2026-10-13T09:32:55.927093+00:00",
+            "source_commit": "f459d983ea4f786d497204b3f7790e5b8b5bb0c7",
+            "working_tree_dirty_at_run": true,
+            "elapsed_seconds": 432.58
           },
           "latest_direct_route_spot_check": {
             "command": ".venv\\Scripts\\python.exe -m pytest tests/test_digital_twin_direct_qa.py tests/test_hiad_response_stage_contract.py -q",
@@ -7907,6 +7965,7 @@
           "active response families now receive only their integrity-checked KHK public-accident precedents in the runtime evidence manifest, compact LLM prompt and staged operator guidance",
           "consequence flow-boundary mismatches are exposed when HyRAM recomputes a high-pressure choked flow instead of silently presenting it as the supplied process flow",
           "public HIAD action categories are evaluated case-by-case against required staged response plans without using raw action text or making an effectiveness claim",
+          "five active HIAD response categories cover all 72 event-category command obligations, and 52 simulation-only commands across ten response families complete with virtual feedback; notification never contacts an external service",
           "derived HIAD action-category counts and the action-evidence artifact digest are carried into the hashed runtime envelope without raw incident prose",
           "public CC BY accidental-release/ignition archive metadata is carried into the hashed envelope without raw traces, ignition-probability claims or full-loop validation claims",
           "public CC BY sampling-workbook instrumentation context is carried into the evidence envelope without inferring vehicle or receptacle channels",
@@ -7979,11 +8038,26 @@
             "covered_category_count": 8,
             "category_count": 8,
             "uncovered_case_category_count": 0,
+            "active_action_category_count": 5,
+            "executable_case_category_count": 72,
+            "executable_uncovered_case_category_count": 0,
+            "virtual_actions_are_simulation_only": true,
+            "external_notification_performed": false,
             "raw_action_text_used": false,
             "effectiveness_claimed": false,
             "safety_claimed": false,
             "holdout_use": false,
-            "interpretation": "public accident action-category to staged-plan interface coverage only; cases without a recorded category are not treated as having no response"
+            "interpretation": "public accident action-category to staged-plan and simulation-command interface coverage only; cases without a recorded category are not treated as having no response; no action-correctness or field-effectiveness claim"
+          },
+          "virtual_action_execution": {
+            "evidence": "research/hiad_virtual_action_execution_2026_10_10.json",
+            "response_family_count": 10,
+            "response_family_pass_count": 10,
+            "simulation_command_count": 52,
+            "failure_feedback_guard_passed": true,
+            "structural_damage_physics_modeled": false,
+            "external_notification_performed": false,
+            "interpretation": "simulation-only command acceptance, completion feedback and process-state change; no historical reconstruction, field action correctness or effectiveness claim"
           },
           "confidential_local_accident_response_coverage": {
             "evidence": "research/confidential_local_accident_response_coverage_2026_10_06.json",
@@ -8553,7 +8627,7 @@
             75,
             72
           ],
-          "approximate_manuscript_words_before_references": 7934,
+          "approximate_manuscript_words_before_references": 7991,
           "figures": 3,
           "tables": 3,
           "citation_keys": 54,
@@ -8585,7 +8659,7 @@
       "requirement": "Compiler success, exact source/PDF hashes, no unresolved errors, and visual inspection of every rendered page.",
       "observed": {
         "schema_version": 2,
-        "verified_at_utc": "2026-10-13T08:23:29.534940+00:00",
+        "verified_at_utc": "2026-10-13T09:06:21.332974+00:00",
         "success": true,
         "compiler": {
           "name": "Tectonic",
@@ -8595,20 +8669,20 @@
         },
         "source": {
           "path": "manuscript/ijhe_manuscript_draft.tex",
-          "bytes": 76868,
-          "sha256": "e0897f4c58e30a452752e15e459a5be99628ed579f9049d730ed4e46d3aa80b3"
+          "bytes": 77357,
+          "sha256": "87c4ec1d6d04d8e1e20a676ed8fbab2b1c93c03e7f0e095c84718ad3e93f34ea"
         },
         "pdf": {
           "path": "output/pdf/ijhe_manuscript_draft.pdf",
-          "bytes": 837527,
-          "sha256": "076dc4d9f8500a4be7fd0a6962925bbb645ee036844ee39bccc7e16fef10cba8",
+          "bytes": 838071,
+          "sha256": "2e33f59ed53186689078e448a61ba3dd0fe2dc2149fbdcf9a18c9ccfda618497",
           "page_count": 24,
-          "extracted_character_count": 71170
+          "extracted_character_count": 71677
         },
         "compile_log": {
           "path": "output/pdf/ijhe_manuscript_draft.log",
-          "bytes": 19548,
-          "sha256": "8713ad292b0d92b796aa64b60fc33e1747fb3c148797c1c5daa87f8cd4c6ac14",
+          "bytes": 19549,
+          "sha256": "4be0d2fbc021e6a5347e19dc97344c8715c5cbdff4adbea543d24c75ebb76824",
           "unresolved_citations": 0,
           "unresolved_references": 0,
           "fatal_errors": [],

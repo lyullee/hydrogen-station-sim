@@ -5756,6 +5756,7 @@ def audit(root: Path) -> dict[str, object]:
         "response_stage_contract_sha256": root / "research/hiad_response_stage_contract.json",
         "action_playbook_coverage_sha256": root / "research/hiad_action_playbook_coverage.json",
         "playbook_catalog_sha256": root / "src/h2station/data/emergency_playbooks.json",
+        "virtual_safety_runtime_sha256": root / "src/h2station/virtual_safety.py",
     }
     accident_hashes_match = bool(accident_hashes) and all(
         accident_hashes.get(key) == _sha256(path)
@@ -5772,7 +5773,12 @@ def audit(root: Path) -> dict[str, object]:
         and accident_aggregate.get("category_count") == 8
         and accident_aggregate.get("covered_category_count") == 8
         and accident_aggregate.get("uncovered_case_category_count") == 0
+        and accident_aggregate.get("active_action_category_count") == 5
+        and accident_aggregate.get("executable_case_category_count") == 72
+        and accident_aggregate.get("executable_uncovered_case_category_count") == 0
         and accident_aggregate.get("contract_pass") is True
+        and accident_contract.get("virtual_actions_are_simulation_only") is True
+        and accident_contract.get("external_notification_performed") is False
         and accident_contract.get("raw_action_text_used") is False
         and accident_contract.get("effectiveness_claimed") is False
         and accident_contract.get("safety_claimed") is False
@@ -5784,9 +5790,9 @@ def audit(root: Path) -> dict[str, object]:
     gates.append(_gate(
         "hiad_accident_response_coverage_evaluation",
         "PASS" if accident_response_pass else ("FAIL" if accident_response else "PENDING"),
-        "Public HIAD action categories are routed case-by-case to staged response plans with an explicit non-evaluative boundary.",
+        "Public HIAD action categories are routed case-by-case to staged plans, and active categories expose simulation-only response commands.",
         str(accident_response_path.relative_to(root)),
-        "34 cases, 33 cases with public action categories, 8/8 categories covered with zero uncovered case-category pairs, current input hashes, no raw action text or holdout use.",
+        "34 cases, 33 cases with public action categories, 8/8 staged categories and 72/72 active case-category command obligations covered; current hashes, no raw action text, external notification or holdout use.",
         {
             "aggregate": accident_aggregate,
             "contract": accident_contract,

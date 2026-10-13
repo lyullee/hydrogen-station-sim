@@ -1042,6 +1042,59 @@ def _public_incident_traceability() -> dict[str, Any] | None:
             "holdout_use": False,
             "claim_limit": str(action_record.get("claim_boundary") or ""),
         }
+    # Expose only aggregate command-coverage evidence from the case-by-case
+    # response audit.  No HIAD narrative, action prose or event title enters
+    # the provider context.  Hash checks make a stale audit fail closed.
+    response_path = path.parent / (
+        "hiad_accident_response_coverage_evaluation_2026_10_05.json"
+    )
+    try:
+        response_record = json.loads(response_path.read_text(encoding="utf-8"))
+    except (OSError, ValueError, json.JSONDecodeError):
+        response_record = None
+    response_aggregate = (response_record or {}).get("aggregate") or {}
+    response_contract = (response_record or {}).get("contract") or {}
+    response_source = (response_record or {}).get("source") or {}
+    response_hashes = response_source.get("hashes") or {}
+    expected_response_hashes = {
+        "action_evidence_sha256": path.parent / "hiad_action_evidence.json",
+        "response_stage_contract_sha256": path.parent / "hiad_response_stage_contract.json",
+        "action_playbook_coverage_sha256": path.parent / "hiad_action_playbook_coverage.json",
+        "playbook_catalog_sha256": root / "src/h2station/data/emergency_playbooks.json",
+        "virtual_safety_runtime_sha256": root / "src/h2station/virtual_safety.py",
+    }
+    response_hashes_match = bool(response_hashes) and all(
+        response_hashes.get(key) == sha256(source_path.read_bytes()).hexdigest()
+        for key, source_path in expected_response_hashes.items()
+    )
+    if (
+        isinstance(response_record, dict)
+        and response_record.get("schema_version") == 2
+        and response_record.get("status")
+        == "completed_public_accident_response_coverage_evaluation"
+        and response_record.get("evidence_role")
+        == "public_accident_grounded_interface_evaluation"
+        and response_aggregate.get("case_count") == 34
+        and response_aggregate.get("active_action_category_count") == 5
+        and response_aggregate.get("executable_case_category_count") == 72
+        and response_aggregate.get("executable_uncovered_case_category_count") == 0
+        and response_aggregate.get("contract_pass") is True
+        and response_contract.get("virtual_actions_are_simulation_only") is True
+        and response_contract.get("external_notification_performed") is False
+        and response_hashes_match
+    ):
+        result["active_response_command_coverage"] = {
+            "artifact": (
+                "research/hiad_accident_response_coverage_evaluation_2026_10_05.json"
+            ),
+            "artifact_sha256": sha256(response_path.read_bytes()).hexdigest(),
+            "active_action_category_count": 5,
+            "case_category_obligation_count": 72,
+            "uncovered_case_category_count": 0,
+            "virtual_actions_are_simulation_only": True,
+            "external_notification_performed": False,
+            "claim_limit": str(response_record.get("claim_boundary") or ""),
+        }
     replay_path = path.parent / "hiad_digital_twin_replay_coverage_2026_10_08.json"
     try:
         replay = json.loads(replay_path.read_text(encoding="utf-8"))
@@ -1947,8 +2000,8 @@ def _virtual_response_action_execution_evidence() -> dict[str, Any] | None:
         or record.get("status") != "completed_virtual_action_execution_audit"
         or record.get("evidence_role")
         != "public_action_category_to_simulation_command_consistency_only"
-        or runtime.get("family_count") != 9
-        or runtime.get("family_pass_count") != 9
+        or runtime.get("family_count") != 10
+        or runtime.get("family_pass_count") != 10
         or runtime.get("all_family_sequences_passed") is not True
         or guard.get("status") != "passed"
         or guard.get("feedback_status") != "failed"
@@ -10743,6 +10796,9 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
             ) or {},
             "category_concordance": incident_traceability.get(
                 "category_concordance"
+            ) or {},
+            "active_response_command_coverage": incident_traceability.get(
+                "active_response_command_coverage"
             ) or {},
             "digital_twin_replay": {
                 key: replay.get(key)

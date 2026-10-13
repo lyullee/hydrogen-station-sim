@@ -93,7 +93,7 @@ The following tests passed in the repository virtual environment:
 65 passed, 2 warnings
 
 .venv\Scripts\python.exe -m pytest -q
-1463 passed, 0 failed, 6 skipped, 209 warnings in 268.07 s
+1521 passed, 0 failed, 20 warnings in 432.58 s (working tree under review)
 
 .venv\Scripts\python.exe -m pytest tests/test_digital_twin_direct_qa.py tests/test_hiad_response_stage_contract.py -q
 20 passed, 3 warnings
@@ -323,7 +323,7 @@ an interface/traceability check: it does not read HIAD response text and does no
 validate the safety or effectiveness of any step. The independent coordinator
 review, holdout response collection and expert rating gates remain required.
 
-The [HIAD accident-response coverage evaluation](HIAD_ACCIDENT_RESPONSE_COVERAGE_EVALUATION.md) additionally checks the 34 public metadata cases one by one: 33 cases with recorded action categories route to staged plans, all 8 categories have zero uncovered case-category pairs, and one case with no recorded category is explicitly marked as not assessed rather than treated as no response. This is structural traceability only; raw action prose is excluded and no effectiveness or safety claim is made.
+The [HIAD accident-response coverage evaluation](HIAD_ACCIDENT_RESPONSE_COVERAGE_EVALUATION.md) additionally checks the 34 public metadata cases one by one: 33 cases with recorded action categories route to staged plans, all 8 categories have zero uncovered case-category pairs, and one case with no recorded category is explicitly marked as not assessed rather than treated as no response. The five active-response categories cover all 72 event-category obligations with at least one simulation-only command. The command replay covers 10 response families and 52 confirmed virtual commands, including command-only structural-damage response. Virtual responder notification is an exercise record and never contacts an external service. This is structural and executable-interface traceability only; raw action prose is excluded and no action correctness, effectiveness or safety claim is made.
 
 The [HIAD-to-digital-twin replay audit](HIAD_DIGITAL_TWIN_REPLAY_COVERAGE_2026_10_08.md)
 checks the integration layer that the text-only benchmark cannot exercise. Seven

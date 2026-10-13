@@ -14,13 +14,20 @@ from datetime import datetime, timezone
 import hashlib
 import json
 from pathlib import Path
+import sys
 
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "src"))
+
+from h2station.virtual_safety import suggested_actions  # noqa: E402
+
+
 ACTION_EVIDENCE = ROOT / "research/hiad_action_evidence.json"
 STAGE_CONTRACT = ROOT / "research/hiad_response_stage_contract.json"
 PLAYBOOK_COVERAGE = ROOT / "research/hiad_action_playbook_coverage.json"
 PLAYBOOKS = ROOT / "src/h2station/data/emergency_playbooks.json"
+VIRTUAL_SAFETY = ROOT / "src/h2station/virtual_safety.py"
 OUTPUT = ROOT / "research/hiad_accident_response_coverage_evaluation_2026_10_05.json"
 MARKDOWN = ROOT / "research/HIAD_ACCIDENT_RESPONSE_COVERAGE_EVALUATION.md"
 
@@ -38,6 +45,46 @@ CATEGORY_REQUIRED_STAGES = {
     "inspection_leak_test_repair": ("restart", "prevention"),
     "procedure_interlock_training_design": ("prevention",),
     "ventilation_purge": ("immediate", "stabilize", "prevention"),
+}
+
+# Only categories that translate into an immediate virtual control or
+# coordination command are required to expose an executable action.  The
+# remaining categories are monitoring, recovery or lifecycle obligations and
+# continue to use the staged-plan contract.  This is interface traceability,
+# not evidence that an action is correct or effective in a real facility.
+CATEGORY_EXECUTION_CONTRACT = {
+    "shutdown_isolation_depressurization": {
+        "mode": "virtual_command_required",
+        "accepted_action_kinds": ("operation.stop", "valve.close", "esd.trip", "vent.open"),
+    },
+    "detection_alarm_monitoring": {
+        "mode": "staged_workflow_only",
+        "accepted_action_kinds": (),
+    },
+    "fire_response_cooling": {
+        "mode": "virtual_command_required",
+        "accepted_action_kinds": ("cooling.on", "operation.stop", "valve.close", "esd.trip"),
+    },
+    "evacuation_perimeter_access": {
+        "mode": "virtual_command_required",
+        "accepted_action_kinds": ("personnel.evacuate", "access.restrict", "vehicle.evacuate"),
+    },
+    "emergency_communication_coordination": {
+        "mode": "virtual_command_required",
+        "accepted_action_kinds": ("responders.notify",),
+    },
+    "inspection_leak_test_repair": {
+        "mode": "staged_workflow_only",
+        "accepted_action_kinds": (),
+    },
+    "procedure_interlock_training_design": {
+        "mode": "staged_workflow_only",
+        "accepted_action_kinds": (),
+    },
+    "ventilation_purge": {
+        "mode": "virtual_command_required",
+        "accepted_action_kinds": ("ventilation.on", "purge.run"),
+    },
 }
 
 
@@ -82,7 +129,9 @@ def evaluate(root: Path = ROOT) -> dict:
     uncovered: list[dict[str, object]] = []
     category_case_counts: Counter[str] = Counter()
     category_covered_counts: Counter[str] = Counter()
+    category_executable_counts: Counter[str] = Counter()
     category_stage_obligations: dict[str, dict[str, object]] = {}
+    executable_uncovered: list[dict[str, object]] = []
 
     for event_id, case in action_cases.items():
         categories = [str(item) for item in case.get("action_categories", [])]
@@ -94,12 +143,29 @@ def evaluate(root: Path = ROOT) -> dict:
 
         for category in categories:
             required = tuple(CATEGORY_REQUIRED_STAGES.get(category, STAGES))
+            execution_contract = CATEGORY_EXECUTION_CONTRACT.get(category, {
+                "mode": "staged_workflow_only", "accepted_action_kinds": (),
+            })
+            accepted_action_kinds = set(execution_contract["accepted_action_kinds"])
             category_case_counts[category] += 1
             eligible_plan_ids = [
                 plan_id for plan_id in registered_plan_ids
                 if _plan_stage_ok(plans[plan_id], required)
             ]
-            covered = bool(eligible_plan_ids)
+            plan_actions = {
+                plan_id: suggested_actions(plan_id)
+                for plan_id in registered_plan_ids
+            }
+            executable_plan_ids = [
+                plan_id for plan_id, actions in plan_actions.items()
+                if accepted_action_kinds.intersection(
+                    str(action.get("kind", "")) for action in actions
+                )
+            ]
+            executable_required = execution_contract["mode"] == "virtual_command_required"
+            executable_covered = bool(executable_plan_ids) if executable_required else None
+            stage_covered = bool(eligible_plan_ids)
+            covered = stage_covered and (executable_covered is not False)
             if covered:
                 category_covered_counts[category] += 1
             else:
@@ -109,6 +175,16 @@ def evaluate(root: Path = ROOT) -> dict:
                     "candidate_plan_ids": candidate_plan_ids,
                     "required_stages": list(required),
                 })
+            if executable_required:
+                if executable_covered:
+                    category_executable_counts[category] += 1
+                else:
+                    executable_uncovered.append({
+                        "event_id": event_id,
+                        "category": category,
+                        "candidate_plan_ids": candidate_plan_ids,
+                        "accepted_action_kinds": sorted(accepted_action_kinds),
+                    })
             category_stage_obligations.setdefault(category, {
                 "required_stages": list(required),
                 "rationale": "minimum interface stages for presenting this public action category; not a source-action correctness claim",
@@ -117,6 +193,10 @@ def evaluate(root: Path = ROOT) -> dict:
                 "category": category,
                 "required_stages": list(required),
                 "covering_plan_ids": eligible_plan_ids,
+                "execution_requirement": execution_contract["mode"],
+                "accepted_action_kinds": sorted(accepted_action_kinds),
+                "executable_plan_ids": executable_plan_ids,
+                "executable_covered": executable_covered,
                 "covered": covered,
             })
 
@@ -150,6 +230,9 @@ def evaluate(root: Path = ROOT) -> dict:
         expected = category_counts.get(category, 0)
         assessed = category_case_counts.get(category, 0)
         covered = category_covered_counts.get(category, 0)
+        execution_contract = CATEGORY_EXECUTION_CONTRACT[category]
+        executable_required = execution_contract["mode"] == "virtual_command_required"
+        executable_covered = category_executable_counts.get(category, 0)
         category_rows.append({
             "category": category,
             "public_case_count": expected,
@@ -157,6 +240,12 @@ def evaluate(root: Path = ROOT) -> dict:
             "covered_case_count": covered,
             "uncovered_case_count": assessed - covered,
             "required_stages": list(CATEGORY_REQUIRED_STAGES[category]),
+            "execution_requirement": execution_contract["mode"],
+            "accepted_action_kinds": list(execution_contract["accepted_action_kinds"]),
+            "executable_covered_case_count": executable_covered if executable_required else None,
+            "executable_uncovered_case_count": (
+                assessed - executable_covered if executable_required else None
+            ),
             "coverage_fraction": covered / assessed if assessed else None,
             "category_present_in_source_taxonomy": category in category_counts,
         })
@@ -166,6 +255,7 @@ def evaluate(root: Path = ROOT) -> dict:
         "response_stage_contract_sha256": _sha256(stage_path),
         "action_playbook_coverage_sha256": _sha256(coverage_path),
         "playbook_catalog_sha256": _sha256(playbook_path),
+        "virtual_safety_runtime_sha256": _sha256(root / VIRTUAL_SAFETY.relative_to(ROOT)),
     }
     source_hash_matches = (
         (action.get("source") or {}).get("sha256")
@@ -180,6 +270,7 @@ def evaluate(root: Path = ROOT) -> dict:
         and all(row["uncovered_case_count"] == 0 for row in category_rows)
         and covered_action_category_case_count == action_category_case_count
         and not uncovered
+        and not executable_uncovered
         and all(row["stage_contract"] == "pass" for row in case_rows)
         and all(row["registered_candidate_plan_ids"] for row in case_rows)
         and source_hash_matches
@@ -188,7 +279,7 @@ def evaluate(root: Path = ROOT) -> dict:
     )
 
     return {
-        "schema_version": 1,
+        "schema_version": 2,
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "status": "completed_public_accident_response_coverage_evaluation",
         "evidence_role": "public_accident_grounded_interface_evaluation",
@@ -197,12 +288,16 @@ def evaluate(root: Path = ROOT) -> dict:
             "response_stage_contract": "research/hiad_response_stage_contract.json",
             "action_playbook_coverage": "research/hiad_action_playbook_coverage.json",
             "playbook_catalog": "src/h2station/data/emergency_playbooks.json",
+            "virtual_safety_runtime": "src/h2station/virtual_safety.py",
             "hashes": source_hashes,
             "action_evidence_source_hash_matches": source_hash_matches,
         },
         "contract": {
             "required_stage_names": list(STAGES),
             "category_required_stages": category_stage_obligations,
+            "category_execution_contract": CATEGORY_EXECUTION_CONTRACT,
+            "virtual_actions_are_simulation_only": True,
+            "external_notification_performed": False,
             "raw_action_text_used": False,
             "effectiveness_claimed": False,
             "safety_claimed": False,
@@ -216,15 +311,28 @@ def evaluate(root: Path = ROOT) -> dict:
             "category_count": len(category_rows),
             "covered_category_count": sum(row["uncovered_case_count"] == 0 for row in category_rows),
             "uncovered_case_category_count": len(uncovered),
+            "active_action_category_count": sum(
+                row["execution_requirement"] == "virtual_command_required"
+                for row in category_rows
+            ),
+            "executable_case_category_count": sum(
+                int(row["assessed_case_count"])
+                for row in category_rows
+                if row["execution_requirement"] == "virtual_command_required"
+            ),
+            "executable_uncovered_case_category_count": len(executable_uncovered),
             "category_counts": category_counts,
             "contract_pass": contract_pass,
         },
         "categories": category_rows,
         "cases": case_rows,
         "uncovered": uncovered,
+        "executable_uncovered": executable_uncovered,
         "claim_boundary": (
             "This artifact shows only that action categories derived from public HIAD "
-            "metadata can be routed to registered staged response plans. A case with "
+            "metadata can be routed to registered staged response plans and that active "
+            "response categories expose at least one simulation-only command. Virtual "
+            "responder notification never contacts an external service. A case with "
             "no recorded public category is not treated as having no response. The "
             "result does not judge source actions, validate physics, estimate risk, "
             "or demonstrate SAGA/LLM/operator effectiveness or safety. Independent "
@@ -247,16 +355,20 @@ def _markdown(report: dict) -> str:
         f"- 범주가 기록되지 않은 사례: **{aggregate['no_public_action_category_case_count']}** (대응 없음으로 해석하지 않음)",
         f"- 범주 커버리지: **{aggregate['covered_category_count']}/{aggregate['category_count']}**",
         f"- 미커버 사례-범주 쌍: **{aggregate['uncovered_case_category_count']}**",
+        f"- 실행명령 필수 범주: **{aggregate['active_action_category_count']}**",
+        f"- 실행명령 미커버 사례-범주 쌍: **{aggregate['executable_uncovered_case_category_count']}**",
         "",
         "## 범주별 단계 계약",
         "",
-        "| 공개 조치 범주 | 사례 수 | 커버 사례 | 필수 단계 |",
-        "|---|---:|---:|---|",
+        "| 공개 조치 범주 | 사례 수 | 커버 사례 | 실행 계약 | 실행 미커버 | 필수 단계 |",
+        "|---|---:|---:|---|---:|---|",
     ]
     for row in report["categories"]:
         lines.append(
             f"| `{row['category']}` | {row['assessed_case_count']} | "
-            f"{row['covered_case_count']} | {', '.join(row['required_stages'])} |"
+            f"{row['covered_case_count']} | `{row['execution_requirement']}` | "
+            f"{row['executable_uncovered_case_count'] if row['executable_uncovered_case_count'] is not None else '해당 없음'} | "
+            f"{', '.join(row['required_stages'])} |"
         )
     lines.extend([
         "",

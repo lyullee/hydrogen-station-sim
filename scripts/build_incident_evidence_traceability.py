@@ -68,6 +68,11 @@ def build(root: Path) -> dict[str, Any]:
             "cases_with_public_action_categories": response["aggregate"]["public_action_category_case_count"],
             "action_category_count": response["aggregate"]["category_count"],
             "covered_action_category_count": response["aggregate"]["covered_category_count"],
+            "active_action_category_count": response["aggregate"]["active_action_category_count"],
+            "executable_case_category_count": response["aggregate"]["executable_case_category_count"],
+            "executable_uncovered_case_category_count": response["aggregate"]["executable_uncovered_case_category_count"],
+            "virtual_actions_are_simulation_only": response["contract"]["virtual_actions_are_simulation_only"],
+            "external_notification_performed": response["contract"]["external_notification_performed"],
             "contract_pass": response["aggregate"]["contract_pass"],
         },
         "supported_claim": "Public incident metadata can be mapped to registered staged response families and used as traceability evidence for grounded decision-support prompts.",
@@ -99,6 +104,7 @@ human-effectiveness study.
 HIAD executed {h['passed_family_recipes']}/{h['executable_family_recipes']} family recipes.
 KHK executed {k['passed_family_recipes']}/{k['executable_family_recipes']} family recipes.
 The HIAD response contract covered {r['covered_action_category_count']}/{r['action_category_count']} action categories across {r['cases_with_public_action_categories']} cases; contract pass: `{r['contract_pass']}`.
+Five active-response categories covered {r['executable_case_category_count']} case-category obligations with {r['executable_uncovered_case_category_count']} missing simulation-command links. Virtual notification does not contact an external service.
 
 ## Interpretation boundary
 

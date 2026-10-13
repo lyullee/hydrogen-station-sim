@@ -222,6 +222,17 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert taxonomy["category_patterns_version"] == "hiad-action-taxonomy-v1"
     assert sum(taxonomy["category_counts"].values()) > 0
     assert "does not judge whether an action was correct or safe" in taxonomy["claim_limit"]
+    command_coverage = traceability["active_response_command_coverage"]
+    assert command_coverage["active_action_category_count"] == 5
+    assert command_coverage["case_category_obligation_count"] == 72
+    assert command_coverage["uncovered_case_category_count"] == 0
+    assert command_coverage["virtual_actions_are_simulation_only"] is True
+    assert command_coverage["external_notification_performed"] is False
+    summary_command_coverage = prompt_evidence_summary(idle)[
+        "public_incident_traceability"
+    ]["active_response_command_coverage"]
+    assert summary_command_coverage["case_category_obligation_count"] == 72
+    assert "never contacts an external service" in command_coverage["claim_limit"]
     accident_inventory = idle["response_evidence"]["public_accident_report_inventory"]
     assert accident_inventory["public_report_count"] == 23
     assert accident_inventory["incident_code_count"] == 26
@@ -1865,6 +1876,12 @@ def test_compact_data_used_reports_available_and_applied_station_profile():
     )["public_evidence_inventory"]
     incident_traceability = inventory["public_incident_traceability"]
     assert incident_traceability["status"] == "available"
+    response_grounding = incident_traceability["response_grounding"]
+    assert response_grounding["active_action_category_count"] == 5
+    assert response_grounding["executable_case_category_count"] == 72
+    assert response_grounding["executable_uncovered_case_category_count"] == 0
+    assert response_grounding["virtual_actions_are_simulation_only"] is True
+    assert response_grounding["external_notification_performed"] is False
     assert incident_traceability["source_hashes_verified"] is True
     assert incident_traceability["hiad"]["case_count"] == 34
     assert incident_traceability["response_grounding"]["contract_pass"] is True

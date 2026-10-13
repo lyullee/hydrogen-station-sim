@@ -1,23 +1,23 @@
 {
   "schema_version": 1,
   "artifact_type": "hiad_virtual_response_action_execution_consistency_audit",
-  "generated_at_utc": "2026-10-11T17:07:17.168407+00:00",
+  "generated_at_utc": "2026-10-13T08:55:29.307762+00:00",
   "status": "completed_virtual_action_execution_audit",
   "evidence_role": "public_action_category_to_simulation_command_consistency_only",
   "source": {
     "hiad_replay_coverage": "research/hiad_digital_twin_replay_coverage_2026_10_08.json",
-    "hiad_replay_coverage_sha256": "a43f645c8e2fc468eb33edaecde7a31102eced4c9977de6af5e4968ff922f6df",
+    "hiad_replay_coverage_sha256": "26978656a22337717cac0fca3ec1f88fe84b400b04d10647023fb1d64bfd7a4d",
     "action_evidence": "research/hiad_action_evidence.json",
     "action_evidence_sha256": "72f2550eabea6a4207a5d59c98bd99520e217fd2d4f8597e5d1d72f2ef87e1dd",
     "playbook_catalog": "src/h2station/data/emergency_playbooks.json",
     "playbook_catalog_sha256": "d8fedb036a91b5adae3934f1604a17966b8f0f9200c52f4d40bf2da2243a7c6c",
     "virtual_safety_runtime": "src/h2station/virtual_safety.py",
-    "virtual_safety_runtime_sha256": "4484f9cdc2288c046983360a8e34f8e0a342c51aa4b0569402ba853ae3dca6d3"
+    "virtual_safety_runtime_sha256": "5d55b14ab716417ec0eb92086e0bd5c9e6a7db7f48da6baa866834db4915f775"
   },
   "runtime": {
-    "family_count": 9,
-    "family_pass_count": 9,
-    "action_count": 39,
+    "family_count": 10,
+    "family_pass_count": 10,
+    "action_count": 52,
     "all_family_sequences_passed": true,
     "failure_feedback_guard": {
       "status": "passed",
@@ -38,8 +38,8 @@
         "completion_feedback_confirmed": true,
         "process_settings_changed": true
       },
-      "action_count": 2,
-      "confirmed_action_count": 2,
+      "action_count": 4,
+      "confirmed_action_count": 4,
       "actions": [
         {
           "kind": "operation.stop",
@@ -51,6 +51,18 @@
           "kind": "valve.close",
           "target": "compressor.discharge",
           "status": "commanded",
+          "feedback_status": "confirmed"
+        },
+        {
+          "kind": "ventilation.on",
+          "target": "compressor",
+          "status": "confirmed",
+          "feedback_status": "confirmed"
+        },
+        {
+          "kind": "responders.notify",
+          "target": "virtual_response_team",
+          "status": "confirmed",
           "feedback_status": "confirmed"
         }
       ],
@@ -69,7 +81,9 @@
         "pressure_recharge": false,
         "vehicle_1": true,
         "vehicle_2": true
-      }
+      },
+      "source_representation": "proxy_partial_replay",
+      "physical_scenario_replay_run": true
     },
     "external_fire": {
       "family": "external_fire",
@@ -81,8 +95,8 @@
         "completion_feedback_confirmed": true,
         "process_settings_changed": true
       },
-      "action_count": 7,
-      "confirmed_action_count": 7,
+      "action_count": 8,
+      "confirmed_action_count": 8,
       "actions": [
         {
           "kind": "operation.stop",
@@ -125,6 +139,12 @@
           "target": "medium",
           "status": "confirmed",
           "feedback_status": "confirmed"
+        },
+        {
+          "kind": "responders.notify",
+          "target": "virtual_response_team",
+          "status": "confirmed",
+          "feedback_status": "confirmed"
         }
       ],
       "errors": [],
@@ -143,7 +163,9 @@
         "pressure_recharge": false,
         "vehicle_1": false,
         "vehicle_2": false
-      }
+      },
+      "source_representation": "direct_physical_replay",
+      "physical_scenario_replay_run": true
     },
     "fueling_fault": {
       "family": "fueling_fault",
@@ -155,8 +177,8 @@
         "completion_feedback_confirmed": true,
         "process_settings_changed": true
       },
-      "action_count": 3,
-      "confirmed_action_count": 3,
+      "action_count": 5,
+      "confirmed_action_count": 5,
       "actions": [
         {
           "kind": "operation.stop",
@@ -173,6 +195,18 @@
         {
           "kind": "vehicle.evacuate",
           "target": "vehicle_1",
+          "status": "confirmed",
+          "feedback_status": "confirmed"
+        },
+        {
+          "kind": "ventilation.on",
+          "target": "dispenser",
+          "status": "confirmed",
+          "feedback_status": "confirmed"
+        },
+        {
+          "kind": "responders.notify",
+          "target": "virtual_response_team",
           "status": "confirmed",
           "feedback_status": "confirmed"
         }
@@ -192,7 +226,9 @@
         "pressure_recharge": true,
         "vehicle_1": false,
         "vehicle_2": true
-      }
+      },
+      "source_representation": "direct_physical_replay",
+      "physical_scenario_replay_run": true
     },
     "gas_release": {
       "family": "gas_release",
@@ -204,8 +240,8 @@
         "completion_feedback_confirmed": true,
         "process_settings_changed": true
       },
-      "action_count": 6,
-      "confirmed_action_count": 6,
+      "action_count": 7,
+      "confirmed_action_count": 7,
       "actions": [
         {
           "kind": "operation.stop",
@@ -242,6 +278,12 @@
           "target": "storage",
           "status": "confirmed",
           "feedback_status": "confirmed"
+        },
+        {
+          "kind": "responders.notify",
+          "target": "virtual_response_team",
+          "status": "confirmed",
+          "feedback_status": "confirmed"
         }
       ],
       "errors": [],
@@ -260,7 +302,9 @@
         "pressure_recharge": false,
         "vehicle_1": false,
         "vehicle_2": false
-      }
+      },
+      "source_representation": "direct_physical_replay",
+      "physical_scenario_replay_run": true
     },
     "hose_connection": {
       "family": "hose_connection",
@@ -272,8 +316,8 @@
         "completion_feedback_confirmed": true,
         "process_settings_changed": true
       },
-      "action_count": 3,
-      "confirmed_action_count": 3,
+      "action_count": 4,
+      "confirmed_action_count": 4,
       "actions": [
         {
           "kind": "operation.stop",
@@ -290,6 +334,12 @@
         {
           "kind": "vehicle.evacuate",
           "target": "vehicle_1",
+          "status": "confirmed",
+          "feedback_status": "confirmed"
+        },
+        {
+          "kind": "responders.notify",
+          "target": "virtual_response_team",
           "status": "confirmed",
           "feedback_status": "confirmed"
         }
@@ -309,7 +359,9 @@
         "pressure_recharge": true,
         "vehicle_1": false,
         "vehicle_2": true
-      }
+      },
+      "source_representation": "direct_physical_replay",
+      "physical_scenario_replay_run": true
     },
     "hydrogen_fire": {
       "family": "hydrogen_fire",
@@ -321,8 +373,8 @@
         "completion_feedback_confirmed": true,
         "process_settings_changed": true
       },
-      "action_count": 7,
-      "confirmed_action_count": 7,
+      "action_count": 8,
+      "confirmed_action_count": 8,
       "actions": [
         {
           "kind": "operation.stop",
@@ -365,6 +417,12 @@
           "target": "medium",
           "status": "confirmed",
           "feedback_status": "confirmed"
+        },
+        {
+          "kind": "responders.notify",
+          "target": "virtual_response_team",
+          "status": "confirmed",
+          "feedback_status": "confirmed"
         }
       ],
       "errors": [],
@@ -383,7 +441,9 @@
         "pressure_recharge": false,
         "vehicle_1": false,
         "vehicle_2": false
-      }
+      },
+      "source_representation": "direct_physical_replay",
+      "physical_scenario_replay_run": true
     },
     "isolation_failure": {
       "family": "isolation_failure",
@@ -438,7 +498,9 @@
         "pressure_recharge": false,
         "vehicle_1": false,
         "vehicle_2": false
-      }
+      },
+      "source_representation": "proxy_partial_replay",
+      "physical_scenario_replay_run": true
     },
     "overpressure": {
       "family": "overpressure",
@@ -450,8 +512,8 @@
         "completion_feedback_confirmed": true,
         "process_settings_changed": true
       },
-      "action_count": 5,
-      "confirmed_action_count": 5,
+      "action_count": 6,
+      "confirmed_action_count": 6,
       "actions": [
         {
           "kind": "operation.stop",
@@ -482,6 +544,12 @@
           "target": "storage",
           "status": "confirmed",
           "feedback_status": "confirmed"
+        },
+        {
+          "kind": "responders.notify",
+          "target": "virtual_response_team",
+          "status": "confirmed",
+          "feedback_status": "confirmed"
         }
       ],
       "errors": [],
@@ -500,7 +568,9 @@
         "pressure_recharge": false,
         "vehicle_1": false,
         "vehicle_2": false
-      }
+      },
+      "source_representation": "direct_physical_replay",
+      "physical_scenario_replay_run": true
     },
     "precooling_fault": {
       "family": "precooling_fault",
@@ -543,17 +613,72 @@
         "pressure_recharge": true,
         "vehicle_1": false,
         "vehicle_2": true
-      }
+      },
+      "source_representation": "direct_physical_replay",
+      "physical_scenario_replay_run": true
+    },
+    "structural_damage": {
+      "family": "structural_damage",
+      "representative_node_id": "N08",
+      "status": "passed",
+      "checks": {
+        "template_nonempty": true,
+        "commands_accepted": true,
+        "completion_feedback_confirmed": true,
+        "process_settings_changed": true
+      },
+      "action_count": 4,
+      "confirmed_action_count": 4,
+      "actions": [
+        {
+          "kind": "operation.stop",
+          "target": "all",
+          "status": "confirmed",
+          "feedback_status": "confirmed"
+        },
+        {
+          "kind": "access.restrict",
+          "target": "storage",
+          "status": "confirmed",
+          "feedback_status": "confirmed"
+        },
+        {
+          "kind": "personnel.evacuate",
+          "target": "storage",
+          "status": "confirmed",
+          "feedback_status": "confirmed"
+        },
+        {
+          "kind": "responders.notify",
+          "target": "virtual_response_team",
+          "status": "confirmed",
+          "feedback_status": "confirmed"
+        }
+      ],
+      "errors": [],
+      "closed_valves": [],
+      "process_settings_before": {
+        "trailer_supply": true,
+        "pressure_recharge": true,
+        "vehicle_1": true,
+        "vehicle_2": true
+      },
+      "process_settings_after": {
+        "trailer_supply": false,
+        "pressure_recharge": false,
+        "vehicle_1": false,
+        "vehicle_2": false
+      },
+      "source_representation": "response_only_no_physical_model",
+      "physical_scenario_replay_run": false
     }
   },
-  "excluded_response_only_families": [
-    "structural_damage"
-  ],
+  "excluded_response_only_families": [],
   "claim_boundary": [
     "Each sequence is a simulation-only command/feedback replay using representative node IDs; it is not a reconstruction of a historical HIAD event.",
     "A pass means the registered template is accepted by the virtual runtime, changes the requested process/safety state, and reports completion feedback.",
     "The stuck-open check confirms command and feedback are kept separate; it does not estimate field valve reliability or diagnostic sensitivity.",
     "No operator benefit, LLM effectiveness, accident frequency, consequence distance or field safety claim is made.",
-    "Structural damage remains excluded because the current process model has no structural mechanics."
+    "Structural-damage response verifies virtual stop, isolation, evacuation and notification controls only; the current process model still has no structural mechanics."
   ]
 }
