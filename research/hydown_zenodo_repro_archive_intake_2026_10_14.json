@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "artifact_type": "public_reproducibility_archive_intake",
+  "generated_at": "2026-10-14",
+  "source": {
+    "title": "Supplementary material for Open Source Tools for Pressure Vessel Thermo-Mechanical Response and Safety Analysis",
+    "doi": "10.5281/zenodo.20728325",
+    "record_url": "https://doi.org/10.5281/zenodo.20728325",
+    "publisher": "Zenodo",
+    "archive_file": "blowdown_reproducibility_archive.zip",
+    "archive_size_bytes": 3193229,
+    "archive_md5": "a210c0d9b40562cc1349737d838b77f8",
+    "record_license": null,
+    "rights_boundary": "The Zenodo record does not expose a machine-readable license field in the API response. Rights for each bundled input and derived data file must be checked before redistribution or validation reuse."
+  },
+  "observed_contents": {
+    "hydrogen_validation_inputs": [
+      "inputs/hyddown_validation/dickens_typeIII.yml",
+      "inputs/hyddown_validation/Striednig_fillingH2_5MPa_min.yml",
+      "inputs/hyddown_validation/Striednig_fillingH2_10MPa_min.yml",
+      "inputs/hyddown_validation/Striednig_fillingH2_30MPa_min.yml",
+      "inputs/hyddown_validation/Byrnes_run7.yml",
+      "inputs/hyddown_validation/Byrnes_run8.yml",
+      "inputs/hyddown_validation/Byrnes_run9.yml"
+    ],
+    "embedded_measurements": true,
+    "measurement_format": "YAML validation blocks with time/value arrays",
+    "reproducibility_scripts": true,
+    "hydrogen_storage_analysis": true
+  },
+  "eligibility": {
+    "new_independent_prospective_holdout": false,
+    "reason": "The archive contains cases and validation outcomes that overlap with already accessed public experiments and the numerical content was inspected after the existing protocols were frozen.",
+    "component_diagnostic_use": true,
+    "runtime_parameter_promotion": false,
+    "validation_gate_promotion": false,
+    "station_to_vehicle_full_loop": false
+  },
+  "permitted_use": [
+    "reproduce an external open-source solver result",
+    "compare thermodynamic and heat-transfer assumptions",
+    "identify missing geometry, boundary-condition or observation metadata",
+    "design a future pre-access holdout protocol"
+  ],
+  "prohibited_use": [
+    "calling the archive a new independent validation set",
+    "selecting runtime parameters from post-access comparisons",
+    "claiming HRS station-to-vehicle validation",
+    "redistributing bundled files without rights review"
+  ],
+  "claim_boundary": "This intake strengthens reproducibility and model-development evidence only. It does not close Dickens, Schefer, PRESLHY, Grune or full-loop validation gates."
+}
