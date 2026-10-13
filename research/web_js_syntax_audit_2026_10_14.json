@@ -1,0 +1,9 @@
+{
+  "generated_at": "2026-10-14",
+  "scope": "web/*.js and web/*.mjs",
+  "checker": "Node.js --check",
+  "files_checked": 23,
+  "syntax_failures": 0,
+  "runtime_behavior_or_browser_integration_validated": false,
+  "claim_boundary": "Static ECMAScript syntax check only; this does not replace browser interaction, physics or external-validation tests."
+}
