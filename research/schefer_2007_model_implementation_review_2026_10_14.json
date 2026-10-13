@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "artifact_type": "schefer_2007_model_implementation_review",
+  "recorded_at": "2026-10-14T05:42:56.900810+09:00",
+  "source": {
+    "implementation": "src/h2station/schefer_2007_validation.py",
+    "holdout_result": "research/schefer_2007_holdout_result.json",
+    "post_outcome_diagnostic": "research/schefer_2007_nonadiabatic_diagnostic_2026_10_14.json"
+  },
+  "checks": {
+    "pressure_basis": "absolute Pa internally; psi only at the evaluator output boundary",
+    "initial_conditions": "43.1 MPa absolute, 290 K, 1.234 m3 vessel, 5.08 mm restriction, 101325 Pa ambient",
+    "mass_balance": "dm/dt = -m_dot",
+    "energy_balance": "dU/dt = -m_dot*h_out with real-gas state reconstructed from rho and u",
+    "restriction_area": "pi*d^2/4 using SI metres",
+    "eos_state_round_trip": "CoolProp hydrogen storage_from_pt and storage_from_rho_u are used consistently",
+    "numerical_interpolation": "monotonic solver output interpolated only at declared measurement times",
+    "unit_or_sign_error_found": false
+  },
+  "observed_failure": {
+    "pressure_nrmse_percent_initial_measured": 11.580711004119967,
+    "median_absolute_percentage_error_percent": 27.46396061123326,
+    "half_pressure_time_relative_error_percent": 6.511877481513398,
+    "interpretation": "half-pressure timing passes while curve-shape and pointwise error fail"
+  },
+  "boundary_hypotheses": [
+    "unpublished valve-opening profile or effective discharge coefficient",
+    "downstream line inventory and pressure-wave/transient restriction effects",
+    "unresolved vessel-wall thermal boundary and apparatus geometry"
+  ],
+  "decision": {
+    "status": "NO_IMPLEMENTATION_UNIT_BUG_FOUND",
+    "runtime_model_changed": false,
+    "frozen_holdout_changed": false,
+    "validation_gate_changed": false,
+    "next_required_evidence": "rights-cleared time-resolved apparatus data including valve opening, line volume and boundary conditions before any new frozen rerun"
+  },
+  "claim_boundary": "This is an implementation review, not a new validation result. It does not promote the Schefer gate or authorize runtime parameter changes."
+}
