@@ -1,0 +1,41 @@
+{
+  "schema_version": "1.0",
+  "artifact_type": "public_fueling_data_recheck",
+  "generated_at": "2026-10-14T06:40:00+09:00",
+  "purpose": "Screen additional public fueling and tank experiments for an independent holdout without promoting incomplete records.",
+  "candidates": [
+    {
+      "id": "jrc_gastef_reference_data",
+      "source": "https://publications.jrc.ec.europa.eu/repository/handle/JRC76380",
+      "doi": "10.1016/j.ijhydene.2014.03.227",
+      "channels_described": ["tank pressure", "internal temperature", "external temperature", "gas-path pressure/temperature"],
+      "decision": "CONTACT_REQUEST_CANDIDATE_ONLY",
+      "reason": "Public record describes the reference campaign but exposes no reusable machine-readable trace or reuse terms."
+    },
+    {
+      "id": "kuroki_hitrf_36l",
+      "source": "https://doi.org/10.1002/ente.202300239",
+      "channels_described": ["station inlet pressure", "tank pressure", "gas temperature", "liner temperature"],
+      "decision": "PUBLISHED_EXPERIMENT_DESCRIPTION_DATA_NOT_SHARED",
+      "reason": "The article provides boundary conditions and figures, but the underlying logger data are not publicly released."
+    },
+    {
+      "id": "nrel_h2fills_hdvs",
+      "source": "https://www.nrel.gov/hydrogen/h2fills",
+      "channels_described": ["vehicle tank pressure/temperature", "mass transfer"],
+      "decision": "PARTIAL_TANK_BOUNDARY_ONLY",
+      "reason": "The local workbook is independently screened as a tank candidate, but station-side channels and redistribution rights are absent."
+    },
+    {
+      "id": "nrel_retail_composite_products",
+      "source": "https://www.nrel.gov/hydrogen/infrastructure-cdps-retail.html",
+      "channels_described": ["aggregate fueling counts", "final pressure distributions", "fueling time distributions"],
+      "decision": "CONTEXT_ONLY",
+      "reason": "Aggregate products do not provide synchronized event-level station-to-vehicle traces."
+    }
+  ],
+  "result": "NO_NEW_PUBLIC_SYNCHRONIZED_STATION_TO_VEHICLE_HOLDOUT_ADMITTED",
+  "scope_effect": "Keep full-loop external validation outside the primary claim and retain the component-level validation plan.",
+  "next_action": "Request a rights-cleared, de-identified logger export from a listed custodian and freeze the protocol before inspecting outcomes.",
+  "claim_boundary": "A public paper or aggregate dashboard is not treated as raw time-series validation evidence."
+}
