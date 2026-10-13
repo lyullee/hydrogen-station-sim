@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "artifact_type": "liang_2026_release_postaccess_benchmark_protocol",
+  "recorded_at": "2026-10-13",
+  "source": {
+    "doi": "10.19912/j.0254-0096.tynxb.2024-2238",
+    "url": "https://www.tynxb.org.cn/CN/10.19912/j.0254-0096.tynxb.2024-2238",
+    "table": "Table 2",
+    "rows": 7,
+    "medium": "hydrogen",
+    "release_geometry": "1 mm circular nozzle; measured p2 pressure near nozzle"
+  },
+  "protocol_status": "POST_ACCESS_ZERO_FIT_BENCHMARK_NOT_PROSPECTIVE",
+  "outcomes_accessed_before_protocol": true,
+  "parameter_fitting_allowed": false,
+  "production_model_change_allowed": false,
+  "locked_model": {
+    "implementation": "DynamicLeakModel real-gas isentropic restriction",
+    "discharge_coefficient": 0.8,
+    "nozzle_diameter_m": 0.001,
+    "temperature_k": 300.15,
+    "ambient_pressure_pa": 101325.0
+  },
+  "screens": {
+    "runtime_mass_flow": {
+      "nrmse_percent_of_observed_peak_max": 15.0,
+      "median_absolute_percentage_error_max": 20.0,
+      "decision_rule": "both screens must pass",
+      "threshold_provenance": "Existing Proust component release protocol thresholds; applied without adjustment after viewing Liang outcomes"
+    },
+    "real_gas_equation_parity": {
+      "nrmse_percent_of_paper_theory_peak_max": 2.0,
+      "median_absolute_percentage_error_max": 2.0,
+      "decision_rule": "both screens must pass",
+      "purpose": "Separate EOS/choked-flow equation parity from empirical discharge-coefficient error"
+    }
+  },
+  "diagnostic_only": {
+    "discharge_coefficient": 0.6,
+    "reason": "A bounded comparison with the article's reported 0.60 to 0.57 real-gas coefficients and the pre-existing Proust sensitivity grid",
+    "runtime_promotion": false
+  },
+  "locked_inputs": [
+    {
+      "path": "data/public_validation/derived/liang_2026_table2.csv",
+      "sha256": "f8e15793b1c859504817a6272448ec0faf25894e02199b0ec91b9eec6528ec50"
+    },
+    {
+      "path": "src/h2station/liang_2026_release_benchmark.py",
+      "sha256": "4a58080ff64767b7b6eabddee25dc4d1877d87503507b0d2e8a9d4aa797b2dc0"
+    },
+    {
+      "path": "src/h2station/risk/live.py",
+      "sha256": "73b9d430fd02ccad87758aa206ce2f31fdb78604225f7f3a3579231097fd97d4"
+    },
+    {
+      "path": "scripts/run_liang_2026_release_benchmark.py",
+      "sha256": "f8a1891a64054b6d72e20dc40316add9019cd276ece67fb7bdcf58227d642628"
+    }
+  ],
+  "claim_boundary": "The seven numerical outcomes were inspected before this protocol was written. The result is a post-access zero-fit benchmark, not a prospective holdout or independent validation. The Cd=0.6 comparison is diagnostic only and cannot be promoted to runtime from this dataset. The campaign does not establish coefficients for cracks, valves, long supply lines, or other station geometries."
+}

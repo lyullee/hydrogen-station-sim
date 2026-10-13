@@ -132,7 +132,8 @@ def main() -> int:
     encoded = json.dumps(payload, ensure_ascii=False, indent=2) + "\n"
     if args.output:
         args.output.parent.mkdir(parents=True, exist_ok=True)
-        args.output.write_text(encoded, encoding="utf-8")
+        with args.output.open("w", encoding="utf-8", newline="\n") as handle:
+            handle.write(encoded)
     else:
         print(encoded, end="")
     return 0 if not payload["high_confidence_secret_hits"] else 2

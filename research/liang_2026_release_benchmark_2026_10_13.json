@@ -1,0 +1,171 @@
+{
+  "source": {
+    "doi": "10.19912/j.0254-0096.tynxb.2024-2238",
+    "url": "https://www.tynxb.org.cn/CN/10.19912/j.0254-0096.tynxb.2024-2238",
+    "table": "Table 2",
+    "medium": "hydrogen",
+    "geometry": "1 mm circular nozzle; p2 pressure near nozzle",
+    "temperature_k": 300.15,
+    "ambient_pressure_pa": 101325.0
+  },
+  "evidence_role": "POST_ACCESS_ZERO_FIT_BENCHMARK_NOT_PROSPECTIVE",
+  "outcomes_accessed_before_protocol": true,
+  "parameter_fitting": false,
+  "production_model_parameter_changed": false,
+  "runtime_model": {
+    "discharge_coefficient": 0.8,
+    "metrics": {
+      "nrmse_percent_of_observed_peak": 28.426666827358154,
+      "median_absolute_percentage_error": 39.04693043295591,
+      "mean_percentage_bias": 38.454898519664376,
+      "maximum_absolute_percentage_error": 40.88153940696893
+    },
+    "screens": {
+      "nrmse_le_15_percent": false,
+      "median_ape_le_20_percent": false
+    },
+    "joint_screen_pass": false
+  },
+  "real_gas_equation_parity": {
+    "comparison": "runtime Cd=1 prediction versus paper Abel-Noble theory",
+    "metrics": {
+      "nrmse_percent_of_observed_peak": 0.5851979556245009,
+      "median_absolute_percentage_error": 0.8060080452902673,
+      "mean_percentage_bias": 0.7837464895529493,
+      "maximum_absolute_percentage_error": 0.932527975028773
+    },
+    "screens": {
+      "nrmse_le_2_percent": true,
+      "median_ape_le_2_percent": true
+    },
+    "joint_screen_pass": true
+  },
+  "diagnostic_only_cd_0_6": {
+    "discharge_coefficient": 0.6,
+    "metrics": {
+      "nrmse_percent_of_observed_peak": 3.62009944622306,
+      "median_absolute_percentage_error": 4.285197824716914,
+      "mean_percentage_bias": 3.8411738897482675,
+      "maximum_absolute_percentage_error": 5.661154555226692
+    },
+    "not_promoted_to_runtime": true
+  },
+  "effective_discharge_coefficient": {
+    "minimum": 0.567852965951071,
+    "median": 0.5753453150738449,
+    "maximum": 0.5944551023841963
+  },
+  "rows": [
+    {
+      "case_id": "1",
+      "nozzle_pressure_mpa": 11.124,
+      "measured_mass_flow_kg_min": 0.19,
+      "paper_ideal_mass_flow_kg_min": 0.301,
+      "paper_real_gas_mass_flow_kg_min": 0.319,
+      "paper_abel_noble_mass_flow_kg_min": 0.318,
+      "paper_ideal_cd": 0.63,
+      "paper_real_cd": 0.6,
+      "runtime_predicted_mass_flow_kg_min": 0.25569635013707465,
+      "unit_cd_predicted_mass_flow_kg_min": 0.3196204376713433,
+      "diagnostic_cd_0_6_mass_flow_kg_min": 0.19177226260280597,
+      "implied_discharge_coefficient": 0.5944551023841963
+    },
+    {
+      "case_id": "2",
+      "nozzle_pressure_mpa": 17.797,
+      "measured_mass_flow_kg_min": 0.3,
+      "paper_ideal_mass_flow_kg_min": 0.465,
+      "paper_real_gas_mass_flow_kg_min": 0.508,
+      "paper_abel_noble_mass_flow_kg_min": 0.504,
+      "paper_ideal_cd": 0.65,
+      "paper_real_cd": 0.6,
+      "runtime_predicted_mass_flow_kg_min": 0.406006893467194,
+      "unit_cd_predicted_mass_flow_kg_min": 0.5075086168339924,
+      "diagnostic_cd_0_6_mass_flow_kg_min": 0.30450517010039546,
+      "implied_discharge_coefficient": 0.5911229682591397
+    },
+    {
+      "case_id": "3",
+      "nozzle_pressure_mpa": 32.749,
+      "measured_mass_flow_kg_min": 0.53,
+      "paper_ideal_mass_flow_kg_min": 0.789,
+      "paper_real_gas_mass_flow_kg_min": 0.921,
+      "paper_abel_noble_mass_flow_kg_min": 0.909,
+      "paper_ideal_cd": 0.67,
+      "paper_real_cd": 0.58,
+      "runtime_predicted_mass_flow_kg_min": 0.7339813434344092,
+      "unit_cd_predicted_mass_flow_kg_min": 0.9174766792930116,
+      "diagnostic_cd_0_6_mass_flow_kg_min": 0.5504860075758069,
+      "implied_discharge_coefficient": 0.5776713588059884
+    },
+    {
+      "case_id": "4",
+      "nozzle_pressure_mpa": 42.041,
+      "measured_mass_flow_kg_min": 0.67,
+      "paper_ideal_mass_flow_kg_min": 0.967,
+      "paper_real_gas_mass_flow_kg_min": 1.173,
+      "paper_abel_noble_mass_flow_kg_min": 1.154,
+      "paper_ideal_cd": 0.69,
+      "paper_real_cd": 0.58,
+      "runtime_predicted_mass_flow_kg_min": 0.9316144339008047,
+      "unit_cd_predicted_mass_flow_kg_min": 1.1645180423760058,
+      "diagnostic_cd_0_6_mass_flow_kg_min": 0.6987108254256034,
+      "implied_discharge_coefficient": 0.5753453150738449
+    },
+    {
+      "case_id": "5a",
+      "nozzle_pressure_mpa": 53.3,
+      "measured_mass_flow_kg_min": 0.83,
+      "paper_ideal_mass_flow_kg_min": 1.161,
+      "paper_real_gas_mass_flow_kg_min": 1.473,
+      "paper_abel_noble_mass_flow_kg_min": 1.444,
+      "paper_ideal_cd": 0.71,
+      "paper_real_cd": 0.57,
+      "runtime_predicted_mass_flow_kg_min": 1.1649068506429148,
+      "unit_cd_predicted_mass_flow_kg_min": 1.4561335633036434,
+      "diagnostic_cd_0_6_mass_flow_kg_min": 0.8736801379821859,
+      "implied_discharge_coefficient": 0.5700026569794288
+    },
+    {
+      "case_id": "5b",
+      "nozzle_pressure_mpa": 61.001,
+      "measured_mass_flow_kg_min": 0.94,
+      "paper_ideal_mass_flow_kg_min": 1.283,
+      "paper_real_gas_mass_flow_kg_min": 1.675,
+      "paper_abel_noble_mass_flow_kg_min": 1.638,
+      "paper_ideal_cd": 0.73,
+      "paper_real_cd": 0.57,
+      "runtime_predicted_mass_flow_kg_min": 1.3207553975277309,
+      "unit_cd_predicted_mass_flow_kg_min": 1.6509442469096633,
+      "diagnostic_cd_0_6_mass_flow_kg_min": 0.9905665481457979,
+      "implied_discharge_coefficient": 0.5693711351909966
+    },
+    {
+      "case_id": "5c",
+      "nozzle_pressure_mpa": 63.999,
+      "measured_mass_flow_kg_min": 0.98,
+      "paper_ideal_mass_flow_kg_min": 1.32,
+      "paper_real_gas_mass_flow_kg_min": 1.753,
+      "paper_abel_noble_mass_flow_kg_min": 1.712,
+      "paper_ideal_cd": 0.74,
+      "paper_real_cd": 0.57,
+      "runtime_predicted_mass_flow_kg_min": 1.3806390861882956,
+      "unit_cd_predicted_mass_flow_kg_min": 1.7257988577353693,
+      "diagnostic_cd_0_6_mass_flow_kg_min": 1.0354793146412216,
+      "implied_discharge_coefficient": 0.567852965951071
+    }
+  ],
+  "decision": {
+    "runtime_mass_flow_screen": "FAIL",
+    "real_gas_equation_parity_screen": "PASS",
+    "runtime_action": "UNCHANGED_PENDING_GEOMETRY_SPECIFIC_EXTERNAL_VALIDATION",
+    "interpretation": "The real-gas isentropic equation reproduces the paper's Abel-Noble theory, while the generic runtime Cd=0.8 overpredicts this round-nozzle experiment. Geometry-specific discharge behavior, not the EOS layer, controls the remaining discrepancy."
+  },
+  "claim_boundary": "The seven numerical outcomes were inspected before this protocol was written. This is a post-access zero-fit benchmark, not a prospective holdout or independent validation. The Cd=0.6 comparison is diagnostic only and is not promoted to runtime. One 1 mm round-nozzle campaign cannot define coefficients for cracks, valves, long lines, or other station release geometries.",
+  "schema_version": 1,
+  "artifact_type": "liang_2026_release_postaccess_benchmark",
+  "generated_at": "2026-10-13T08:31:25.533151+00:00",
+  "protocol_sha256": "dd87b6365b4c48d2be3ddb3ecac93f1e2996e7d00ff54949848f0b521b6e1fb9",
+  "data_sha256": "f8e15793b1c859504817a6272448ec0faf25894e02199b0ec91b9eec6528ec50",
+  "locked_input_hashes_verified": true
+}

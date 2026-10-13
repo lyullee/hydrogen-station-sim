@@ -396,6 +396,36 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert [row["nozzle_diameter_mm"] for row in release_boundary[
         "effective_coefficient_by_diameter"
     ]] == [1.0, 2.0, 3.0]
+    round_nozzle = release_boundary["round_nozzle_postaccess_benchmark"]
+    assert round_nozzle["source_doi"] == (
+        "10.19912/j.0254-0096.tynxb.2024-2238"
+    )
+    assert round_nozzle["runtime_discharge_coefficient"] == 0.8
+    assert round_nozzle["runtime_joint_screen_pass"] is False
+    assert round_nozzle["runtime_nrmse_percent"] == pytest.approx(
+        28.426666827358154
+    )
+    assert round_nozzle["runtime_mean_bias_percent"] > 38.0
+    assert round_nozzle["real_gas_equation_parity_pass"] is True
+    assert round_nozzle["theory_median_ape_percent"] < 1.0
+    assert round_nozzle["parameter_fitting"] is False
+    assert round_nozzle["production_model_parameter_changed"] is False
+    assert "실측 안전거리" in round_nozzle["operator_interpretation"]
+    compact_aperture = prompt_decision_evidence(idle)[
+        "validation_boundaries"
+    ]["high_pressure_aperture"]
+    assert compact_aperture["liang_role"] == "postaccess_zero_fit"
+    assert compact_aperture["liang_cd08_pass"] is False
+    assert compact_aperture["liang_bias_pct"] == pytest.approx(38.45)
+    assert compact_aperture["liang_eos_pass"] is True
+    without_liang = json.loads(json.dumps(idle))
+    del without_liang["response_evidence"][
+        "proust_release_model_validation_boundary"
+    ]["round_nozzle_postaccess_benchmark"]
+    compact_without_liang = prompt_decision_evidence(without_liang)[
+        "validation_boundaries"
+    ]["high_pressure_aperture"]
+    assert not any(key.startswith("liang_") for key in compact_without_liang)
     assert "corrected discharge law" in release_boundary["claim_limit"]
     cross_release = idle["response_evidence"][
         "cross_campaign_release_validation_boundary"

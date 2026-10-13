@@ -671,18 +671,17 @@ This result is retained as a negative transfer of the rigid-source depletion
 model; it does not validate cryogenic two-phase flow, ignition, dispersion,
 station control or separation distance.
 
-\subsection{Negative independent 90 MPa mass-flow transfer}
-All three INERIS/CEA diameter series met their eligibility minima, with 13, 10
-and 12 paired states for 1, 2 and 3 mm, respectively. None passed both screens.
-Peak-normalized NRMSE was 16.27\%, 16.01\% and 32.62\%, while median absolute
-percentage error was 25.07\%, 15.85\% and 32.88\%. The 1 mm series was generally
-underpredicted, whereas overprediction increased for the 2 and 3 mm series.
-Adding 101.325 kPa to the plotted pressure did not change any decision, and no
-prediction lay inside the narrow digitization interval. Post-outcome descriptive
-least-squares effective discharge coefficients were 1.141, 0.657 and 0.533; they
-are diagnostics and were not used to rerun or tune the primary result. The 0/3
-joint pass count rejects the independently validated high-pressure aperture-flow
-claim for the fixed model.
+\subsection{High-pressure aperture-flow transfer}
+The three INERIS/CEA 1, 2 and 3 mm series supplied 13, 10 and 12 states; none
+passed both screens. NRMSE was 16.27\%, 16.01\% and 32.62\%, and median error was
+25.07\%, 15.85\% and 32.88\%. Pressure-basis and digitization sensitivities did
+not change the 0/3 decision. Diagnostic effective coefficients were 1.141,
+0.657 and 0.533 and were not used for refitting. Separately, seven post-access
+1 mm round-nozzle points at 11.124--63.999 MPa \cite{liang2026} gave 28.43\%
+NRMSE, 39.05\% median error and +38.45\% bias with production $C_d=0.8$; the
+$C_d=1$ equation matched the paper's theory within 0.81\% median error. This
+localizes the latter mismatch to discharge loss, adds no validation pass and
+does not change runtime.
 
 \subsection{Negative Sandia/SRI transient mass-flow transfer}
 The Figure 3b digitization supplied 25 unique experimental coordinates. The
@@ -837,15 +836,12 @@ was too small and lacked a successful high-pressure case. E5.1 also shares the
 DisCha facility and investigators with E3.1, so even a passing result would have
 been separate-campaign evidence rather than independent-laboratory replication.
 
-The independent French campaign then exposed a different limitation. A constant
-coefficient multiplying nominal aperture area cannot represent the observed
-diameter scaling across a 10 m delivery path: the fitted diagnostic coefficient
-decreased strongly as diameter increased, while exceeding unity for 1 mm. This
-does not justify three new coefficients. It requires an explicit valve--pipe--
-orifice network, geometric uncertainty and a new untouched facility for testing.
-The Proust curves are now consumed development evidence. Their plot-digitization
-uncertainty was much smaller than the discrepancies and did not determine the
-negative result.
+The French campaign showed that one coefficient cannot represent diameter
+scaling across a 10 m delivery path. Its effective coefficient fell with
+diameter and exceeded unity for 1 mm, whereas Liang's near-nozzle round orifice
+implied 0.568--0.594 while the real-gas equation matched theory. These consumed
+data require geometry-specific valve--pipe--orifice boundaries and a new
+untouched facility, rather than post-hoc coefficients.
 
 The separate Sandia/SRI transient had low aggregate NRMSE but the adiabatic model
 depleted flow too quickly. It motivates non-adiabatic cylinder walls and explicit
@@ -1106,6 +1102,11 @@ Technology (2021),
 C. Proust, D. Jamois, E. Studer, High pressure hydrogen fires,
 \textit{International Journal of Hydrogen Energy} 36(3) (2011) 2367--2373,
 \href{https://doi.org/10.1016/j.ijhydene.2010.04.055}{doi:10.1016/j.ijhydene.2010.04.055}.
+
+\bibitem{liang2026}
+L. Liang et al., Experimental research on high-pressure hydrogen leakage from
+storage tanks, \textit{Acta Energiae Solaris Sinica} 47(4) (2026) 593--598,
+\href{https://doi.org/10.19912/j.0254-0096.tynxb.2024-2238}{doi:10.19912/j.0254-0096.tynxb.2024-2238}.
 
 \bibitem{schefer2006}
 R.W. Schefer, W.G. Houf, B. Bourne, J.D. Colton, Spatial and radiative properties

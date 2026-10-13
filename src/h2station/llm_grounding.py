@@ -4093,6 +4093,79 @@ def _release_model_validation_boundary() -> dict[str, Any] | None:
         or not isinstance(record.get("claim_boundary"), str)
     ):
         return None
+
+    liang_summary: dict[str, Any] | None = None
+    liang_path = Path(__file__).resolve().parents[2] / (
+        "research/liang_2026_release_benchmark_2026_10_13.json"
+    )
+    try:
+        liang = json.loads(liang_path.read_text(encoding="utf-8"))
+    except (OSError, ValueError, json.JSONDecodeError):
+        liang = None
+    if isinstance(liang, dict):
+        runtime = liang.get("runtime_model") or {}
+        runtime_metrics = runtime.get("metrics") or {}
+        parity = liang.get("real_gas_equation_parity") or {}
+        parity_metrics = parity.get("metrics") or {}
+        effective = liang.get("effective_discharge_coefficient") or {}
+        decision = liang.get("decision") or {}
+        required_numbers = (
+            runtime_metrics.get("nrmse_percent_of_observed_peak"),
+            runtime_metrics.get("median_absolute_percentage_error"),
+            runtime_metrics.get("mean_percentage_bias"),
+            parity_metrics.get("nrmse_percent_of_observed_peak"),
+            parity_metrics.get("median_absolute_percentage_error"),
+            effective.get("minimum"),
+            effective.get("maximum"),
+        )
+        if (
+            liang.get("artifact_type")
+            == "liang_2026_release_postaccess_benchmark"
+            and liang.get("evidence_role")
+            == "POST_ACCESS_ZERO_FIT_BENCHMARK_NOT_PROSPECTIVE"
+            and liang.get("outcomes_accessed_before_protocol") is True
+            and liang.get("parameter_fitting") is False
+            and liang.get("production_model_parameter_changed") is False
+            and liang.get("locked_input_hashes_verified") is True
+            and runtime.get("discharge_coefficient") == 0.8
+            and runtime.get("joint_screen_pass") is False
+            and parity.get("joint_screen_pass") is True
+            and decision.get("runtime_action")
+            == "UNCHANGED_PENDING_GEOMETRY_SPECIFIC_EXTERNAL_VALIDATION"
+            and all(
+                isinstance(value, (int, float)) and math.isfinite(float(value))
+                for value in required_numbers
+            )
+            and isinstance(liang.get("claim_boundary"), str)
+        ):
+            liang_summary = {
+                "artifact": (
+                    "research/liang_2026_release_benchmark_2026_10_13.json"
+                ),
+                "source_doi": (liang.get("source") or {}).get("doi"),
+                "evidence_role": liang.get("evidence_role"),
+                "geometry": (liang.get("source") or {}).get("geometry"),
+                "runtime_discharge_coefficient": 0.8,
+                "runtime_joint_screen_pass": False,
+                "runtime_nrmse_percent": float(required_numbers[0]),
+                "runtime_median_ape_percent": float(required_numbers[1]),
+                "runtime_mean_bias_percent": float(required_numbers[2]),
+                "real_gas_equation_parity_pass": True,
+                "theory_nrmse_percent": float(required_numbers[3]),
+                "theory_median_ape_percent": float(required_numbers[4]),
+                "effective_cd_range": [
+                    float(required_numbers[5]), float(required_numbers[6])
+                ],
+                "parameter_fitting": False,
+                "production_model_parameter_changed": False,
+                "operator_interpretation": (
+                    "1 mm 원형 노즐 시험에서는 Cd=0.8 누출량이 평균 약 38% "
+                    "보수적으로 높았습니다. 실가스 식 자체는 논문 이론값과 일치하지만 "
+                    "형상별 방출계수는 검증되지 않았으므로 피해범위를 실측 안전거리로 "
+                    "해석하지 마십시오."
+                ),
+                "claim_limit": liang.get("claim_boundary"),
+            }
     rows: list[dict[str, Any]] = []
     for item in record.get("effective_coefficient_by_diameter") or []:
         if not isinstance(item, dict):
@@ -4135,6 +4208,7 @@ def _release_model_validation_boundary() -> dict[str, Any] | None:
         ),
         "parameter_fitting": False,
         "production_model_parameter_changed": False,
+        "round_nozzle_postaccess_benchmark": liang_summary,
         "claim_limit": str(record.get("claim_boundary")),
     }
 
@@ -11332,7 +11406,8 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
                 "evidence_role", "baseline_discharge_coefficient",
                 "baseline_joint_primary_pass_count",
                 "effective_coefficient_by_diameter", "parameter_fitting",
-                "production_model_parameter_changed", "claim_limit",
+                "production_model_parameter_changed",
+                "round_nozzle_postaccess_benchmark", "claim_limit",
             )
             if release_boundary.get(key) is not None
         }
@@ -12559,6 +12634,7 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
     closed_loop = response.get("closed_loop_validation_boundary") or {}
     closed_loop_aggregate = closed_loop.get("aggregate") or {}
     release = response.get("proust_release_model_validation_boundary") or {}
+    liang_release = release.get("round_nozzle_postaccess_benchmark") or {}
     cross_campaign_release = response.get(
         "cross_campaign_release_validation_boundary"
     ) or {}
@@ -14900,10 +14976,21 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                 "claim_limit": short(preslhy.get("claim_limit"), 80),
             },
             "high_pressure_aperture": {
-                "baseline_joint_primary_pass_count": release.get(
+                "proust_pass_count": release.get(
                     "baseline_joint_primary_pass_count"
                 ),
-                "claim_limit": short(release.get("claim_limit"), 80),
+                **({
+                    "liang_role": "postaccess_zero_fit",
+                    "liang_cd08_pass": liang_release.get(
+                        "runtime_joint_screen_pass"
+                    ) is True,
+                    "liang_bias_pct": round(float(
+                        liang_release.get("runtime_mean_bias_percent")
+                    ), 2),
+                    "liang_eos_pass": liang_release.get(
+                        "real_gas_equation_parity_pass"
+                    ) is True,
+                } if liang_release else {}),
             },
             "release_cross_campaign": {
                 "supported": cross_campaign_release.get(
@@ -16333,6 +16420,9 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
             "production_model_parameter_changed": release_boundary.get(
                 "production_model_parameter_changed"
             ) is True,
+            "round_nozzle_postaccess_benchmark": release_boundary.get(
+                "round_nozzle_postaccess_benchmark"
+            ),
             "claim_limit": release_boundary.get("claim_limit"),
         },
         "cross_campaign_release_validation_boundary": {

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-13T07:22:12+00:00",
+  "generated_at": "2026-10-13T08:23:31+00:00",
   "metric_definition": "PASS gates divided by PASS+FAIL+PENDING gates; not a publication-readiness probability",
   "gate_counts": {
     "PASS": 131,
@@ -83,6 +83,28 @@
       "independent_component_holdout": "retained_public_type_iv_split_ready",
       "station_to_vehicle_raw_data": "removed_from_primary_goal_after_public_search",
       "ethics_and_expert_review": "optional_for_physics_validation; required only for a claim that SAGA improves human safety guidance"
+    },
+    "latest_access_evidence": {
+      "liang_2026_actual_hydrogen_release": {
+        "doi": "10.19912/j.0254-0096.tynxb.2024-2238",
+        "evidence_role": "POST_ACCESS_ZERO_FIT_BENCHMARK_NOT_PROSPECTIVE",
+        "rows": 7,
+        "geometry": "1 mm circular nozzle; pressure measured near nozzle",
+        "runtime_cd_0_8": {
+          "nrmse_percent": 28.426666827358154,
+          "median_ape_percent": 39.04693043295591,
+          "mean_bias_percent": 38.454898519664376,
+          "screen": "FAIL"
+        },
+        "real_gas_equation_parity": {
+          "nrmse_percent": 0.5851979556245009,
+          "median_ape_percent": 0.8060080452902673,
+          "screen": "PASS"
+        },
+        "production_runtime_changed": false,
+        "readiness_gate_count_changed": false,
+        "claim_limit": "Outcomes were inspected before protocol freeze; this is not a prospective holdout or independent validation, and the diagnostic Cd=0.6 result is not promoted to runtime."
+      }
     }
   }
 }
