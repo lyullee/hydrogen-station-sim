@@ -1,19 +1,19 @@
 {
   "schema_version": 1,
-  "source_audit_generated_at": "2026-10-13T21:43:46.964573+00:00",
+  "source_audit_generated_at": "2026-10-13T23:28:18.723820+00:00",
   "target_journal": "International Journal of Hydrogen Energy",
   "overall": {
-    "pass": 133,
+    "pass": 134,
     "fail": 11,
     "pending": 7,
     "full_user_objective_ready": false
   },
   "primary_scope": {
     "definition": "Declared 2026-10-11 primary scope: station-side process/safety, public component holdouts and direct-answer SAGA grounding; full-loop, human-effectiveness and non-validation access-boundary checks remain excluded.",
-    "pass": 132,
+    "pass": 133,
     "fail": 10,
     "pending": 2,
-    "total": 144,
+    "total": 145,
     "closure_percent": 91.7,
     "excluded_gate_ids": [
       "full_loop_external_validation",
