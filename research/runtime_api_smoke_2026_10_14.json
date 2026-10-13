@@ -1,0 +1,31 @@
+{
+  "schema_version": "1.0",
+  "artifact_type": "runtime_api_smoke",
+  "generated_at": "2026-10-14T06:29:29+09:00",
+  "base_url": "http://127.0.0.1:8011",
+  "command": "POST /api/simulations {duration_s: 1.0, continuous: false, speed_multiplier: 10}",
+  "simulation_id": "04e8974d76fe4d13a830fb316a18b612",
+  "checks": {
+    "create": {"status": 202, "result_status": "queued"},
+    "status_running": {"status": 200, "result_status": "running", "progress": 5},
+    "status_complete": {"status": 200, "result_status": "complete", "progress": 100},
+    "frames": {"status": 200, "result_keys": ["job", "frames"]},
+    "risk_zones": {"status": 200, "result_keys": ["time_s", "zones", "status", "backend_available", "update_interval_s", "basis"]},
+    "result": {"status": 200, "result_keys": ["summary", "series", "events", "risk_updates", "faults", "impact", "hazop", "analysis", "gas_detectors", "flame_detectors"]},
+    "stop": {"status": 200, "result_status": "complete"}
+  },
+  "protected_endpoint_check": {
+    "path": "/api/simulations/{id}/safety",
+    "status": 409,
+    "detail": "Operator mode is required",
+    "interpretation": "Expected authorization guard; operator mode must be supplied before safety replay access."
+  },
+  "runtime_observations": {
+    "hyram_backend": "HyRAM+ 6.1 native",
+    "released_mass_kg": 0.0,
+    "last_sample_time_s": 1.0,
+    "max_vehicle_temperature_c": 25.03548034504712,
+    "station_dynamics_calibration_applied": false
+  },
+  "claim_boundary": "This is an API lifecycle smoke check on the local simulation service, not independent physical validation."
+}
