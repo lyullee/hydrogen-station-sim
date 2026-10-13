@@ -2387,3 +2387,16 @@ the full-loop claim pass.
   The readiness audit remains 132 PASS / 11 FAIL / 7 PENDING; no independent
   validation gate was promoted.
 
+## 2026-10-13 - One-command evidence-chain refresh
+
+- Added `scripts/refresh_runtime_evidence_chain.py` so a runtime, API or LLM
+  grounding change can rebuild all 13 hash-linked projections in their required
+  order. The command covers HyDelta, Type-IV, public-accident routing, HIAD and
+  KHK replay, traceability, readiness mirrors, gap/blocker summaries, coverage
+  and the IJHE claim/evidence matrix.
+- The first complete execution passed all 13 generators in 56.0 seconds. Child
+  output is forced to UTF-8 and local repository paths are removed from optional
+  execution records.
+- The refresh is administrative reproducibility infrastructure only. It retains
+  all failed and pending scientific screens and cannot promote a readiness gate.
+

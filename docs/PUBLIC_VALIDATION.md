@@ -561,6 +561,20 @@ $env:PYTHONPATH = "src"
 .venv\Scripts\python.exe scripts\audit_ijhe_readiness.py
 ```
 
+When a runtime, API or LLM-grounding source changes, refresh the complete
+hash-linked evidence chain with one command before running the focused CI
+checks:
+
+```powershell
+.venv\Scripts\python.exe scripts\refresh_runtime_evidence_chain.py
+```
+
+Use `--list` to inspect the ordered plan without modifying files. The command
+rebuilds the HyDelta, Type-IV, HIAD and KHK runtime audits first, then refreshes
+the readiness mirrors, validation-gap and blocker reports, coverage summary
+and IJHE claim/evidence matrix. It preserves every failed or pending scientific
+screen and never promotes a validation gate.
+
 If the RADAR endpoint repeatedly drops short index requests, cache the remaining
 TAR tail over a resumable long stream and perform the same header verification
 and member extraction locally:
