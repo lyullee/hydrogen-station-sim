@@ -1,0 +1,90 @@
+{
+  "schema_version": 1,
+  "artifact_type": "dataset_specific_preaccess_spatial_holdout_protocol",
+  "protocol_id": "elvhys_wp42_actual_hydrogen_spatial_rank_intake",
+  "frozen_at": "2026-10-14T00:00:00Z",
+  "status": "FROZEN_BEFORE_NUMERICAL_FILE_ACCESS",
+  "objective": "Assess the already frozen pooled spatial-rank candidate on an independent, rights-cleared actual-hydrogen ELVHYS WP4.2 dispersion cohort, if the required coordinates, time intervals and numerical concentration responses are present.",
+  "source": {
+    "title": "ELVHYS 4.2 - Leakage into cold room/tank connection space considering barriers and obstacles",
+    "doi": "10.18710/JXJP0H",
+    "landing_page": "https://b2find.eudat.eu/dataset/a3e9b55a-4e14-5d49-923d-9e809c806b78",
+    "dataverse_api": "https://dataverse.no/api/datasets/:persistentId/?persistentId=doi:10.18710/JXJP0H",
+    "publisher": "DataverseNO",
+    "creators": ["Wayne Rattigan", "Janet Welch", "Janni Vizma"],
+    "publication_year": 2025,
+    "test_gas": "cryogenic hydrogen (LH2)",
+    "facility_description": "1 m3 transfer connection space; small horizontal/vertical leaks, pressure-peaking releases and ignition tests",
+    "declared_test_count": 48,
+    "license": "CC0 1.0",
+    "metadata_seen_before_freeze": [
+      "Public B2FIND metadata and DOI",
+      "Dataset description, declared 48-test campaign and three experiment classes",
+      "Dataverse file inventory, filenames, byte sizes and content types",
+      "CC0 1.0 rights statement"
+    ],
+    "numerical_files_opened_before_freeze": false,
+    "readme_or_sensor_pdf_opened_before_freeze": false,
+    "numerical_rows_or_coordinates_viewed_before_freeze": false,
+    "outcome_metrics_computed_before_freeze": false
+  },
+  "locked_candidate": {
+    "candidate_id": "pooled_spatial_rank_v1",
+    "parent_protocol": "research/prospective_spatial_rank_protocol_2026_10_13.json",
+    "parent_protocol_sha256": "a0ef3e23142e953fe67e5fd9eb1cb7b214a4cf0ac636c73763ceb7b1951c6e70",
+    "implementation": "src/h2station/prospective_spatial_rank.py",
+    "implementation_sha256": "7ec8658fa729b1b8817e86314d7d178ee1ad3772f00e1f2b76e10f95d636b387",
+    "formula": "exp(0.3*max(dy,0)-0.1*max(-dy,0))/(0.25+horizontal_distance_m^1.25+0.2*abs(dy))",
+    "output_semantics": "within-case sensor rank only",
+    "parameter_or_coordinate_fitting_after_access": "prohibited"
+  },
+  "eligibility_screen": {
+    "required_test_gas": "hydrogen",
+    "cohort": "unignited small horizontal or vertical leak dispersion cases only",
+    "excluded_classes": ["pressure-peaking-only cases", "deliberately ignited cases", "commissioning cases without the declared release interval"],
+    "minimum_eligible_case_count": 10,
+    "minimum_usable_sensor_or_spatial_point_count_per_case": 8,
+    "required_fields": [
+      "publisher-authenticated source coordinates",
+      "publisher-authenticated observation/sensor coordinates in one Cartesian frame",
+      "declared coordinate units and elevation axis",
+      "release orientation and leak diameter for every case",
+      "publisher-authenticated release start/stop or a reproducible release-window crosswalk",
+      "numerical hydrogen concentration response for every scored observation",
+      "case-to-observation mapping and test-gas identity"
+    ],
+    "numerical_recovery_policy": "Use the CC0 CSV files and publisher sensor metadata. Do not estimate concentration values or coordinates visually from figures. Record file digests, parsing decisions and missing-field counts.",
+    "case_selection": "Include every case in the declared unignited dispersion cohort that satisfies the locked fields. Do not remove a case after viewing model or response ranks.",
+    "independence_policy": "Hash and compare case identities against existing HyTunnel-CS, H2SAFE, USN, Kouchi and OEDI cohorts before scoring. Any overlap is ineligible.",
+    "rights_policy": "The source is CC0 1.0; retain citation, DOI, file hashes and a non-redistributive derived summary only. Do not commit raw CSV files."
+  },
+  "locked_response_and_metrics": {
+    "per_observation_response": "q99 minus q10 hydrogen concentration during the publisher-authenticated unignited release interval; if the source defines a steady interval, use that interval without adjustment",
+    "rank_statistic": "Spearman rho between the frozen geometry score and observed response within each case",
+    "top5_recall": "fraction of the five highest-scored observations contained in the observed top response quartile",
+    "nearest_success": "highest-scored observation is in the observed top response quartile",
+    "tie_break": "ascending publisher observation identifier after descending score or response",
+    "aggregate_screens": {
+      "all_declared_cases_eligible": true,
+      "median_spearman_at_least": 0.5,
+      "fraction_of_cases_with_spearman_at_least_0_4_at_least": 0.6,
+      "mean_top5_recall_of_observed_top_quartile_at_least": 0.6,
+      "nearest_predicted_observation_in_observed_top_quartile_fraction_at_least": 0.7
+    },
+    "all_screens_must_pass": true
+  },
+  "decision_policy": {
+    "eligible_and_all_screens_pass": "Record a confirmatory transfer result limited to within-case spatial rank in the tested cryogenic indoor geometry. Runtime promotion still requires a safety review and regression evidence.",
+    "eligible_and_any_screen_fails": "Retain the negative holdout. Do not tune the candidate, coordinates, thresholds, case scope or response definition and keep runtime spatial routing disabled.",
+    "ineligible": "Record exact missing fields and INELIGIBLE_NO_MODEL_EVALUATION. A bounded source inventory may be retained without changing the spatial validation gate.",
+    "format_only_amendment": "A pre-outcome amendment may repair parsing or coordinate conventions only. It may not change the model, cohort, response definition, thresholds or minimum sample requirements."
+  },
+  "runtime_policy": {
+    "enabled": false,
+    "api_import_permitted": false,
+    "hazop_runtime_import_permitted": false,
+    "alarm_or_trip_setpoint_change_permitted": false,
+    "concentration_or_distance_calibration_permitted": false
+  },
+  "claim_boundary": "This protocol can test only within-case spatial response ordering in the published ELVHYS WP4.2 cryogenic indoor geometry. It cannot validate concentration magnitude, detector response time, outdoor HRS detector placement, CFD, ignition probability, flame or blast consequence distance, ESD effectiveness, field safety or station-to-vehicle behavior."
+}
