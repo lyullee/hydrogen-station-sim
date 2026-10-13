@@ -2545,3 +2545,17 @@ the full-loop claim pass.
   validation claim.
 - Verification: the new artifact schema test passes and the source inventory now
   records the DOI, license, provenance boundary and diagnostic path.
+
+## 2026-10-14 - Jet-fire evidence routed to the interactive LLM envelope
+
+- Routed the bounded HyTunnel-CS Zenodo 7895795 diagnostic into the response
+  evidence summary, decision-support projection and source-link header used by
+  interactive LLM prompts.
+- The projection carries the actual-hydrogen test count, pressure/thermal
+  aggregate and distance-trend summary while explicitly carrying false
+  independent-holdout, prospective-validation, runtime-application and
+  heat-flux-validation flags. It never exposes raw workbook rows or local
+  paths and cannot be interpreted as a safety-distance calibration.
+- Verification: the new routing test plus the existing HyTunnel and grounding
+  tests pass (32 passed, one environment deprecation warning). Readiness remains
+  134 PASS / 11 FAIL / 7 PENDING; no scientific gate was promoted.

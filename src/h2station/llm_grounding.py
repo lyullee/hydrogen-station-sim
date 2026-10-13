@@ -5862,6 +5862,117 @@ def _public_hytunnel_failure_diagnostic_evidence() -> dict[str, Any] | None:
     }
 
 
+def _public_zenodo_7895795_jetfire_evidence() -> dict[str, Any] | None:
+    """Expose a compact, claim-bounded summary of the HyTunnel jet-fire archive.
+
+    The archive contains actual-hydrogen vessel-pressure and thermal channels
+    from ignited releases.  It is useful for fire/consequence response context,
+    but the workbooks were opened before this diagnostic was frozen, so it must
+    never become an independent holdout, a heat-flux calibration, or a runtime
+    parameter source.  Only aggregate values and a small test summary are
+    admitted; raw workbook rows and local paths stay outside the prompt.
+    """
+
+    root = Path(__file__).resolve().parents[2]
+    path = root / "research/zenodo_7895795_jetfire_postaccess_diagnostic_2026_10_14.json"
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError, json.JSONDecodeError):
+        return None
+    source = record.get("source") or {}
+    provenance = record.get("provenance_boundary") or {}
+    aggregate = record.get("aggregate") or {}
+    decision = record.get("decision") or {}
+    if (
+        record.get("schema_version") != 1
+        or record.get("artifact_type")
+        != "post_access_zenodo_7895795_hydrogen_jetfire_diagnostic"
+        or record.get("status")
+        != "POST_ACCESS_THERMAL_PRESSURE_DIAGNOSTIC_NOT_INDEPENDENT_VALIDATION"
+        or source.get("dataset_doi") != "10.5281/zenodo.7895795"
+        or source.get("actual_hydrogen") is not True
+        or source.get("raw_files_external_only") is not True
+        or provenance.get("independent_holdout") is not False
+        or provenance.get("prospective_validation") is not False
+        or provenance.get("parameter_fitting") is not False
+        or provenance.get("runtime_parameter_change") is not False
+        or decision.get("gate_changed") is not False
+    ):
+        return None
+
+    tests: list[dict[str, Any]] = []
+    for item in record.get("tests") or []:
+        if not isinstance(item, dict):
+            continue
+        metadata = item.get("publisher_test_metadata") or {}
+        pressure: dict[str, Any] | None = None
+        trends: list[dict[str, Any]] = []
+        for sheet in item.get("sheets") or []:
+            if not isinstance(sheet, dict):
+                continue
+            candidate_pressure = sheet.get("pressure") or {}
+            if candidate_pressure.get("available") is True and pressure is None:
+                pressure = {
+                    key: candidate_pressure.get(key)
+                    for key in (
+                        "sample_count", "initial_median", "final_median",
+                        "drop", "half_pressure_time_s",
+                    )
+                    if candidate_pressure.get(key) is not None
+                }
+            thermal = sheet.get("thermal") or {}
+            trend = thermal.get("distance_trend") or {}
+            if trend.get("available") is True:
+                trends.append({
+                    "distance_peak_delta_spearman": trend.get(
+                        "distance_peak_delta_spearman"
+                    ),
+                    "channel_count": trend.get("channel_count"),
+                    "expected_decreasing_with_distance": trend.get(
+                        "expected_decreasing_with_distance"
+                    ),
+                })
+        tests.append({
+            "test_id": item.get("test_id"),
+            "kind": metadata.get("kind"),
+            "nozzle_mm": metadata.get("nozzle_mm"),
+            "pressure_bar": metadata.get("pressure_bar"),
+            "volume_l": metadata.get("volume_l"),
+            "pressure": pressure or {},
+            "free_jet_distance_trends": trends,
+        })
+
+    return {
+        "artifact": "research/zenodo_7895795_jetfire_postaccess_diagnostic_2026_10_14.json",
+        "evidence_role": "public actual-hydrogen jet-fire pressure and thermal response context",
+        "source": {
+            key: source.get(key)
+            for key in (
+                "dataset_doi", "landing_page", "title", "publisher",
+                "license", "actual_hydrogen",
+            )
+            if source.get(key) is not None
+        },
+        "aggregate": {
+            key: aggregate.get(key)
+            for key in (
+                "workbook_count", "free_jet_distance_trend_count",
+                "free_jet_distance_trend_expected_decreasing_count",
+                "pressure_workbook_count", "thermal_workbook_count",
+            )
+            if aggregate.get(key) is not None
+        },
+        "tests": tests,
+        "independent_holdout": False,
+        "prospective_validation": False,
+        "parameter_fitting": False,
+        "runtime_parameter_application": False,
+        "fire_heat_flux_validation": False,
+        "claim_supported": False,
+        "claim_limit": str(record.get("claim_boundary") or ""),
+    }
+
+
 def _public_usn_actual_h2_spatial_diagnostic_evidence() -> dict[str, Any] | None:
     """Expose the bounded actual-H2 USN spatial diagnostic to decision support.
 
@@ -5961,6 +6072,22 @@ def _public_source_links(evidence: dict[str, Any]) -> list[dict[str, Any]]:
             "HyTunnel-CS actual-hydrogen mechanically ventilated enclosure dataset",
             f"https://doi.org/{hytunnel_doi}",
             "공개 실제 수소 시계열 holdout 및 모델 한계 진단",
+        )
+
+    jetfire = evidence.get(
+        "public_hydrogen_jetfire_postaccess_diagnostic"
+    ) or {}
+    jetfire_source = jetfire.get("source") or {}
+    jetfire_doi = str(jetfire_source.get("dataset_doi") or "").strip()
+    if jetfire_doi:
+        add(
+            "PUBLIC_HYTUNNEL_JETFIRE_ZENODO_7895795",
+            "HyTunnel-CS actual-hydrogen jet-fire pressure and thermal dataset",
+            str(
+                jetfire_source.get("landing_page")
+                or f"https://doi.org/{jetfire_doi}"
+            ),
+            "공개 실제 수소 jet-fire 열·압력 대응 근거(사후 진단, heat-flux·안전거리 검증 아님)",
         )
 
     usn_actual_h2_spatial = evidence.get(
@@ -10609,6 +10736,11 @@ def build_evidence_manifest(
         envelope["response_evidence"][
             "public_hytunnel_failure_diagnostic"
         ] = hytunnel_diagnostic
+    jetfire_diagnostic = _public_zenodo_7895795_jetfire_evidence()
+    if jetfire_diagnostic is not None:
+        envelope["response_evidence"][
+            "public_hydrogen_jetfire_postaccess_diagnostic"
+        ] = jetfire_diagnostic
     usn_actual_h2_spatial = _public_usn_actual_h2_spatial_diagnostic_evidence()
     if usn_actual_h2_spatial is not None:
         envelope["response_evidence"][
@@ -11438,6 +11570,30 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
             ) is True,
             "claim_supported": hytunnel_diagnostic.get("claim_supported") is True,
             "claim_limit": short(hytunnel_diagnostic.get("claim_limit"), 320),
+        }
+    jetfire_diagnostic = evidence.get(
+        "public_hydrogen_jetfire_postaccess_diagnostic"
+    )
+    if isinstance(jetfire_diagnostic, dict):
+        summary["public_hydrogen_jetfire_postaccess_diagnostic"] = {
+            "evidence_role": jetfire_diagnostic.get("evidence_role"),
+            "source": jetfire_diagnostic.get("source") or {},
+            "aggregate": jetfire_diagnostic.get("aggregate") or {},
+            "tests": jetfire_diagnostic.get("tests") or [],
+            "independent_holdout": jetfire_diagnostic.get(
+                "independent_holdout"
+            ) is True,
+            "prospective_validation": jetfire_diagnostic.get(
+                "prospective_validation"
+            ) is True,
+            "runtime_parameter_application": jetfire_diagnostic.get(
+                "runtime_parameter_application"
+            ) is True,
+            "fire_heat_flux_validation": jetfire_diagnostic.get(
+                "fire_heat_flux_validation"
+            ) is True,
+            "claim_supported": jetfire_diagnostic.get("claim_supported") is True,
+            "claim_limit": short(jetfire_diagnostic.get("claim_limit"), 320),
         }
     usn_actual_h2_spatial = evidence.get(
         "public_usn_actual_h2_spatial_diagnostic"
@@ -13138,6 +13294,9 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
     hytunnel_diagnostic = response.get(
         "public_hytunnel_failure_diagnostic"
     ) or {}
+    jetfire_diagnostic = response.get(
+        "public_hydrogen_jetfire_postaccess_diagnostic"
+    ) or {}
     usn_actual_h2_spatial = response.get(
         "public_usn_actual_h2_spatial_diagnostic"
     ) or {}
@@ -13298,6 +13457,10 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
         "공개", "실측", "원자료", "검증", "데이터", "피해영향", "안전거리",
         "public", "measurement", "raw", "validation", "dataset", "dispersion",
         "consequence", "safety distance",
+    ))
+    jetfire_relevant = hytunnel_relevant or any(token in lead_context for token in (
+        "jet fire", "jetfire", "제트화염", "화염", "열복사", "복사열",
+        "fire", "flame", "radiation", "heat flux", "열유속",
     ))
     usn_actual_h2_spatial_relevant = hytunnel_relevant or any(token in lead_context for token in (
         "검지기", "검지", "센서 위치", "공간", "detector", "sensor placement",
@@ -14680,6 +14843,30 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
             } if virtual_action_execution and (
                 manifest.get("question") or manifest.get("selected_sensor")
             ) else {}),
+            **({
+                "public_hydrogen_jetfire": {
+                    "claim_supported": jetfire_diagnostic.get(
+                        "claim_supported"
+                    ) is True,
+                    "test_count": len(jetfire_diagnostic.get("tests") or []),
+                    "aggregate": jetfire_diagnostic.get("aggregate") or {},
+                    "independent_holdout": jetfire_diagnostic.get(
+                        "independent_holdout"
+                    ) is True,
+                    "prospective_validation": jetfire_diagnostic.get(
+                        "prospective_validation"
+                    ) is True,
+                    "runtime_parameter_application": jetfire_diagnostic.get(
+                        "runtime_parameter_application"
+                    ) is True,
+                    "fire_heat_flux_validation": jetfire_diagnostic.get(
+                        "fire_heat_flux_validation"
+                    ) is True,
+                    "claim_limit": short(
+                        jetfire_diagnostic.get("claim_limit"), 220
+                    ),
+                },
+            } if jetfire_diagnostic and jetfire_relevant else {}),
         },
         "validation_boundaries": {
             # Keep this projection compact because it is sent on every
@@ -15421,6 +15608,30 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                 },
             } if hytunnel_diagnostic and hytunnel_relevant
             and not (impact.get("calculation_attempted") is True) else {}),
+            **({
+                "public_hydrogen_jetfire": {
+                    "claim_supported": jetfire_diagnostic.get(
+                        "claim_supported"
+                    ) is True,
+                    "test_count": len(jetfire_diagnostic.get("tests") or []),
+                    "aggregate": jetfire_diagnostic.get("aggregate") or {},
+                    "independent_holdout": jetfire_diagnostic.get(
+                        "independent_holdout"
+                    ) is True,
+                    "prospective_validation": jetfire_diagnostic.get(
+                        "prospective_validation"
+                    ) is True,
+                    "runtime_parameter_application": jetfire_diagnostic.get(
+                        "runtime_parameter_application"
+                    ) is True,
+                    "fire_heat_flux_validation": jetfire_diagnostic.get(
+                        "fire_heat_flux_validation"
+                    ) is True,
+                    "claim_limit": short(
+                        jetfire_diagnostic.get("claim_limit"), 220
+                    ),
+                },
+            } if jetfire_diagnostic and jetfire_relevant else {}),
             **({
                 "public_usn_actual_h2_spatial": {
                     "claim_supported": usn_actual_h2_spatial.get(
@@ -16182,6 +16393,9 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
     hytunnel_diagnostic = evidence.get(
         "public_hytunnel_failure_diagnostic"
     ) or {}
+    jetfire_diagnostic = evidence.get(
+        "public_hydrogen_jetfire_postaccess_diagnostic"
+    ) or {}
     usn_actual_h2_spatial = evidence.get(
         "public_usn_actual_h2_spatial_diagnostic"
     ) or {}
@@ -16537,6 +16751,26 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
             ) is True,
             "claim_supported": hytunnel_diagnostic.get("claim_supported") is True,
             "claim_limit": hytunnel_diagnostic.get("claim_limit"),
+        },
+        "public_hydrogen_jetfire_postaccess_diagnostic": {
+            "evidence_role": jetfire_diagnostic.get("evidence_role"),
+            "source": jetfire_diagnostic.get("source") or {},
+            "aggregate": jetfire_diagnostic.get("aggregate") or {},
+            "tests": jetfire_diagnostic.get("tests") or [],
+            "independent_holdout": jetfire_diagnostic.get(
+                "independent_holdout"
+            ) is True,
+            "prospective_validation": jetfire_diagnostic.get(
+                "prospective_validation"
+            ) is True,
+            "runtime_parameter_application": jetfire_diagnostic.get(
+                "runtime_parameter_application"
+            ) is True,
+            "fire_heat_flux_validation": jetfire_diagnostic.get(
+                "fire_heat_flux_validation"
+            ) is True,
+            "claim_supported": jetfire_diagnostic.get("claim_supported") is True,
+            "claim_limit": jetfire_diagnostic.get("claim_limit"),
         },
         "public_usn_actual_h2_spatial_diagnostic": {
             "evidence_role": usn_actual_h2_spatial.get("evidence_role"),
