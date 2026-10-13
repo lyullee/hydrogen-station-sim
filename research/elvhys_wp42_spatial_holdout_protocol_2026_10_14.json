@@ -3,7 +3,7 @@
   "artifact_type": "dataset_specific_preaccess_spatial_holdout_protocol",
   "protocol_id": "elvhys_wp42_actual_hydrogen_spatial_rank_intake",
   "frozen_at": "2026-10-14T00:00:00Z",
-  "status": "FROZEN_BEFORE_NUMERICAL_FILE_ACCESS",
+  "status": "FROZEN_FOR_DISJOINT_CASES_AFTER_EXISTING_OVERLAP_DECLARED",
   "objective": "Assess the already frozen pooled spatial-rank candidate on an independent, rights-cleared actual-hydrogen ELVHYS WP4.2 dispersion cohort, if the required coordinates, time intervals and numerical concentration responses are present.",
   "source": {
     "title": "ELVHYS 4.2 - Leakage into cold room/tank connection space considering barriers and obstacles",
@@ -23,10 +23,16 @@
       "Dataverse file inventory, filenames, byte sizes and content types",
       "CC0 1.0 rights statement"
     ],
-    "numerical_files_opened_before_freeze": false,
+    "numerical_files_opened_before_freeze": true,
     "readme_or_sensor_pdf_opened_before_freeze": false,
     "numerical_rows_or_coordinates_viewed_before_freeze": false,
-    "outcome_metrics_computed_before_freeze": false
+    "outcome_metrics_computed_before_freeze": true,
+    "existing_outcome_access_overlap": {
+      "case_ids": [29, 30, 31, 45],
+      "reason": "These cases are already retained in the repository's ELVHYS auxiliary replay and are excluded before any new spatial scoring.",
+      "evidence": "research/elvhys_auxiliary_replay.json; data/public_validation/raw/elvhys_4_2/"
+    },
+    "new_holdout_scope": "All eligible unignited dispersion cases not in the existing overlap set; no case may be removed after spatial scores are viewed."
   },
   "locked_candidate": {
     "candidate_id": "pooled_spatial_rank_v1",

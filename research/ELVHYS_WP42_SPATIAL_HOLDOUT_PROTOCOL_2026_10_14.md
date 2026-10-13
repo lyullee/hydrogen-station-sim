@@ -1,6 +1,6 @@
 # ELVHYS WP4.2 spatial holdout protocol
 
-This protocol is frozen before opening the numerical files for the public **ELVHYS 4.2** dataset (DOI `10.18710/JXJP0H`). The dataset is published by DataverseNO under CC0 1.0 and describes 48 actual liquid-hydrogen experiments in a 1 m³ transfer-connection space.
+This protocol is frozen for a disjoint holdout of the public **ELVHYS 4.2** dataset (DOI `10.18710/JXJP0H`). The dataset is published by DataverseNO under CC0 1.0 and describes 48 actual liquid-hydrogen experiments in a 1 m³ transfer-connection space. Cases 29, 30, 31 and 45 were already opened for a bounded auxiliary replay in this repository, so they are excluded before any new spatial scoring.
 
 The evaluation is restricted to unignited small horizontal or vertical leak dispersion cases. Pressure-peaking and deliberately ignited tests are excluded before numerical access because they represent different response regimes. Every eligible case must provide source and sensor coordinates in a common frame, coordinate units, release orientation, a release interval, and numerical hydrogen concentration values for at least eight scored observations. At least ten eligible cases are required.
 
