@@ -1,9 +1,9 @@
 {
   "schema_version": "1.0",
   "candidate": "hydrogen-station-sim 0.1.1-rc1",
-  "generated_at": "2026-10-12T05:43:15.134910+00:00",
+  "generated_at": "2026-10-14T03:16:00+09:00",
   "repository": "lyullee/hydrogen-station-sim",
-  "validated_source_commit": "f3c5f30a88aa01fbbe417e5d6564a3b01bf2df0d",
+  "validated_source_commit": "9cd8c0795b1750e0d53defa04c24aafb45f16e6f",
   "branch": "main",
   "scope": {
     "included": [
@@ -37,20 +37,20 @@
     }
   },
   "software_evidence": {
-    "latest_ci_run_id": "38214960683",
-    "latest_ci_sha": "b816696c2c8ed55c12ec3c01c341ee7dbd4e4d79",
+    "latest_ci_run_id": "38444483946",
+    "latest_ci_sha": "9cd8c0795b1750e0d53defa04c24aafb45f16e6f",
     "latest_ci_conclusion": "success",
-    "latest_ci_url": "https://github.com/lyullee/hydrogen-station-sim/actions/runs/38214960683",
+    "latest_ci_url": "https://github.com/lyullee/hydrogen-station-sim/actions/runs/38444483946",
     "local_priority_focus": "PASS",
     "scientific_screen": "FAIL_WITH_DOCUMENTED_EXTERNAL_DATA_GAPS",
     "local_priority_focus_artifact": "research/priority_focus_run_2026_10_13.json",
     "local_priority_focus_schema": "priority_validation_run",
     "local_priority_focus_check_count": 3,
-    "latest_full_regression_artifact": "research/full_regression_test_run_2026_10_13.json",
+    "latest_full_regression_artifact": "research/full_regression_test_run_2026_10_14.json",
     "latest_full_regression_status": "PASS",
-    "latest_full_regression_passed": 1513,
+    "latest_full_regression_passed": 1565,
     "latest_full_regression_failed": 0,
-    "latest_full_regression_skipped": 6,
+    "latest_full_regression_skipped": 0,
     "latest_full_regression_working_tree_dirty": true,
     "scientific_screen_failures": [
       "mc_tank_boundary",
@@ -68,7 +68,6 @@
     "schefer_2007_pressure_decay_validation",
     "grune_2014_pressure_decay_validation",
     "h2safe_spatial_detector_transfer_validation",
-    "consequence_model_external_validation",
     "submission_metadata_and_declarations"
   ],
   "release_rule": "This candidate is reproducible software and bounded research evidence; it must not be described as independently validated or publication-ready until the readiness flags above are true."
