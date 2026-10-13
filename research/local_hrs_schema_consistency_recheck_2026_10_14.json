@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "artifact_type": "local_hrs_schema_consistency_recheck",
+  "generated_at_utc": "2026-10-13T21:52:03+00:00",
+  "status": "PASS",
+  "source_label": "user-local controlled HRS export",
+  "source_identifiers_published": false,
+  "original_headers_published": false,
+  "raw_rows_persisted": false,
+  "measurement_values_persisted": false,
+  "compared_fields": [
+    "source_files_scanned",
+    "source_tables_scanned",
+    "measurement_like_tables",
+    "semantic_channel_table_counts",
+    "time_overlap_candidate_summary",
+    "candidate_schema_counts"
+  ],
+  "mismatches": {},
+  "observed_summary": {
+    "source_files_scanned": 21,
+    "source_tables_scanned": 21,
+    "measurement_like_tables": 12,
+    "semantic_channel_table_counts": {
+      "controller_state": 8,
+      "mass_flow": 12,
+      "pressure": 12,
+      "temperature": 11,
+      "time": 12
+    },
+    "time_overlap_candidate_summary": {
+      "usable_table_count": 9,
+      "absolute_clock_table_count": 9,
+      "relative_clock_table_count": 0,
+      "multi_table_cluster_count": 0,
+      "tables_in_clusters": 0,
+      "largest_cluster_tables": 0,
+      "exact_full_loop_cluster_count": 0,
+      "header_only_missing_family_histogram": {},
+      "path_assisted_candidate_count": 0,
+      "path_assisted_missing_family_histogram": {},
+      "minimum_shorter_interval_overlap_fraction": 0.8,
+      "maximum_cadence_ratio": 10.0,
+      "path_semantics_are_unattested": true,
+      "source_identifiers_published": false,
+      "original_headers_published": false,
+      "absolute_time_samples_published": false
+    },
+    "candidate_schema_counts": {
+      "full_loop_candidate": 0,
+      "co_located_full_loop_candidate": 0,
+      "near_full_loop_missing_one_semantic_group": 0,
+      "station_recharge_candidate": 0,
+      "vehicle_fill_candidate": 0,
+      "synchronized_flat_full_loop_candidate": 0,
+      "synchronized_flat_station_recharge_candidate": 0,
+      "synchronized_flat_vehicle_fill_candidate": 0,
+      "time_overlap_full_loop_candidate": 0,
+      "time_overlap_path_assisted_full_loop_candidate": 0,
+      "rejected_nonmeasurement_candidate_container": 0
+    }
+  },
+  "decision": {
+    "new_full_loop_candidate": false,
+    "eligible_for_model_validation": false,
+    "reason": "Latest local schema inventory matches the privacy-safe recheck and still reports no candidate class eligible for numerical validation."
+  },
+  "claim_boundary": "Schema and bounded time-shape consistency only; no tag mapping, units, calibration, raw rows, paths or timestamps are retained."
+}\n

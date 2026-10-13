@@ -8,6 +8,7 @@
   "raw_rows_persisted": false,
   "source_files_scanned": 21,
   "source_tables_scanned": 21,
+  "measurement_like_tables": 12,
   "semantic_channel_table_counts": {
     "controller_state": 8,
     "mass_flow": 12,
