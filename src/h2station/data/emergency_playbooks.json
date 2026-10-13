@@ -1,5 +1,5 @@
 {
-  "version": "2026-10-08-scenario-v4",
+  "version": "2026-10-13-scenario-v5",
   "scope": "H70 gaseous-hydrogen station simulation; operator decision support, not automatic PLC commands",
   "sources": {
     "ISO19880": {
@@ -66,6 +66,12 @@
       "url": "https://doi.org/10.5281/zenodo.20817291",
       "license": "CC BY 4.0",
       "claim_limit": "승인된 제어식 플레어의 계획·보호기능 근거이며 일반 벤트의 현장 점화, 범용 34 vol% N2 설정값, 충전소 방출모델 검증 또는 현장 안전거리를 의미하지 않음"
+    },
+    "HYDELTA_VENTILATION_2023": {
+      "title": "HyDelta D6B.1A/D6B.1B, hydrogen ventilation experiments in pressure-reducing-station cabinets",
+      "url": "https://doi.org/10.5281/zenodo.8164602",
+      "license": "CC BY 4.0",
+      "claim_limit": "저압 가스 캐비닛의 실제 수소 농도·환기 실험 근거이며 H70 충전소 확산모델, 검지기 배치, 경보 설정값, ESD 성능 또는 현장 안전거리를 검증하지 않음"
     }
   },
   "common_response": [
@@ -90,7 +96,8 @@
       ],
       "stabilize": [
         "검지기와 압력·질량수지 추세로 차단 후 누출량 감소 여부를 확인한다.",
-        "실내·캐비닛·캐노피 등 체류 공간은 설계된 환기 상태를 확인하고, 환기 장애가 있으면 수소 공급을 유지하지 않는다.",
+        "실내·캐비닛·캐노피 등 체류 공간은 설계된 환기 상태를 확인하고, 환기 장애가 있으면 수소 공급을 유지하지 않는다. 환기가 작동한다는 표시만으로 안전을 선언하지 않는다.",
+        "수소는 상부에 층을 형성할 수 있으므로 상부·배출구·작업자 접근 위치를 독립 계측한다. 환기 후에도 모든 지정 지점이 현장 복귀 기준 아래에서 안정적으로 유지되는지 확인한 뒤 접근한다.",
         "누출을 위험 없이 멈출 수 없는 경우 접근을 확대하지 말고 전문 대응조직에 인계한다."
       ],
       "restart": [
@@ -99,7 +106,8 @@
       ],
       "prevention": [
         "접속부·호스·피팅의 정기 누설 점검과 교체 이력 관리",
-        "검지기 교정·경보·자동차단 연동 시험 및 환기 경로 확인",
+        "검지기 교정·경보·자동차단 연동 시험 및 상부 체류·사각지대를 포함한 환기 경로 확인",
+        "캐비닛을 열기 전 배출구 농도를 측정하고, 상·하부 환기구의 막힘과 지붕 돌출부·장애물에 의한 수소 체류를 점검",
         "누출 위치별 대피·연락 훈련과 인접 설비 재고·차단점 도면 최신화"
       ],
       "sources": [
@@ -110,7 +118,8 @@
         "H2_PLAN",
         "HIAD2026",
         "KHK_PUBLIC",
-        "ACCIDENTAL_RELEASE_2025"
+        "ACCIDENTAL_RELEASE_2025",
+        "HYDELTA_VENTILATION_2023"
       ]
     },
     {

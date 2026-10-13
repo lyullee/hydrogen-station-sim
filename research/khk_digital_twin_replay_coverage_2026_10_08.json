@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "artifact_type": "khk_public_accident_to_digital_twin_canonical_replay_audit",
-  "generated_at_utc": "2026-10-13T11:20:17.610430+00:00",
+  "generated_at_utc": "2026-10-13T12:17:05.844979+00:00",
   "status": "completed_independent_public_accident_integration_audit",
   "evidence_role": "independent_retrospective_metadata_to_canonical_runtime_traceability_only",
   "source": {
@@ -19,7 +19,7 @@
     },
     "playbook_catalog": {
       "path": "src/h2station/data/emergency_playbooks.json",
-      "sha256": "d8fedb036a91b5adae3934f1604a17966b8f0f9200c52f4d40bf2da2243a7c6c"
+      "sha256": "997da81d9f273031dc5d160d1fdee826cc1defaa3cbf5651f9bd0c7c7988e052"
     },
     "model_input_sha256": {
       "src/h2station/safety_runtime.py": "ab1f4ea32ec47bd7f31e6631eeb0176c7d3c1282a846043a3db666cf769790b2",
@@ -28,7 +28,7 @@
       "src/h2station/hazop/mapping.py": "1c9af0f4372a9543ad59ec1e2710d0bee24086ede10f562f3f9ba546ccbe1b85",
       "src/h2station/risk/live.py": "73b9d430fd02ccad87758aa206ce2f31fdb78604225f7f3a3579231097fd97d4",
       "src/h2station/risk/runtime_backend.py": "64be1ef599b882c40cdab5637195db9073d1b61dddc3d9f5b8282b60e39dd813",
-      "src/h2station/data/emergency_playbooks.json": "d8fedb036a91b5adae3934f1604a17966b8f0f9200c52f4d40bf2da2243a7c6c"
+      "src/h2station/data/emergency_playbooks.json": "997da81d9f273031dc5d160d1fdee826cc1defaa3cbf5651f9bd0c7c7988e052"
     },
     "public_report_text_used": false,
     "report_narrative_used_for_physical_parameters": false,

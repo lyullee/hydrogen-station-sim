@@ -7808,6 +7808,61 @@ def audit(root: Path) -> dict[str, object]:
         } if flare_evidence else "missing",
     ))
 
+    ventilation_evidence_path = (
+        root / "research/hydelta_natural_ventilation_evidence_2026_10_13.json"
+    )
+    ventilation_runtime_path = (
+        root
+        / "research/hydelta_natural_ventilation_runtime_grounding_2026_10_13.json"
+    )
+    ventilation_evidence = _json(ventilation_evidence_path)
+    ventilation_runtime = _json(ventilation_runtime_path)
+    ventilation_checks = (ventilation_runtime or {}).get("checks") or {}
+    ventilation_runtime_use = (ventilation_evidence or {}).get("runtime_use") or {}
+    ventilation_pass = bool(
+        (ventilation_evidence or {}).get("status")
+        == "verified_report_level_natural_ventilation_evidence"
+        and (ventilation_evidence or {}).get("source", {}).get("doi")
+        == "10.5281/zenodo.8164602"
+        and (ventilation_evidence or {}).get("source", {}).get("license")
+        == "CC BY 4.0"
+        and (ventilation_runtime or {}).get("status") == "PASS"
+        and ventilation_checks
+        and all(value is True for value in ventilation_checks.values())
+        and ventilation_runtime_use.get("emergency_response_grounding") is True
+        and ventilation_runtime_use.get(
+            "ventilation_as_single_safe_state_proof_authorized"
+        ) is False
+        and ventilation_runtime_use.get("measured_gas_clearance_required") is True
+        and ventilation_runtime_use.get("dispersion_proxy_calibration") is False
+        and ventilation_runtime_use.get("alarm_setpoint_calibration") is False
+        and ventilation_runtime_use.get("site_safety_distance_validation") is False
+    )
+    gates.append(_gate(
+        "hydelta_natural_ventilation_response_grounding_integrity",
+        "PASS" if ventilation_pass else (
+            "FAIL" if ventilation_evidence else "PENDING"
+        ),
+        "Actual-hydrogen cabinet experiments ground measured gas-clearance guidance while ventilation-only safe-state, H70 calibration and site-distance claims remain prohibited.",
+        (
+            f"{ventilation_evidence_path.relative_to(root)}; "
+            f"{ventilation_runtime_path.relative_to(root)}"
+        ),
+        "Verified CC BY 4.0 report identity, all report claim checks, source-linked gas-release playbook, active-only compact guidance, independent gas-clearance requirement and explicit false calibration flags.",
+        {
+            "doi": (ventilation_evidence or {}).get("source", {}).get("doi"),
+            "license": (ventilation_evidence or {}).get("source", {}).get(
+                "license"
+            ),
+            "experiment_scope": (ventilation_evidence or {}).get(
+                "experiment_scope"
+            ),
+            "runtime_checks": ventilation_checks,
+            "runtime_use": ventilation_runtime_use,
+            "claim_boundary": (ventilation_runtime or {}).get("claim_boundary"),
+        } if ventilation_evidence else "missing",
+    ))
+
     sensitivity_path = root / "research/hiad_design_sensitivity.json"
     sensitivity = _json(sensitivity_path)
     sensitivity_pass = bool(

@@ -23,17 +23,17 @@
     "full_user_objective_ready": false,
     "goal_completion_permitted": false,
     "overall_gates": {
-      "PASS": 131,
+      "PASS": 132,
       "FAIL": 11,
       "PENDING": 7,
-      "total": 149
+      "total": 150
     },
     "primary_scope_gates": {
-      "PASS": 130,
+      "PASS": 131,
       "FAIL": 10,
       "PENDING": 2,
-      "total": 142,
-      "closure_percent": 91.5
+      "total": 143,
+      "closure_percent": 91.6
     }
   },
   "software_evidence": {

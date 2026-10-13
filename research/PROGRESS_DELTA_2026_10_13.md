@@ -40,7 +40,9 @@ SAGA 근거 봉투에도 이 결과를 연결했다. 일반 답변에는 Proust�
 통과하기 전까지 이 한계를 LLM 프롬프트와 화면에 강제로 유지한다. 관련 산출물은
 `RUNTIME_INVENTORY_DURATION_SCREEN_2026_10_13.md`와
 `runtime_inventory_duration_screen_2026_10_13.json`이며, 준비도 게이트 수는
-`131 PASS / 11 FAIL / 7 PENDING`으로 유지된다.
+`132 PASS / 11 FAIL / 7 PENDING`이다. 새 PASS는 HyDelta 실제 수소
+자연환기 실험을 가스 방출 대응에 연결하면서, 환기 상태만으로 안전 복귀를
+판정하거나 H70 분산·현장 안전거리를 검증했다고 주장하지 못하게 하는 게이트다.
 
 ## 압축기 격리 후 유한 잔류재고 감압
 

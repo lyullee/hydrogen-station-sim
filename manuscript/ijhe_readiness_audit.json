@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-13T11:33:27.953790+00:00",
+  "generated_at": "2026-10-13T12:48:26.833368+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -13,7 +13,7 @@
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 131,
+    "PASS": 132,
     "FAIL": 11,
     "PENDING": 7
   },
@@ -4976,19 +4976,19 @@
       "requirement": "34/34 mapped rows, no missing recognition/immediate/stabilize/restart/prevention fields, explicit metadata-only claim boundary.",
       "observed": {
         "schema_version": 1,
-        "generated_at_utc": "2026-10-08T02:51:42.641471+00:00",
+        "generated_at_utc": "2026-10-13T12:15:56.113860+00:00",
         "status": "completed_metadata_only_response_stage_contract",
         "evidence_role": "metadata_only_response_contract",
         "source": {
           "inventory": "research/hiad_hrs_public_evidence.json",
           "inventory_sha256": "27b7fc752fe7ad706eb48854447bb203605be30b745515a259fad89325cc2536",
           "coverage": "research/hiad_playbook_coverage.json",
-          "coverage_sha256": "8ee95901a506ec341d7f9ae04c626d6bb811eb3f0d5f43db988cd43e5d2ea9bf",
+          "coverage_sha256": "0802339fbf506f29ec05ee7c1cd54558add21fb12a538aa4b5e24ce0dd3532ae",
           "public_source": "https://minerva.jrc.ec.europa.eu/en/shorturl/capri/hiadpt"
         },
         "catalog": {
           "path": "src/h2station/data/emergency_playbooks.json",
-          "catalog_sha256": "d8fedb036a91b5adae3934f1604a17966b8f0f9200c52f4d40bf2da2243a7c6c",
+          "catalog_sha256": "997da81d9f273031dc5d160d1fdee826cc1defaa3cbf5651f9bd0c7c7988e052",
           "plan_count": 16,
           "required_stages": [
             "recognition",
@@ -5001,7 +5001,7 @@
         "aggregate": {
           "case_count": 34,
           "mapped_case_count": 34,
-          "plan_reference_count": 61,
+          "plan_reference_count": 60,
           "missing_stage_case_count": 0,
           "invalid_plan_reference_count": 0,
           "ignition_case_count": 6,
@@ -5141,7 +5141,6 @@
           {
             "event_id": "803",
             "candidate_plan_ids": [
-              "gas_release",
               "fueling_fault"
             ],
             "stage_contract": "pass",
@@ -8539,6 +8538,71 @@
       }
     },
     {
+      "id": "hydelta_natural_ventilation_response_grounding_integrity",
+      "status": "PASS",
+      "claim": "Actual-hydrogen cabinet experiments ground measured gas-clearance guidance while ventilation-only safe-state, H70 calibration and site-distance claims remain prohibited.",
+      "evidence": "research\\hydelta_natural_ventilation_evidence_2026_10_13.json; research\\hydelta_natural_ventilation_runtime_grounding_2026_10_13.json",
+      "requirement": "Verified CC BY 4.0 report identity, all report claim checks, source-linked gas-release playbook, active-only compact guidance, independent gas-clearance requirement and explicit false calibration flags.",
+      "observed": {
+        "doi": "10.5281/zenodo.8164602",
+        "license": "CC BY 4.0",
+        "experiment_scope": {
+          "actual_hydrogen": true,
+          "cabinet_families": [
+            "0.5 m3",
+            "4 m3",
+            "mini (<0.5 m3)"
+          ],
+          "hydrogen_flow_nm3_h": [
+            0.125,
+            0.558,
+            1.25,
+            5.8
+          ],
+          "nominal_pressure_barg": [
+            1.0,
+            8.0
+          ],
+          "nominal_opening_mm2": [
+            0.025,
+            0.25
+          ],
+          "hydrogen_lfl_volpct_used_by_source": 4.0,
+          "measured_case_count": 10
+        },
+        "runtime_checks": {
+          "evidence_status_verified": true,
+          "publisher_file_identity_verified": true,
+          "all_report_claim_checks_pass": true,
+          "source_doi_registered": true,
+          "source_license_registered": true,
+          "gas_release_plan_links_source": true,
+          "ventilation_status_alone_rejected_in_playbook": true,
+          "independent_measurement_required_in_playbook": true,
+          "idle_compact_prompt_omits_ventilation_guidance": true,
+          "active_compact_prompt_includes_ventilation_guidance": true,
+          "active_prompt_rejects_ventilation_only_clearance": true,
+          "active_prompt_requires_measured_clearance": true,
+          "active_prompt_requires_measurement_before_opening": true,
+          "detailed_header_keeps_no_dispersion_calibration_boundary": true,
+          "detailed_header_keeps_no_site_distance_boundary": true,
+          "public_source_link_exposed": true,
+          "runtime_use_is_response_only": true
+        },
+        "runtime_use": {
+          "emergency_response_grounding": true,
+          "ventilation_as_single_safe_state_proof_authorized": false,
+          "measured_gas_clearance_required": true,
+          "dispersion_proxy_calibration": false,
+          "alarm_setpoint_calibration": false,
+          "station_release_model_validation": false,
+          "site_safety_distance_validation": false,
+          "raw_machine_readable_time_series_available": false
+        },
+        "claim_boundary": "This audit verifies report identity, playbook routing and recovery guardrails only. It does not validate H70 dispersion, detector placement, alarm thresholds, ESD effectiveness, release rate, site distance or field response effectiveness."
+      }
+    },
+    {
       "id": "preoutcome_design_sensitivity",
       "status": "PASS",
       "claim": "The fixed incident-study sample limitations were quantified before outcomes.",
@@ -8627,11 +8691,11 @@
             75,
             72
           ],
-          "approximate_manuscript_words_before_references": 7956,
+          "approximate_manuscript_words_before_references": 7990,
           "figures": 3,
           "tables": 3,
-          "citation_keys": 54,
-          "bibliography_entries": 56,
+          "citation_keys": 55,
+          "bibliography_entries": 57,
           "unresolved_citations": [],
           "missing_figure_assets": []
         },
@@ -8659,7 +8723,7 @@
       "requirement": "Compiler success, exact source/PDF hashes, no unresolved errors, and visual inspection of every rendered page.",
       "observed": {
         "schema_version": 2,
-        "verified_at_utc": "2026-10-13T10:19:07.233929+00:00",
+        "verified_at_utc": "2026-10-13T12:36:19.180521+00:00",
         "success": true,
         "compiler": {
           "name": "Tectonic",
@@ -8669,20 +8733,20 @@
         },
         "source": {
           "path": "manuscript/ijhe_manuscript_draft.tex",
-          "bytes": 77125,
-          "sha256": "ba7b8bde73c4818600110883931cc25415e24066ae8735ff9af3ff2c9ed02435"
+          "bytes": 77703,
+          "sha256": "de445885eab9e690248163733cc8a61cffcc7f9142f1c71c3c0c7e89946b461c"
         },
         "pdf": {
           "path": "output/pdf/ijhe_manuscript_draft.pdf",
-          "bytes": 837945,
-          "sha256": "f174a91e07ede91d53c838d06df9981659008da17979aeec13fe09979389c40e",
+          "bytes": 838804,
+          "sha256": "9f72012ad607ea9d66b9cfbcd952b7cb9ccfeb3bb28ca0e2f1ab3cb8e50f122d",
           "page_count": 24,
-          "extracted_character_count": 71439
+          "extracted_character_count": 71933
         },
         "compile_log": {
           "path": "output/pdf/ijhe_manuscript_draft.log",
-          "bytes": 19549,
-          "sha256": "c6847e4fce33b77d8a0bbf780740d5ff63e022a143fa7c75415d39627ebc2e81",
+          "bytes": 19550,
+          "sha256": "e4abe27c8c4bfac3adf7596e8f1dcb1c25f0c68ed04b5f91c06c60234804ef1a",
           "unresolved_citations": 0,
           "unresolved_references": 0,
           "fatal_errors": [],

@@ -2087,6 +2087,72 @@ def _public_controlled_flare_evidence() -> dict[str, Any] | None:
     }
 
 
+def _public_natural_ventilation_evidence() -> dict[str, Any] | None:
+    """Expose bounded HyDelta actual-hydrogen ventilation evidence."""
+
+    artifact = "research/hydelta_natural_ventilation_evidence_2026_10_13.json"
+    path = Path(__file__).resolve().parents[2] / artifact
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError, json.JSONDecodeError):
+        return None
+    source = record.get("source") or {}
+    scope = record.get("experiment_scope") or {}
+    findings = record.get("reported_findings") or {}
+    runtime = record.get("runtime_use") or {}
+    checks = record.get("claim_checks") or {}
+    identity = source.get("publisher_file_identity") or {}
+    if (
+        record.get("status")
+        != "verified_report_level_natural_ventilation_evidence"
+        or source.get("doi") != "10.5281/zenodo.8164602"
+        or source.get("license") != "CC BY 4.0"
+        or identity.get("identity_match") is not True
+        or not checks
+        or not all(value is True for value in checks.values())
+        or runtime.get("emergency_response_grounding") is not True
+        or runtime.get("ventilation_as_single_safe_state_proof_authorized") is not False
+        or runtime.get("measured_gas_clearance_required") is not True
+        or runtime.get("dispersion_proxy_calibration") is not False
+        or runtime.get("station_release_model_validation") is not False
+        or runtime.get("site_safety_distance_validation") is not False
+    ):
+        return None
+    return {
+        "artifact": artifact,
+        "doi": source.get("doi"),
+        "record_url": source.get("record_url"),
+        "license": source.get("license"),
+        "evidence_role": (
+            "actual-hydrogen cabinet ventilation emergency-response grounding"
+        ),
+        "experiment_scope": {
+            key: scope.get(key)
+            for key in (
+                "actual_hydrogen",
+                "cabinet_families",
+                "hydrogen_flow_nm3_h",
+                "hydrogen_lfl_volpct_used_by_source",
+                "measured_case_count",
+            )
+        },
+        "reported_findings": {
+            key: findings.get(key)
+            for key in (
+                "hydrogen_accumulates_as_upper_blanket",
+                "ventilation_mitigates_but_does_not_guarantee_below_lfl",
+                "gas_measurement_before_opening_recommended",
+                "ventilation_rate_above_five_per_hour_not_sufficient_by_itself",
+                "additional_top_and_bottom_ventilation_can_still_leave_flammable_mixtures",
+                "maximum_reported_inside_concentration_volpct_h2",
+                "smallest_reported_flow_with_flammable_mini_cabinet_nm3_h",
+            )
+        },
+        "runtime_use": runtime,
+        "claim_limit": str(record.get("claim_boundary") or ""),
+    }
+
+
 def _public_detector_logic_evidence() -> dict[str, Any] | None:
     """Expose the public concentration-detector replay as bounded evidence.
 
@@ -6222,6 +6288,7 @@ def _public_source_links(evidence: dict[str, Any]) -> list[dict[str, Any]]:
         "공개 실험 원자료 출처(방출모델 검증 주장 아님)",
     )
     controlled_flare = evidence.get("public_controlled_flare_evidence") or {}
+    natural_ventilation = evidence.get("public_natural_ventilation_evidence") or {}
     flare_doi = str(controlled_flare.get("doi") or "").strip()
     if flare_doi:
         add(
@@ -6229,6 +6296,14 @@ def _public_source_links(evidence: dict[str, Any]) -> list[dict[str, Any]]:
             "HyDelta controlled hydrogen flaring experiment",
             f"https://doi.org/{flare_doi}",
             "승인된 제어식 플레어 보호기능·운전경계 근거(일반 벤트 점화 지침 아님)",
+        )
+    ventilation_doi = str(natural_ventilation.get("doi") or "").strip()
+    if ventilation_doi:
+        add(
+            "HYDELTA_VENTILATION_2023",
+            "HyDelta actual-hydrogen cabinet ventilation experiments",
+            f"https://doi.org/{ventilation_doi}",
+            "환기 후 실측 농도 확인 근거(충전소 확산모델·안전거리 검증 아님)",
         )
 
     detector = evidence.get("public_detector_logic_evidence") or {}
@@ -10169,6 +10244,11 @@ def build_evidence_manifest(
     controlled_flare = _public_controlled_flare_evidence()
     if controlled_flare is not None:
         envelope["response_evidence"]["public_controlled_flare_evidence"] = controlled_flare
+    natural_ventilation = _public_natural_ventilation_evidence()
+    if natural_ventilation is not None:
+        envelope["response_evidence"][
+            "public_natural_ventilation_evidence"
+        ] = natural_ventilation
     detector_logic = _public_detector_logic_evidence()
     if detector_logic is not None:
         envelope["response_evidence"]["public_detector_logic_evidence"] = detector_logic
@@ -12037,6 +12117,25 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
             "ad_hoc_vent_ignition_authorized": False,
             "claim_limit": short(controlled_flare.get("claim_limit")),
         }
+    natural_ventilation = evidence.get("public_natural_ventilation_evidence")
+    if isinstance(natural_ventilation, dict):
+        findings = natural_ventilation.get("reported_findings") or {}
+        runtime_use = natural_ventilation.get("runtime_use") or {}
+        summary["public_natural_ventilation_evidence"] = {
+            "doi": natural_ventilation.get("doi"),
+            "hydrogen_accumulates_as_upper_blanket": findings.get(
+                "hydrogen_accumulates_as_upper_blanket"
+            ) is True,
+            "ventilation_alone_proves_safe_state": False,
+            "measured_gas_clearance_required": runtime_use.get(
+                "measured_gas_clearance_required"
+            ) is True,
+            "maximum_reported_inside_concentration_volpct_h2": findings.get(
+                "maximum_reported_inside_concentration_volpct_h2"
+            ),
+            "runtime_parameter_application": False,
+            "claim_limit": short(natural_ventilation.get("claim_limit")),
+        }
     confidential = evidence.get("confidential_measured_boundary_replay")
     if isinstance(confidential, dict):
         summary["confidential_measured_boundary_replay"] = {
@@ -12830,6 +12929,9 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
         "virtual_response_action_execution_consistency"
     ) or {}
     controlled_flare = response.get("public_controlled_flare_evidence") or {}
+    natural_ventilation = response.get(
+        "public_natural_ventilation_evidence"
+    ) or {}
     local_incident = response.get("confidential_local_accident_response_coverage") or {}
     measured_boundary_replay = response.get(
         "confidential_measured_boundary_replay"
@@ -15326,6 +15428,34 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
             "tested_safeguards": list(findings.get("tested_safeguards") or []),
             "claim_limit": short(controlled_flare.get("claim_limit")),
         }
+    if (
+        "HYDELTA_VENTILATION_2023"
+        in decision["response_guidance"]["source_ids"]
+        and isinstance(natural_ventilation, dict)
+        and natural_ventilation
+    ):
+        findings = natural_ventilation.get("reported_findings") or {}
+        runtime_use = natural_ventilation.get("runtime_use") or {}
+        decision["response_guidance"]["natural_ventilation"] = {
+            "doi": natural_ventilation.get("doi"),
+            "hydrogen_accumulates_as_upper_blanket": findings.get(
+                "hydrogen_accumulates_as_upper_blanket"
+            ) is True,
+            "ventilation_mitigates_but_does_not_guarantee_below_lfl": findings.get(
+                "ventilation_mitigates_but_does_not_guarantee_below_lfl"
+            ) is True,
+            "ventilation_as_single_safe_state_proof_authorized": False,
+            "measured_gas_clearance_required": runtime_use.get(
+                "measured_gas_clearance_required"
+            ) is True,
+            "measure_before_opening_recommended": findings.get(
+                "gas_measurement_before_opening_recommended"
+            ) is True,
+            "maximum_reported_inside_concentration_volpct_h2": findings.get(
+                "maximum_reported_inside_concentration_volpct_h2"
+            ),
+            "claim_limit": short(natural_ventilation.get("claim_limit")),
+        }
     return decision
 
 
@@ -15861,6 +15991,7 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
         "public_ignited_pressure_peaking_validation"
     ) or {}
     controlled_flare = evidence.get("public_controlled_flare_evidence") or {}
+    natural_ventilation = evidence.get("public_natural_ventilation_evidence") or {}
     local_accident_coverage = evidence.get(
         "confidential_local_accident_response_coverage"
     ) or {}
@@ -16774,6 +16905,14 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
             "reported_findings": controlled_flare.get("reported_findings") or {},
             "runtime_use": controlled_flare.get("runtime_use") or {},
             "claim_limit": controlled_flare.get("claim_limit"),
+        },
+        "public_natural_ventilation_evidence": {
+            "doi": natural_ventilation.get("doi"),
+            "license": natural_ventilation.get("license"),
+            "experiment_scope": natural_ventilation.get("experiment_scope") or {},
+            "reported_findings": natural_ventilation.get("reported_findings") or {},
+            "runtime_use": natural_ventilation.get("runtime_use") or {},
+            "claim_limit": natural_ventilation.get("claim_limit"),
         },
         "confidential_local_accident_response_coverage": {
             "case_count": local_accident_coverage.get("case_count"),

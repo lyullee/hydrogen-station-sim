@@ -1,18 +1,18 @@
 {
   "schema_version": 1,
-  "generated_at_utc": "2026-10-08T02:51:42.641471+00:00",
+  "generated_at_utc": "2026-10-13T12:15:56.113860+00:00",
   "status": "completed_metadata_only_response_stage_contract",
   "evidence_role": "metadata_only_response_contract",
   "source": {
     "inventory": "research/hiad_hrs_public_evidence.json",
     "inventory_sha256": "27b7fc752fe7ad706eb48854447bb203605be30b745515a259fad89325cc2536",
     "coverage": "research/hiad_playbook_coverage.json",
-    "coverage_sha256": "8ee95901a506ec341d7f9ae04c626d6bb811eb3f0d5f43db988cd43e5d2ea9bf",
+    "coverage_sha256": "0802339fbf506f29ec05ee7c1cd54558add21fb12a538aa4b5e24ce0dd3532ae",
     "public_source": "https://minerva.jrc.ec.europa.eu/en/shorturl/capri/hiadpt"
   },
   "catalog": {
     "path": "src/h2station/data/emergency_playbooks.json",
-    "catalog_sha256": "d8fedb036a91b5adae3934f1604a17966b8f0f9200c52f4d40bf2da2243a7c6c",
+    "catalog_sha256": "997da81d9f273031dc5d160d1fdee826cc1defaa3cbf5651f9bd0c7c7988e052",
     "plan_count": 16,
     "required_stages": [
       "recognition",
@@ -25,7 +25,7 @@
   "aggregate": {
     "case_count": 34,
     "mapped_case_count": 34,
-    "plan_reference_count": 61,
+    "plan_reference_count": 60,
     "missing_stage_case_count": 0,
     "invalid_plan_reference_count": 0,
     "ignition_case_count": 6,
@@ -165,7 +165,6 @@
     {
       "event_id": "803",
       "candidate_plan_ids": [
-        "gas_release",
         "fueling_fault"
       ],
       "stage_contract": "pass",

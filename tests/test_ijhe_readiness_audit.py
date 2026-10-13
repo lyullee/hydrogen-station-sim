@@ -949,6 +949,22 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     assert flare["runtime_checks"]["active_compact_prompt_includes_flare"] is True
     assert flare["runtime_use"]["station_release_model_validation"] is False
 
+    assert gates[
+        "hydelta_natural_ventilation_response_grounding_integrity"
+    ]["status"] == "PASS"
+    ventilation = gates[
+        "hydelta_natural_ventilation_response_grounding_integrity"
+    ]["observed"]
+    assert ventilation["doi"] == "10.5281/zenodo.8164602"
+    assert ventilation["experiment_scope"]["measured_case_count"] == 10
+    assert ventilation["runtime_checks"][
+        "idle_compact_prompt_omits_ventilation_guidance"
+    ] is True
+    assert ventilation["runtime_checks"][
+        "active_compact_prompt_includes_ventilation_guidance"
+    ] is True
+    assert ventilation["runtime_use"]["dispersion_proxy_calibration"] is False
+
     assert gates["khk_digital_twin_replay_traceability"]["status"] == "PASS"
     khk_replay = gates["khk_digital_twin_replay_traceability"]["observed"]
     assert khk_replay["aggregate"]["public_report_count"] == 23

@@ -1,0 +1,177 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-13",
+  "status": "verified_report_level_natural_ventilation_evidence",
+  "source": {
+    "title": "D6B.1A & D6B.1B Inventory, modeling and experiments related to ventilation in pressure reducing stations",
+    "publisher": "HyDelta / Kiwa",
+    "doi": "10.5281/zenodo.8164602",
+    "record_url": "https://doi.org/10.5281/zenodo.8164602",
+    "publication_date": "2023-07-19",
+    "license": "CC BY 4.0",
+    "language": "English",
+    "file": "D6B_1_2_HyDelta_Tweede_Tranche_Ventilation_in_Gas_Stations_EN.pdf",
+    "publisher_file_identity": {
+      "expected_bytes": 8542387,
+      "expected_md5": "7941752237175c0c0e012b06879d00aa",
+      "expected_sha256": "0b0dbe668c17de4f819da30dca9b02b5695cb9ffe34dea20736dc26cda80200e",
+      "observed": {
+        "bytes": 8542387,
+        "md5": "7941752237175c0c0e012b06879d00aa",
+        "sha256": "0b0dbe668c17de4f819da30dca9b02b5695cb9ffe34dea20736dc26cda80200e"
+      },
+      "identity_match": true
+    },
+    "page_count": 118,
+    "raw_pdf_committed": false
+  },
+  "experiment_scope": {
+    "actual_hydrogen": true,
+    "cabinet_families": [
+      "0.5 m3",
+      "4 m3",
+      "mini (<0.5 m3)"
+    ],
+    "hydrogen_flow_nm3_h": [
+      0.125,
+      0.558,
+      1.25,
+      5.8
+    ],
+    "nominal_pressure_barg": [
+      1.0,
+      8.0
+    ],
+    "nominal_opening_mm2": [
+      0.025,
+      0.25
+    ],
+    "hydrogen_lfl_volpct_used_by_source": 4.0,
+    "measured_case_count": 10
+  },
+  "measured_case_summary": [
+    {
+      "cabinet": "0.5 m3",
+      "hydrogen_flow_nm3_h": 0.125,
+      "nominal_pressure_barg": 1.0,
+      "nominal_opening_mm2": 0.025,
+      "maximum_inside_volpct_h2": 2.9,
+      "maximum_vent_opening_volpct_h2": 3.2,
+      "flammable_mixture_observed": false
+    },
+    {
+      "cabinet": "0.5 m3",
+      "hydrogen_flow_nm3_h": 0.558,
+      "nominal_pressure_barg": 8.0,
+      "nominal_opening_mm2": 0.025,
+      "maximum_inside_volpct_h2": 6.9,
+      "maximum_vent_opening_volpct_h2": 6.4,
+      "flammable_mixture_observed": true
+    },
+    {
+      "cabinet": "0.5 m3",
+      "hydrogen_flow_nm3_h": 1.25,
+      "nominal_pressure_barg": 1.0,
+      "nominal_opening_mm2": 0.25,
+      "maximum_inside_volpct_h2": 11.0,
+      "maximum_vent_opening_volpct_h2": 11.0,
+      "flammable_mixture_observed": true
+    },
+    {
+      "cabinet": "0.5 m3",
+      "hydrogen_flow_nm3_h": 5.8,
+      "nominal_pressure_barg": 8.0,
+      "nominal_opening_mm2": 0.25,
+      "maximum_inside_volpct_h2": 24.0,
+      "maximum_vent_opening_volpct_h2": 21.0,
+      "flammable_mixture_observed": true
+    },
+    {
+      "cabinet": "4 m3",
+      "hydrogen_flow_nm3_h": 0.125,
+      "nominal_pressure_barg": 1.0,
+      "nominal_opening_mm2": 0.025,
+      "maximum_inside_volpct_h2": 1.0,
+      "maximum_vent_opening_volpct_h2": 0.4,
+      "flammable_mixture_observed": false
+    },
+    {
+      "cabinet": "4 m3",
+      "hydrogen_flow_nm3_h": 0.558,
+      "nominal_pressure_barg": 8.0,
+      "nominal_opening_mm2": 0.025,
+      "maximum_inside_volpct_h2": 2.2,
+      "maximum_vent_opening_volpct_h2": 1.3,
+      "flammable_mixture_observed": false
+    },
+    {
+      "cabinet": "4 m3",
+      "hydrogen_flow_nm3_h": 1.25,
+      "nominal_pressure_barg": 1.0,
+      "nominal_opening_mm2": 0.25,
+      "maximum_inside_volpct_h2": 5.5,
+      "maximum_vent_opening_volpct_h2": 4.1,
+      "flammable_mixture_observed": true
+    },
+    {
+      "cabinet": "4 m3",
+      "hydrogen_flow_nm3_h": 5.8,
+      "nominal_pressure_barg": 8.0,
+      "nominal_opening_mm2": 0.25,
+      "maximum_inside_volpct_h2": 12.0,
+      "maximum_vent_opening_volpct_h2": 9.3,
+      "flammable_mixture_observed": true
+    },
+    {
+      "cabinet": "mini (<0.5 m3)",
+      "hydrogen_flow_nm3_h": 0.125,
+      "nominal_pressure_barg": 1.0,
+      "nominal_opening_mm2": 0.025,
+      "maximum_inside_volpct_h2": 5.6,
+      "maximum_vent_opening_volpct_h2": 4.1,
+      "flammable_mixture_observed": true,
+      "indicative_only": true
+    },
+    {
+      "cabinet": "mini (<0.5 m3)",
+      "hydrogen_flow_nm3_h": 0.558,
+      "nominal_pressure_barg": 8.0,
+      "nominal_opening_mm2": 0.025,
+      "maximum_inside_volpct_h2": 12.0,
+      "maximum_vent_opening_volpct_h2": 12.0,
+      "flammable_mixture_observed": true,
+      "indicative_only": true,
+      "experiment_stopped_early_for_safety": true
+    }
+  ],
+  "reported_findings": {
+    "hydrogen_accumulates_as_upper_blanket": true,
+    "ventilation_mitigates_but_does_not_guarantee_below_lfl": true,
+    "gas_measurement_before_opening_recommended": true,
+    "ventilation_rate_above_five_per_hour_not_sufficient_by_itself": true,
+    "additional_top_and_bottom_ventilation_can_still_leave_flammable_mixtures": true,
+    "maximum_reported_inside_concentration_volpct_h2": 24.0,
+    "smallest_reported_flow_with_flammable_mini_cabinet_nm3_h": 0.125
+  },
+  "claim_checks": {
+    "actual_hydrogen_reference_leaks_reported": true,
+    "half_cubic_metre_low_flow_result_reported": true,
+    "four_cubic_metre_hydrogen_combustible_case_reported": true,
+    "mini_cabinet_hydrogen_combustible_case_reported": true,
+    "hydrogen_blanket_stratification_reported": true,
+    "cross_ventilation_does_not_guarantee_safe_concentration": true,
+    "ventilation_rate_alone_is_not_comprehensive": true,
+    "measure_before_opening_recommended": true
+  },
+  "runtime_use": {
+    "emergency_response_grounding": true,
+    "ventilation_as_single_safe_state_proof_authorized": false,
+    "measured_gas_clearance_required": true,
+    "dispersion_proxy_calibration": false,
+    "alarm_setpoint_calibration": false,
+    "station_release_model_validation": false,
+    "site_safety_distance_validation": false,
+    "raw_machine_readable_time_series_available": false
+  },
+  "claim_boundary": "The CC BY 4.0 report provides actual-hydrogen, cabinet-scale measured concentration evidence for ventilation and response wording. The values are report tables rather than machine-readable time series, the mini-cabinet tests are explicitly indicative, and the geometries are low-pressure gas distribution cabinets. They do not validate the H70 station dispersion proxy, detector placement, alarm thresholds, ESD effectiveness, release rate, or site separation distance."
+}

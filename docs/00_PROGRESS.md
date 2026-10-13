@@ -1,10 +1,10 @@
 # Development Progress
 
-## 2026-10-12 - Synchronize the public documentation with the evidence ledger
+## 2026-10-13 - Synchronize the public documentation with the evidence ledger
 
 The current machine-readable readiness audit, submission blocker matrix,
-technical report and user manual now share the same snapshot: **131 PASS / 11
-FAIL / 7 PENDING** overall, with **130 PASS / 10 FAIL / 2 PENDING** in the
+technical report and user manual now share the same snapshot: **132 PASS / 11
+FAIL / 7 PENDING** overall, with **131 PASS / 10 FAIL / 2 PENDING** in the
 declared station-side primary scope. The full objective and bounded IJHE
 submission gate remain open. A documentation-consistency regression now reads
 the authoritative audit and checks the current technical report and user
@@ -2363,7 +2363,8 @@ the full-loop claim pass.
   checks, not reconstruction or response-effectiveness validation.
 - Verification: the full suite reached 1,522 passes with two stale generated
   projections; both were rebuilt from the current readiness audit and all 17
-  manuscript, projection and documentation checks then passed. The final audit
-  remains 131 PASS / 11 FAIL / 7 PENDING, preserving every negative external
-  transfer rather than promoting the new sensitivity range to validation.
+  manuscript, projection and documentation checks then passed. The current
+  audit is 132 PASS / 11 FAIL / 7 PENDING after adding the separate HyDelta
+  response-grounding integrity gate; every negative external transfer remains
+  unchanged rather than being promoted to validation.
 

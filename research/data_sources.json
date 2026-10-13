@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "checked_at": "2026-10-08",
+  "checked_at": "2026-10-13",
   "policy": "Raw third-party files are downloaded under data/public_validation/raw and are not committed or redistributed.",
   "sources": {
     "h2protocol_j2601_tables": {
@@ -84,6 +84,19 @@
       "file_sha256": "a36fc96f10a6d9b9fe009d0b152a64508caae1f1c48c5cc6212f5a53df00d5c0",
       "rights_note": "The openly licensed English report may be audited locally; the raw PDF remains outside version control and only its identity, reported safeguards and bounded findings are committed.",
       "eligibility_note": "Report-level emergency-response grounding for an engineered controlled flare only. It is not a raw time-series release-model validation set, does not authorize ad hoc ignition of a vent stream and does not establish HRS safety distances or universal nitrogen trip setpoints."
+    },
+    "hydelta_2023_natural_ventilation": {
+      "title": "D6B.1A & D6B.1B Inventory, modeling and experiments related to ventilation in pressure reducing stations",
+      "publisher": "HyDelta / Kiwa",
+      "landing_page": "https://doi.org/10.5281/zenodo.8164602",
+      "doi": "10.5281/zenodo.8164602",
+      "publication_date": "2023-07-19",
+      "license": "CC BY 4.0",
+      "file_bytes": 8542387,
+      "file_md5": "7941752237175c0c0e012b06879d00aa",
+      "file_sha256": "0b0dbe668c17de4f819da30dca9b02b5695cb9ffe34dea20736dc26cda80200e",
+      "rights_note": "The openly licensed English report may be audited locally; the raw PDF remains outside version control and only its identity, reported concentration cases, safeguards and bounded findings are committed.",
+      "eligibility_note": "Report-level emergency-response grounding for cabinet natural ventilation and gas-clearance decisions only. It is not machine-readable time-series evidence and does not calibrate the H70 dispersion proxy, detector setpoints, ESD performance, release rate or site safety distance."
     },
     "hydrogen_dispersion_channel": {
       "title": "Experimental Data of Hydrogen Dispersion in an Open-ended Rectangular Channel",

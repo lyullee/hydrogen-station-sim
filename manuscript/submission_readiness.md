@@ -20,7 +20,7 @@ Audit snapshot: **2026-10-13 KST**
 | Full validated-digital-twin objective ready | **False** |
 | Goal completion permitted | **False** |
 
-Gate counts: **131 PASS · 11 FAIL · 7 PENDING**.
+Gate counts: **132 PASS · 11 FAIL · 7 PENDING**.
 
 The latest full working-tree regression passed **1,510 tests with 0 failures and 6 skipped** plus 209 dependency/data-reader warnings in 220.44 s (`research/full_regression_test_run_2026_10_13.json`). It was run from commit `27cfc11bd4aed64a8535433d8a16891d2851aff1` with the new third-cohort transfer diagnostic and refreshed evidence files still uncommitted, so it is an implementation-integrity record rather than a clean-release attestation. The last clean full-regression record remains `research/full_regression_test_run_2026_10_12_latest.json`. A broad LLM/SAGA, virtual-safety, HAZOP and HIAD accident-path selection passed **159 tests with 2 warnings** (`research/paper_llm_safety_broad_regression_2026_10_12.json`). These software checks do not convert independent physical-validation failures or the author-confirmation gate into passes.
 
@@ -45,8 +45,8 @@ The owner-controlled records are evaluated as same-site chronological holdouts;
 the public Type-IV records provide the independent component holdout. The
 synchronized station-to-vehicle full-loop lane is retained in the legacy audit
 for traceability but is excluded from the primary goal because no openly
-reusable raw cohort was found. The scope-adjusted closure is **129 PASS · 10
-FAIL · 2 PENDING = 91.5%**; this is a scope metric, not a new validation result.
+reusable raw cohort was found. The scope-adjusted closure is **131 PASS · 10
+FAIL · 2 PENDING = 91.6%**; this is a scope metric, not a new validation result.
 The exact split and the paper limitation are recorded in
 [`VALIDATION_DATA_SPLIT_AND_SCOPE_DECISION_2026_10_11.md`](../research/VALIDATION_DATA_SPLIT_AND_SCOPE_DECISION_2026_10_11.md)
 and the machine-readable
@@ -238,6 +238,16 @@ from unrelated compact LLM prompts. The audit also enforces that ordinary vent
 streams are not ignited ad hoc, the reported 34 vol% nitrogen boundary remains
 specific to the tested burner, and the report is not treated as release-model
 or site-distance validation.
+
+The recovery and cabinet-access guidance also uses the CC BY 4.0 HyDelta
+natural-ventilation report (DOI 10.5281/zenodo.8164602). Ten tabulated
+actual-hydrogen cabinet cases show upper-layer accumulation and demonstrate
+that enlarged natural ventilation does not, by itself, prove that every point
+is below the flammability limit. SAGA therefore requires measured gas clearance
+at upper, vent-opening and access locations before opening or re-entry. The
+report is low-pressure, report-level evidence without machine-readable time
+series; it is not used to calibrate H70 dispersion, alarm thresholds, ESD
+performance, release rate or site separation distance.
 
 The open seven-method DATA3632 HRS QRA archive is retained as a post-access
 simulation-to-simulation diagnostic. The fixed 46-file audit keeps 211 rows in

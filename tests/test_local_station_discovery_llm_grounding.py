@@ -182,7 +182,7 @@ def test_role_aware_schema_contract_is_exposed_without_private_headers():
 def test_validation_readiness_ledger_reaches_all_llm_views_without_paths():
     manifest = _manifest()
     expected = {
-        "PASS": 131,
+        "PASS": 132,
         "FAIL": 11,
         "PENDING": 7,
     }
@@ -208,7 +208,7 @@ def test_validation_readiness_ledger_reaches_all_llm_views_without_paths():
     assert summary["full_user_objective_ready"] is False
 
     decision = prompt_decision_evidence(manifest)["validation_boundaries"]
-    assert decision["r"] == "131/11/7;0l0"
+    assert decision["r"] == "132/11/7;0l0"
 
     header = prompt_evidence_header(manifest)["validation_readiness"]
     assert header["gate_counts"] == expected
@@ -221,12 +221,12 @@ def test_primary_scope_amendment_reaches_llm_without_reclassifying_audit_gates()
     assert scope["status"] == "available"
     assert scope["artifact_integrity"] is True
     assert scope["gate_counts"] == {
-        "PASS": 130,
+        "PASS": 131,
         "FAIL": 10,
         "PENDING": 2,
-        "TOTAL": 142,
+        "TOTAL": 143,
     }
-    assert scope["gate_closure_percent"] == 91.5
+    assert scope["gate_closure_percent"] == 91.6
     assert scope["station_to_vehicle_scope"] == (
         "removed_from_primary_goal_after_public_search"
     )
@@ -248,9 +248,9 @@ def test_primary_scope_amendment_reaches_llm_without_reclassifying_audit_gates()
     assert "optional_for_physics_validation" in scope["ethics_and_expert_review"]
 
     decision = prompt_decision_evidence(manifest)
-    assert decision["primary_scope_progress"]["gate_closure_percent"] == 91.5
+    assert decision["primary_scope_progress"]["gate_closure_percent"] == 91.6
     summary = prompt_evidence_summary(manifest)
-    assert summary["primary_scope_progress"]["gate_counts"]["TOTAL"] == 142
+    assert summary["primary_scope_progress"]["gate_counts"]["TOTAL"] == 143
     header = prompt_evidence_header(manifest)
     assert header["primary_scope_progress"]["station_to_vehicle_scope"] == (
         "removed_from_primary_goal_after_public_search"

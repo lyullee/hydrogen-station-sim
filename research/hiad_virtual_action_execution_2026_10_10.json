@@ -1,16 +1,16 @@
 {
   "schema_version": 1,
   "artifact_type": "hiad_virtual_response_action_execution_consistency_audit",
-  "generated_at_utc": "2026-10-13T11:19:42.701992+00:00",
+  "generated_at_utc": "2026-10-13T12:18:43.749888+00:00",
   "status": "completed_virtual_action_execution_audit",
   "evidence_role": "public_action_category_to_simulation_command_consistency_only",
   "source": {
     "hiad_replay_coverage": "research/hiad_digital_twin_replay_coverage_2026_10_08.json",
-    "hiad_replay_coverage_sha256": "43649b8b82fd709e374e75eed6762677f314fb9292300dd44564173b4a099ef5",
+    "hiad_replay_coverage_sha256": "97deb3a901c84f89bbe889ab0cf1af416a5c805f3ebe96957987f8b105af0b4f",
     "action_evidence": "research/hiad_action_evidence.json",
     "action_evidence_sha256": "72f2550eabea6a4207a5d59c98bd99520e217fd2d4f8597e5d1d72f2ef87e1dd",
     "playbook_catalog": "src/h2station/data/emergency_playbooks.json",
-    "playbook_catalog_sha256": "d8fedb036a91b5adae3934f1604a17966b8f0f9200c52f4d40bf2da2243a7c6c",
+    "playbook_catalog_sha256": "997da81d9f273031dc5d160d1fdee826cc1defaa3cbf5651f9bd0c7c7988e052",
     "virtual_safety_runtime": "src/h2station/virtual_safety.py",
     "virtual_safety_runtime_sha256": "5d55b14ab716417ec0eb92086e0bd5c9e6a7db7f48da6baa866834db4915f775"
   },

@@ -32,7 +32,8 @@ _DATA_COVERAGE = next(
     (path for path in _DATA_COVERAGE_CANDIDATES if path.is_file()),
     _DATA_COVERAGE_CANDIDATES[-1],
 )
-_VALIDATION_GAP_TRIAGE = _ROOT / "research/validation_gap_triage_2026_10_10.json"
+_READINESS_AUDIT = _ROOT / "research/ijhe_readiness_audit.json"
+_VALIDATION_GAP_TRIAGE = _ROOT / "research/validation_gap_triage_current.json"
 _PRIVATE_FULL_LOOP_SCHEMA = _ROOT / "research/private_full_loop_schema_recheck_2026_10_10.json"
 _PRIVATE_RECHARGE_SCHEMA = _ROOT / "research/private_recharge_multitrace_schema_recheck_2026_10_10.json"
 _KHK_ACCIDENTS = _ROOT / "research/khk_hydrogen_station_public_reports_inventory_2026_10_04.json"
@@ -1505,7 +1506,8 @@ def validation_evidence_summary() -> dict[str, Any]:
     try:
         coverage = _read_json(_DATA_COVERAGE)
         triage = _read_json(_VALIDATION_GAP_TRIAGE)
-        readiness = coverage.get("readiness") or {}
+        readiness_audit = _read_json(_READINESS_AUDIT)
+        gate_counts = readiness_audit.get("gate_counts") or {}
         overall = triage.get("overall") or {}
         interpretation = triage.get("interpretation") or {}
         if (
@@ -1556,9 +1558,13 @@ def validation_evidence_summary() -> dict[str, Any]:
             "evidence_role": "privacy_bounded_validation_surface",
             "privacy": privacy,
             "readiness": {
-                "ijhe_gate_counts": readiness.get("ijhe_gate_counts") or {},
-                "bounded_submission_ready": readiness.get("bounded_submission_ready") is True,
-                "full_user_objective_ready": overall.get("full_user_objective_ready") is True,
+                "ijhe_gate_counts": gate_counts,
+                "bounded_submission_ready": readiness_audit.get(
+                    "bounded_ijhe_submission_ready"
+                ) is True,
+                "full_user_objective_ready": readiness_audit.get(
+                    "full_user_objective_ready"
+                ) is True,
             },
             "interpretation": {
                 "data_volume_is_primary_blocker": interpretation.get(

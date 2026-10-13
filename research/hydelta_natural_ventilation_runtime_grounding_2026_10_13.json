@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-10-13T12:48:07.399598+00:00",
+  "status": "PASS",
+  "source": {
+    "doi": "10.5281/zenodo.8164602",
+    "evidence": "research/hydelta_natural_ventilation_evidence_2026_10_13.json",
+    "playbook": "src/h2station/data/emergency_playbooks.json"
+  },
+  "checks": {
+    "evidence_status_verified": true,
+    "publisher_file_identity_verified": true,
+    "all_report_claim_checks_pass": true,
+    "source_doi_registered": true,
+    "source_license_registered": true,
+    "gas_release_plan_links_source": true,
+    "ventilation_status_alone_rejected_in_playbook": true,
+    "independent_measurement_required_in_playbook": true,
+    "idle_compact_prompt_omits_ventilation_guidance": true,
+    "active_compact_prompt_includes_ventilation_guidance": true,
+    "active_prompt_rejects_ventilation_only_clearance": true,
+    "active_prompt_requires_measured_clearance": true,
+    "active_prompt_requires_measurement_before_opening": true,
+    "detailed_header_keeps_no_dispersion_calibration_boundary": true,
+    "detailed_header_keeps_no_site_distance_boundary": true,
+    "public_source_link_exposed": true,
+    "runtime_use_is_response_only": true
+  },
+  "runtime_observation": {
+    "relevant_plan_ids": [
+      "gas_release"
+    ],
+    "idle_prompt_has_natural_ventilation_guidance": false,
+    "active_prompt_natural_ventilation": {
+      "doi": "10.5281/zenodo.8164602",
+      "hydrogen_accumulates_as_upper_blanket": true,
+      "ventilation_mitigates_but_does_not_guarantee_below_lfl": true,
+      "ventilation_as_single_safe_state_proof_authorized": false,
+      "measured_gas_clearance_required": true,
+      "measure_before_opening_recommended": true,
+      "maximum_reported_inside_concentration_volpct_h2": 24.0,
+      "claim_limit": "The CC BY 4.0 report provides actual-hydrogen, cabinet-scale measured concentration evidence for ventilation and response wording. The values are rep…"
+    }
+  },
+  "claim_boundary": "This audit verifies report identity, playbook routing and recovery guardrails only. It does not validate H70 dispersion, detector placement, alarm thresholds, ESD effectiveness, release rate, site distance or field response effectiveness."
+}
