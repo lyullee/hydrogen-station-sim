@@ -1875,8 +1875,8 @@ def test_compact_data_used_reports_available_and_applied_station_profile():
         include_references=True,
     )["validation_readiness"]
     assert readiness["claim_tier"] == "component_and_station_side_only"
-    assert readiness["gate_counts"] == {"PASS": 131, "FAIL": 10, "PENDING": 7}
-    assert readiness["open_gate_count"] == 17
+    assert readiness["gate_counts"] == {"PASS": 130, "FAIL": 11, "PENDING": 7}
+    assert readiness["open_gate_count"] == 18
     assert readiness["full_loop_external_validation_supported"] is False
     assert readiness["expert_effectiveness_evaluation_supported"] is False
 

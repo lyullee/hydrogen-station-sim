@@ -6471,10 +6471,16 @@ def audit(root: Path) -> dict[str, object]:
 
     preslhy_path = root / "research/preslhy_blowdown_external_validation.json"
     preslhy = _json(preslhy_path)
+    preslhy_freeze_audit_path = (
+        root / "research/preslhy_blowdown_freeze_integrity_audit_2026_10_13.json"
+    )
+    preslhy_freeze_audit = _json(preslhy_freeze_audit_path)
     preslhy_protocol_path = root / "research/preslhy_blowdown_validation_protocol.json"
     preslhy_protocol = _json(preslhy_protocol_path)
     preslhy_eligibility = (preslhy or {}).get("eligibility") or {}
-    preslhy_aggregate = (preslhy or {}).get("aggregate") or {}
+    preslhy_aggregate = (
+        (preslhy_freeze_audit or {}).get("primary_frozen_result") or {}
+    ).get("aggregate") or {}
     preslhy_protocol_hash = (
         _sha256(preslhy_protocol_path) if preslhy_protocol_path.is_file() else None
     )
@@ -6486,6 +6492,12 @@ def audit(root: Path) -> dict[str, object]:
         )
         is False
         and preslhy_eligibility.get("minimum_requirements_met") is True
+        and (preslhy_freeze_audit or {}).get("status")
+        == "PRIMARY_FROZEN_RESULT_RETAINED_POST_OUTCOME_RERUN_DEMOTED"
+        and ((preslhy_freeze_audit or {}).get("primary_frozen_result") or {}).get(
+            "claim_supported"
+        )
+        is True
         and preslhy_aggregate.get(
             "ambient_direct_aperture_blowdown_claim_supported"
         )
@@ -6495,12 +6507,20 @@ def audit(root: Path) -> dict[str, object]:
     gates.append(_gate(
         "preslhy_blowdown_external_validation",
         "PASS" if preslhy_pass else ("FAIL" if preslhy else "PENDING"),
-        "The source-depletion and direct-aperture release model meets its prospectively frozen screens on public PRESLHY ambient blowdown experiments.",
-        f"{preslhy_path.relative_to(root)}; {preslhy_protocol_path.relative_to(root)}",
+        "The source-depletion and direct-aperture release model is evaluated against prospectively frozen screens on public PRESLHY ambient blowdown experiments.",
+        f"{preslhy_path.relative_to(root)}; {preslhy_protocol_path.relative_to(root)}; "
+        f"{preslhy_freeze_audit_path.relative_to(root)}",
         ">=12 cases across >=3 nozzle and pressure groups, >=70% joint primary pass fraction, frozen implementation and retained failures.",
         {
             "eligibility": preslhy_eligibility,
             "aggregate": preslhy_aggregate,
+            "freeze_integrity": preslhy_freeze_audit,
+            "post_outcome_diagnostic": {
+                "joint_primary_pass_fraction": ((preslhy or {}).get("aggregate") or {}).get(
+                    "joint_primary_pass_fraction"
+                ),
+                "claim_supported": False,
+            },
             "claim_boundary": (preslhy_protocol or {}).get("claim_boundary"),
         } if preslhy else "missing; acquisition/validation has not completed",
     ))

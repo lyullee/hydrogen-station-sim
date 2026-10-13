@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "artifact_type": "preslhy_blowdown_freeze_integrity_audit",
+  "recorded_at": "2026-10-13",
+  "status": "PRIMARY_FROZEN_RESULT_RETAINED_POST_OUTCOME_RERUN_DEMOTED",
+  "protocol": {
+    "path": "research/preslhy_blowdown_validation_protocol.json",
+    "sha256": "d40cc59af3a607e66870d2afb91014058c83ae96fc1ba4aeac0d8554953733af",
+    "frozen_model_commit": "d5eb663d7c48d93e29ecf83601175d8b16e3eeaf",
+    "validation_implementation_commit": "3b01661436de76a453e6652c4bcb479c3eaeb628",
+    "outcomes_accessed_before_freeze": false
+  },
+  "chronology": [
+    {
+      "commit": "2ace577d66e2ff45797d40cd13472b4d0a94ce39",
+      "time": "2026-10-03T15:52:46+09:00",
+      "event": "Original frozen numerical result archived after outcome access"
+    },
+    {
+      "commit": "20975ae60d3d22cb7c98ec7b81049af98519a3c5",
+      "time": "2026-10-03T21:13:47+09:00",
+      "event": "Hydrogen property solver changed after the original result"
+    },
+    {
+      "commit": "c7d16d471d3072b8a34e4e10de80dda2b57b8da0",
+      "time": "2026-10-04T09:51:41+09:00",
+      "event": "Restriction choking search changed after the original result"
+    },
+    {
+      "commit": "b00c98e9c89218c53b09d3eb8995ade2cb1dc22c",
+      "time": "2026-10-05T06:32:12+09:00",
+      "event": "Changed model rerun replaced the archived numerical record"
+    }
+  ],
+  "primary_frozen_result": {
+    "source": "git:2ace577d66e2ff45797d40cd13472b4d0a94ce39:research/preslhy_blowdown_external_validation.json",
+    "eligible_cases": 22,
+    "joint_primary_passes": 11,
+    "aggregate": {
+      "joint_primary_pass_fraction": 0.5,
+      "bootstrap_95_percent_ci": [0.3181818181818182, 0.7272727272727273],
+      "claim_threshold": 0.7,
+      "ambient_direct_aperture_blowdown_claim_supported": false
+    },
+    "evaluation_error_count": 6,
+    "claim_supported": false,
+    "decision": "FAIL"
+  },
+  "post_outcome_rerun": {
+    "source": "research/preslhy_blowdown_external_validation.json",
+    "eligible_cases": 22,
+    "joint_primary_passes": 16,
+    "joint_primary_pass_fraction": 0.7272727272727273,
+    "numerical_rule_met": true,
+    "prospective_claim_supported": false,
+    "evidence_role": "POST_OUTCOME_DEVELOPMENT_DIAGNOSTIC_ONLY"
+  },
+  "integrity_findings": {
+    "model_changed_after_outcome_access": true,
+    "positive_rerun_matches_prospectively_frozen_model": false,
+    "positive_rerun_may_replace_primary_result": false,
+    "manuscript_original_negative_result_is_controlling": true
+  },
+  "runtime_parameter_application": false,
+  "claim_boundary": "The original 11/22 frozen failure is the only prospective E3.1 decision. The later 16/22 numerical result is a transparent post-outcome diagnostic and cannot validate source depletion, station consequence distance or field safety."
+}

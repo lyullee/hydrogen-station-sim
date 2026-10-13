@@ -1,16 +1,20 @@
-# PRESLHY ambient blowdown external validation
+# PRESLHY ambient blowdown result and post-outcome diagnostic
 
-- Decision: **PASS**
+- Controlling prospective decision: **FAIL**
 - Eligible cases: **22**; excluded: **0**
-- Joint primary pass fraction: **72.7%** (case-bootstrap 95% CI 54.5%–90.9%)
+- Original frozen result: **11/22 (50.0%)** (case-bootstrap 95% CI 31.8%–72.7%)
+- Post-outcome rerun shown below: **16/22 (72.7%)** (case-bootstrap 95% CI 54.5%–90.9%)
 - Predeclared threshold: **70%**
-- Evaluation errors retained as failures: **0**
+- Original frozen evaluation errors retained as failures: **6**
 - Protocol SHA-256: `d40cc59af3a607e66870d2afb91014058c83ae96fc1ba4aeac0d8554953733af`
 - Runner commit: `d5767d6a08d86f3322cdd572e84be36d82a3db18`
 
-The frozen ambient direct-aperture source-depletion model met the predeclared external-validation decision rule.
+The original frozen model did not meet the predeclared external-validation rule.
+The 72.7% rerun followed property-domain and choking-search changes made after
+outcome access, so it is development evidence only. See
+`PRESLHY_BLOWDOWN_FREEZE_INTEGRITY_AUDIT_2026_10_13.md`.
 
-## Stratified result
+## Post-outcome diagnostic stratified result
 
 | Stratum | Cases | Pressure pass | Half-time pass | Joint pass | Errors |
 |---|---:|---:|---:|---:|---:|
@@ -22,7 +26,7 @@ The frozen ambient direct-aperture source-depletion model met the predeclared ex
 | by_initial_pressure_group: low | 6 | 4 | 4 | 3 | 0 |
 | by_initial_pressure_group: medium | 7 | 7 | 6 | 6 | 0 |
 
-## Case-level result
+## Post-outcome diagnostic case-level result
 
 | Case | d (mm) | P0 (bar abs) | Group | P NRMSE (%) | t50 error (%) | Joint | Error |
 |---|---:|---:|---|---:|---:|---|---|
@@ -53,6 +57,9 @@ The frozen ambient direct-aperture source-depletion model met the predeclared ex
 
 This protocol evaluates a rigid source vessel discharging through a nominal circular aperture. It does not validate a vehicle-fueling loop, cryogenic two-phase release, a site vent stack, pipe backpressure, ignition, dispersion, or emergency separation distance.
 
-Post-outcome model development must preserve this negative result. Any revised thermophysical domain, heat-transfer model, valve/line model or coefficient requires a new version and independent holdout; the present cases cannot become an undisclosed validation set.
+The original 11/22 frozen failure remains controlling. This 16/22 rerun cannot
+support a prospective validation claim. Any revised thermophysical domain,
+heat-transfer model, valve/line model or coefficient requires a new version and
+an untouched independent holdout.
 
 The numerical-only pass fraction is descriptive and does not replace the predeclared decision, which includes every eligible model failure.

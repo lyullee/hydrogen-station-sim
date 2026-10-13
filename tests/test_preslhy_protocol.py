@@ -83,12 +83,28 @@ def test_preslhy_primary_screens_are_fixed_before_outcome_access():
     ].lower()
 
 
-def test_preslhy_validation_implementation_matches_pre_outcome_hashes():
+def test_preslhy_validation_implementation_hashes_remain_a_historical_lock():
     protocol = _protocol()
     implementation = protocol["validation_implementation_pre_outcome"]
+    freeze_audit = json.loads(
+        (
+            ROOT
+            / "research"
+            / "preslhy_blowdown_freeze_integrity_audit_2026_10_13.json"
+        ).read_text(encoding="utf-8")
+    )
+    implementation_commit = freeze_audit["protocol"]["validation_implementation_commit"]
+    assert re.fullmatch(r"[0-9a-f]{40}", implementation_commit)
     assert implementation["revision"] == 4
     assert implementation["raw_workbook_structure_accessed_when_hashed"] is True
     assert implementation["numerical_model_outcomes_computed_when_hashed"] is False
-    for relative, expected in implementation["files_sha256"].items():
-        actual = hashlib.sha256((ROOT / relative).read_bytes()).hexdigest()
-        assert actual == expected
+    adapter = "src/h2station/preslhy_validation.py"
+    runner = "scripts/run_preslhy_blowdown_validation.py"
+    assert hashlib.sha256((ROOT / adapter).read_bytes()).hexdigest() == (
+        implementation["files_sha256"][adapter]
+    )
+    # The runner now contains the fail-closed freeze guard. Its current bytes
+    # must not be confused with the historical pre-outcome runner bytes.
+    assert hashlib.sha256((ROOT / runner).read_bytes()).hexdigest() != (
+        implementation["files_sha256"][runner]
+    )

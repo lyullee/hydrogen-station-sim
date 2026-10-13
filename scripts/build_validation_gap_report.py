@@ -427,9 +427,15 @@ def main() -> int:
     args = parser.parse_args()
     report = build_report(args.root.resolve(), audit_path=args.audit)
     args.json_output.parent.mkdir(parents=True, exist_ok=True)
-    args.json_output.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    args.json_output.write_text(
+        json.dumps(report, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+        newline="\n",
+    )
     args.markdown_output.parent.mkdir(parents=True, exist_ok=True)
-    args.markdown_output.write_text(_markdown(report), encoding="utf-8")
+    args.markdown_output.write_text(
+        _markdown(report), encoding="utf-8", newline="\n"
+    )
     print(args.json_output)
     print(args.markdown_output)
     return 0

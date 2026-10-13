@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-12T06:53:17.476815+00:00",
+  "generated_at": "2026-10-13T05:26:20.969167+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -13,12 +13,13 @@
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 131,
-    "FAIL": 10,
+    "PASS": 130,
+    "FAIL": 11,
     "PENDING": 7
   },
   "blocking_bounded_submission_gates": [
     "dickens_typeiii_prospective_validation",
+    "preslhy_blowdown_external_validation",
     "preslhy_partb_ambient_external_validation",
     "preslhy_revised_holdout_validation",
     "proust_independent_release_validation",
@@ -29,6 +30,7 @@
   ],
   "blocking_full_objective_gates": [
     "dickens_typeiii_prospective_validation",
+    "preslhy_blowdown_external_validation",
     "preslhy_partb_ambient_external_validation",
     "preslhy_revised_holdout_validation",
     "proust_independent_release_validation",
@@ -6185,9 +6187,9 @@
     },
     {
       "id": "preslhy_blowdown_external_validation",
-      "status": "PASS",
-      "claim": "The source-depletion and direct-aperture release model meets its prospectively frozen screens on public PRESLHY ambient blowdown experiments.",
-      "evidence": "research\\preslhy_blowdown_external_validation.json; research\\preslhy_blowdown_validation_protocol.json",
+      "status": "FAIL",
+      "claim": "The source-depletion and direct-aperture release model is evaluated against prospectively frozen screens on public PRESLHY ambient blowdown experiments.",
+      "evidence": "research\\preslhy_blowdown_external_validation.json; research\\preslhy_blowdown_validation_protocol.json; research\\preslhy_blowdown_freeze_integrity_audit_2026_10_13.json",
       "requirement": ">=12 cases across >=3 nozzle and pressure groups, >=70% joint primary pass fraction, frozen implementation and retained failures.",
       "observed": {
         "eligibility": {
@@ -6207,15 +6209,85 @@
           "minimum_requirements_met": true
         },
         "aggregate": {
-          "joint_primary_pass_fraction": 0.7272727272727273,
+          "joint_primary_pass_fraction": 0.5,
           "bootstrap_95_percent_ci": [
-            0.5454545454545454,
-            0.9090909090909091
+            0.3181818181818182,
+            0.7272727272727273
           ],
-          "bootstrap_replicates": 10000,
-          "bootstrap_seed": 20261003,
           "claim_threshold": 0.7,
-          "ambient_direct_aperture_blowdown_claim_supported": true
+          "ambient_direct_aperture_blowdown_claim_supported": false
+        },
+        "freeze_integrity": {
+          "schema_version": 1,
+          "artifact_type": "preslhy_blowdown_freeze_integrity_audit",
+          "recorded_at": "2026-10-13",
+          "status": "PRIMARY_FROZEN_RESULT_RETAINED_POST_OUTCOME_RERUN_DEMOTED",
+          "protocol": {
+            "path": "research/preslhy_blowdown_validation_protocol.json",
+            "sha256": "d40cc59af3a607e66870d2afb91014058c83ae96fc1ba4aeac0d8554953733af",
+            "frozen_model_commit": "d5eb663d7c48d93e29ecf83601175d8b16e3eeaf",
+            "outcomes_accessed_before_freeze": false
+          },
+          "chronology": [
+            {
+              "commit": "2ace577d66e2ff45797d40cd13472b4d0a94ce39",
+              "time": "2026-10-03T15:52:46+09:00",
+              "event": "Original frozen numerical result archived after outcome access"
+            },
+            {
+              "commit": "20975ae60d3d22cb7c98ec7b81049af98519a3c5",
+              "time": "2026-10-03T21:13:47+09:00",
+              "event": "Hydrogen property solver changed after the original result"
+            },
+            {
+              "commit": "c7d16d471d3072b8a34e4e10de80dda2b57b8da0",
+              "time": "2026-10-04T09:51:41+09:00",
+              "event": "Restriction choking search changed after the original result"
+            },
+            {
+              "commit": "b00c98e9c89218c53b09d3eb8995ade2cb1dc22c",
+              "time": "2026-10-05T06:32:12+09:00",
+              "event": "Changed model rerun replaced the archived numerical record"
+            }
+          ],
+          "primary_frozen_result": {
+            "source": "git:2ace577d66e2ff45797d40cd13472b4d0a94ce39:research/preslhy_blowdown_external_validation.json",
+            "eligible_cases": 22,
+            "joint_primary_passes": 11,
+            "aggregate": {
+              "joint_primary_pass_fraction": 0.5,
+              "bootstrap_95_percent_ci": [
+                0.3181818181818182,
+                0.7272727272727273
+              ],
+              "claim_threshold": 0.7,
+              "ambient_direct_aperture_blowdown_claim_supported": false
+            },
+            "evaluation_error_count": 6,
+            "claim_supported": false,
+            "decision": "FAIL"
+          },
+          "post_outcome_rerun": {
+            "source": "research/preslhy_blowdown_external_validation.json",
+            "eligible_cases": 22,
+            "joint_primary_passes": 16,
+            "joint_primary_pass_fraction": 0.7272727272727273,
+            "numerical_rule_met": true,
+            "prospective_claim_supported": false,
+            "evidence_role": "POST_OUTCOME_DEVELOPMENT_DIAGNOSTIC_ONLY"
+          },
+          "integrity_findings": {
+            "model_changed_after_outcome_access": true,
+            "positive_rerun_matches_prospectively_frozen_model": false,
+            "positive_rerun_may_replace_primary_result": false,
+            "manuscript_original_negative_result_is_controlling": true
+          },
+          "runtime_parameter_application": false,
+          "claim_boundary": "The original 11/22 frozen failure is the only prospective E3.1 decision. The later 16/22 numerical result is a transparent post-outcome diagnostic and cannot validate source depletion, station consequence distance or field safety."
+        },
+        "post_outcome_diagnostic": {
+          "joint_primary_pass_fraction": 0.7272727272727273,
+          "claim_supported": false
         },
         "claim_boundary": "This protocol evaluates a rigid source vessel discharging through a nominal circular aperture. It does not validate a vehicle-fueling loop, cryogenic two-phase release, a site vent stack, pipe backpressure, ignition, dispersion, or emergency separation distance."
       }

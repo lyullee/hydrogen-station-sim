@@ -1,6 +1,17 @@
 {
-  "schema_version": 1,
-  "evidence_type": "prospectively specified independent external validation",
+  "schema_version": 2,
+  "evidence_type": "post-outcome development diagnostic with retained original frozen result",
+  "freeze_integrity": {
+    "status": "PRIMARY_FROZEN_RESULT_RETAINED_POST_OUTCOME_RERUN_DEMOTED",
+    "audit": "research/preslhy_blowdown_freeze_integrity_audit_2026_10_13.json",
+    "original_result_commit": "2ace577d66e2ff45797d40cd13472b4d0a94ce39",
+    "post_outcome_model_change_commits": [
+      "20975ae60d3d22cb7c98ec7b81049af98519a3c5",
+      "c7d16d471d3072b8a34e4e10de80dda2b57b8da0"
+    ],
+    "positive_rerun_commit": "b00c98e9c89218c53b09d3eb8995ade2cb1dc22c",
+    "prospective_claim_permitted": false
+  },
   "source": {
     "title": "PRESLHY Experiment series E3.1 (Cryogenic Hydrogen Blow-down/Discharge) results - part A high pressure",
     "doi": "10.35097/1187",
@@ -78,13 +89,14 @@
     "bootstrap_replicates": 10000,
     "bootstrap_seed": 20261003,
     "claim_threshold": 0.7,
-    "ambient_direct_aperture_blowdown_claim_supported": true
+    "ambient_direct_aperture_blowdown_claim_supported": false,
+    "post_outcome_numerical_rule_met": true
   },
   "decision": {
-    "status": "PASS",
+    "status": "POST_OUTCOME_DIAGNOSTIC_ONLY",
     "predeclared_threshold": 0.7,
-    "claim_supported": true,
-    "interpretation": "The frozen ambient direct-aperture source-depletion model met the predeclared external-validation decision rule."
+    "claim_supported": false,
+    "interpretation": "The post-outcome model rerun met the numerical screen, but model bytes changed after the original outcomes were accessed. The original frozen 11/22 (50.0%) failure controls the prospective claim."
   },
   "failure_accounting": {
     "eligible_case_count": 22,
@@ -687,5 +699,5 @@
     }
   ],
   "exclusions": [],
-  "development_note": "Post-outcome model development must preserve this negative result. Any revised thermophysical domain, heat-transfer model, valve/line model or coefficient requires a new version and independent holdout; the present cases cannot become an undisclosed validation set."
+  "development_note": "This 16/22 rerun is post-outcome development evidence only. The original frozen 11/22 result remains the controlling negative validation result. Any revised model requires a new untouched external holdout."
 }

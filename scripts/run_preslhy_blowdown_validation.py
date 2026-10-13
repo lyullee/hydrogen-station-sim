@@ -16,6 +16,12 @@ import zipfile
 
 import numpy as np
 
+# Make the documented ``python scripts/...`` entry point work from a source
+# checkout as well as from an editable installation.  The freeze check below
+# still runs before any raw outcome workbook is opened.
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "src"))
+
 from h2station.preslhy_validation import (
     eligible_pressure_window,
     evaluate_preslhy_trace,
@@ -48,6 +54,46 @@ def _git_commit(root: Path) -> str:
     return subprocess.check_output(
         ["git", "rev-parse", "HEAD"], cwd=root, text=True
     ).strip()
+
+
+def _freeze_integrity(root: Path, protocol: dict) -> dict[str, object]:
+    """Compare the executable model bytes with the prospectively frozen set.
+
+    This check must run before any raw workbook is opened.  A later bug fix or
+    property-table change can be scientifically useful, but once the outcomes
+    have been inspected it is a development diagnostic rather than the frozen
+    confirmatory run.
+    """
+
+    expected = dict(
+        (protocol.get("frozen_model") or {}).get("files_sha256") or {}
+    )
+    expected.update(
+        (protocol.get("validation_implementation_pre_outcome") or {}).get(
+            "files_sha256"
+        )
+        or {}
+    )
+    observed: dict[str, str | None] = {}
+    mismatches: list[dict[str, str | None]] = []
+    for relative, expected_hash in sorted(expected.items()):
+        path = root / relative
+        actual_hash = _sha256(path) if path.is_file() else None
+        observed[relative] = actual_hash
+        if actual_hash != expected_hash:
+            mismatches.append({
+                "path": relative,
+                "expected_sha256": expected_hash,
+                "observed_sha256": actual_hash,
+            })
+    return {
+        "checked_before_raw_outcome_access": True,
+        "frozen_git_commit": (protocol.get("frozen_model") or {}).get("git_commit"),
+        "expected_files_sha256": expected,
+        "observed_files_sha256": observed,
+        "mismatches": mismatches,
+        "matches_frozen_model": not mismatches and bool(expected),
+    }
 
 
 def _json_safe(value):
@@ -116,11 +162,30 @@ def main() -> int:
         type=Path,
         default=Path("data/public_validation/results/preslhy_blowdown"),
     )
+    parser.add_argument(
+        "--development-diagnostic",
+        action="store_true",
+        help=(
+            "Allow execution when current model bytes differ from the frozen "
+            "protocol. The output is labelled post-outcome development evidence "
+            "and cannot support the prospective validation claim."
+        ),
+    )
     args = parser.parse_args()
     root = Path(__file__).resolve().parents[1]
     protocol = json.loads(args.protocol.read_text(encoding="utf-8"))
     if protocol["source"]["outcomes_accessed_before_freeze"] is not False:
         raise RuntimeError("PRESLHY protocol is not prospectively frozen")
+    freeze_integrity = _freeze_integrity(root, protocol)
+    if not freeze_integrity["matches_frozen_model"] and not args.development_diagnostic:
+        changed = ", ".join(
+            item["path"] for item in freeze_integrity["mismatches"]
+        )
+        raise RuntimeError(
+            "current model does not match the prospectively frozen PRESLHY "
+            f"implementation ({changed}); rerun only with "
+            "--development-diagnostic and do not promote the result"
+        )
 
     cases = []
     exclusions = []
@@ -188,6 +253,12 @@ def main() -> int:
 
     report = {
         "schema_version": 1,
+        "evidence_role": (
+            "prospectively_frozen_external_validation"
+            if freeze_integrity["matches_frozen_model"]
+            else "post_outcome_development_diagnostic_only"
+        ),
+        "freeze_integrity": freeze_integrity,
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "runner_git_commit": _git_commit(root),
         "protocol_path": str(args.protocol),

@@ -182,8 +182,8 @@ def test_role_aware_schema_contract_is_exposed_without_private_headers():
 def test_validation_readiness_ledger_reaches_all_llm_views_without_paths():
     manifest = _manifest()
     expected = {
-        "PASS": 131,
-        "FAIL": 10,
+        "PASS": 130,
+        "FAIL": 11,
         "PENDING": 7,
     }
     readiness = manifest["response_evidence"]["validation_readiness"]
@@ -197,7 +197,7 @@ def test_validation_readiness_ledger_reaches_all_llm_views_without_paths():
     assert readiness["expert_effectiveness_evaluation_supported"] is False
     assert readiness["independent_expert_review_complete"] is False
     assert readiness["claim_tier"] == "component_and_station_side_only"
-    assert readiness["open_gate_count"] == 17
+    assert readiness["open_gate_count"] == 18
     assert "full_loop_external_validation" in readiness["open_gate_ids"]
     assert readiness["evidence_use_policy"]["diagnostic"]
     assert "C:\\" not in str(readiness)
@@ -208,7 +208,7 @@ def test_validation_readiness_ledger_reaches_all_llm_views_without_paths():
     assert summary["full_user_objective_ready"] is False
 
     decision = prompt_decision_evidence(manifest)["validation_boundaries"]
-    assert decision["r"] == "131/10/7;0l0"
+    assert decision["r"] == "130/11/7;0l0"
 
     header = prompt_evidence_header(manifest)["validation_readiness"]
     assert header["gate_counts"] == expected

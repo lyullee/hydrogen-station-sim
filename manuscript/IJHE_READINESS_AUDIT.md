@@ -134,7 +134,7 @@ The local result is an evidence-readiness gate, not a guarantee of editorial acc
 | `public_nbsdc_lh2_station_intake_integrity` | **PASS** | The public NBSDC liquid-hydrogen station record is protocol-frozen and its numerical-file access boundary is recorded without treating catalogue metadata as measured validation. | `research\nbsdc_lh2_station_intake_protocol_2026_10_12.json; research\nbsdc_lh2_station_intake_result_2026_10_12.json` |
 | `runtime_public_accident_precedent_routing` | **PASS** | Active response families receive integrity-checked, scenario-specific public KHK accident precedents in both the evidence manifest and compact LLM prompt. | `research\runtime_public_accident_precedent_routing_2026_10_07.json` |
 | `khk_digital_twin_replay_traceability` | **PASS** | Independent public KHK accident families are explicitly traced through executable digital-twin recipes with phase and equipment mismatches kept visible. | `research\khk_digital_twin_replay_coverage_2026_10_08.json` |
-| `preslhy_blowdown_external_validation` | **PASS** | The source-depletion and direct-aperture release model meets its prospectively frozen screens on public PRESLHY ambient blowdown experiments. | `research\preslhy_blowdown_external_validation.json; research\preslhy_blowdown_validation_protocol.json` |
+| `preslhy_blowdown_external_validation` | **FAIL** | The source-depletion and direct-aperture release model is evaluated against prospectively frozen screens on public PRESLHY ambient blowdown experiments. | `research\preslhy_blowdown_external_validation.json; research\preslhy_blowdown_validation_protocol.json; research\preslhy_blowdown_freeze_integrity_audit_2026_10_13.json` |
 | `preslhy_partb_ambient_external_validation` | **FAIL** | The frozen release model meets the independent ambient Cryostat Part-B pressure-decay screens. | `research\preslhy_partb_ambient_validation.json; research\preslhy_partb_holdout_protocol.json` |
 | `preslhy_partb_nonadiabatic_diagnostic_integrity` | **PASS** | The revised non-adiabatic model is replayed on the consumed Part-B cases as a negative development diagnostic without replacing the frozen result. | `research\preslhy_partb_nonadiabatic_diagnostic_2026_10_05.json` |
 | `preslhy_partb_input_interpretation_audit` | **PASS** | The PRESLHY Part-B workbook labels, units, time base and release marker are independently checked without changing the frozen validation result. | `research\preslhy_partb_input_audit_2026_10_05.json` |
@@ -170,6 +170,7 @@ The local result is an evidence-readiness gate, not a guarantee of editorial acc
 ## Blocking bounded-submission gates
 
 - `dickens_typeiii_prospective_validation`
+- `preslhy_blowdown_external_validation`
 - `preslhy_partb_ambient_external_validation`
 - `preslhy_revised_holdout_validation`
 - `proust_independent_release_validation`
@@ -181,6 +182,7 @@ The local result is an evidence-readiness gate, not a guarantee of editorial acc
 ## Blocking full-objective gates
 
 - `dickens_typeiii_prospective_validation`
+- `preslhy_blowdown_external_validation`
 - `preslhy_partb_ambient_external_validation`
 - `preslhy_revised_holdout_validation`
 - `proust_independent_release_validation`

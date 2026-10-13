@@ -597,9 +597,12 @@ def main() -> int:
     args.json_output.write_text(
         json.dumps(summary, ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8",
+        newline="\n",
     )
     args.markdown_output.parent.mkdir(parents=True, exist_ok=True)
-    args.markdown_output.write_text(_markdown(summary), encoding="utf-8")
+    args.markdown_output.write_text(
+        _markdown(summary), encoding="utf-8", newline="\n"
+    )
     print(args.json_output)
     print(args.markdown_output)
     return 0

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-11T22:28:59.053525+00:00",
+  "generated_at": "2026-10-13T05:28:49.859062+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -16,8 +16,8 @@
     "interpretation": "A bounded manuscript may be drafted around model-level and qualitative evidence, but the validated full-station digital-twin objective cannot be declared complete."
   },
   "gate_counts": {
-    "PASS": 131,
-    "FAIL": 10,
+    "PASS": 130,
+    "FAIL": 11,
     "PENDING": 7
   },
   "evidence_snapshot": {
@@ -325,9 +325,9 @@
     }
   ],
   "reproducibility": {
-    "audit_sha256": "8d24d67b6010205c9d3f3c0214677db381ae40421fbc24504c8989cc0afbd6f8",
+    "audit_sha256": "9b0ec042d23d5a4d2c2d63753626bc5e78be5e8b710930b4bb4e9798959befec",
     "hiad_readiness_sha256": "ff2088fc29bacbe6ea8ab22d3fa8fd0de89a64c8357b12ef2c83b55094cf0ed6",
-    "acquisition_tracker_sha256": "42f06e0474285fbe75847fd9d7af463c9cd23a36fe4cc5f0c00cc1d3405baa10",
+    "acquisition_tracker_sha256": "2554679ac3aa83b6cc76dbfc6a9ee89165fd05aa2795867e139b55debdd076a8",
     "full_loop_search_sha256": "7bf50a987108144ce02d4f0ada3e80bed235bee5d437ec13dfb20fe460826a69",
     "latest_full_loop_search_sha256": "14391668298eea81e1aaff919e9a20fd9c3570694e33cf8998d4156976cba808",
     "methytrucks_postaccess_sha256": "5f55152984db8952fb532d975f7c89db7f1681375f20c306a9ccb7cdc79ddf48",

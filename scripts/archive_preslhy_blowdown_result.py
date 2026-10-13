@@ -57,6 +57,17 @@ def archive_result(validation: dict, protocol: dict, protocol_sha256: str) -> di
         raise RuntimeError("validation result does not match the current frozen protocol")
     if protocol["source"]["outcomes_accessed_before_freeze"] is not False:
         raise RuntimeError("protocol was not frozen before numerical outcome access")
+    freeze_integrity = validation.get("freeze_integrity") or {}
+    if (
+        validation.get("evidence_role")
+        != "prospectively_frozen_external_validation"
+        or freeze_integrity.get("matches_frozen_model") is not True
+    ):
+        raise RuntimeError(
+            "validation output is not from the prospectively frozen model; "
+            "retain it as a development diagnostic instead of overwriting the "
+            "external-validation record"
+        )
 
     cases = validation["cases"]
     errors = Counter(
@@ -76,6 +87,7 @@ def archive_result(validation: dict, protocol: dict, protocol_sha256: str) -> di
     return {
         "schema_version": 1,
         "evidence_type": "prospectively specified independent external validation",
+        "freeze_integrity": freeze_integrity,
         "source": protocol["source"],
         "claim_boundary": validation["claim_boundary"],
         "protocol_path": validation["protocol_path"],

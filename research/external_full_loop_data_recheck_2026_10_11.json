@@ -103,7 +103,7 @@
         "nozzle_diameter_and_initial_pressure_metadata": true,
         "station_and_vehicle_synchronized": false,
         "common_timebase_station_to_vehicle_public": false,
-        "published_component_validation": "ambient direct-aperture blowdown; 22 eligible cases; 72.7% joint pass"
+        "published_component_validation": "ambient direct-aperture blowdown; 22 eligible cases; original prospectively frozen result 11/22 (50.0%) and below the 70% criterion; later 16/22 (72.7%) result is post-outcome development diagnostic only"
       },
       "decision": "COMPONENT_ONLY_NOT_FULL_LOOP",
       "claim_boundary": "This dataset supports an independent rigid-vessel direct-aperture component check. It cannot validate dispenser, receptacle, vehicle control, ESD or a complete station-to-vehicle loop."

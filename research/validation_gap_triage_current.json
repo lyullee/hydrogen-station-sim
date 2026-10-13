@@ -1,20 +1,20 @@
 {
   "schema_version": 1,
-  "source_audit_generated_at": "2026-10-12T06:53:17.476815+00:00",
+  "source_audit_generated_at": "2026-10-13T05:26:20.969167+00:00",
   "target_journal": "International Journal of Hydrogen Energy",
   "overall": {
-    "pass": 131,
-    "fail": 10,
+    "pass": 130,
+    "fail": 11,
     "pending": 7,
     "full_user_objective_ready": false
   },
   "primary_scope": {
     "definition": "Declared 2026-10-11 primary scope: station-side process/safety, public component holdouts and direct-answer SAGA grounding; full-loop, human-effectiveness and non-validation access-boundary checks remain excluded.",
-    "pass": 130,
-    "fail": 9,
+    "pass": 129,
+    "fail": 10,
     "pending": 2,
     "total": 141,
-    "closure_percent": 92.2,
+    "closure_percent": 91.5,
     "excluded_gate_ids": [
       "full_loop_external_validation",
       "hiad_casebook_frozen",
@@ -53,6 +53,10 @@
     "governance_review": {
       "FAIL": 0,
       "PENDING": 6
+    },
+    "other": {
+      "FAIL": 1,
+      "PENDING": 0
     }
   },
   "scope_exclusions": [
@@ -273,6 +277,18 @@
       "next_action": "저자·기여·이해상충·자금·AI 사용 공개를 확인한 뒤 제출 메타데이터를 잠근다.",
       "why_now": "수치 계산과 독립적으로 진행 가능한 검토·기록 작업",
       "claim_boundary": "현재 게이트 상태 이상의 주장은 허용하지 않는다."
+    },
+    {
+      "id": "preslhy_blowdown_external_validation",
+      "status": "FAIL",
+      "bucket": "other",
+      "priority": "P3",
+      "parallel_track": "other",
+      "scope_role": "required_primary_scope",
+      "claim": "The source-depletion and direct-aperture release model is evaluated against prospectively frozen screens on public PRESLHY ambient blowdown experiments.",
+      "next_action": "게이트 정의와 독립 근거를 확인한 뒤 상태를 갱신한다.",
+      "why_now": "게이트 정의와 독립 근거를 먼저 확인",
+      "claim_boundary": "This protocol evaluates a rigid source vessel discharging through a nominal circular aperture. It does not validate a vehicle-fueling loop, cryogenic two-phase release, a site vent stack, pipe backpressure, ignition, dispersion, or emergency separation distance."
     }
   ]
 }

@@ -23,17 +23,17 @@
     "full_user_objective_ready": false,
     "goal_completion_permitted": false,
     "overall_gates": {
-      "PASS": 131,
-      "FAIL": 10,
+      "PASS": 130,
+      "FAIL": 11,
       "PENDING": 7,
       "total": 148
     },
     "primary_scope_gates": {
-      "PASS": 130,
-      "FAIL": 9,
+      "PASS": 129,
+      "FAIL": 10,
       "PENDING": 2,
       "total": 141,
-      "closure_percent": 92.2
+      "closure_percent": 91.5
     }
   },
   "software_evidence": {
@@ -53,6 +53,7 @@
   },
   "known_blockers": [
     "dickens_typeiii_prospective_validation",
+    "preslhy_blowdown_external_validation",
     "preslhy_partb_ambient_external_validation",
     "preslhy_revised_holdout_validation",
     "proust_independent_release_validation",

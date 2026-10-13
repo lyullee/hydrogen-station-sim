@@ -624,10 +624,13 @@ exists and the results support the stated claims:
    errors, confidence intervals, environmental strata, capacity strata and
    residual plots are reported. Calibration and validation cases are separated
    if any parameter fitting is introduced.
-2. **Release/consequence physics:** the frozen PRESLHY ambient blowdown test
-   meets its direct-aperture screens, and the production consequence path is
-   traceable to the exact HyRAM+ validation basis and adapter-parity evidence.
-   These remain separate source-depletion and free-jet consequence claims.
+2. **Release/consequence physics:** the original frozen PRESLHY ambient
+   blowdown result remains a retained negative result (11/22; 50.0%) and cannot
+   support the direct-aperture transfer claim. A new untouched external dataset
+   must meet a prospectively frozen screen before that claim is promoted. The
+   production consequence path must remain traceable to the exact HyRAM+
+   validation basis and adapter-parity evidence; source depletion and free-jet
+   consequence remain separate claims.
 3. **Incident decision support:** the holdout vignettes are checked for response
    leakage; three qualified reviewers complete blinded ratings; agreement,
    unsafe-advice rate, critical-omission rate, response latency and failed-call

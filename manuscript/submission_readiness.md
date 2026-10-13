@@ -12,7 +12,7 @@ evidence-readiness decision; it is not a prediction of editorial acceptance.
 
 ## Current decision
 
-Audit snapshot: **2026-10-12 KST**
+Audit snapshot: **2026-10-13 KST**
 
 | Decision | Result |
 |---|---|
@@ -20,7 +20,7 @@ Audit snapshot: **2026-10-12 KST**
 | Full validated-digital-twin objective ready | **False** |
 | Goal completion permitted | **False** |
 
-Gate counts: **131 PASS · 10 FAIL · 7 PENDING**.
+Gate counts: **130 PASS · 11 FAIL · 7 PENDING**.
 
 The latest clean full-regression evidence is recorded at commit `4b73ec651bb81d81ce3b11160b6600f59d16d92a` with **1,463 passed, 0 failed and 6 skipped** plus 209 dependency/data-reader warnings in 268.07 s (`research/full_regression_test_run_2026_10_12_latest.json`). A fresh broad LLM/SAGA, virtual-safety, HAZOP and HIAD accident-path selection passed **159 tests with 2 warnings** (`research/paper_llm_safety_broad_regression_2026_10_12.json`). These are software implementation checks only and do not convert the independent physical validation failures or author-confirmation gate into passes. The focused LLM/accident-path regression passed **65 tests with 2 warnings**, and the clean direct LLM route spot check passed **20 tests with 3 warnings**.
 
@@ -45,8 +45,8 @@ The owner-controlled records are evaluated as same-site chronological holdouts;
 the public Type-IV records provide the independent component holdout. The
 synchronized station-to-vehicle full-loop lane is retained in the legacy audit
 for traceability but is excluded from the primary goal because no openly
-reusable raw cohort was found. The scope-adjusted closure is **130 PASS · 9
-FAIL · 2 PENDING = 92.2%**; this is a scope metric, not a new validation result.
+reusable raw cohort was found. The scope-adjusted closure is **129 PASS · 10
+FAIL · 2 PENDING = 91.5%**; this is a scope metric, not a new validation result.
 The exact split and the paper limitation are recorded in
 [`VALIDATION_DATA_SPLIT_AND_SCOPE_DECISION_2026_10_11.md`](../research/VALIDATION_DATA_SPLIT_AND_SCOPE_DECISION_2026_10_11.md)
 and the machine-readable
@@ -646,29 +646,30 @@ development evidence rather than a source for geometry fitting.
 
 ## Blocking gates
 
-The bounded paper still has 8 unresolved or failed gates:
+The bounded paper still has 9 unresolved or failed gates:
 
 1. `dickens_typeiii_prospective_validation`
-2. `preslhy_partb_ambient_external_validation`
-3. `preslhy_revised_holdout_validation`
-4. `proust_independent_release_validation`
-5. `schefer_transient_release_validation`
-6. `schefer_2007_pressure_decay_validation`
-7. `grune_2014_pressure_decay_validation`
-8. `submission_metadata_and_declarations`
+2. `preslhy_blowdown_external_validation`
+3. `preslhy_partb_ambient_external_validation`
+4. `preslhy_revised_holdout_validation`
+5. `proust_independent_release_validation`
+6. `schefer_transient_release_validation`
+7. `schefer_2007_pressure_decay_validation`
+8. `grune_2014_pressure_decay_validation`
+9. `submission_metadata_and_declarations`
 
 The legacy audit retains the following broader re-entry lanes for a future
 station-to-vehicle or human-effectiveness study. They are **not requirements of
 the active station-side/component manuscript goal** and are reported as
 limitations or optional follow-up work:
 
-9. `institutional_ethics_determination`
-10. `hiad_casebook_frozen`
-11. `hiad_holdout_collection`
-12. `independent_expert_review_complete`
-13. `full_loop_external_validation` (future re-entry lane; current goal excludes it)
-14. `h2safe_spatial_detector_transfer_validation` (future detector-transfer lane)
-15. `saga_effectiveness_and_safety_supported` (requires human study)
+10. `institutional_ethics_determination`
+11. `hiad_casebook_frozen`
+12. `hiad_holdout_collection`
+13. `independent_expert_review_complete`
+14. `full_loop_external_validation` (future re-entry lane; current goal excludes it)
+15. `h2safe_spatial_detector_transfer_validation` (future detector-transfer lane)
+16. `saga_effectiveness_and_safety_supported` (requires human study)
 
 For the active goal, completion is evaluated against the scope-adjusted gate
 set recorded in
