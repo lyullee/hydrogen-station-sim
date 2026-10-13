@@ -71,6 +71,8 @@ def main() -> int:
         "recorded_at": datetime.now(timezone.utc).isoformat(),
         "source": {
             "catalog_url": "https://nbsdc.cn/general/dataDetail?id=67d50e37195d260905af9869&type=1",
+            "catalog_mirror_checked": "https://www.selectdataset.com/dataset/276d2dc2127cea7f6c7129af57dfd38a/%E6%B6%B2%E6%B0%A2%E5%8A%A0%E6%B0%A2%E7%AB%99%E8%BF%90%E8%A1%8C%E6%95%B0%E6%8D%AE%E9%9B%86",
+            "catalog_mirror_raw_download_found": False,
             "dataset_id": DATA_ID,
             "dataset_title": root_item["fileName"],
             "license_or_access_note": "Catalog metadata is public; raw files require a data application.",

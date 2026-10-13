@@ -1,9 +1,11 @@
 {
   "schema_version": 1,
   "artifact_type": "public_dataset_access_boundary_recheck",
-  "recorded_at": "2026-10-13T17:12:58.341157+00:00",
+  "recorded_at": "2026-10-13T17:17:04.260314+00:00",
   "source": {
     "catalog_url": "https://nbsdc.cn/general/dataDetail?id=67d50e37195d260905af9869&type=1",
+    "catalog_mirror_checked": "https://www.selectdataset.com/dataset/276d2dc2127cea7f6c7129af57dfd38a/%E6%B6%B2%E6%B0%A2%E5%8A%A0%E6%B0%A2%E7%AB%99%E8%BF%90%E8%A1%8C%E6%95%B0%E6%8D%AE%E9%9B%86",
+    "catalog_mirror_raw_download_found": false,
     "dataset_id": "67d50e37195d260905af9869",
     "dataset_title": "2020YFB1506204-003 液氢加氢站运行数据集",
     "license_or_access_note": "Catalog metadata is public; raw files require a data application."
