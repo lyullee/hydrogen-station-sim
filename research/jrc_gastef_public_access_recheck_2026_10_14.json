@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "artifact_type": "public_data_access_recheck",
+  "generated_at": "2026-10-14",
+  "source": {
+    "title": "JRC reference data from experiments of on-board hydrogen tanks fast filling",
+    "doi": "10.1016/j.ijhydene.2014.03.227",
+    "jrc_record_url": "https://publications.jrc.ec.europa.eu/repository/handle/JRC76380",
+    "open_article_url": "https://hysafe.info/ichs2013/images/papers/224.pdf",
+    "institution": "European Commission Joint Research Centre GasTeF"
+  },
+  "published_description": {
+    "database_entry_count_reported": 165,
+    "tank_classes": [
+      "Type III 40 L",
+      "Type IV 29 L",
+      "Type IV 19 L"
+    ],
+    "hydrogen_fast_fill_data": true,
+    "pressure_temperature_logging_interval_s": 0.6,
+    "instrumentation_metadata_reported": true,
+    "raw_database_publicly_described": true
+  },
+  "access_check": {
+    "jrc_record_dataset_url_present": false,
+    "jrc_record_supporting_file_url_present": false,
+    "machine_readable_time_series_downloaded": false,
+    "rights_cleared_raw_trace_available": false,
+    "decision": "ACCESS_REQUEST_REQUIRED"
+  },
+  "required_request_payload": [
+    "rights-cleared pressure, mass-flow and inlet-temperature time series",
+    "tank type, internal volume, geometry and material metadata",
+    "thermocouple coordinates, channel names, calibration uncertainty and response time",
+    "filling protocol, initial/final pressure, APRR and pre-cooling state",
+    "case-level checksums and permission for derived validation metrics"
+  ],
+  "eligibility": {
+    "current_prospective_holdout_eligible": false,
+    "component_validation_candidate": true,
+    "station_to_vehicle_full_loop": false,
+    "runtime_parameter_promotion": false
+  },
+  "claim_boundary": "The JRC publication establishes that a substantial GasTeF database exists and documents its measurement context. The current public record does not expose the raw machine-readable cases, so no independent numerical validation claim is made from this route."
+}
