@@ -95,6 +95,10 @@ def _case(path: Path, experiment: int) -> dict[str, object]:
         "experiment": experiment,
         "eligible_points": int(measured.size),
         "measured_peak_g_s": measured_peak,
+        "observed_pressure_min_mpa_abs": float(np.min(pressure) * 0.1),
+        "observed_pressure_max_mpa_abs": float(np.max(pressure) * 0.1),
+        "observed_temperature_min_k": float(np.min(temperature)),
+        "observed_temperature_max_k": float(np.max(temperature)),
         "frozen_cd": BLOWDOWN_DISCHARGE_COEFFICIENT,
         "frozen_cd_peak_prediction_g_s": float(
             ideal_peak * BLOWDOWN_DISCHARGE_COEFFICIENT
@@ -114,6 +118,8 @@ def build_report(raw_dir: Path) -> dict[str, object]:
     cases = [_case(raw_dir / f"Exp{experiment:02d}.mat", experiment) for experiment in BLOWDOWN_CASES]
     peak_ratios = [item["effective_cd_peak_ratio"] for item in cases]
     medians = [item["effective_cd_median"] for item in cases]
+    q10_values = [item["effective_cd_q10"] for item in cases]
+    q90_values = [item["effective_cd_q90"] for item in cases]
     return {
         "schema_version": 1,
         "artifact_type": "hytunnel_carpark_post_outcome_effective_cd_diagnostic",
@@ -144,6 +150,20 @@ def build_report(raw_dir: Path) -> dict[str, object]:
             "effective_cd_peak_ratio_min": float(np.min(peak_ratios)),
             "effective_cd_peak_ratio_max": float(np.max(peak_ratios)),
             "effective_cd_median_across_cases": float(np.median(medians)),
+            "effective_cd_central_union_lower": float(np.min(q10_values)),
+            "effective_cd_central_union_upper": float(np.max(q90_values)),
+            "observed_pressure_min_mpa_abs": float(
+                np.min([item["observed_pressure_min_mpa_abs"] for item in cases])
+            ),
+            "observed_pressure_max_mpa_abs": float(
+                np.max([item["observed_pressure_max_mpa_abs"] for item in cases])
+            ),
+            "observed_temperature_min_k": float(
+                np.min([item["observed_temperature_min_k"] for item in cases])
+            ),
+            "observed_temperature_max_k": float(
+                np.max([item["observed_temperature_max_k"] for item in cases])
+            ),
         },
         "findings": [
             "The frozen Cd=0.8 model preserves the mass-flow time ordering but underpredicts the measured peak in all five blowdown cases.",
@@ -171,7 +191,8 @@ def main() -> None:
     args = parser.parse_args()
     report = build_report(args.raw_dir)
     args.output.parent.mkdir(parents=True, exist_ok=True)
-    args.output.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
+    with args.output.open("w", encoding="utf-8", newline="\n") as stream:
+        stream.write(json.dumps(report, indent=2) + "\n")
     print(json.dumps(report["aggregate"], indent=2))
 
 

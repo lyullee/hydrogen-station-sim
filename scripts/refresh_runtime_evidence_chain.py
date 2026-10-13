@@ -88,6 +88,18 @@ STEPS: tuple[RefreshStep, ...] = (
         ),
     ),
     RefreshStep(
+        "validation_gap_current",
+        "scripts/build_validation_gap_report.py",
+        (
+            "--audit",
+            "manuscript/ijhe_readiness_audit.json",
+            "--json-output",
+            "research/validation_gap_triage_current.json",
+            "--markdown-output",
+            "research/VALIDATION_GAP_TRIAGE_CURRENT.md",
+        ),
+    ),
+    RefreshStep(
         "ijhe_blocker_matrix",
         "scripts/build_ijhe_blocker_matrix.py",
         (

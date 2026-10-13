@@ -29,6 +29,12 @@ def test_refresh_plan_preserves_hash_dependency_order() -> None:
     assert names.index("ijhe_readiness") < names.index(
         "ijhe_claim_evidence_matrix"
     )
+    assert names.index("ijhe_readiness") < names.index(
+        "validation_gap_current"
+    )
+    assert names.index("validation_gap_current") < names.index(
+        "ijhe_blocker_matrix"
+    )
 
 
 def test_readiness_mirrors_come_from_the_authoritative_manuscript_outputs() -> None:

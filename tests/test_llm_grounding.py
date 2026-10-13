@@ -2313,12 +2313,16 @@ def test_manifest_keeps_the_per_result_consequence_validation_boundary():
             "release_flow_lower_bound_kg_s": 0.031,
             "release_flow_upper_bound_kg_s": 0.045,
             "release_flow_model_discharge_coefficient": 0.8,
-            "release_flow_empirical_cd_lower": 1.0218,
-            "release_flow_empirical_cd_upper": 1.1777,
-            "release_flow_uncertainty_status": "PUBLIC_EXPERIMENT_ENVELOPE_IN_DOMAIN",
+            "release_flow_empirical_cd_lower": 1.0041,
+            "release_flow_empirical_cd_upper": 1.1310,
+            "release_flow_uncertainty_status": "PUBLIC_ACTUAL_HYDROGEN_ENVELOPE_IN_DOMAIN",
             "release_flow_public_domain": True,
-            "release_flow_evidence_doi": "10.1016/j.ijhydene.2010.04.055",
-            "release_flow_envelope_kind": "MODEL_AND_PUBLIC_EXPERIMENT_SENSITIVITY",
+            "release_flow_evidence_source_id": "HYTUNNEL_CS_0_5MM_BLOWDOWN",
+            "release_flow_evidence_doi": "10.23642/USN.14405903",
+            "release_flow_evidence_article_doi": "10.3390/en14113008",
+            "release_flow_evidence_license": "CC BY 4.0",
+            "release_flow_empirical_diameter_mm": 0.5,
+            "release_flow_envelope_kind": "MODEL_AND_PUBLIC_ACTUAL_HYDROGEN_SENSITIVITY",
             "release_flow_claim_limit": "not a confidence interval or safety distance",
             "source_inventory_kg": 14.0,
             "source_inventory_model_volume_m3": 0.35,
@@ -2344,7 +2348,7 @@ def test_manifest_keeps_the_per_result_consequence_validation_boundary():
     assert impact["release_flow_lower_bound_kg_s"] == 0.031
     assert impact["release_flow_upper_bound_kg_s"] == 0.045
     assert impact["release_flow_public_domain"] is True
-    assert impact["release_flow_evidence_doi"] == "10.1016/j.ijhydene.2010.04.055"
+    assert impact["release_flow_evidence_doi"] == "10.23642/USN.14405903"
     assert "confidence interval" in impact["release_flow_claim_limit"]
     assert impact["releasable_inventory_kg"] == 13.97
     assert impact["constant_rate_inventory_time_lower_s"] == 310.4
@@ -2354,6 +2358,12 @@ def test_manifest_keeps_the_per_result_consequence_validation_boundary():
     assert compact["source_inventory_origin"] == "DIGITAL_TWIN_STATE"
     assert compact["constant_rate_inventory_time_lower_s"] == 310.4
     assert compact["constant_rate_inventory_time_upper_s"] == 450.6
+    assert compact["release_flow_evidence_source_id"] == "HYTUNNEL_CS_0_5MM_BLOWDOWN"
+    assert compact["release_flow_evidence_article_doi"] == "10.3390/en14113008"
+    assert compact["release_flow_evidence_license"] == "CC BY 4.0"
+    assert compact["release_flow_empirical_diameter_mm"] == 0.5
+    assert compact["release_flow_upper_bound_kg_s"] == 0.045
+    assert "confidence interval" in compact["release_flow_claim_limit"]
     assert "pressure-decay" in compact["inventory_duration_claim_limit"]
 
 

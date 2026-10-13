@@ -2390,13 +2390,31 @@ the full-loop claim pass.
 ## 2026-10-13 - One-command evidence-chain refresh
 
 - Added `scripts/refresh_runtime_evidence_chain.py` so a runtime, API or LLM
-  grounding change can rebuild all 13 hash-linked projections in their required
+  grounding change can rebuild all 14 hash-linked projections in their required
   order. The command covers HyDelta, Type-IV, public-accident routing, HIAD and
   KHK replay, traceability, readiness mirrors, gap/blocker summaries, coverage
   and the IJHE claim/evidence matrix.
-- The first complete execution passed all 13 generators in 56.0 seconds. Child
+- The refresh also regenerates both the dated validation-gap report and the
+  `validation_gap_triage_current` projection consumed by focused runners and
+  LLM grounding, preventing a stale current-audit timestamp after refresh.
+- The first complete execution passed all generators. Child
   output is forced to UTF-8 and local repository paths are removed from optional
   execution records.
 - The refresh is administrative reproducibility infrastructure only. It retains
   all failed and pending scientific screens and cannot promote a readiness gate.
+
+## 2026-10-13 - HyTunnel actual-hydrogen source-flow sensitivity
+
+- Connected the five public HyTunnel-CS 0.5 mm actual-hydrogen blowdowns
+  (`10.23642/USN.14405903`) to the runtime release-flow evidence envelope.
+  The frozen $C_d=0.8$ point calculation remains unchanged; the additional
+  1.0041--1.1310 effective-coefficient range makes its observed 18--20% peak
+  underprediction visible to operators and the LLM.
+- Applicability is limited to the exact 0.5 mm nozzle family and the observed
+  1.6845--71.4655 MPa absolute, 262.1307--296.0777 K domain. Other states are
+  explicitly marked extrapolated, and unrelated HyTunnel/Proust diameters are
+  never interpolated together. Process-flow-limited releases remain capped.
+- This is a post-outcome sensitivity, not a refit, confidence interval,
+  station-leak validation or safety distance. The frozen 3/5 validation result
+  and every scientific readiness gate remain unchanged.
 

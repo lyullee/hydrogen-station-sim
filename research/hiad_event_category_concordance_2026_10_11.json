@@ -1,14 +1,14 @@
 {
   "schema_version": 1,
   "artifact_type": "hiad_public_metadata_to_runtime_family_concordance",
-  "generated_at_utc": "2026-10-13T14:07:46.965096+00:00",
+  "generated_at_utc": "2026-10-13T14:39:55.240460+00:00",
   "status": "completed_retrospective_category_concordance",
   "evidence_role": "supporting_traceability_only",
   "source": {
     "hiad_inventory": "research/hiad_hrs_public_evidence.json",
     "hiad_inventory_sha256": "27b7fc752fe7ad706eb48854447bb203605be30b745515a259fad89325cc2536",
     "replay_coverage": "research/hiad_digital_twin_replay_coverage_2026_10_08.json",
-    "replay_coverage_sha256": "990f0b55f95b71791725c2690ac9da9eb89787e45c18aa43eb8c4414dd74c5dc",
+    "replay_coverage_sha256": "64a5ad0aad740f3dcce240782844060efe40a9dc90971fd69e390275ae787981",
     "public_metadata_fields_used": [
       "physical_effect",
       "consequence_nature",

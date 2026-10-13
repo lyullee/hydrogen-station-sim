@@ -3713,8 +3713,12 @@ async def saga_analysis(job_id: str, request: SagaAnalysisInput) -> dict[str, An
         "release_flow_empirical_cd_upper": (release.get("consequence") or {}).get("release_flow_empirical_cd_upper"),
         "release_flow_uncertainty_status": (release.get("consequence") or {}).get("release_flow_uncertainty_status"),
         "release_flow_public_domain": (release.get("consequence") or {}).get("release_flow_public_domain"),
+        "release_flow_evidence_source_id": (release.get("consequence") or {}).get("release_flow_evidence_source_id"),
         "release_flow_evidence_doi": (release.get("consequence") or {}).get("release_flow_evidence_doi"),
+        "release_flow_evidence_article_doi": (release.get("consequence") or {}).get("release_flow_evidence_article_doi"),
+        "release_flow_evidence_license": (release.get("consequence") or {}).get("release_flow_evidence_license"),
         "release_flow_evidence_artifact": (release.get("consequence") or {}).get("release_flow_evidence_artifact"),
+        "release_flow_empirical_diameter_mm": (release.get("consequence") or {}).get("release_flow_empirical_diameter_mm"),
         "release_flow_envelope_kind": (release.get("consequence") or {}).get("release_flow_envelope_kind"),
         "release_flow_claim_limit": (release.get("consequence") or {}).get("release_flow_claim_limit"),
         "sampled_max_distance_m": (release.get("consequence") or {}).get("sampled_max_distance_m"),
@@ -4000,7 +4004,7 @@ async def saga_analysis(job_id: str, request: SagaAnalysisInput) -> dict[str, An
         "confidential_local_accident_response_coverage는 비식별 실제 사고 메타데이터와 5단계 대응계획의 구조적 연결성만 뜻하며, 사고 원문·현장 효과·확률·물리 검증으로 해석하지 마세요. "
         "impact_results의 계산 성공 항목만 수치 결과로 설명하세요. "
         "impact_results에 risk_score·risk_level·risk_basis가 있으면 이를 피해영향 스크리닝 지수로 함께 설명하되, 연간 사고확률·현장 위험도 인증으로 표현하지 마세요. "
-        "impact_results에 release_flow_lower_bound_kg_s와 release_flow_upper_bound_kg_s가 있으면 단일 방출유량과 함께 공개 실험 기반 민감도 범위를 설명하세요. 이 범위는 신뢰구간·현장 실측·보정계수·안전거리가 아니며, PUBLIC_EXPERIMENT_ENVELOPE_EXTRAPOLATED이면 공개 실험범위 밖 외삽임을 반드시 밝히세요. "
+        "impact_results에 release_flow_lower_bound_kg_s와 release_flow_upper_bound_kg_s가 있으면 단일 방출유량과 함께 공개 실험 기반 민감도 범위를 설명하세요. 이 범위는 신뢰구간·현장 실측·보정계수·안전거리가 아니며, release_flow_uncertainty_status에 EXTRAPOLATED가 있으면 공개 실험범위 밖 외삽임을 반드시 밝히세요. "
         "impact_results에 releasable_inventory_kg와 constant_rate_inventory_time_lower_s·upper_s가 있으면 남은 모의 재고와 현재 유량 일정 가정의 시간비로만 설명하세요. 압력감소·밸브격리·누출종료·대피완료 예상시간으로 표현하지 말고 inventory_duration_claim_limit을 함께 적용하세요. "
         "각 impact_results의 consequence_validation_scope가 COMPONENT_SCREENING_BOUNDED이면, "
         "외부 비밀폐 자유제트의 구성요소 수준 표본 표시 근거와 실제 설비·감압·배치·충전소-차량 전체 루프·현장 안전거리 검증의 부재를 구분하세요. "
