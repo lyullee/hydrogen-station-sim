@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "frozen_at": "2026-10-14",
-  "status": "FROZEN_BEFORE_USN_OPEN_CHANNEL_RAW_ACCESS",
+  "status": "RECLASSIFIED_AFTER_SOURCE_ACCESS_NOT_INDEPENDENT_HOLDOUT",
   "objective": "Screen the already frozen orientation-class spatial detector against a new public actual-hydrogen open-channel release dataset without fitting coordinates, source strength, alarm thresholds or rank coefficients.",
   "claim_boundary": "This is a component spatial-ranking holdout only. It does not validate HRS outdoor detector placement, concentration amplitudes, alarm/trip setpoints, CFD, ESD effectiveness, consequence distance or a station-to-vehicle loop.",
   "source": {
@@ -16,12 +16,20 @@
   },
   "prior_access": {
     "public_metadata_viewed": true,
-    "documentation_viewed": false,
-    "raw_archives_downloaded": false,
-    "raw_archives_opened": false,
-    "individual_sensor_responses_computed": false,
+    "documentation_viewed": true,
+    "raw_archives_downloaded": true,
+    "raw_archives_opened": true,
+    "individual_sensor_responses_computed": true,
     "model_frozen_before_raw_access": true,
     "model_freeze_commit": "7f36e23"
+  },
+  "reclassification": {
+    "recorded_at": "2026-10-14",
+    "reason": "The source was already accessed and used in a prior post-access spatial diagnostic before this protocol artifact was recorded.",
+    "replacement_artifact": "research/usn_orientation_class_spatial_transfer_diagnostic_2026_10_14.json",
+    "independent_holdout": false,
+    "prospective_validation": false,
+    "readiness_gate_effect": false
   },
   "eligibility": {
     "minimum_independent_experiments": 18,

@@ -1,5 +1,24 @@
 # Development Progress
 
+## 2026-10-14 - Reproduce the frozen spatial rank on the USN actual-hydrogen dataset
+
+The frozen `orientation_class_rank_v2` formula was replayed against all 22
+public USN open-channel archives, using the published sensor coordinates and
+the complete concentration trace for each sensor. The diagnostic obtains a
+median Spearman rank correlation of **0.6714**, 95.5% of cases with rho >= 0.4,
+mean top-five recall of **87.3%**, and nearest-sensor success of **95.5%**;
+all four internal reference screens pass.
+
+This is recorded in
+`research/usn_orientation_class_spatial_transfer_diagnostic_2026_10_14.json`
+with a reproducible runner and a human-readable report. It is explicitly
+classified as post-access reproducibility/transfer evidence because the same
+dataset had already been opened in an earlier spatial diagnostic. Therefore it
+does not close the independent spatial-validation gate, does not alter runtime
+detector routing, and does not change the readiness count. The corresponding
+holdout protocol was reclassified rather than overstated as a new independent
+holdout.
+
 ## 2026-10-14 - Separate sensor spread from the remaining tank thermal error
 
 The eight public MC Default cases were replayed with the leave-one-case-out

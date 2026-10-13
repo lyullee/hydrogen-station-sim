@@ -1,7 +1,7 @@
 # USN open-channel spatial holdout protocol (2026-10-14)
 
-This protocol freezes the spatial detector and eligibility rules before opening
-the raw archives for the public USN Figshare dataset
+This protocol originally froze the spatial detector and eligibility rules for
+the public USN Figshare dataset
 [`10.23642/USN.26117989.v2`](https://doi.org/10.23642/USN.26117989.v2). The
 dataset advertises actual-hydrogen dispersion experiments with filling
 pressure, temporal mass flow and 29 concentration sensors. It is licensed CC
@@ -21,7 +21,12 @@ and all four frozen aggregate screens: median Spearman rho >= 0.5, at least 60%
 of cases with rho >= 0.4, mean top-five recall >= 0.6, and nearest-sensor
 success >= 0.7.
 
-Even a pass would support only component spatial-rank transfer in the published
-open-channel geometry. It would not validate outdoor hydrogen-station detector
-placement, concentration amplitudes, alarm/trip thresholds, CFD, ESD,
-consequence distances or a complete station-to-vehicle loop.
+The source was subsequently opened and was found to have already been used in a
+prior post-access spatial diagnostic. The protocol is therefore **reclassified
+as not independent** and does not change the readiness gate. The reproducible
+run is recorded in
+`research/USN_ORIENTATION_CLASS_SPATIAL_TRANSFER_2026_10_14.md` and its JSON
+artifact. Even a pass supports only component spatial-rank transfer in the
+published open-channel geometry. It does not validate outdoor hydrogen-station
+detector placement, concentration amplitudes, alarm/trip thresholds, CFD,
+ESD, consequence distances or a complete station-to-vehicle loop.

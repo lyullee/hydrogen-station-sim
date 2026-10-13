@@ -109,6 +109,8 @@
       "dataverseno_api_url": "https://dataverse.no/api/datasets/:persistentId/?persistentId=doi:10.23642/USN.26117989",
       "dataverseno_recheck": "research/usn_open_channel_dataverseno_recheck_2026_10_12.json",
       "dataverseno_archive_sha256": "3b9f0c12d1a19717cec07ea77ab6d58c750e0329df114fcb5b76bf1ecebcc1f5",
+      "orientation_transfer_diagnostic": "research/usn_orientation_class_spatial_transfer_diagnostic_2026_10_14.json",
+      "orientation_transfer_report": "research/USN_ORIENTATION_CLASS_SPATIAL_TRANSFER_2026_10_14.md",
       "rights_note": "Download metadata and files from the Figshare API and retain the supplied MD5 values."
     },
     "carb_2024_hydrogen_station_in_use_study": {
