@@ -10073,6 +10073,34 @@ def build_evidence_manifest(
                 "유한 공통 헤더의 모의 상태이며 현장 계측 또는 검증된 배관 치수를 의미하지 않음"
             ),
         }
+    compressor_package = {
+        "pressure_mpa_abs": _finite_number(
+            frame.get("compressor_package_pressure_mpa")
+        ),
+        "temperature_c": _finite_number(
+            frame.get("compressor_package_temperature_c")
+        ),
+        "inventory_kg": _finite_number(
+            frame.get("compressor_package_mass_kg")
+        ),
+        "internal_volume_m3": _finite_number(
+            (frame.get("component_internal_volume_m3") or {}).get("compressor")
+        ),
+    }
+    if any(value is not None for value in compressor_package.values()):
+        envelope["compressor_package"] = {
+            **compressor_package,
+            "origin": "DIGITAL_TWIN_PROCESS_STATE",
+            "model_status": "DEVELOPMENT_PHYSICS_UNVALIDATED",
+            "topology": (
+                "finite discharge-package inventory; compressor inflow, "
+                "bank connection, isolation and residual leak are mass/energy coupled"
+            ),
+            "claim_limit": (
+                "선언된 압축기 패키지·매니폴드 체적의 개발 모델이며 특정 제조사 형상, "
+                "현장 잔류량 또는 감압시간을 검증하지 않음"
+            ),
+        }
     traceability = _public_incident_traceability()
     if traceability is not None:
         envelope["response_evidence"]["public_incident_traceability"] = traceability
@@ -10797,6 +10825,7 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
         ) or {},
         "detector_policy": manifest.get("detector_policy") or {},
         "common_header": manifest.get("common_header") or {},
+        "compressor_package": manifest.get("compressor_package") or {},
     }
     incident_traceability = evidence.get("public_incident_traceability")
     if isinstance(incident_traceability, dict):
@@ -13431,6 +13460,13 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
             "pressure_mpa_abs", "temperature_c", "inventory_kg",
             "bank_inflow_g_s", "origin", "model_status", "claim_limit",
         )),
+        **({
+            "compressor_package": selected(manifest.get("compressor_package"), (
+                "pressure_mpa_abs", "temperature_c", "inventory_kg",
+                "internal_volume_m3", "origin", "model_status", "topology",
+                "claim_limit",
+            )),
+        } if manifest.get("compressor_package") else {}),
         "impact": {
             "calculation_attempted": impact.get("calculation_attempted") is True,
             "calculation_status": impact.get("calculation_status"),

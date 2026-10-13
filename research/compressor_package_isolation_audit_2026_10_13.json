@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "status": "completed_development_physics_audit",
+  "model_status": "DEVELOPMENT_PHYSICS_UNVALIDATED",
+  "purpose": "Verify that an active compressor-package leak continues from finite residual inventory after ESD while the isolated storage bank stops replenishing that release.",
+  "source_hashes": {
+    "src/h2station/full_station.py": "0ffc98042bb47dba5089101ec72f5c429a32a67493ee4291c347e90e309d32f7",
+    "src/h2station/safe_operation.py": "73d7d71c699775622d1c9003b40f8150a1bff1b6b85808efcd68dabdadc95f87",
+    "src/h2station/scenario.py": "bd4d94bf5fd37e3a3c577228c0989d0b9c6150ef58874829131d13dacf5b3604",
+    "tests/test_process_operations.py": "46ea6e2b61bcf5f771fcb1be7aad06aeb32000ff216d9eecdcbf7852920f187e"
+  },
+  "declared_inputs": {
+    "compressor_package_internal_volume_m3": 0.02,
+    "leak_diameter_mm": 0.5,
+    "connected_operation_duration_s": 0.6,
+    "post_esd_duration_s": 5.0,
+    "control_period_s": 0.2,
+    "consequence_backend": "unavailable-by-design-for-process-audit"
+  },
+  "results": {
+    "package_pressure_at_esd_mpa_abs": 57.02884214869477,
+    "package_pressure_final_mpa_abs": 52.99871746294713,
+    "package_mass_at_esd_kg": 0.7455652356246576,
+    "package_mass_final_kg": 0.7187853960057599,
+    "package_mass_loss_kg": 0.02677983961889774,
+    "integrated_post_esd_release_kg": 0.026780941428029423,
+    "mass_balance_residual_kg": -1.1018091316851442e-06,
+    "high_bank_mass_change_after_esd_kg": 0.0,
+    "post_esd_initial_release_g_s": 5.513579937242516,
+    "post_esd_final_release_g_s": 5.203427975449269
+  },
+  "checks": {
+    "esd_latched": true,
+    "high_bank_isolated_mass_change_abs_le_1e_9_kg": true,
+    "package_inventory_decreased": true,
+    "package_pressure_decreased": true,
+    "residual_release_continued_after_esd": true,
+    "release_rate_decreased": true,
+    "post_esd_mass_balance_abs_le_5e_6_kg": true
+  },
+  "claim_boundary": "This is a deterministic internal consistency and topology audit. The declared package volume, restriction area and thermal parameters have not been validated against a specific compressor or an independent hydrogen package-depressurization time series; the result cannot establish field isolation time, leak rate or safety distance."
+}

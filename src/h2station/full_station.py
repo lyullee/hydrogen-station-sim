@@ -592,6 +592,11 @@ class FullStationState:
     partial_station: PartialStationState
     secondary_partial_station: PartialStationState | None = None
     common_header: CascadeBankState | None = None
+    # Finite gas inventory trapped in the compressor discharge package and
+    # short manifold.  It is distinct from the cascade banks so isolation can
+    # stop bank replenishment while the residual package gas continues to
+    # depressurize through a casing/manifold leak.
+    compressor_package: CascadeBankState | None = None
 
     def as_vector(self) -> np.ndarray:
         parts = tuple(bank.as_vector() for bank in self.banks) + (
@@ -601,30 +606,74 @@ class FullStationState:
             parts += (self.secondary_partial_station.as_vector(),)
         if self.common_header is not None:
             parts += (self.common_header.as_vector(),)
+        if self.compressor_package is not None:
+            parts += (self.compressor_package.as_vector(),)
         return np.concatenate(parts)
 
     @classmethod
-    def from_vector(cls, values: np.ndarray, bank_count: int) -> "FullStationState":
+    def from_vector(
+        cls,
+        values: np.ndarray,
+        bank_count: int,
+        *,
+        has_secondary: bool | None = None,
+        has_header: bool | None = None,
+        has_compressor_package: bool | None = None,
+    ) -> "FullStationState":
         primary_size = 3 * bank_count + 8
         dual_size = primary_size + 8
         primary_header_size = primary_size + 3
         dual_header_size = dual_size + 3
-        if len(values) not in (
-            primary_size, dual_size, primary_header_size, dual_header_size,
-        ):
-            raise ValueError(
-                "FullStationState requires one of "
-                f"{primary_size}, {primary_header_size}, {dual_size}, or "
-                f"{dual_header_size} state values"
+        layout_declared = any(
+            flag is not None
+            for flag in (has_secondary, has_header, has_compressor_package)
+        )
+        if layout_declared:
+            if any(
+                flag is None
+                for flag in (has_secondary, has_header, has_compressor_package)
+            ):
+                raise ValueError("All FullStationState layout flags must be supplied together")
+            expected_size = (
+                primary_size
+                + (8 if has_secondary else 0)
+                + (3 if has_header else 0)
+                + (3 if has_compressor_package else 0)
             )
+            if len(values) != expected_size:
+                raise ValueError(
+                    f"FullStationState requires {expected_size} values for the declared layout"
+                )
+        else:
+            # Preserve the original four layouts.  The new production
+            # reference layout (dual dispenser + common header + compressor
+            # package) is also unambiguous.  Ambiguous header/package-only
+            # layouts must use the explicit flags above.
+            package_full_size = dual_header_size + 3
+            if len(values) not in (
+                primary_size,
+                dual_size,
+                primary_header_size,
+                dual_header_size,
+                package_full_size,
+            ):
+                raise ValueError(
+                    "FullStationState has an unsupported state-vector length; "
+                    "declare the optional-state layout explicitly"
+                )
+            has_secondary = len(values) in (
+                dual_size, dual_header_size, package_full_size,
+            )
+            has_header = len(values) in (
+                primary_header_size, dual_header_size, package_full_size,
+            )
+            has_compressor_package = len(values) == package_full_size
         banks = tuple(
             CascadeBankState.from_vector(values[3 * index:3 * index + 3])
             for index in range(bank_count)
         )
         offset = 3 * bank_count
         primary = PartialStationState.from_vector(values[offset:offset + 8])
-        has_secondary = len(values) in (dual_size, dual_header_size)
-        has_header = len(values) in (primary_header_size, dual_header_size)
         secondary = (
             PartialStationState.from_vector(values[offset + 8:offset + 16])
             if has_secondary else None
@@ -634,7 +683,12 @@ class FullStationState:
             CascadeBankState.from_vector(values[header_offset:header_offset + 3])
             if has_header else None
         )
-        return cls(banks, primary, secondary, header)
+        package_offset = header_offset + (3 if has_header else 0)
+        package = (
+            CascadeBankState.from_vector(values[package_offset:package_offset + 3])
+            if has_compressor_package else None
+        )
+        return cls(banks, primary, secondary, header, package)
 
 
 @dataclass(frozen=True)
@@ -668,6 +722,8 @@ class FullStationModel:
         secondary_partial_station: PartialStationModel | None = None,
         common_header: CascadeBank | None = None,
         bank_header_restriction: RestrictionParameters | None = None,
+        compressor_package: CascadeBank | None = None,
+        compressor_package_connection_restriction: RestrictionParameters | None = None,
         compressor_reverse_restriction: RestrictionParameters | None = None,
         supervisor: CascadeSupervisor | None = None,
         valve_sequencer: CascadeValveSequencer | None = None,
@@ -684,6 +740,7 @@ class FullStationModel:
         self.partial_station = partial_station
         self.secondary_partial_station = secondary_partial_station
         self.common_header = common_header
+        self.compressor_package = compressor_package
         self.bank_header_restriction = (
             IsentropicRealGasRestriction(
                 bank_header_restriction or RestrictionParameters(
@@ -692,6 +749,16 @@ class FullStationModel:
                 )
             )
             if common_header is not None else None
+        )
+        self.compressor_package_connection_restriction = (
+            IsentropicRealGasRestriction(
+                compressor_package_connection_restriction
+                or RestrictionParameters(
+                    flow_area_m2=1.0e-5,
+                    discharge_coefficient=0.8,
+                )
+            )
+            if compressor_package is not None else None
         )
         # A failed non-return valve can expose the stopped compressor train to
         # a charged cascade bank.  The equivalent area is deliberately kept
@@ -733,6 +800,24 @@ class FullStationModel:
         if self.common_header is None or state.common_header is None:
             return None
         return self.common_header.gas_state(state.common_header)
+
+    def compressor_package_gas_state(
+        self, state: FullStationState,
+    ) -> CompositeTankGasState | None:
+        """Return the finite compressor package/manifold gas state."""
+        if self.compressor_package is None or state.compressor_package is None:
+            return None
+        return self.compressor_package.gas_state(state.compressor_package)
+
+    def state_from_vector(self, values: np.ndarray) -> FullStationState:
+        """Decode a state vector using this model's declared topology."""
+        return FullStationState.from_vector(
+            values,
+            len(self.banks),
+            has_secondary=self.secondary_partial_station is not None,
+            has_header=self.common_header is not None,
+            has_compressor_package=self.compressor_package is not None,
+        )
 
     def header_bank_mass_flows(
         self,
@@ -796,15 +881,25 @@ class FullStationModel:
             bank.gas_state(bank_state)
             for bank, bank_state in zip(self.banks, state.banks)
         )
+        package_gas = self.compressor_package_gas_state(state)
         suction = self.compressor_suction(time_s)
+        discharge_pressure_pa = (
+            bank_gases[recharge_index].pressure_pa
+            + self.compressor.parameters.discharge_pressure_margin_pa
+            if recharge_index is not None
+            else suction.pressure_pa
+        )
+        if recharge_index is not None and package_gas is not None:
+            # The compressor must at least match the already pressurized
+            # package.  A blocked discharge therefore raises package pressure
+            # only to the declared compressor limit, where delivery stops.
+            discharge_pressure_pa = max(
+                discharge_pressure_pa,
+                package_gas.pressure_pa,
+            )
         result = self.compressor.evaluate(
             suction,
-            (
-                bank_gases[recharge_index].pressure_pa
-                + self.compressor.parameters.discharge_pressure_margin_pa
-                if recharge_index is not None
-                else suction.pressure_pa
-            ),
+            discharge_pressure_pa,
             enabled=recharge_index is not None,
         )
         if result.mass_flow_kg_s > 0.0:
@@ -866,6 +961,7 @@ class FullStationModel:
         header_allow_reverse_flow: bool = False,
         compressor_allow_reverse_flow: bool = False,
         compressor_flow_multiplier: float = 1.0,
+        compressor_package_connection_opening: float = 1.0,
     ) -> tuple[FullStationState, CompressorResult, float]:
         bank_gases = tuple(
             bank.gas_state(bank_state)
@@ -999,6 +1095,55 @@ class FullStationModel:
             allow_reverse_flow=compressor_allow_reverse_flow,
             flow_multiplier=compressor_flow_multiplier,
         )
+        package_gas = self.compressor_package_gas_state(state)
+        package_bank_flow = 0.0
+        package_rate: CascadeBankState | None = None
+        if (
+            package_gas is not None
+            and self.compressor_package is not None
+            and state.compressor_package is not None
+        ):
+            if (
+                recharge_index is not None
+                and self.compressor_package_connection_restriction is not None
+            ):
+                target_gas = bank_gases[recharge_index]
+                package_bank_flow = (
+                    self.compressor_package_connection_restriction.mass_flow_kg_s(
+                        package_gas.pressure_pa,
+                        package_gas.temperature_k,
+                        target_gas.pressure_pa,
+                        compressor_package_connection_opening,
+                        1.0,
+                        compressor_allow_reverse_flow,
+                        target_gas.temperature_k,
+                    )
+                )
+            package_inflows = [
+                (
+                    max(compressor_result.mass_flow_kg_s, 0.0),
+                    compressor_result.outlet_enthalpy_j_kg,
+                )
+            ]
+            if package_bank_flow < 0.0 and recharge_index is not None:
+                package_inflows.append(
+                    (-package_bank_flow, bank_gases[recharge_index].specific_enthalpy_j_kg)
+                )
+            total_package_inflow = sum(flow for flow, _ in package_inflows)
+            package_inlet_enthalpy = (
+                sum(flow * enthalpy for flow, enthalpy in package_inflows)
+                / total_package_inflow
+                if total_package_inflow > 0.0
+                else package_gas.specific_enthalpy_j_kg
+            )
+            package_rate = self.compressor_package.derivative(
+                state.compressor_package,
+                total_package_inflow,
+                package_inlet_enthalpy,
+                max(package_bank_flow, 0.0),
+                self.ambient_temperature_k,
+                gas=package_gas,
+            )
         header_rate: CascadeBankState | None = None
         header_flows = self.header_bank_mass_flows(
             state,
@@ -1055,14 +1200,24 @@ class FullStationModel:
                 direct_outflow = max(header_flows[index], 0.0)
                 reverse_header_inflow = max(-header_flows[index], 0.0)
             compressor_inflow = (
-                max(compressor_result.mass_flow_kg_s, 0.0)
+                (
+                    max(package_bank_flow, 0.0)
+                    if package_gas is not None else max(compressor_result.mass_flow_kg_s, 0.0)
+                )
                 if index == recharge_index else 0.0
             )
+            if package_bank_flow < 0.0 and index == recharge_index:
+                direct_outflow += -package_bank_flow
             if index == compressor_reverse_index:
                 direct_outflow += max(-compressor_result.mass_flow_kg_s, 0.0)
             total_inflow = compressor_inflow + reverse_header_inflow
             inlet_energy = (
-                compressor_inflow * compressor_result.outlet_enthalpy_j_kg
+                compressor_inflow
+                * (
+                    package_gas.specific_enthalpy_j_kg
+                    if package_gas is not None
+                    else compressor_result.outlet_enthalpy_j_kg
+                )
                 + reverse_header_inflow
                 * (header_gas.specific_enthalpy_j_kg if header_gas is not None else 0.0)
             )
@@ -1083,6 +1238,7 @@ class FullStationModel:
         return (
             FullStationState(
                 tuple(bank_rates), partial_rate, secondary_rate, header_rate,
+                package_rate,
             ),
             compressor_result,
             instantaneous["nozzle_mass_flow"],
@@ -1231,7 +1387,7 @@ class FullStationModel:
             solution = solve_ivp(
                 lambda local_time, vector: self.derivative(
                     local_time,
-                    FullStationState.from_vector(vector, len(self.banks)),
+                    self.state_from_vector(vector),
                     command,
                     dispatch_index,
                     recharge_index,
@@ -1246,7 +1402,7 @@ class FullStationModel:
             )
             if not solution.success:
                 raise RuntimeError(f"Full-station integration failed: {solution.message}")
-            current = FullStationState.from_vector(solution.y[:, -1], len(self.banks))
+            current = self.state_from_vector(solution.y[:, -1])
             time_s = end_s
 
         return FullStationTrajectory(

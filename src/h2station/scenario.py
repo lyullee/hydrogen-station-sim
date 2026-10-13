@@ -149,6 +149,16 @@ class ReferenceScenario:
     # station data; frozen station-side validation must evaluate them unchanged.
     header_internal_volume_m3: float = 0.015
     bank_header_flow_area_m2: float = 6.0e-6
+    # Aggregate internal gas volume of the compressor discharge package and
+    # short high-pressure manifold.  These declared development-geometry
+    # values make post-isolation line-pack depletion explicit; they are not a
+    # validated representation of a particular compressor make or model.
+    compressor_package_internal_volume_m3: float = 0.020
+    compressor_package_flow_area_m2: float = 1.0e-5
+    # ``None`` initializes the retained discharge manifold at the highest
+    # connected bank pressure, representing a warm station restart.  A cold
+    # commissioning study can supply an explicit lower absolute pressure.
+    compressor_package_initial_pressure_pa: float | None = None
     # Aggregate gas volume of the low/medium/high storage banks.  The 0.35 m3
     # default preserves the demonstrator reference plant, while explicit
     # values allow a public rig or an anonymized station inventory to be
@@ -240,6 +250,16 @@ def build_reference_scenario(
         volume_m3 <= 0.0 for volume_m3 in config.bank_internal_volume_m3
     ):
         raise ValueError("bank_internal_volume_m3 must contain three positive values")
+    if min(
+        config.compressor_package_internal_volume_m3,
+        config.compressor_package_flow_area_m2,
+    ) <= 0.0:
+        raise ValueError("compressor package volume and flow area must be positive")
+    if (
+        config.compressor_package_initial_pressure_pa is not None
+        and config.compressor_package_initial_pressure_pa <= 0.0
+    ):
+        raise ValueError("compressor package initial pressure must be positive")
     if config.vehicle_internal_volume_m3 <= 0.0 or config.vehicle_2_internal_volume_m3 <= 0.0:
         raise ValueError("vehicle tank volumes must be positive")
     if min(
@@ -555,6 +575,17 @@ def build_reference_scenario(
             wall_ambient_ua_w_k=8.0,
         )
     )
+    compressor_package = CascadeBank(
+        CascadeBankParameters(
+            name="compressor-package",
+            internal_volume_m3=config.compressor_package_internal_volume_m3,
+            target_pressure_pa=100.0e6,
+            wall_mass_kg=25.0,
+            wall_specific_heat_j_kg_k=500.0,
+            gas_wall_ua_w_k=12.0,
+            wall_ambient_ua_w_k=6.0,
+        )
+    )
     compressor = MultistageHydrogenCompressor(
         CompressorParameters(
             number_of_stages=3,
@@ -580,6 +611,10 @@ def build_reference_scenario(
         common_header=common_header,
         bank_header_restriction=RestrictionParameters(
             flow_area_m2=config.bank_header_flow_area_m2,
+        ),
+        compressor_package=compressor_package,
+        compressor_package_connection_restriction=RestrictionParameters(
+            flow_area_m2=config.compressor_package_flow_area_m2,
         ),
         supervisor=CascadeSupervisor(
             CascadeSupervisorParameters(
@@ -649,6 +684,20 @@ def build_reference_scenario(
         common_header=common_header.initial_state(
             initial_header_pressure_pa,
             config.ambient_temperature_k,
+        ),
+        compressor_package=compressor_package.initial_state(
+            (
+                config.compressor_package_initial_pressure_pa
+                if config.compressor_package_initial_pressure_pa is not None
+                else max(
+                    maximum_pa * percent / 100.0
+                    for maximum_pa, percent in zip(
+                        BANK_REFERENCE_MAX_PRESSURE_PA,
+                        config.initial_bank_fill_percent,
+                    )
+                )
+            ),
+            config.compressor_suction_temperature_k,
         ),
     )
     fault_injector = FaultInjector(FaultSchedule(config.fault_events))

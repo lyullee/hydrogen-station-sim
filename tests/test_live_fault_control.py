@@ -46,6 +46,7 @@ def test_bank_leak_consumes_inventory_and_reduces_bank_pressure():
         job_id = client.post("/api/simulations", json={"continuous": True,
             "duration_s": 4.0, "control_period_s": .2,
             "bank_high_internal_volume_m3": 0.42,
+            "compressor_package_internal_volume_m3": 0.03,
             # Supplying an explicit idle process runtime prevents the
             # reference-only finite run from selecting a compressor recharge
             # bank in the background.  The assertion is then about the leak,
@@ -76,6 +77,9 @@ def test_bank_leak_consumes_inventory_and_reduces_bank_pressure():
             assert volumes["cascade.high"] == pytest.approx(0.42)
             assert volumes["dispenser.hose"] > 0.0
             assert volumes["vehicle.tank"] > 0.0
+            assert volumes["compressor"] == pytest.approx(0.03)
+            assert active[-1]["compressor_package_pressure_mpa"] > 0.0
+            assert active[-1]["compressor_package_mass_kg"] > 0.0
         finally:
             client.post(f"/api/simulations/{job_id}/stop")
 

@@ -586,6 +586,15 @@ class SimulationInput(BaseModel):
     bank_low_internal_volume_m3: float = Field(default=0.35, gt=0.0, le=100.0)
     bank_medium_internal_volume_m3: float = Field(default=0.35, gt=0.0, le=100.0)
     bank_high_internal_volume_m3: float = Field(default=0.35, gt=0.0, le=100.0)
+    compressor_package_internal_volume_m3: float = Field(
+        default=0.020, gt=0.0, le=1.0
+    )
+    compressor_package_connection_area_mm2: float = Field(
+        default=10.0, gt=0.0, le=10_000.0
+    )
+    compressor_package_initial_pressure_mpa: float | None = Field(
+        default=None, gt=0.0, le=100.0
+    )
     initial_bank_low_fill_percent: float = Field(default=90.0, ge=1.0, le=100.0)
     initial_bank_medium_fill_percent: float = Field(default=100.0 * 65.0 / 70.0, ge=1.0, le=100.0)
     initial_bank_high_fill_percent: float = Field(default=90.0, ge=1.0, le=100.0)
@@ -983,6 +992,17 @@ def _execute_simulation(job_id: str, request: SimulationInput) -> None:
                 request.bank_medium_internal_volume_m3,
                 request.bank_high_internal_volume_m3,
             ),
+            compressor_package_internal_volume_m3=(
+                request.compressor_package_internal_volume_m3
+            ),
+            compressor_package_flow_area_m2=(
+                request.compressor_package_connection_area_mm2 * 1.0e-6
+            ),
+            compressor_package_initial_pressure_pa=(
+                request.compressor_package_initial_pressure_mpa * 1.0e6
+                if request.compressor_package_initial_pressure_mpa is not None
+                else None
+            ),
             initial_bank_fill_percent=(
                 request.initial_bank_low_fill_percent,
                 request.initial_bank_medium_fill_percent,
@@ -1073,6 +1093,10 @@ def _execute_simulation(job_id: str, request: SimulationInput) -> None:
         if built.station.common_header is not None:
             component_internal_volume_m3["header"] = float(
                 built.station.common_header.volume_m3
+            )
+        if built.station.compressor_package is not None:
+            component_internal_volume_m3["compressor"] = float(
+                built.station.compressor_package.volume_m3
             )
         with _jobs_lock:
             process_runtime = _process_runtimes.get(job_id)
@@ -1258,6 +1282,19 @@ def _execute_simulation(job_id: str, request: SimulationInput) -> None:
                         "header_inflow_g_s": (
                             sample.header_inflow_kg_s * 1000.0
                             if sample.header_inflow_kg_s is not None else None
+                        ),
+                        "compressor_package_pressure_mpa": (
+                            sample.compressor_package_pressure_pa / 1.0e6
+                            if sample.compressor_package_pressure_pa is not None
+                            else None
+                        ),
+                        "compressor_package_temperature_c": (
+                            sample.compressor_package_temperature_k - 273.15
+                            if sample.compressor_package_temperature_k is not None
+                            else None
+                        ),
+                        "compressor_package_mass_kg": (
+                            sample.compressor_package_mass_kg
                         ),
                         "dispatch_bank": sample.dispatch_bank,
                         "dispatch_bank_2": sample.dispatch_bank_2,
@@ -1550,11 +1587,14 @@ def _serialize_result(trajectory, station, backend, faults=()) -> dict[str, Any]
     hose_2_pressures: list[float] = []
     hose_2_temperatures: list[float] = []
     soc_2_values: list[float] = []
+    compressor_package_pressures: list[float | None] = []
+    compressor_package_temperatures: list[float | None] = []
+    compressor_package_masses: list[float | None] = []
     reference_density = float(
         PropsSI("Dmass", "P", 70.0e6, "T", 288.15, "Hydrogen")
     )
     for vector in trajectory.states:
-        state = FullStationState.from_vector(vector, len(station.banks))
+        state = station.state_from_vector(vector)
         for bank, bank_state in zip(station.banks, state.banks):
             bank_pressures[bank.parameters.name].append(
                 bank.gas_state(bank_state).pressure_pa / 1.0e6
@@ -1575,6 +1615,17 @@ def _serialize_result(trajectory, station, backend, faults=()) -> dict[str, Any]
             trajectory.vehicle_2_density_kg_m3[len(soc_2_values)]
         )
         soc_2_values.append(100.0 * density_2 / reference_density)
+        package_gas = station.compressor_package_gas_state(state)
+        compressor_package_pressures.append(
+            package_gas.pressure_pa / 1.0e6 if package_gas is not None else None
+        )
+        compressor_package_temperatures.append(
+            package_gas.temperature_k - 273.15 if package_gas is not None else None
+        )
+        compressor_package_masses.append(
+            state.compressor_package.hydrogen_mass_kg
+            if state.compressor_package is not None else None
+        )
 
     total_leak_flow = np.zeros_like(trajectory.time_s)
     leak_series = {}
@@ -1720,6 +1771,9 @@ def _serialize_result(trajectory, station, backend, faults=()) -> dict[str, Any]
             "header_temperature_c": (trajectory.header_temperature_k - 273.15).tolist(),
             "header_mass_kg": trajectory.header_mass_kg.tolist(),
             "header_inflow_g_s": (trajectory.header_inflow_kg_s * 1000.0).tolist(),
+            "compressor_package_pressure_mpa": compressor_package_pressures,
+            "compressor_package_temperature_c": compressor_package_temperatures,
+            "compressor_package_mass_kg": compressor_package_masses,
             "dispatch_bank": list(trajectory.dispatch_bank),
             "dispatch_bank_2": list(trajectory.dispatch_bank_2),
             "recharge_bank": list(trajectory.recharge_bank),
@@ -1752,7 +1806,9 @@ _CONTINUOUS_FRAME_SERIES_KEYS = (
     "nozzle_1_flow_g_s", "nozzle_2_flow_g_s", "total_leak_flow_g_s",
     "hose_pressure_mpa", "hose_temperature_c", "hose_2_pressure_mpa",
     "hose_2_temperature_c", "header_pressure_mpa", "header_temperature_c",
-    "header_mass_kg", "header_inflow_g_s", "dispatch_bank", "dispatch_bank_2",
+    "header_mass_kg", "header_inflow_g_s", "compressor_package_pressure_mpa",
+    "compressor_package_temperature_c", "compressor_package_mass_kg",
+    "dispatch_bank", "dispatch_bank_2",
     "recharge_bank", "esd", "active_faults", "analysis", "gas_detectors",
     "flame_detectors", "released_mass_kg", "peak_vehicle_temperature_c",
     "trip_causes", "process_activity", "process_operations", "virtual_safety",

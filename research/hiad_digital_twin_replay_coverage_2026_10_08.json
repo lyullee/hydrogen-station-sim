@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "artifact_type": "hiad_to_digital_twin_canonical_replay_coverage_audit",
-  "generated_at_utc": "2026-10-13T09:51:25.428319+00:00",
+  "generated_at_utc": "2026-10-13T11:18:49.430610+00:00",
   "status": "completed_family_level_integration_audit",
   "evidence_role": "retrospective_metadata_to_canonical_runtime_traceability_only",
   "source": {
@@ -11,9 +11,9 @@
     "playbook_catalog_sha256": "d8fedb036a91b5adae3934f1604a17966b8f0f9200c52f4d40bf2da2243a7c6c",
     "model_input_sha256": {
       "src/h2station/safety_runtime.py": "ab1f4ea32ec47bd7f31e6631eeb0176c7d3c1282a846043a3db666cf769790b2",
-      "src/h2station/safe_operation.py": "0f77751aec85cfb99779f069488614e10e968464951accf02b685b3c2d1210cd",
+      "src/h2station/safe_operation.py": "73d7d71c699775622d1c9003b40f8150a1bff1b6b85808efcd68dabdadc95f87",
       "src/h2station/hazop/runtime.py": "df8e34d063f886165057c673d887a62ddddf1a6b69a14917dc2f5c7cb0669748",
-      "src/h2station/hazop/mapping.py": "0412b597461848964208b415dbb8549c5c7c27d83a50970d7dacc1d29c4a9684",
+      "src/h2station/hazop/mapping.py": "1c9af0f4372a9543ad59ec1e2710d0bee24086ede10f562f3f9ba546ccbe1b85",
       "src/h2station/risk/live.py": "73b9d430fd02ccad87758aa206ce2f31fdb78604225f7f3a3579231097fd97d4",
       "src/h2station/risk/runtime_backend.py": "64be1ef599b882c40cdab5637195db9073d1b61dddc3d9f5b8282b60e39dd813",
       "src/h2station/data/emergency_playbooks.json": "d8fedb036a91b5adae3934f1604a17966b8f0f9200c52f4d40bf2da2243a7c6c"

@@ -299,8 +299,19 @@ class ModelMapper:
                 depressurize_elapsed_s if depressurizing else 0.0
             ),
         })
-        discharge = (bank_gases[recharge_index].pressure_pa + station.compressor.parameters.discharge_pressure_margin_pa
-                     if recharge_index is not None else supply.pressure_pa)
+        package_gas = station.compressor_package_gas_state(state)
+        discharge = (
+            max(
+                bank_gases[recharge_index].pressure_pa
+                + station.compressor.parameters.discharge_pressure_margin_pa,
+                package_gas.pressure_pa if package_gas is not None else 0.0,
+            )
+            if recharge_index is not None
+            else (
+                package_gas.pressure_pa
+                if package_gas is not None else supply.pressure_pa
+            )
+        )
         compressor = station.compressor.evaluate(supply, discharge, enabled=recharge_index is not None,
                                                  include_stage_outlets=True)
         compressor_flow_kg_s = (
@@ -331,8 +342,17 @@ class ModelMapper:
             put(f"PT-{node}01", pressure/1e6)
             put(f"TT-{node}01", temperature-273.15)
             put(f"TT-{node}02", station.compressor.parameters.intercooler_outlet_temperature_k-273.15)
-        put("PT-0601", discharge/1e6)
-        put("TT-0601", compressor.outlet_temperature_k-273.15)
+        put(
+            "PT-0601",
+            (package_gas.pressure_pa if package_gas is not None else discharge) / 1e6,
+        )
+        put(
+            "TT-0601",
+            (
+                package_gas.temperature_k
+                if package_gas is not None else compressor.outlet_temperature_k
+            ) - 273.15,
+        )
         put("TT-0602", bank_gases[recharge_index].temperature_k-273.15 if recharge_index is not None else supply.temperature_k-273.15)
         if header_gas is not None and state.common_header is not None:
             put("PT-1001", header_gas.pressure_pa / 1e6)

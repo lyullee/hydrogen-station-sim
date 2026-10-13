@@ -120,6 +120,9 @@ class SafeOperationSample:
     header_temperature_k: float | None = None
     header_mass_kg: float | None = None
     header_inflow_kg_s: float | None = None
+    compressor_package_pressure_pa: float | None = None
+    compressor_package_temperature_k: float | None = None
+    compressor_package_mass_kg: float | None = None
     fueling_stop_reason: str | None = None
     fueling_2_stop_reason: str | None = None
     fueling_communication_state: str = "valid"
@@ -257,6 +260,9 @@ class SafeFullStationSimulator:
             bank_gases = tuple(
                 bank.gas_state(bank_state)
                 for bank, bank_state in zip(self.station.banks, current.banks)
+            )
+            compressor_package_gas = self.station.compressor_package_gas_state(
+                current
             )
             hose_gas = self.station.partial_station.hose_gas_state(
                 current.partial_station
@@ -522,6 +528,16 @@ class SafeFullStationSimulator:
                 and (recharge_index is not None or compressor_allow_reverse_flow)
                 else 1.0
             )
+            compressor_package_connection_opening = (
+                min(
+                    virtual_safety.opening("compressor.discharge"),
+                    virtual_safety.opening(
+                        f"bank.{self.station.banks[compressor_path_index].parameters.name}.inlet"
+                    ),
+                )
+                if virtual_safety is not None and recharge_index is not None
+                else (1.0 if recharge_index is not None else 0.0)
+            )
             compressor_path_result, _compressor_reverse_index = (
                 self.station.compressor_path_result(
                     time_s,
@@ -711,13 +727,9 @@ class SafeFullStationSimulator:
                 reasons = process_snapshot["stop_reason"]
                 compressor_flow_g_s = 0.0
                 if recharge_index is not None:
-                    compressor_flow_g_s = 1000.0 * self.station.compressor.evaluate(
-                        self.station.compressor_suction(time_s),
-                        bank_gases[recharge_index].pressure_pa
-                        + self.station.compressor.parameters.discharge_pressure_margin_pa,
-                        enabled=True,
-                    ).mass_flow_kg_s
-                    compressor_flow_g_s *= compressor_flow_multiplier
+                    compressor_flow_g_s = (
+                        1000.0 * compressor_path_result.mass_flow_kg_s
+                    )
 
                 def operation_state(key: str, flow_g_s: float, wait_reason: str) -> dict[str, object]:
                     if not settings[key]:
@@ -763,8 +775,22 @@ class SafeFullStationSimulator:
                            for side in ("inlet", "outlet")},
                         "dispenser.1": hose_gas.pressure_pa / 1e6,
                         "dispenser.2": hose_2_gas.pressure_pa / 1e6,
-                        **({"compressor.discharge": bank_gases[recharge_index].pressure_pa / 1e6}
-                           if recharge_index is not None else {})})
+                        **(
+                            {
+                                "compressor.discharge": (
+                                    compressor_package_gas.pressure_pa / 1e6
+                                )
+                            }
+                            if compressor_package_gas is not None
+                            else (
+                                {
+                                    "compressor.discharge": (
+                                        bank_gases[recharge_index].pressure_pa / 1e6
+                                    )
+                                }
+                                if recharge_index is not None else {}
+                            )
+                        )})
 
             if sample_callback is not None:
                 sample_callback(
@@ -815,6 +841,18 @@ class SafeFullStationSimulator:
                             if current.common_header is not None else None
                         ),
                         header_inflow_kg_s=header_inflow,
+                        compressor_package_pressure_pa=(
+                            compressor_package_gas.pressure_pa
+                            if compressor_package_gas is not None else None
+                        ),
+                        compressor_package_temperature_k=(
+                            compressor_package_gas.temperature_k
+                            if compressor_package_gas is not None else None
+                        ),
+                        compressor_package_mass_kg=(
+                            current.compressor_package.hydrogen_mass_kg
+                            if current.compressor_package is not None else None
+                        ),
                         dispatch_bank=(
                             self.station.banks[dispatch_index].parameters.name
                             if dispatch_index is not None else None
@@ -910,8 +948,8 @@ class SafeFullStationSimulator:
                     progress_callback(time_s, end_time_s)
                 continue
             def rhs(local_time_s: float, vector: np.ndarray) -> np.ndarray:
-                local_state = FullStationState.from_vector(
-                    vector[:-1] if process is not None else vector, len(self.station.banks)
+                local_state = self.station.state_from_vector(
+                    vector[:-1] if process is not None else vector
                 )
                 base_rate, compressor_result, _ = self.station.derivative(
                     local_time_s,
@@ -935,6 +973,9 @@ class SafeFullStationSimulator:
                     header_allow_reverse_flow=self._allow_reverse_flow(override, "header"),
                     compressor_allow_reverse_flow=compressor_allow_reverse_flow,
                     compressor_flow_multiplier=compressor_flow_multiplier,
+                    compressor_package_connection_opening=(
+                        compressor_package_connection_opening
+                    ),
                 )
                 rates = self._apply_fault_effects(
                     self._apply_leak_sinks(
@@ -967,8 +1008,8 @@ class SafeFullStationSimulator:
                                      t_eval=[end_s], rtol=1.0e-6, atol=1.0e-8)
             if not solution.success:
                 raise RuntimeError(f"Safe-operation integration failed: {solution.message}")
-            current = FullStationState.from_vector(
-                solution.y[:-1, -1] if process is not None else solution.y[:, -1], len(self.station.banks)
+            current = self.station.state_from_vector(
+                solution.y[:-1, -1] if process is not None else solution.y[:, -1]
             )
             if process is not None:
                 process.account_compressor(float(solution.y[-1, -1]), 1.0)
@@ -1080,7 +1121,59 @@ class SafeFullStationSimulator:
         partial_rate = base_rate.partial_station
         secondary_rate = base_rate.secondary_partial_station
         header_rate = base_rate.common_header
+        package_rate = base_rate.compressor_package
         for event in events:
+            if (
+                event.target == "compressor"
+                and package_rate is not None
+                and state.compressor_package is not None
+                and self.station.compressor_package is not None
+            ):
+                gas = self.station.compressor_package.gas_state(
+                    state.compressor_package
+                )
+                if event.kind is FaultKind.PRESSURE_DISTURBANCE:
+                    desired = gas.pressure_pa + event.magnitude * 1.0e6
+                    mass_rate = np.clip(
+                        state.compressor_package.hydrogen_mass_kg
+                        * (desired - gas.pressure_pa)
+                        / max(abs(gas.pressure_pa), 1.0e5)
+                        / event.rate_s,
+                        -state.compressor_package.hydrogen_mass_kg / event.rate_s,
+                        10.0,
+                    )
+                    package_rate = replace(
+                        package_rate,
+                        hydrogen_mass_kg=package_rate.hydrogen_mass_kg + mass_rate,
+                        hydrogen_internal_energy_j=(
+                            package_rate.hydrogen_internal_energy_j
+                            + mass_rate * gas.specific_enthalpy_j_kg
+                        ),
+                    )
+                elif event.kind in (
+                    FaultKind.EXTERNAL_FIRE,
+                    FaultKind.TEMPERATURE_DISTURBANCE,
+                ):
+                    source_temperature = event.external_temperature_k or 298.15
+                    ua = event.heat_transfer_ua_w_k or 500.0
+                    heat = ua * (
+                        source_temperature
+                        - state.compressor_package.wall_temperature_k
+                    )
+                    p = self.station.compressor_package.parameters
+                    f = self.station.compressor_package.fit
+                    capacity = (
+                        p.wall_mass_kg
+                        * p.wall_specific_heat_j_kg_k
+                        * f.wall_heat_capacity_multiplier
+                    )
+                    package_rate = replace(
+                        package_rate,
+                        wall_temperature_k=(
+                            package_rate.wall_temperature_k + heat / capacity
+                        ),
+                    )
+                continue
             if (
                 event.target == "header"
                 and header_rate is not None
@@ -1135,6 +1228,7 @@ class SafeFullStationSimulator:
                 )
         return FullStationState(
             tuple(bank_rates), partial_rate, secondary_rate, header_rate,
+            package_rate,
         )
 
     def _apply_pressure_disturbance(self, event, state, bank_rates, partial_rate, secondary_rate):
@@ -1209,6 +1303,8 @@ class SafeFullStationSimulator:
     def _gas_for_target(self, target, state):
         if target == "header" and self.station.common_header is not None and state.common_header is not None:
             return self.station.common_header.gas_state(state.common_header)
+        if target == "compressor" and self.station.compressor_package is not None and state.compressor_package is not None:
+            return self.station.compressor_package.gas_state(state.compressor_package)
         if target.startswith("cascade.") or target == "compressor":
             index = ({"low": 0, "medium": 1, "high": 2}.get(target.split(".", 1)[1]) if target.startswith("cascade.") else 2)
             return self.station.banks[index].gas_state(state.banks[index]) if index is not None else None
@@ -1221,6 +1317,8 @@ class SafeFullStationSimulator:
     def _mass_for_target(self, target, state):
         if target == "header" and state.common_header is not None:
             return state.common_header.hydrogen_mass_kg
+        if target == "compressor" and state.compressor_package is not None:
+            return state.compressor_package.hydrogen_mass_kg
         if target.startswith("cascade.") or target == "compressor":
             index = ({"low": 0, "medium": 1, "high": 2}.get(target.split(".", 1)[1]) if target.startswith("cascade.") else 2); return state.banks[index].hydrogen_mass_kg if index is not None else 0.0
         if target == "dispenser.hose": return state.partial_station.hose_hydrogen_mass_kg
@@ -1268,10 +1366,17 @@ class SafeFullStationSimulator:
                 raise ValueError("Common-header state is unavailable")
             gas = self.station.common_header.gas_state(state.common_header)
         elif target == "compressor":
-            # The compressor still has no separate gas inventory. Use the
-            # connected high-bank state as a conservative source proxy.
-            index = next((i for i, bank in enumerate(self.station.banks) if bank.parameters.name == "high"), len(self.station.banks)-1)
-            gas = self.station.banks[index].gas_state(state.banks[index])
+            if (
+                self.station.compressor_package is not None
+                and state.compressor_package is not None
+            ):
+                gas = self.station.compressor_package.gas_state(
+                    state.compressor_package
+                )
+            else:
+                # Legacy topologies have no separate package inventory.
+                index = next((i for i, bank in enumerate(self.station.banks) if bank.parameters.name == "high"), len(self.station.banks)-1)
+                gas = self.station.banks[index].gas_state(state.banks[index])
         else:
             raise ValueError(f"Unsupported leak target: {target}")
         return (
@@ -1289,6 +1394,7 @@ class SafeFullStationSimulator:
         partial_rate = base_rate.partial_station
         secondary_rate = base_rate.secondary_partial_station
         header_rate = base_rate.common_header
+        package_rate = base_rate.compressor_package
         for event, scenario, source, enthalpy in self._active_leak_inputs(events, state):
             mass_flow = self.risk_monitor.leak_model.mass_flow_kg_s(scenario, source)
             # Do not allow an adaptive ODE trial step to remove more inventory
@@ -1355,6 +1461,17 @@ class SafeFullStationSimulator:
                         - mass_flow * enthalpy
                     ),
                 )
+            elif event.target == "compressor" and package_rate is not None:
+                package_rate = replace(
+                    package_rate,
+                    hydrogen_mass_kg=(
+                        package_rate.hydrogen_mass_kg - mass_flow
+                    ),
+                    hydrogen_internal_energy_j=(
+                        package_rate.hydrogen_internal_energy_j
+                        - mass_flow * enthalpy
+                    ),
+                )
             else:
                 bank_name = event.target.split(".", 1)[1] if event.target.startswith("cascade.") else "high"
                 index = next((index for index, bank in enumerate(self.station.banks) if bank.parameters.name == bank_name), len(self.station.banks)-1)
@@ -1370,6 +1487,7 @@ class SafeFullStationSimulator:
                 )
         return FullStationState(
             tuple(bank_rates), partial_rate, secondary_rate, header_rate,
+            package_rate,
         )
 
     @staticmethod

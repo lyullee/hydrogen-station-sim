@@ -1,12 +1,12 @@
 {
   "schema_version": 1,
   "artifact_type": "hiad_virtual_response_action_execution_consistency_audit",
-  "generated_at_utc": "2026-10-13T09:51:54.983856+00:00",
+  "generated_at_utc": "2026-10-13T11:19:42.701992+00:00",
   "status": "completed_virtual_action_execution_audit",
   "evidence_role": "public_action_category_to_simulation_command_consistency_only",
   "source": {
     "hiad_replay_coverage": "research/hiad_digital_twin_replay_coverage_2026_10_08.json",
-    "hiad_replay_coverage_sha256": "7fcc1ab005540b6f595cf5663397f66840de1df9b68f8c040c8c751c3a509eb7",
+    "hiad_replay_coverage_sha256": "43649b8b82fd709e374e75eed6762677f314fb9292300dd44564173b4a099ef5",
     "action_evidence": "research/hiad_action_evidence.json",
     "action_evidence_sha256": "72f2550eabea6a4207a5d59c98bd99520e217fd2d4f8597e5d1d72f2ef87e1dd",
     "playbook_catalog": "src/h2station/data/emergency_playbooks.json",

@@ -112,7 +112,14 @@ def test_recharge_needs_both_commands_and_depletes_trailer():
     assert monitor.latest["modes"]["unloading.active"] is True
     bank_gain = charging.final_state.banks[2].hydrogen_mass_kg - supply_only.final_state.banks[2].hydrogen_mass_kg
     assert bank_gain > 0
-    assert bank_gain == pytest.approx(settings["trailer_capacity_kg"] - process.trailer_mass_kg, rel=1e-5)
+    package_gain = (
+        charging.final_state.compressor_package.hydrogen_mass_kg
+        - supply_only.final_state.compressor_package.hydrogen_mass_kg
+    )
+    assert bank_gain + package_gain == pytest.approx(
+        settings["trailer_capacity_kg"] - process.trailer_mass_kg,
+        rel=1e-5,
+    )
 
 
 def test_pressure_target_auto_stop_and_relief_hysteresis_with_mass_sink():
@@ -469,6 +476,69 @@ def test_live_operator_leak_uses_stable_solver_and_depletes_inventory():
     initial_pressure = built.station.banks[2].gas_state(built.initial_state.banks[2]).pressure_pa
     final_pressure = built.station.banks[2].gas_state(result.final_state.banks[2]).pressure_pa
     assert final_pressure < initial_pressure - .3e6
+
+
+def test_compressor_leak_uses_finite_package_inventory_after_esd_isolation():
+    """ESD must stop bank replenishment without erasing trapped package gas."""
+    leak = FaultEvent(
+        event_id="compressor-package-leak",
+        kind=FaultKind.HYDROGEN_LEAK,
+        target="compressor",
+        start_time_s=0.0,
+        leak_diameter_m=0.0005,
+    )
+    built = build_reference_scenario(
+        ReferenceScenario(
+            duration_s=6.0,
+            control_period_s=0.2,
+            fault_events=(leak,),
+        ),
+        UnavailableHyRAMBackend(),
+    )
+    settings = ProcessSettings(
+        trailer_supply=True,
+        pressure_recharge=True,
+        recharge_auto_stop=False,
+    ).model_dump()
+    process = ProcessRuntime(settings)
+    built.simulator.process_runtime = process
+    built.station.compressor_suction = lambda _time: process.trailer_state()
+
+    connected = built.simulator.simulate(built.initial_state, 0.6, 0.2)
+    bank_mass_at_trip = connected.final_state.banks[2].hydrogen_mass_kg
+    package_mass_at_trip = (
+        connected.final_state.compressor_package.hydrogen_mass_kg
+    )
+    package_pressure_at_trip = built.station.compressor_package.gas_state(
+        connected.final_state.compressor_package
+    ).pressure_pa
+
+    process.safety.issue("esd.trip", "station", 0.6, process=process)
+    isolated = built.simulator.simulate(
+        connected.final_state,
+        5.0,
+        0.2,
+        start_time_s=0.6,
+        reset_runtime=False,
+    )
+    final_package = isolated.final_state.compressor_package
+    final_package_pressure = built.station.compressor_package.gas_state(
+        final_package
+    ).pressure_pa
+    leak_flow = isolated.leak_mass_flow_by_release["compressor-package-leak"]
+
+    assert isolated.final_state.banks[2].hydrogen_mass_kg == pytest.approx(
+        bank_mass_at_trip,
+        abs=1.0e-10,
+    )
+    assert final_package.hydrogen_mass_kg < package_mass_at_trip
+    assert final_package_pressure < package_pressure_at_trip
+    assert leak_flow[0] > 0.0
+    assert leak_flow[-1] < leak_flow[0]
+    assert package_mass_at_trip - final_package.hydrogen_mass_kg == pytest.approx(
+        np.trapezoid(leak_flow, isolated.time_s),
+        rel=2.0e-2,
+    )
 
 
 def test_live_api_operation_settings_can_be_changed_and_invalid_hysteresis_rejected():

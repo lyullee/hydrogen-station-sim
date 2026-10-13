@@ -20,6 +20,10 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
         "header_temperature_c": 24.2,
         "header_mass_kg": 0.16,
         "header_inflow_g_s": 12.4,
+        "compressor_package_pressure_mpa": 57.0,
+        "compressor_package_temperature_c": 31.5,
+        "compressor_package_mass_kg": 0.74,
+        "component_internal_volume_m3": {"compressor": 0.02},
     }
     signals = {"PT-0901": {"value": 88.0, "unit": "MPa", "quality": "GOOD"}}
 
@@ -108,6 +112,17 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     )
     assert prompt_evidence_summary(idle)["common_header"]["bank_inflow_g_s"] == 12.4
     assert prompt_decision_evidence(idle)["common_header"]["temperature_c"] == 24.2
+    assert idle["compressor_package"]["pressure_mpa_abs"] == 57.0
+    assert idle["compressor_package"]["inventory_kg"] == 0.74
+    assert idle["compressor_package"]["model_status"] == (
+        "DEVELOPMENT_PHYSICS_UNVALIDATED"
+    )
+    assert prompt_evidence_summary(idle)["compressor_package"][
+        "internal_volume_m3"
+    ] == 0.02
+    assert prompt_decision_evidence(idle)["compressor_package"][
+        "topology"
+    ].startswith("finite discharge-package inventory")
     scope = prompt_decision_evidence(idle)["support_scope"]
     assert scope["station_side"] is True
     assert scope["full_loop"] is False
