@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "artifact_type": "hiad_to_digital_twin_canonical_replay_coverage_audit",
-  "generated_at_utc": "2026-10-13T16:10:06.030684+00:00",
+  "generated_at_utc": "2026-10-13T21:43:13.522795+00:00",
   "status": "completed_family_level_integration_audit",
   "evidence_role": "retrospective_metadata_to_canonical_runtime_traceability_only",
   "source": {
