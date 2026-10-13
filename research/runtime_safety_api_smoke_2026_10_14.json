@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0",
+  "artifact_type": "runtime_virtual_safety_api_smoke",
+  "generated_at": "2026-10-14T06:34:00+09:00",
+  "command": "python -m pytest -q tests/test_virtual_safety.py::test_live_safety_api_separates_command_feedback_and_replays",
+  "status": "passed",
+  "tests_passed": 1,
+  "tests_failed": 0,
+  "verified_behaviors": [
+    "valve-close command is accepted and later confirmed by feedback",
+    "operation-start state is reflected in the process operation settings",
+    "restart approval is rejected while the hazard state is unsafe",
+    "safety replay returns command history and training evaluation",
+    "running operator simulation is stopped during cleanup"
+  ],
+  "claim_boundary": "This verifies virtual safety command/state plumbing and replay behavior; it is not field ESD effectiveness validation."
+}
