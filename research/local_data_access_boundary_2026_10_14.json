@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-10-14",
+  "artifact_type": "local_data_access_boundary",
+  "source_description": "User-provided local FTPData folder inventory; names and absolute paths intentionally omitted.",
+  "inventory": {
+    "file_count": 85,
+    "total_bytes": 2667082728,
+    "by_extension": {
+      ".jpg": 54,
+      ".mp4": 29,
+      ".pdf": 1,
+      ".hwpx": 1
+    },
+    "numeric_trace_extensions_found": [],
+    "numeric_trace_extensions_checked": [
+      ".csv",
+      ".tsv",
+      ".xlsx",
+      ".xls",
+      ".parquet",
+      ".sqlite",
+      ".sqlite3",
+      ".json",
+      ".h5",
+      ".hdf5",
+      ".mat",
+      ".txt"
+    ]
+  },
+  "evidence_boundary": {
+    "supports": [
+      "visual equipment and facility-context review from images and video",
+      "document review after separate rights and confidentiality screening"
+    ],
+    "does_not_support": [
+      "independent pressure-time validation",
+      "independent mass-flow validation",
+      "synchronized station-to-vehicle logger validation",
+      "numeric accident-model calibration"
+    ],
+    "public_repository_policy": "Do not copy the source media or document contents into this public repository without an explicit release decision."
+  },
+  "decision": "The folder cannot close any currently blocked numerical holdout gate. Use it for visual/model-context work only unless a separately exported, rights-cleared numeric trace is supplied."
+}
