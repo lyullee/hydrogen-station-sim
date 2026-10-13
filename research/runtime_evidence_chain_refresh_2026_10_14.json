@@ -35,7 +35,7 @@
       "status": "PASS",
       "exit_code": 0,
       "duration_s": 21.404,
-      "output_tail": "{\n  \"case_count\": 34,\n  \"integration_trace_pass_count\": 34,\n  \"representation_case_counts\": {\n    \"direct_physical_replay\": 29,\n    \"proxy_partial_replay\": 4,\n    \"response_only_no_physical_model\": 1,\n    \"unmapped\": 0\n  },\n  \"mapped_family_count\": 10,\n  \"physical_or_proxy_family_count\": 9,\n  \"response_only_family_count\": 1\n}\nC:\\Users\\lyul\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\hyram\\phys\\_comps.py:162: PhysicsWarning: Fluid choked. Ignoring mdot specification and using choked flow calculation.\n  warnings.warn('Fluid choked. Ignoring mdot specification and using choked flow calculation.', category=PhysicsWarning)"
+      "output_tail": "{\n  \"case_count\": 34,\n  \"integration_trace_pass_count\": 34,\n  \"representation_case_counts\": {\n    \"direct_physical_replay\": 29,\n    \"proxy_partial_replay\": 4,\n    \"response_only_no_physical_model\": 1,\n    \"unmapped\": 0\n  },\n  \"mapped_family_count\": 10,\n  \"physical_or_proxy_family_count\": 9,\n  \"response_only_family_count\": 1\n}\n<site-packages>\\hyram\\phys\\_comps.py:162: PhysicsWarning: Fluid choked. Ignoring mdot specification and using choked flow calculation.\n  warnings.warn('Fluid choked. Ignoring mdot specification and using choked flow calculation.', category=PhysicsWarning)"
     },
     {
       "name": "khk_digital_twin_replay",
@@ -43,7 +43,7 @@
       "status": "PASS",
       "exit_code": 0,
       "duration_s": 18.766,
-      "output_tail": "{\n  \"status\": \"completed_independent_public_accident_integration_audit\",\n  \"aggregate\": {\n    \"public_report_count\": 23,\n    \"incident_code_count\": 26,\n    \"in_scope_report_count\": 22,\n    \"in_scope_incident_code_count\": 25,\n    \"integration_trace_pass_report_count\": 22,\n    \"integration_trace_pass_incident_code_count\": 25,\n    \"out_of_scope_report_count\": 1,\n    \"out_of_scope_incident_code_count\": 1,\n    \"representation_report_counts\": {\n      \"direct_canonical_family_replay\": 12,\n      \"proxy_partial_replay\": 10,\n      \"out_of_scope_non_hydrogen_chemical\": 1\n    }\n  },\n  \"runtime\": {\n    \"backend\": \"HyRAM+ 6.1 native\",\n    \"virtual_detector_mode\": true,\n    \"mapped_family_count\": 8,\n    \"family_recipe_count\": 8,\n    \"family_recipe_pass_count\": 8,\n    \"all_family_recipes_passed\": true,\n    \"missing_runtime_families\": [],\n    \"missing_playbook_ids\": []\n  }\n}\nC:\\Users\\lyul\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\hyram\\phys\\_comps.py:162: PhysicsWarning: Fluid choked. Ignoring mdot specification and using choked flow calculation.\n  warnings.warn('Fluid choked. Ignoring mdot specification and using choked flow calculation.', category=PhysicsWarning)"
+      "output_tail": "{\n  \"status\": \"completed_independent_public_accident_integration_audit\",\n  \"aggregate\": {\n    \"public_report_count\": 23,\n    \"incident_code_count\": 26,\n    \"in_scope_report_count\": 22,\n    \"in_scope_incident_code_count\": 25,\n    \"integration_trace_pass_report_count\": 22,\n    \"integration_trace_pass_incident_code_count\": 25,\n    \"out_of_scope_report_count\": 1,\n    \"out_of_scope_incident_code_count\": 1,\n    \"representation_report_counts\": {\n      \"direct_canonical_family_replay\": 12,\n      \"proxy_partial_replay\": 10,\n      \"out_of_scope_non_hydrogen_chemical\": 1\n    }\n  },\n  \"runtime\": {\n    \"backend\": \"HyRAM+ 6.1 native\",\n    \"virtual_detector_mode\": true,\n    \"mapped_family_count\": 8,\n    \"family_recipe_count\": 8,\n    \"family_recipe_pass_count\": 8,\n    \"all_family_recipes_passed\": true,\n    \"missing_runtime_families\": [],\n    \"missing_playbook_ids\": []\n  }\n}\n<site-packages>\\hyram\\phys\\_comps.py:162: PhysicsWarning: Fluid choked. Ignoring mdot specification and using choked flow calculation.\n  warnings.warn('Fluid choked. Ignoring mdot specification and using choked flow calculation.', category=PhysicsWarning)"
     },
     {
       "name": "hiad_event_category_concordance",
@@ -67,7 +67,7 @@
       "status": "PASS",
       "exit_code": 0,
       "duration_s": 13.942,
-      "output_tail": "{\n  \"backend\": \"HyRAM+ 6.1 native\",\n  \"virtual_detector_mode\": true,\n  \"unique_family_recipes_run\": 9,\n  \"response_handoff_pass_count\": 9,\n  \"all_executable_handoffs_passed\": true\n}\nC:\\Users\\lyul\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\hyram\\phys\\_comps.py:162: PhysicsWarning: Fluid choked. Ignoring mdot specification and using choked flow calculation.\n  warnings.warn('Fluid choked. Ignoring mdot specification and using choked flow calculation.', category=PhysicsWarning)"
+      "output_tail": "{\n  \"backend\": \"HyRAM+ 6.1 native\",\n  \"virtual_detector_mode\": true,\n  \"unique_family_recipes_run\": 9,\n  \"response_handoff_pass_count\": 9,\n  \"all_executable_handoffs_passed\": true\n}\n<site-packages>\\hyram\\phys\\_comps.py:162: PhysicsWarning: Fluid choked. Ignoring mdot specification and using choked flow calculation.\n  warnings.warn('Fluid choked. Ignoring mdot specification and using choked flow calculation.', category=PhysicsWarning)"
     },
     {
       "name": "ijhe_readiness",
