@@ -1,9 +1,9 @@
 {
   "schema_version": "1.0",
   "candidate": "hydrogen-station-sim 0.1.1-rc1",
-  "generated_at": "2026-10-14T06:45:00+09:00",
+  "generated_at": "2026-10-14T06:48:00+09:00",
   "repository": "lyullee/hydrogen-station-sim",
-  "validated_source_commit": "a6f952d13730e1e771463c20635f0ac1a679b6e0",
+  "validated_source_commit": "3534fbc2d1133ac7a1bbe25096f3e253bba7f604",
   "branch": "main",
   "scope": {
     "included": [
@@ -56,7 +56,13 @@
       "mc_tank_boundary",
       "h2safe_spatial_response",
       "nrel_h2fills_hdvs_tank"
-    ]
+    ],
+    "local_direct_answer_llm_regression_artifact": "research/direct_answer_llm_regression_2026_10_14.json",
+    "local_direct_answer_llm_regression_status": "PASS",
+    "local_direct_answer_llm_regression_tests_passed": 55,
+    "local_direct_answer_llm_regression_tests_failed": 0,
+    "local_direct_answer_llm_regression_source_commit": "3534fbc2d1133ac7a1bbe25096f3e253bba7f604",
+    "ci_status_note": "Latest confirmed CI record remains the recorded run; GitHub API status refresh was unavailable due rate limiting."
   },
   "known_blockers": [
     "dickens_typeiii_prospective_validation",
