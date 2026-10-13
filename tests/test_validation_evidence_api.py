@@ -138,6 +138,19 @@ def test_validation_evidence_surface_is_privacy_bounded_and_claim_limited() -> N
     assert capacity_cv["runtime_parameter_application"] is False
     assert capacity_cv["validation_gate_changed"] is False
     assert capacity_cv["promotion_prohibited"] is True
+    temperature_envelope = inventory[
+        "public_mc_temperature_sensor_envelope"
+    ]
+    assert temperature_envelope["status"] == "diagnostic_only"
+    assert temperature_envelope["case_count"] == 8
+    assert temperature_envelope["observation_operator_selected"] is False
+    assert temperature_envelope["runtime_parameter_application"] is False
+    assert temperature_envelope["validation_gate_changed"] is False
+    assert temperature_envelope["promotion_prohibited"] is True
+    assert temperature_envelope["raw_rows_exposed"] is False
+    gas = temperature_envelope["temperature_states"]["gas_temperature"]
+    assert gas["inside_envelope_fraction_pooled"] < 0.1
+    assert gas["mean_to_envelope_rmse_reduction_percent"] < 10.0
     cumulative_mass = inventory["public_mc_cumulative_mass_sensitivity"]
     assert cumulative_mass["status"] == "diagnostic_only"
     assert cumulative_mass["case_count"] == 8

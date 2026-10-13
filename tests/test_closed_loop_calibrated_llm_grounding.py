@@ -117,6 +117,34 @@ def test_mc_temperature_channel_inventory_is_grounded_without_validation_promoti
     assert compact["stratification_summary"]["maximum_case_peak_spread_c"] == pytest.approx(8.532)
 
 
+def test_mc_temperature_sensor_envelope_is_grounded_without_operator_selection():
+    manifest = build_evidence_manifest(
+        {"time_s": 1.0}, {}, [], False, question="탱크 온도 센서 열전대 오차"
+    )
+    evidence = manifest["response_evidence"][
+        "public_mc_temperature_sensor_envelope"
+    ]
+    assert evidence["status"] == "diagnostic_only"
+    assert evidence["case_count"] == 8
+    assert evidence["observation_operator_selected"] is False
+    assert evidence["runtime_parameter_application"] is False
+    assert evidence["validation_gate_changed"] is False
+    assert evidence["promotion_prohibited"] is True
+    assert evidence["raw_rows_exposed"] is False
+    gas = evidence["temperature_states"]["gas_temperature"]
+    assert gas["inside_envelope_fraction_pooled"] < 0.1
+    assert gas["mean_to_envelope_rmse_reduction_percent"] < 10.0
+    compact = prompt_evidence_summary(manifest)[
+        "public_mc_temperature_sensor_envelope"
+    ]
+    assert "Sensor spread alone" in compact["finding"]
+    decision = prompt_decision_evidence(manifest)[
+        "public_mc_temperature_sensor_envelope"
+    ]
+    assert decision["observation_operator_selected"] is False
+    assert decision["promotion_prohibited"] is True
+
+
 def test_mc_cumulative_mass_sensitivity_is_grounded_without_promotion():
     manifest = build_evidence_manifest(
         {"time_s": 1.0}, {}, [], False, question="MC 질량 적분 원인"

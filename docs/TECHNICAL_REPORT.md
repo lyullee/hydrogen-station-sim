@@ -97,6 +97,15 @@ claim boundary with the committed audit JSON before using an assistant output
 as research evidence. A PASS gate means that the named artifact or integrity
 check passed; it does not turn a component diagnostic into station validation.
 
+The MC vehicle-tank thermal diagnosis also retains the complete independent
+thermocouple envelope instead of relying only on the historical mean trace.
+Under the 7+1 leave-one-case-out geometry rule, the gas and liner states remain
+inside the simultaneous sensor range for only 7.7% and 8.1% of pooled samples;
+their case-mean envelope RMSE values are 8.593 and 8.347 °C. The small reduction
+from mean-trace scoring shows that sensor spread alone does not explain the
+thermal error. This is post-outcome diagnostic evidence exposed to SAGA with no
+operator selection, thermal fitting, runtime change or validation promotion.
+
 ## 8. Known boundaries
 
 The model is a training and research simulator. All sensors are simulated; no actual PLC, CCTV or gas detector is connected. The 3D image and CCTV illustrations are representational. The station layout, volumes, heat transfer, compressor performance, leak geometry, population and meteorology are scenario assumptions, not an as-built survey. Weather-dependent dispersion, structural failure, detailed indoor CFD and full probabilistic risk are outside the model's validated scope. HyRAM outputs are conditional consequences, and a successful LLM response does not validate a safety decision. Operators must use actual site procedures and measurements for real incidents.

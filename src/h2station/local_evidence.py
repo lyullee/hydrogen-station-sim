@@ -82,6 +82,9 @@ _MC_TANK_BOUNDARY_DIAGNOSTIC = _ROOT / (
 _MC_CAPACITY_GEOMETRY_CV = _ROOT / (
     "research/mc_capacity_geometry_leave_one_out_2026_10_14.json"
 )
+_MC_TEMPERATURE_SENSOR_ENVELOPE = _ROOT / (
+    "research/mc_temperature_sensor_envelope_2026_10_14.json"
+)
 _MC_CUMULATIVE_MASS_SENSITIVITY = _ROOT / (
     "research/mc_cumulative_mass_sensitivity_2026_10_10.json"
 )
@@ -585,6 +588,99 @@ def _mc_capacity_geometry_cv_summary() -> dict[str, Any] | None:
             "remaining_limitation": (
                 "Four of eight folds still fail; tank-temperature observation "
                 "semantics and heat-transfer boundaries remain unresolved."
+            ),
+            "claim_limit": str(record["claim_boundary"]),
+        }
+    except (OSError, KeyError, TypeError, ValueError, json.JSONDecodeError):
+        return None
+
+
+def _mc_temperature_sensor_envelope_summary() -> dict[str, Any] | None:
+    """Expose the multi-sensor temperature result without raw trace rows."""
+
+    try:
+        record = _read_json(_MC_TEMPERATURE_SENSOR_ENVELOPE)
+        aggregate = record.get("aggregate") or {}
+        cases = record.get("cases") or []
+        source = record.get("source") or {}
+        operators = (
+            "gas_temperature",
+            "liner_temperature",
+            "shell_temperature",
+            "liner_shell_mean",
+        )
+        required = (
+            record.get("artifact_type")
+            == "mc_temperature_sensor_envelope_diagnostic",
+            record.get("evidence_role")
+            == "post_outcome_within_campaign_development_diagnostic",
+            record.get("post_outcome") is True,
+            record.get("external_validation") is False,
+            record.get("prospective_validation") is False,
+            record.get("observation_operator_selection_performed") is False,
+            record.get("runtime_parameter_changed") is False,
+            record.get("validation_gate_changed") is False,
+            record.get("promotion_to_validation_prohibited") is True,
+            record.get("raw_experimental_rows_persisted") is False,
+            source.get("archive_sha256")
+            == source.get("expected_archive_sha256"),
+            len(cases) == 8,
+            all(
+                case.get("training_case_count") == 7
+                and case.get("held_out_case_used_for_geometry_fit") is False
+                for case in cases
+            ),
+            set(aggregate) == set(operators),
+            isinstance(record.get("claim_boundary"), str),
+        )
+        if not all(required):
+            return None
+        summarized = {}
+        for operator in operators:
+            row = aggregate[operator]
+            if not (
+                row.get("case_count") == 8
+                and isinstance(row.get("sample_count"), int)
+                and row["sample_count"] > 0
+            ):
+                return None
+            summarized[operator] = {
+                key: row[key]
+                for key in (
+                    "case_count",
+                    "sample_count",
+                    "mean_trace_rmse_c_case_mean",
+                    "envelope_rmse_c_case_mean",
+                    "envelope_mae_c_case_mean",
+                    "inside_envelope_fraction_case_mean",
+                    "inside_envelope_fraction_pooled",
+                    "case_count_envelope_rmse_le_10c",
+                    "mean_to_envelope_rmse_reduction_percent",
+                )
+            }
+        return {
+            "status": "diagnostic_only",
+            "evidence_role": str(record["evidence_role"]),
+            "case_count": 8,
+            "geometry_cross_validation": "leave_one_case_out_7_plus_1",
+            "temperature_states": summarized,
+            "finding": (
+                "Allowing the simultaneous thermocouple minimum-to-maximum "
+                "range reduces gas/liner RMSE by only about seven percent, "
+                "and those states remain inside the measured range for about "
+                "eight percent of samples. Sensor spread alone does not "
+                "explain the retained thermal error."
+            ),
+            "external_validation": False,
+            "observation_operator_selected": False,
+            "runtime_parameter_application": False,
+            "validation_gate_changed": False,
+            "promotion_prohibited": True,
+            "raw_rows_exposed": False,
+            "remaining_limitation": (
+                "Thermocouple coordinates, time response and state mapping are "
+                "unavailable; inlet-jet and heat-transfer boundaries require "
+                "independent confirmation."
             ),
             "claim_limit": str(record["claim_boundary"]),
         }
@@ -1822,6 +1918,18 @@ def public_evidence_inventory_summary() -> dict[str, Any]:
             "validation_gate_changed": False,
             "promotion_prohibited": True,
         },
+        "public_mc_temperature_sensor_envelope": {
+            "status": "unavailable",
+            "case_count": 0,
+            "geometry_cross_validation": None,
+            "temperature_states": {},
+            "external_validation": False,
+            "observation_operator_selected": False,
+            "runtime_parameter_application": False,
+            "validation_gate_changed": False,
+            "promotion_prohibited": True,
+            "raw_rows_exposed": False,
+        },
         "public_mc_cumulative_mass_sensitivity": {
             "status": "unavailable",
             "case_count": 0,
@@ -2314,6 +2422,11 @@ def public_evidence_inventory_summary() -> dict[str, Any]:
         result[
             "public_mc_capacity_geometry_cross_validation"
         ] = capacity_geometry_cv
+    temperature_sensor_envelope = _mc_temperature_sensor_envelope_summary()
+    if temperature_sensor_envelope is not None:
+        result[
+            "public_mc_temperature_sensor_envelope"
+        ] = temperature_sensor_envelope
     cumulative_mass = _mc_cumulative_mass_sensitivity_summary()
     if cumulative_mass is not None:
         result["public_mc_cumulative_mass_sensitivity"] = cumulative_mass

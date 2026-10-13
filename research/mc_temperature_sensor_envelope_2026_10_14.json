@@ -1,0 +1,582 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-10-13T16:06:07.469945+00:00",
+  "source_commit": "63409253538b6732c045029a739dec9b9404509a",
+  "artifact_type": "mc_temperature_sensor_envelope_diagnostic",
+  "evidence_role": "post_outcome_within_campaign_development_diagnostic",
+  "post_outcome": true,
+  "external_validation": false,
+  "prospective_validation": false,
+  "parameter_fitting": true,
+  "parameter_fit_scope": "geometry from seven training cases per fold; thermal parameter frozen",
+  "observation_operator_selection_performed": false,
+  "runtime_parameter_changed": false,
+  "validation_gate_changed": false,
+  "promotion_to_validation_prohibited": true,
+  "raw_experimental_rows_persisted": false,
+  "method": {
+    "case_count": 8,
+    "geometry_split": "leave-one-case-out, seven training plus one held-out case",
+    "held_out_temperature_used_for_geometry_fit": false,
+    "thermal_parameter_policy": "retain frozen public Type-IV gas-liner UA multiplier",
+    "observation_interval": "simultaneous minimum and maximum of independent in-tank temperature channels",
+    "candidate_states": {
+      "gas_temperature": "uniform gas state",
+      "liner_temperature": "inner polymer liner state",
+      "shell_temperature": "outer composite shell state",
+      "liner_shell_mean": "unweighted liner and shell state mean"
+    },
+    "selection_rule": "none; every predefined state is reported"
+  },
+  "aggregate": {
+    "gas_temperature": {
+      "case_count": 8,
+      "sample_count": 4894,
+      "mean_trace_rmse_c_case_mean": 9.201604122312393,
+      "envelope_rmse_c_case_mean": 8.592609437013433,
+      "envelope_mae_c_case_mean": 7.310376680861626,
+      "inside_envelope_fraction_case_mean": 0.09436652360309795,
+      "inside_envelope_fraction_pooled": 0.07723743359215365,
+      "case_count_envelope_rmse_le_10c": 4,
+      "mean_to_envelope_rmse_reduction_percent": 6.6183534653729215
+    },
+    "liner_temperature": {
+      "case_count": 8,
+      "sample_count": 4894,
+      "mean_trace_rmse_c_case_mean": 9.014972547596878,
+      "envelope_rmse_c_case_mean": 8.346635268365517,
+      "envelope_mae_c_case_mean": 7.048250045033044,
+      "inside_envelope_fraction_case_mean": 0.09484521910316876,
+      "inside_envelope_fraction_pooled": 0.08111973845525133,
+      "case_count_envelope_rmse_le_10c": 4,
+      "mean_to_envelope_rmse_reduction_percent": 7.413636322270549
+    },
+    "shell_temperature": {
+      "case_count": 8,
+      "sample_count": 4894,
+      "mean_trace_rmse_c_case_mean": 29.005304620958377,
+      "envelope_rmse_c_case_mean": 28.349597171532,
+      "envelope_mae_c_case_mean": 26.700715443261046,
+      "inside_envelope_fraction_case_mean": 0.010470230154689387,
+      "inside_envelope_fraction_pooled": 0.006334286881896199,
+      "case_count_envelope_rmse_le_10c": 0,
+      "mean_to_envelope_rmse_reduction_percent": 2.2606466575516735
+    },
+    "liner_shell_mean": {
+      "case_count": 8,
+      "sample_count": 4894,
+      "mean_trace_rmse_c_case_mean": 14.28500145910826,
+      "envelope_rmse_c_case_mean": 13.632405547253523,
+      "envelope_mae_c_case_mean": 12.023139951817932,
+      "inside_envelope_fraction_case_mean": 0.05386075514691812,
+      "inside_envelope_fraction_pooled": 0.08868001634654679,
+      "case_count_envelope_rmse_le_10c": 2,
+      "mean_to_envelope_rmse_reduction_percent": 4.568399336344735
+    }
+  },
+  "cases": [
+    {
+      "case_id": "H2P-MC-1-A",
+      "training_case_count": 7,
+      "held_out_case_used_for_geometry_fit": false,
+      "training_volume_ratio_median": 0.9677255651983419,
+      "temperature_sensor_channel_count": 3,
+      "temperature_states": {
+        "gas_temperature": {
+          "sample_count": 607,
+          "sensor_channel_count": 3,
+          "mean_trace_rmse_c": 11.043957334709372,
+          "mean_trace_mae_c": 8.874559854493064,
+          "envelope_rmse_c": 10.660477779057215,
+          "envelope_mae_c": 8.39121752568102,
+          "envelope_peak_outside_distance_c": 22.607465364357886,
+          "inside_envelope_fraction": 0.029654036243822075,
+          "sensor_spread_mean_c": 0.9477841845140038,
+          "sensor_spread_p95_c": 2.954799999999999,
+          "sensor_spread_peak_c": 4.209000000000003
+        },
+        "liner_temperature": {
+          "sample_count": 607,
+          "sensor_channel_count": 3,
+          "mean_trace_rmse_c": 10.896005004492311,
+          "mean_trace_mae_c": 8.8993319891084,
+          "envelope_rmse_c": 10.478020320610872,
+          "envelope_mae_c": 8.404767437518272,
+          "envelope_peak_outside_distance_c": 21.51405505179269,
+          "inside_envelope_fraction": 0.047775947281713346,
+          "sensor_spread_mean_c": 0.9477841845140038,
+          "sensor_spread_p95_c": 2.954799999999999,
+          "sensor_spread_peak_c": 4.209000000000003
+        },
+        "shell_temperature": {
+          "sample_count": 607,
+          "sensor_channel_count": 3,
+          "mean_trace_rmse_c": 21.938318434389178,
+          "mean_trace_mae_c": 20.330117895954515,
+          "envelope_rmse_c": 21.50517452099702,
+          "envelope_mae_c": 19.821118701416893,
+          "envelope_peak_outside_distance_c": 30.97783564302948,
+          "inside_envelope_fraction": 0.006589785831960461,
+          "sensor_spread_mean_c": 0.9477841845140038,
+          "sensor_spread_p95_c": 2.954799999999999,
+          "sensor_spread_peak_c": 4.209000000000003
+        },
+        "liner_shell_mean": {
+          "sample_count": 607,
+          "sensor_channel_count": 3,
+          "mean_trace_rmse_c": 12.649010645530744,
+          "mean_trace_mae_c": 10.62782785405356,
+          "envelope_rmse_c": 12.244610938156285,
+          "envelope_mae_c": 10.121902993244221,
+          "envelope_peak_outside_distance_c": 21.924374658990914,
+          "inside_envelope_fraction": 0.039538714991762765,
+          "sensor_spread_mean_c": 0.9477841845140038,
+          "sensor_spread_p95_c": 2.954799999999999,
+          "sensor_spread_peak_c": 4.209000000000003
+        }
+      }
+    },
+    {
+      "case_id": "H2P-MC-1-B",
+      "training_case_count": 7,
+      "held_out_case_used_for_geometry_fit": false,
+      "training_volume_ratio_median": 0.9634369563731257,
+      "temperature_sensor_channel_count": 3,
+      "temperature_states": {
+        "gas_temperature": {
+          "sample_count": 339,
+          "sensor_channel_count": 3,
+          "mean_trace_rmse_c": 7.098759344307289,
+          "mean_trace_mae_c": 5.643490986819279,
+          "envelope_rmse_c": 6.640940024852858,
+          "envelope_mae_c": 5.027389960453296,
+          "envelope_peak_outside_distance_c": 14.533868105860876,
+          "inside_envelope_fraction": 0.10029498525073746,
+          "sensor_spread_mean_c": 1.3332477876106192,
+          "sensor_spread_p95_c": 3.6135000000000015,
+          "sensor_spread_peak_c": 4.195
+        },
+        "liner_temperature": {
+          "sample_count": 339,
+          "sensor_channel_count": 3,
+          "mean_trace_rmse_c": 6.948703295202893,
+          "mean_trace_mae_c": 5.6529892854723265,
+          "envelope_rmse_c": 6.384934091291416,
+          "envelope_mae_c": 4.98941260353487,
+          "envelope_peak_outside_distance_c": 13.409503006883796,
+          "inside_envelope_fraction": 0.09144542772861357,
+          "sensor_spread_mean_c": 1.3332477876106192,
+          "sensor_spread_p95_c": 3.6135000000000015,
+          "sensor_spread_peak_c": 4.195
+        },
+        "shell_temperature": {
+          "sample_count": 339,
+          "sensor_channel_count": 3,
+          "mean_trace_rmse_c": 29.29570722072321,
+          "mean_trace_mae_c": 28.327986187871794,
+          "envelope_rmse_c": 28.631117972790474,
+          "envelope_mae_c": 27.60637298577759,
+          "envelope_peak_outside_distance_c": 33.11253609907024,
+          "inside_envelope_fraction": 0.011799410029498525,
+          "sensor_spread_mean_c": 1.3332477876106192,
+          "sensor_spread_p95_c": 3.6135000000000015,
+          "sensor_spread_peak_c": 4.195
+        },
+        "liner_shell_mean": {
+          "sample_count": 339,
+          "sensor_channel_count": 3,
+          "mean_trace_rmse_c": 14.64403714897208,
+          "mean_trace_mae_c": 13.68689059406304,
+          "envelope_rmse_c": 13.956285806063839,
+          "envelope_mae_c": 12.965392733173315,
+          "envelope_peak_outside_distance_c": 20.714520978620982,
+          "inside_envelope_fraction": 0.017699115044247787,
+          "sensor_spread_mean_c": 1.3332477876106192,
+          "sensor_spread_p95_c": 3.6135000000000015,
+          "sensor_spread_peak_c": 4.195
+        }
+      }
+    },
+    {
+      "case_id": "H2P-MC-1-C",
+      "training_case_count": 7,
+      "held_out_case_used_for_geometry_fit": false,
+      "training_volume_ratio_median": 0.9634369563731257,
+      "temperature_sensor_channel_count": 3,
+      "temperature_states": {
+        "gas_temperature": {
+          "sample_count": 259,
+          "sensor_channel_count": 3,
+          "mean_trace_rmse_c": 4.750890326599316,
+          "mean_trace_mae_c": 3.83306281877477,
+          "envelope_rmse_c": 4.219311217700718,
+          "envelope_mae_c": 3.1413795850829014,
+          "envelope_peak_outside_distance_c": 9.80338549129958,
+          "inside_envelope_fraction": 0.16988416988416988,
+          "sensor_spread_mean_c": 1.6424362934362933,
+          "sensor_spread_p95_c": 4.170100000000003,
+          "sensor_spread_peak_c": 5.182000000000002
+        },
+        "liner_temperature": {
+          "sample_count": 259,
+          "sensor_channel_count": 3,
+          "mean_trace_rmse_c": 5.738968619839356,
+          "mean_trace_mae_c": 4.789090362847482,
+          "envelope_rmse_c": 5.007426024864517,
+          "envelope_mae_c": 3.9887497222684476,
+          "envelope_peak_outside_distance_c": 9.76870935419391,
+          "inside_envelope_fraction": 0.09652509652509653,
+          "sensor_spread_mean_c": 1.6424362934362933,
+          "sensor_spread_p95_c": 4.170100000000003,
+          "sensor_spread_peak_c": 5.182000000000002
+        },
+        "shell_temperature": {
+          "sample_count": 259,
+          "sensor_channel_count": 3,
+          "mean_trace_rmse_c": 40.134521953649305,
+          "mean_trace_mae_c": 38.21256208299442,
+          "envelope_rmse_c": 39.389753386952805,
+          "envelope_mae_c": 37.346044081316464,
+          "envelope_peak_outside_distance_c": 47.035377861594,
+          "inside_envelope_fraction": 0.019305019305019305,
+          "sensor_spread_mean_c": 1.6424362934362933,
+          "sensor_spread_p95_c": 4.170100000000003,
+          "sensor_spread_peak_c": 5.182000000000002
+        },
+        "liner_shell_mean": {
+          "sample_count": 259,
+          "sensor_channel_count": 3,
+          "mean_trace_rmse_c": 21.14431525758436,
+          "mean_trace_mae_c": 20.185758530887686,
+          "envelope_rmse_c": 20.372491298471857,
+          "envelope_mae_c": 19.318850933974055,
+          "envelope_peak_outside_distance_c": 25.213712671727635,
+          "inside_envelope_fraction": 0.023166023166023165,
+          "sensor_spread_mean_c": 1.6424362934362933,
+          "sensor_spread_p95_c": 4.170100000000003,
+          "sensor_spread_peak_c": 5.182000000000002
+        }
+      }
+    },
+    {
+      "case_id": "H2P-MC-1-D",
+      "training_case_count": 7,
+      "held_out_case_used_for_geometry_fit": false,
+      "training_volume_ratio_median": 0.9634369563731257,
+      "temperature_sensor_channel_count": 3,
+      "temperature_states": {
+        "gas_temperature": {
+          "sample_count": 280,
+          "sensor_channel_count": 3,
+          "mean_trace_rmse_c": 6.331376085129735,
+          "mean_trace_mae_c": 5.544619093524342,
+          "envelope_rmse_c": 5.466561695161267,
+          "envelope_mae_c": 4.58506860673303,
+          "envelope_peak_outside_distance_c": 10.960216183248889,
+          "inside_envelope_fraction": 0.039285714285714285,
+          "sensor_spread_mean_c": 1.8800821428571428,
+          "sensor_spread_p95_c": 6.131249999999993,
+          "sensor_spread_peak_c": 6.564
+        },
+        "liner_temperature": {
+          "sample_count": 280,
+          "sensor_channel_count": 3,
+          "mean_trace_rmse_c": 9.073562361871666,
+          "mean_trace_mae_c": 7.531333227394683,
+          "envelope_rmse_c": 8.03281063839082,
+          "envelope_mae_c": 6.580886148156651,
+          "envelope_peak_outside_distance_c": 14.905620623303541,
+          "inside_envelope_fraction": 0.07142857142857142,
+          "sensor_spread_mean_c": 1.8800821428571428,
+          "sensor_spread_p95_c": 6.131249999999993,
+          "sensor_spread_peak_c": 6.564
+        },
+        "shell_temperature": {
+          "sample_count": 280,
+          "sensor_channel_count": 3,
+          "mean_trace_rmse_c": 51.91040085897239,
+          "mean_trace_mae_c": 50.24122812170942,
+          "envelope_rmse_c": 51.09739373848716,
+          "envelope_mae_c": 49.23789165885132,
+          "envelope_peak_outside_distance_c": 59.98811321454963,
+          "inside_envelope_fraction": 0.007142857142857143,
+          "sensor_spread_mean_c": 1.8800821428571428,
+          "sensor_spread_p95_c": 6.131249999999993,
+          "sensor_spread_peak_c": 6.564
+        },
+        "liner_shell_mean": {
+          "sample_count": 280,
+          "sensor_channel_count": 3,
+          "mean_trace_rmse_c": 28.257247150392033,
+          "mean_trace_mae_c": 27.53016746038926,
+          "envelope_rmse_c": 27.369124407974912,
+          "envelope_mae_c": 26.52728722199062,
+          "envelope_peak_outside_distance_c": 33.12999430330785,
+          "inside_envelope_fraction": 0.010714285714285714,
+          "sensor_spread_mean_c": 1.8800821428571428,
+          "sensor_spread_p95_c": 6.131249999999993,
+          "sensor_spread_peak_c": 6.564
+        }
+      }
+    },
+    {
+      "case_id": "H2P-MC-1-E",
+      "training_case_count": 7,
+      "held_out_case_used_for_geometry_fit": false,
+      "training_volume_ratio_median": 0.9677255651983419,
+      "temperature_sensor_channel_count": 3,
+      "temperature_states": {
+        "gas_temperature": {
+          "sample_count": 810,
+          "sensor_channel_count": 3,
+          "mean_trace_rmse_c": 14.114031238876606,
+          "mean_trace_mae_c": 12.14854470938786,
+          "envelope_rmse_c": 13.746103972569895,
+          "envelope_mae_c": 11.66288568322859,
+          "envelope_peak_outside_distance_c": 21.209501436393943,
+          "inside_envelope_fraction": 0.03950617283950617,
+          "sensor_spread_mean_c": 0.9524456790123456,
+          "sensor_spread_p95_c": 2.479399999999998,
+          "sensor_spread_peak_c": 4.169000000000004
+        },
+        "liner_temperature": {
+          "sample_count": 810,
+          "sensor_channel_count": 3,
+          "mean_trace_rmse_c": 13.539870525299607,
+          "mean_trace_mae_c": 11.881541721259666,
+          "envelope_rmse_c": 13.137731599188294,
+          "envelope_mae_c": 11.384276294741483,
+          "envelope_peak_outside_distance_c": 19.98246235552373,
+          "inside_envelope_fraction": 0.028395061728395062,
+          "sensor_spread_mean_c": 0.9524456790123456,
+          "sensor_spread_p95_c": 2.479399999999998,
+          "sensor_spread_peak_c": 4.169000000000004
+        },
+        "shell_temperature": {
+          "sample_count": 810,
+          "sensor_channel_count": 3,
+          "mean_trace_rmse_c": 23.776924291455778,
+          "mean_trace_mae_c": 22.37768206537443,
+          "envelope_rmse_c": 23.305479967470003,
+          "envelope_mae_c": 21.879220525547808,
+          "envelope_peak_outside_distance_c": 35.634005787516415,
+          "inside_envelope_fraction": 0.006172839506172839,
+          "sensor_spread_mean_c": 0.9524456790123456,
+          "sensor_spread_p95_c": 2.479399999999998,
+          "sensor_spread_peak_c": 4.169000000000004
+        },
+        "liner_shell_mean": {
+          "sample_count": 810,
+          "sensor_channel_count": 3,
+          "mean_trace_rmse_c": 11.544682321371937,
+          "mean_trace_mae_c": 8.313222415244928,
+          "envelope_rmse_c": 11.116366787643978,
+          "envelope_mae_c": 7.824332804215002,
+          "envelope_peak_outside_distance_c": 23.66800933656748,
+          "inside_envelope_fraction": 0.07037037037037037,
+          "sensor_spread_mean_c": 0.9524456790123456,
+          "sensor_spread_p95_c": 2.479399999999998,
+          "sensor_spread_peak_c": 4.169000000000004
+        }
+      }
+    },
+    {
+      "case_id": "H2P-MC-1-F",
+      "training_case_count": 7,
+      "held_out_case_used_for_geometry_fit": false,
+      "training_volume_ratio_median": 0.9677255651983419,
+      "temperature_sensor_channel_count": 3,
+      "temperature_states": {
+        "gas_temperature": {
+          "sample_count": 1790,
+          "sensor_channel_count": 3,
+          "mean_trace_rmse_c": 12.659988879908017,
+          "mean_trace_mae_c": 11.851888891995687,
+          "envelope_rmse_c": 12.314013606974886,
+          "envelope_mae_c": 11.504564775271284,
+          "envelope_peak_outside_distance_c": 15.588965961950258,
+          "inside_envelope_fraction": 0.005027932960893855,
+          "sensor_spread_mean_c": 0.6884703910614526,
+          "sensor_spread_p95_c": 1.2765499999999974,
+          "sensor_spread_peak_c": 3.067999999999998
+        },
+        "liner_temperature": {
+          "sample_count": 1790,
+          "sensor_channel_count": 3,
+          "mean_trace_rmse_c": 12.082046180602452,
+          "mean_trace_mae_c": 11.356976473199106,
+          "envelope_rmse_c": 11.725567106954646,
+          "envelope_mae_c": 11.00828306604745,
+          "envelope_peak_outside_distance_c": 14.633199126689568,
+          "inside_envelope_fraction": 0.00558659217877095,
+          "sensor_spread_mean_c": 0.6884703910614526,
+          "sensor_spread_p95_c": 1.2765499999999974,
+          "sensor_spread_peak_c": 3.067999999999998
+        },
+        "shell_temperature": {
+          "sample_count": 1790,
+          "sensor_channel_count": 3,
+          "mean_trace_rmse_c": 18.073572150588703,
+          "mean_trace_mae_c": 16.788445892378032,
+          "envelope_rmse_c": 17.770168010413023,
+          "envelope_mae_c": 16.433936541940355,
+          "envelope_peak_outside_distance_c": 32.569237143451886,
+          "inside_envelope_fraction": 0.0022346368715083797,
+          "sensor_spread_mean_c": 0.6884703910614526,
+          "sensor_spread_p95_c": 1.2765499999999974,
+          "sensor_spread_peak_c": 3.067999999999998
+        },
+        "liner_shell_mean": {
+          "sample_count": 1790,
+          "sensor_channel_count": 3,
+          "mean_trace_rmse_c": 8.314606494308897,
+          "mean_trace_mae_c": 4.924775168779806,
+          "envelope_rmse_c": 8.118198412779233,
+          "envelope_mae_c": 4.601959084775514,
+          "envelope_peak_outside_distance_c": 22.58563804681981,
+          "inside_envelope_fraction": 0.1787709497206704,
+          "sensor_spread_mean_c": 0.6884703910614526,
+          "sensor_spread_p95_c": 1.2765499999999974,
+          "sensor_spread_peak_c": 3.067999999999998
+        }
+      }
+    },
+    {
+      "case_id": "H2P-MC-2-A",
+      "training_case_count": 7,
+      "held_out_case_used_for_geometry_fit": false,
+      "training_volume_ratio_median": 0.9677255651983419,
+      "temperature_sensor_channel_count": 2,
+      "temperature_states": {
+        "gas_temperature": {
+          "sample_count": 183,
+          "sensor_channel_count": 2,
+          "mean_trace_rmse_c": 14.751397382022178,
+          "mean_trace_mae_c": 13.80190008126931,
+          "envelope_rmse_c": 14.249980408768616,
+          "envelope_mae_c": 13.236768933728326,
+          "envelope_peak_outside_distance_c": 20.075722184151964,
+          "inside_envelope_fraction": 0.00546448087431694,
+          "sensor_spread_mean_c": 1.1331202185792348,
+          "sensor_spread_p95_c": 2.417700000000002,
+          "sensor_spread_peak_c": 2.992000000000001
+        },
+        "liner_temperature": {
+          "sample_count": 183,
+          "sensor_channel_count": 2,
+          "mean_trace_rmse_c": 11.09073583870921,
+          "mean_trace_mae_c": 9.734051780751594,
+          "envelope_rmse_c": 10.6485670507672,
+          "envelope_mae_c": 9.168920633210611,
+          "envelope_peak_outside_distance_c": 17.164678788728104,
+          "inside_envelope_fraction": 0.00546448087431694,
+          "sensor_spread_mean_c": 1.1331202185792348,
+          "sensor_spread_p95_c": 2.417700000000002,
+          "sensor_spread_peak_c": 2.992000000000001
+        },
+        "shell_temperature": {
+          "sample_count": 183,
+          "sensor_channel_count": 2,
+          "mean_trace_rmse_c": 22.87075437330784,
+          "mean_trace_mae_c": 19.877073067906625,
+          "envelope_rmse_c": 22.417006064012643,
+          "envelope_mae_c": 19.319572012106335,
+          "envelope_peak_outside_distance_c": 33.2966804403873,
+          "inside_envelope_fraction": 0.0273224043715847,
+          "sensor_spread_mean_c": 1.1331202185792348,
+          "sensor_spread_p95_c": 2.417700000000002,
+          "sensor_spread_peak_c": 2.992000000000001
+        },
+        "liner_shell_mean": {
+          "sample_count": 183,
+          "sensor_channel_count": 2,
+          "mean_trace_rmse_c": 5.942811736301821,
+          "mean_trace_mae_c": 5.230748708336836,
+          "envelope_rmse_c": 5.487742866339797,
+          "envelope_mae_c": 4.691410796571574,
+          "envelope_peak_outside_distance_c": 8.573720501429456,
+          "inside_envelope_fraction": 0.08743169398907104,
+          "sensor_spread_mean_c": 1.1331202185792348,
+          "sensor_spread_p95_c": 2.417700000000002,
+          "sensor_spread_peak_c": 2.992000000000001
+        }
+      }
+    },
+    {
+      "case_id": "H2P-MC-9.8KG",
+      "training_case_count": 7,
+      "held_out_case_used_for_geometry_fit": false,
+      "training_volume_ratio_median": 0.9634369563731257,
+      "temperature_sensor_channel_count": 3,
+      "temperature_states": {
+        "gas_temperature": {
+          "sample_count": 626,
+          "sensor_channel_count": 3,
+          "mean_trace_rmse_c": 2.8624323869466246,
+          "mean_trace_mae_c": 2.460497563235991,
+          "envelope_rmse_c": 1.4434867910220093,
+          "envelope_mae_c": 0.9337383767145663,
+          "envelope_peak_outside_distance_c": 3.7722979261569094,
+          "inside_envelope_fraction": 0.365814696485623,
+          "sensor_spread_mean_c": 3.3089664536741212,
+          "sensor_spread_p95_c": 6.099500000000004,
+          "sensor_spread_peak_c": 8.532000000000004
+        },
+        "liner_temperature": {
+          "sample_count": 626,
+          "sensor_channel_count": 3,
+          "mean_trace_rmse_c": 2.749888554757532,
+          "mean_trace_mae_c": 2.378972015464305,
+          "envelope_rmse_c": 1.3580253148563755,
+          "envelope_mae_c": 0.8607044547865714,
+          "envelope_peak_outside_distance_c": 4.3203198374338,
+          "inside_envelope_fraction": 0.41214057507987223,
+          "sensor_spread_mean_c": 3.3089664536741212,
+          "sensor_spread_p95_c": 6.099500000000004,
+          "sensor_spread_peak_c": 8.532000000000004
+        },
+        "shell_temperature": {
+          "sample_count": 626,
+          "sensor_channel_count": 3,
+          "mean_trace_rmse_c": 24.042237684580595,
+          "mean_trace_mae_c": 23.446510337536868,
+          "envelope_rmse_c": 22.680683711132865,
+          "envelope_mae_c": 21.961567039131612,
+          "envelope_peak_outside_distance_c": 26.146188633209533,
+          "inside_envelope_fraction": 0.003194888178913738,
+          "sensor_spread_mean_c": 3.3089664536741212,
+          "sensor_spread_p95_c": 6.099500000000004,
+          "sensor_spread_peak_c": 8.532000000000004
+        },
+        "liner_shell_mean": {
+          "sample_count": 626,
+          "sensor_channel_count": 3,
+          "mean_trace_rmse_c": 11.783300918404205,
+          "mean_trace_mae_c": 11.61890896414448,
+          "envelope_rmse_c": 10.394423860598277,
+          "envelope_mae_c": 10.133983046599148,
+          "envelope_peak_outside_distance_c": 13.367862125669262,
+          "inside_envelope_fraction": 0.003194888178913738,
+          "sensor_spread_mean_c": 3.3089664536741212,
+          "sensor_spread_p95_c": 6.099500000000004,
+          "sensor_spread_peak_c": 8.532000000000004
+        }
+      }
+    }
+  ],
+  "source": {
+    "archive_alias": "public_mc_default_bench_archive",
+    "archive_sha256": "e029c53f95c8172be08e5dc4cc41dffb42a09ad7ecbb8b6b8d73e43a9ad210d1",
+    "expected_archive_sha256": "e029c53f95c8172be08e5dc4cc41dffb42a09ad7ecbb8b6b8d73e43a9ad210d1",
+    "protocol_artifact": "research/mc_default_external_holdout_protocol.json",
+    "protocol_sha256": "41aa67a8e459687dda91fe831d69f5a47b52f1bc70e33466e17738f76d7edde0"
+  },
+  "interpretation": "The sensor envelope distinguishes spatial thermocouple spread from model-state error without choosing a favorable observation operator. A low envelope error would support a sensor-location explanation; a large error for all states would retain the heat-transfer-model limitation.",
+  "limitations": [
+    "All outcomes belong to one previously inspected public campaign.",
+    "Thermocouple coordinates, response time, uncertainty and state mapping are unavailable.",
+    "An interval score is less strict than matching a predeclared sensor location.",
+    "The geometry rule is training-fold fitted and has not been prospectively confirmed."
+  ],
+  "claim_boundary": "This is a privacy-safe, post-outcome sensor-envelope diagnostic. It cannot select a temperature observation operator, calibrate heat transfer, change runtime behavior, close an external-validation gate, or support a vehicle or field-safety claim."
+}

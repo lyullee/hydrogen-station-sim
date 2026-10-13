@@ -1,5 +1,23 @@
 # Development Progress
 
+## 2026-10-14 - Separate sensor spread from the remaining tank thermal error
+
+The eight public MC Default cases were replayed with the leave-one-case-out
+geometry rule while retaining every independent in-tank temperature channel.
+For each timestamp, the gas, liner, shell and fixed liner/shell-mean states were
+scored against the simultaneous thermocouple minimum-to-maximum interval rather
+than only the historical sensor mean. No operator was selected and no thermal
+coefficient was fitted.
+
+The wider interval explains little of the retained mismatch. Gas-state RMSE
+falls only from 9.202 to 8.593 °C and the gas state lies inside the measured
+sensor interval for 7.7% of pooled samples. The liner result is similar at
+8.347 °C and 8.1%. This makes simple thermocouple placement or stratification
+an insufficient explanation and moves the next physical work to inlet-jet and
+heat-transfer boundaries. The result is post-outcome development evidence,
+does not change runtime parameters or the readiness count, and is now supplied
+to SAGA with its non-promotion and raw-data boundaries.
+
 ## 2026-10-14 - Cross-evaluate a capacity/mass-closure tank geometry rule
 
 The highest-priority MC vehicle-tank boundary failure was decomposed with a

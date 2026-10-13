@@ -40,6 +40,18 @@ reach only 4/8 on MC and 7/7 on the post-access NREL sample. This is a model
 transferability boundary, not a new validation result or a runtime-parameter
 selection.
 
+A follow-up sensor-envelope diagnostic retains all independent in-tank
+thermocouples in the eight MC cases while applying the 7+1 geometry folds. The
+gas and liner states lie within the simultaneous sensor range for only 7.7%
+and 8.1% of pooled samples, and interval scoring reduces their case-mean RMSE
+by less than 8%. Thermocouple spread therefore does not explain most of the
+retained temperature mismatch. Because the campaign was already inspected and
+sensor coordinates, response time and state mapping are unavailable, this
+result only prioritizes inlet-jet and heat-transfer work; it neither selects an
+observation operator nor changes a runtime or validation gate. The aggregate is
+recorded in
+[`MC_TEMPERATURE_SENSOR_ENVELOPE_2026_10_14.md`](../research/MC_TEMPERATURE_SENSOR_ENVELOPE_2026_10_14.md).
+
 The primary claim scope is now explicitly station-side and component-bounded.
 The owner-controlled records are evaluated as same-site chronological holdouts;
 the public Type-IV records provide the independent component holdout. The

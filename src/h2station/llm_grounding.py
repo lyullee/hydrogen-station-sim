@@ -10401,6 +10401,18 @@ def build_evidence_manifest(
         envelope["response_evidence"][
             "public_mc_capacity_geometry_cross_validation"
         ] = capacity_geometry_cv
+    temperature_sensor_envelope = (
+        public_inventory.get("public_mc_temperature_sensor_envelope")
+        if isinstance(public_inventory, dict)
+        else None
+    )
+    if (
+        isinstance(temperature_sensor_envelope, dict)
+        and temperature_sensor_envelope.get("status") == "diagnostic_only"
+    ):
+        envelope["response_evidence"][
+            "public_mc_temperature_sensor_envelope"
+        ] = temperature_sensor_envelope
     cumulative_mass = (
         public_inventory.get("public_mc_cumulative_mass_sensitivity")
         if isinstance(public_inventory, dict)
@@ -11233,6 +11245,22 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
                 "promotion_prohibited", "remaining_limitation", "claim_limit",
             )
             if capacity_geometry_cv.get(key) is not None
+        }
+    temperature_sensor_envelope = evidence.get(
+        "public_mc_temperature_sensor_envelope"
+    )
+    if isinstance(temperature_sensor_envelope, dict):
+        summary["public_mc_temperature_sensor_envelope"] = {
+            key: temperature_sensor_envelope.get(key)
+            for key in (
+                "status", "evidence_role", "case_count",
+                "geometry_cross_validation", "temperature_states", "finding",
+                "external_validation", "observation_operator_selected",
+                "runtime_parameter_application", "validation_gate_changed",
+                "promotion_prohibited", "raw_rows_exposed",
+                "remaining_limitation", "claim_limit",
+            )
+            if temperature_sensor_envelope.get(key) is not None
         }
     cumulative_mass = evidence.get("public_mc_cumulative_mass_sensitivity")
     if isinstance(cumulative_mass, dict):
@@ -13038,6 +13066,9 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
     capacity_geometry_cv = response.get(
         "public_mc_capacity_geometry_cross_validation"
     ) or {}
+    temperature_sensor_envelope = response.get(
+        "public_mc_temperature_sensor_envelope"
+    ) or {}
     station_thermal = response.get("confidential_station_thermal_dynamics") or {}
     signal_consistency = response.get(
         "confidential_station_signal_consistency"
@@ -13206,6 +13237,16 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
             "tank", "vehicle", "volume", "geometry", "soc", "pressure",
             "temperature", "validation", "model", "탱크", "차량", "체적",
             "형상", "압력", "온도", "검증", "모델",
+        )
+    )
+    temperature_sensor_envelope_relevant = bool(
+        temperature_sensor_envelope
+    ) and any(
+        token in lead_context
+        for token in (
+            "tank", "vehicle", "temperature", "thermal", "thermocouple",
+            "sensor", "validation", "model", "탱크", "차량", "온도",
+            "열전대", "센서", "검증", "모델",
         )
     )
     h2iq_aggregate_relevant = bool(
@@ -13652,6 +13693,21 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                 if capacity_geometry_cv.get(key) is not None
             },
         } if capacity_geometry_relevant else {}),
+        **({
+            "public_mc_temperature_sensor_envelope": {
+                key: temperature_sensor_envelope.get(key)
+                for key in (
+                    "status", "evidence_role", "case_count",
+                    "geometry_cross_validation", "temperature_states",
+                    "finding", "external_validation",
+                    "observation_operator_selected",
+                    "runtime_parameter_application", "validation_gate_changed",
+                    "promotion_prohibited", "raw_rows_exposed",
+                    "remaining_limitation", "claim_limit",
+                )
+                if temperature_sensor_envelope.get(key) is not None
+            },
+        } if temperature_sensor_envelope_relevant else {}),
         **({
             "public_elvhys_post_failure_alarm_diagnostic": {
                 key: elvhys_alarm_diagnostic.get(key)
@@ -16688,6 +16744,22 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
             if (
                 evidence.get("public_mc_capacity_geometry_cross_validation")
                 or {}
+            ).get(key) is not None
+        },
+        "public_mc_temperature_sensor_envelope": {
+            key: (
+                evidence.get("public_mc_temperature_sensor_envelope") or {}
+            ).get(key)
+            for key in (
+                "status", "evidence_role", "case_count",
+                "geometry_cross_validation", "temperature_states", "finding",
+                "external_validation", "observation_operator_selected",
+                "runtime_parameter_application", "validation_gate_changed",
+                "promotion_prohibited", "raw_rows_exposed",
+                "remaining_limitation", "claim_limit",
+            )
+            if (
+                evidence.get("public_mc_temperature_sensor_envelope") or {}
             ).get(key) is not None
         },
         "public_mc_cumulative_mass_sensitivity": {
