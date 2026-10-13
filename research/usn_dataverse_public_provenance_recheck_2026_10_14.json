@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "artifact_type": "usn_dataverse_public_provenance_recheck",
+  "recorded_at": "2026-10-14",
+  "source": {
+    "doi": "10.23642/USN.26117989",
+    "api_url": "https://dataverse.no/api/datasets/:persistentId/?persistentId=doi%3A10.23642%2FUSN.26117989",
+    "dataverse_identifier": "USN.26117989",
+    "dataset_version": "1.0",
+    "publication_date": "2025-05-26",
+    "license": "CC BY 4.0",
+    "license_uri": "http://creativecommons.org/licenses/by/4.0",
+    "public_archive_count": 22,
+    "public_archive_bytes": 49241005,
+    "public_archive_md5_count": 22
+  },
+  "local_comparison": {
+    "checked": true,
+    "local_archive_count": 22,
+    "matched_count": 22,
+    "missing_public_files": [],
+    "extra_local_files": [],
+    "all_public_md5_match": true
+  },
+  "decision": {
+    "provenance_integrity": true,
+    "independent_holdout": false,
+    "runtime_parameter_application": false,
+    "reason": "The archive is a public actual-hydrogen component dataset and its local files match the canonical Dataverse metadata, but outcomes were already accessed during candidate development; it remains provenance/development evidence."
+  },
+  "claim_boundary": "This record verifies public source identity, CC BY 4.0 terms and file digests only. It does not validate concentration magnitude, detector placement, alarm timing, outdoor HRS dispersion, ESD, consequence distance or station-to-vehicle behavior."
+}

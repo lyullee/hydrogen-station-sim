@@ -96,6 +96,13 @@ is a simulation library. The detailed access boundary is recorded in
 This prevents repeated catalogue searches from being counted as validation
 progress.
 
+The canonical DataverseNO record for the existing USN/FFI actual-hydrogen
+open-channel archive was also rechecked through its public API. All 22 local
+archive digests match the public CC BY 4.0 file metadata. This strengthens
+source provenance only; the cohort remains post-access development evidence
+and is not promoted to an independent holdout. The aggregate record is
+[`usn_dataverse_public_provenance_recheck_2026_10_14.json`](../research/usn_dataverse_public_provenance_recheck_2026_10_14.json).
+
 To make the remaining external work actionable, the exact minimum channels,
 event metadata, rights requirements and privacy boundary for each unresolved
 physics gate are frozen in
