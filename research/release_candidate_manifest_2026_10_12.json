@@ -44,7 +44,7 @@
     "local_priority_focus": "PASS",
     "scientific_screen": "FAIL_WITH_DOCUMENTED_EXTERNAL_DATA_GAPS",
     "local_priority_focus_artifact": "research/priority_focus_run_2026_10_14.json",
-    "local_priority_focus_schema": "priority_validation_run",
+    "local_priority_focus_schema": "parallel_priority_focus_run",
     "local_priority_focus_check_count": 3,
     "latest_full_regression_artifact": "research/full_regression_test_run_2026_10_14.json",
     "latest_full_regression_status": "PASS",

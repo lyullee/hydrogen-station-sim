@@ -43,18 +43,21 @@ def test_release_candidate_manifest_matches_repository_and_readiness_ledger() ->
         )
     )
     assert focus["status"] == "PASS"
-    assert focus["artifact_type"] == "priority_validation_run"
-    assert len(focus["checks"]) == manifest["software_evidence"][
+    assert focus["artifact_type"] == "parallel_priority_focus_run"
+    assert len(focus["software_checks"]["checks"]) == manifest["software_evidence"][
         "local_priority_focus_check_count"
     ]
-    assert all(check["status"] == "PASS" for check in focus["checks"])
-    assert focus["current_status"]["readiness"]["gate_counts"] == {
+    assert all(
+        check["status"] == "PASS"
+        for check in focus["software_checks"]["checks"]
+    )
+    assert focus["software_checks"]["current_status"]["readiness"]["gate_counts"] == {
         key: audit["gate_counts"][key] for key in ("PASS", "FAIL", "PENDING")
     }
-    assert focus["current_status"]["readiness"][
+    assert focus["software_checks"]["current_status"]["readiness"][
         "bounded_ijhe_submission_ready"
     ] is False
-    assert focus["current_status"]["readiness"][
+    assert focus["software_checks"]["current_status"]["readiness"][
         "full_user_objective_ready"
     ] is False
 
