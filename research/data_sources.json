@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "checked_at": "2026-10-13",
+  "checked_at": "2026-10-14",
   "policy": "Raw third-party files are downloaded under data/public_validation/raw and are not committed or redistributed.",
   "sources": {
     "h2protocol_j2601_tables": {
