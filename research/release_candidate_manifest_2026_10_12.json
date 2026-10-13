@@ -37,10 +37,10 @@
     }
   },
   "software_evidence": {
-    "latest_ci_run_id": "38448380145",
-    "latest_ci_sha": "5c70afd015baa1374e7c24bae02a5467b8249c42",
+    "latest_ci_run_id": "38449825534",
+    "latest_ci_sha": "7fdeb6dd7cc0b46b1395c5f4b34b23cbc67cdb7c",
     "latest_ci_conclusion": "success",
-    "latest_ci_url": "https://github.com/lyullee/hydrogen-station-sim/actions/runs/38448380145",
+    "latest_ci_url": "https://github.com/lyullee/hydrogen-station-sim/actions/runs/38449825534",
     "local_priority_focus": "PASS",
     "scientific_screen": "FAIL_WITH_DOCUMENTED_EXTERNAL_DATA_GAPS",
     "local_priority_focus_artifact": "research/priority_focus_run_2026_10_14.json",
