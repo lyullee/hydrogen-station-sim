@@ -24,8 +24,14 @@ Gate counts: **133 PASS · 11 FAIL · 7 PENDING**.
 
 The latest full working-tree regression passed **1,570 tests with 0 failures and 0 skips** plus 222 dependency/data-reader warnings in 221.93 s (`research/full_regression_test_run_2026_10_14.json`). It was run from commit `5b5f6cf9d6956851027d0bb7ab2cc0aad7d3b225` with the PRESLHY concentration-transport diagnostic and refreshed evidence files present, so it is an implementation-integrity record rather than a clean-release attestation. A broad LLM/SAGA, virtual-safety, HAZOP and HIAD accident-path selection passed **159 tests with 2 warnings** (`research/paper_llm_safety_broad_regression_2026_10_12.json`). These software checks do not convert independent physical-validation failures or the author-confirmation gate into passes.
 
-The 2026-10-12 critical-priority diagnostic run completed in 3.2 s and is
-archived as [`priority_diagnostic_run_2026_10_12.json`](../research/priority_diagnostic_run_2026_10_12.json).
+The latest critical-priority fast lane completed locally in about 5 s and is
+archived as [`priority_focus_run_2026_10_14.json`](../research/priority_focus_run_2026_10_14.json).
+The software lane returned **PASS**. The scientific diagnostic lane remains
+explicitly **FAIL** for the MC tank boundary, H2SAFE spatial response and NREL
+HDVS tank screen; those are retained as development diagnostics and do not
+change frozen gates or runtime parameters. The older 2026-10-12 run remains
+available for comparison at
+[`priority_diagnostic_run_2026_10_12.json`](../research/priority_diagnostic_run_2026_10_12.json).
 It confirmed the SOC/EOS boundary screen (8/8) and the post-outcome Dickens
 mixed-convection sensitivity (3/3), while retaining failures for the frozen MC
 tank boundary, H2Safe spatial transfer and NREL H2FillS geometry screen. These
@@ -80,6 +86,15 @@ recorded in
 [`PUBLIC_STATION_VEHICLE_SEARCH_RECHECK_2026_10_11.md`](../research/PUBLIC_STATION_VEHICLE_SEARCH_RECHECK_2026_10_11.md)
 and
 [`STATION_VEHICLE_CUSTODIAN_REQUEST_PLAN_2026_10_11.md`](../research/STATION_VEHICLE_CUSTODIAN_REQUEST_PLAN_2026_10_11.md).
+
+The 2026-10-14 public-data recheck added no new eligible raw holdout. The JRC /
+GasTeF record remains a reference-data publication without a linked
+machine-readable time-series bundle, the European H2-Stations interface
+provides station metadata and availability/event signals, and the DTU material
+is a simulation library. The detailed access boundary is recorded in
+[`PUBLIC_DATA_SEARCH_RECHECK_2026_10_14.md`](../research/PUBLIC_DATA_SEARCH_RECHECK_2026_10_14.md).
+This prevents repeated catalogue searches from being counted as validation
+progress.
 
 The USN DataverseNO actual-hydrogen pressure-peaking archive was also replayed
 as a post-access component diagnostic. Ten cases were eligible and 8/10 passed
