@@ -16,6 +16,8 @@
 - 결과: 중앙 Spearman ρ `0.658`, 평균 top-5 recall `0.727`; 최근접 센서 사분위 적중률은 `0.545`로 전체 joint screen은 실패했다.
 - 자료를 과거 진단에서 이미 열어 보았으므로 이번 결과는 `POST_ACCESS_TRANSFER_DIAGNOSTIC`이며 독립 검증 게이트·runtime 라우팅·진행률을 변경하지 않는다. 재현 결과는 `research/figshare_h2_channel_spatial_holdout_result_2026_10_14.json`에 고정했다.
 - NBSDC 액체수소 충전소 운영 데이터 후보도 공식 카탈로그 API로 재확인했다. 35 MPa 충전기, 70 MPa 충전기, 90 MPa 압축기, 고압 저장용기, 액체수소 펌프·저장탱크 파일 목록은 공개되어 있지만 원자료 다운로드는 데이터 신청으로 제한된다. 따라서 수치 검증·독립 holdout·runtime 승격에는 사용하지 않았고, 접근 경계는 `research/nbsdc_lh2_station_access_recheck_2026_10_14.json`에 고정했다.
+- Schefer 2007 장치 경계의 누락 원인을 분리하기 위해 벽 열용량·외부 열전달계수 16개 조합의 비단열 민감도 진단을 실행했다. 최선 조합도 압력 NRMSE `10.98%`, 중앙 APE `24.92%`로 고정 화면을 통과하지 못했다. 이 결과는 `research/schefer_2007_nonadiabatic_diagnostic_2026_10_14.json`에 보존했으며, 기존 holdout·런타임·진행률은 변경하지 않았다.
+- Grune 2014의 KIT 서지 기록과 공개 ICHS/HyTunnel 요약을 다시 확인했지만, 권리 정리된 원시 pressure-time 표나 전체 logger export는 찾지 못했다. 공개 자료는 0.37 dm³ 저장조, 최대 약 200 bar, 3/4/10 mm 노즐과 밸브 개방 조건을 설명하는 경계자료로만 사용하고, 검증 게이트는 계속 보류한다.
 
 ## 먼저 처리할 수 있는 작업
 
