@@ -2305,6 +2305,15 @@ def test_manifest_keeps_the_per_result_consequence_validation_boundary():
             "release_flow_evidence_doi": "10.1016/j.ijhydene.2010.04.055",
             "release_flow_envelope_kind": "MODEL_AND_PUBLIC_EXPERIMENT_SENSITIVITY",
             "release_flow_claim_limit": "not a confidence interval or safety distance",
+            "source_inventory_kg": 14.0,
+            "source_inventory_model_volume_m3": 0.35,
+            "ambient_equilibrium_inventory_kg": 0.03,
+            "releasable_inventory_kg": 13.97,
+            "source_inventory_origin": "DIGITAL_TWIN_STATE",
+            "inventory_duration_status": "CURRENT_RATE_RATIO_ONLY",
+            "constant_rate_inventory_time_lower_s": 310.4,
+            "constant_rate_inventory_time_upper_s": 450.6,
+            "inventory_duration_claim_limit": "not a validated pressure-decay or isolation time",
         }],
         True,
     )
@@ -2322,6 +2331,15 @@ def test_manifest_keeps_the_per_result_consequence_validation_boundary():
     assert impact["release_flow_public_domain"] is True
     assert impact["release_flow_evidence_doi"] == "10.1016/j.ijhydene.2010.04.055"
     assert "confidence interval" in impact["release_flow_claim_limit"]
+    assert impact["releasable_inventory_kg"] == 13.97
+    assert impact["constant_rate_inventory_time_lower_s"] == 310.4
+    assert impact["constant_rate_inventory_time_upper_s"] == 450.6
+    assert "pressure-decay" in impact["inventory_duration_claim_limit"]
+    compact = prompt_decision_evidence(manifest)["impact"]["results"][0]
+    assert compact["source_inventory_origin"] == "DIGITAL_TWIN_STATE"
+    assert compact["constant_rate_inventory_time_lower_s"] == 310.4
+    assert compact["constant_rate_inventory_time_upper_s"] == 450.6
+    assert "pressure-decay" in compact["inventory_duration_claim_limit"]
 
 
 def test_manifest_and_prompt_keep_validated_ignited_enclosure_evidence():

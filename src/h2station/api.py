@@ -1047,6 +1047,33 @@ def _execute_simulation(job_id: str, request: SimulationInput) -> None:
             fault_events=tuple(fault.to_event() for fault in request.faults),
         )
         built = build_reference_scenario(config, backend)
+        component_internal_volume_m3 = {
+            f"cascade.{bank.parameters.name}": float(bank.volume_m3)
+            for bank in built.station.banks
+        }
+        component_internal_volume_m3.update({
+            "dispenser.hose": float(
+                built.station.partial_station.hose.internal_volume_m3
+                * built.station.partial_station.fit.hose_volume_multiplier
+            ),
+            "vehicle.tank": float(
+                built.station.partial_station.vehicle_tank.effective_volume_m3
+            ),
+        })
+        if built.station.secondary_partial_station is not None:
+            component_internal_volume_m3.update({
+                "dispenser_2.hose": float(
+                    built.station.secondary_partial_station.hose.internal_volume_m3
+                    * built.station.secondary_partial_station.fit.hose_volume_multiplier
+                ),
+                "vehicle_2.tank": float(
+                    built.station.secondary_partial_station.vehicle_tank.effective_volume_m3
+                ),
+            })
+        if built.station.common_header is not None:
+            component_internal_volume_m3["header"] = float(
+                built.station.common_header.volume_m3
+            )
         with _jobs_lock:
             process_runtime = _process_runtimes.get(job_id)
             simulation_clock = _jobs[job_id]["_simulation_clock"]
@@ -1216,6 +1243,9 @@ def _execute_simulation(job_id: str, request: SimulationInput) -> None:
                             for name, temperature in (sample.bank_temperature_k or {}).items()
                         },
                         "bank_mass_kg": dict(sample.bank_mass_kg or {}),
+                        "component_internal_volume_m3": dict(
+                            component_internal_volume_m3
+                        ),
                         "header_pressure_mpa": (
                             sample.header_pressure_pa / 1.0e6
                             if sample.header_pressure_pa is not None else None
@@ -3184,6 +3214,18 @@ def _direct_impact_summary(results: list[dict[str, Any]]) -> str:
         if isinstance(plume, (int, float)) and plume > 0:
             effect.append(f"4 vol% 비점화 플룸 중심선 거리 {plume:g} m")
         lines.append("  " + " · ".join(effect))
+        releasable = row.get("releasable_inventory_kg")
+        duration_low = row.get("constant_rate_inventory_time_lower_s")
+        duration_high = row.get("constant_rate_inventory_time_upper_s")
+        if (
+            isinstance(releasable, (int, float))
+            and isinstance(duration_low, (int, float))
+            and isinstance(duration_high, (int, float))
+        ):
+            lines.append(
+                f"  방출 가능 모의 재고 {releasable:g} kg · 현재 유량 일정 가정 시간비 "
+                f"{duration_low:g}–{duration_high:g} s (압력 고갈·격리 완료시간 아님)"
+            )
     validation_limit = next(
         (
             str(row["consequence_validation_claim_limit"])
@@ -3879,6 +3921,7 @@ async def saga_analysis(job_id: str, request: SagaAnalysisInput) -> dict[str, An
         "impact_results의 계산 성공 항목만 수치 결과로 설명하세요. "
         "impact_results에 risk_score·risk_level·risk_basis가 있으면 이를 피해영향 스크리닝 지수로 함께 설명하되, 연간 사고확률·현장 위험도 인증으로 표현하지 마세요. "
         "impact_results에 release_flow_lower_bound_kg_s와 release_flow_upper_bound_kg_s가 있으면 단일 방출유량과 함께 공개 실험 기반 민감도 범위를 설명하세요. 이 범위는 신뢰구간·현장 실측·보정계수·안전거리가 아니며, PUBLIC_EXPERIMENT_ENVELOPE_EXTRAPOLATED이면 공개 실험범위 밖 외삽임을 반드시 밝히세요. "
+        "impact_results에 releasable_inventory_kg와 constant_rate_inventory_time_lower_s·upper_s가 있으면 남은 모의 재고와 현재 유량 일정 가정의 시간비로만 설명하세요. 압력감소·밸브격리·누출종료·대피완료 예상시간으로 표현하지 말고 inventory_duration_claim_limit을 함께 적용하세요. "
         "각 impact_results의 consequence_validation_scope가 COMPONENT_SCREENING_BOUNDED이면, "
         "외부 비밀폐 자유제트의 구성요소 수준 표본 표시 근거와 실제 설비·감압·배치·충전소-차량 전체 루프·현장 안전거리 검증의 부재를 구분하세요. "
         "consequence_validation_claim_limit을 무시하거나 이를 현장 안전거리·대피반경·안전 인증으로 바꾸지 마세요. "
@@ -4833,6 +4876,7 @@ async def analyze_simulation_sensor(job_id: str, sensor_id: str,
         "실제 누출, 안전밸브 방출, 센서값 기준 가정 누출을 혼동하지 마세요. 계산된 피해영향 수치만 언급하고 안전거리를 확정하지 마세요. "
         "impact_results에 risk_score·risk_level·risk_basis가 있으면 피해영향 스크리닝 지수로 표시하고, 빈도 기반 위험도나 안전 인증으로 확대하지 마세요. "
         "impact_results에 release_flow_lower_bound_kg_s와 release_flow_upper_bound_kg_s가 있으면 현재 단일값과 공개 실험 기반 민감도 범위를 구분하세요. 이를 신뢰구간·현장 실측·보정계수·안전거리로 표현하지 말고, 외삽 상태이면 그 한계를 명시하세요. "
+        "impact_results에 releasable_inventory_kg와 constant_rate_inventory_time_lower_s·upper_s가 있으면 남은 모의 재고와 현재 유량 일정 가정의 시간비로만 설명하세요. 이를 압력 고갈·격리·누출 종료·대피 완료 예상시간으로 표현하지 마세요. "
         "impact_results의 consequence_validation_scope가 COMPONENT_SCREENING_BOUNDED이면, 외부 비밀폐 자유제트의 구성요소 수준 표본 표시 근거와 실제 설비·감압·배치·충전소-차량 전체 루프·현장 안전거리 검증의 부재를 함께 설명하세요. "
         "literature_delayed_ignition_status가 CALCULATED로 시작하면 78회 실험 기반 자유제트 지연점화 문헌 비교값입니다. 해당 방사거리는 25~35 vol% 혼합운 중심 기준이며 누출구 중심 안전거리·대피거리가 아닙니다. 외삽 상태와 적용 한계를 빠뜨리지 마세요. "
         "literature_jet_flame_status가 CALCULATED로 시작하면 123개 실험 자료에 근거한 가시 제트화염 길이 비교값이며 열복사 피해거리·안전거리·대피거리가 아닙니다. 외삽 상태와 적용 한계를 빠뜨리지 마세요. "

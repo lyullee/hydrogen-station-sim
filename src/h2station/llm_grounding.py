@@ -9533,6 +9533,12 @@ def _impact_rows(results: Iterable[dict[str, Any]] | None) -> list[dict[str, Any
         "release_flow_public_domain", "release_flow_evidence_doi",
         "release_flow_evidence_artifact", "release_flow_envelope_kind",
         "release_flow_claim_limit",
+        "source_inventory_kg", "source_inventory_model_volume_m3",
+        "ambient_equilibrium_inventory_kg", "releasable_inventory_kg",
+        "source_inventory_origin", "inventory_duration_status",
+        "constant_rate_inventory_time_lower_s",
+        "constant_rate_inventory_time_upper_s",
+        "inventory_duration_claim_limit",
         "release_source_boundary", "process_flow_limit_kg_s",
         "physical_orifice_diameter_m", "consequence_equivalent_orifice_diameter_m",
         "flow_limited_equivalent_orifice_applied", "flow_limited_consequence_status",
@@ -12650,6 +12656,11 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
             "flammable_plume_streamline_distance_m", "effect_range_status",
             "consequence_validation_scope", "geometry_display_mapping_verified",
             "source_depletion_external_holdout_supported",
+            "source_inventory_kg", "source_inventory_model_volume_m3",
+            "ambient_equilibrium_inventory_kg", "releasable_inventory_kg",
+            "source_inventory_origin", "inventory_duration_status",
+            "constant_rate_inventory_time_lower_s",
+            "constant_rate_inventory_time_upper_s",
             "release_source_boundary", "process_flow_limit_kg_s",
             "physical_orifice_diameter_m", "consequence_equivalent_orifice_diameter_m",
             "flow_limited_equivalent_orifice_applied", "flow_limited_consequence_status",
@@ -12674,6 +12685,10 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
         if raw.get("consequence_validation_claim_limit"):
             row["consequence_validation_claim_limit"] = short(
                 raw["consequence_validation_claim_limit"]
+            )
+        if raw.get("inventory_duration_claim_limit"):
+            row["inventory_duration_claim_limit"] = short(
+                raw["inventory_duration_claim_limit"]
             )
         if raw.get("ignited_enclosure_claim_limit"):
             row["ignited_enclosure_claim_limit"] = short(

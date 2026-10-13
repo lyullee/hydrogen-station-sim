@@ -45,6 +45,7 @@ def test_bank_leak_consumes_inventory_and_reduces_bank_pressure():
     with TestClient(app) as client:
         job_id = client.post("/api/simulations", json={"continuous": True,
             "duration_s": 4.0, "control_period_s": .2,
+            "bank_high_internal_volume_m3": 0.42,
             # Supplying an explicit idle process runtime prevents the
             # reference-only finite run from selecting a compressor recharge
             # bank in the background.  The assertion is then about the leak,
@@ -71,6 +72,10 @@ def test_bank_leak_consumes_inventory_and_reduces_bank_pressure():
                       if "hydrogen-leak:cascade.high" in frame["active_faults"]]
             assert active
             assert active[-1]["bank_mass_kg"]["high"] < frames[0]["bank_mass_kg"]["high"]
+            volumes = active[-1]["component_internal_volume_m3"]
+            assert volumes["cascade.high"] == pytest.approx(0.42)
+            assert volumes["dispenser.hose"] > 0.0
+            assert volumes["vehicle.tank"] > 0.0
         finally:
             client.post(f"/api/simulations/{job_id}/stop")
 

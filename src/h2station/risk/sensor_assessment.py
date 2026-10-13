@@ -6,6 +6,7 @@ import math
 import re
 from typing import Any, Mapping
 
+from ..thermo import HydrogenEOS
 from .live import DynamicLeakModel, HyRAMDynamicReleaseRequest, LeakScenario, LeakSourceState
 from .runtime_backend import consequence_risk_summary, consequence_validation_context
 
@@ -51,6 +52,106 @@ _AREA_PROCESS_SOURCES = {
     "N22": ("N07", "N08", "N09"),
     "N23": ("N13", "N17"),
 }
+
+
+def _positive_finite(value: Any) -> float | None:
+    try:
+        number = float(value)
+    except (TypeError, ValueError):
+        return None
+    return number if math.isfinite(number) and number > 0.0 else None
+
+
+def _source_inventory_screen(
+    frame: Mapping[str, Any],
+    node: Mapping[str, Any],
+    component: str,
+    *,
+    pressure_pa: float,
+    temperature_k: float,
+    ambient_pressure_pa: float,
+) -> dict[str, Any]:
+    """Return an auditable inventory/current-rate screening basis.
+
+    The live simulator publishes exact state inventory for banks and vehicles.
+    Other modeled volumes can only use an EOS estimate from the selected P/T
+    sensors.  This helper deliberately stops at inventory:flow ratios.  It is
+    not a pressure-decay integration and therefore cannot be presented as an
+    isolation, evacuation, or blowdown completion time.
+    """
+
+    volume_m3 = _positive_finite(
+        (frame.get("component_internal_volume_m3") or {}).get(component)
+    ) or _positive_finite(node.get("모델체적_m3"))
+    if volume_m3 is None:
+        return {}
+
+    inventory_kg: float | None = None
+    origin = "EOS_FROM_SENSOR_AND_MODEL_VOLUME"
+    if component.startswith("cascade."):
+        bank_name = component.split(".", 1)[1]
+        inventory_kg = _positive_finite(
+            (frame.get("bank_mass_kg") or {}).get(bank_name)
+        )
+        if inventory_kg is not None:
+            origin = "DIGITAL_TWIN_STATE"
+    elif component == "vehicle.tank":
+        inventory_kg = _positive_finite(frame.get("vehicle_mass_kg"))
+        if inventory_kg is not None:
+            origin = "DIGITAL_TWIN_STATE"
+    elif component == "vehicle_2.tank":
+        inventory_kg = _positive_finite(frame.get("vehicle_2_mass_kg"))
+        if inventory_kg is not None:
+            origin = "DIGITAL_TWIN_STATE"
+
+    try:
+        eos = HydrogenEOS()
+        if inventory_kg is None:
+            inventory_kg = eos.state_pt(pressure_pa, temperature_k).density * volume_m3
+        ambient_inventory_kg = (
+            eos.state_pt(ambient_pressure_pa, temperature_k).density * volume_m3
+        )
+    except (RuntimeError, ValueError, FloatingPointError):
+        return {}
+    if not math.isfinite(inventory_kg) or inventory_kg <= 0.0:
+        return {}
+    releasable_inventory_kg = max(0.0, inventory_kg - ambient_inventory_kg)
+    return {
+        "source_inventory_kg": float(inventory_kg),
+        "source_inventory_model_volume_m3": float(volume_m3),
+        "ambient_equilibrium_inventory_kg": float(ambient_inventory_kg),
+        "releasable_inventory_kg": float(releasable_inventory_kg),
+        "source_inventory_origin": origin,
+        "inventory_duration_status": "CURRENT_RATE_RATIO_ONLY",
+        "inventory_duration_claim_limit": (
+            "Current model inventory divided by current release-flow bounds only; "
+            "not a validated pressure-decay, isolation, evacuation, or blowdown time."
+        ),
+    }
+
+
+def _inventory_duration_screen(
+    inventory: Mapping[str, Any],
+    *,
+    point_flow_kg_s: float,
+    lower_flow_kg_s: Any,
+    upper_flow_kg_s: Any,
+) -> dict[str, Any]:
+    releasable = _positive_finite(inventory.get("releasable_inventory_kg"))
+    if releasable is None:
+        return dict(inventory)
+    point = _positive_finite(point_flow_kg_s)
+    lower = _positive_finite(lower_flow_kg_s) or point
+    upper = _positive_finite(upper_flow_kg_s) or point
+    if lower is None or upper is None:
+        return dict(inventory)
+    low_flow, high_flow = sorted((lower, upper))
+    result = dict(inventory)
+    result.update({
+        "constant_rate_inventory_time_lower_s": releasable / high_flow,
+        "constant_rate_inventory_time_upper_s": releasable / low_flow,
+    })
+    return result
 
 
 def assess_sensor_cases(
@@ -148,6 +249,15 @@ def assess_sensor_cases(
                       assumed_release_height_m=1.0, assumed_release_angle_rad=0.0,
                       assumed_ambient_pressure_pa=101325.0,
                       assumption_note="누출 위치·방향·높이 미확정. 1 m 높이 수평 분출과 표본 관측점을 가정; 현장 안전반경 아님")
+        inventory_screen = _source_inventory_screen(
+            frame,
+            node,
+            str(component),
+            pressure_pa=source_pressure_pa,
+            temperature_k=source_temperature_k,
+            ambient_pressure_pa=101325.0,
+        )
+        result.update(inventory_screen)
         if not getattr(backend, "available", False):
             result.update(calculation_status="backend_unavailable", reason=getattr(backend, "reason", "Consequence backend unavailable"))
             results.append(result)
@@ -186,6 +296,12 @@ def assess_sensor_cases(
             )
             consequence = dict(backend.evaluate_release(request))
             consequence.update(consequence_risk_summary(consequence))
+            result.update(_inventory_duration_screen(
+                inventory_screen,
+                point_flow_kg_s=mass_flow,
+                lower_flow_kg_s=consequence.get("release_flow_lower_bound_kg_s"),
+                upper_flow_kg_s=consequence.get("release_flow_upper_bound_kg_s"),
+            ))
             radius = consequence.get("sampled_effect_radius_m")
             result.update(calculation_status=consequence.get("status", "unknown"),
                           mass_flow_g_s=mass_flow * 1000.0,

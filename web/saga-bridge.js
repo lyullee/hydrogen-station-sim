@@ -62,6 +62,7 @@
   }
   function impactCard(row){
     const card=document.createElement('section');card.className='saga-impact-card';
+    const english=window.stationLocale?.language?.()==='en';
     const actual=row.calculation_basis==='ACTIVE_RELEASE_CURRENT_SENSORS'||Boolean(row.release_id);
     const title=document.createElement('header');
     const heading=document.createElement('b');heading.textContent=`${row.node_name||row.component_id||row.node_id||'설비'}${row.node_id?` · ${row.node_id}`:''}`;
@@ -79,8 +80,18 @@
     if(Number.isFinite(flowLow)&&Number.isFinite(flowHigh)&&flowHigh>0){
       const flowRange=document.createElement('p');flowRange.className='saga-impact-literature';
       const extrapolated=row.release_flow_uncertainty_status==='PUBLIC_EXPERIMENT_ENVELOPE_EXTRAPOLATED';
-      flowRange.textContent=`방출유량 근거 범위 · ${fmt(flowLow*1000,2)}–${fmt(flowHigh*1000,2)} g/s${extrapolated?' · 공개 실험범위 밖 외삽':''} · 민감도 범위이며 신뢰구간·현장 측정값 아님`;
+      flowRange.textContent=english
+        ?`Release-flow evidence range · ${fmt(flowLow*1000,2)}–${fmt(flowHigh*1000,2)} g/s${extrapolated?' · extrapolated beyond the public experiment domain':''} · sensitivity range, not a confidence interval or field measurement`
+        :`방출유량 근거 범위 · ${fmt(flowLow*1000,2)}–${fmt(flowHigh*1000,2)} g/s${extrapolated?' · 공개 실험범위 밖 외삽':''} · 민감도 범위이며 신뢰구간·현장 측정값 아님`;
       card.append(flowRange);
+    }
+    const releasable=Number(row.releasable_inventory_kg),durationLow=Number(row.constant_rate_inventory_time_lower_s),durationHigh=Number(row.constant_rate_inventory_time_upper_s);
+    if(Number.isFinite(releasable)&&Number.isFinite(durationLow)&&Number.isFinite(durationHigh)&&releasable>0){
+      const inventory=document.createElement('p');inventory.className='saga-impact-literature';
+      inventory.textContent=english
+        ?`Modeled releasable inventory · ${fmt(releasable,2)} kg · current-rate ratio ${fmt(durationLow,0)}–${fmt(durationHigh,0)} s · not a pressure-decay, isolation, evacuation, or leak-end time`
+        :`방출 가능 모의 재고 · ${fmt(releasable,2)} kg · 현재 유량 일정 가정 시간비 ${fmt(durationLow,0)}–${fmt(durationHigh,0)} s · 압력 고갈·격리·대피·누출 종료시간 아님`;
+      card.append(inventory);
     }
     const literatureRadius=Number(row.literature_delayed_ignition_5kpa_radial_distance_m);
     if(literatureRadius>0){

@@ -509,10 +509,14 @@ def test_sensor_assessment_uses_live_release_orifice_and_flow():
             return {"status": "calculated", "maximum_heat_flux_w_m2": 12.0,
                     "maximum_overpressure_pa": 34.0,
                     "sampled_effect_radius_m": 0.0, "sampled_max_distance_m": 5.0,
-                    "effect_range_status": "BELOW_THRESHOLDS_AT_SAMPLES"}
+                    "effect_range_status": "BELOW_THRESHOLDS_AT_SAMPLES",
+                    "release_flow_lower_bound_kg_s": 0.006,
+                    "release_flow_upper_bound_kg_s": 0.012}
 
     backend = FakeBackend()
-    frame = {"time_s": 9.0, "hazop": {"signals": {
+    frame = {"time_s": 9.0, "bank_mass_kg": {"high": 14.0},
+             "component_internal_volume_m3": {"cascade.high": 0.42},
+             "hazop": {"signals": {
         "PT-0901": {"value": 84.0, "quality": "GOOD"},
         "TT-0901": {"value": 29.0, "quality": "GOOD"},
     }, "releases": [{"release_id": "actual-1", "component_id": "cascade.high",
@@ -524,6 +528,18 @@ def test_sensor_assessment_uses_live_release_orifice_and_flow():
     assert backend.request.source_pressure_pa == 84e6
     assert backend.request.orifice_diameter_m == 0.003
     assert backend.request.mass_flow_override_kg_s == 0.008
+    assert impact["source_inventory_kg"] == pytest.approx(14.0)
+    assert impact["source_inventory_model_volume_m3"] == pytest.approx(0.42)
+    assert impact["source_inventory_origin"] == "DIGITAL_TWIN_STATE"
+    assert 0.0 < impact["releasable_inventory_kg"] < 14.0
+    assert impact["constant_rate_inventory_time_lower_s"] == pytest.approx(
+        impact["releasable_inventory_kg"] / 0.012
+    )
+    assert impact["constant_rate_inventory_time_upper_s"] == pytest.approx(
+        impact["releasable_inventory_kg"] / 0.006
+    )
+    assert impact["inventory_duration_status"] == "CURRENT_RATE_RATIO_ONLY"
+    assert "not a validated pressure-decay" in impact["inventory_duration_claim_limit"]
 
 
 def test_saga_can_propose_calculate_and_interpret_scenarios(monkeypatch):

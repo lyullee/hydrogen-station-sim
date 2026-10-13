@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-10-13",
+  "evidence_role": "runtime_decision_support_screen",
+  "status": "implemented_with_explicit_claim_boundary",
+  "calculation": {
+    "releasable_inventory": "max(0, current_inventory - rho_H2(ambient_pressure, current_temperature) * runtime_component_volume)",
+    "constant_rate_lower_time": "releasable_inventory / release_flow_upper_bound",
+    "constant_rate_upper_time": "releasable_inventory / release_flow_lower_bound",
+    "state_inventory_priority": [
+      "digital_twin_bank_or_vehicle_inventory",
+      "EOS_density_from_selected_pressure_temperature_and_runtime_volume"
+    ],
+    "volume_priority": [
+      "runtime_component_internal_volume",
+      "versioned_HAZOP_model_volume"
+    ]
+  },
+  "public_release_flow_evidence": {
+    "doi": "10.1016/j.ijhydene.2010.04.055",
+    "artifact": "research/RELEASE_FLOW_UNCERTAINTY_CONTRACT_2026_10_13.md",
+    "role": "release_flow_sensitivity_range_only"
+  },
+  "interfaces": [
+    "sensor consequence assessment",
+    "main SAGA consequence assessment",
+    "LLM evidence manifest",
+    "direct deterministic impact summary",
+    "bilingual consequence card"
+  ],
+  "external_source_depletion_holdout_supported": false,
+  "claim_limit": "Current model inventory divided by current release-flow bounds only; not a validated pressure-decay, isolation, evacuation, blowdown-completion, leak-end, or site-safety time."
+}
