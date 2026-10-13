@@ -48,7 +48,7 @@
     "local_priority_focus_check_count": 3,
     "latest_full_regression_artifact": "research/full_regression_test_run_2026_10_14.json",
     "latest_full_regression_status": "PASS",
-    "latest_full_regression_passed": 1571,
+    "latest_full_regression_passed": 1578,
     "latest_full_regression_failed": 0,
     "latest_full_regression_skipped": 0,
     "latest_full_regression_working_tree_dirty": true,

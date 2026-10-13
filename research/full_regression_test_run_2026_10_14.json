@@ -4,15 +4,15 @@
   "generated_at": "2026-10-14T05:41:50.822212+09:00",
   "command": "python -m pytest -q",
   "status": "PASS",
-  "tests_passed": 1571,
+  "tests_passed": 1578,
   "tests_failed": 0,
   "tests_skipped": 0,
   "warnings": 222,
   "elapsed_seconds": 305.05,
   "duration_seconds": 305.05,
-  "source_commit": "c2d9b2f31667f68b556365d0c11823bba8341e15",
+  "source_commit": "d436b47eeaef4f8f9c35f8c88213058be46ba61b",
   "readiness_snapshot": "research/ijhe_readiness_audit.json",
-  "interpretation": "All 1,571 executable tests pass for the current working-tree state. This verifies implementation integrity only; it does not convert independent validation FAIL/PENDING gates to PASS.",
+  "interpretation": "All 1,578 executable tests pass for the current source commit. This verifies implementation integrity only; it does not convert independent validation FAIL/PENDING gates to PASS.",
   "working_tree_dirty_at_run": true,
-  "run_recorded_at": "2026-10-14T05:41:50.822221+09:00"
+  "run_recorded_at": "2026-10-14T08:54:00+09:00"
 }

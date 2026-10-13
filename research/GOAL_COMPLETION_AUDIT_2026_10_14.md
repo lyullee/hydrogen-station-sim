@@ -11,7 +11,7 @@
 - `bounded_ijhe_submission_ready`: **false**
 - `full_user_objective_ready`: **false**
 - 목표 완료 허용: **false**
-- 최근 전체 회귀: **1,572 passed / 0 failed / 0 skipped**
+- 최근 전체 회귀: **1,578 passed / 0 failed / 0 skipped**
 - 최근 SAGA·LLM 집중 회귀: **55 passed / 0 failed / 0 skipped**
 - 최신 GitHub priority workflow: **success**
 
