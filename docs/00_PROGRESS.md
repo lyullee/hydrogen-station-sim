@@ -1,5 +1,23 @@
 # Development Progress
 
+## 2026-10-14 - Reject the OEDI H2SAFE release as an independent holdout
+
+Before opening the detailed OEDI/NLR dataset record, the existing frozen
+`pooled_spatial_rank_v1` detector model and a source-specific eligibility
+protocol were committed and pushed in `2aa686d`. The protocol required actual
+hydrogen, at least 18 independent release cases, usable sensor coordinates and
+concentration time series, and no overlap with development evidence.
+
+The subsequent official-source screen found that the public record contains
+five controlled **helium-surrogate** experiments and uses DOI
+`10.7799/17118570`, which is the same legacy H2SAFE source already used during
+development. It therefore fails the frozen actual-hydrogen, minimum-case and
+independence requirements. The result is recorded as
+`INELIGIBLE_NO_MODEL_EVALUATION`: no archive download, raw sensor-row access,
+model execution, parameter fitting, runtime routing or alarm change was made.
+The source improves provenance and licensing traceability, but it does not
+close the spatial detector-transfer gate or increase the readiness score.
+
 ## 2026-10-14 - Screen a new public actual-hydrogen spatial source first
 
 The official ICHS 2007 Kouchi et al. paper was screened as a low-cost candidate

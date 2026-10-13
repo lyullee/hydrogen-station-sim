@@ -7,6 +7,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 PROTOCOL = ROOT / "research/oedi_h2safe_spatial_holdout_protocol_2026_10_14.json"
+RESULT = ROOT / "research/oedi_h2safe_spatial_holdout_eligibility_2026_10_14.json"
 MODEL = ROOT / "src/h2station/prospective_spatial_rank.py"
 PARENT = ROOT / "research/prospective_spatial_rank_protocol_2026_10_13.json"
 
@@ -44,3 +45,34 @@ def test_oedi_protocol_retains_all_or_nothing_independent_holdout_rule() -> None
     assert len(decision["screens"]) == 5
     assert protocol["runtime_policy"]["enabled"] is False
     assert protocol["runtime_policy"]["alarm_or_trip_setpoint_change_permitted"] is False
+
+
+def test_oedi_source_is_rejected_before_numerical_access() -> None:
+    result = json.loads(RESULT.read_text(encoding="utf-8"))
+    protocol = result["protocol"]
+    source = result["source"]
+    identity = result["identity_crosscheck"]
+    eligibility = result["eligibility"]
+    evaluation = result["model_evaluation"]
+
+    assert protocol["sha256"] == _sha256(PROTOCOL)
+    assert protocol["freeze_commit"].startswith("2aa686d")
+    assert protocol["detailed_access_confirmed_after_freeze"] is True
+    assert source["doi"] == "10.7799/17118570"
+    assert source["test_gas"] == "helium surrogate"
+    assert source["experiment_count"] == 5
+    assert source["raw_archive_downloaded"] is False
+    assert identity["source_doi_matches_legacy_development_source"] is True
+    assert identity["independent_of_candidate_development"] is False
+    assert eligibility["decision"] == "INELIGIBLE_NO_MODEL_EVALUATION"
+    assert set(eligibility["failed_requirements"]) == {
+        "actual_hydrogen_test_gas",
+        "minimum_eligible_case_count",
+        "independent_nonoverlap_with_candidate_development",
+    }
+    assert evaluation["executed"] is False
+    assert evaluation["sensor_responses_opened"] is False
+    assert evaluation["spatial_rank_metrics_computed"] is False
+    assert result["gate_impact"][
+        "h2safe_spatial_detector_transfer_validation"
+    ] == "unchanged_fail"

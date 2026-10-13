@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "artifact_type": "dataset_specific_spatial_holdout_eligibility_result",
+  "evaluated_at_utc": "2026-10-13T15:27:01.8660632Z",
+  "decision": "INELIGIBLE_NO_MODEL_EVALUATION",
+  "protocol": {
+    "path": "research/oedi_h2safe_spatial_holdout_protocol_2026_10_14.json",
+    "sha256": "ffe00966329b9ca9232768112425ffe2a1f36458a10c66507d241579db64f263",
+    "freeze_commit": "2aa686df57f6fc070e8e299a5e0dce86bb25e7ed",
+    "freeze_commit_time_utc": "2026-10-13T15:26:26Z",
+    "detailed_access_confirmed_after_freeze": true,
+    "seconds_from_commit_to_access_confirmation": 35.8660632
+  },
+  "source": {
+    "title": "Dataset for H2SAFE - Controlled Gas Releases and Sensor-Response for Indoor Hydrogen Safety",
+    "oedi_url": "https://data.openei.org/submissions/8799",
+    "official_catalog_url": "https://data.nlr.gov/submissions/330",
+    "doi": "10.7799/17118570",
+    "publisher": "National Laboratory of the Rockies",
+    "license": "CC BY 4.0",
+    "status": "Public",
+    "last_updated": "2026-10-05",
+    "test_gas": "helium surrogate",
+    "experiment_count": 5,
+    "lab_1_experiment_count": 1,
+    "lab_2_experiment_count": 4,
+    "lab_1_sensor_location_count": 24,
+    "lab_2_coordinate_location_count": 37,
+    "resource_count": 3,
+    "dataset_archive_size_mb": 3.6,
+    "raw_archive_downloaded": false,
+    "numerical_rows_opened": false
+  },
+  "identity_crosscheck": {
+    "legacy_development_source_doi": "10.7799/17118570",
+    "source_doi_matches_legacy_development_source": true,
+    "legacy_development_artifact": "research/h2safe_spatial_response_diagnostic_2026_10_08.json",
+    "legacy_development_test_gas": "helium surrogate",
+    "legacy_development_experiment_count": 5,
+    "independent_of_candidate_development": false
+  },
+  "eligibility": {
+    "required_test_gas": "hydrogen",
+    "observed_test_gas": "helium surrogate",
+    "required_minimum_case_count": 18,
+    "observed_case_count": 5,
+    "required_independent_nonoverlap": true,
+    "observed_independent_nonoverlap": false,
+    "failed_requirements": [
+      "actual_hydrogen_test_gas",
+      "minimum_eligible_case_count",
+      "independent_nonoverlap_with_candidate_development"
+    ],
+    "coordinate_and_time_series_schema_appears_available": true,
+    "coordinate_and_time_series_schema_scored": false,
+    "decision": "INELIGIBLE_NO_MODEL_EVALUATION"
+  },
+  "model_evaluation": {
+    "executed": false,
+    "parameter_fitting_executed": false,
+    "sensor_responses_opened": false,
+    "spatial_rank_metrics_computed": false,
+    "reason": "The official catalog identifies helium surrogate gas, five experiments and the same DOI already used in candidate development. Three frozen eligibility rules fail before numerical access."
+  },
+  "gate_impact": {
+    "h2safe_spatial_detector_transfer_validation": "unchanged_fail",
+    "runtime_spatial_routing": "disabled",
+    "alarm_or_trip_setpoint_change": "prohibited"
+  },
+  "claim_boundary": "The October 2026 catalog publication improves provenance, licensing and reproducibility for the existing five-case helium H2SAFE cohort. It is not actual-hydrogen evidence, is not independent of candidate development and was not numerically scored under the OEDI holdout protocol. It cannot validate detector transfer, concentration magnitude, alarm timing, ESD, outdoor HRS dispersion or safety distance."
+}

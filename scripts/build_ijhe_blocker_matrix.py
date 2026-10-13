@@ -59,6 +59,8 @@ def build(root: Path) -> dict[str, Any]:
     kouchi_spatial_protocol_path = root / "research/kouchi_2007_spatial_holdout_protocol_2026_10_13.json"
     kouchi_spatial_chronology_path = root / "research/kouchi_2007_spatial_holdout_chronology_amendment_2026_10_14.json"
     kouchi_spatial_eligibility_path = root / "research/kouchi_2007_spatial_holdout_eligibility_2026_10_13.json"
+    oedi_h2safe_protocol_path = root / "research/oedi_h2safe_spatial_holdout_protocol_2026_10_14.json"
+    oedi_h2safe_eligibility_path = root / "research/oedi_h2safe_spatial_holdout_eligibility_2026_10_14.json"
     ignited_pressure_path = root / "research/usn_17934047_ignited_pressure_peaking_result_2026_10_08.json"
     qra_comparison_path = root / "research/qra_multimethod_comparison_2026_10_08.json"
     runtime_qra_path = root / "research/runtime_qra_envelope_comparison_2026_10_08.json"
@@ -82,6 +84,7 @@ def build(root: Path) -> dict[str, Any]:
     sandia_spatial = load_json(sandia_spatial_path)
     hytunnel_spatial = load_json(hytunnel_spatial_result_path)
     kouchi_spatial_eligibility = load_json(kouchi_spatial_eligibility_path)
+    oedi_h2safe_eligibility = load_json(oedi_h2safe_eligibility_path)
     ignited_pressure = load_json(ignited_pressure_path)
     qra_comparison = load_json(qra_comparison_path)
     runtime_qra = load_json(runtime_qra_path)
@@ -239,6 +242,8 @@ def build(root: Path) -> dict[str, Any]:
                     "research/kouchi_2007_spatial_holdout_protocol_2026_10_13.json",
                     "research/kouchi_2007_spatial_holdout_chronology_amendment_2026_10_14.json",
                     "research/kouchi_2007_spatial_holdout_eligibility_2026_10_13.json",
+                    "research/oedi_h2safe_spatial_holdout_protocol_2026_10_14.json",
+                    "research/oedi_h2safe_spatial_holdout_eligibility_2026_10_14.json",
                 ],
                 "experiment_count": h2safe_spatial["results"]["Y_as_elevation"]["aggregate"]["experiment_count"],
                 "median_spearman": h2safe_spatial["results"]["Y_as_elevation"]["aggregate"]["median_spearman"],
@@ -357,6 +362,40 @@ def build(root: Path) -> dict[str, Any]:
                     "runtime_candidate_enabled": False,
                     "gate_changed": False,
                     "claim_boundary": kouchi_spatial_eligibility[
+                        "claim_boundary"
+                    ],
+                },
+                "oedi_h2safe_2026_publication_intake": {
+                    "status": oedi_h2safe_eligibility["eligibility"][
+                        "decision"
+                    ],
+                    "doi": oedi_h2safe_eligibility["source"]["doi"],
+                    "license": oedi_h2safe_eligibility["source"]["license"],
+                    "test_gas": oedi_h2safe_eligibility["source"][
+                        "test_gas"
+                    ],
+                    "required_case_count": oedi_h2safe_eligibility[
+                        "eligibility"
+                    ]["required_minimum_case_count"],
+                    "observed_case_count": oedi_h2safe_eligibility[
+                        "eligibility"
+                    ]["observed_case_count"],
+                    "failed_requirements": oedi_h2safe_eligibility[
+                        "eligibility"
+                    ]["failed_requirements"],
+                    "source_doi_matches_development": oedi_h2safe_eligibility[
+                        "identity_crosscheck"
+                    ]["source_doi_matches_legacy_development_source"],
+                    "independent_of_candidate_development": (
+                        oedi_h2safe_eligibility["identity_crosscheck"]
+                        ["independent_of_candidate_development"]
+                    ),
+                    "model_evaluation_executed": oedi_h2safe_eligibility[
+                        "model_evaluation"
+                    ]["executed"],
+                    "runtime_candidate_enabled": False,
+                    "gate_changed": False,
+                    "claim_boundary": oedi_h2safe_eligibility[
                         "claim_boundary"
                     ],
                 },
@@ -571,6 +610,12 @@ def build(root: Path) -> dict[str, Any]:
             ),
             "kouchi_spatial_eligibility_sha256": sha256(
                 kouchi_spatial_eligibility_path
+            ),
+            "oedi_h2safe_protocol_sha256": sha256(
+                oedi_h2safe_protocol_path
+            ),
+            "oedi_h2safe_eligibility_sha256": sha256(
+                oedi_h2safe_eligibility_path
             ),
             "reference_leak_detector_result_sha256": sha256(
                 reference_leak_detector_path

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-13T15:13:31.222087+00:00",
+  "generated_at": "2026-10-13T15:30:40.527299+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -132,7 +132,9 @@
         "research/HYTUNNEL_SPATIAL_HOLDOUT_2026_10_08.md",
         "research/kouchi_2007_spatial_holdout_protocol_2026_10_13.json",
         "research/kouchi_2007_spatial_holdout_chronology_amendment_2026_10_14.json",
-        "research/kouchi_2007_spatial_holdout_eligibility_2026_10_13.json"
+        "research/kouchi_2007_spatial_holdout_eligibility_2026_10_13.json",
+        "research/oedi_h2safe_spatial_holdout_protocol_2026_10_14.json",
+        "research/oedi_h2safe_spatial_holdout_eligibility_2026_10_14.json"
       ],
       "experiment_count": 5,
       "median_spearman": 0.5817391304347826,
@@ -209,6 +211,25 @@
         "runtime_candidate_enabled": false,
         "gate_changed": false,
         "claim_boundary": "The paper is useful public evidence that actual-hydrogen concentration and fluctuation measurements were conducted at 20-40 MPa with 0.2-2.0 mm apertures. It is not an eligible confirmatory cohort for the frozen spatial-rank candidate and does not change any runtime or safety claim."
+      },
+      "oedi_h2safe_2026_publication_intake": {
+        "status": "INELIGIBLE_NO_MODEL_EVALUATION",
+        "doi": "10.7799/17118570",
+        "license": "CC BY 4.0",
+        "test_gas": "helium surrogate",
+        "required_case_count": 18,
+        "observed_case_count": 5,
+        "failed_requirements": [
+          "actual_hydrogen_test_gas",
+          "minimum_eligible_case_count",
+          "independent_nonoverlap_with_candidate_development"
+        ],
+        "source_doi_matches_development": true,
+        "independent_of_candidate_development": false,
+        "model_evaluation_executed": false,
+        "runtime_candidate_enabled": false,
+        "gate_changed": false,
+        "claim_boundary": "The October 2026 catalog publication improves provenance, licensing and reproducibility for the existing five-case helium H2SAFE cohort. It is not actual-hydrogen evidence, is not independent of candidate development and was not numerically scored under the OEDI holdout protocol. It cannot validate detector transfer, concentration magnitude, alarm timing, ESD, outdoor HRS dispersion or safety distance."
       },
       "claim_boundary": "This post-access diagnostic supports only a development choice to replace arbitrary near/far detector assignment with a transparent coordinate ranking. It failed the joint spatial screen and is not independent validation."
     },
@@ -351,7 +372,7 @@
     }
   ],
   "reproducibility": {
-    "audit_sha256": "469c0a98557cbcb2aab36b6ad600813885d87d9a21475362af40884261279d29",
+    "audit_sha256": "383d7ae3bd23f44dfbe19ddf472a3f04bef74749266c5fb43bb584c909cc7e66",
     "hiad_readiness_sha256": "ff2088fc29bacbe6ea8ab22d3fa8fd0de89a64c8357b12ef2c83b55094cf0ed6",
     "acquisition_tracker_sha256": "2554679ac3aa83b6cc76dbfc6a9ee89165fd05aa2795867e139b55debdd076a8",
     "full_loop_search_sha256": "7bf50a987108144ce02d4f0ada3e80bed235bee5d437ec13dfb20fe460826a69",
@@ -375,6 +396,8 @@
     "kouchi_spatial_protocol_sha256": "c73bc1734cd9d1c0a270418b4999a1cd9b5c68ed915d74ddf0922d71afea38fd",
     "kouchi_spatial_chronology_sha256": "7265b13bdd17fc05d84709775d0c2fee8508628124bd3788e3af6f8ca31fcfea",
     "kouchi_spatial_eligibility_sha256": "8f6bbf8f3bea6b6e48f121b6051931300ada8920988c5811765222e2557b926e",
+    "oedi_h2safe_protocol_sha256": "ffe00966329b9ca9232768112425ffe2a1f36458a10c66507d241579db64f263",
+    "oedi_h2safe_eligibility_sha256": "f44ca2582445acfc825fb325289730d2c8ab6dcca45a06254cf69c1d5a295a20",
     "reference_leak_detector_result_sha256": "1b03b114e73a7d4070920ae6e59d4edad854459dd74834998a35cb64893f2b2f",
     "usn_spatial_stratification_sha256": "92a6f11d1ec8c0a8cff16cd1865249beb1b2475aec5edeb7d2b0d7d27c9b5803",
     "ignited_pressure_peaking_sha256": "53dbb83055c0eaa50d7f9ff2af351302b325ffb46e38b0290a4583eae4356174",

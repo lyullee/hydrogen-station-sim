@@ -25,6 +25,25 @@ def test_current_builder_retains_kouchi_ineligible_preaccess_screen():
     assert len(matrix["reproducibility"]["kouchi_spatial_eligibility_sha256"]) == 64
 
 
+def test_current_builder_rejects_oedi_helium_republication_before_scoring():
+    matrix = build(ROOT)
+    intake = matrix["evidence_snapshot"][
+        "h2safe_spatial_detector_transfer"
+    ]["oedi_h2safe_2026_publication_intake"]
+    assert intake["status"] == "INELIGIBLE_NO_MODEL_EVALUATION"
+    assert intake["doi"] == "10.7799/17118570"
+    assert intake["test_gas"] == "helium surrogate"
+    assert intake["required_case_count"] == 18
+    assert intake["observed_case_count"] == 5
+    assert intake["source_doi_matches_development"] is True
+    assert intake["independent_of_candidate_development"] is False
+    assert intake["model_evaluation_executed"] is False
+    assert intake["runtime_candidate_enabled"] is False
+    assert intake["gate_changed"] is False
+    assert len(matrix["reproducibility"]["oedi_h2safe_protocol_sha256"]) == 64
+    assert len(matrix["reproducibility"]["oedi_h2safe_eligibility_sha256"]) == 64
+
+
 def test_current_blocker_matrix_tracks_the_readiness_audit():
     audit = json.loads((ROOT / "manuscript/ijhe_readiness_audit.json").read_text(encoding="utf-8"))
     matrix = json.loads(

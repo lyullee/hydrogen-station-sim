@@ -534,6 +534,25 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     assert kouchi["chronology_correction_retains_protocol"] is True
     assert kouchi["runtime_candidate_enabled"] is False
     assert kouchi["gate_changed"] is False
+    oedi = h2safe_spatial["oedi_h2safe_2026_publication_intake"]
+    assert oedi["audit_integrity"] is True
+    assert oedi["status"] == "INELIGIBLE_NO_MODEL_EVALUATION"
+    assert oedi["doi"] == "10.7799/17118570"
+    assert oedi["license"] == "CC BY 4.0"
+    assert oedi["test_gas"] == "helium surrogate"
+    assert oedi["required_case_count"] == 18
+    assert oedi["observed_case_count"] == 5
+    assert set(oedi["failed_requirements"]) == {
+        "actual_hydrogen_test_gas",
+        "minimum_eligible_case_count",
+        "independent_nonoverlap_with_candidate_development",
+    }
+    assert oedi["source_doi_matches_development"] is True
+    assert oedi["independent_of_candidate_development"] is False
+    assert oedi["model_evaluation_executed"] is False
+    assert oedi["sensor_responses_opened"] is False
+    assert oedi["runtime_candidate_enabled"] is False
+    assert oedi["gate_changed"] is False
     prospective_spatial = gates[
         "prospective_spatial_rank_candidate_freeze_integrity"
     ]

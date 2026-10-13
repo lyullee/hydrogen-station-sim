@@ -4489,6 +4489,12 @@ def audit(root: Path) -> dict[str, object]:
     kouchi_spatial_chronology_path = root / (
         "research/kouchi_2007_spatial_holdout_chronology_amendment_2026_10_14.json"
     )
+    oedi_h2safe_protocol_path = root / (
+        "research/oedi_h2safe_spatial_holdout_protocol_2026_10_14.json"
+    )
+    oedi_h2safe_eligibility_path = root / (
+        "research/oedi_h2safe_spatial_holdout_eligibility_2026_10_14.json"
+    )
     h2safe_spatial = _json(h2safe_spatial_path)
     hydelta_spatial_eligibility = _json(hydelta_spatial_eligibility_path)
     sandia_spatial = _json(sandia_spatial_path)
@@ -4501,6 +4507,8 @@ def audit(root: Path) -> dict[str, object]:
     kouchi_spatial_protocol = _json(kouchi_spatial_protocol_path)
     kouchi_spatial_eligibility = _json(kouchi_spatial_eligibility_path)
     kouchi_spatial_chronology = _json(kouchi_spatial_chronology_path)
+    oedi_h2safe_protocol = _json(oedi_h2safe_protocol_path)
+    oedi_h2safe_eligibility = _json(oedi_h2safe_eligibility_path)
     h2safe_spatial_source = (h2safe_spatial or {}).get("source") or {}
     h2safe_spatial_method = (h2safe_spatial or {}).get("method") or {}
     h2safe_spatial_results = (
@@ -4692,6 +4700,63 @@ def audit(root: Path) -> dict[str, object]:
         ) == "unchanged_fail"
         and kouchi_gate_impact.get("runtime_spatial_routing") == "disabled"
     )
+    oedi_source = (oedi_h2safe_eligibility or {}).get("source") or {}
+    oedi_identity = (
+        (oedi_h2safe_eligibility or {}).get("identity_crosscheck") or {}
+    )
+    oedi_eligibility = (
+        (oedi_h2safe_eligibility or {}).get("eligibility") or {}
+    )
+    oedi_evaluation = (
+        (oedi_h2safe_eligibility or {}).get("model_evaluation") or {}
+    )
+    oedi_gate_impact = (
+        (oedi_h2safe_eligibility or {}).get("gate_impact") or {}
+    )
+    oedi_h2safe_integrity = bool(
+        (oedi_h2safe_protocol or {}).get("artifact_type")
+        == "dataset_specific_preaccess_spatial_holdout_protocol"
+        and (oedi_h2safe_protocol or {}).get("source", {}).get(
+            "numerical_time_series_opened"
+        ) is False
+        and (oedi_h2safe_protocol or {}).get("locked_candidate", {}).get(
+            "implementation_sha256"
+        ) == _sha256(prospective_spatial_module_path)
+        and (oedi_h2safe_eligibility or {}).get("artifact_type")
+        == "dataset_specific_spatial_holdout_eligibility_result"
+        and (oedi_h2safe_eligibility or {}).get("decision")
+        == "INELIGIBLE_NO_MODEL_EVALUATION"
+        and (oedi_h2safe_eligibility or {}).get("protocol", {}).get(
+            "sha256"
+        ) == _sha256(oedi_h2safe_protocol_path)
+        and (oedi_h2safe_eligibility or {}).get("protocol", {}).get(
+            "freeze_commit"
+        ) == "2aa686df57f6fc070e8e299a5e0dce86bb25e7ed"
+        and (oedi_h2safe_eligibility or {}).get("protocol", {}).get(
+            "detailed_access_confirmed_after_freeze"
+        ) is True
+        and oedi_source.get("doi") == h2safe_spatial_source.get("doi")
+        and oedi_source.get("test_gas") == "helium surrogate"
+        and oedi_source.get("experiment_count") == 5
+        and oedi_source.get("raw_archive_downloaded") is False
+        and oedi_source.get("numerical_rows_opened") is False
+        and oedi_identity.get("source_doi_matches_legacy_development_source")
+        is True
+        and oedi_identity.get("independent_of_candidate_development") is False
+        and oedi_eligibility.get("required_test_gas") == "hydrogen"
+        and oedi_eligibility.get("required_minimum_case_count") == 18
+        and oedi_eligibility.get("observed_case_count") == 5
+        and oedi_eligibility.get("decision")
+        == "INELIGIBLE_NO_MODEL_EVALUATION"
+        and len(oedi_eligibility.get("failed_requirements") or []) == 3
+        and oedi_evaluation.get("executed") is False
+        and oedi_evaluation.get("sensor_responses_opened") is False
+        and oedi_evaluation.get("spatial_rank_metrics_computed") is False
+        and oedi_gate_impact.get(
+            "h2safe_spatial_detector_transfer_validation"
+        ) == "unchanged_fail"
+        and oedi_gate_impact.get("runtime_spatial_routing") == "disabled"
+    )
     gates.append(_gate(
         "h2safe_spatial_detector_transfer_validation",
         "PASS" if h2safe_spatial_pass else (
@@ -4710,6 +4775,8 @@ def audit(root: Path) -> dict[str, object]:
             str(kouchi_spatial_protocol_path.relative_to(root)),
             str(kouchi_spatial_chronology_path.relative_to(root)),
             str(kouchi_spatial_eligibility_path.relative_to(root)),
+            str(oedi_h2safe_protocol_path.relative_to(root)),
+            str(oedi_h2safe_eligibility_path.relative_to(root)),
         )),
         "Exact frozen model hash, 18 complete actual-hydrogen cases, unchanged rank/recall screens, retained format amendment and no runtime activation unless every screen passes.",
         {
@@ -4821,6 +4888,34 @@ def audit(root: Path) -> dict[str, object]:
                 "chronology_correction_retains_protocol": all(
                     value is True for value in kouchi_chronology_rules.values()
                 ) if kouchi_chronology_rules else False,
+                "runtime_candidate_enabled": False,
+                "gate_changed": False,
+            },
+            "oedi_h2safe_2026_publication_intake": {
+                "audit_integrity": oedi_h2safe_integrity,
+                "status": oedi_eligibility.get("decision"),
+                "doi": oedi_source.get("doi"),
+                "license": oedi_source.get("license"),
+                "test_gas": oedi_source.get("test_gas"),
+                "required_case_count": oedi_eligibility.get(
+                    "required_minimum_case_count"
+                ),
+                "observed_case_count": oedi_eligibility.get(
+                    "observed_case_count"
+                ),
+                "failed_requirements": oedi_eligibility.get(
+                    "failed_requirements"
+                ),
+                "source_doi_matches_development": oedi_identity.get(
+                    "source_doi_matches_legacy_development_source"
+                ),
+                "independent_of_candidate_development": oedi_identity.get(
+                    "independent_of_candidate_development"
+                ),
+                "model_evaluation_executed": oedi_evaluation.get("executed"),
+                "sensor_responses_opened": oedi_evaluation.get(
+                    "sensor_responses_opened"
+                ),
                 "runtime_candidate_enabled": False,
                 "gate_changed": False,
             },
