@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-13T14:40:12.404334+00:00",
+  "generated_at": "2026-10-13T15:13:31.002203+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -2903,13 +2903,26 @@
     {
       "id": "hyram_adapter_verification",
       "status": "PASS",
-      "claim": "The production adapter is identical to and numerically consistent with HyRAM+ 6.1 within the tested scope.",
-      "evidence": "research\\hyram_adapter_verification.json",
-      "requirement": "Source identity, upstream validation suite and production-adapter parity pass.",
+      "claim": "The production adapter is identical to and numerically consistent with HyRAM+ 6.1 within the tested scope, and a post-access actual-hydrogen near-LFL point is retained as bounded context.",
+      "evidence": "research\\hyram_adapter_verification.json; research\\kouchi_2007_hyram_lfl_context_2026_10_14.json",
+      "requirement": "Source identity, upstream validation suite and production-adapter parity pass; the Kouchi point remains explicitly single-point, post-access and non-validating.",
       "observed": {
         "source_identity_match": true,
         "upstream_status": "passed",
-        "adapter_parity_passed": true
+        "adapter_parity_passed": true,
+        "kouchi_2007_actual_hydrogen_context": {
+          "audit_integrity": true,
+          "status": "POST_ACCESS_SINGLE_POINT_PLAUSIBILITY_CONTEXT_NOT_VALIDATION",
+          "pressure_mpa": 40.0,
+          "aperture_mm": 0.2,
+          "published_distance_m": 0.9,
+          "published_concentration_volpct": 4.1,
+          "modeled_4volpct_distance_m": 0.9100876452938917,
+          "relative_distance_difference_percent": 1.1208494770990804,
+          "independent_validation": false,
+          "runtime_parameter_application": false,
+          "claim_boundary": "The current HyRAM+ 6.1 4 vol% centreline distance is compared with one published actual-hydrogen point at 4.1 vol% and nearly the same distance. The endpoint was defined after the paper was opened, source temperature and meteorology were not matched, and the published point is not an exact 4 vol% contour crossing. This is a single-point physical-plausibility context only, not model validation, parameter calibration, an emergency separation distance, or evidence of field safety."
+        }
       }
     },
     {
@@ -3149,7 +3162,7 @@
       "id": "h2safe_spatial_detector_transfer_validation",
       "status": "FAIL",
       "claim": "The exact frozen orientation-class detector ranking must pass every screen on an independent actual-hydrogen spatial holdout before runtime use.",
-      "evidence": "research\\h2safe_spatial_response_diagnostic_2026_10_08.json; research\\hydelta_indoor_spatial_holdout_eligibility_2026_10_08.json; research\\sandia_warehouse_spatial_diagnostic_2026_10_08.json; research\\hytunnel_spatial_holdout_protocol_2026_10_08.json; research\\hytunnel_spatial_format_amendment_2026_10_08.json; research\\hytunnel_spatial_holdout_result_2026_10_08.json; research\\HYTUNNEL_SPATIAL_HOLDOUT_2026_10_08.md",
+      "evidence": "research\\h2safe_spatial_response_diagnostic_2026_10_08.json; research\\hydelta_indoor_spatial_holdout_eligibility_2026_10_08.json; research\\sandia_warehouse_spatial_diagnostic_2026_10_08.json; research\\hytunnel_spatial_holdout_protocol_2026_10_08.json; research\\hytunnel_spatial_format_amendment_2026_10_08.json; research\\hytunnel_spatial_holdout_result_2026_10_08.json; research\\HYTUNNEL_SPATIAL_HOLDOUT_2026_10_08.md; research\\kouchi_2007_spatial_holdout_protocol_2026_10_13.json; research\\kouchi_2007_spatial_holdout_chronology_amendment_2026_10_14.json; research\\kouchi_2007_spatial_holdout_eligibility_2026_10_13.json",
       "requirement": "Exact frozen model hash, 18 complete actual-hydrogen cases, unchanged rank/recall screens, retained format amendment and no runtime activation unless every screen passes.",
       "observed": {
         "doi": "10.7799/17118570",
@@ -3207,6 +3220,30 @@
           },
           "joint_screen_pass": false,
           "runtime_candidate_enabled": false
+        },
+        "kouchi_2007_actual_hydrogen_intake": {
+          "audit_integrity": true,
+          "status": "INELIGIBLE_NO_MODEL_EVALUATION",
+          "test_gas": "hydrogen",
+          "pressure_domain_mpa": [
+            20.0,
+            40.0
+          ],
+          "aperture_domain_mm": [
+            0.2,
+            2.0
+          ],
+          "required_case_count": 10,
+          "observed_case_count": 6,
+          "failed_requirements": [
+            "minimum_eligible_case_count",
+            "complete_numerical_per_observation_response"
+          ],
+          "model_evaluation_executed": false,
+          "freeze_to_download_seconds": 20,
+          "chronology_correction_retains_protocol": true,
+          "runtime_candidate_enabled": false,
+          "gate_changed": false
         },
         "claim_boundary": "This post-access diagnostic supports only a development choice to replace arbitrary near/far detector assignment with a transparent coordinate ranking. It failed the joint spatial screen and is not independent validation."
       }

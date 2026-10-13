@@ -4022,20 +4022,98 @@ def audit(root: Path) -> dict[str, object]:
 
     hyram_path = root / "research/hyram_adapter_verification.json"
     hyram = _json(hyram_path)
+    kouchi_hyram_path = root / (
+        "research/kouchi_2007_hyram_lfl_context_2026_10_14.json"
+    )
+    kouchi_hyram = _json(kouchi_hyram_path)
+    kouchi_hyram_source = (kouchi_hyram or {}).get("source") or {}
+    kouchi_hyram_model = (kouchi_hyram or {}).get("model") or {}
+    kouchi_hyram_result = (kouchi_hyram or {}).get("result") or {}
+    kouchi_hyram_interpretation = (
+        (kouchi_hyram or {}).get("interpretation") or {}
+    )
+    kouchi_hyram_integrity = bool(
+        (kouchi_hyram or {}).get("artifact_type")
+        == "kouchi_2007_hyram_lfl_context_diagnostic"
+        and (kouchi_hyram or {}).get("status")
+        == "POST_ACCESS_SINGLE_POINT_PLAUSIBILITY_CONTEXT_NOT_VALIDATION"
+        and kouchi_hyram_source.get("test_gas") == "hydrogen"
+        and kouchi_hyram_source.get("reported_pressure_mpa") == 40.0
+        and kouchi_hyram_source.get("reported_aperture_mm") == 0.2
+        and kouchi_hyram_source.get("reported_point_distance_m") == 0.9
+        and kouchi_hyram_source.get(
+            "reported_time_averaged_concentration_volpct"
+        ) == 4.1
+        and kouchi_hyram_model.get("version") == "6.1"
+        and kouchi_hyram_model.get("adapter_sha256")
+        == _sha256(root / "src/h2station/risk/hyram_adapter.py")
+        and kouchi_hyram_model.get("parameter_fitting_executed") is False
+        and 0.90 < float(
+            kouchi_hyram_result.get(
+                "modeled_4volpct_streamline_distance_m", 0.0
+            )
+        ) < 0.92
+        and kouchi_hyram_interpretation.get(
+            "published_point_is_exact_4volpct_contour"
+        ) is False
+        and kouchi_hyram_interpretation.get("post_access_endpoint") is True
+        and kouchi_hyram_interpretation.get("independent_validation") is False
+        and kouchi_hyram_interpretation.get("runtime_parameter_application")
+        is False
+        and kouchi_hyram_interpretation.get(
+            "consequence_validation_gate_changed"
+        ) is False
+    )
     hyram_pass = bool(
         (hyram or {}).get("adapter_parity_passed")
         and (((hyram or {}).get("hyram") or {}).get("source_identity_match"))
         and (((hyram or {}).get("upstream_validation") or {}).get("status") == "passed")
+        and kouchi_hyram_integrity
     )
     gates.append(_gate(
         "hyram_adapter_verification", "PASS" if hyram_pass else "FAIL",
-        "The production adapter is identical to and numerically consistent with HyRAM+ 6.1 within the tested scope.",
-        str(hyram_path.relative_to(root)),
-        "Source identity, upstream validation suite and production-adapter parity pass.",
+        "The production adapter is identical to and numerically consistent with HyRAM+ 6.1 within the tested scope, and a post-access actual-hydrogen near-LFL point is retained as bounded context.",
+        f"{hyram_path.relative_to(root)}; {kouchi_hyram_path.relative_to(root)}",
+        "Source identity, upstream validation suite and production-adapter parity pass; the Kouchi point remains explicitly single-point, post-access and non-validating.",
         {
             "source_identity_match": (((hyram or {}).get("hyram") or {}).get("source_identity_match")),
             "upstream_status": (((hyram or {}).get("upstream_validation") or {}).get("status")),
             "adapter_parity_passed": (hyram or {}).get("adapter_parity_passed"),
+            "kouchi_2007_actual_hydrogen_context": {
+                "audit_integrity": kouchi_hyram_integrity,
+                "status": (kouchi_hyram or {}).get("status"),
+                "pressure_mpa": kouchi_hyram_source.get(
+                    "reported_pressure_mpa"
+                ),
+                "aperture_mm": kouchi_hyram_source.get(
+                    "reported_aperture_mm"
+                ),
+                "published_distance_m": kouchi_hyram_source.get(
+                    "reported_point_distance_m"
+                ),
+                "published_concentration_volpct": kouchi_hyram_source.get(
+                    "reported_time_averaged_concentration_volpct"
+                ),
+                "modeled_4volpct_distance_m": kouchi_hyram_result.get(
+                    "modeled_4volpct_streamline_distance_m"
+                ),
+                "relative_distance_difference_percent": (
+                    kouchi_hyram_result.get(
+                        "relative_distance_difference_percent"
+                    )
+                ),
+                "independent_validation": kouchi_hyram_interpretation.get(
+                    "independent_validation"
+                ),
+                "runtime_parameter_application": (
+                    kouchi_hyram_interpretation.get(
+                        "runtime_parameter_application"
+                    )
+                ),
+                "claim_boundary": (kouchi_hyram or {}).get(
+                    "claim_boundary"
+                ),
+            },
         },
     ))
 
@@ -4402,6 +4480,15 @@ def audit(root: Path) -> dict[str, object]:
     prospective_spatial_transfer_path = root / (
         "research/usn_frozen_spatial_candidate_transfer_2026_10_13.json"
     )
+    kouchi_spatial_protocol_path = root / (
+        "research/kouchi_2007_spatial_holdout_protocol_2026_10_13.json"
+    )
+    kouchi_spatial_eligibility_path = root / (
+        "research/kouchi_2007_spatial_holdout_eligibility_2026_10_13.json"
+    )
+    kouchi_spatial_chronology_path = root / (
+        "research/kouchi_2007_spatial_holdout_chronology_amendment_2026_10_14.json"
+    )
     h2safe_spatial = _json(h2safe_spatial_path)
     hydelta_spatial_eligibility = _json(hydelta_spatial_eligibility_path)
     sandia_spatial = _json(sandia_spatial_path)
@@ -4411,6 +4498,9 @@ def audit(root: Path) -> dict[str, object]:
     prospective_spatial_development = _json(prospective_spatial_development_path)
     prospective_spatial_protocol = _json(prospective_spatial_protocol_path)
     prospective_spatial_transfer = _json(prospective_spatial_transfer_path)
+    kouchi_spatial_protocol = _json(kouchi_spatial_protocol_path)
+    kouchi_spatial_eligibility = _json(kouchi_spatial_eligibility_path)
+    kouchi_spatial_chronology = _json(kouchi_spatial_chronology_path)
     h2safe_spatial_source = (h2safe_spatial or {}).get("source") or {}
     h2safe_spatial_method = (h2safe_spatial or {}).get("method") or {}
     h2safe_spatial_results = (
@@ -4539,6 +4629,69 @@ def audit(root: Path) -> dict[str, object]:
         and sandia_spatial_decision.get("h2safe_gate_changed") is False
         and sandia_spatial_decision.get("runtime_candidate_enabled") is False
     )
+    kouchi_source = (kouchi_spatial_eligibility or {}).get("source") or {}
+    kouchi_eligibility = (
+        (kouchi_spatial_eligibility or {}).get("eligibility") or {}
+    )
+    kouchi_evaluation = (
+        (kouchi_spatial_eligibility or {}).get("model_evaluation") or {}
+    )
+    kouchi_gate_impact = (
+        (kouchi_spatial_eligibility or {}).get("gate_impact") or {}
+    )
+    kouchi_chronology_rules = (
+        (kouchi_spatial_chronology or {}).get("scientific_rules_unchanged") or {}
+    )
+    kouchi_spatial_integrity = bool(
+        (kouchi_spatial_protocol or {}).get("status")
+        == "FROZEN_BEFORE_DETAILED_NUMERICAL_OUTCOME_ACCESS"
+        and (kouchi_spatial_protocol or {}).get("preaccess_record", {}).get(
+            "detailed_pdf_opened_or_downloaded"
+        ) is False
+        and (kouchi_spatial_protocol or {}).get("locked_candidate", {}).get(
+            "implementation_sha256"
+        ) == _sha256(prospective_spatial_module_path)
+        and (kouchi_spatial_eligibility or {}).get("artifact_type")
+        == "dataset_specific_spatial_holdout_eligibility_result"
+        and (kouchi_spatial_eligibility or {}).get("protocol", {}).get(
+            "sha256"
+        ) == _sha256(kouchi_spatial_protocol_path)
+        and (kouchi_spatial_eligibility or {}).get("protocol", {}).get(
+            "frozen_before_detailed_pdf_access"
+        ) is True
+        and (kouchi_spatial_chronology or {}).get("artifact_type")
+        == "post_access_format_only_chronology_amendment"
+        and (kouchi_spatial_chronology or {}).get(
+            "authoritative_freeze_event", {}
+        ).get("git_commit")
+        == (kouchi_spatial_eligibility or {}).get("protocol", {}).get(
+            "freeze_commit"
+        )
+        and (kouchi_spatial_chronology or {}).get(
+            "first_detailed_source_access", {}
+        ).get("pdf_sha256") == kouchi_source.get("pdf_sha256")
+        and (kouchi_spatial_chronology or {}).get(
+            "first_detailed_source_access", {}
+        ).get("seconds_after_commit_to_download_start") == 20
+        and kouchi_chronology_rules
+        and all(value is True for value in kouchi_chronology_rules.values())
+        and kouchi_source.get("test_gas") == "hydrogen"
+        and len(str(kouchi_source.get("pdf_sha256") or "")) == 64
+        and kouchi_source.get("pdf_pages") == 10
+        and kouchi_source.get("raw_pdf_committed") is False
+        and kouchi_eligibility.get("required_minimum_case_count") == 10
+        and kouchi_eligibility.get("observed_maximum_distinct_case_count") == 6
+        and kouchi_eligibility.get("minimum_case_count_met") is False
+        and kouchi_eligibility.get("decision")
+        == "INELIGIBLE_NO_MODEL_EVALUATION"
+        and kouchi_evaluation.get("executed") is False
+        and kouchi_evaluation.get("parameter_fitting_executed") is False
+        and kouchi_evaluation.get("spatial_rank_metrics_computed") is False
+        and kouchi_gate_impact.get(
+            "h2safe_spatial_detector_transfer_validation"
+        ) == "unchanged_fail"
+        and kouchi_gate_impact.get("runtime_spatial_routing") == "disabled"
+    )
     gates.append(_gate(
         "h2safe_spatial_detector_transfer_validation",
         "PASS" if h2safe_spatial_pass else (
@@ -4554,6 +4707,9 @@ def audit(root: Path) -> dict[str, object]:
             str(hytunnel_spatial_amendment_path.relative_to(root)),
             str(hytunnel_spatial_result_path.relative_to(root)),
             str(hytunnel_spatial_report_path.relative_to(root)),
+            str(kouchi_spatial_protocol_path.relative_to(root)),
+            str(kouchi_spatial_chronology_path.relative_to(root)),
+            str(kouchi_spatial_eligibility_path.relative_to(root)),
         )),
         "Exact frozen model hash, 18 complete actual-hydrogen cases, unchanged rank/recall screens, retained format amendment and no runtime activation unless every screen passes.",
         {
@@ -4630,6 +4786,43 @@ def audit(root: Path) -> dict[str, object]:
                 "runtime_candidate_enabled": hytunnel_spatial_decision.get(
                     "runtime_candidate_enabled"
                 ),
+            },
+            "kouchi_2007_actual_hydrogen_intake": {
+                "audit_integrity": kouchi_spatial_integrity,
+                "status": kouchi_eligibility.get("decision"),
+                "test_gas": kouchi_source.get("test_gas"),
+                "pressure_domain_mpa": (
+                    (kouchi_spatial_eligibility or {}).get(
+                        "bounded_evidence", {}
+                    ).get("pressure_domain_mpa")
+                ),
+                "aperture_domain_mm": (
+                    (kouchi_spatial_eligibility or {}).get(
+                        "bounded_evidence", {}
+                    ).get("aperture_domain_mm")
+                ),
+                "required_case_count": kouchi_eligibility.get(
+                    "required_minimum_case_count"
+                ),
+                "observed_case_count": kouchi_eligibility.get(
+                    "observed_maximum_distinct_case_count"
+                ),
+                "failed_requirements": kouchi_eligibility.get(
+                    "failed_requirements"
+                ),
+                "model_evaluation_executed": kouchi_evaluation.get(
+                    "executed"
+                ),
+                "freeze_to_download_seconds": (
+                    (kouchi_spatial_chronology or {}).get(
+                        "first_detailed_source_access", {}
+                    ).get("seconds_after_commit_to_download_start")
+                ),
+                "chronology_correction_retains_protocol": all(
+                    value is True for value in kouchi_chronology_rules.values()
+                ) if kouchi_chronology_rules else False,
+                "runtime_candidate_enabled": False,
+                "gate_changed": False,
             },
             "claim_boundary": (h2safe_spatial or {}).get("claim_boundary"),
         } if h2safe_spatial else "missing; H2SAFE spatial diagnostic has not run",

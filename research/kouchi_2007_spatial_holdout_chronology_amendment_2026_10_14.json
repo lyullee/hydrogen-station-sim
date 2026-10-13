@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "artifact_type": "post_access_format_only_chronology_amendment",
+  "recorded_at": "2026-10-13T15:02:00Z",
+  "status": "GIT_COMMIT_PROVES_PREACCESS_FREEZE; MANUAL_FROZEN_AT_FIELD_RETAINED_AS_CLERICAL_ERROR",
+  "protocol": {
+    "path": "research/kouchi_2007_spatial_holdout_protocol_2026_10_13.json",
+    "sha256": "c73bc1734cd9d1c0a270418b4999a1cd9b5c68ed915d74ddf0922d71afea38fd",
+    "declared_frozen_at": "2026-10-13T15:24:00Z",
+    "declared_time_is_incorrect": true,
+    "reason": "The UTC time was entered manually and is later than both the immutable Git commit and the subsequent download. The committed protocol content and its decision rules are retained unchanged."
+  },
+  "authoritative_freeze_event": {
+    "git_commit": "b47ba319060c178c3a0f6c7d7b1fbe24f4b6d792",
+    "git_commit_time": "2026-10-13T23:55:51+09:00",
+    "git_commit_time_utc": "2026-10-13T14:55:51Z",
+    "pushed_to_origin_before_download": true
+  },
+  "first_detailed_source_access": {
+    "download_file": "kouchi_ichs2007_1.1.54.pdf",
+    "download_creation_time_utc": "2026-10-13T14:56:11Z",
+    "download_completed_time_utc": "2026-10-13T14:56:13Z",
+    "pdf_sha256": "a80ab4303b8f5f167fe1cb1fac7d38e6e46c92199be669b46f2914607aa5b4ec",
+    "seconds_after_commit_to_download_start": 20,
+    "seconds_after_commit_to_download_complete": 22
+  },
+  "scientific_rules_unchanged": {
+    "candidate": true,
+    "minimum_case_count": true,
+    "minimum_observations_per_case": true,
+    "required_fields": true,
+    "response_definition": true,
+    "metrics": true,
+    "thresholds": true,
+    "ineligible_no_model_evaluation_rule": true
+  },
+  "claim_boundary": "This amendment corrects chronology metadata only. It neither changes the protocol nor converts the ineligible source into validation evidence. The Git commit and local download timestamps establish that the exact protocol was committed before detailed PDF access."
+}

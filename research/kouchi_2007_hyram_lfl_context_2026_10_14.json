@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "artifact_type": "kouchi_2007_hyram_lfl_context_diagnostic",
+  "evaluated_at": "2026-10-14",
+  "status": "POST_ACCESS_SINGLE_POINT_PLAUSIBILITY_CONTEXT_NOT_VALIDATION",
+  "source": {
+    "title": "Dispersion Tests on Concentration and its Fluctuations for 40MPa Pressurized Hydrogen",
+    "paper_id": "ICHS 2007 1.1.54",
+    "official_pdf_url": "https://conference.ing.unipi.it/ichs2007/fileadmin/user_upload/CD/PAPERS/12SEPT/1.1.54.pdf",
+    "pdf_sha256": "a80ab4303b8f5f167fe1cb1fac7d38e6e46c92199be669b46f2914607aa5b4ec",
+    "test_gas": "hydrogen",
+    "reported_pressure_mpa": 40.0,
+    "reported_aperture_mm": 0.2,
+    "reported_release_direction": "horizontal",
+    "reported_point_distance_m": 0.9,
+    "reported_time_averaged_concentration_volpct": 4.1,
+    "source_location": "section 3.2 and Figures 8-10"
+  },
+  "model": {
+    "engine": "HyRAM+",
+    "version": "6.1",
+    "adapter": "src/h2station/risk/hyram_adapter.py",
+    "adapter_sha256": "144562325bc345bc9da81f06e3d0ab51ef962199b9eb0985e622b352748e6795",
+    "source_pressure_pa": 40000000.0,
+    "assumed_source_temperature_k": 298.15,
+    "orifice_diameter_m": 0.0002,
+    "discharge_coefficient": 1.0,
+    "release_angle_rad": 0.0,
+    "ambient_temperature_k": 298.15,
+    "ambient_pressure_pa": 101325.0,
+    "nozzle_model": "yuce",
+    "target_centerline_mole_fraction": 0.04,
+    "parameter_fitting_executed": false
+  },
+  "result": {
+    "modeled_mass_flow_kg_s": 0.000742912520035636,
+    "modeled_4volpct_streamline_distance_m": 0.9100876452938917,
+    "published_near_lfl_point_distance_m": 0.9,
+    "published_point_concentration_volpct": 4.1,
+    "absolute_distance_difference_m": 0.010087645293891723,
+    "relative_distance_difference_fraction": 0.011208494770990804,
+    "relative_distance_difference_percent": 1.1208494770990804
+  },
+  "interpretation": {
+    "published_point_is_exact_4volpct_contour": false,
+    "published_point_is_near_4volpct": true,
+    "source_temperature_reported": false,
+    "meteorology_matched": false,
+    "single_point_only": true,
+    "post_access_endpoint": true,
+    "independent_validation": false,
+    "runtime_parameter_application": false,
+    "spatial_detector_gate_changed": false,
+    "consequence_validation_gate_changed": false
+  },
+  "claim_boundary": "The current HyRAM+ 6.1 4 vol% centreline distance is compared with one published actual-hydrogen point at 4.1 vol% and nearly the same distance. The endpoint was defined after the paper was opened, source temperature and meteorology were not matched, and the published point is not an exact 4 vol% contour crossing. This is a single-point physical-plausibility context only, not model validation, parameter calibration, an emergency separation distance, or evidence of field safety."
+}

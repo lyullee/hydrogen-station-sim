@@ -3,6 +3,8 @@ from __future__ import annotations
 from pathlib import Path
 import sys
 
+import pytest
+
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
@@ -218,6 +220,20 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     assert woodfield["runtime_parameter_updated"] is False
     assert woodfield["validation_gate_effect"] == "none"
     assert gates["hyram_adapter_verification"]["status"] == "PASS"
+    kouchi_hyram = gates["hyram_adapter_verification"]["observed"][
+        "kouchi_2007_actual_hydrogen_context"
+    ]
+    assert kouchi_hyram["audit_integrity"] is True
+    assert kouchi_hyram["pressure_mpa"] == 40.0
+    assert kouchi_hyram["aperture_mm"] == 0.2
+    assert kouchi_hyram["published_distance_m"] == 0.9
+    assert kouchi_hyram["published_concentration_volpct"] == 4.1
+    assert kouchi_hyram["modeled_4volpct_distance_m"] == pytest.approx(
+        0.9100876452938917
+    )
+    assert kouchi_hyram["relative_distance_difference_percent"] < 1.2
+    assert kouchi_hyram["independent_validation"] is False
+    assert kouchi_hyram["runtime_parameter_application"] is False
     usn_recheck = gates[
         "usn_17932439_actual_hydrogen_pressure_peaking_recheck_integrity"
     ]
@@ -501,6 +517,23 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     assert hytunnel_spatial["screens"]["mean_top5_recall_at_least_0_6"] is False
     assert hytunnel_spatial["joint_screen_pass"] is False
     assert hytunnel_spatial["runtime_candidate_enabled"] is False
+    kouchi = h2safe_spatial["kouchi_2007_actual_hydrogen_intake"]
+    assert kouchi["audit_integrity"] is True
+    assert kouchi["status"] == "INELIGIBLE_NO_MODEL_EVALUATION"
+    assert kouchi["test_gas"] == "hydrogen"
+    assert kouchi["pressure_domain_mpa"] == [20.0, 40.0]
+    assert kouchi["aperture_domain_mm"] == [0.2, 2.0]
+    assert kouchi["required_case_count"] == 10
+    assert kouchi["observed_case_count"] == 6
+    assert set(kouchi["failed_requirements"]) == {
+        "minimum_eligible_case_count",
+        "complete_numerical_per_observation_response",
+    }
+    assert kouchi["model_evaluation_executed"] is False
+    assert kouchi["freeze_to_download_seconds"] == 20
+    assert kouchi["chronology_correction_retains_protocol"] is True
+    assert kouchi["runtime_candidate_enabled"] is False
+    assert kouchi["gate_changed"] is False
     prospective_spatial = gates[
         "prospective_spatial_rank_candidate_freeze_integrity"
     ]

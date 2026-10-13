@@ -1,8 +1,28 @@
 import json
 from pathlib import Path
 
+from scripts.build_ijhe_blocker_matrix import build
+
 
 ROOT = Path(__file__).resolve().parents[1]
+
+
+def test_current_builder_retains_kouchi_ineligible_preaccess_screen():
+    matrix = build(ROOT)
+    intake = matrix["evidence_snapshot"][
+        "h2safe_spatial_detector_transfer"
+    ]["kouchi_2007_actual_hydrogen_intake"]
+    assert intake["status"] == "INELIGIBLE_NO_MODEL_EVALUATION"
+    assert intake["test_gas"] == "hydrogen"
+    assert intake["required_case_count"] == 10
+    assert intake["observed_case_count"] == 6
+    assert intake["model_evaluation_executed"] is False
+    assert intake["freeze_to_download_seconds"] == 20
+    assert intake["runtime_candidate_enabled"] is False
+    assert intake["gate_changed"] is False
+    assert len(matrix["reproducibility"]["kouchi_spatial_protocol_sha256"]) == 64
+    assert len(matrix["reproducibility"]["kouchi_spatial_chronology_sha256"]) == 64
+    assert len(matrix["reproducibility"]["kouchi_spatial_eligibility_sha256"]) == 64
 
 
 def test_current_blocker_matrix_tracks_the_readiness_audit():

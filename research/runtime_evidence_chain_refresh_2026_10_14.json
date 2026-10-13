@@ -1,0 +1,124 @@
+{
+  "schema_version": 1,
+  "artifact_type": "runtime_evidence_chain_refresh",
+  "status": "PASS",
+  "failed_step": null,
+  "duration_s": 85.815,
+  "steps": [
+    {
+      "name": "hydelta_cabinet_runtime_grounding",
+      "command": "python scripts/audit_hydelta_ventilation_runtime_grounding.py",
+      "status": "PASS",
+      "exit_code": 0,
+      "duration_s": 0.597,
+      "output_tail": "binet_ventilation_public_domain\": false,\n      \"cabinet_ventilation_volume_m3\": 1.0,\n      \"cabinet_ventilation_input_flow_nm3_h\": 0.558,\n      \"cabinet_ventilation_source_lfl_volpct_h2\": 4.0,\n      \"cabinet_ventilation_basis\": \"HYDELTA_REPORT_TABLE_NO_INTERPOLATION\",\n      \"cabinet_ventilation_classification\": \"NOT_EVALUATED\",\n      \"cabinet_ventilation_requires_measured_clearance\": true,\n      \"cabinet_ventilation_safety_clearance_authorized\": false,\n      \"cabinet_ventilation_evidence_doi\": \"10.5281/zenodo.8164602\",\n      \"cabinet_ventilation_evidence_license\": \"CC BY 4.0\",\n      \"cabinet_ventilation_evidence_artifact\": \"research/hydelta_natural_ventilation_evidence_2026_10_13.json\",\n      \"cabinet_ventilation_claim_limit\": \"HyDelta 저압 가스 정압기 캐비닛의 실제 수소 표 측정값을 같은 체적·유량 구간에서 대조한 경험적 스크리닝입니다. 농도를 보간·예측하지 않으며 H70 분산, 검지기 배치, 경보 설정, ESD 효과, 현장 안전·대피거리 또는 안전상태 선언을 검증하지 않습니다.\"\n    }\n  },\n  \"claim_boundary\": \"This audit verifies report identity, exact table replay, bounded bracketing, playbook routing and recovery guardrails only. It does not validate H70 dispersion, detector placement, alarm thresholds, ESD effectiveness, release rate, site distance or field response effectiveness.\"\n}"
+    },
+    {
+      "name": "public_type_iv_runtime_calibration",
+      "command": "python scripts/audit_public_tank_runtime_calibration.py",
+      "status": "PASS",
+      "exit_code": 0,
+      "duration_s": 0.898,
+      "output_tail": "alidation_recheck_2026_10_07.json\",\n    \"matches_frozen_expected_result\": true,\n    \"sha256\": \"7fb2df6c3fc2bf70f44b9a9fd60b46e479e6c70bec0934d37072d3ec29e7ca89\"\n  },\n  \"source_hashes\": {\n    \"research/tank_model_validation_v2.json\": \"4480505cd2e094f64c03421545bfb2a0235a7f58b66e2a5cb5ed529d4d669840\",\n    \"src/h2station/public_tank_calibration.py\": \"db963b9f6d1f67137e2bbec97b45cb723260d61a32aa34441f697bda2fffd6fc\",\n    \"src/h2station/scenario.py\": \"bd4d94bf5fd37e3a3c577228c0989d0b9c6150ef58874829131d13dacf5b3604\",\n    \"src/h2station/api.py\": \"031cd75908620768aec3d9c4a36a2e758f22749d479ffa872dfc7f57363ab871\",\n    \"src/h2station/llm_grounding.py\": \"bb4e3f3c09ba526faddb5d01d86ca771a54b4cb828ce56f20e44d675ed10db28\",\n    \"scripts/audit_public_tank_runtime_calibration.py\": \"e07f9ff181227af9184c2824e65d87f912ad137157fae27bde7b9e13bcbf4ada\"\n  },\n  \"claim_boundary\": \"This proves only that the frozen public Type-IV tank fit is the runtime default and is disclosed to LLM evidence. The fit was validated with measured mass-flow and inlet-temperature boundaries; it does not validate a station-to-vehicle controller, compressor, cascade topology, dispenser, field safety, or vehicle certification.\"\n}"
+    },
+    {
+      "name": "public_accident_runtime_routing",
+      "command": "python scripts/audit_runtime_public_accident_precedents.py",
+      "status": "PASS",
+      "exit_code": 0,
+      "duration_s": 0.822,
+      "output_tail": "{\"output\": \"<repository>\\\\research\\\\runtime_public_accident_precedent_routing_2026_10_07.json\", \"status\": \"PASS\", \"public_report_count\": 23, \"mapped_response_family_count\": 8}"
+    },
+    {
+      "name": "hiad_digital_twin_replay",
+      "command": "python scripts/audit_hiad_digital_twin_replay_coverage.py",
+      "status": "PASS",
+      "exit_code": 0,
+      "duration_s": 33.877,
+      "output_tail": "{\n  \"case_count\": 34,\n  \"integration_trace_pass_count\": 34,\n  \"representation_case_counts\": {\n    \"direct_physical_replay\": 29,\n    \"proxy_partial_replay\": 4,\n    \"response_only_no_physical_model\": 1,\n    \"unmapped\": 0\n  },\n  \"mapped_family_count\": 10,\n  \"physical_or_proxy_family_count\": 9,\n  \"response_only_family_count\": 1\n}\n<repository>\\.venv\\Lib\\site-packages\\hyram\\phys\\_comps.py:162: PhysicsWarning: Fluid choked. Ignoring mdot specification and using choked flow calculation.\n  warnings.warn('Fluid choked. Ignoring mdot specification and using choked flow calculation.', category=PhysicsWarning)"
+    },
+    {
+      "name": "khk_digital_twin_replay",
+      "command": "python scripts/audit_khk_digital_twin_replay_coverage.py",
+      "status": "PASS",
+      "exit_code": 0,
+      "duration_s": 30.421,
+      "output_tail": "{\n  \"status\": \"completed_independent_public_accident_integration_audit\",\n  \"aggregate\": {\n    \"public_report_count\": 23,\n    \"incident_code_count\": 26,\n    \"in_scope_report_count\": 22,\n    \"in_scope_incident_code_count\": 25,\n    \"integration_trace_pass_report_count\": 22,\n    \"integration_trace_pass_incident_code_count\": 25,\n    \"out_of_scope_report_count\": 1,\n    \"out_of_scope_incident_code_count\": 1,\n    \"representation_report_counts\": {\n      \"direct_canonical_family_replay\": 12,\n      \"proxy_partial_replay\": 10,\n      \"out_of_scope_non_hydrogen_chemical\": 1\n    }\n  },\n  \"runtime\": {\n    \"backend\": \"HyRAM+ 6.1 native\",\n    \"virtual_detector_mode\": true,\n    \"mapped_family_count\": 8,\n    \"family_recipe_count\": 8,\n    \"family_recipe_pass_count\": 8,\n    \"all_family_recipes_passed\": true,\n    \"missing_runtime_families\": [],\n    \"missing_playbook_ids\": []\n  }\n}\n<repository>\\.venv\\Lib\\site-packages\\hyram\\phys\\_comps.py:162: PhysicsWarning: Fluid choked. Ignoring mdot specification and using choked flow calculation.\n  warnings.warn('Fluid choked. Ignoring mdot specification and using choked flow calculation.', category=PhysicsWarning)"
+    },
+    {
+      "name": "hiad_event_category_concordance",
+      "command": "python scripts/build_hiad_event_category_concordance.py",
+      "status": "PASS",
+      "exit_code": 0,
+      "duration_s": 0.064,
+      "output_tail": "{\"case_count\": 34, \"category_concordance_counts\": {\"matched\": 34, \"partial\": 0, \"metadata_runtime_conflict\": 0, \"not_comparable\": 0}, \"representation_case_counts\": {\"direct_physical_replay\": 29, \"proxy_partial_replay\": 4, \"response_only_no_physical_model\": 1}, \"integration_trace_pass_count\": 34}"
+    },
+    {
+      "name": "incident_evidence_traceability",
+      "command": "python scripts/build_incident_evidence_traceability.py",
+      "status": "PASS",
+      "exit_code": 0,
+      "duration_s": 0.067,
+      "output_tail": "{\"case_count\": 34, \"khk_codes\": 26}"
+    },
+    {
+      "name": "hiad_runtime_response_handoff",
+      "command": "python scripts/audit_hiad_runtime_response_handoff.py",
+      "status": "PASS",
+      "exit_code": 0,
+      "duration_s": 18.289,
+      "output_tail": "{\n  \"backend\": \"HyRAM+ 6.1 native\",\n  \"virtual_detector_mode\": true,\n  \"unique_family_recipes_run\": 9,\n  \"response_handoff_pass_count\": 9,\n  \"all_executable_handoffs_passed\": true\n}\n<repository>\\.venv\\Lib\\site-packages\\hyram\\phys\\_comps.py:162: PhysicsWarning: Fluid choked. Ignoring mdot specification and using choked flow calculation.\n  warnings.warn('Fluid choked. Ignoring mdot specification and using choked flow calculation.', category=PhysicsWarning)"
+    },
+    {
+      "name": "ijhe_readiness",
+      "command": "python scripts/audit_ijhe_readiness.py",
+      "status": "PASS",
+      "exit_code": 0,
+      "duration_s": 0.444,
+      "output_tail": "uired before deployment or any claim that SAGA improves human safety decisions.\",\n        \"author_action_required\": [\n          \"Add every author and affiliation.\",\n          \"Confirm institutional email addresses and corresponding-author responsibility.\",\n          \"Complete CRediT roles and obtain agreement from every author.\",\n          \"Confirm competing interests and funding statements.\",\n          \"Approve the AI, data-availability and ethics wording against the final manuscript.\"\n        ]\n      }\n    },\n    {\n      \"id\": \"software_doi\",\n      \"status\": \"PASS\",\n      \"claim\": \"The reproducible software release has a persistent DOI.\",\n      \"evidence\": \"CITATION.cff\",\n      \"requirement\": \"Repository citation metadata contains the released Zenodo DOI.\",\n      \"observed\": \"10.5281/zenodo.23084421\"\n    }\n  ],\n  \"decision_rule\": \"Only full_user_objective_ready=true permits goal completion. The current objective is explicitly scoped to station-side/component evidence and consequence/decision-support claims. Synchronized station-to-vehicle full-loop validation and human-effectiveness claims are excluded and must remain stated limitations until their re-entry conditions are met.\"\n}"
+    },
+    {
+      "name": "validation_gap_report",
+      "command": "python scripts/build_validation_gap_report.py --audit manuscript/ijhe_readiness_audit.json --json-output research/validation_gap_report_2026_10_13.json --markdown-output research/VALIDATION_GAP_REPORT_2026_10_13.md",
+      "status": "PASS",
+      "exit_code": 0,
+      "duration_s": 0.06,
+      "output_tail": "research\\validation_gap_report_2026_10_13.json\nresearch\\VALIDATION_GAP_REPORT_2026_10_13.md"
+    },
+    {
+      "name": "validation_gap_current",
+      "command": "python scripts/build_validation_gap_report.py --audit manuscript/ijhe_readiness_audit.json --json-output research/validation_gap_triage_current.json --markdown-output research/VALIDATION_GAP_TRIAGE_CURRENT.md",
+      "status": "PASS",
+      "exit_code": 0,
+      "duration_s": 0.059,
+      "output_tail": "research\\validation_gap_triage_current.json\nresearch\\VALIDATION_GAP_TRIAGE_CURRENT.md"
+    },
+    {
+      "name": "ijhe_blocker_matrix",
+      "command": "python scripts/build_ijhe_blocker_matrix.py --json-output research/ijhe_submission_blocker_matrix_2026_10_13.json --report-output research/IJHE_SUBMISSION_BLOCKER_MATRIX_2026_10_13.md",
+      "status": "PASS",
+      "exit_code": 0,
+      "duration_s": 0.083,
+      "output_tail": "{\"json\": \"<repository>\\\\research\\\\ijhe_submission_blocker_matrix_2026_10_13.json\", \"markdown\": \"<repository>\\\\research\\\\IJHE_SUBMISSION_BLOCKER_MATRIX_2026_10_13.md\"}"
+    },
+    {
+      "name": "data_coverage_summary",
+      "command": "python scripts/build_data_coverage_summary.py --json-output research/data_coverage_summary.json --markdown-output research/DATA_COVERAGE_SUMMARY.md",
+      "status": "PASS",
+      "exit_code": 0,
+      "duration_s": 0.064,
+      "output_tail": "research\\data_coverage_summary.json\nresearch\\DATA_COVERAGE_SUMMARY.md"
+    },
+    {
+      "name": "ijhe_claim_evidence_matrix",
+      "command": "python scripts/build_ijhe_claim_evidence_matrix.py",
+      "status": "PASS",
+      "exit_code": 0,
+      "duration_s": 0.067,
+      "output_tail": "{\"rows\": 8, \"audit_sha256\": \"469c0a98557cbcb2aab36b6ad600813885d87d9a21475362af40884261279d29\"}"
+    }
+  ],
+  "readiness_mirrors_copied": true,
+  "scientific_gate_promotion": false,
+  "claim_boundary": "This command refreshes deterministic evidence projections only. It does not change frozen scientific acceptance rules or turn a failed or pending validation gate into a pass."
+}

@@ -1,0 +1,110 @@
+{
+  "schema_version": 1,
+  "artifact_type": "dataset_specific_spatial_holdout_eligibility_result",
+  "evaluated_at": "2026-10-13T15:01:00Z",
+  "protocol": {
+    "path": "research/kouchi_2007_spatial_holdout_protocol_2026_10_13.json",
+    "sha256": "c73bc1734cd9d1c0a270418b4999a1cd9b5c68ed915d74ddf0922d71afea38fd",
+    "freeze_commit": "b47ba319060c178c3a0f6c7d7b1fbe24f4b6d792",
+    "frozen_before_detailed_pdf_access": true,
+    "chronology_amendment": "research/kouchi_2007_spatial_holdout_chronology_amendment_2026_10_14.json",
+    "authoritative_git_commit_time_utc": "2026-10-13T14:55:51Z",
+    "detailed_pdf_download_started_utc": "2026-10-13T14:56:11Z",
+    "commit_precedes_download_seconds": 20,
+    "declared_frozen_at_field_is_clerical_error": true
+  },
+  "source": {
+    "title": "Dispersion Tests on Concentration and its Fluctuations for 40MPa Pressurized Hydrogen",
+    "authors": [
+      "Akinori Kouchi",
+      "Kazuki Okabayashi",
+      "Keiji Takeno",
+      "Keiko Chitose"
+    ],
+    "conference": "Second International Conference on Hydrogen Safety (ICHS 2007)",
+    "paper_id": "1.1.54",
+    "official_pdf_url": "https://conference.ing.unipi.it/ichs2007/fileadmin/user_upload/CD/PAPERS/12SEPT/1.1.54.pdf",
+    "pdf_sha256": "a80ab4303b8f5f167fe1cb1fac7d38e6e46c92199be669b46f2914607aa5b4ec",
+    "pdf_bytes": 189117,
+    "pdf_pages": 10,
+    "test_gas": "hydrogen",
+    "raw_pdf_committed": false,
+    "redistribution": "not committed; source license does not explicitly authorize PDF redistribution"
+  },
+  "source_audit": {
+    "steady_time_averaged_campaign": {
+      "release_case_count": 5,
+      "cases": [
+        {"pressure_mpa": 40.0, "aperture_mm": 0.25},
+        {"pressure_mpa": 40.0, "aperture_mm": 0.5},
+        {"pressure_mpa": 40.0, "aperture_mm": 1.0},
+        {"pressure_mpa": 40.0, "aperture_mm": 2.0},
+        {"pressure_mpa": 20.0, "aperture_mm": 2.0}
+      ],
+      "release_height_m": 1.0,
+      "release_direction": "horizontal",
+      "instrument_layout": "eight downwind poles at 4, 6, 8, 11, 15, 20, 30 and 50 m with five sensors per pole",
+      "response_publication_format": "figures and derived axial relation; no machine-readable per-sensor table"
+    },
+    "fast_fluctuation_campaign": {
+      "release_case_count": 1,
+      "pressure_mpa": 40.0,
+      "aperture_mm": 0.2,
+      "release_direction": "horizontal",
+      "observation_distances_m": [0.15, 0.3, 0.35, 0.4, 0.45, 0.7, 0.8, 0.9, 1.0, 1.5, 2.0],
+      "sampling_hz": 200,
+      "measurement_duration_s": "approximately 40-50 per point",
+      "response_publication_format": "selected figures and selected textual values; no complete machine-readable time series"
+    },
+    "maximum_distinct_release_case_count": 6,
+    "source_and_observation_coordinates_available": true,
+    "release_orientation_available": true,
+    "pressure_and_aperture_available": true,
+    "complete_numerical_per_observation_response_available": false,
+    "machine_readable_raw_time_series_available": false
+  },
+  "eligibility": {
+    "required_actual_hydrogen": true,
+    "actual_hydrogen_met": true,
+    "required_minimum_case_count": 10,
+    "observed_maximum_distinct_case_count": 6,
+    "minimum_case_count_met": false,
+    "required_minimum_observations_per_case": 8,
+    "observation_layout_potentially_met": true,
+    "complete_numeric_response_met": false,
+    "common_coordinate_frame_met": true,
+    "all_required_fields_met": false,
+    "decision": "INELIGIBLE_NO_MODEL_EVALUATION",
+    "failed_requirements": [
+      "minimum_eligible_case_count",
+      "complete_numerical_per_observation_response"
+    ]
+  },
+  "model_evaluation": {
+    "candidate_id": "pooled_spatial_rank_v1",
+    "executed": false,
+    "parameter_fitting_executed": false,
+    "spatial_rank_metrics_computed": false,
+    "reason": "The source provides at most six distinct release cases, below the frozen minimum of ten, and it does not publish a complete machine-readable per-observation response table. Spatial points from separate campaigns were not pooled and plotted values were not digitized after the eligibility failure was established."
+  },
+  "gate_impact": {
+    "h2safe_spatial_detector_transfer_validation": "unchanged_fail",
+    "runtime_spatial_routing": "disabled",
+    "alarm_or_trip_threshold_change": false,
+    "claim_supported": false
+  },
+  "bounded_evidence": {
+    "public_actual_hydrogen_experiment": true,
+    "pressure_domain_mpa": [20.0, 40.0],
+    "aperture_domain_mm": [0.2, 2.0],
+    "permitted_use": "public experiment inventory and method/domain context only",
+    "prohibited_uses": [
+      "confirmatory spatial-rank validation",
+      "runtime detector routing",
+      "concentration calibration",
+      "alarm or trip threshold validation",
+      "outdoor HRS safety-distance validation"
+    ]
+  },
+  "claim_boundary": "The paper is useful public evidence that actual-hydrogen concentration and fluctuation measurements were conducted at 20-40 MPa with 0.2-2.0 mm apertures. It is not an eligible confirmatory cohort for the frozen spatial-rank candidate and does not change any runtime or safety claim."
+}

@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
   "artifact_type": "ijhe_claim_evidence_matrix",
-  "generated_at": "2026-10-13T14:40:12.896695+00:00",
+  "generated_at": "2026-10-13T15:13:31.362510+00:00",
   "source_audit": "manuscript/ijhe_readiness_audit.json",
-  "source_audit_sha256": "8461a8b33b0b84b8f2b189a1d167876a57e1394d4e16a87449f30070e1997354",
+  "source_audit_sha256": "469c0a98557cbcb2aab36b6ad600813885d87d9a21475362af40884261279d29",
   "paper_scope": "objective engineering and physics validation; no human-effectiveness or field-safety claim",
   "rows": [
     {
@@ -183,7 +183,7 @@
       "interpretation": "Rank/recall screens were not jointly met; geometry-only routing remains disabled at runtime.",
       "status": "FAIL",
       "audit_claim": "The exact frozen orientation-class detector ranking must pass every screen on an independent actual-hydrogen spatial holdout before runtime use.",
-      "evidence": "research\\h2safe_spatial_response_diagnostic_2026_10_08.json; research\\hydelta_indoor_spatial_holdout_eligibility_2026_10_08.json; research\\sandia_warehouse_spatial_diagnostic_2026_10_08.json; research\\hytunnel_spatial_holdout_protocol_2026_10_08.json; research\\hytunnel_spatial_format_amendment_2026_10_08.json; research\\hytunnel_spatial_holdout_result_2026_10_08.json; research\\HYTUNNEL_SPATIAL_HOLDOUT_2026_10_08.md",
+      "evidence": "research\\h2safe_spatial_response_diagnostic_2026_10_08.json; research\\hydelta_indoor_spatial_holdout_eligibility_2026_10_08.json; research\\sandia_warehouse_spatial_diagnostic_2026_10_08.json; research\\hytunnel_spatial_holdout_protocol_2026_10_08.json; research\\hytunnel_spatial_format_amendment_2026_10_08.json; research\\hytunnel_spatial_holdout_result_2026_10_08.json; research\\HYTUNNEL_SPATIAL_HOLDOUT_2026_10_08.md; research\\kouchi_2007_spatial_holdout_protocol_2026_10_13.json; research\\kouchi_2007_spatial_holdout_chronology_amendment_2026_10_14.json; research\\kouchi_2007_spatial_holdout_eligibility_2026_10_13.json",
       "requirement": "Exact frozen model hash, 18 complete actual-hydrogen cases, unchanged rank/recall screens, retained format amendment and no runtime activation unless every screen passes.",
       "observed": {
         "doi": "10.7799/17118570",
@@ -241,6 +241,30 @@
           },
           "joint_screen_pass": false,
           "runtime_candidate_enabled": false
+        },
+        "kouchi_2007_actual_hydrogen_intake": {
+          "audit_integrity": true,
+          "status": "INELIGIBLE_NO_MODEL_EVALUATION",
+          "test_gas": "hydrogen",
+          "pressure_domain_mpa": [
+            20.0,
+            40.0
+          ],
+          "aperture_domain_mm": [
+            0.2,
+            2.0
+          ],
+          "required_case_count": 10,
+          "observed_case_count": 6,
+          "failed_requirements": [
+            "minimum_eligible_case_count",
+            "complete_numerical_per_observation_response"
+          ],
+          "model_evaluation_executed": false,
+          "freeze_to_download_seconds": 20,
+          "chronology_correction_retains_protocol": true,
+          "runtime_candidate_enabled": false,
+          "gate_changed": false
         },
         "claim_boundary": "This post-access diagnostic supports only a development choice to replace arbitrary near/far detector assignment with a transparent coordinate ranking. It failed the joint spatial screen and is not independent validation."
       }

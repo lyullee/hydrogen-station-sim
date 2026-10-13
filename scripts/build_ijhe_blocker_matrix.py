@@ -56,6 +56,9 @@ def build(root: Path) -> dict[str, Any]:
     hytunnel_spatial_protocol_path = root / "research/hytunnel_spatial_holdout_protocol_2026_10_08.json"
     hytunnel_spatial_amendment_path = root / "research/hytunnel_spatial_format_amendment_2026_10_08.json"
     hytunnel_spatial_result_path = root / "research/hytunnel_spatial_holdout_result_2026_10_08.json"
+    kouchi_spatial_protocol_path = root / "research/kouchi_2007_spatial_holdout_protocol_2026_10_13.json"
+    kouchi_spatial_chronology_path = root / "research/kouchi_2007_spatial_holdout_chronology_amendment_2026_10_14.json"
+    kouchi_spatial_eligibility_path = root / "research/kouchi_2007_spatial_holdout_eligibility_2026_10_13.json"
     ignited_pressure_path = root / "research/usn_17934047_ignited_pressure_peaking_result_2026_10_08.json"
     qra_comparison_path = root / "research/qra_multimethod_comparison_2026_10_08.json"
     runtime_qra_path = root / "research/runtime_qra_envelope_comparison_2026_10_08.json"
@@ -78,6 +81,7 @@ def build(root: Path) -> dict[str, Any]:
     hydelta_spatial_eligibility = load_json(hydelta_spatial_eligibility_path)
     sandia_spatial = load_json(sandia_spatial_path)
     hytunnel_spatial = load_json(hytunnel_spatial_result_path)
+    kouchi_spatial_eligibility = load_json(kouchi_spatial_eligibility_path)
     ignited_pressure = load_json(ignited_pressure_path)
     qra_comparison = load_json(qra_comparison_path)
     runtime_qra = load_json(runtime_qra_path)
@@ -232,6 +236,9 @@ def build(root: Path) -> dict[str, Any]:
                     "research/hytunnel_spatial_format_amendment_2026_10_08.json",
                     "research/hytunnel_spatial_holdout_result_2026_10_08.json",
                     "research/HYTUNNEL_SPATIAL_HOLDOUT_2026_10_08.md",
+                    "research/kouchi_2007_spatial_holdout_protocol_2026_10_13.json",
+                    "research/kouchi_2007_spatial_holdout_chronology_amendment_2026_10_14.json",
+                    "research/kouchi_2007_spatial_holdout_eligibility_2026_10_13.json",
                 ],
                 "experiment_count": h2safe_spatial["results"]["Y_as_elevation"]["aggregate"]["experiment_count"],
                 "median_spearman": h2safe_spatial["results"]["Y_as_elevation"]["aggregate"]["median_spearman"],
@@ -317,6 +324,40 @@ def build(root: Path) -> dict[str, Any]:
                     ],
                     "runtime_candidate_enabled": hytunnel_spatial["decision"][
                         "runtime_candidate_enabled"
+                    ],
+                },
+                "kouchi_2007_actual_hydrogen_intake": {
+                    "status": kouchi_spatial_eligibility["eligibility"][
+                        "decision"
+                    ],
+                    "test_gas": kouchi_spatial_eligibility["source"][
+                        "test_gas"
+                    ],
+                    "pressure_domain_mpa": kouchi_spatial_eligibility[
+                        "bounded_evidence"
+                    ]["pressure_domain_mpa"],
+                    "aperture_domain_mm": kouchi_spatial_eligibility[
+                        "bounded_evidence"
+                    ]["aperture_domain_mm"],
+                    "required_case_count": kouchi_spatial_eligibility[
+                        "eligibility"
+                    ]["required_minimum_case_count"],
+                    "observed_case_count": kouchi_spatial_eligibility[
+                        "eligibility"
+                    ]["observed_maximum_distinct_case_count"],
+                    "failed_requirements": kouchi_spatial_eligibility[
+                        "eligibility"
+                    ]["failed_requirements"],
+                    "model_evaluation_executed": kouchi_spatial_eligibility[
+                        "model_evaluation"
+                    ]["executed"],
+                    "freeze_to_download_seconds": kouchi_spatial_eligibility[
+                        "protocol"
+                    ]["commit_precedes_download_seconds"],
+                    "runtime_candidate_enabled": False,
+                    "gate_changed": False,
+                    "claim_boundary": kouchi_spatial_eligibility[
+                        "claim_boundary"
                     ],
                 },
                 "claim_boundary": h2safe_spatial["claim_boundary"],
@@ -522,6 +563,15 @@ def build(root: Path) -> dict[str, Any]:
             "hytunnel_spatial_protocol_sha256": sha256(hytunnel_spatial_protocol_path),
             "hytunnel_spatial_amendment_sha256": sha256(hytunnel_spatial_amendment_path),
             "hytunnel_spatial_result_sha256": sha256(hytunnel_spatial_result_path),
+            "kouchi_spatial_protocol_sha256": sha256(
+                kouchi_spatial_protocol_path
+            ),
+            "kouchi_spatial_chronology_sha256": sha256(
+                kouchi_spatial_chronology_path
+            ),
+            "kouchi_spatial_eligibility_sha256": sha256(
+                kouchi_spatial_eligibility_path
+            ),
             "reference_leak_detector_result_sha256": sha256(
                 reference_leak_detector_path
             ),

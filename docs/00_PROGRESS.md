@@ -1,5 +1,30 @@
 # Development Progress
 
+## 2026-10-14 - Screen a new public actual-hydrogen spatial source first
+
+The official ICHS 2007 Kouchi et al. paper was screened as a low-cost candidate
+for the open detector spatial-transfer gate. The eligibility rule and frozen
+`pooled_spatial_rank_v1` hash were committed and pushed in `b47ba31` before the
+detailed PDF was downloaded. The immutable commit time precedes the download by
+20 seconds; a separate chronology amendment preserves the protocol's manually
+mistyped UTC field without rewriting the pre-access record.
+
+The source is useful actual-hydrogen evidence at 20--40 MPa and 0.2--2.0 mm,
+but it contains at most six distinct release cases rather than the frozen
+minimum of ten and no complete machine-readable per-observation concentration
+table. It is therefore retained as `INELIGIBLE_NO_MODEL_EVALUATION`: no plot
+digitisation, point pooling, coefficient fitting, spatial score, runtime route,
+or alarm change was performed. The detector transfer gate remains FAIL. The
+paper also reports a 4.1 vol% time-averaged point 0.9 m downstream of a 40 MPa,
+0.2 mm horizontal release. A strictly post-access, no-fit HyRAM+ 6.1 context run
+places the 4.0 vol% centreline distance at 0.910 m (1.12% distance difference).
+Because the published point is not an exact 4.0% crossing and source temperature
+and meteorology were not matched, this is retained only as single-point physical
+plausibility context, not validation, calibration or a safety distance. The
+full 14-step evidence refresh passed in 85.8 s, and the readiness count remains
+**132 PASS / 11 FAIL / 7 PENDING**. The focused priority validation passed, and
+the full regression suite completed with **1,550 passed**.
+
 ## 2026-10-13 - Synchronize the public documentation with the evidence ledger
 
 The current machine-readable readiness audit, submission blocker matrix,
