@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-10-14",
+  "case_id": "dickens_typeIII",
+  "status": "REPAIR_BOUNDARY_ONLY",
+  "frozen_validation_gate": "UNCHANGED_FAIL",
+  "runtime_parameter_updated": false,
+  "runtime_promotion_allowed": false,
+  "post_outcome_diagnostics": {
+    "temperature_observation": "research/dickens_typeiii_temperature_observation_diagnostic_2026_10_11.json",
+    "forced_convection": "research/dickens_typeiii_mixed_convection_diagnostic_2026_10_08.json"
+  },
+  "candidate_observation_operators": [
+    "gas_temperature",
+    "liner_temperature",
+    "shell_temperature",
+    "gas_liner_mean",
+    "gas_shell_mean",
+    "all_state_mean"
+  ],
+  "candidate_nozzle_diameters_mm": [3.0, 5.0, 7.0],
+  "unknown_source_metadata": [
+    "experiment inlet nozzle internal diameter",
+    "time-resolved inlet gas temperature",
+    "temperature sensor location and averaging/response definition"
+  ],
+  "required_pre_access_inputs": [
+    "inlet nozzle internal diameter and uncertainty",
+    "time-resolved inlet gas temperature or authenticated boundary definition",
+    "temperature sensor location and response/averaging definition",
+    "gas-liner-shell observation mapping",
+    "outcome-unseen pressure and temperature acceptance screens"
+  ],
+  "allowed_effect": "model-development explanation only",
+  "prohibited_effects": [
+    "selecting a nozzle diameter from consumed outcomes",
+    "selecting an observation operator from consumed outcomes",
+    "changing runtime thermal parameters",
+    "changing the Dickens validation gate",
+    "supporting a safety-distance or LLM evidence claim"
+  ]
+}
