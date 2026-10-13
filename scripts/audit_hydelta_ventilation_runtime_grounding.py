@@ -18,6 +18,10 @@ def audit(root: Path) -> dict[str, Any]:
         prompt_decision_evidence,
         prompt_evidence_header,
     )
+    from h2station.risk.cabinet_ventilation import (  # pylint: disable=import-outside-toplevel
+        HYDROGEN_NORMAL_DENSITY_KG_M3,
+        cabinet_ventilation_empirical_screen,
+    )
 
     evidence_path = (
         root / "research/hydelta_natural_ventilation_evidence_2026_10_13.json"
@@ -60,6 +64,18 @@ def audit(root: Path) -> dict[str, Any]:
     )
     runtime_use = evidence.get("runtime_use") or {}
     identity = (evidence.get("source") or {}).get("publisher_file_identity") or {}
+    exact_screen = cabinet_ventilation_empirical_screen(
+        enclosure_volume_m3=0.5,
+        mass_flow_kg_s=0.558 * HYDROGEN_NORMAL_DENSITY_KG_M3 / 3600.0,
+    )
+    transition_screen = cabinet_ventilation_empirical_screen(
+        enclosure_volume_m3=4.0,
+        mass_flow_kg_s=0.9 * HYDROGEN_NORMAL_DENSITY_KG_M3 / 3600.0,
+    )
+    out_of_domain_screen = cabinet_ventilation_empirical_screen(
+        enclosure_volume_m3=1.0,
+        mass_flow_kg_s=0.558 * HYDROGEN_NORMAL_DENSITY_KG_M3 / 3600.0,
+    )
     checks = {
         "evidence_status_verified": evidence.get("status")
         == "verified_report_level_natural_ventilation_evidence",
@@ -95,15 +111,62 @@ def audit(root: Path) -> dict[str, Any]:
             (detailed.get("runtime_use") or {}).get("site_safety_distance_validation")
             is False
         ),
+        "detailed_header_exposes_empirical_screen_contract": (
+            (detailed.get("empirical_screen") or {}).get(
+                "supported_non_indicative_cabinet_volumes_m3"
+            )
+            == [0.5, 4.0]
+            and (detailed.get("empirical_screen") or {}).get(
+                "concentration_interpolation"
+            )
+            is False
+            and (detailed.get("empirical_screen") or {}).get(
+                "safe_state_output_authorized"
+            )
+            is False
+        ),
         "public_source_link_exposed": any(
             item.get("id") == "HYDELTA_VENTILATION_2023"
             and item.get("url") == "https://doi.org/10.5281/zenodo.8164602"
             for item in source_links
         ),
-        "runtime_use_is_response_only": (
+        "runtime_use_boundaries_preserved": (
             runtime_use.get("emergency_response_grounding") is True
+            and runtime_use.get("bounded_empirical_cabinet_screening") is True
+            and runtime_use.get("concentration_interpolation_authorized") is False
+            and runtime_use.get("extrapolation_authorized") is False
+            and runtime_use.get("operational_safe_state_declaration_authorized")
+            is False
             and runtime_use.get("station_release_model_validation") is False
             and runtime_use.get("alarm_setpoint_calibration") is False
+        ),
+        "exact_report_case_replayed": (
+            exact_screen.get("cabinet_ventilation_screen_status")
+            == "EXACT_MEASURED_CASE"
+            and exact_screen.get("cabinet_ventilation_classification")
+            == "FLAMMABLE_MIXTURE_REPORTED"
+            and exact_screen.get(
+                "cabinet_ventilation_lower_max_inside_volpct_h2"
+            )
+            == 6.9
+        ),
+        "adjacent_cases_are_bracketed_without_interpolation": (
+            transition_screen.get("cabinet_ventilation_screen_status")
+            == "BRACKETED_MEASURED_CASES"
+            and transition_screen.get("cabinet_ventilation_classification")
+            == "LFL_TRANSITION_BETWEEN_MEASURED_BRACKETS"
+            and "NO_INTERPOLATION"
+            in str(transition_screen.get("cabinet_ventilation_basis"))
+        ),
+        "unsupported_volume_fails_closed": (
+            out_of_domain_screen.get("cabinet_ventilation_screen_status")
+            == "OUTSIDE_PUBLIC_CABINET_VOLUME_DOMAIN"
+            and out_of_domain_screen.get("cabinet_ventilation_public_domain")
+            is False
+            and out_of_domain_screen.get(
+                "cabinet_ventilation_safety_clearance_authorized"
+            )
+            is False
         ),
     }
     return {
@@ -122,10 +185,14 @@ def audit(root: Path) -> dict[str, Any]:
                 "idle_compact_prompt_omits_ventilation_guidance"
             ],
             "active_prompt_natural_ventilation": active_guidance,
+            "exact_empirical_screen": exact_screen,
+            "transition_empirical_screen": transition_screen,
+            "out_of_domain_empirical_screen": out_of_domain_screen,
         },
         "claim_boundary": (
-            "This audit verifies report identity, playbook routing and recovery "
-            "guardrails only. It does not validate H70 dispersion, detector placement, "
+            "This audit verifies report identity, exact table replay, bounded bracketing, "
+            "playbook routing and recovery guardrails only. It does not validate H70 "
+            "dispersion, detector placement, "
             "alarm thresholds, ESD effectiveness, release rate, site distance or field "
             "response effectiveness."
         ),

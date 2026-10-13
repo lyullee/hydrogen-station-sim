@@ -3676,6 +3676,29 @@ async def saga_analysis(job_id: str, request: SagaAnalysisInput) -> dict[str, An
         "calculation_status": (release.get("consequence") or {}).get("status"),
         "maximum_heat_flux_w_m2": (release.get("consequence") or {}).get("maximum_heat_flux_w_m2"),
         "maximum_overpressure_pa": (release.get("consequence") or {}).get("maximum_overpressure_pa"),
+        "indoor_status": (release.get("consequence") or {}).get("indoor_status"),
+        "maximum_indoor_overpressure_pa": (release.get("consequence") or {}).get("maximum_indoor_overpressure_pa"),
+        "cabinet_ventilation_screen_status": (release.get("consequence") or {}).get("cabinet_ventilation_screen_status"),
+        "cabinet_ventilation_public_domain": (release.get("consequence") or {}).get("cabinet_ventilation_public_domain"),
+        "cabinet_ventilation_volume_m3": (release.get("consequence") or {}).get("cabinet_ventilation_volume_m3"),
+        "cabinet_ventilation_input_flow_nm3_h": (release.get("consequence") or {}).get("cabinet_ventilation_input_flow_nm3_h"),
+        "cabinet_ventilation_source_lfl_volpct_h2": (release.get("consequence") or {}).get("cabinet_ventilation_source_lfl_volpct_h2"),
+        "cabinet_ventilation_basis": (release.get("consequence") or {}).get("cabinet_ventilation_basis"),
+        "cabinet_ventilation_classification": (release.get("consequence") or {}).get("cabinet_ventilation_classification"),
+        "cabinet_ventilation_lower_flow_nm3_h": (release.get("consequence") or {}).get("cabinet_ventilation_lower_flow_nm3_h"),
+        "cabinet_ventilation_upper_flow_nm3_h": (release.get("consequence") or {}).get("cabinet_ventilation_upper_flow_nm3_h"),
+        "cabinet_ventilation_lower_max_inside_volpct_h2": (release.get("consequence") or {}).get("cabinet_ventilation_lower_max_inside_volpct_h2"),
+        "cabinet_ventilation_upper_max_inside_volpct_h2": (release.get("consequence") or {}).get("cabinet_ventilation_upper_max_inside_volpct_h2"),
+        "cabinet_ventilation_lower_max_vent_volpct_h2": (release.get("consequence") or {}).get("cabinet_ventilation_lower_max_vent_volpct_h2"),
+        "cabinet_ventilation_upper_max_vent_volpct_h2": (release.get("consequence") or {}).get("cabinet_ventilation_upper_max_vent_volpct_h2"),
+        "cabinet_ventilation_lower_flammable_observed": (release.get("consequence") or {}).get("cabinet_ventilation_lower_flammable_observed"),
+        "cabinet_ventilation_upper_flammable_observed": (release.get("consequence") or {}).get("cabinet_ventilation_upper_flammable_observed"),
+        "cabinet_ventilation_requires_measured_clearance": (release.get("consequence") or {}).get("cabinet_ventilation_requires_measured_clearance"),
+        "cabinet_ventilation_safety_clearance_authorized": (release.get("consequence") or {}).get("cabinet_ventilation_safety_clearance_authorized"),
+        "cabinet_ventilation_evidence_doi": (release.get("consequence") or {}).get("cabinet_ventilation_evidence_doi"),
+        "cabinet_ventilation_evidence_license": (release.get("consequence") or {}).get("cabinet_ventilation_evidence_license"),
+        "cabinet_ventilation_evidence_artifact": (release.get("consequence") or {}).get("cabinet_ventilation_evidence_artifact"),
+        "cabinet_ventilation_claim_limit": (release.get("consequence") or {}).get("cabinet_ventilation_claim_limit"),
         "sampled_effect_radius_m": ((release.get("consequence") or {}).get("sampled_effect_radius_m") or None),
         "flammable_contour_volume_fraction": (release.get("consequence") or {}).get("flammable_contour_volume_fraction"),
         "flammable_plume_streamline_distance_m": (release.get("consequence") or {}).get("flammable_plume_streamline_distance_m"),
@@ -3729,7 +3752,8 @@ async def saga_analysis(job_id: str, request: SagaAnalysisInput) -> dict[str, An
     assessed_releases = {row.get("release_id") for row in sensor_impacts if row.get("calculation_status") == "calculated"}
     impact_results = [row for row in sensor_impacts + [row for row in legacy_impacts
         if row.get("release_id") not in assessed_releases]
-        if row.get("calculation_status") == "calculated"]
+        if row.get("calculation_status") == "calculated"
+        or row.get("cabinet_ventilation_public_domain") is True]
     evidence_manifest = build_evidence_manifest(
         frame, sensor_values, impact_results, show_impact_results,
         active_conditions=(matched_rules + reference_rules

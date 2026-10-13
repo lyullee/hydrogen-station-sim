@@ -37,7 +37,12 @@ def test_committed_hydelta_ventilation_evidence_is_bounded_and_grounded():
     assert all(evidence["claim_checks"].values())
     assert evidence["runtime_use"] == {
         "emergency_response_grounding": True,
+        "bounded_empirical_cabinet_screening": True,
+        "screening_requires_exact_cabinet_family": True,
+        "concentration_interpolation_authorized": False,
+        "extrapolation_authorized": False,
         "ventilation_as_single_safe_state_proof_authorized": False,
+        "operational_safe_state_declaration_authorized": False,
         "measured_gas_clearance_required": True,
         "dispersion_proxy_calibration": False,
         "alarm_setpoint_calibration": False,

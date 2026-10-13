@@ -4,7 +4,8 @@
 - DOI: <https://doi.org/10.5281/zenodo.8164602>
 - License: `CC BY 4.0`
 - Actual-hydrogen cabinet cases transcribed: `10`
-- Runtime calibration: **false**
+- H70 runtime calibration: **false**
+- Bounded empirical cabinet screen: **enabled**
 
 ## Decision-support finding
 
@@ -16,6 +17,22 @@ The controlled cabinet experiments show that natural or enlarged ventilation can
 - Ventilation alone proves safe state: `false`
 - Maximum tabulated inside concentration: `24.0 vol% H2`
 - Smallest indicative mini-cabinet flow with a flammable reading: `0.125 Nm3/h H2`
+
+## Runtime empirical screen
+
+The runtime now replays an exact measured row or returns the two adjacent
+measured rows for the exact `0.5 m3` and `4.0 m3` cabinet families. The input
+mass flow is converted to `Nm3/h` only to select those rows. Concentrations are
+not interpolated, cabinet volumes are not interpolated, and flows outside
+`0.125–5.8 Nm3/h` are explicitly marked outside the public domain. The
+indicative mini-cabinet cases are retained as qualitative context and are not
+used numerically.
+
+The empirical result is carried beside the normal consequence result and into
+the compact LLM evidence envelope. It never overwrites the HyRAM concentration,
+pressure, heat-flux, or distance output. Every result keeps the source DOI,
+license, measured bracket, the requirement for independent gas clearance, and
+an explicit `safety_clearance_authorized=false` field.
 
 ## Claim boundary
 

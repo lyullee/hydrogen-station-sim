@@ -2368,3 +2368,22 @@ the full-loop claim pass.
   response-grounding integrity gate; every negative external transfer remains
   unchanged rather than being promoted to validation.
 
+## 2026-10-13 - Bounded HyDelta cabinet measurement screen
+
+- Added an empirical runtime screen from the public actual-hydrogen HyDelta
+  cabinet report (`10.5281/zenodo.8164602`). It replays an exact table row or
+  returns adjacent measured brackets only for the exact 0.5 m³ and 4.0 m³
+  cabinet families and 0.125–5.8 Nm³/h flow domain.
+- No concentration or cabinet-volume interpolation is performed. Unsupported
+  inputs fail closed, indicative mini-cabinet tests are excluded from numerical
+  use, and every result prohibits safe-state, H70 dispersion, detector-layout,
+  ESD-effectiveness and site-distance claims.
+- The measured bracket travels beside HyRAM outputs through the API and compact
+  LLM evidence envelope without replacing modeled concentration, heat flux,
+  overpressure or distance. It remains available as report evidence when the
+  HyRAM backend is unavailable while the consequence status stays unavailable.
+- Replayed hash-bound HIAD and KHK public accident integrations after the
+  backend change: HIAD remains 34/34 and KHK remains 22/22 in-scope reports.
+  The readiness audit remains 132 PASS / 11 FAIL / 7 PENDING; no independent
+  validation gate was promoted.
+

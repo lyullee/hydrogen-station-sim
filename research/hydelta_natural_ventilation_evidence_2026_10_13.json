@@ -165,13 +165,35 @@
   },
   "runtime_use": {
     "emergency_response_grounding": true,
+    "bounded_empirical_cabinet_screening": true,
+    "screening_requires_exact_cabinet_family": true,
+    "concentration_interpolation_authorized": false,
+    "extrapolation_authorized": false,
     "ventilation_as_single_safe_state_proof_authorized": false,
+    "operational_safe_state_declaration_authorized": false,
     "measured_gas_clearance_required": true,
     "dispersion_proxy_calibration": false,
     "alarm_setpoint_calibration": false,
     "station_release_model_validation": false,
     "site_safety_distance_validation": false,
     "raw_machine_readable_time_series_available": false
+  },
+  "empirical_screen": {
+    "implementation": "src/h2station/risk/cabinet_ventilation.py",
+    "supported_non_indicative_cabinet_volumes_m3": [
+      0.5,
+      4.0
+    ],
+    "supported_flow_range_nm3_h": [
+      0.125,
+      5.8
+    ],
+    "method": "exact report-table replay or adjacent measured bracket within the same exact cabinet family",
+    "concentration_interpolation": false,
+    "volume_interpolation": false,
+    "flow_extrapolation": false,
+    "mini_cabinet_used_numerically": false,
+    "safe_state_output_authorized": false
   },
   "claim_boundary": "The CC BY 4.0 report provides actual-hydrogen, cabinet-scale measured concentration evidence for ventilation and response wording. The values are report tables rather than machine-readable time series, the mini-cabinet tests are explicitly indicative, and the geometries are low-pressure gas distribution cabinets. They do not validate the H70 station dispersion proxy, detector placement, alarm thresholds, ESD effectiveness, release rate, or site separation distance."
 }

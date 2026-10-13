@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-13T12:48:07.399598+00:00",
+  "generated_at": "2026-10-13T13:49:54.307270+00:00",
   "status": "PASS",
   "source": {
     "doi": "10.5281/zenodo.8164602",
@@ -23,8 +23,12 @@
     "active_prompt_requires_measurement_before_opening": true,
     "detailed_header_keeps_no_dispersion_calibration_boundary": true,
     "detailed_header_keeps_no_site_distance_boundary": true,
+    "detailed_header_exposes_empirical_screen_contract": true,
     "public_source_link_exposed": true,
-    "runtime_use_is_response_only": true
+    "runtime_use_boundaries_preserved": true,
+    "exact_report_case_replayed": true,
+    "adjacent_cases_are_bracketed_without_interpolation": true,
+    "unsupported_volume_fails_closed": true
   },
   "runtime_observation": {
     "relevant_plan_ids": [
@@ -40,7 +44,68 @@
       "measure_before_opening_recommended": true,
       "maximum_reported_inside_concentration_volpct_h2": 24.0,
       "claim_limit": "The CC BY 4.0 report provides actual-hydrogen, cabinet-scale measured concentration evidence for ventilation and response wording. The values are rep…"
+    },
+    "exact_empirical_screen": {
+      "cabinet_ventilation_screen_status": "EXACT_MEASURED_CASE",
+      "cabinet_ventilation_public_domain": true,
+      "cabinet_ventilation_volume_m3": 0.5,
+      "cabinet_ventilation_input_flow_nm3_h": 0.558,
+      "cabinet_ventilation_source_lfl_volpct_h2": 4.0,
+      "cabinet_ventilation_basis": "HYDELTA_REPORT_TABLE_EXACT_CASE",
+      "cabinet_ventilation_classification": "FLAMMABLE_MIXTURE_REPORTED",
+      "cabinet_ventilation_requires_measured_clearance": true,
+      "cabinet_ventilation_safety_clearance_authorized": false,
+      "cabinet_ventilation_evidence_doi": "10.5281/zenodo.8164602",
+      "cabinet_ventilation_evidence_license": "CC BY 4.0",
+      "cabinet_ventilation_evidence_artifact": "research/hydelta_natural_ventilation_evidence_2026_10_13.json",
+      "cabinet_ventilation_claim_limit": "HyDelta 저압 가스 정압기 캐비닛의 실제 수소 표 측정값을 같은 체적·유량 구간에서 대조한 경험적 스크리닝입니다. 농도를 보간·예측하지 않으며 H70 분산, 검지기 배치, 경보 설정, ESD 효과, 현장 안전·대피거리 또는 안전상태 선언을 검증하지 않습니다.",
+      "cabinet_ventilation_lower_flow_nm3_h": 0.558,
+      "cabinet_ventilation_upper_flow_nm3_h": 0.558,
+      "cabinet_ventilation_lower_max_inside_volpct_h2": 6.9,
+      "cabinet_ventilation_upper_max_inside_volpct_h2": 6.9,
+      "cabinet_ventilation_lower_max_vent_volpct_h2": 6.4,
+      "cabinet_ventilation_upper_max_vent_volpct_h2": 6.4,
+      "cabinet_ventilation_lower_flammable_observed": true,
+      "cabinet_ventilation_upper_flammable_observed": true
+    },
+    "transition_empirical_screen": {
+      "cabinet_ventilation_screen_status": "BRACKETED_MEASURED_CASES",
+      "cabinet_ventilation_public_domain": true,
+      "cabinet_ventilation_volume_m3": 4.0,
+      "cabinet_ventilation_input_flow_nm3_h": 0.9,
+      "cabinet_ventilation_source_lfl_volpct_h2": 4.0,
+      "cabinet_ventilation_basis": "HYDELTA_REPORT_TABLE_ADJACENT_BRACKET_NO_INTERPOLATION",
+      "cabinet_ventilation_classification": "LFL_TRANSITION_BETWEEN_MEASURED_BRACKETS",
+      "cabinet_ventilation_requires_measured_clearance": true,
+      "cabinet_ventilation_safety_clearance_authorized": false,
+      "cabinet_ventilation_evidence_doi": "10.5281/zenodo.8164602",
+      "cabinet_ventilation_evidence_license": "CC BY 4.0",
+      "cabinet_ventilation_evidence_artifact": "research/hydelta_natural_ventilation_evidence_2026_10_13.json",
+      "cabinet_ventilation_claim_limit": "HyDelta 저압 가스 정압기 캐비닛의 실제 수소 표 측정값을 같은 체적·유량 구간에서 대조한 경험적 스크리닝입니다. 농도를 보간·예측하지 않으며 H70 분산, 검지기 배치, 경보 설정, ESD 효과, 현장 안전·대피거리 또는 안전상태 선언을 검증하지 않습니다.",
+      "cabinet_ventilation_lower_flow_nm3_h": 0.558,
+      "cabinet_ventilation_upper_flow_nm3_h": 1.25,
+      "cabinet_ventilation_lower_max_inside_volpct_h2": 2.2,
+      "cabinet_ventilation_upper_max_inside_volpct_h2": 5.5,
+      "cabinet_ventilation_lower_max_vent_volpct_h2": 1.3,
+      "cabinet_ventilation_upper_max_vent_volpct_h2": 4.1,
+      "cabinet_ventilation_lower_flammable_observed": false,
+      "cabinet_ventilation_upper_flammable_observed": true
+    },
+    "out_of_domain_empirical_screen": {
+      "cabinet_ventilation_screen_status": "OUTSIDE_PUBLIC_CABINET_VOLUME_DOMAIN",
+      "cabinet_ventilation_public_domain": false,
+      "cabinet_ventilation_volume_m3": 1.0,
+      "cabinet_ventilation_input_flow_nm3_h": 0.558,
+      "cabinet_ventilation_source_lfl_volpct_h2": 4.0,
+      "cabinet_ventilation_basis": "HYDELTA_REPORT_TABLE_NO_INTERPOLATION",
+      "cabinet_ventilation_classification": "NOT_EVALUATED",
+      "cabinet_ventilation_requires_measured_clearance": true,
+      "cabinet_ventilation_safety_clearance_authorized": false,
+      "cabinet_ventilation_evidence_doi": "10.5281/zenodo.8164602",
+      "cabinet_ventilation_evidence_license": "CC BY 4.0",
+      "cabinet_ventilation_evidence_artifact": "research/hydelta_natural_ventilation_evidence_2026_10_13.json",
+      "cabinet_ventilation_claim_limit": "HyDelta 저압 가스 정압기 캐비닛의 실제 수소 표 측정값을 같은 체적·유량 구간에서 대조한 경험적 스크리닝입니다. 농도를 보간·예측하지 않으며 H70 분산, 검지기 배치, 경보 설정, ESD 효과, 현장 안전·대피거리 또는 안전상태 선언을 검증하지 않습니다."
     }
   },
-  "claim_boundary": "This audit verifies report identity, playbook routing and recovery guardrails only. It does not validate H70 dispersion, detector placement, alarm thresholds, ESD effectiveness, release rate, site distance or field response effectiveness."
+  "claim_boundary": "This audit verifies report identity, exact table replay, bounded bracketing, playbook routing and recovery guardrails only. It does not validate H70 dispersion, detector placement, alarm thresholds, ESD effectiveness, release rate, site distance or field response effectiveness."
 }

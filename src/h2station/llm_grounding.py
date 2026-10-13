@@ -2100,6 +2100,7 @@ def _public_natural_ventilation_evidence() -> dict[str, Any] | None:
     scope = record.get("experiment_scope") or {}
     findings = record.get("reported_findings") or {}
     runtime = record.get("runtime_use") or {}
+    empirical_screen = record.get("empirical_screen") or {}
     checks = record.get("claim_checks") or {}
     identity = source.get("publisher_file_identity") or {}
     if (
@@ -2113,6 +2114,10 @@ def _public_natural_ventilation_evidence() -> dict[str, Any] | None:
         or runtime.get("emergency_response_grounding") is not True
         or runtime.get("ventilation_as_single_safe_state_proof_authorized") is not False
         or runtime.get("measured_gas_clearance_required") is not True
+        or runtime.get("bounded_empirical_cabinet_screening") is not True
+        or runtime.get("concentration_interpolation_authorized") is not False
+        or runtime.get("extrapolation_authorized") is not False
+        or runtime.get("operational_safe_state_declaration_authorized") is not False
         or runtime.get("dispersion_proxy_calibration") is not False
         or runtime.get("station_release_model_validation") is not False
         or runtime.get("site_safety_distance_validation") is not False
@@ -2124,7 +2129,8 @@ def _public_natural_ventilation_evidence() -> dict[str, Any] | None:
         "record_url": source.get("record_url"),
         "license": source.get("license"),
         "evidence_role": (
-            "actual-hydrogen cabinet ventilation emergency-response grounding"
+            "actual-hydrogen cabinet ventilation response grounding and bounded "
+            "measured-case screening"
         ),
         "experiment_scope": {
             key: scope.get(key)
@@ -2149,6 +2155,7 @@ def _public_natural_ventilation_evidence() -> dict[str, Any] | None:
             )
         },
         "runtime_use": runtime,
+        "empirical_screen": empirical_screen,
         "claim_limit": str(record.get("claim_boundary") or ""),
     }
 
@@ -9585,6 +9592,26 @@ def _impact_rows(results: Iterable[dict[str, Any]] | None) -> list[dict[str, Any
         "risk_confidence", "risk_claim_limit",
         "maximum_heat_flux_w_m2", "maximum_overpressure_pa",
         "indoor_status", "maximum_indoor_overpressure_pa",
+        "cabinet_ventilation_screen_status",
+        "cabinet_ventilation_public_domain",
+        "cabinet_ventilation_volume_m3",
+        "cabinet_ventilation_input_flow_nm3_h",
+        "cabinet_ventilation_source_lfl_volpct_h2",
+        "cabinet_ventilation_basis", "cabinet_ventilation_classification",
+        "cabinet_ventilation_lower_flow_nm3_h",
+        "cabinet_ventilation_upper_flow_nm3_h",
+        "cabinet_ventilation_lower_max_inside_volpct_h2",
+        "cabinet_ventilation_upper_max_inside_volpct_h2",
+        "cabinet_ventilation_lower_max_vent_volpct_h2",
+        "cabinet_ventilation_upper_max_vent_volpct_h2",
+        "cabinet_ventilation_lower_flammable_observed",
+        "cabinet_ventilation_upper_flammable_observed",
+        "cabinet_ventilation_requires_measured_clearance",
+        "cabinet_ventilation_safety_clearance_authorized",
+        "cabinet_ventilation_evidence_doi",
+        "cabinet_ventilation_evidence_license",
+        "cabinet_ventilation_evidence_artifact",
+        "cabinet_ventilation_claim_limit",
         "ignited_enclosure_status", "ignited_enclosure_model",
         "maximum_ignited_enclosure_overpressure_pa",
         "ignited_enclosure_peak_time_s",
@@ -12771,6 +12798,23 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
             "risk_confidence", "risk_claim_limit",
             "maximum_heat_flux_w_m2", "maximum_overpressure_pa",
             "indoor_status", "maximum_indoor_overpressure_pa",
+            "cabinet_ventilation_screen_status",
+            "cabinet_ventilation_public_domain",
+            "cabinet_ventilation_volume_m3",
+            "cabinet_ventilation_input_flow_nm3_h",
+            "cabinet_ventilation_source_lfl_volpct_h2",
+            "cabinet_ventilation_basis", "cabinet_ventilation_classification",
+            "cabinet_ventilation_lower_flow_nm3_h",
+            "cabinet_ventilation_upper_flow_nm3_h",
+            "cabinet_ventilation_lower_max_inside_volpct_h2",
+            "cabinet_ventilation_upper_max_inside_volpct_h2",
+            "cabinet_ventilation_lower_max_vent_volpct_h2",
+            "cabinet_ventilation_upper_max_vent_volpct_h2",
+            "cabinet_ventilation_lower_flammable_observed",
+            "cabinet_ventilation_upper_flammable_observed",
+            "cabinet_ventilation_requires_measured_clearance",
+            "cabinet_ventilation_safety_clearance_authorized",
+            "cabinet_ventilation_evidence_doi",
             "ignited_enclosure_status", "ignited_enclosure_model",
             "maximum_ignited_enclosure_overpressure_pa",
             "ignited_enclosure_peak_time_s",
@@ -12821,6 +12865,10 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
         if raw.get("ignited_enclosure_claim_limit"):
             row["ignited_enclosure_claim_limit"] = short(
                 raw["ignited_enclosure_claim_limit"]
+            )
+        if raw.get("cabinet_ventilation_claim_limit"):
+            row["cabinet_ventilation_claim_limit"] = short(
+                raw["cabinet_ventilation_claim_limit"]
             )
         if raw.get("literature_delayed_ignition_claim_limit"):
             row["literature_delayed_ignition_claim_limit"] = short(
@@ -16912,6 +16960,7 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
             "experiment_scope": natural_ventilation.get("experiment_scope") or {},
             "reported_findings": natural_ventilation.get("reported_findings") or {},
             "runtime_use": natural_ventilation.get("runtime_use") or {},
+            "empirical_screen": natural_ventilation.get("empirical_screen") or {},
             "claim_limit": natural_ventilation.get("claim_limit"),
         },
         "confidential_local_accident_response_coverage": {

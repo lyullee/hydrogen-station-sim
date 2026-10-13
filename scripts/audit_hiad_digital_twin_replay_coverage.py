@@ -43,6 +43,7 @@ MODEL_INPUTS = (
     ROOT / "src/h2station/hazop/mapping.py",
     ROOT / "src/h2station/risk/live.py",
     ROOT / "src/h2station/risk/runtime_backend.py",
+    ROOT / "src/h2station/risk/cabinet_ventilation.py",
     ROOT / "src/h2station/data/emergency_playbooks.json",
 )
 

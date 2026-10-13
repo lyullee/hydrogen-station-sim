@@ -22,6 +22,7 @@ from .hyram_adapter import (
     IndoorScenario,
     LeakScenario as AdapterLeakScenario,
 )
+from .cabinet_ventilation import cabinet_ventilation_empirical_screen
 from .delayed_ignition import delayed_ignition_envelope
 from .jet_flame import jet_flame_envelope
 from .live import CallableHyRAMBackend, HyRAMDynamicReleaseRequest
@@ -343,6 +344,11 @@ class UnavailableHyRAMBackend:
             release_boundary=request.release_boundary,
             process_flow_limit_kg_s=request.process_flow_limit_kg_s,
         ))
+        if request.indoor:
+            output.update(cabinet_ventilation_empirical_screen(
+                enclosure_volume_m3=request.enclosure_volume_m3,
+                mass_flow_kg_s=request.mass_flow_override_kg_s,
+            ))
         return output
 
 
@@ -508,6 +514,16 @@ class NativeHyRAMBackend:
         output["thermal_threshold_w_m2"] = 5000.0
         output["overpressure_threshold_pa"] = 5000.0
         if request.indoor:
+            cabinet_volume_m3 = request.enclosure_volume_m3
+            if cabinet_volume_m3 is None and self.indoor_scenario is not None:
+                cabinet_volume_m3 = (
+                    self.indoor_scenario.floor_ceiling_area
+                    * self.indoor_scenario.enclosure_height
+                )
+            output.update(cabinet_ventilation_empirical_screen(
+                enclosure_volume_m3=cabinet_volume_m3,
+                mass_flow_kg_s=result.mass_flow_rate,
+            ))
             if self.indoor_scenario is None:
                 output["indoor_status"] = "enclosure-not-configured"
             else:

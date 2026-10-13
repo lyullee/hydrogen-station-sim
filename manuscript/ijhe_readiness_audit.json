@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-13T12:48:26.833368+00:00",
+  "generated_at": "2026-10-13T13:52:37.858529+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -8586,12 +8586,21 @@
           "active_prompt_requires_measurement_before_opening": true,
           "detailed_header_keeps_no_dispersion_calibration_boundary": true,
           "detailed_header_keeps_no_site_distance_boundary": true,
+          "detailed_header_exposes_empirical_screen_contract": true,
           "public_source_link_exposed": true,
-          "runtime_use_is_response_only": true
+          "runtime_use_boundaries_preserved": true,
+          "exact_report_case_replayed": true,
+          "adjacent_cases_are_bracketed_without_interpolation": true,
+          "unsupported_volume_fails_closed": true
         },
         "runtime_use": {
           "emergency_response_grounding": true,
+          "bounded_empirical_cabinet_screening": true,
+          "screening_requires_exact_cabinet_family": true,
+          "concentration_interpolation_authorized": false,
+          "extrapolation_authorized": false,
           "ventilation_as_single_safe_state_proof_authorized": false,
+          "operational_safe_state_declaration_authorized": false,
           "measured_gas_clearance_required": true,
           "dispersion_proxy_calibration": false,
           "alarm_setpoint_calibration": false,
@@ -8599,7 +8608,7 @@
           "site_safety_distance_validation": false,
           "raw_machine_readable_time_series_available": false
         },
-        "claim_boundary": "This audit verifies report identity, playbook routing and recovery guardrails only. It does not validate H70 dispersion, detector placement, alarm thresholds, ESD effectiveness, release rate, site distance or field response effectiveness."
+        "claim_boundary": "This audit verifies report identity, exact table replay, bounded bracketing, playbook routing and recovery guardrails only. It does not validate H70 dispersion, detector placement, alarm thresholds, ESD effectiveness, release rate, site distance or field response effectiveness."
       }
     },
     {
