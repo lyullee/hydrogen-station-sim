@@ -1,0 +1,191 @@
+{
+  "schema_version": 1,
+  "status": "post_outcome_sensitivity_diagnostic_only",
+  "model_changed": false,
+  "runtime_promotion": false,
+  "holdout_gate_promotion": false,
+  "apparatus_boundary": {
+    "total_vessel_volume_m3": 1.234,
+    "published_restriction_diameter_mm": 5.08,
+    "wall_geometry_and_line_inventory_resolved": false
+  },
+  "metrics": [
+    {
+      "wall_heat_capacity_j_k": 100000.0,
+      "external_heat_transfer_w_m2_k": 2.0,
+      "pressure_nrmse_percent_initial_measured": 11.195923695049451,
+      "median_absolute_percentage_error_percent": 26.672573574627933,
+      "half_pressure_time_relative_error_percent": 9.704900891041673,
+      "nrmse_screen_pass": false,
+      "median_ape_screen_pass": false,
+      "half_pressure_time_screen_pass": true,
+      "joint_primary_screen_pass": false
+    },
+    {
+      "wall_heat_capacity_j_k": 100000.0,
+      "external_heat_transfer_w_m2_k": 6.0,
+      "pressure_nrmse_percent_initial_measured": 11.192518237047198,
+      "median_absolute_percentage_error_percent": 26.672574923686852,
+      "half_pressure_time_relative_error_percent": 9.706746881569677,
+      "nrmse_screen_pass": false,
+      "median_ape_screen_pass": false,
+      "half_pressure_time_screen_pass": true,
+      "joint_primary_screen_pass": false
+    },
+    {
+      "wall_heat_capacity_j_k": 100000.0,
+      "external_heat_transfer_w_m2_k": 12.0,
+      "pressure_nrmse_percent_initial_measured": 11.187606763645219,
+      "median_absolute_percentage_error_percent": 26.672576945761527,
+      "half_pressure_time_relative_error_percent": 9.709506752125122,
+      "nrmse_screen_pass": false,
+      "median_ape_screen_pass": false,
+      "half_pressure_time_screen_pass": true,
+      "joint_primary_screen_pass": false
+    },
+    {
+      "wall_heat_capacity_j_k": 100000.0,
+      "external_heat_transfer_w_m2_k": 25.0,
+      "pressure_nrmse_percent_initial_measured": 11.17769840920558,
+      "median_absolute_percentage_error_percent": 26.67258132069953,
+      "half_pressure_time_relative_error_percent": 9.715449168367135,
+      "nrmse_screen_pass": false,
+      "median_ape_screen_pass": false,
+      "half_pressure_time_screen_pass": true,
+      "joint_primary_screen_pass": false
+    },
+    {
+      "wall_heat_capacity_j_k": 500000.0,
+      "external_heat_transfer_w_m2_k": 2.0,
+      "pressure_nrmse_percent_initial_measured": 11.032477582680995,
+      "median_absolute_percentage_error_percent": 25.669088769041082,
+      "half_pressure_time_relative_error_percent": 10.530978235674798,
+      "nrmse_screen_pass": false,
+      "median_ape_screen_pass": false,
+      "half_pressure_time_screen_pass": true,
+      "joint_primary_screen_pass": false
+    },
+    {
+      "wall_heat_capacity_j_k": 500000.0,
+      "external_heat_transfer_w_m2_k": 6.0,
+      "pressure_nrmse_percent_initial_measured": 11.032261052004445,
+      "median_absolute_percentage_error_percent": 25.669088874323045,
+      "half_pressure_time_relative_error_percent": 10.531082624956687,
+      "nrmse_screen_pass": false,
+      "median_ape_screen_pass": false,
+      "half_pressure_time_screen_pass": true,
+      "joint_primary_screen_pass": false
+    },
+    {
+      "wall_heat_capacity_j_k": 500000.0,
+      "external_heat_transfer_w_m2_k": 12.0,
+      "pressure_nrmse_percent_initial_measured": 11.031938834582352,
+      "median_absolute_percentage_error_percent": 25.669089032218128,
+      "half_pressure_time_relative_error_percent": 10.531239090041291,
+      "nrmse_screen_pass": false,
+      "median_ape_screen_pass": false,
+      "half_pressure_time_screen_pass": true,
+      "joint_primary_screen_pass": false
+    },
+    {
+      "wall_heat_capacity_j_k": 500000.0,
+      "external_heat_transfer_w_m2_k": 25.0,
+      "pressure_nrmse_percent_initial_measured": 11.031251211654862,
+      "median_absolute_percentage_error_percent": 25.66908937421093,
+      "half_pressure_time_relative_error_percent": 10.531577609146058,
+      "nrmse_screen_pass": false,
+      "median_ape_screen_pass": false,
+      "half_pressure_time_screen_pass": true,
+      "joint_primary_screen_pass": false
+    },
+    {
+      "wall_heat_capacity_j_k": 1000000.0,
+      "external_heat_transfer_w_m2_k": 2.0,
+      "pressure_nrmse_percent_initial_measured": 11.003160502609905,
+      "median_absolute_percentage_error_percent": 25.312350858180366,
+      "half_pressure_time_relative_error_percent": 10.662825849426111,
+      "nrmse_screen_pass": false,
+      "median_ape_screen_pass": false,
+      "half_pressure_time_screen_pass": true,
+      "joint_primary_screen_pass": false
+    },
+    {
+      "wall_heat_capacity_j_k": 1000000.0,
+      "external_heat_transfer_w_m2_k": 6.0,
+      "pressure_nrmse_percent_initial_measured": 11.003103474389912,
+      "median_absolute_percentage_error_percent": 25.311435209605136,
+      "half_pressure_time_relative_error_percent": 10.66285379851716,
+      "nrmse_screen_pass": false,
+      "median_ape_screen_pass": false,
+      "half_pressure_time_screen_pass": true,
+      "joint_primary_screen_pass": false
+    },
+    {
+      "wall_heat_capacity_j_k": 1000000.0,
+      "external_heat_transfer_w_m2_k": 12.0,
+      "pressure_nrmse_percent_initial_measured": 11.003018275008452,
+      "median_absolute_percentage_error_percent": 25.310063562664,
+      "half_pressure_time_relative_error_percent": 10.662895705913144,
+      "nrmse_screen_pass": false,
+      "median_ape_screen_pass": false,
+      "half_pressure_time_screen_pass": true,
+      "joint_primary_screen_pass": false
+    },
+    {
+      "wall_heat_capacity_j_k": 1000000.0,
+      "external_heat_transfer_w_m2_k": 25.0,
+      "pressure_nrmse_percent_initial_measured": 11.002835049705547,
+      "median_absolute_percentage_error_percent": 25.307103051768,
+      "half_pressure_time_relative_error_percent": 10.662986438509321,
+      "nrmse_screen_pass": false,
+      "median_ape_screen_pass": false,
+      "half_pressure_time_screen_pass": true,
+      "joint_primary_screen_pass": false
+    },
+    {
+      "wall_heat_capacity_j_k": 5000000.0,
+      "external_heat_transfer_w_m2_k": 2.0,
+      "pressure_nrmse_percent_initial_measured": 10.977933232112811,
+      "median_absolute_percentage_error_percent": 24.91881698691689,
+      "half_pressure_time_relative_error_percent": 10.774239328399297,
+      "nrmse_screen_pass": false,
+      "median_ape_screen_pass": false,
+      "half_pressure_time_screen_pass": true,
+      "joint_primary_screen_pass": false
+    },
+    {
+      "wall_heat_capacity_j_k": 5000000.0,
+      "external_heat_transfer_w_m2_k": 6.0,
+      "pressure_nrmse_percent_initial_measured": 10.977930862916761,
+      "median_absolute_percentage_error_percent": 24.91877960581988,
+      "half_pressure_time_relative_error_percent": 10.774240491853417,
+      "nrmse_screen_pass": false,
+      "median_ape_screen_pass": false,
+      "half_pressure_time_screen_pass": true,
+      "joint_primary_screen_pass": false
+    },
+    {
+      "wall_heat_capacity_j_k": 5000000.0,
+      "external_heat_transfer_w_m2_k": 12.0,
+      "pressure_nrmse_percent_initial_measured": 10.977927311652659,
+      "median_absolute_percentage_error_percent": 24.918723058009874,
+      "half_pressure_time_relative_error_percent": 10.774242236900513,
+      "nrmse_screen_pass": false,
+      "median_ape_screen_pass": false,
+      "half_pressure_time_screen_pass": true,
+      "joint_primary_screen_pass": false
+    },
+    {
+      "wall_heat_capacity_j_k": 5000000.0,
+      "external_heat_transfer_w_m2_k": 25.0,
+      "pressure_nrmse_percent_initial_measured": 10.97791962912787,
+      "median_absolute_percentage_error_percent": 24.918600312858942,
+      "half_pressure_time_relative_error_percent": 10.774246017271444,
+      "nrmse_screen_pass": false,
+      "median_ape_screen_pass": false,
+      "half_pressure_time_screen_pass": true,
+      "joint_primary_screen_pass": false
+    }
+  ],
+  "claim_boundary": "The grid exposes sensitivity to declared wall heat-transfer assumptions. It is post-outcome because the digitized pressure trace was already used by the frozen holdout, and it cannot establish an independent validation claim."
+}
