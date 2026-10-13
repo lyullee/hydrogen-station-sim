@@ -96,6 +96,13 @@ is a simulation library. The detailed access boundary is recorded in
 This prevents repeated catalogue searches from being counted as validation
 progress.
 
+To make the remaining external work actionable, the exact minimum channels,
+event metadata, rights requirements and privacy boundary for each unresolved
+physics gate are frozen in
+[`VALIDATION_DATA_REQUEST_SPEC_2026_10_14.md`](../research/VALIDATION_DATA_REQUEST_SPEC_2026_10_14.md).
+It is a custodian request specification only; it does not promote any
+diagnostic result or treat missing data as a pass.
+
 The USN DataverseNO actual-hydrogen pressure-peaking archive was also replayed
 as a post-access component diagnostic. Ten cases were eligible and 8/10 passed
 the joint peak-pressure/peak-time screen. Because the raw outcomes were seen
