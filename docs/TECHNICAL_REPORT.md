@@ -74,9 +74,9 @@ For a repeatable exercise, record the Git commit, Python/dependency versions, jo
 
 `manuscript/ijhe_readiness_audit.json` is the authoritative, machine-readable
 readiness ledger. It is an evidence gate, not a prediction of editorial
-acceptance. The current snapshot contains **130 PASS, 11 FAIL and 7 PENDING**
+acceptance. The current snapshot contains **131 PASS, 11 FAIL and 7 PENDING**
 gates; bounded IJHE submission readiness and the full user objective are both
-false. The declared station-side primary scope is **129 PASS, 10 FAIL and 2
+false. The declared station-side primary scope is **130 PASS, 10 FAIL and 2
 PENDING**. In particular, the frozen station-to-vehicle full-loop screen is
 not supported, and the independent expert-effectiveness evaluation is not
 complete.

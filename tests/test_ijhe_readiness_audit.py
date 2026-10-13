@@ -501,6 +501,19 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     assert hytunnel_spatial["screens"]["mean_top5_recall_at_least_0_6"] is False
     assert hytunnel_spatial["joint_screen_pass"] is False
     assert hytunnel_spatial["runtime_candidate_enabled"] is False
+    prospective_spatial = gates[
+        "prospective_spatial_rank_candidate_freeze_integrity"
+    ]
+    assert prospective_spatial["status"] == "PASS"
+    prospective_observed = prospective_spatial["observed"]
+    assert prospective_observed["candidate_count"] == 15120
+    assert prospective_observed["parameters"] == [0.3, 0.1, 0.2, 1.0, 1.25]
+    assert prospective_observed["hytunnel_actual_hydrogen"]["joint_pass"] is True
+    assert prospective_observed["h2safe_helium"]["joint_pass"] is False
+    assert prospective_observed["both_cohorts_joint_pass"] is False
+    assert prospective_observed["future_holdout_outcomes_accessed"] is False
+    assert prospective_observed["runtime_enabled"] is False
+    assert prospective_observed["runtime_sources_exclude_candidate"] is True
     assert gates["hytunnel_spatial_holdout_execution_integrity"]["status"] == "PASS"
     assert gates["dataverse_hydrogen_explosion_component_inventory"]["status"] == "PASS"
     explosion_inventory = gates["dataverse_hydrogen_explosion_component_inventory"]["observed"]

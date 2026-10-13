@@ -199,6 +199,7 @@ def _primary_scope_progress() -> dict[str, Any]:
     # Prefer the newest privacy-bounded snapshot, while retaining a fallback
     # for packaged deployments that have not yet received that day's ledger.
     for filename in (
+        "goal_progress_snapshot_2026_10_13.json",
         "goal_progress_snapshot_2026_10_12.json",
         "goal_progress_snapshot_2026_10_11.json",
     ):

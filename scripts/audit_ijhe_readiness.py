@@ -4390,12 +4390,23 @@ def audit(root: Path) -> dict[str, object]:
     hytunnel_spatial_report_path = root / (
         "research/HYTUNNEL_SPATIAL_HOLDOUT_2026_10_08.md"
     )
+    prospective_spatial_development_path = root / (
+        "research/pooled_spatial_rank_development_2026_10_13.json"
+    )
+    prospective_spatial_protocol_path = root / (
+        "research/prospective_spatial_rank_protocol_2026_10_13.json"
+    )
+    prospective_spatial_module_path = root / (
+        "src/h2station/prospective_spatial_rank.py"
+    )
     h2safe_spatial = _json(h2safe_spatial_path)
     hydelta_spatial_eligibility = _json(hydelta_spatial_eligibility_path)
     sandia_spatial = _json(sandia_spatial_path)
     hytunnel_spatial_protocol = _json(hytunnel_spatial_protocol_path)
     hytunnel_spatial_amendment = _json(hytunnel_spatial_amendment_path)
     hytunnel_spatial_result = _json(hytunnel_spatial_result_path)
+    prospective_spatial_development = _json(prospective_spatial_development_path)
+    prospective_spatial_protocol = _json(prospective_spatial_protocol_path)
     h2safe_spatial_source = (h2safe_spatial or {}).get("source") or {}
     h2safe_spatial_method = (h2safe_spatial or {}).get("method") or {}
     h2safe_spatial_results = (
@@ -4645,6 +4656,118 @@ def audit(root: Path) -> dict[str, object]:
                 "claim_boundary"
             ),
         } if hytunnel_spatial_result else "missing",
+    ))
+
+    prospective_selected = (
+        (prospective_spatial_development or {}).get("selection", {}).get(
+            "selected", {}
+        )
+    )
+    prospective_hytunnel = prospective_selected.get(
+        "hytunnel_actual_hydrogen", {}
+    )
+    prospective_h2safe = prospective_selected.get("h2safe_helium", {})
+    prospective_candidate = (prospective_spatial_protocol or {}).get(
+        "candidate", {}
+    )
+    prospective_holdout = (prospective_spatial_protocol or {}).get(
+        "future_holdout", {}
+    )
+    prospective_rule = (prospective_spatial_protocol or {}).get(
+        "decision_rule", {}
+    )
+    prospective_runtime = (prospective_spatial_protocol or {}).get(
+        "runtime_policy", {}
+    )
+    runtime_sources_exclude_prospective = bool(
+        "prospective_spatial_rank" not in (
+            root / "src/h2station/api.py"
+        ).read_text(encoding="utf-8")
+        and "prospective_spatial_rank" not in (
+            root / "src/h2station/hazop/runtime.py"
+        ).read_text(encoding="utf-8")
+    )
+    prospective_spatial_integrity = bool(
+        (prospective_spatial_development or {}).get("artifact_type")
+        == "post_outcome_pooled_spatial_rank_development"
+        and (prospective_spatial_development or {}).get("status")
+        == "DEVELOPMENT_ONLY_NOT_VALIDATION"
+        and (prospective_spatial_development or {}).get("selection", {}).get(
+            "candidate_count"
+        ) == 15120
+        and (prospective_spatial_development or {}).get("selection", {}).get(
+            "outcomes_seen_before_search"
+        ) is True
+        and prospective_selected.get("parameters")
+        == [0.3, 0.1, 0.2, 1.0, 1.25]
+        and prospective_hytunnel.get("experiment_count") == 18
+        and prospective_hytunnel.get("joint_pass") is True
+        and prospective_h2safe.get("experiment_count") == 5
+        and prospective_h2safe.get("joint_pass") is False
+        and prospective_h2safe.get("screens", {}).get(
+            "nearest_in_response_quartile_fraction_at_least_0_7"
+        ) is False
+        and prospective_selected.get("both_cohorts_joint_pass") is False
+        and (prospective_spatial_development or {}).get("implementation", {}).get(
+            "sha256"
+        ) == _sha256(prospective_spatial_module_path)
+        and (prospective_spatial_development or {}).get("decision", {}).get(
+            "new_independent_validation"
+        ) is False
+        and (prospective_spatial_development or {}).get("decision", {}).get(
+            "runtime_application"
+        ) is False
+        and (prospective_spatial_protocol or {}).get("artifact_type")
+        == "prospective_spatial_rank_candidate_freeze"
+        and prospective_candidate.get("implementation_sha256")
+        == _sha256(prospective_spatial_module_path)
+        and (prospective_spatial_protocol or {}).get(
+            "development_provenance", {}
+        ).get("artifact_sha256") == _sha256(prospective_spatial_development_path)
+        and prospective_holdout.get("outcomes_accessed") is False
+        and prospective_holdout.get("required_test_gas") == "hydrogen"
+        and prospective_holdout.get("minimum_eligible_case_count") == 10
+        and prospective_holdout.get("minimum_usable_sensor_count_per_case") == 8
+        and len(prospective_rule.get("screens") or {}) == 4
+        and prospective_rule.get("all_screens_must_pass") is True
+        and prospective_rule.get("parameter_tuning_after_access_permitted")
+        is False
+        and prospective_runtime.get("enabled") is False
+        and prospective_runtime.get("api_import_permitted") is False
+        and prospective_runtime.get("hazop_runtime_import_permitted") is False
+        and runtime_sources_exclude_prospective
+    )
+    gates.append(_gate(
+        "prospective_spatial_rank_candidate_freeze_integrity",
+        "PASS" if prospective_spatial_integrity else "PENDING",
+        "The pooled post-outcome spatial candidate and its future actual-hydrogen holdout rule are hash-frozen without entering runtime routing.",
+        "; ".join((
+            str(prospective_spatial_development_path.relative_to(root)),
+            str(prospective_spatial_protocol_path.relative_to(root)),
+            str(prospective_spatial_module_path.relative_to(root)),
+        )),
+        "15,120-candidate search, retained 7/8 screen result, exact implementation and development hashes, untouched future cohort contract, and no API or HAZOP runtime import.",
+        {
+            "candidate_count": (
+                (prospective_spatial_development or {}).get("selection", {}).get(
+                    "candidate_count"
+                )
+            ),
+            "parameters": prospective_selected.get("parameters"),
+            "hytunnel_actual_hydrogen": prospective_hytunnel,
+            "h2safe_helium": prospective_h2safe,
+            "both_cohorts_joint_pass": prospective_selected.get(
+                "both_cohorts_joint_pass"
+            ),
+            "future_holdout_outcomes_accessed": prospective_holdout.get(
+                "outcomes_accessed"
+            ),
+            "runtime_enabled": prospective_runtime.get("enabled"),
+            "runtime_sources_exclude_candidate": runtime_sources_exclude_prospective,
+            "claim_boundary": (prospective_spatial_protocol or {}).get(
+                "claim_boundary"
+            ),
+        } if prospective_spatial_protocol else "missing",
     ))
 
     blend_protocol_path = root / (

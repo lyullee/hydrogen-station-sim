@@ -20,9 +20,9 @@ Audit snapshot: **2026-10-13 KST**
 | Full validated-digital-twin objective ready | **False** |
 | Goal completion permitted | **False** |
 
-Gate counts: **130 PASS · 11 FAIL · 7 PENDING**.
+Gate counts: **131 PASS · 11 FAIL · 7 PENDING**.
 
-The latest clean full-regression evidence is recorded at commit `4b73ec651bb81d81ce3b11160b6600f59d16d92a` with **1,463 passed, 0 failed and 6 skipped** plus 209 dependency/data-reader warnings in 268.07 s (`research/full_regression_test_run_2026_10_12_latest.json`). A fresh broad LLM/SAGA, virtual-safety, HAZOP and HIAD accident-path selection passed **159 tests with 2 warnings** (`research/paper_llm_safety_broad_regression_2026_10_12.json`). These are software implementation checks only and do not convert the independent physical validation failures or author-confirmation gate into passes. The focused LLM/accident-path regression passed **65 tests with 2 warnings**, and the clean direct LLM route spot check passed **20 tests with 3 warnings**.
+The latest full working-tree regression passed **1,507 tests with 0 failures and 6 skipped** plus 209 dependency/data-reader warnings in 290.65 s (`research/full_regression_test_run_2026_10_13.json`). It was run from commit `602c561ea7a4a9baa56884cf6bb18600e76f6a7b` with the candidate and refreshed evidence files still uncommitted, so it is an implementation-integrity record rather than a clean-release attestation. The last clean full-regression record remains `research/full_regression_test_run_2026_10_12_latest.json`. A broad LLM/SAGA, virtual-safety, HAZOP and HIAD accident-path selection passed **159 tests with 2 warnings** (`research/paper_llm_safety_broad_regression_2026_10_12.json`). These software checks do not convert independent physical-validation failures or the author-confirmation gate into passes.
 
 The 2026-10-12 critical-priority diagnostic run completed in 3.2 s and is
 archived as [`priority_diagnostic_run_2026_10_12.json`](../research/priority_diagnostic_run_2026_10_12.json).

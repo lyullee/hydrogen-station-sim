@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "artifact_type": "prospective_spatial_rank_candidate_freeze",
+  "protocol_id": "pooled_spatial_rank_v1_future_actual_hydrogen_holdout",
+  "frozen_at": "2026-10-13T06:36:00Z",
+  "candidate": {
+    "candidate_id": "pooled_spatial_rank_v1",
+    "implementation": "src/h2station/prospective_spatial_rank.py",
+    "implementation_sha256": "7ec8658fa729b1b8817e86314d7d178ee1ad3772f00e1f2b76e10f95d636b387",
+    "vertical_axis": "y",
+    "coordinate_unit": "m",
+    "parameter_order": [
+      "upward_vertical_weight",
+      "downward_vertical_penalty",
+      "vertical_denominator_weight",
+      "denominator_power",
+      "horizontal_distance_power"
+    ],
+    "parameters": [0.3, 0.1, 0.2, 1.0, 1.25],
+    "denominator_offset": 0.25,
+    "formula": "exp(0.3*max(dy,0)-0.1*max(-dy,0))/(0.25+horizontal_distance_m^1.25+0.2*abs(dy))",
+    "output_semantics": "within-case sensor rank only"
+  },
+  "development_provenance": {
+    "outcomes_seen": true,
+    "artifact": "research/pooled_spatial_rank_development_2026_10_13.json",
+    "artifact_sha256": "6ce50567bc6b60f21940fbf0f8d11ab190b81ef0ef447b6510cd16568f74e76c",
+    "cohorts": [
+      {
+        "dataset_doi": "10.23642/USN.14405903",
+        "test_gas": "hydrogen",
+        "experiment_count": 18
+      },
+      {
+        "dataset_doi": "10.7799/17118570",
+        "test_gas": "helium surrogate",
+        "experiment_count": 5
+      }
+    ],
+    "eligible_as_independent_validation": false
+  },
+  "future_holdout": {
+    "dataset_identity": null,
+    "outcomes_accessed": false,
+    "required_test_gas": "hydrogen",
+    "minimum_eligible_case_count": 10,
+    "minimum_usable_sensor_count_per_case": 8,
+    "required_inputs": [
+      "publisher-authenticated source coordinates",
+      "publisher-authenticated sensor coordinates in the same frame",
+      "declared elevation axis and coordinate units",
+      "release start and stop or a publisher-authenticated time crosswalk",
+      "per-sensor numerical concentration response",
+      "release orientation and ventilation state for prespecified subgroup reporting"
+    ],
+    "case_selection": "include every case in the frozen dataset scope that satisfies the required inputs; do not exclude a case after viewing response metrics",
+    "response_definition": "q99 minus q10 hydrogen concentration during the publisher-authenticated release/evaluation interval",
+    "invalid_case_policy": "retain and report all failures; a format-only amendment may repair parsing but may not change the candidate, thresholds, response definition, or case scope"
+  },
+  "decision_rule": {
+    "all_screens_must_pass": true,
+    "parameter_tuning_after_access_permitted": false,
+    "screens": {
+      "median_spearman_at_least": 0.5,
+      "fraction_of_cases_with_spearman_at_least_0_4_at_least": 0.6,
+      "mean_top5_recall_of_observed_top_quartile_at_least": 0.6,
+      "nearest_predicted_sensor_in_observed_top_quartile_fraction_at_least": 0.7
+    },
+    "failure_effect": "retain the result as a negative holdout; do not enable runtime routing or change alarm thresholds",
+    "pass_effect": "supports only spatial rank transfer for the tested domain; runtime promotion still requires an explicit safety review and regression test"
+  },
+  "runtime_policy": {
+    "enabled": false,
+    "api_import_permitted": false,
+    "hazop_runtime_import_permitted": false,
+    "alarm_or_trip_setpoint_change_permitted": false
+  },
+  "claim_boundary": "This freeze does not validate detector placement, hydrogen concentration, alarm time, flammable volume, ESD performance, CFD, outdoor HRS dispersion, or any site safety distance. A dataset-specific protocol must identify and hash a new untouched cohort before numerical outcomes are accessed."
+}

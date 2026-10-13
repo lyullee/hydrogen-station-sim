@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "artifact_type": "post_outcome_pooled_spatial_rank_development",
+  "generated_at": "2026-10-13T06:35:26.483190+00:00",
+  "status": "DEVELOPMENT_ONLY_NOT_VALIDATION",
+  "selection": {
+    "candidate_count": 15120,
+    "parameter_order": [
+      "upward_vertical_weight",
+      "downward_vertical_penalty",
+      "vertical_denominator_weight",
+      "denominator_power",
+      "horizontal_distance_power"
+    ],
+    "objective": "maximize the minimum normalized margin over four frozen screens in each consumed cohort; break ties by pooled top-five recall and then pooled median Spearman",
+    "outcomes_seen_before_search": true,
+    "selected": {
+      "parameters": [
+        0.3,
+        0.1,
+        0.2,
+        1.0,
+        1.25
+      ],
+      "hytunnel_actual_hydrogen": {
+        "experiment_count": 18,
+        "median_spearman": 0.600035638222451,
+        "spearman_at_least_0_4_fraction": 0.7777777777777778,
+        "mean_top5_recall": 0.7444444444444445,
+        "nearest_in_response_quartile_fraction": 0.9444444444444444,
+        "screens": {
+          "median_spearman_at_least_0_5": true,
+          "spearman_at_least_0_4_fraction_at_least_0_6": true,
+          "mean_top5_recall_at_least_0_6": true,
+          "nearest_in_response_quartile_fraction_at_least_0_7": true
+        },
+        "joint_pass": true
+      },
+      "h2safe_helium": {
+        "experiment_count": 5,
+        "median_spearman": 0.5685483870967741,
+        "spearman_at_least_0_4_fraction": 0.8,
+        "mean_top5_recall": 0.8,
+        "nearest_in_response_quartile_fraction": 0.6,
+        "screens": {
+          "median_spearman_at_least_0_5": true,
+          "spearman_at_least_0_4_fraction_at_least_0_6": true,
+          "mean_top5_recall_at_least_0_6": true,
+          "nearest_in_response_quartile_fraction_at_least_0_7": false
+        },
+        "joint_pass": false
+      },
+      "both_cohorts_joint_pass": false,
+      "minimum_normalized_screen_margin": 0.8571428571428572
+    }
+  },
+  "sources": {
+    "hytunnel_actual_hydrogen": {
+      "dataset_doi": "10.23642/USN.14405903",
+      "experiment_count": 18
+    },
+    "h2safe_helium": {
+      "dataset_doi": "10.7799/17118570",
+      "experiment_count": 5,
+      "test_gas": "helium surrogate",
+      "release_time_crosswalk_available": false
+    }
+  },
+  "implementation": {
+    "path": "src/h2station/prospective_spatial_rank.py",
+    "sha256": "7ec8658fa729b1b8817e86314d7d178ee1ad3772f00e1f2b76e10f95d636b387",
+    "runtime_imported": false
+  },
+  "decision": {
+    "new_independent_validation": false,
+    "readiness_gate_effect": "none",
+    "runtime_application": false,
+    "future_candidate_frozen": true,
+    "next_step": "Evaluate without tuning on a newly acquired actual-hydrogen cohort with source and sensor coordinates in one frame."
+  },
+  "claim_boundary": "This pooled search uses two already-consumed cohorts. It is model development, not independent validation, concentration prediction, detector-placement validation, alarm calibration, CFD, ESD, or a site safety-distance result."
+}

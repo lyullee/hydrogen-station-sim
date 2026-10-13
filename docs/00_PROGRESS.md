@@ -3,8 +3,8 @@
 ## 2026-10-12 - Synchronize the public documentation with the evidence ledger
 
 The current machine-readable readiness audit, submission blocker matrix,
-technical report and user manual now share the same snapshot: **131 PASS / 10
-FAIL / 7 PENDING** overall, with **130 PASS / 9 FAIL / 2 PENDING** in the
+technical report and user manual now share the same snapshot: **131 PASS / 11
+FAIL / 7 PENDING** overall, with **130 PASS / 10 FAIL / 2 PENDING** in the
 declared station-side primary scope. The full objective and bounded IJHE
 submission gate remain open. A documentation-consistency regression now reads
 the authoritative audit and checks the current technical report and user

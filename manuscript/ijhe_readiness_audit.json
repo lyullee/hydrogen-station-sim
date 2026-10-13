@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-13T05:26:20.093577+00:00",
+  "generated_at": "2026-10-13T06:57:33.608560+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -13,7 +13,7 @@
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 130,
+    "PASS": 131,
     "FAIL": 11,
     "PENDING": 7
   },
@@ -3233,6 +3233,56 @@
       }
     },
     {
+      "id": "prospective_spatial_rank_candidate_freeze_integrity",
+      "status": "PASS",
+      "claim": "The pooled post-outcome spatial candidate and its future actual-hydrogen holdout rule are hash-frozen without entering runtime routing.",
+      "evidence": "research\\pooled_spatial_rank_development_2026_10_13.json; research\\prospective_spatial_rank_protocol_2026_10_13.json; src\\h2station\\prospective_spatial_rank.py",
+      "requirement": "15,120-candidate search, retained 7/8 screen result, exact implementation and development hashes, untouched future cohort contract, and no API or HAZOP runtime import.",
+      "observed": {
+        "candidate_count": 15120,
+        "parameters": [
+          0.3,
+          0.1,
+          0.2,
+          1.0,
+          1.25
+        ],
+        "hytunnel_actual_hydrogen": {
+          "experiment_count": 18,
+          "median_spearman": 0.600035638222451,
+          "spearman_at_least_0_4_fraction": 0.7777777777777778,
+          "mean_top5_recall": 0.7444444444444445,
+          "nearest_in_response_quartile_fraction": 0.9444444444444444,
+          "screens": {
+            "median_spearman_at_least_0_5": true,
+            "spearman_at_least_0_4_fraction_at_least_0_6": true,
+            "mean_top5_recall_at_least_0_6": true,
+            "nearest_in_response_quartile_fraction_at_least_0_7": true
+          },
+          "joint_pass": true
+        },
+        "h2safe_helium": {
+          "experiment_count": 5,
+          "median_spearman": 0.5685483870967741,
+          "spearman_at_least_0_4_fraction": 0.8,
+          "mean_top5_recall": 0.8,
+          "nearest_in_response_quartile_fraction": 0.6,
+          "screens": {
+            "median_spearman_at_least_0_5": true,
+            "spearman_at_least_0_4_fraction_at_least_0_6": true,
+            "mean_top5_recall_at_least_0_6": true,
+            "nearest_in_response_quartile_fraction_at_least_0_7": false
+          },
+          "joint_pass": false
+        },
+        "both_cohorts_joint_pass": false,
+        "future_holdout_outcomes_accessed": false,
+        "runtime_enabled": false,
+        "runtime_sources_exclude_candidate": true,
+        "claim_boundary": "This freeze does not validate detector placement, hydrogen concentration, alarm time, flammable volume, ESD performance, CFD, outdoor HRS dispersion, or any site safety distance. A dataset-specific protocol must identify and hash a new untouched cohort before numerical outcomes are accessed."
+      }
+    },
+    {
       "id": "hydrogen_blend_dispersion_negative_result_integrity",
       "status": "PASS",
       "claim": "A newly screened public hydrogen-blend dataset retains its failed frozen trend result and discloses the post-access format repair without outcome-specific rescue.",
@@ -6226,6 +6276,7 @@
             "path": "research/preslhy_blowdown_validation_protocol.json",
             "sha256": "d40cc59af3a607e66870d2afb91014058c83ae96fc1ba4aeac0d8554953733af",
             "frozen_model_commit": "d5eb663d7c48d93e29ecf83601175d8b16e3eeaf",
+            "validation_implementation_commit": "3b01661436de76a453e6652c4bcb479c3eaeb628",
             "outcomes_accessed_before_freeze": false
           },
           "chronology": [
@@ -6536,8 +6587,8 @@
       "evidence": "research\\apparatus_resolved_release_protocol.json; research\\release_network_prospective_protocol.json; research\\apparatus_release_holdout_manifest.template.json; src\\h2station\\release_network.py; src\\h2station\\apparatus_release_validation.py; scripts\\run_apparatus_release_holdout.py",
       "requirement": "Model, evaluator, runner and protocol hashes agree; eight-case stratification and no-fit/privacy rules are frozen; external validation remains explicitly not established.",
       "observed": {
-        "protocol_sha256": "ace967812e58f427eb7854114f25984ff5da781946dd4e842e649596183fd062",
-        "model_sha256": "fa0267fd6c06450c46651a019fa152bad599defd3eb7c2854dbe638618b0c39a",
+        "protocol_sha256": "29b61050001add8ab992ffd6daebe6389fdbe0ca666ae58d4df8299a931d2ab4",
+        "model_sha256": "ba240756c4dddb55aa7a98fc40b3635494bf157e7fbe4835bbddb2f06afeced6",
         "evaluator_sha256": "a31b9dcebbb4320749e0f39b9661519626cadbc1624c66c14c6ffa7f0ec2c035",
         "runner_sha256": "4a9a12b2b771c634ebcdf7e5ca660da51c78b85505bff421fdbac0f2cc01397c",
         "template_case_count": 8,

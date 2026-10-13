@@ -182,7 +182,7 @@ def test_role_aware_schema_contract_is_exposed_without_private_headers():
 def test_validation_readiness_ledger_reaches_all_llm_views_without_paths():
     manifest = _manifest()
     expected = {
-        "PASS": 130,
+        "PASS": 131,
         "FAIL": 11,
         "PENDING": 7,
     }
@@ -208,7 +208,7 @@ def test_validation_readiness_ledger_reaches_all_llm_views_without_paths():
     assert summary["full_user_objective_ready"] is False
 
     decision = prompt_decision_evidence(manifest)["validation_boundaries"]
-    assert decision["r"] == "130/11/7;0l0"
+    assert decision["r"] == "131/11/7;0l0"
 
     header = prompt_evidence_header(manifest)["validation_readiness"]
     assert header["gate_counts"] == expected
@@ -222,17 +222,18 @@ def test_primary_scope_amendment_reaches_llm_without_reclassifying_audit_gates()
     assert scope["artifact_integrity"] is True
     assert scope["gate_counts"] == {
         "PASS": 130,
-        "FAIL": 9,
+        "FAIL": 10,
         "PENDING": 2,
-        "TOTAL": 141,
+        "TOTAL": 142,
     }
-    assert scope["gate_closure_percent"] == 92.2
+    assert scope["gate_closure_percent"] == 91.5
     assert scope["station_to_vehicle_scope"] == (
         "removed_from_primary_goal_after_public_search"
     )
     assert scope["active_scope_open_gate_ids"] == [
         "dickens_typeiii_prospective_validation",
         "grune_2014_pressure_decay_validation",
+        "preslhy_blowdown_external_validation",
         "preslhy_partb_ambient_external_validation",
         "preslhy_revised_holdout_validation",
         "proust_independent_release_validation",
@@ -247,9 +248,9 @@ def test_primary_scope_amendment_reaches_llm_without_reclassifying_audit_gates()
     assert "optional_for_physics_validation" in scope["ethics_and_expert_review"]
 
     decision = prompt_decision_evidence(manifest)
-    assert decision["primary_scope_progress"]["gate_closure_percent"] == 92.2
+    assert decision["primary_scope_progress"]["gate_closure_percent"] == 91.5
     summary = prompt_evidence_summary(manifest)
-    assert summary["primary_scope_progress"]["gate_counts"]["TOTAL"] == 141
+    assert summary["primary_scope_progress"]["gate_counts"]["TOTAL"] == 142
     header = prompt_evidence_header(manifest)
     assert header["primary_scope_progress"]["station_to_vehicle_scope"] == (
         "removed_from_primary_goal_after_public_search"
@@ -292,6 +293,7 @@ def test_frozen_split_and_ethics_boundaries_reach_all_llm_projections():
     assert data_used["validation_scope"]["active_scope_open_gate_ids"] == [
         "dickens_typeiii_prospective_validation",
         "grune_2014_pressure_decay_validation",
+        "preslhy_blowdown_external_validation",
         "preslhy_partb_ambient_external_validation",
         "preslhy_revised_holdout_validation",
         "proust_independent_release_validation",
