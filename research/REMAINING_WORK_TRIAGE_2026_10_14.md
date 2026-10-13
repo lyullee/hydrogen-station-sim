@@ -24,6 +24,7 @@
 - 2026-10-14 공개자료 재검색에서 JRC/GasTeF 원시 시계열, 유럽 H2-Stations API, DTU Modelica 라이브러리, California in-use 보고서를 확인했다. 새 권리정리 원자료 holdout은 발견되지 않았고, 이미 개방한 H2SAFE·ELVHYS·USN 자료는 재사용하지 않았다. 상세 경계와 다음 수집 조건은 `research/public_data_search_recheck_2026_10_14.json`에 고정했다.
 - 최신 IJHE Type III/IV 충전 연구(DOI `10.1016/j.ijhydene.2026.156406`)도 확인했지만, 공개 접근 경로에서 원시 압력·온도·시간 파일과 권리정리된 보충 아카이브를 찾지 못해 경계자료로만 기록했다.
 - ICHS 2011 전면규모 차고 방출 실험은 실제 수소/혼합가스 센서 위치·응답시각 근거를 추가했지만, 원시 시계열과 재사용 조건이 없어 H2SAFE 공간 holdout을 닫지 못한다.
+- 차량탱크 경계조건의 영향도를 수치로 분리했다. MC 8개 시험에서 입구 엔탈피 압력을 공개된 `source_pressure_1`로 둘 때 압력 RMSE 평균은 `2.19 MPa`로 줄지만 온도 RMSE는 `23.28 °C`, SOC RMSE는 `5.58 pp`로 남았다. `source_pressure_3`도 압력 `1.82 MPa`까지 낮추지만 온도 `25.88 °C`와 SOC `5.58 pp`를 동시에 개선하지 못했고, 차량 압력을 쓰는 기존 경계는 온도 `9.05 °C`만 낮출 뿐 압력 `4.38 MPa`가 남는다. 따라서 공개 자료만으로 하나의 입구 경계를 선택해 런타임에 승격할 수 없으며, 원자료가 제공하는 노즐 상류 압력·온도 계측이 다음 독립 검증의 필수 입력이다. 진단 원본은 `research/mc_enthalpy_pressure_sensitivity_2026_10_05.json`이다.
 
 ## 먼저 처리할 수 있는 작업
 
