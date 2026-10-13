@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "artifact_type": "elvhys_wp42_release_window_amendment",
+  "status": "POST_ACCESS_FORMAT_ONLY_RELEASE_WINDOW_AMENDMENT",
+  "generated_at": "2026-10-14T00:00:00+00:00",
+  "protocol": "research/elvhys_wp42_spatial_holdout_protocol_2026_10_14.json",
+  "purpose": "Record the fixed pressure-derived release-window crosswalk used to make the public ELVHYS spatial replay reproducible.",
+  "scientific_candidate_unchanged": true,
+  "response_definition_unchanged": true,
+  "case_scope_unchanged": true,
+  "parameter_tuning_after_access": false,
+  "runtime_promotion": false,
+  "window_rule": {
+    "pressure_channel": "PT1ReleaseRig",
+    "quantiles": [0.9, 0.99],
+    "hold_level": "(q90 + q99) / 2",
+    "start_rule": "first timestamp at or above 0.90 * hold_level",
+    "stop_rule": "last timestamp after start at or above 0.10 * hold_level",
+    "response_window": "inclusive start/stop interval",
+    "response_values_used_for_window_selection": false
+  },
+  "outcomes_accessed_before_amendment": true,
+  "interpretation": "Format-only provenance amendment for a negative diagnostic replay; it does not create a confirmatory prospective validation claim or permit runtime use."
+}

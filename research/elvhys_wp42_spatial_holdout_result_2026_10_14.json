@@ -1,0 +1,986 @@
+{
+  "schema_version": 1,
+  "artifact_type": "elvhys_wp42_actual_hydrogen_spatial_holdout_result",
+  "generated_at": "2026-10-13T22:11:17+00:00",
+  "status": "FAIL",
+  "protocol": {
+    "path": "research\\elvhys_wp42_spatial_holdout_protocol_2026_10_14.json",
+    "sha256": "61e4f438f28206bbeb4cb2c9d4fc59f3f5d02d99015bb07cae31ee443ff60c4e",
+    "protocol_id": "elvhys_wp42_actual_hydrogen_spatial_rank_intake"
+  },
+  "amendment": {
+    "path": "research\\elvhys_wp42_release_window_amendment_2026_10_14.json",
+    "sha256": "50c730718274b65c3a400a99c17c9d7c38b010e5d4174facd2e2981c4e210eda",
+    "status": "POST_ACCESS_FORMAT_ONLY_RELEASE_WINDOW_AMENDMENT"
+  },
+  "source": {
+    "doi": "10.18710/JXJP0H",
+    "license": "CC0 1.0",
+    "existing_overlap_case_ids_excluded": [
+      29,
+      30,
+      31,
+      45
+    ]
+  },
+  "candidate": "pooled_spatial_rank_v1",
+  "selection": {
+    "eligible_case_ids": [
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      43,
+      44,
+      46,
+      47,
+      48
+    ],
+    "invalid_case_ids_excluded": [
+      27,
+      28
+    ],
+    "parameter_tuning_after_access": false
+  },
+  "aggregate": {
+    "eligible_case_count": 29,
+    "ineligible_case_count": 0,
+    "median_spearman": 0.21785714285714286,
+    "fraction_spearman_at_least_0_4": 0.27586206896551724,
+    "mean_top5_recall": 0.42068965517241386,
+    "nearest_success_fraction": 0.896551724137931
+  },
+  "screens": {
+    "all_declared_cases_eligible": true,
+    "median_spearman_at_least_0_5": false,
+    "fraction_cases_spearman_at_least_0_4_at_least_0_6": false,
+    "mean_top5_recall_at_least_0_6": false,
+    "nearest_success_fraction_at_least_0_7": true
+  },
+  "cases": [
+    {
+      "case_id": 3,
+      "orientation": "horizontal",
+      "sensor_count": 14,
+      "release_window_s": {
+        "start": 22.1500000000002,
+        "stop": 947.799999999686,
+        "duration": 925.6499999996857
+      },
+      "response_definition": "q99_minus_q10_during_pressure_crosswalk_window",
+      "spearman_rho": 0.2835164835164835,
+      "top5_recall": 0.4,
+      "nearest_success": true,
+      "screen": {
+        "rho_at_least_0_4": false,
+        "top5_recall_at_least_0_6": false,
+        "nearest_success": true
+      }
+    },
+    {
+      "case_id": 4,
+      "orientation": "horizontal",
+      "sensor_count": 14,
+      "release_window_s": {
+        "start": 10.7,
+        "stop": 805.949999999815,
+        "duration": 795.2499999998149
+      },
+      "response_definition": "q99_minus_q10_during_pressure_crosswalk_window",
+      "spearman_rho": 0.14725274725274726,
+      "top5_recall": 0.4,
+      "nearest_success": true,
+      "screen": {
+        "rho_at_least_0_4": false,
+        "top5_recall_at_least_0_6": false,
+        "nearest_success": true
+      }
+    },
+    {
+      "case_id": 5,
+      "orientation": "horizontal",
+      "sensor_count": 14,
+      "release_window_s": {
+        "start": 9.5,
+        "stop": 1179.74999999947,
+        "duration": 1170.24999999947
+      },
+      "response_definition": "q99_minus_q10_during_pressure_crosswalk_window",
+      "spearman_rho": 0.3230769230769231,
+      "top5_recall": 0.4,
+      "nearest_success": false,
+      "screen": {
+        "rho_at_least_0_4": false,
+        "top5_recall_at_least_0_6": false,
+        "nearest_success": false
+      }
+    },
+    {
+      "case_id": 6,
+      "orientation": "horizontal",
+      "sensor_count": 15,
+      "release_window_s": {
+        "start": 7.34999999999998,
+        "stop": 1117.34999999953,
+        "duration": 1109.99999999953
+      },
+      "response_definition": "q99_minus_q10_during_pressure_crosswalk_window",
+      "spearman_rho": 0.46785714285714286,
+      "top5_recall": 0.6,
+      "nearest_success": true,
+      "screen": {
+        "rho_at_least_0_4": true,
+        "top5_recall_at_least_0_6": true,
+        "nearest_success": true
+      }
+    },
+    {
+      "case_id": 7,
+      "orientation": "horizontal",
+      "sensor_count": 15,
+      "release_window_s": {
+        "start": 9.65,
+        "stop": 925.899999999706,
+        "duration": 916.249999999706
+      },
+      "response_definition": "q99_minus_q10_during_pressure_crosswalk_window",
+      "spearman_rho": 0.09285714285714286,
+      "top5_recall": 0.4,
+      "nearest_success": true,
+      "screen": {
+        "rho_at_least_0_4": false,
+        "top5_recall_at_least_0_6": false,
+        "nearest_success": true
+      }
+    },
+    {
+      "case_id": 8,
+      "orientation": "horizontal",
+      "sensor_count": 15,
+      "release_window_s": {
+        "start": 13.3000000000001,
+        "stop": 1181.44999999947,
+        "duration": 1168.1499999994699
+      },
+      "response_definition": "q99_minus_q10_during_pressure_crosswalk_window",
+      "spearman_rho": 0.07857142857142857,
+      "top5_recall": 0.4,
+      "nearest_success": true,
+      "screen": {
+        "rho_at_least_0_4": false,
+        "top5_recall_at_least_0_6": false,
+        "nearest_success": true
+      }
+    },
+    {
+      "case_id": 9,
+      "orientation": "horizontal",
+      "sensor_count": 15,
+      "release_window_s": {
+        "start": 34.4000000000002,
+        "stop": 793.849999999826,
+        "duration": 759.4499999998258
+      },
+      "response_definition": "q99_minus_q10_during_pressure_crosswalk_window",
+      "spearman_rho": 0.025,
+      "top5_recall": 0.4,
+      "nearest_success": true,
+      "screen": {
+        "rho_at_least_0_4": false,
+        "top5_recall_at_least_0_6": false,
+        "nearest_success": true
+      }
+    },
+    {
+      "case_id": 10,
+      "orientation": "horizontal",
+      "sensor_count": 15,
+      "release_window_s": {
+        "start": 65.1999999999984,
+        "stop": 1133.14999999952,
+        "duration": 1067.9499999995217
+      },
+      "response_definition": "q99_minus_q10_during_pressure_crosswalk_window",
+      "spearman_rho": 0.5428571428571428,
+      "top5_recall": 0.6,
+      "nearest_success": true,
+      "screen": {
+        "rho_at_least_0_4": true,
+        "top5_recall_at_least_0_6": true,
+        "nearest_success": true
+      }
+    },
+    {
+      "case_id": 11,
+      "orientation": "horizontal",
+      "sensor_count": 15,
+      "release_window_s": {
+        "start": 16.6500000000001,
+        "stop": 990.349999999647,
+        "duration": 973.6999999996469
+      },
+      "response_definition": "q99_minus_q10_during_pressure_crosswalk_window",
+      "spearman_rho": 0.4857142857142857,
+      "top5_recall": 0.4,
+      "nearest_success": true,
+      "screen": {
+        "rho_at_least_0_4": true,
+        "top5_recall_at_least_0_6": false,
+        "nearest_success": true
+      }
+    },
+    {
+      "case_id": 12,
+      "orientation": "horizontal",
+      "sensor_count": 15,
+      "release_window_s": {
+        "start": 46.7499999999995,
+        "stop": 1088.09999999956,
+        "duration": 1041.3499999995604
+      },
+      "response_definition": "q99_minus_q10_during_pressure_crosswalk_window",
+      "spearman_rho": 0.09642857142857143,
+      "top5_recall": 0.4,
+      "nearest_success": true,
+      "screen": {
+        "rho_at_least_0_4": false,
+        "top5_recall_at_least_0_6": false,
+        "nearest_success": true
+      }
+    },
+    {
+      "case_id": 13,
+      "orientation": "horizontal",
+      "sensor_count": 15,
+      "release_window_s": {
+        "start": 13.1500000000001,
+        "stop": 1407.44999999927,
+        "duration": 1394.2999999992699
+      },
+      "response_definition": "q99_minus_q10_during_pressure_crosswalk_window",
+      "spearman_rho": 0.10714285714285714,
+      "top5_recall": 0.4,
+      "nearest_success": true,
+      "screen": {
+        "rho_at_least_0_4": false,
+        "top5_recall_at_least_0_6": false,
+        "nearest_success": true
+      }
+    },
+    {
+      "case_id": 14,
+      "orientation": "horizontal",
+      "sensor_count": 15,
+      "release_window_s": {
+        "start": 26.8500000000002,
+        "stop": 1210.39999999945,
+        "duration": 1183.54999999945
+      },
+      "response_definition": "q99_minus_q10_during_pressure_crosswalk_window",
+      "spearman_rho": 0.6107142857142858,
+      "top5_recall": 0.6,
+      "nearest_success": true,
+      "screen": {
+        "rho_at_least_0_4": true,
+        "top5_recall_at_least_0_6": true,
+        "nearest_success": true
+      }
+    },
+    {
+      "case_id": 15,
+      "orientation": "horizontal",
+      "sensor_count": 15,
+      "release_window_s": {
+        "start": 10.75,
+        "stop": 1411.89999999926,
+        "duration": 1401.14999999926
+      },
+      "response_definition": "q99_minus_q10_during_pressure_crosswalk_window",
+      "spearman_rho": 0.48214285714285715,
+      "top5_recall": 0.4,
+      "nearest_success": true,
+      "screen": {
+        "rho_at_least_0_4": true,
+        "top5_recall_at_least_0_6": false,
+        "nearest_success": true
+      }
+    },
+    {
+      "case_id": 16,
+      "orientation": "horizontal",
+      "sensor_count": 15,
+      "release_window_s": {
+        "start": 29.5000000000003,
+        "stop": 1900.14999999882,
+        "duration": 1870.6499999988198
+      },
+      "response_definition": "q99_minus_q10_during_pressure_crosswalk_window",
+      "spearman_rho": 0.4928571428571429,
+      "top5_recall": 0.4,
+      "nearest_success": true,
+      "screen": {
+        "rho_at_least_0_4": true,
+        "top5_recall_at_least_0_6": false,
+        "nearest_success": true
+      }
+    },
+    {
+      "case_id": 17,
+      "orientation": "horizontal",
+      "sensor_count": 15,
+      "release_window_s": {
+        "start": 24.1500000000002,
+        "stop": 1390.24999999928,
+        "duration": 1366.0999999992798
+      },
+      "response_definition": "q99_minus_q10_during_pressure_crosswalk_window",
+      "spearman_rho": 0.37142857142857144,
+      "top5_recall": 0.4,
+      "nearest_success": true,
+      "screen": {
+        "rho_at_least_0_4": false,
+        "top5_recall_at_least_0_6": false,
+        "nearest_success": true
+      }
+    },
+    {
+      "case_id": 18,
+      "orientation": "horizontal",
+      "sensor_count": 15,
+      "release_window_s": {
+        "start": 21.3000000000002,
+        "stop": 1192.44999999946,
+        "duration": 1171.1499999994599
+      },
+      "response_definition": "q99_minus_q10_during_pressure_crosswalk_window",
+      "spearman_rho": 0.6321428571428571,
+      "top5_recall": 0.6,
+      "nearest_success": true,
+      "screen": {
+        "rho_at_least_0_4": true,
+        "top5_recall_at_least_0_6": true,
+        "nearest_success": true
+      }
+    },
+    {
+      "case_id": 19,
+      "orientation": "horizontal",
+      "sensor_count": 15,
+      "release_window_s": {
+        "start": 53.2999999999991,
+        "stop": 1643.94999999905,
+        "duration": 1590.649999999051
+      },
+      "response_definition": "q99_minus_q10_during_pressure_crosswalk_window",
+      "spearman_rho": 0.575,
+      "top5_recall": 0.4,
+      "nearest_success": true,
+      "screen": {
+        "rho_at_least_0_4": true,
+        "top5_recall_at_least_0_6": false,
+        "nearest_success": true
+      }
+    },
+    {
+      "case_id": 20,
+      "orientation": "horizontal",
+      "sensor_count": 15,
+      "release_window_s": {
+        "start": 47.4999999999994,
+        "stop": 1168.94999999948,
+        "duration": 1121.4499999994807
+      },
+      "response_definition": "q99_minus_q10_during_pressure_crosswalk_window",
+      "spearman_rho": 0.2714285714285714,
+      "top5_recall": 0.6,
+      "nearest_success": true,
+      "screen": {
+        "rho_at_least_0_4": false,
+        "top5_recall_at_least_0_6": true,
+        "nearest_success": true
+      }
+    },
+    {
+      "case_id": 21,
+      "orientation": "horizontal",
+      "sensor_count": 15,
+      "release_window_s": {
+        "start": 92.9499999999969,
+        "stop": 1177.79999999948,
+        "duration": 1084.849999999483
+      },
+      "response_definition": "q99_minus_q10_during_pressure_crosswalk_window",
+      "spearman_rho": 0.2357142857142857,
+      "top5_recall": 0.4,
+      "nearest_success": true,
+      "screen": {
+        "rho_at_least_0_4": false,
+        "top5_recall_at_least_0_6": false,
+        "nearest_success": true
+      }
+    },
+    {
+      "case_id": 22,
+      "orientation": "horizontal",
+      "sensor_count": 15,
+      "release_window_s": {
+        "start": 206.400000000013,
+        "stop": 1482.1999999992,
+        "duration": 1275.7999999991869
+      },
+      "response_definition": "q99_minus_q10_during_pressure_crosswalk_window",
+      "spearman_rho": 0.075,
+      "top5_recall": 0.4,
+      "nearest_success": true,
+      "screen": {
+        "rho_at_least_0_4": false,
+        "top5_recall_at_least_0_6": false,
+        "nearest_success": true
+      }
+    },
+    {
+      "case_id": 23,
+      "orientation": "horizontal",
+      "sensor_count": 15,
+      "release_window_s": {
+        "start": 118.599999999995,
+        "stop": 1175.29999999948,
+        "duration": 1056.699999999485
+      },
+      "response_definition": "q99_minus_q10_during_pressure_crosswalk_window",
+      "spearman_rho": 0.28214285714285714,
+      "top5_recall": 0.6,
+      "nearest_success": true,
+      "screen": {
+        "rho_at_least_0_4": false,
+        "top5_recall_at_least_0_6": true,
+        "nearest_success": true
+      }
+    },
+    {
+      "case_id": 24,
+      "orientation": "horizontal",
+      "sensor_count": 15,
+      "release_window_s": {
+        "start": 18.2000000000001,
+        "stop": 794.749999999825,
+        "duration": 776.549999999825
+      },
+      "response_definition": "q99_minus_q10_during_pressure_crosswalk_window",
+      "spearman_rho": 0.21785714285714286,
+      "top5_recall": 0.4,
+      "nearest_success": true,
+      "screen": {
+        "rho_at_least_0_4": false,
+        "top5_recall_at_least_0_6": false,
+        "nearest_success": true
+      }
+    },
+    {
+      "case_id": 25,
+      "orientation": "horizontal",
+      "sensor_count": 15,
+      "release_window_s": {
+        "start": 34.4000000000002,
+        "stop": 756.04999999986,
+        "duration": 721.6499999998598
+      },
+      "response_definition": "q99_minus_q10_during_pressure_crosswalk_window",
+      "spearman_rho": 0.2,
+      "top5_recall": 0.4,
+      "nearest_success": true,
+      "screen": {
+        "rho_at_least_0_4": false,
+        "top5_recall_at_least_0_6": false,
+        "nearest_success": true
+      }
+    },
+    {
+      "case_id": 26,
+      "orientation": "horizontal",
+      "sensor_count": 15,
+      "release_window_s": {
+        "start": 23.9500000000002,
+        "stop": 802.149999999818,
+        "duration": 778.1999999998178
+      },
+      "response_definition": "q99_minus_q10_during_pressure_crosswalk_window",
+      "spearman_rho": 0.14285714285714285,
+      "top5_recall": 0.4,
+      "nearest_success": true,
+      "screen": {
+        "rho_at_least_0_4": false,
+        "top5_recall_at_least_0_6": false,
+        "nearest_success": true
+      }
+    },
+    {
+      "case_id": 43,
+      "orientation": "vertical",
+      "sensor_count": 15,
+      "release_window_s": {
+        "start": 33.0500000000003,
+        "stop": 1199.84999999946,
+        "duration": 1166.7999999994595
+      },
+      "response_definition": "q99_minus_q10_during_pressure_crosswalk_window",
+      "spearman_rho": 0.14285714285714285,
+      "top5_recall": 0.4,
+      "nearest_success": true,
+      "screen": {
+        "rho_at_least_0_4": false,
+        "top5_recall_at_least_0_6": false,
+        "nearest_success": true
+      }
+    },
+    {
+      "case_id": 44,
+      "orientation": "vertical",
+      "sensor_count": 15,
+      "release_window_s": {
+        "start": 1199.89999999946,
+        "stop": 1868.09999999885,
+        "duration": 668.19999999939
+      },
+      "response_definition": "q99_minus_q10_during_pressure_crosswalk_window",
+      "spearman_rho": -0.2714285714285714,
+      "top5_recall": 0.2,
+      "nearest_success": true,
+      "screen": {
+        "rho_at_least_0_4": false,
+        "top5_recall_at_least_0_6": false,
+        "nearest_success": true
+      }
+    },
+    {
+      "case_id": 46,
+      "orientation": "vertical",
+      "sensor_count": 15,
+      "release_window_s": {
+        "start": 18.6000000000001,
+        "stop": 738.399999999876,
+        "duration": 719.7999999998758
+      },
+      "response_definition": "q99_minus_q10_during_pressure_crosswalk_window",
+      "spearman_rho": 0.02857142857142857,
+      "top5_recall": 0.4,
+      "nearest_success": true,
+      "screen": {
+        "rho_at_least_0_4": false,
+        "top5_recall_at_least_0_6": false,
+        "nearest_success": true
+      }
+    },
+    {
+      "case_id": 47,
+      "orientation": "vertical",
+      "sensor_count": 15,
+      "release_window_s": {
+        "start": 2370.39999999986,
+        "stop": 3257.95000000309,
+        "duration": 887.5500000032298
+      },
+      "response_definition": "q99_minus_q10_during_pressure_crosswalk_window",
+      "spearman_rho": -0.010714285714285714,
+      "top5_recall": 0.2,
+      "nearest_success": false,
+      "screen": {
+        "rho_at_least_0_4": false,
+        "top5_recall_at_least_0_6": false,
+        "nearest_success": false
+      }
+    },
+    {
+      "case_id": 48,
+      "orientation": "vertical",
+      "sensor_count": 15,
+      "release_window_s": {
+        "start": 62.4499999999986,
+        "stop": 758.699999999858,
+        "duration": 696.2499999998595
+      },
+      "response_definition": "q99_minus_q10_during_pressure_crosswalk_window",
+      "spearman_rho": -0.007142857142857143,
+      "top5_recall": 0.2,
+      "nearest_success": false,
+      "screen": {
+        "rho_at_least_0_4": false,
+        "top5_recall_at_least_0_6": false,
+        "nearest_success": false
+      }
+    }
+  ],
+  "ineligible_cases": [],
+  "source_file_manifest": [
+    {
+      "name": "ELE402HSE003CONC2025118.csv",
+      "bytes": 7578570,
+      "sha256": "d2efac5f04081fa367a63f6d248944f57de5b813dc87bc1b1491e315bd955906",
+      "case_id": 3
+    },
+    {
+      "name": "ELE402HSE003PRES2025118.csv",
+      "bytes": 2356576,
+      "sha256": "492d0e4892045ad64820f13be796516b27e8eb1597fd7c3dd7826fa449a362b4",
+      "case_id": 3
+    },
+    {
+      "name": "ELE402HSE004CONC2025118.csv",
+      "bytes": 6790044,
+      "sha256": "38c6353508ec003221fa1d2b26d03ee11f9b0f1b48fcfacb02dc981c5ceaada9",
+      "case_id": 4
+    },
+    {
+      "name": "ELE402HSE004PRES2025118.csv",
+      "bytes": 2029728,
+      "sha256": "232a5c6926faa1c422c37fc6eca8e707ec18fa11c8769eb7285a23d986ce1d78",
+      "case_id": 4
+    },
+    {
+      "name": "ELE402HSE005CONC2025118.csv",
+      "bytes": 7655292,
+      "sha256": "09e39361099db2d336fb20eb52e8927357efd2cd82a6d67c71822314f26f8271",
+      "case_id": 5
+    },
+    {
+      "name": "ELE402HSE005PRES2025118.csv",
+      "bytes": 2426168,
+      "sha256": "abb95eb3b57f78fc172797e6225e1b344d26eeebccd6b1b95dd7f8562c78b90c",
+      "case_id": 5
+    },
+    {
+      "name": "ELE402HSE006CONC2025118.csv",
+      "bytes": 8594293,
+      "sha256": "fbb8a08167df4c5ba76961622ef8468193dfb828ef98935cde0ed81a5c7f0a7b",
+      "case_id": 6
+    },
+    {
+      "name": "ELE402HSE006PRES2025118.csv",
+      "bytes": 2550484,
+      "sha256": "f8ed34764c6f6a9f5e0275a65922bde211a9dc0ecb5506b752166a62f9c3830e",
+      "case_id": 6
+    },
+    {
+      "name": "ELE402HSE007CONC2025118.csv",
+      "bytes": 6929975,
+      "sha256": "7037bea3c0cd2e0cee61fd8ffdbf1f1ff893cc76c6866088d1b0b619a9e7447f",
+      "case_id": 7
+    },
+    {
+      "name": "ELE402HSE007PRES2025118.csv",
+      "bytes": 2020113,
+      "sha256": "0cd351f5c515154a6eaf8bc6865b7878bef14362d56fbaf509c4b781ef3a7f71",
+      "case_id": 7
+    },
+    {
+      "name": "ELE402HSE008CONC2025118.csv",
+      "bytes": 9741000,
+      "sha256": "5463eba83c7cc15c9ac0bd7724fea55b875a170f772a07285c8c83a5906aa2ea",
+      "case_id": 8
+    },
+    {
+      "name": "ELE402HSE008PRES2025118.csv",
+      "bytes": 2888363,
+      "sha256": "b19eac4121936e1581f03307756ab78c93861cd92eb02479dd2de2d70898ab34",
+      "case_id": 8
+    },
+    {
+      "name": "ELE402HSE009CONC2025118.csv",
+      "bytes": 6088760,
+      "sha256": "2fdfa6c38cc50c7f93b3d35754cdc1d250cbd5b41beaa512440facf7fef9df63",
+      "case_id": 9
+    },
+    {
+      "name": "ELE402HSE009PRES2025118.csv",
+      "bytes": 1707813,
+      "sha256": "ebe113f9529298dd37a1e8baea3d7390ebadad949c213983c3d150385037bc97",
+      "case_id": 9
+    },
+    {
+      "name": "ELE402HSE010CONC20251111.csv",
+      "bytes": 8541270,
+      "sha256": "534ddacd0b96a5cd04c46c8cce93b3d268012705e45dd28a8904563850c71480",
+      "case_id": 10
+    },
+    {
+      "name": "ELE402HSE010PRES20251111.csv",
+      "bytes": 2546186,
+      "sha256": "845a555edbfd0f7e4e3c2f8e65182556d476ec739bb8633d1497e689e2a21dd0",
+      "case_id": 10
+    },
+    {
+      "name": "ELE402HSE011CONC20251111.csv",
+      "bytes": 8639379,
+      "sha256": "5eaa47e1ffe1aabea53265043b976821434c5b77db110321d4023d841e86759e",
+      "case_id": 11
+    },
+    {
+      "name": "ELE402HSE011PRES20251111.csv",
+      "bytes": 2579140,
+      "sha256": "59fd2286678d0d8180edaa2f333ec5314a37bbecaf9a6dcaba2a707f5f5f243b",
+      "case_id": 11
+    },
+    {
+      "name": "ELE402HSE012CONC20251111.csv",
+      "bytes": 7269833,
+      "sha256": "e9c48bbb5faf1c3683f1d2f036019fdcd3a9e59893b9fb34d50c58730e0e2043",
+      "case_id": 12
+    },
+    {
+      "name": "ELE402HSE012PRES20251111.csv",
+      "bytes": 2117755,
+      "sha256": "47b2982b26f6c58b915d020b4157014c447bb21398f99b53e93ef98a52784d07",
+      "case_id": 12
+    },
+    {
+      "name": "ELE402HSE013CONC20251111.csv",
+      "bytes": 10081877,
+      "sha256": "d9ff4c70482b6d1fc36ffbc90ee9502c699e09c7e607f45a361e8fa714f9d231",
+      "case_id": 13
+    },
+    {
+      "name": "ELE402HSE013PRES20251111.csv",
+      "bytes": 2954403,
+      "sha256": "c386cd619bf8aa2c37738ba589fada8fa5605c70cb7d8a1908138de54e8dd288",
+      "case_id": 13
+    },
+    {
+      "name": "ELE402HSE014CONC20251112.csv",
+      "bytes": 9407355,
+      "sha256": "2963e070614171045709136c4768b4f5bf8a6d0b4d119dc89dac0dedd2578b69",
+      "case_id": 14
+    },
+    {
+      "name": "ELE402HSE014PRES20251112.csv",
+      "bytes": 2832703,
+      "sha256": "2c6cd40bdb6229cc4048dbed8342746d594e453ed9c305fbfa2b3da60e32ad49",
+      "case_id": 14
+    },
+    {
+      "name": "ELE402HSE015CONC20251112.csv",
+      "bytes": 9702897,
+      "sha256": "d70cda4d5ce571c07e128da97fd366a11fdc468f2e47840632620d288f0722ee",
+      "case_id": 15
+    },
+    {
+      "name": "ELE402HSE015PRES20251112.csv",
+      "bytes": 2830716,
+      "sha256": "0dad493022d700af0526646c03a70520b2f72dd4f43390a8b63fe2b4c8657572",
+      "case_id": 15
+    },
+    {
+      "name": "ELE402HSE016CONC20251112.csv",
+      "bytes": 17883683,
+      "sha256": "b7699cd71fb3192adbfb50e192f3e5468950e62ec0ff69387f9712d6b87eac78",
+      "case_id": 16
+    },
+    {
+      "name": "ELE402HSE016PRES20251112.csv",
+      "bytes": 5415909,
+      "sha256": "cca213dc8b6434222cb621494b6fa5f44302794a2d2d6efab09951d9be8bca9c",
+      "case_id": 16
+    },
+    {
+      "name": "ELE402HSE017CONC20251112.csv",
+      "bytes": 11458694,
+      "sha256": "dbb3030190e3e1927558acd58064f676e9d61f387a23dad2510443b5c2a4718c",
+      "case_id": 17
+    },
+    {
+      "name": "ELE402HSE017PRES20251112.csv",
+      "bytes": 3360020,
+      "sha256": "5e440c1577cce9aebcff3a4ed912862271a71942633130be6de0263b97ff12ad",
+      "case_id": 17
+    },
+    {
+      "name": "ELE402HSE018CONC20251112.csv",
+      "bytes": 8752445,
+      "sha256": "25577b44b4e912701e67d64f4712669ceea87daea72a50a92643b27d95d2ca7e",
+      "case_id": 18
+    },
+    {
+      "name": "ELE402HSE018PRES20251112.csv",
+      "bytes": 2591610,
+      "sha256": "f8f41cae982e1f22ccc3af9e2a1e0c1eda011fa33710765d3f93c56d0b2bea1b",
+      "case_id": 18
+    },
+    {
+      "name": "ELE402HSE019CONC20251113.csv",
+      "bytes": 11410962,
+      "sha256": "55b832db5ef22ace06dc277e05ca4a3301fc35dbf3da95492a77bf93e8572869",
+      "case_id": 19
+    },
+    {
+      "name": "ELE402HSE019PRES20251113.csv",
+      "bytes": 3310141,
+      "sha256": "006980aaab7dc101c0bc2d5c2ac81887dd76bc8442b2987dfc320cdb0bb8facb",
+      "case_id": 19
+    },
+    {
+      "name": "ELE402HSE020CONC20251113.csv",
+      "bytes": 8024049,
+      "sha256": "a00768221dac0e14ea17e5958eabf13e2ddaea7ba2c162ed14c58f1b3a117f19",
+      "case_id": 20
+    },
+    {
+      "name": "ELE402HSE020PRES20251113.csv",
+      "bytes": 2353146,
+      "sha256": "2f7e27e656a1dcad1ec8bcf482c015be7f625f2ccea16799731166b92df22041",
+      "case_id": 20
+    },
+    {
+      "name": "ELE402HSE021CONC20251113.csv",
+      "bytes": 19846836,
+      "sha256": "801cee3175722ce812eb442d0bf6683c7f526636aba0a8725c8b9ab91426eee2",
+      "case_id": 21
+    },
+    {
+      "name": "ELE402HSE021PRES20251113.csv",
+      "bytes": 5819888,
+      "sha256": "b6075ff6365472d02501987ba00c908c8303cb6f1d889442659450de6ba4949f",
+      "case_id": 21
+    },
+    {
+      "name": "ELE402HSE022CONC20251114.csv",
+      "bytes": 10259685,
+      "sha256": "6cbfc8706cd31f3b085f79a878caa7e674c983cf1662227c05e78db494347e6a",
+      "case_id": 22
+    },
+    {
+      "name": "ELE402HSE022PRES20251114.csv",
+      "bytes": 2998888,
+      "sha256": "eacfb804c3a521703be244f1420872c3f4abc7eb1736f358006f509ae9c97402",
+      "case_id": 22
+    },
+    {
+      "name": "ELE402HSE023CONC20251114.csv",
+      "bytes": 9160352,
+      "sha256": "89892b6b5e0b0ee66aa0e5ba0c545a7222b6a94399b9f0d8065f4d69935085e2",
+      "case_id": 23
+    },
+    {
+      "name": "ELE402HSE023PRES20251114.csv",
+      "bytes": 2689358,
+      "sha256": "3e4b4a5d51702050e4d556e2627278b0c67d9fb95aeb0e195aea239113573734",
+      "case_id": 23
+    },
+    {
+      "name": "ELE402HSE024CONC20251114.csv",
+      "bytes": 5686178,
+      "sha256": "30023efff2a268abb632003ff56167f29c747440c56f329c2a45524a3f4a5f98",
+      "case_id": 24
+    },
+    {
+      "name": "ELE402HSE0024PRES20251114.csv",
+      "bytes": 1658947,
+      "sha256": "2503984010ca4ed74ae82721c136ac621b624810627d49bb6635bc687b8aca50",
+      "case_id": 24
+    },
+    {
+      "name": "ELE402HSE025CONC20251114.csv",
+      "bytes": 4565928,
+      "sha256": "238b9765a4b68d7c8e63463823b2679722761008afc1c3959f685e4a280cd9a6",
+      "case_id": 25
+    },
+    {
+      "name": "ELE402HSE025PRES20251114.csv",
+      "bytes": 1327552,
+      "sha256": "7efbee8dc80cfede7165bf0dca682f339249b7a9380722088cc65d3e80150864",
+      "case_id": 25
+    },
+    {
+      "name": "ELE402HSE026CONC20251114.csv",
+      "bytes": 5931861,
+      "sha256": "3c8914b9b31b22a75ba9d28c983d39b3df23fd1625ba50d160922f1911afe9c2",
+      "case_id": 26
+    },
+    {
+      "name": "ELE402HSE026PRES20251114.csv",
+      "bytes": 1697611,
+      "sha256": "60d30488b6aeebe59ad3b3e4b1eda9c30f117f0a30148a4aa5bde70501969b52",
+      "case_id": 26
+    },
+    {
+      "name": "ELE402HSE043CONC20251128.csv",
+      "bytes": 8675547,
+      "sha256": "f2c47a9efeb0535995afa398b991ab24419f104d2896c332f6164f4f2653c171",
+      "case_id": 43
+    },
+    {
+      "name": "ELE402HSE043PRES20251128.csv",
+      "bytes": 2136561,
+      "sha256": "9341ee8629380ba175086dade41f575b8986feb5659e30211a60221e254235ac",
+      "case_id": 43
+    },
+    {
+      "name": "ELE402HSE044CONC20251128.csv",
+      "bytes": 6264597,
+      "sha256": "fed15217d1d60c2f3d9635ca57ffaf52f171773a3f13d4bb29d3b88200546919",
+      "case_id": 44
+    },
+    {
+      "name": "ELE402HSE044PRES20251128.csv",
+      "bytes": 1856369,
+      "sha256": "388d587e3be66d44701b260f0ce3c7745c07ec7205a46d1ec561cd9e321e6243",
+      "case_id": 44
+    },
+    {
+      "name": "ELE402HSE046CONC20251128.csv",
+      "bytes": 14527182,
+      "sha256": "d1d71e08a7556498995af9f24fc344eb2d72ba46ab77f49221687884f58a9bd9",
+      "case_id": 46
+    },
+    {
+      "name": "ELE402HSE046PRES20251128.csv",
+      "bytes": 4229989,
+      "sha256": "25b52d67cec5589772c17111385ccc70391e73c5251c497345eaec4ec3f773bb",
+      "case_id": 46
+    },
+    {
+      "name": "ELE402HSE047CONC20251128.csv",
+      "bytes": 6842554,
+      "sha256": "c0c6efce32344a5775455bbf4a14db41ad746ba15da8a8deee4aa98df6348b21",
+      "case_id": 47
+    },
+    {
+      "name": "ELE402HSE047PRES20251128.csv",
+      "bytes": 1992137,
+      "sha256": "484e3651039e4221b7194449f76af64254639528760d43f24aeda3a415d92488",
+      "case_id": 47
+    },
+    {
+      "name": "ELE402HSE048CONC20251128.csv",
+      "bytes": 5889283,
+      "sha256": "70eca8dcab71490f3813773f1aedadd632b60917029e4142e645f6bab92cedd8",
+      "case_id": 48
+    },
+    {
+      "name": "ELE402HSE048PRES20251128.csv",
+      "bytes": 1713859,
+      "sha256": "7b0e91a5caa4c1659d8bdb0c9cd03e67e329f0d558719950632ec67092e8c04c",
+      "case_id": 48
+    }
+  ],
+  "runtime_promotion": false,
+  "claim_boundary": "This result tests only within-case spatial response ordering in the disjoint ELVHYS cryogenic indoor geometry. It does not validate concentration magnitude, detector timing, outdoor HRS placement, consequence distance, ESD, field safety or station-to-vehicle behavior."
+}

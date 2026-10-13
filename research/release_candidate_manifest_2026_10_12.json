@@ -23,10 +23,10 @@
     "full_user_objective_ready": false,
     "goal_completion_permitted": false,
     "overall_gates": {
-      "PASS": 133,
+      "PASS": 134,
       "FAIL": 11,
       "PENDING": 7,
-      "total": 151
+      "total": 152
     },
     "primary_scope_gates": {
       "PASS": 132,

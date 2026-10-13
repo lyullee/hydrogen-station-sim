@@ -89,7 +89,7 @@ The assistant is deliberately separate from process control. A question such as 
 
 The assistant receives a compact `validation_readiness` summary from the same
 committed evidence ledger used by the research report. At the current snapshot
-the ledger is **133 PASS · 11 FAIL · 7 PENDING** (the declared station-side
+the ledger is **134 PASS · 11 FAIL · 7 PENDING** (the declared station-side
 primary scope is **132 PASS · 10 FAIL · 2 PENDING**) and does not authorize a
 claim of externally validated station-to-vehicle full-loop behavior. This
 status is shown to keep answers grounded; it is not a live plant alarm and it

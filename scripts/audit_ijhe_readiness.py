@@ -3744,6 +3744,47 @@ def audit(root: Path) -> dict[str, object]:
         } if elvhys_replay else "missing",
     ))
 
+    elvhys_spatial_path = root / "research/elvhys_wp42_spatial_holdout_result_2026_10_14.json"
+    elvhys_spatial = _json(elvhys_spatial_path)
+    elvhys_spatial_protocol = _repo_path(root, ((elvhys_spatial or {}).get("protocol") or {}).get("path"))
+    elvhys_spatial_source = (elvhys_spatial or {}).get("source") or {}
+    elvhys_spatial_aggregate = (elvhys_spatial or {}).get("aggregate") or {}
+    elvhys_spatial_screens = (elvhys_spatial or {}).get("screens") or {}
+    elvhys_spatial_integrity = bool(
+        (elvhys_spatial or {}).get("artifact_type") == "elvhys_wp42_actual_hydrogen_spatial_holdout_result"
+        and (elvhys_spatial or {}).get("status") == "FAIL"
+        and (elvhys_spatial or {}).get("candidate") == "pooled_spatial_rank_v1"
+        and ((elvhys_spatial or {}).get("selection") or {}).get("parameter_tuning_after_access") is False
+        and elvhys_spatial_protocol.is_file()
+        and _sha256(elvhys_spatial_protocol) == ((elvhys_spatial or {}).get("protocol") or {}).get("sha256")
+        and elvhys_spatial_source.get("doi") == "10.18710/JXJP0H"
+        and elvhys_spatial_source.get("license") == "CC0 1.0"
+        and elvhys_spatial_source.get("existing_overlap_case_ids_excluded") == [29, 30, 31, 45]
+        and elvhys_spatial_aggregate.get("eligible_case_count") == 29
+        and elvhys_spatial_aggregate.get("ineligible_case_count") == 0
+        and elvhys_spatial_screens.get("all_declared_cases_eligible") is True
+        and elvhys_spatial_screens.get("median_spearman_at_least_0_5") is False
+        and elvhys_spatial_screens.get("fraction_cases_spearman_at_least_0_4_at_least_0_6") is False
+        and elvhys_spatial_screens.get("mean_top5_recall_at_least_0_6") is False
+        and elvhys_spatial_screens.get("nearest_success_fraction_at_least_0_7") is True
+        and (elvhys_spatial or {}).get("runtime_promotion") is False
+        and "does not validate" in str((elvhys_spatial or {}).get("claim_boundary", ""))
+    )
+    gates.append(_gate(
+        "elvhys_wp42_spatial_holdout_integrity",
+        "PASS" if elvhys_spatial_integrity else ("FAIL" if elvhys_spatial else "PENDING"),
+        "The disjoint ELVHYS actual-hydrogen spatial replay is retained as a negative diagnostic result without tuning or runtime promotion.",
+        str(elvhys_spatial_path.relative_to(root)),
+        "29 eligible cases, no ineligible cases, frozen protocol hash, DOI/license provenance, failed rank screens, and explicit runtime/claim boundary.",
+        {
+            "doi": elvhys_spatial_source.get("doi"),
+            "eligible_case_count": elvhys_spatial_aggregate.get("eligible_case_count"),
+            "ineligible_case_count": elvhys_spatial_aggregate.get("ineligible_case_count"),
+            "screens": elvhys_spatial_screens,
+            "runtime_promotion": (elvhys_spatial or {}).get("runtime_promotion"),
+        } if elvhys_spatial else "missing",
+    ))
+
     elvhys_metadata_path = root / "research/elvhys_dataverse_metadata_audit_2026_10_05.json"
     elvhys_metadata = _json(elvhys_metadata_path)
     elvhys_metadata_source = (elvhys_metadata or {}).get("source") or {}
