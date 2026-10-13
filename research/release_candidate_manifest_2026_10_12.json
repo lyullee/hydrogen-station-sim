@@ -1,9 +1,9 @@
 {
   "schema_version": "1.0",
   "candidate": "hydrogen-station-sim 0.1.1-rc1",
-  "generated_at": "2026-10-14T03:16:00+09:00",
+  "generated_at": "2026-10-14T06:45:00+09:00",
   "repository": "lyullee/hydrogen-station-sim",
-  "validated_source_commit": "9cd8c0795b1750e0d53defa04c24aafb45f16e6f",
+  "validated_source_commit": "a6f952d13730e1e771463c20635f0ac1a679b6e0",
   "branch": "main",
   "scope": {
     "included": [
@@ -37,10 +37,10 @@
     }
   },
   "software_evidence": {
-    "latest_ci_run_id": "38449825534",
-    "latest_ci_sha": "7fdeb6dd7cc0b46b1395c5f4b34b23cbc67cdb7c",
+    "latest_ci_run_id": "38472133355",
+    "latest_ci_sha": "a6f952d13730e1e771463c20635f0ac1a679b6e0",
     "latest_ci_conclusion": "success",
-    "latest_ci_url": "https://github.com/lyullee/hydrogen-station-sim/actions/runs/38449825534",
+    "latest_ci_url": "https://github.com/lyullee/hydrogen-station-sim/actions/runs/38472133355",
     "local_priority_focus": "PASS",
     "scientific_screen": "FAIL_WITH_DOCUMENTED_EXTERNAL_DATA_GAPS",
     "local_priority_focus_artifact": "research/priority_focus_run_2026_10_14.json",
@@ -48,7 +48,7 @@
     "local_priority_focus_check_count": 3,
     "latest_full_regression_artifact": "research/full_regression_test_run_2026_10_14.json",
     "latest_full_regression_status": "PASS",
-    "latest_full_regression_passed": 1565,
+    "latest_full_regression_passed": 1571,
     "latest_full_regression_failed": 0,
     "latest_full_regression_skipped": 0,
     "latest_full_regression_working_tree_dirty": true,
