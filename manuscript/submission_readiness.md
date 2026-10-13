@@ -22,7 +22,7 @@ Audit snapshot: **2026-10-14 KST**
 
 Gate counts: **133 PASS · 11 FAIL · 7 PENDING**.
 
-The latest full working-tree regression passed **1,570 tests with 0 failures and 0 skips** plus 222 dependency/data-reader warnings in 221.93 s (`research/full_regression_test_run_2026_10_14.json`). It was run from commit `5b5f6cf9d6956851027d0bb7ab2cc0aad7d3b225` with the PRESLHY concentration-transport diagnostic and refreshed evidence files present, so it is an implementation-integrity record rather than a clean-release attestation. A broad LLM/SAGA, virtual-safety, HAZOP and HIAD accident-path selection passed **159 tests with 2 warnings** (`research/paper_llm_safety_broad_regression_2026_10_12.json`). These software checks do not convert independent physical-validation failures or the author-confirmation gate into passes.
+The latest full working-tree regression passed **1,571 tests with 0 failures and 0 skips** plus 222 dependency/data-reader warnings in approximately 305 s (`research/full_regression_test_run_2026_10_14.json`). It was run from commit `c2d9b2f31667f68b556365d0c11823bba8341e15`, so it is an implementation-integrity record rather than a clean-release attestation. A broad LLM/SAGA, virtual-safety, HAZOP and HIAD accident-path selection passed **159 tests with 2 warnings** (`research/paper_llm_safety_broad_regression_2026_10_12.json`). These software checks do not convert independent physical-validation failures or the author-confirmation gate into passes.
 
 The latest critical-priority fast lane completed locally in about 5 s and is
 archived as [`priority_focus_run_2026_10_14.json`](../research/priority_focus_run_2026_10_14.json).
