@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-13T16:10:38.305572+00:00",
+  "generated_at": "2026-10-13T17:29:54.625030+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -8826,7 +8826,7 @@
       "requirement": "Compiler success, exact source/PDF hashes, no unresolved errors, and visual inspection of every rendered page.",
       "observed": {
         "schema_version": 2,
-        "verified_at_utc": "2026-10-13T12:36:19.180521+00:00",
+        "verified_at_utc": "2026-10-13T17:26:44.285127+00:00",
         "success": true,
         "compiler": {
           "name": "Tectonic",
@@ -8836,20 +8836,20 @@
         },
         "source": {
           "path": "manuscript/ijhe_manuscript_draft.tex",
-          "bytes": 77703,
-          "sha256": "de445885eab9e690248163733cc8a61cffcc7f9142f1c71c3c0c7e89946b461c"
+          "bytes": 78361,
+          "sha256": "1e03a3bf58ccae18591aaa0a9c4b5223589aa22a7250b675f0ccaaf30a54f8fc"
         },
         "pdf": {
           "path": "output/pdf/ijhe_manuscript_draft.pdf",
-          "bytes": 838804,
-          "sha256": "9f72012ad607ea9d66b9cfbcd952b7cb9ccfeb3bb28ca0e2f1ab3cb8e50f122d",
+          "bytes": 840357,
+          "sha256": "28bb41f851d844c922d2e5022f4d3d8e9ce131bb41c7a84f8ea4ec29258fee0a",
           "page_count": 24,
-          "extracted_character_count": 71933
+          "extracted_character_count": 72547
         },
         "compile_log": {
           "path": "output/pdf/ijhe_manuscript_draft.log",
-          "bytes": 19550,
-          "sha256": "e4abe27c8c4bfac3adf7596e8f1dcb1c25f0c68ed04b5f91c06c60234804ef1a",
+          "bytes": 19549,
+          "sha256": "17279b069797afa64d44ed55bd3010246db2f84fb3ca99b06475b7570a9d522d",
           "unresolved_citations": 0,
           "unresolved_references": 0,
           "fatal_errors": [],
