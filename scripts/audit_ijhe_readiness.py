@@ -1037,6 +1037,87 @@ def audit(root: Path) -> dict[str, object]:
         } if mc_tank_boundary else "missing",
     ))
 
+    mc_capacity_cv_path = (
+        root / "research/mc_capacity_geometry_leave_one_out_2026_10_14.json"
+    )
+    mc_capacity_cv = _json(mc_capacity_cv_path)
+    mc_capacity_folds = (mc_capacity_cv or {}).get("folds") or []
+    mc_capacity_aggregate = (mc_capacity_cv or {}).get("aggregate") or {}
+    mc_capacity_comparison = (
+        (mc_capacity_cv or {}).get("baseline_comparison") or {}
+    )
+    mc_capacity_sources = (mc_capacity_cv or {}).get("source_hashes") or {}
+    mc_capacity_hashes_match = bool(mc_capacity_sources) and all(
+        (_repo_path(root, relative)).is_file()
+        and _sha256(_repo_path(root, relative)) == expected
+        for relative, expected in mc_capacity_sources.items()
+    )
+    mc_capacity_disjoint = bool(mc_capacity_folds) and all(
+        fold.get("training_case_count") == 7
+        and fold.get("held_out_case_id") not in (fold.get("training_case_ids") or [])
+        and fold.get("held_out_volume_ratio_used_for_training") is False
+        for fold in mc_capacity_folds
+    )
+    mc_capacity_cv_pass = bool(
+        (mc_capacity_cv or {}).get("schema_version") == 1
+        and (mc_capacity_cv or {}).get("artifact_type")
+        == "mc_capacity_geometry_leave_one_case_out"
+        and (mc_capacity_cv or {}).get("evidence_role")
+        == "post_outcome_within_campaign_development_cross_validation"
+        and (mc_capacity_cv or {}).get("post_outcome") is True
+        and (mc_capacity_cv or {}).get("external_validation") is False
+        and (mc_capacity_cv or {}).get("prospective_validation") is False
+        and (mc_capacity_cv or {}).get("runtime_parameter_changed") is False
+        and (mc_capacity_cv or {}).get("validation_gate_changed") is False
+        and ((mc_capacity_cv or {}).get("method") or {}).get(
+            "held_out_outcomes_excluded_from_fit"
+        ) is True
+        and len(mc_capacity_folds) == 8
+        and mc_capacity_disjoint
+        and mc_capacity_hashes_match
+        and mc_capacity_aggregate.get("fold_count") == 8
+        and mc_capacity_aggregate.get("joint_screening_pass_count") == 4
+        and mc_capacity_comparison.get(
+            "baseline_joint_screening_pass_count"
+        ) == 0
+        and float(
+            mc_capacity_comparison.get("pressure_rmse_reduction_percent", -1.0)
+        ) > 50.0
+        and float(
+            mc_capacity_comparison.get(
+                "soc_final_abs_error_reduction_percent", -1.0
+            )
+        ) > 60.0
+        and float(
+            mc_capacity_comparison.get("temperature_rmse_reduction_percent", 1.0)
+        ) < 0.0
+        and (mc_capacity_cv or {}).get("claim_boundary")
+    )
+    gates.append(_gate(
+        "mc_capacity_geometry_cross_validation_integrity",
+        "PASS" if mc_capacity_cv_pass else (
+            "FAIL" if mc_capacity_cv else "PENDING"
+        ),
+        "The MC capacity/mass-closure geometry candidate is evaluated with disjoint leave-one-case-out folds while retaining its post-outcome and within-campaign limits.",
+        str(mc_capacity_cv_path.relative_to(root)),
+        "Eight disjoint 7+1 folds, source hashes intact, no held-out target used for fitting, runtime unchanged, and the remaining temperature failure disclosed.",
+        {
+            "audit_integrity": {
+                "source_hashes_match": mc_capacity_hashes_match,
+                "folds_disjoint": mc_capacity_disjoint,
+            },
+            "aggregate": mc_capacity_aggregate,
+            "baseline_comparison": mc_capacity_comparison,
+            "external_validation": (mc_capacity_cv or {}).get(
+                "external_validation"
+            ),
+            "validation_gate_changed": (mc_capacity_cv or {}).get(
+                "validation_gate_changed"
+            ),
+            "claim_boundary": (mc_capacity_cv or {}).get("claim_boundary"),
+        } if mc_capacity_cv else "missing",
+    ))
+
     mc_geometry_path = root / "research/mc_geometry_transfer_diagnostic_2026_10_08.json"
     mc_geometry = _json(mc_geometry_path)
     mc_geometry_runs = (mc_geometry or {}).get("runs") or []

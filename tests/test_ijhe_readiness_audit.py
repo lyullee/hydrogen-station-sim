@@ -770,6 +770,17 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     assert mc_tank["evidence_role"] == "development_diagnostic_only"
     assert mc_tank["post_outcome"] is True
     assert mc_tank["parameter_fitting"] is False
+    capacity_cv = gates["mc_capacity_geometry_cross_validation_integrity"]
+    assert capacity_cv["status"] == "PASS"
+    capacity_observed = capacity_cv["observed"]
+    assert capacity_observed["audit_integrity"]["source_hashes_match"] is True
+    assert capacity_observed["audit_integrity"]["folds_disjoint"] is True
+    assert capacity_observed["aggregate"]["joint_screening_pass_count"] == 4
+    assert capacity_observed["baseline_comparison"][
+        "baseline_joint_screening_pass_count"
+    ] == 0
+    assert capacity_observed["external_validation"] is False
+    assert capacity_observed["validation_gate_changed"] is False
     assert gates["mc_enthalpy_pressure_sensitivity_integrity"]["status"] == "PASS"
     mc_enthalpy = gates["mc_enthalpy_pressure_sensitivity_integrity"]["observed"]
     assert mc_enthalpy["run_count"] == 3

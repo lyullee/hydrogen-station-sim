@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-13T15:30:40.282934+00:00",
+  "generated_at": "2026-10-13T15:49:41.147127+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -13,7 +13,7 @@
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 132,
+    "PASS": 133,
     "FAIL": 11,
     "PENDING": 7
   },
@@ -719,6 +719,43 @@
           "temperature_rmse_c_mean": 9.052229650073286,
           "soc_rmse_percentage_points_mean": 5.583563785890824
         }
+      }
+    },
+    {
+      "id": "mc_capacity_geometry_cross_validation_integrity",
+      "status": "PASS",
+      "claim": "The MC capacity/mass-closure geometry candidate is evaluated with disjoint leave-one-case-out folds while retaining its post-outcome and within-campaign limits.",
+      "evidence": "research\\mc_capacity_geometry_leave_one_out_2026_10_14.json",
+      "requirement": "Eight disjoint 7+1 folds, source hashes intact, no held-out target used for fitting, runtime unchanged, and the remaining temperature failure disclosed.",
+      "observed": {
+        "audit_integrity": {
+          "source_hashes_match": true,
+          "folds_disjoint": true
+        },
+        "aggregate": {
+          "fold_count": 8,
+          "joint_screening_pass_count": 4,
+          "joint_screening_pass_fraction": 0.5,
+          "pressure_rmse_mpa_mean": 1.9023055120398222,
+          "temperature_rmse_c_mean": 9.201604122312393,
+          "soc_rmse_percentage_points_mean": 2.087247249370759,
+          "soc_final_abs_error_percentage_points_mean": 2.9832416544999667,
+          "training_volume_ratio_median_min": 0.9634369563731257,
+          "training_volume_ratio_median_max": 0.9677255651983419
+        },
+        "baseline_comparison": {
+          "baseline_model": "prospectively frozen Tables Method effective-volume fit",
+          "baseline_joint_screening_pass_count": 0,
+          "baseline_pressure_rmse_mpa_mean": 4.375922315837227,
+          "baseline_temperature_rmse_c_mean": 9.052229650073286,
+          "baseline_soc_final_abs_error_percentage_points_mean": 9.019375614272029,
+          "pressure_rmse_reduction_percent": 56.52789572714656,
+          "temperature_rmse_reduction_percent": -1.6501401092701735,
+          "soc_final_abs_error_reduction_percent": 66.92407787320265
+        },
+        "external_validation": false,
+        "validation_gate_changed": false,
+        "claim_boundary": "This is a leakage-controlled within-campaign development cross-validation. It may guide the next frozen candidate, but it does not validate a vehicle, station controller, dispenser, consequence model or field safety function."
       }
     },
     {

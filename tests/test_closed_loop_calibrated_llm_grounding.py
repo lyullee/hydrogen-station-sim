@@ -66,6 +66,39 @@ def test_mc_tank_boundary_negative_screen_is_explicitly_grounded():
     assert compact["aggregate"]["pressure_rmse_mpa_mean"] == 4.375922315837227
 
 
+def test_mc_capacity_geometry_cross_validation_is_grounded_without_promotion():
+    manifest = build_evidence_manifest(
+        {"time_s": 1.0}, {}, [], False, question="MC 차량탱크 개선 후보"
+    )
+    evidence = manifest["response_evidence"][
+        "public_mc_capacity_geometry_cross_validation"
+    ]
+    assert evidence["status"] == "development_cross_validation_only"
+    assert evidence["fold_count"] == 8
+    assert evidence["folds_disjoint"] is True
+    assert evidence["joint_screening_pass_count"] == 4
+    assert evidence["baseline_comparison"][
+        "pressure_rmse_reduction_percent"
+    ] > 50.0
+    assert evidence["baseline_comparison"][
+        "temperature_rmse_reduction_percent"
+    ] < 0.0
+    assert evidence["external_validation"] is False
+    assert evidence["runtime_parameter_application"] is False
+    assert evidence["validation_gate_changed"] is False
+    assert evidence["promotion_prohibited"] is True
+    compact = prompt_evidence_summary(manifest)[
+        "public_mc_capacity_geometry_cross_validation"
+    ]
+    assert compact["joint_screening_pass_fraction"] == 0.5
+    assert "temperature" in compact["remaining_limitation"].lower()
+    decision = prompt_decision_evidence(manifest)[
+        "public_mc_capacity_geometry_cross_validation"
+    ]
+    assert decision["promotion_prohibited"] is True
+    assert decision["validation_gate_changed"] is False
+
+
 def test_mc_temperature_channel_inventory_is_grounded_without_validation_promotion():
     manifest = build_evidence_manifest(
         {"time_s": 1.0}, {}, [], False, question="탱크 온도 층화"

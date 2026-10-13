@@ -123,6 +123,21 @@ def test_validation_evidence_surface_is_privacy_bounded_and_claim_limited() -> N
     assert tank_boundary["joint_screening_pass_count"] == 0
     assert tank_boundary["runtime_parameter_application"] is False
     assert tank_boundary["promotion_prohibited"] is True
+    capacity_cv = inventory["public_mc_capacity_geometry_cross_validation"]
+    assert capacity_cv["status"] == "development_cross_validation_only"
+    assert capacity_cv["fold_count"] == 8
+    assert capacity_cv["folds_disjoint"] is True
+    assert capacity_cv["joint_screening_pass_count"] == 4
+    assert capacity_cv["baseline_comparison"][
+        "pressure_rmse_reduction_percent"
+    ] > 50.0
+    assert capacity_cv["baseline_comparison"][
+        "temperature_rmse_reduction_percent"
+    ] < 0.0
+    assert capacity_cv["external_validation"] is False
+    assert capacity_cv["runtime_parameter_application"] is False
+    assert capacity_cv["validation_gate_changed"] is False
+    assert capacity_cv["promotion_prohibited"] is True
     cumulative_mass = inventory["public_mc_cumulative_mass_sensitivity"]
     assert cumulative_mass["status"] == "diagnostic_only"
     assert cumulative_mass["case_count"] == 8

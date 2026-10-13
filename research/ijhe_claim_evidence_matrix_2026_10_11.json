@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
   "artifact_type": "ijhe_claim_evidence_matrix",
-  "generated_at": "2026-10-13T15:30:40.667092+00:00",
+  "generated_at": "2026-10-13T15:49:41.503008+00:00",
   "source_audit": "manuscript/ijhe_readiness_audit.json",
-  "source_audit_sha256": "383d7ae3bd23f44dfbe19ddf472a3f04bef74749266c5fb43bb584c909cc7e66",
+  "source_audit_sha256": "85ccb4b83d59ea567ac61f1012f22170f2d879adfc86231b4b72537ff3836ba1",
   "paper_scope": "objective engineering and physics validation; no human-effectiveness or field-safety claim",
   "rows": [
     {

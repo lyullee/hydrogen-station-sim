@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-13T13:04:04.595714+00:00",
+  "generated_at": "2026-10-13T15:49:55.498807+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -16,7 +16,7 @@
     "interpretation": "A bounded manuscript may be drafted around model-level and qualitative evidence, but the validated full-station digital-twin objective cannot be declared complete."
   },
   "gate_counts": {
-    "PASS": 132,
+    "PASS": 133,
     "FAIL": 11,
     "PENDING": 7
   },
@@ -25,6 +25,21 @@
       "gate": "PASS",
       "evidence": "research/tank_model_validation_v2.json",
       "claim_boundary": "Type-IV tank submodel only; not a full station or safety-distance validation."
+    },
+    "mc_capacity_geometry_cross_validation": {
+      "gate": "PASS",
+      "evidence": [
+        "research/mc_capacity_geometry_leave_one_out_2026_10_14.json",
+        "research/MC_CAPACITY_GEOMETRY_LEAVE_ONE_OUT_2026_10_14.md"
+      ],
+      "joint_screening_pass_count": 4,
+      "fold_count": 8,
+      "pressure_rmse_reduction_percent": 56.52789572714656,
+      "soc_final_abs_error_reduction_percent": 66.92407787320265,
+      "temperature_rmse_reduction_percent": -1.6501401092701735,
+      "external_validation": false,
+      "runtime_parameter_changed": false,
+      "claim_boundary": "This is a leakage-controlled within-campaign development cross-validation. It may guide the next frozen candidate, but it does not validate a vehicle, station controller, dispenser, consequence model or field safety function."
     },
     "typeiii_prospective_fill": {
       "gate": "FAIL",
@@ -129,7 +144,12 @@
         "research/hytunnel_spatial_holdout_protocol_2026_10_08.json",
         "research/hytunnel_spatial_format_amendment_2026_10_08.json",
         "research/hytunnel_spatial_holdout_result_2026_10_08.json",
-        "research/HYTUNNEL_SPATIAL_HOLDOUT_2026_10_08.md"
+        "research/HYTUNNEL_SPATIAL_HOLDOUT_2026_10_08.md",
+        "research/kouchi_2007_spatial_holdout_protocol_2026_10_13.json",
+        "research/kouchi_2007_spatial_holdout_chronology_amendment_2026_10_14.json",
+        "research/kouchi_2007_spatial_holdout_eligibility_2026_10_13.json",
+        "research/oedi_h2safe_spatial_holdout_protocol_2026_10_14.json",
+        "research/oedi_h2safe_spatial_holdout_eligibility_2026_10_14.json"
       ],
       "experiment_count": 5,
       "median_spearman": 0.5817391304347826,
@@ -183,6 +203,48 @@
         },
         "joint_screen_pass": false,
         "runtime_candidate_enabled": false
+      },
+      "kouchi_2007_actual_hydrogen_intake": {
+        "status": "INELIGIBLE_NO_MODEL_EVALUATION",
+        "test_gas": "hydrogen",
+        "pressure_domain_mpa": [
+          20.0,
+          40.0
+        ],
+        "aperture_domain_mm": [
+          0.2,
+          2.0
+        ],
+        "required_case_count": 10,
+        "observed_case_count": 6,
+        "failed_requirements": [
+          "minimum_eligible_case_count",
+          "complete_numerical_per_observation_response"
+        ],
+        "model_evaluation_executed": false,
+        "freeze_to_download_seconds": 20,
+        "runtime_candidate_enabled": false,
+        "gate_changed": false,
+        "claim_boundary": "The paper is useful public evidence that actual-hydrogen concentration and fluctuation measurements were conducted at 20-40 MPa with 0.2-2.0 mm apertures. It is not an eligible confirmatory cohort for the frozen spatial-rank candidate and does not change any runtime or safety claim."
+      },
+      "oedi_h2safe_2026_publication_intake": {
+        "status": "INELIGIBLE_NO_MODEL_EVALUATION",
+        "doi": "10.7799/17118570",
+        "license": "CC BY 4.0",
+        "test_gas": "helium surrogate",
+        "required_case_count": 18,
+        "observed_case_count": 5,
+        "failed_requirements": [
+          "actual_hydrogen_test_gas",
+          "minimum_eligible_case_count",
+          "independent_nonoverlap_with_candidate_development"
+        ],
+        "source_doi_matches_development": true,
+        "independent_of_candidate_development": false,
+        "model_evaluation_executed": false,
+        "runtime_candidate_enabled": false,
+        "gate_changed": false,
+        "claim_boundary": "The October 2026 catalog publication improves provenance, licensing and reproducibility for the existing five-case helium H2SAFE cohort. It is not actual-hydrogen evidence, is not independent of candidate development and was not numerically scored under the OEDI holdout protocol. It cannot validate detector transfer, concentration magnitude, alarm timing, ESD, outdoor HRS dispersion or safety distance."
       },
       "claim_boundary": "This post-access diagnostic supports only a development choice to replace arbitrary near/far detector assignment with a transparent coordinate ranking. It failed the joint spatial screen and is not independent validation."
     },
@@ -325,7 +387,7 @@
     }
   ],
   "reproducibility": {
-    "audit_sha256": "ef3e7c96de54dc8b678c4e9b85d779e6b938d5a4849f4a4fdce0d872d3a6187a",
+    "audit_sha256": "85ccb4b83d59ea567ac61f1012f22170f2d879adfc86231b4b72537ff3836ba1",
     "hiad_readiness_sha256": "ff2088fc29bacbe6ea8ab22d3fa8fd0de89a64c8357b12ef2c83b55094cf0ed6",
     "acquisition_tracker_sha256": "2554679ac3aa83b6cc76dbfc6a9ee89165fd05aa2795867e139b55debdd076a8",
     "full_loop_search_sha256": "7bf50a987108144ce02d4f0ada3e80bed235bee5d437ec13dfb20fe460826a69",
@@ -346,11 +408,17 @@
     "hytunnel_spatial_protocol_sha256": "5f7d80f2698da7bf7f4fccbf230fb4f465cdd01db6336a8377470764f29549ea",
     "hytunnel_spatial_amendment_sha256": "6723cb93b188b7033a587901ab2833463c5a9af391f2faf5f9579124d5c65dc6",
     "hytunnel_spatial_result_sha256": "c9217b45976287f8bdd034d2afe5d46dbe8c15187f955b085e3f3b3153e68fad",
+    "kouchi_spatial_protocol_sha256": "c73bc1734cd9d1c0a270418b4999a1cd9b5c68ed915d74ddf0922d71afea38fd",
+    "kouchi_spatial_chronology_sha256": "7265b13bdd17fc05d84709775d0c2fee8508628124bd3788e3af6f8ca31fcfea",
+    "kouchi_spatial_eligibility_sha256": "8f6bbf8f3bea6b6e48f121b6051931300ada8920988c5811765222e2557b926e",
+    "oedi_h2safe_protocol_sha256": "ffe00966329b9ca9232768112425ffe2a1f36458a10c66507d241579db64f263",
+    "oedi_h2safe_eligibility_sha256": "f44ca2582445acfc825fb325289730d2c8ab6dcca45a06254cf69c1d5a295a20",
     "reference_leak_detector_result_sha256": "1b03b114e73a7d4070920ae6e59d4edad854459dd74834998a35cb64893f2b2f",
     "usn_spatial_stratification_sha256": "92a6f11d1ec8c0a8cff16cd1865249beb1b2475aec5edeb7d2b0d7d27c9b5803",
     "ignited_pressure_peaking_sha256": "53dbb83055c0eaa50d7f9ff2af351302b325ffb46e38b0290a4583eae4356174",
     "qra_multimethod_comparison_sha256": "e248db619eec2cc6161b151fdaa2fa3a7fb3886abb14bcd426f3e7ac1de4c70f",
     "runtime_qra_comparison_sha256": "1a7b91b433721ce6c07c7bbcb41c1e2f13544e600dcc45941c21049f69038c9f",
+    "mc_capacity_geometry_cross_validation_sha256": "0fe693b25f9453d8b9d8ea7a27bf21119fc13af9cf03d16ea36fa3656b48f948",
     "candidate_route_count": 33,
     "public_full_loop_search_candidate_count": 17,
     "latest_public_full_loop_search_candidate_count": 9,

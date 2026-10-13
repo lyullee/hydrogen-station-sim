@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "artifact_type": "public_type_iv_tank_runtime_calibration_audit",
-  "generated_at_utc": "2026-10-13T15:29:47.189341+00:00",
+  "generated_at_utc": "2026-10-13T15:48:49.050511+00:00",
   "raw_experimental_rows_persisted": false,
   "source_workbook_names_persisted": false,
   "runtime_match": true,
@@ -26,7 +26,7 @@
     "src/h2station/public_tank_calibration.py": "db963b9f6d1f67137e2bbec97b45cb723260d61a32aa34441f697bda2fffd6fc",
     "src/h2station/scenario.py": "bd4d94bf5fd37e3a3c577228c0989d0b9c6150ef58874829131d13dacf5b3604",
     "src/h2station/api.py": "031cd75908620768aec3d9c4a36a2e758f22749d479ffa872dfc7f57363ab871",
-    "src/h2station/llm_grounding.py": "bb4e3f3c09ba526faddb5d01d86ca771a54b4cb828ce56f20e44d675ed10db28",
+    "src/h2station/llm_grounding.py": "dd9e0b8e2b2eda2400f2473c455cc322cff04277a857f0bd9252dc9f3357300b",
     "scripts/audit_public_tank_runtime_calibration.py": "e07f9ff181227af9184c2824e65d87f912ad137157fae27bde7b9e13bcbf4ada"
   },
   "claim_boundary": "This proves only that the frozen public Type-IV tank fit is the runtime default and is disclosed to LLM evidence. The fit was validated with measured mass-flow and inlet-temperature boundaries; it does not validate a station-to-vehicle controller, compressor, cascade topology, dispenser, field safety, or vehicle certification."

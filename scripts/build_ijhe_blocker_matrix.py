@@ -90,6 +90,10 @@ def build(root: Path) -> dict[str, Any]:
     runtime_qra = load_json(runtime_qra_path)
     reference_leak_detector = load_json(reference_leak_detector_path)
     spatial_stratification = load_json(spatial_stratification_path)
+    mc_capacity_cv_path = (
+        root / "research/mc_capacity_geometry_leave_one_out_2026_10_14.json"
+    )
+    mc_capacity_cv = load_json(mc_capacity_cv_path)
 
     status_by_id = {g["id"]: g for g in audit.get("gates", [])}
     gate = lambda gate_id: status_by_id.get(gate_id, {"status": "MISSING"})
@@ -113,6 +117,33 @@ def build(root: Path) -> dict[str, Any]:
                 "gate": gate("tank_external_validation")["status"],
                 "evidence": "research/tank_model_validation_v2.json",
                 "claim_boundary": "Type-IV tank submodel only; not a full station or safety-distance validation.",
+            },
+            "mc_capacity_geometry_cross_validation": {
+                "gate": gate(
+                    "mc_capacity_geometry_cross_validation_integrity"
+                )["status"],
+                "evidence": [
+                    "research/mc_capacity_geometry_leave_one_out_2026_10_14.json",
+                    "research/MC_CAPACITY_GEOMETRY_LEAVE_ONE_OUT_2026_10_14.md",
+                ],
+                "joint_screening_pass_count": mc_capacity_cv["aggregate"][
+                    "joint_screening_pass_count"
+                ],
+                "fold_count": mc_capacity_cv["aggregate"]["fold_count"],
+                "pressure_rmse_reduction_percent": mc_capacity_cv[
+                    "baseline_comparison"
+                ]["pressure_rmse_reduction_percent"],
+                "soc_final_abs_error_reduction_percent": mc_capacity_cv[
+                    "baseline_comparison"
+                ]["soc_final_abs_error_reduction_percent"],
+                "temperature_rmse_reduction_percent": mc_capacity_cv[
+                    "baseline_comparison"
+                ]["temperature_rmse_reduction_percent"],
+                "external_validation": mc_capacity_cv["external_validation"],
+                "runtime_parameter_changed": mc_capacity_cv[
+                    "runtime_parameter_changed"
+                ],
+                "claim_boundary": mc_capacity_cv["claim_boundary"],
             },
             "typeiii_prospective_fill": {
                 "gate": gate("dickens_typeiii_prospective_validation")["status"],
@@ -490,6 +521,8 @@ def build(root: Path) -> dict[str, Any]:
                 "why_blocked": "The frozen external station-loop holdout has 0/8 engineering-screen passes. The public MetHyTrucks D3 report confirms Groups A and C are 35 MPa direct/serial sampling-system tests, not vehicle-tank filling traces; the post-access Hy-SaM set also has incomplete mapping. A separately frozen Group D H70 vehicle event was retained prospectively, but it lacks vehicle tank pressure and temperature, engineering units and independently documented tank geometry, so no model score was permitted.",
                 "evidence": [
                     "data/public_validation/results/closed_loop_external_holdout/validation.json",
+                    "research/mc_capacity_geometry_leave_one_out_2026_10_14.json",
+                    "research/MC_CAPACITY_GEOMETRY_LEAVE_ONE_OUT_2026_10_14.md",
                     "research/mc_default_source_boundary_identifiability_2026_10_04.json",
                     "research/public_full_loop_search_recheck_2026_10_04.json",
                     "research/public_full_loop_search_recheck_2026_10_06.json",
@@ -626,6 +659,9 @@ def build(root: Path) -> dict[str, Any]:
             "ignited_pressure_peaking_sha256": sha256(ignited_pressure_path),
             "qra_multimethod_comparison_sha256": sha256(qra_comparison_path),
             "runtime_qra_comparison_sha256": sha256(runtime_qra_path),
+            "mc_capacity_geometry_cross_validation_sha256": sha256(
+                mc_capacity_cv_path
+            ),
             "candidate_route_count": len(tracker.get("candidates") or []),
             "public_full_loop_search_candidate_count": candidate_count(search),
             "latest_public_full_loop_search_candidate_count": candidate_count(latest_search),

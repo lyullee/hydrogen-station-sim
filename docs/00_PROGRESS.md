@@ -1,5 +1,32 @@
 # Development Progress
 
+## 2026-10-14 - Cross-evaluate a capacity/mass-closure tank geometry rule
+
+The highest-priority MC vehicle-tank boundary failure was decomposed with a
+deterministic leave-one-case-out study across all eight public MC Default fill
+cases. Each fold derives one effective-volume ratio from the other seven cases
+only, retains the existing frozen thermal coefficient and measured flow/inlet
+enthalpy boundaries, and scores the untouched fold. The geometry candidate
+improves mean pressure RMSE from 4.376 to 1.902 MPa and mean final SOC absolute
+error from 9.019 to 2.983 percentage points; the strict joint screen improves
+from 0/8 to 4/8. Mean temperature RMSE changes from 9.052 to 9.202 °C, showing
+that unresolved temperature-observation/heat-transfer semantics remain the
+dominant limitation.
+
+This is a leakage-controlled but post-outcome within-campaign development
+cross-validation. It does not change the runtime model or close an independent
+external-validation gate. It establishes a materially stronger geometry
+candidate for the next prospectively frozen external tank trace without hiding
+the four retained failures.
+
+The aggregate result is now exposed to SAGA as bounded development evidence,
+including the non-promotion rule and unresolved temperature limitation. The
+14-step evidence refresh and critical-priority validation both pass. The
+readiness ledger advances by one integrity gate to **133 PASS / 11 FAIL / 7
+PENDING** overall and **132 PASS / 10 FAIL / 2 PENDING** in the declared
+station-side primary scope. The full repository regression passes **1,558
+tests** with dependency/data-reader warnings only.
+
 ## 2026-10-14 - Reject the OEDI H2SAFE release as an independent holdout
 
 Before opening the detailed OEDI/NLR dataset record, the existing frozen

@@ -79,6 +79,9 @@ _MC_GEOMETRY_TRANSFER_DIAGNOSTIC = _ROOT / (
 _MC_TANK_BOUNDARY_DIAGNOSTIC = _ROOT / (
     "research/mc_tank_boundary_diagnostic_2026_10_05.json"
 )
+_MC_CAPACITY_GEOMETRY_CV = _ROOT / (
+    "research/mc_capacity_geometry_leave_one_out_2026_10_14.json"
+)
 _MC_CUMULATIVE_MASS_SENSITIVITY = _ROOT / (
     "research/mc_cumulative_mass_sensitivity_2026_10_10.json"
 )
@@ -510,6 +513,79 @@ def _mc_tank_boundary_diagnostic_summary() -> dict[str, Any] | None:
             "runtime_parameter_application": False,
             "full_loop_external_validation_ready": False,
             "promotion_prohibited": True,
+            "claim_limit": str(record["claim_boundary"]),
+        }
+    except (OSError, KeyError, TypeError, ValueError, json.JSONDecodeError):
+        return None
+
+
+def _mc_capacity_geometry_cv_summary() -> dict[str, Any] | None:
+    """Expose the fold-safe MC geometry result with its claim limits."""
+
+    try:
+        record = _read_json(_MC_CAPACITY_GEOMETRY_CV)
+        aggregate = record.get("aggregate") or {}
+        comparison = record.get("baseline_comparison") or {}
+        folds = record.get("folds") or []
+        disjoint = bool(folds) and all(
+            fold.get("training_case_count") == 7
+            and fold.get("held_out_case_id")
+            not in (fold.get("training_case_ids") or [])
+            and fold.get("held_out_volume_ratio_used_for_training") is False
+            for fold in folds
+        )
+        required = (
+            record.get("artifact_type")
+            == "mc_capacity_geometry_leave_one_case_out",
+            record.get("evidence_role")
+            == "post_outcome_within_campaign_development_cross_validation",
+            record.get("post_outcome") is True,
+            record.get("external_validation") is False,
+            record.get("runtime_parameter_changed") is False,
+            record.get("validation_gate_changed") is False,
+            len(folds) == 8,
+            disjoint,
+            aggregate.get("joint_screening_pass_count") == 4,
+            comparison.get("baseline_joint_screening_pass_count") == 0,
+            isinstance(record.get("claim_boundary"), str),
+        )
+        if not all(required):
+            return None
+        return {
+            "status": "development_cross_validation_only",
+            "evidence_role": str(record["evidence_role"]),
+            "fold_count": 8,
+            "training_case_count_per_fold": 7,
+            "folds_disjoint": True,
+            "joint_screening_pass_count": 4,
+            "joint_screening_pass_fraction": float(
+                aggregate["joint_screening_pass_fraction"]
+            ),
+            "aggregate": {
+                key: float(aggregate[key])
+                for key in (
+                    "pressure_rmse_mpa_mean",
+                    "temperature_rmse_c_mean",
+                    "soc_rmse_percentage_points_mean",
+                    "soc_final_abs_error_percentage_points_mean",
+                )
+            },
+            "baseline_comparison": {
+                key: float(comparison[key])
+                for key in (
+                    "pressure_rmse_reduction_percent",
+                    "temperature_rmse_reduction_percent",
+                    "soc_final_abs_error_reduction_percent",
+                )
+            },
+            "external_validation": False,
+            "runtime_parameter_application": False,
+            "validation_gate_changed": False,
+            "promotion_prohibited": True,
+            "remaining_limitation": (
+                "Four of eight folds still fail; tank-temperature observation "
+                "semantics and heat-transfer boundaries remain unresolved."
+            ),
             "claim_limit": str(record["claim_boundary"]),
         }
     except (OSError, KeyError, TypeError, ValueError, json.JSONDecodeError):
@@ -1734,6 +1810,18 @@ def public_evidence_inventory_summary() -> dict[str, Any]:
             "full_loop_external_validation_ready": False,
             "promotion_prohibited": True,
         },
+        "public_mc_capacity_geometry_cross_validation": {
+            "status": "unavailable",
+            "fold_count": 0,
+            "joint_screening_pass_count": 0,
+            "joint_screening_pass_fraction": 0.0,
+            "aggregate": {},
+            "baseline_comparison": {},
+            "external_validation": False,
+            "runtime_parameter_application": False,
+            "validation_gate_changed": False,
+            "promotion_prohibited": True,
+        },
         "public_mc_cumulative_mass_sensitivity": {
             "status": "unavailable",
             "case_count": 0,
@@ -2221,6 +2309,11 @@ def public_evidence_inventory_summary() -> dict[str, Any]:
     tank_boundary = _mc_tank_boundary_diagnostic_summary()
     if tank_boundary is not None:
         result["public_mc_tank_boundary_diagnostic"] = tank_boundary
+    capacity_geometry_cv = _mc_capacity_geometry_cv_summary()
+    if capacity_geometry_cv is not None:
+        result[
+            "public_mc_capacity_geometry_cross_validation"
+        ] = capacity_geometry_cv
     cumulative_mass = _mc_cumulative_mass_sensitivity_summary()
     if cumulative_mass is not None:
         result["public_mc_cumulative_mass_sensitivity"] = cumulative_mass

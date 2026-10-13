@@ -10388,6 +10388,19 @@ def build_evidence_manifest(
         envelope["response_evidence"][
             "public_mc_tank_boundary_diagnostic"
         ] = tank_boundary
+    capacity_geometry_cv = (
+        public_inventory.get("public_mc_capacity_geometry_cross_validation")
+        if isinstance(public_inventory, dict)
+        else None
+    )
+    if (
+        isinstance(capacity_geometry_cv, dict)
+        and capacity_geometry_cv.get("status")
+        == "development_cross_validation_only"
+    ):
+        envelope["response_evidence"][
+            "public_mc_capacity_geometry_cross_validation"
+        ] = capacity_geometry_cv
     cumulative_mass = (
         public_inventory.get("public_mc_cumulative_mass_sensitivity")
         if isinstance(public_inventory, dict)
@@ -11204,6 +11217,22 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
                 "promotion_prohibited", "claim_limit",
             )
             if mc_tank_boundary.get(key) is not None
+        }
+    capacity_geometry_cv = evidence.get(
+        "public_mc_capacity_geometry_cross_validation"
+    )
+    if isinstance(capacity_geometry_cv, dict):
+        summary["public_mc_capacity_geometry_cross_validation"] = {
+            key: capacity_geometry_cv.get(key)
+            for key in (
+                "status", "evidence_role", "fold_count",
+                "training_case_count_per_fold", "folds_disjoint",
+                "joint_screening_pass_count", "joint_screening_pass_fraction",
+                "aggregate", "baseline_comparison", "external_validation",
+                "runtime_parameter_application", "validation_gate_changed",
+                "promotion_prohibited", "remaining_limitation", "claim_limit",
+            )
+            if capacity_geometry_cv.get(key) is not None
         }
     cumulative_mass = evidence.get("public_mc_cumulative_mass_sensitivity")
     if isinstance(cumulative_mass, dict):
@@ -13006,6 +13035,9 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
     ) or {}
     multisource = response.get("confidential_multisource_mapping_feasibility") or {}
     thermal_observation = response.get("temperature_observation_semantic_boundary") or {}
+    capacity_geometry_cv = response.get(
+        "public_mc_capacity_geometry_cross_validation"
+    ) or {}
     station_thermal = response.get("confidential_station_thermal_dynamics") or {}
     signal_consistency = response.get(
         "confidential_station_signal_consistency"
@@ -13168,6 +13200,14 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
         "압축기", "재충전", "flow", "mass", "totalizer", "pressure",
         "temperature", "compressor", "recharge",
     ))
+    capacity_geometry_relevant = bool(capacity_geometry_cv) and any(
+        token in lead_context
+        for token in (
+            "tank", "vehicle", "volume", "geometry", "soc", "pressure",
+            "temperature", "validation", "model", "탱크", "차량", "체적",
+            "형상", "압력", "온도", "검증", "모델",
+        )
+    )
     h2iq_aggregate_relevant = bool(
         public_h2iq_aggregate
         and (
@@ -13596,6 +13636,22 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
             "status", "alarm_threshold_volpct_h2", "trip_threshold_volpct_h2",
             "persistence_s", "claim_limit",
         )),
+        **({
+            "public_mc_capacity_geometry_cross_validation": {
+                key: capacity_geometry_cv.get(key)
+                for key in (
+                    "status", "evidence_role", "fold_count",
+                    "training_case_count_per_fold", "folds_disjoint",
+                    "joint_screening_pass_count",
+                    "joint_screening_pass_fraction", "aggregate",
+                    "baseline_comparison", "external_validation",
+                    "runtime_parameter_application", "validation_gate_changed",
+                    "promotion_prohibited", "remaining_limitation",
+                    "claim_limit",
+                )
+                if capacity_geometry_cv.get(key) is not None
+            },
+        } if capacity_geometry_relevant else {}),
         **({
             "public_elvhys_post_failure_alarm_diagnostic": {
                 key: elvhys_alarm_diagnostic.get(key)
@@ -16615,6 +16671,24 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
             )
             if (evidence.get("public_mc_tank_boundary_diagnostic") or {}).get(key)
             is not None
+        },
+        "public_mc_capacity_geometry_cross_validation": {
+            key: (
+                evidence.get("public_mc_capacity_geometry_cross_validation")
+                or {}
+            ).get(key)
+            for key in (
+                "status", "evidence_role", "fold_count",
+                "training_case_count_per_fold", "folds_disjoint",
+                "joint_screening_pass_count", "joint_screening_pass_fraction",
+                "aggregate", "baseline_comparison", "external_validation",
+                "runtime_parameter_application", "validation_gate_changed",
+                "promotion_prohibited", "remaining_limitation", "claim_limit",
+            )
+            if (
+                evidence.get("public_mc_capacity_geometry_cross_validation")
+                or {}
+            ).get(key) is not None
         },
         "public_mc_cumulative_mass_sensitivity": {
             key: (evidence.get("public_mc_cumulative_mass_sensitivity") or {}).get(key)

@@ -1,0 +1,260 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-10-13T15:39:39.936532+00:00",
+  "source_commit": "1c3bdbda51d4e0a3098dbcece19e57f576f3014f",
+  "artifact_type": "mc_capacity_geometry_leave_one_case_out",
+  "evidence_role": "post_outcome_within_campaign_development_cross_validation",
+  "post_outcome": true,
+  "external_validation": false,
+  "prospective_validation": false,
+  "parameter_fitting": true,
+  "fit_scope": "training folds only; one median effective-volume ratio per fold",
+  "runtime_parameter_changed": false,
+  "validation_gate_changed": false,
+  "method": {
+    "split": "deterministic leave-one-case-out across eight public MC Default cases",
+    "training_case_count_per_fold": 7,
+    "held_out_case_count_per_fold": 1,
+    "volume_estimator": "median of training-case ratios: integrated signed mass flow divided by measured endpoint density change, normalized by declared capacity geometry",
+    "held_out_outcomes_excluded_from_fit": true,
+    "thermal_parameter_policy": "retain frozen public Type-IV gas-liner UA multiplier",
+    "boundary_conditions": [
+      "measured mass_flow_g_s",
+      "measured inlet_gas_temperature_c",
+      "co-located Pinlet pressure_mpa"
+    ]
+  },
+  "screening_limits": {
+    "pressure_rmse_mpa": 5.0,
+    "temperature_rmse_c": 10.0,
+    "soc_final_abs_error_percentage_points": 5.0
+  },
+  "aggregate": {
+    "fold_count": 8,
+    "joint_screening_pass_count": 4,
+    "joint_screening_pass_fraction": 0.5,
+    "pressure_rmse_mpa_mean": 1.9023055120398222,
+    "temperature_rmse_c_mean": 9.201604122312393,
+    "soc_rmse_percentage_points_mean": 2.087247249370759,
+    "soc_final_abs_error_percentage_points_mean": 2.9832416544999667,
+    "training_volume_ratio_median_min": 0.9634369563731257,
+    "training_volume_ratio_median_max": 0.9677255651983419
+  },
+  "baseline_comparison": {
+    "baseline_model": "prospectively frozen Tables Method effective-volume fit",
+    "baseline_joint_screening_pass_count": 0,
+    "baseline_pressure_rmse_mpa_mean": 4.375922315837227,
+    "baseline_temperature_rmse_c_mean": 9.052229650073286,
+    "baseline_soc_final_abs_error_percentage_points_mean": 9.019375614272029,
+    "pressure_rmse_reduction_percent": 56.52789572714656,
+    "temperature_rmse_reduction_percent": -1.6501401092701735,
+    "soc_final_abs_error_reduction_percent": 66.92407787320265
+  },
+  "folds": [
+    {
+      "fold_id": "holdout_H2P-MC-1-A",
+      "held_out_case_id": "H2P-MC-1-A",
+      "training_case_ids": [
+        "H2P-MC-1-B",
+        "H2P-MC-1-C",
+        "H2P-MC-1-D",
+        "H2P-MC-1-E",
+        "H2P-MC-1-F",
+        "H2P-MC-2-A",
+        "H2P-MC-9.8KG"
+      ],
+      "training_case_count": 7,
+      "training_volume_ratio_median": 0.9677255651983419,
+      "held_out_volume_ratio_for_scoring_only": 0.9399606341818653,
+      "held_out_volume_ratio_used_for_training": false,
+      "fixed_gas_liner_ua_multiplier": 64.43011313151457,
+      "pressure_rmse_mpa": 0.9443448138177375,
+      "temperature_rmse_c": 11.043957334709372,
+      "soc_rmse_percentage_points": 1.0522641966940116,
+      "soc_final_error_percentage_points": -2.592757391129169,
+      "joint_screening_pass": false
+    },
+    {
+      "fold_id": "holdout_H2P-MC-1-B",
+      "held_out_case_id": "H2P-MC-1-B",
+      "training_case_ids": [
+        "H2P-MC-1-A",
+        "H2P-MC-1-C",
+        "H2P-MC-1-D",
+        "H2P-MC-1-E",
+        "H2P-MC-1-F",
+        "H2P-MC-2-A",
+        "H2P-MC-9.8KG"
+      ],
+      "training_case_count": 7,
+      "training_volume_ratio_median": 0.9634369563731257,
+      "held_out_volume_ratio_for_scoring_only": 0.9677255651983419,
+      "held_out_volume_ratio_used_for_training": false,
+      "fixed_gas_liner_ua_multiplier": 64.43011313151457,
+      "pressure_rmse_mpa": 1.9364670519043192,
+      "temperature_rmse_c": 7.098759344307289,
+      "soc_rmse_percentage_points": 0.6887010917259352,
+      "soc_final_error_percentage_points": 0.47521766713258273,
+      "joint_screening_pass": true
+    },
+    {
+      "fold_id": "holdout_H2P-MC-1-C",
+      "held_out_case_id": "H2P-MC-1-C",
+      "training_case_ids": [
+        "H2P-MC-1-A",
+        "H2P-MC-1-B",
+        "H2P-MC-1-D",
+        "H2P-MC-1-E",
+        "H2P-MC-1-F",
+        "H2P-MC-2-A",
+        "H2P-MC-9.8KG"
+      ],
+      "training_case_count": 7,
+      "training_volume_ratio_median": 0.9634369563731257,
+      "held_out_volume_ratio_for_scoring_only": 0.9713173264826471,
+      "held_out_volume_ratio_used_for_training": false,
+      "fixed_gas_liner_ua_multiplier": 64.43011313151457,
+      "pressure_rmse_mpa": 1.5876811514914668,
+      "temperature_rmse_c": 4.750890326599316,
+      "soc_rmse_percentage_points": 0.9211816543245489,
+      "soc_final_error_percentage_points": 0.8697405210105131,
+      "joint_screening_pass": true
+    },
+    {
+      "fold_id": "holdout_H2P-MC-1-D",
+      "held_out_case_id": "H2P-MC-1-D",
+      "training_case_ids": [
+        "H2P-MC-1-A",
+        "H2P-MC-1-B",
+        "H2P-MC-1-C",
+        "H2P-MC-1-E",
+        "H2P-MC-1-F",
+        "H2P-MC-2-A",
+        "H2P-MC-9.8KG"
+      ],
+      "training_case_count": 7,
+      "training_volume_ratio_median": 0.9634369563731257,
+      "held_out_volume_ratio_for_scoring_only": 0.9865599584966702,
+      "held_out_volume_ratio_used_for_training": false,
+      "fixed_gas_liner_ua_multiplier": 64.43011313151457,
+      "pressure_rmse_mpa": 2.5888120573231483,
+      "temperature_rmse_c": 6.331376085129735,
+      "soc_rmse_percentage_points": 1.7310614792354966,
+      "soc_final_error_percentage_points": 2.3245682795890446,
+      "joint_screening_pass": true
+    },
+    {
+      "fold_id": "holdout_H2P-MC-1-E",
+      "held_out_case_id": "H2P-MC-1-E",
+      "training_case_ids": [
+        "H2P-MC-1-A",
+        "H2P-MC-1-B",
+        "H2P-MC-1-C",
+        "H2P-MC-1-D",
+        "H2P-MC-1-F",
+        "H2P-MC-2-A",
+        "H2P-MC-9.8KG"
+      ],
+      "training_case_count": 7,
+      "training_volume_ratio_median": 0.9677255651983419,
+      "held_out_volume_ratio_for_scoring_only": 0.9249284345928499,
+      "held_out_volume_ratio_used_for_training": false,
+      "fixed_gas_liner_ua_multiplier": 64.43011313151457,
+      "pressure_rmse_mpa": 0.2658035606472968,
+      "temperature_rmse_c": 14.114031238876606,
+      "soc_rmse_percentage_points": 2.391342629651019,
+      "soc_final_error_percentage_points": -4.298754493269271,
+      "joint_screening_pass": false
+    },
+    {
+      "fold_id": "holdout_H2P-MC-1-F",
+      "held_out_case_id": "H2P-MC-1-F",
+      "training_case_ids": [
+        "H2P-MC-1-A",
+        "H2P-MC-1-B",
+        "H2P-MC-1-C",
+        "H2P-MC-1-D",
+        "H2P-MC-1-E",
+        "H2P-MC-2-A",
+        "H2P-MC-9.8KG"
+      ],
+      "training_case_count": 7,
+      "training_volume_ratio_median": 0.9677255651983419,
+      "held_out_volume_ratio_for_scoring_only": 0.8564165137192775,
+      "held_out_volume_ratio_used_for_training": false,
+      "fixed_gas_liner_ua_multiplier": 64.43011313151457,
+      "pressure_rmse_mpa": 4.4367128547106685,
+      "temperature_rmse_c": 12.659988879908017,
+      "soc_rmse_percentage_points": 6.042395615040737,
+      "soc_final_error_percentage_points": -10.961962809189956,
+      "joint_screening_pass": false
+    },
+    {
+      "fold_id": "holdout_H2P-MC-2-A",
+      "held_out_case_id": "H2P-MC-2-A",
+      "training_case_ids": [
+        "H2P-MC-1-A",
+        "H2P-MC-1-B",
+        "H2P-MC-1-C",
+        "H2P-MC-1-D",
+        "H2P-MC-1-E",
+        "H2P-MC-1-F",
+        "H2P-MC-9.8KG"
+      ],
+      "training_case_count": 7,
+      "training_volume_ratio_median": 0.9677255651983419,
+      "held_out_volume_ratio_for_scoring_only": 0.9634369563731257,
+      "held_out_volume_ratio_used_for_training": false,
+      "fixed_gas_liner_ua_multiplier": 64.43011313151457,
+      "pressure_rmse_mpa": 1.9478557468794997,
+      "temperature_rmse_c": 14.751397382022178,
+      "soc_rmse_percentage_points": 2.699425497988417,
+      "soc_final_error_percentage_points": -0.4946197167119095,
+      "joint_screening_pass": false
+    },
+    {
+      "fold_id": "holdout_H2P-MC-9.8KG",
+      "held_out_case_id": "H2P-MC-9.8KG",
+      "training_case_ids": [
+        "H2P-MC-1-A",
+        "H2P-MC-1-B",
+        "H2P-MC-1-C",
+        "H2P-MC-1-D",
+        "H2P-MC-1-E",
+        "H2P-MC-1-F",
+        "H2P-MC-2-A"
+      ],
+      "training_case_count": 7,
+      "training_volume_ratio_median": 0.9634369563731257,
+      "held_out_volume_ratio_for_scoring_only": 0.9792710952657286,
+      "held_out_volume_ratio_used_for_training": false,
+      "fixed_gas_liner_ua_multiplier": 64.43011313151457,
+      "pressure_rmse_mpa": 1.5107668595444408,
+      "temperature_rmse_c": 2.8624323869466246,
+      "soc_rmse_percentage_points": 1.171605830305905,
+      "soc_final_error_percentage_points": 1.8483123579672878,
+      "joint_screening_pass": true
+    }
+  ],
+  "source_hashes": {
+    "research/mc_default_external_holdout_protocol.json": "41aa67a8e459687dda91fe831d69f5a47b52f1bc70e33466e17738f76d7edde0",
+    "research/mc_tank_boundary_diagnostic_2026_10_05.json": "f982cd2e53220f1ce66564b8bb4d6651af4b4ff67f33956f3d7df251c3caf8cb",
+    "data/public_validation/processed/mc_default_cases.csv": "ab9c5dbd9f907dcb72815791de01b85a615a2d1307ab490325a2ebb731d8015f",
+    "data/public_validation/processed/mc_default_traces/H2P-MC-1-A.csv": "f6708bb50f731afc65b75fc441c5c3605f72ef22241e2cf9c3693e2ea7fc70e3",
+    "data/public_validation/processed/mc_default_traces/H2P-MC-1-B.csv": "44d558cb43540f7814328b3b2144e69bb645277c3815ec3e881d1c11eda23a66",
+    "data/public_validation/processed/mc_default_traces/H2P-MC-1-C.csv": "9436d7d19345ae9cab608f3a26bf7218fff39458b2a7a99f9c879790586ccb52",
+    "data/public_validation/processed/mc_default_traces/H2P-MC-1-D.csv": "1a06c77df0c69573259fae1a4fbd8b331456214a9b0029242ea6a8f7a59d2680",
+    "data/public_validation/processed/mc_default_traces/H2P-MC-1-E.csv": "9a033edf11848eb77e2e55698639390c7f6c4d44e345b915e5da73ec2998498f",
+    "data/public_validation/processed/mc_default_traces/H2P-MC-1-F.csv": "35f20623a227da5cbe8499472e9478c434dfa77c1ca901733a1876cd90209de2",
+    "data/public_validation/processed/mc_default_traces/H2P-MC-2-A.csv": "8051778acc8fb78dbd116443378efe7e5303148cd62f2725f29b967b3b5fa83e",
+    "data/public_validation/processed/mc_default_traces/H2P-MC-9.8KG.csv": "342bed3498eda157c1d7ad87c4082592267fea520365c5eaf0a0033745dfe53e"
+  },
+  "interpretation": "Training-only capacity/mass-closure geometry cuts mean pressure RMSE and final SOC error substantially, while the joint pass count reaches only four of eight because temperature remains the dominant unresolved boundary.",
+  "limitations": [
+    "All folds belong to one already inspected public campaign.",
+    "Manufacturer-certified internal volume is unavailable.",
+    "The tank-temperature channel does not resolve gas, liner, shell or sensor weighting.",
+    "The result cannot replace a prospectively frozen independent external holdout."
+  ],
+  "claim_boundary": "This is a leakage-controlled within-campaign development cross-validation. It may guide the next frozen candidate, but it does not validate a vehicle, station controller, dispenser, consequence model or field safety function."
+}

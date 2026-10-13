@@ -44,6 +44,26 @@ def test_current_builder_rejects_oedi_helium_republication_before_scoring():
     assert len(matrix["reproducibility"]["oedi_h2safe_eligibility_sha256"]) == 64
 
 
+def test_current_builder_bounds_mc_capacity_geometry_cross_validation():
+    matrix = build(ROOT)
+    snapshot = matrix["evidence_snapshot"][
+        "mc_capacity_geometry_cross_validation"
+    ]
+    assert snapshot["gate"] == "PASS"
+    assert snapshot["joint_screening_pass_count"] == 4
+    assert snapshot["fold_count"] == 8
+    assert snapshot["pressure_rmse_reduction_percent"] > 50.0
+    assert snapshot["soc_final_abs_error_reduction_percent"] > 60.0
+    assert snapshot["temperature_rmse_reduction_percent"] < 0.0
+    assert snapshot["external_validation"] is False
+    assert snapshot["runtime_parameter_changed"] is False
+    assert len(
+        matrix["reproducibility"][
+            "mc_capacity_geometry_cross_validation_sha256"
+        ]
+    ) == 64
+
+
 def test_current_blocker_matrix_tracks_the_readiness_audit():
     audit = json.loads((ROOT / "manuscript/ijhe_readiness_audit.json").read_text(encoding="utf-8"))
     matrix = json.loads(
