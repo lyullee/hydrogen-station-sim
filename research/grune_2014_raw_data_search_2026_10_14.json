@@ -1,0 +1,29 @@
+{
+  "schema_version": "1.0",
+  "artifact_type": "public_raw_data_search",
+  "generated_at": "2026-10-14T06:34:00+09:00",
+  "case_id": "grune_2014_pressure_decay",
+  "search_scope": [
+    "official KIT publication record",
+    "publisher record for DOI 10.1016/j.ijhydene.2013.08.076",
+    "H2Tools and ICHS conference mirrors",
+    "public repository and Zenodo searches for pressure-time traces"
+  ],
+  "sources_reviewed": [
+    {
+      "title": "Experimental study of ignited unsteady hydrogen releases from a high pressure reservoir",
+      "url": "https://publikationen.bibliothek.kit.edu/110097219",
+      "doi": "10.1016/j.ijhydene.2013.08.076",
+      "observed": "Publication metadata and DOI record; no reusable machine-readable pressure-time attachment was exposed."
+    },
+    {
+      "title": "Experimental study of ignited unsteady hydrogen releases from a high pressure reservoir",
+      "url": "https://www.sciencedirect.com/science/article/pii/S0360319913020521",
+      "observed": "Publisher article record; no rights-cleared raw pressure-time table was identified in the accessible record."
+    }
+  ],
+  "outcome": "NO_NEW_RIGHTS_CLEARED_RAW_TRACE_FOUND",
+  "gate_effect": "grune_2014_pressure_decay_validation remains PENDING",
+  "next_reentry_condition": "A custodian supplies a complete pressure-time trace with reuse permission and enough metadata to freeze an outcome-unseen protocol.",
+  "claim_boundary": "This is a documented public-search result, not evidence that the experiment lacked raw data internally."
+}
