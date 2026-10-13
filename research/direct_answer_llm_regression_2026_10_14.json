@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "artifact_type": "direct_answer_llm_regression_run",
+  "generated_at_utc": "2026-10-13T21:09:22.2502535Z",
+  "source_commit": "23268b15b3a2c7b4133ad7f46890f08ee496ff24",
+  "command": "python -m pytest -q tests/test_digital_twin_direct_qa.py tests/test_llm_grounding.py tests/test_hiad_machine_response_benchmark.py tests/test_hiad_response_selectivity_audit.py",
+  "status": "PASS",
+  "tests_passed": 55,
+  "tests_failed": 0,
+  "tests_skipped": 0,
+  "warnings": 105,
+  "elapsed_seconds": 6.41,
+  "covered_contracts": [
+    "direct user-query routing and automatic-analysis separation",
+    "impact calculation is attempted for active alarm/emergency states",
+    "explicit virtual action commands are exposed and grounded",
+    "measurement and numeric-claim guards reject unsupported values",
+    "public accident precedents are carried into SAGA context",
+    "response selectivity and information-burden audit"
+  ],
+  "interpretation": "This verifies the local SAGA direct-answer and evidence-grounding contracts. It does not establish provider uptime, human operator effectiveness, or physical safety validation."
+}
