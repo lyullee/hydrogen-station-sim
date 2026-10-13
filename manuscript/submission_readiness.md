@@ -668,30 +668,32 @@ development evidence rather than a source for geometry fitting.
 
 ## Blocking gates
 
-The bounded paper still has 9 unresolved or failed gates:
+The current primary scope has 12 unresolved or failed gates:
 
 1. `dickens_typeiii_prospective_validation`
-2. `preslhy_blowdown_external_validation`
-3. `preslhy_partb_ambient_external_validation`
-4. `preslhy_revised_holdout_validation`
-5. `proust_independent_release_validation`
-6. `schefer_transient_release_validation`
-7. `schefer_2007_pressure_decay_validation`
-8. `grune_2014_pressure_decay_validation`
-9. `submission_metadata_and_declarations`
+2. `grune_2014_pressure_decay_validation`
+3. `h2safe_spatial_detector_transfer_validation`
+4. `hytunnel_carpark_dispersion_validation`
+5. `hytunnel_carpark_mass_flow_validation`
+6. `preslhy_blowdown_external_validation`
+7. `preslhy_partb_ambient_external_validation`
+8. `preslhy_revised_holdout_validation`
+9. `proust_independent_release_validation`
+10. `schefer_transient_release_validation`
+11. `schefer_2007_pressure_decay_validation`
+12. `submission_metadata_and_declarations`
 
 The legacy audit retains the following broader re-entry lanes for a future
 station-to-vehicle or human-effectiveness study. They are **not requirements of
 the active station-side/component manuscript goal** and are reported as
 limitations or optional follow-up work:
 
-10. `institutional_ethics_determination`
-11. `hiad_casebook_frozen`
-12. `hiad_holdout_collection`
-13. `independent_expert_review_complete`
-14. `full_loop_external_validation` (future re-entry lane; current goal excludes it)
-15. `h2safe_spatial_detector_transfer_validation` (future detector-transfer lane)
-16. `saga_effectiveness_and_safety_supported` (requires human study)
+13. `institutional_ethics_determination`
+14. `hiad_casebook_frozen`
+15. `hiad_holdout_collection`
+16. `independent_expert_review_complete`
+17. `full_loop_external_validation` (future re-entry lane; current goal excludes it)
+18. `saga_effectiveness_and_safety_supported` (requires human study)
 
 For the active goal, completion is evaluated against the scope-adjusted gate
 set recorded in
