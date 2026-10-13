@@ -4,9 +4,10 @@
 
 ## 현재 상태
 
-- 주 목표 범위: **132 PASS / 10 FAIL / 2 PENDING = 91.7%**
-- 전체 회귀: **1,570 passed / 0 failed / 0 skipped / 222 warnings**
-- 최근 회귀 기록: `research/full_regression_test_run_2026_10_14.json`
+- 현재 readiness 게이트: **133 PASS / 11 FAIL / 7 PENDING = 88.1%**
+- 이전 주 범위 보고서의 **132 PASS / 10 FAIL / 2 PENDING = 91.7%**는 별도 축약 분모이며 현재 제출판정과 혼용하지 않는다.
+- 전체 회귀: **1,571 passed / 0 failed / 0 skipped / 222 warnings**
+- 최근 회귀 기록: `research/full_regression_test_run_2026_10_14.json` (실행 당시 구현 커밋 `c2d9b2f`; 이후 원고 패키지 커밋 `b7357f9`)
 - 런타임 승격이 금지된 후보: Type-III 열전달 수정안, H2SAFE 공간 검지기 후보, 사후 보정된 누출·영향 모델
 - NREL H2FillS: `nrel_h2fills_2022_hdvs_typeiv.xlsx` 한 파일만 보유하며 이미 수치 결과를 확인했다. 따라서 새 독립 holdout으로 재사용하지 않는다.
 
@@ -57,6 +58,10 @@
 ### P0 — Grüne 압력 감쇠 원자료
 
 현재 공개 도표를 디지털화한 진단은 1차 화면을 통과하지 못했고, 권리 정리된 원시 pressure-time 표가 없다. 원자료와 재사용 조건을 받은 뒤에만 새 프로토콜을 동결한다.
+
+### P0 — 제출 메타데이터
+
+저자·소속·기관 이메일·CRediT·이해상충·연구비·AI 사용 공개를 실제 저자 확인으로 잠가야 한다. 현재는 추정 입력을 하지 않고 대기한다.
 
 ## 반복하면 안 되는 작업
 
