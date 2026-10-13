@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-13T05:26:20.969167+00:00",
+  "generated_at": "2026-10-13T06:17:48.725848+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -6226,6 +6226,7 @@
             "path": "research/preslhy_blowdown_validation_protocol.json",
             "sha256": "d40cc59af3a607e66870d2afb91014058c83ae96fc1ba4aeac0d8554953733af",
             "frozen_model_commit": "d5eb663d7c48d93e29ecf83601175d8b16e3eeaf",
+            "validation_implementation_commit": "3b01661436de76a453e6652c4bcb479c3eaeb628",
             "outcomes_accessed_before_freeze": false
           },
           "chronology": [
@@ -6536,8 +6537,8 @@
       "evidence": "research\\apparatus_resolved_release_protocol.json; research\\release_network_prospective_protocol.json; research\\apparatus_release_holdout_manifest.template.json; src\\h2station\\release_network.py; src\\h2station\\apparatus_release_validation.py; scripts\\run_apparatus_release_holdout.py",
       "requirement": "Model, evaluator, runner and protocol hashes agree; eight-case stratification and no-fit/privacy rules are frozen; external validation remains explicitly not established.",
       "observed": {
-        "protocol_sha256": "ace967812e58f427eb7854114f25984ff5da781946dd4e842e649596183fd062",
-        "model_sha256": "fa0267fd6c06450c46651a019fa152bad599defd3eb7c2854dbe638618b0c39a",
+        "protocol_sha256": "29b61050001add8ab992ffd6daebe6389fdbe0ca666ae58d4df8299a931d2ab4",
+        "model_sha256": "ba240756c4dddb55aa7a98fc40b3635494bf157e7fbe4835bbddb2f06afeced6",
         "evaluator_sha256": "a31b9dcebbb4320749e0f39b9661519626cadbc1624c66c14c6ffa7f0ec2c035",
         "runner_sha256": "4a9a12b2b771c634ebcdf7e5ca660da51c78b85505bff421fdbac0f2cc01397c",
         "template_case_count": 8,

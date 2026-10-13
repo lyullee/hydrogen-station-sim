@@ -22,7 +22,10 @@ from math import pi
 import numpy as np
 from scipy.integrate import solve_ivp
 
-from .preslhy_nonadiabatic import _CoolPropHydrogen
+from .preslhy_nonadiabatic import (
+    _CoolPropHydrogen,
+    _internal_heat_transfer_coefficient,
+)
 
 
 @dataclass(frozen=True, slots=True)
@@ -73,6 +76,9 @@ class ReleaseNetworkInputs:
     source_wall_temperature_k: float | None = None
     line_wall_temperature_k: float | None = None
     internal_heat_transfer_w_m2_k: float = 0.0
+    internal_heat_transfer_mode: str = "constant"
+    source_characteristic_length_m: float | None = None
+    line_characteristic_length_m: float | None = None
     external_heat_transfer_w_m2_k: float = 0.0
     ambient_temperature_k: float = 293.15
     ambient_pressure_pa: float = 101_325.0
@@ -148,6 +154,28 @@ class ReleaseNetworkInputs:
             or self.intersegment_diameter_m <= 0.0
         ):
             raise ValueError("intersegment_diameter_m must be positive when supplied")
+        if self.internal_heat_transfer_mode not in {"constant", "natural_convection"}:
+            raise ValueError(
+                "internal_heat_transfer_mode must be 'constant' or "
+                "'natural_convection'"
+            )
+        for name, value in (
+            ("source_characteristic_length_m", self.source_characteristic_length_m),
+            ("line_characteristic_length_m", self.line_characteristic_length_m),
+        ):
+            if value is not None and (not np.isfinite(value) or value <= 0.0):
+                raise ValueError(f"{name} must be positive and finite when supplied")
+        if self.internal_heat_transfer_mode == "natural_convection":
+            if self.source_internal_area_m2 > 0.0 and self.source_characteristic_length_m is None:
+                raise ValueError(
+                    "source_characteristic_length_m is required for natural_convection "
+                    "when source_internal_area_m2 is positive"
+                )
+            if self.line_internal_area_m2 > 0.0 and self.line_characteristic_length_m is None:
+                raise ValueError(
+                    "line_characteristic_length_m is required for natural_convection "
+                    "when line_internal_area_m2 is positive"
+                )
 
     @property
     def upstream_area_m2(self) -> float:
@@ -196,6 +224,8 @@ class ReleaseNetworkResult:
     line_temperature_profile_k: np.ndarray
     line_mass_profile_kg: np.ndarray
     intersegment_mass_flow_kg_s: np.ndarray
+    source_internal_heat_transfer_coefficient_w_m2_k: np.ndarray
+    line_internal_heat_transfer_coefficient_profile_w_m2_k: np.ndarray
 
 
 def _opening_fraction(
@@ -216,10 +246,43 @@ def _opening_fraction(
     return initial_fraction + (1.0 - initial_fraction) * travel**shape_exponent
 
 
-def _gas_snapshot(eos: _CoolPropHydrogen, mass: float, energy: float, volume: float):
+def _gas_snapshot(
+    eos: _CoolPropHydrogen,
+    mass: float,
+    energy: float,
+    volume: float,
+    *,
+    wall_temperature_k: float,
+    heat_transfer_mode: str,
+    constant_heat_transfer_w_m2_k: float,
+    characteristic_length_m: float | None,
+    heat_transfer_active: bool,
+):
+    """Return scalar gas properties before the shared CoolProp state mutates.
+
+    ``_CoolPropHydrogen`` deliberately reuses one storage state.  The heat
+    coefficient therefore has to be evaluated in this call, before another
+    control volume overwrites that state.
+    """
+
     minimum_mass = max(mass, 1.0e-12)
     state = eos.storage_from_rho_u(minimum_mass / volume, energy / minimum_mass)
-    return float(state.p()), float(state.T()), float(state.hmass()), state
+    pressure = float(state.p())
+    temperature = float(state.T())
+    enthalpy = float(state.hmass())
+    if not heat_transfer_active:
+        heat_transfer = 0.0
+    elif heat_transfer_mode == "constant":
+        heat_transfer = constant_heat_transfer_w_m2_k
+    else:
+        if characteristic_length_m is None:  # guarded by ReleaseNetworkInputs
+            raise RuntimeError("natural-convection characteristic length is missing")
+        heat_transfer = _internal_heat_transfer_coefficient(
+            state,
+            wall_temperature_k - temperature,
+            characteristic_length_m,
+        )
+    return pressure, temperature, enthalpy, float(heat_transfer)
 
 
 def simulate_release_network(
@@ -302,16 +365,37 @@ def simulate_release_network(
         source_u = float(vector[source_energy_index])
         line_m = np.maximum(vector[line_mass_slice], minimum_line_mass)
         line_u = vector[line_energy_slice]
-        source_p, source_t, source_h, source_state = _gas_snapshot(
-            eos, source_m, source_u, inputs.source_volume_m3
+        source_p, source_t, source_h, source_internal_h = _gas_snapshot(
+            eos,
+            source_m,
+            source_u,
+            inputs.source_volume_m3,
+            wall_temperature_k=float(vector[source_wall_index]),
+            heat_transfer_mode=inputs.internal_heat_transfer_mode,
+            constant_heat_transfer_w_m2_k=inputs.internal_heat_transfer_w_m2_k,
+            characteristic_length_m=inputs.source_characteristic_length_m,
+            heat_transfer_active=inputs.source_internal_area_m2 > 0.0,
         )
         line_snapshots = [
-            _gas_snapshot(eos, float(mass), float(energy), segment_volume)
-            for mass, energy in zip(line_m, line_u, strict=True)
+            _gas_snapshot(
+                eos,
+                float(mass),
+                float(energy),
+                segment_volume,
+                wall_temperature_k=float(wall_temperature),
+                heat_transfer_mode=inputs.internal_heat_transfer_mode,
+                constant_heat_transfer_w_m2_k=inputs.internal_heat_transfer_w_m2_k,
+                characteristic_length_m=inputs.line_characteristic_length_m,
+                heat_transfer_active=inputs.line_internal_area_m2 > 0.0,
+            )
+            for mass, energy, wall_temperature in zip(
+                line_m, line_u, vector[line_wall_slice], strict=True
+            )
         ]
         line_p = np.asarray([item[0] for item in line_snapshots])
         line_t = np.asarray([item[1] for item in line_snapshots])
         line_h = np.asarray([item[2] for item in line_snapshots])
+        line_internal_h = np.asarray([item[3] for item in line_snapshots])
         upstream_opening = _opening_fraction(
             time_s,
             inputs.valve_opening_time_s,
@@ -375,25 +459,25 @@ def simulate_release_network(
                 abs(flow), line_m[donor] / 1.0e-4
             )
         terminal = min(terminal, line_m[-1] / 1.0e-4)
-        source_wall_q = inputs.internal_heat_transfer_w_m2_k * inputs.source_internal_area_m2 * (
+        source_wall_q = source_internal_h * inputs.source_internal_area_m2 * (
             float(vector[source_wall_index]) - source_t
         )
         line_wall_q = (
-            inputs.internal_heat_transfer_w_m2_k
+            line_internal_h
             * (inputs.line_internal_area_m2 / segment_count)
             * (vector[line_wall_slice] - line_t)
         )
         return (
             source_p, source_t, source_h, line_p, line_t, line_h,
             upstream, interface_flows, terminal, upstream_opening, terminal_opening,
-            source_wall_q, line_wall_q,
+            source_wall_q, line_wall_q, source_internal_h, line_internal_h,
         )
 
     def derivative(time_s: float, vector: np.ndarray) -> np.ndarray:
         (
             _source_p, source_t, source_h, _line_p, _line_t, line_h,
             upstream, interface_flows, terminal, _upstream_opening, _terminal_opening,
-            source_wall_q, line_wall_q,
+            source_wall_q, line_wall_q, _source_internal_h, _line_internal_h,
         ) = quantities(time_s, vector)
         source_external_q = inputs.external_heat_transfer_w_m2_k * inputs.source_external_area_m2 * (
             inputs.ambient_temperature_k - float(vector[source_wall_index])
@@ -475,6 +559,8 @@ def simulate_release_network(
     upstream = np.asarray([item[6] for item in snapshots])
     interface_flows = np.vstack([item[7] for item in snapshots]) if segment_count > 1 else np.empty((len(snapshots), 0))
     terminal = np.asarray([item[8] for item in snapshots])
+    source_internal_h = np.asarray([item[13] for item in snapshots])
+    line_internal_h = np.vstack([item[14] for item in snapshots])
     cumulative_terminal_release = np.interp(
         requested, solution.t, solution.y[terminal_mass_index]
     )
@@ -520,6 +606,12 @@ def simulate_release_network(
             for index in range(segment_count - 1)
         ]
     ) if segment_count > 1 else np.empty((len(requested), 0))
+    line_internal_heat_transfer_profile = np.column_stack(
+        [
+            np.interp(requested, solution.t, line_internal_h[:, index])
+            for index in range(segment_count)
+        ]
+    )
     # Valve position is a prescribed command, so evaluate it exactly at the
     # requested timestamps instead of interpolating adaptive solver samples.
     requested_upstream_opening = np.asarray([
@@ -576,6 +668,12 @@ def simulate_release_network(
         line_temperature_profile_k=line_temperature_profile,
         line_mass_profile_kg=line_mass_profile,
         intersegment_mass_flow_kg_s=intersegment_profile,
+        source_internal_heat_transfer_coefficient_w_m2_k=np.interp(
+            requested, solution.t, source_internal_h
+        ),
+        line_internal_heat_transfer_coefficient_profile_w_m2_k=(
+            line_internal_heat_transfer_profile
+        ),
     )
 
 

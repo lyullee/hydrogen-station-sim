@@ -140,7 +140,8 @@ def _next_action(gate_id: str, status: str) -> str:
     if gate_id == "preslhy_blowdown_external_validation":
         return (
             "최초 동결 11/22(50.0%) 실패를 유지하고 16/22 사후 재실행은 개발 진단으로만 사용한다. "
-            "밸브·배관 재고와 열전달을 포함한 후보 모델을 소비된 자료로 진단한 뒤 구현과 화면을 다시 동결하고, "
+            "2026 Cheng H2/CO2 후보는 원시 시계열 없이 설명 PDF와 컴파일 앱만 제공해 독립 검증에서 제외했다. "
+            "밸브·배관 재고와 열전달을 포함한 후보 모델을 소비된 자료로 진단한 뒤 구현과 판정 화면을 다시 동결하고, "
             "수치 결과를 열지 않은 독립 방출 캠페인에서 새 pre-access 프로토콜로 평가한다."
         )
     if gate_id in {"hytunnel_carpark_mass_flow_validation", "preslhy_partb_ambient_external_validation", "preslhy_revised_holdout_validation", "proust_independent_release_validation", "schefer_transient_release_validation", "schefer_2007_pressure_decay_validation", "grune_2014_pressure_decay_validation", "dickens_typeiii_prospective_validation"}:

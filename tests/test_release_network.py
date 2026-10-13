@@ -148,6 +148,82 @@ def test_release_network_energy_closure_is_explicit_for_wall_and_boundary_heat()
     assert np.max(np.abs(result.energy_balance_residual_j)) < 1.0
 
 
+def test_constant_internal_heat_transfer_mode_preserves_legacy_result():
+    time = np.linspace(0.0, 0.2, 41)
+    common = dict(
+        source_wall_mass_kg=2.0,
+        line_wall_mass_kg=1.0,
+        source_internal_area_m2=0.8,
+        line_internal_area_m2=0.2,
+        source_wall_temperature_k=293.15,
+        line_wall_temperature_k=293.15,
+        internal_heat_transfer_w_m2_k=75.0,
+    )
+    legacy_default = simulate_release_network(time, inputs=_inputs(**common))
+    explicit_constant = simulate_release_network(
+        time,
+        inputs=_inputs(**common, internal_heat_transfer_mode="constant"),
+    )
+
+    assert np.array_equal(
+        legacy_default.source_pressure_pa_abs,
+        explicit_constant.source_pressure_pa_abs,
+    )
+    assert np.array_equal(
+        legacy_default.terminal_mass_flow_kg_s,
+        explicit_constant.terminal_mass_flow_kg_s,
+    )
+    assert np.all(
+        explicit_constant.source_internal_heat_transfer_coefficient_w_m2_k
+        == pytest.approx(75.0)
+    )
+    assert np.all(
+        explicit_constant.line_internal_heat_transfer_coefficient_profile_w_m2_k
+        == pytest.approx(75.0)
+    )
+
+
+def test_natural_convection_is_state_dependent_and_conserves_energy():
+    time = np.linspace(0.0, 0.5, 101)
+    common = dict(
+        source_wall_mass_kg=2.0,
+        line_wall_mass_kg=1.0,
+        source_internal_area_m2=0.8,
+        line_internal_area_m2=0.2,
+        source_wall_temperature_k=293.15,
+        line_wall_temperature_k=293.15,
+        source_external_area_m2=0.0,
+        line_external_area_m2=0.0,
+    )
+    adiabatic = simulate_release_network(
+        time,
+        inputs=_inputs(**common, internal_heat_transfer_w_m2_k=0.0),
+    )
+    natural = simulate_release_network(
+        time,
+        inputs=_inputs(
+            **common,
+            internal_heat_transfer_mode="natural_convection",
+            source_characteristic_length_m=0.16,
+            line_characteristic_length_m=0.01,
+        ),
+    )
+
+    source_h = natural.source_internal_heat_transfer_coefficient_w_m2_k
+    line_h = natural.line_internal_heat_transfer_coefficient_profile_w_m2_k
+    assert np.all(np.isfinite(source_h))
+    assert np.all(np.isfinite(line_h))
+    assert np.all(source_h > 0.0)
+    assert np.all(line_h > 0.0)
+    assert np.ptp(source_h) > 1.0e-3
+    assert np.ptp(line_h[:, 0]) > 1.0e-3
+    assert natural.source_temperature_k[-1] != pytest.approx(
+        adiabatic.source_temperature_k[-1], abs=1.0e-4
+    )
+    assert np.max(np.abs(natural.mass_balance_residual_kg)) < 1.0e-8
+    assert np.max(np.abs(natural.energy_balance_residual_j)) < 1.0
+
+
 def test_release_network_rejects_nonphysical_inputs():
     with pytest.raises(ValueError, match="line_volume_m3"):
         _inputs(line_volume_m3=0.0)
@@ -157,6 +233,20 @@ def test_release_network_rejects_nonphysical_inputs():
         _inputs(line_segments=2)
     with pytest.raises(ValueError, match="initial valve fractions"):
         _inputs(terminal_valve_initial_fraction=1.1)
+    with pytest.raises(ValueError, match="internal_heat_transfer_mode"):
+        _inputs(internal_heat_transfer_mode="fitted")
+    with pytest.raises(ValueError, match="source_characteristic_length_m"):
+        _inputs(
+            internal_heat_transfer_mode="natural_convection",
+            source_internal_area_m2=1.0,
+        )
+    with pytest.raises(ValueError, match="line_characteristic_length_m"):
+        _inputs(
+            internal_heat_transfer_mode="natural_convection",
+            line_internal_area_m2=1.0,
+        )
+    with pytest.raises(ValueError, match="positive and finite"):
+        _inputs(source_characteristic_length_m=-0.1)
 
 
 def test_zero_thermal_capacity_keeps_wall_temperature_fixed():

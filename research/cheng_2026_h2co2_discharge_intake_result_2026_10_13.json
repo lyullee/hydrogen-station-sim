@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "artifact_type": "postfreeze_public_candidate_intake_result",
+  "recorded_at": "2026-10-13",
+  "candidate_id": "cheng_2026_h2co2_orifice_discharge",
+  "protocol": "research/cheng_2026_h2co2_discharge_preaccess_protocol_2026_10_13.json",
+  "protocol_freeze_commit": "eb68ec9",
+  "source": {
+    "doi": "10.1016/j.ijhydene.2026.156114",
+    "publisher_page": "https://www.sciencedirect.com/science/article/pii/S0360319926027527",
+    "test_mixture_reported_by_article": "0.7 H2 + 0.3 CO2 mole fraction",
+    "pure_hydrogen_evidence_description": "existing experimental data of pure hydrogen",
+    "pure_hydrogen_raw_trace_packaged": false
+  },
+  "download_integrity": {
+    "supplement_pdf": {
+      "url": "https://ars.els-cdn.com/content/image/1-s2.0-S0360319926027527-mmc1.pdf",
+      "bytes": 200172,
+      "sha256": "EEFD04DC1CCDA49A9DA55DD5EBFE1651219EB6148E4FF05B76DD492990A6834A",
+      "pages": 4
+    },
+    "application_package_zip": {
+      "url": "https://ars.els-cdn.com/content/image/1-s2.0-S0360319926027527-mmc2.zip",
+      "bytes": 2381374,
+      "sha256": "F1C2D2AE67DC4A186154CD067DB02B4C4937659387E46BA2BA8FBF9B0ED905AA"
+    },
+    "nested_rar": {
+      "name": "he_156114_release_H2MixOrificeFlow_mmc2.rar",
+      "bytes": 2380861,
+      "sha256": "EEAF1A9BCF39604FF78E4A4A69D236CE0CA795906D688E52BEA97601BB325861"
+    }
+  },
+  "content_audit": {
+    "supplement_pdf": {
+      "content": "Narrative sensitivity summaries for figures 7-11 and a pointer to the H2MixOrificeFlow application package.",
+      "machine_readable_experimental_timeseries": false,
+      "synchronized_pressure_temperature_flow_trace": false,
+      "reported_summary_ranges": {
+        "initial_pressure_mpa": [5, 15],
+        "initial_temperature_k": [293, 343],
+        "hydrogen_mole_fraction": [0.6, 0.7]
+      }
+    },
+    "application_package": {
+      "file_count": 10,
+      "compiled_matlab_release": "R2025b",
+      "contains_compiled_application": true,
+      "contains_installer": true,
+      "contains_source_code": false,
+      "contains_csv_or_workbook": false,
+      "contains_raw_experimental_trace": false,
+      "executables_run_during_audit": false,
+      "files": [
+        "release_H2MixOrificeFlow/deploymentLog.html",
+        "release_H2MixOrificeFlow/build/splash.png",
+        "release_H2MixOrificeFlow/build/mccExcludedFiles.log",
+        "release_H2MixOrificeFlow/build/requiredMCRProducts.txt",
+        "release_H2MixOrificeFlow/build/buildresult.json",
+        "release_H2MixOrificeFlow/build/includedSupportPackages.txt",
+        "release_H2MixOrificeFlow/build/unresolvedSymbols.txt",
+        "release_H2MixOrificeFlow/build/readme.txt",
+        "release_H2MixOrificeFlow/build/H2MixOrificeFlow.exe",
+        "release_H2MixOrificeFlow/package/MyAppInstaller.exe"
+      ]
+    }
+  },
+  "eligibility_decision": {
+    "state": "ineligible_composition_domain_and_no_raw_trace",
+    "eligible_untouched_numerical_holdout": false,
+    "independent_pure_hydrogen_release_validation": false,
+    "metadata_or_method_context_only": true,
+    "reason": "The publisher supplements contain narrative summaries and a compiled H2/CO2 mixture calculator, not reusable synchronized experimental traces. The reported new experiment is a 70/30 H2/CO2 mixture outside the frozen pure-H2 model domain, while pure-H2 evidence is described as existing literature data and is not packaged as a new raw cohort.",
+    "ijhe_gate_impact": "no_change",
+    "runtime_parameter_application": false,
+    "model_or_screen_changed_before_eligibility_decision": false,
+    "subsequent_model_development_after_candidate_closed": true,
+    "subsequent_development_effect": "No reclassification or numerical use of this ineligible candidate. The frozen implementation remains recoverable at protocol_freeze_commit."
+  },
+  "next_action": "Request reusable synchronized pressure, temperature, terminal mass-flow or released-mass traces plus apparatus and valve metadata from the authors, or locate a different untouched pure-H2 campaign. Do not execute or reverse engineer the packaged binaries for a validation claim.",
+  "claim_boundary": "Hash-audited public candidate intake only. The article and compiled calculator do not validate the pure-H2 HRS release model, detector response, consequence distance, station process loop or SAGA guidance."
+}

@@ -66,8 +66,11 @@ def test_protocol_locks_candidate_revision_before_target_data_access():
     assert protocol["protocol_revision"]["target_campaign_outcome_data_accessed"] is False
     assert protocol["protocol_revision"]["physical_trajectory_equations_changed"] is True
     assert protocol["protocol_revision"]["revision_kind"] == (
-        "third pre-holdout apparatus-structure revision"
+        "fourth pre-holdout thermo-fluid revision"
     )
+    assert protocol["protocol_revision"]["previous_revision"][
+        "target_campaign_outcome_data_accessed"
+    ] is False
     assert protocol["quality_controls"]["observed_valve_location_must_be_declared"] == (
         "upstream_or_terminal"
     )
@@ -91,6 +94,8 @@ def test_secondary_protocol_tracks_the_locked_conservation_outputs():
         "cumulative_thermal_boundary_energy",
         "mass_balance_residual",
         "energy_balance_residual",
+        "source_internal_heat_transfer_coefficient",
+        "line_internal_heat_transfer_coefficient_profile",
     } <= set(protocol["model_boundary"]["outputs"])
     assert protocol["numerical_conservation_screens"] == {
         "mass_closure_relative_error_max": 0.002,
@@ -99,6 +104,7 @@ def test_secondary_protocol_tracks_the_locked_conservation_outputs():
         "physical_trajectory_equations_changed": True,
         "dual_valve_boundary_amended_before_target_campaign_outcome_access": True,
         "command_to_motion_delay_boundary_amended_before_target_campaign_outcome_access": True,
+        "state_dependent_natural_convection_amended_before_target_campaign_outcome_access": True,
     }
 
 
@@ -114,6 +120,9 @@ def test_private_manifest_template_matches_every_frozen_artifact():
     }
     assert "upstream_valve_initial_fraction" in manifest["default_model_parameters"]
     assert "terminal_valve_initial_fraction" in manifest["default_model_parameters"]
+    assert manifest["default_model_parameters"]["internal_heat_transfer_mode"] == "constant"
+    assert manifest["default_model_parameters"]["source_characteristic_length_m"] is None
+    assert manifest["default_model_parameters"]["line_characteristic_length_m"] is None
     assert len(manifest["cases"]) == 8
     assert len({item["strata"]["source_pressure_group"] for item in manifest["cases"]}) == 2
     assert len({item["strata"]["geometry_group"] for item in manifest["cases"]}) == 2

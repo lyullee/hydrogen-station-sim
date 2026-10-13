@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "artifact_type": "pre_holdout_release_network_model_amendment",
+  "recorded_at": "2026-10-13",
+  "status": "FROZEN_BEFORE_QUALIFYING_TARGET_CAMPAIGN",
+  "reason": "The original frozen PRESLHY local-aperture result failed its primary screen at 11/22 cases. A separate development-only non-adiabatic model showed that state-dependent gas-to-wall heat transfer materially improves the consumed campaign without fitting case-specific coefficients. The same physical option is therefore added prospectively to the apparatus-resolved candidate before any qualifying apparatus logger outcome is received.",
+  "prior_revision": {
+    "repository_commit": "eb68ec9448dc094d5cd4c4d3210e8baa79615bf7",
+    "model_sha256": "FA0267FD6C06450C46651A019FA152BAD599DEFD3EB7C2854DBE638618B0C39A",
+    "apparatus_protocol_sha256": "ACE967812E58F427EB7854114F25984FF5DA781946DD4E842E649596183FD062",
+    "secondary_protocol_sha256": "B2D6770134C7ABAD5343CA7E13BB3E25E42296A143532A58490DAD7F575B0D68"
+  },
+  "amended_revision": {
+    "model": "src/h2station/release_network.py",
+    "model_sha256": "BA240756C4DDDB55AA7A98FC40B3635494BF157E7FBE4835BBDDB2F06AFECED6",
+    "apparatus_protocol": "research/apparatus_resolved_release_protocol.json",
+    "apparatus_protocol_sha256": "29B61050001ADD8AB992FFD6DAEBE6389FDBE0CA666AE58D4DF8299A931D2AB4",
+    "secondary_protocol": "research/release_network_prospective_protocol.json",
+    "secondary_protocol_sha256": "6155C38B80011EDA8029BCDDCF97023F72B8886DD26A2CADC6F0632FF5CD521F"
+  },
+  "physics_change": {
+    "new_mode": "natural_convection",
+    "correlation": "Churchill-Chu all-range natural convection",
+    "property_source": "CoolProp HEOS hydrogen at each local control-volume state",
+    "declared_inputs": [
+      "source_internal_area_m2",
+      "line_internal_area_m2",
+      "source_characteristic_length_m",
+      "line_characteristic_length_m"
+    ],
+    "auditable_outputs": [
+      "source_internal_heat_transfer_coefficient_w_m2_k",
+      "line_internal_heat_transfer_coefficient_profile_w_m2_k"
+    ],
+    "legacy_mode": "constant",
+    "legacy_default_preserved": true,
+    "case_specific_fit": false
+  },
+  "freeze_declarations": {
+    "qualifying_target_campaign_received": false,
+    "qualifying_target_campaign_numerical_outcome_accessed": false,
+    "cheng_2026_h2co2_candidate_closed_as_ineligible_before_this_change": true,
+    "heat_transfer_mode_must_be_fixed_before_future_outcome_access": true,
+    "characteristic_lengths_must_be_geometry_based_and_prefrozen": true,
+    "post_outcome_mode_or_length_selection_prohibited": true
+  },
+  "test_evidence": [
+    "constant mode reproduces the previous numerical trajectory",
+    "natural-convection coefficients are finite, positive and state dependent",
+    "mass and open-system energy closure remain within numerical screens",
+    "missing geometry inputs fail closed"
+  ],
+  "claim_impact": {
+    "external_validation_status": "NOT_ESTABLISHED",
+    "ijhe_gate_impact": "no_change",
+    "production_runtime_updated": false,
+    "goal_completion_permitted": false
+  }
+}

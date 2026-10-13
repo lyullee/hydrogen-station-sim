@@ -14,21 +14,28 @@ the last volume discharges through a terminal restriction to ambient. Adjacent
 volumes can exchange flow in either direction. Every volume has a gas mass and
 internal-energy state. Optional lumped wall states exchange heat with the gas
 and ambient; internal gas/wall area and external wall/ambient area are separate
-geometry inputs. The model returns source state, the complete line pressure,
+geometry inputs. Gas-to-wall transfer can use either the legacy constant
+coefficient or the state-dependent Churchill--Chu natural-convection
+correlation. The latter uses local HEOS hydrogen properties, wall-gas
+temperature difference, and separately declared source/line characteristic
+lengths. The model returns source state, the complete line pressure,
 temperature and inventory profiles, every boundary flow, valve position,
 cumulative terminal mass and enthalpy, net thermal-boundary energy, and
-instantaneous mass/energy conservation residuals on one clock.
+instantaneous mass/energy conservation residuals on one clock. It also returns
+the source and line heat-transfer-coefficient histories so the thermal boundary
+is auditable rather than hidden.
 
 The number of line volumes is a physical topology declaration, not a numerical
 mesh refinement control. A multi-volume run is admissible only when the volume
 and equivalent restriction at every boundary can be frozen from apparatus
 information. The one-line-volume default preserves the original candidate.
 
-No fitted discharge coefficient, opening time, line volume, time shift or
-case-specific initial condition is permitted after a holdout outcome is read.
-The topology, geometry and valve law must be frozen from an apparatus drawing,
-calibration record or an independent data-custodian statement before the
-numerical archive is opened.
+No fitted discharge coefficient, opening time, line volume, heat-transfer mode,
+characteristic length, time shift or case-specific initial condition is
+permitted after a holdout outcome is read. The topology, geometry, valve law,
+thermal areas and characteristic lengths must be frozen from an apparatus
+drawing, calibration record or an independent data-custodian statement before
+the numerical archive is opened.
 
 ## Required raw channels
 
@@ -85,8 +92,10 @@ development set under the same model version.
 
 The repository contains the implementation and unit tests for mass and
 open-system energy closure, finite valve travel, resolved line pressure and
-inventory gradients, reverse inter-volume flow, and separate thermal areas.
-The multi-volume structure was introduced before any qualifying target campaign
-was received. It is therefore a prospective candidate revision, not a repair of
-an inspected holdout. No result from this model is used in the IJHE readiness
-audit. The full-loop and consequence gates remain unchanged.
+inventory gradients, reverse inter-volume flow, separate thermal areas and
+state-dependent natural convection. Constant mode reproduces the earlier
+candidate trajectory. The multi-volume and thermal revisions were introduced
+before any qualifying target campaign was received. They are prospective
+candidate revisions, not repairs of an inspected holdout. No result from this
+model is used in the IJHE readiness audit. The full-loop and consequence gates
+remain unchanged.

@@ -20,14 +20,16 @@ distinction testable without fitting to the existing outcomes.
 
 The candidate implementation is
 `src/h2station/release_network.py`, SHA-256
-`5C52E06F3FF1C45FD6C63047B5C34494D2B605A3BD46CB40FFCD81946B7E259D` after a
-pre-holdout apparatus-structure revision. It has source mass/energy, one or
+`BA240756C4DDDB55AA7A98FC40B3635494BF157E7FBE4835BBDDB2F06AFECED6` after a
+pre-holdout thermo-fluid revision. It has source mass/energy, one or
 more physically declared line-volume mass/energy states, a configurable finite
 valve-opening curve, inter-volume restrictions, terminal flow and optional wall
-thermal states. It also reports every line state and boundary flow, cumulative
-terminal mass and enthalpy, thermal-boundary energy, and instantaneous
-mass/energy residuals. It is development-only and is not wired into the station
-runtime.
+thermal states. Internal heat transfer can remain constant or use the
+state-dependent Churchill--Chu natural-convection correlation with declared
+source and line characteristic lengths. It also reports every line state and
+boundary flow, heat-transfer-coefficient history, cumulative terminal mass and
+enthalpy, thermal-boundary energy, and instantaneous mass/energy residuals. It
+is development-only and is not wired into the station runtime.
 
 The nominal line dimensions imply 0.000785398 m³ of geometric internal volume
 (`pi × 0.010² / 4 × 10`). That number is only a derivation from published
@@ -55,14 +57,17 @@ this protocol.
 
 Before opening numerical rows, freeze the as-built topology and volume of each
 declared line/manifold compartment, every equivalent restriction, valve law,
-discharge coefficients, heat-transfer terms, solver configuration, sensor
+discharge coefficients, heat-transfer mode, geometry-derived characteristic
+lengths, external heat-transfer terms, solver configuration, sensor
 calibration, synchronization rule, missing-data rule, endpoints and archive
 hash. No case-specific fitting, time shifting, outcome-driven cropping or
 diameter-specific correction is allowed.
 
 ## Pre-registered screens
 
-At least two of three independent complete runs must pass all of the following:
+At least eight declared cases must span two source-pressure groups, two geometry
+groups and two valve-opening groups. At least 70% of those cases must pass all
+quality, primary and conservation gates, including the following:
 
 * source-pressure NRMSE ≤ 15%;
 * terminal-flow NRMSE normalized by measured peak ≤ 15%;

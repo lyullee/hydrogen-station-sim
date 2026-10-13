@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "source_audit_generated_at": "2026-10-13T05:26:20.969167+00:00",
+  "source_audit_generated_at": "2026-10-13T06:17:48.725848+00:00",
   "target_journal": "International Journal of Hydrogen Energy",
   "overall": {
     "pass": 130,
@@ -150,7 +150,7 @@
       "parallel_track": "component_model_repairs",
       "scope_role": "required_primary_scope",
       "claim": "The source-depletion and direct-aperture release model is evaluated against prospectively frozen screens on public PRESLHY ambient blowdown experiments.",
-      "next_action": "최초 동결 11/22(50.0%) 실패를 유지하고 16/22 사후 재실행은 개발 진단으로만 사용한다. 밸브·배관 재고와 열전달을 포함한 후보 모델을 소비된 자료로 진단한 뒤 구현과 화면을 다시 동결하고, 수치 결과를 열지 않은 독립 방출 캠페인에서 새 pre-access 프로토콜로 평가한다.",
+      "next_action": "최초 동결 11/22(50.0%) 실패를 유지하고 16/22 사후 재실행은 개발 진단으로만 사용한다. 2026 Cheng H2/CO2 후보는 원시 시계열 없이 설명 PDF와 컴파일 앱만 제공해 독립 검증에서 제외했다. 밸브·배관 재고와 열전달을 포함한 후보 모델을 소비된 자료로 진단한 뒤 구현과 판정 화면을 다시 동결하고, 수치 결과를 열지 않은 독립 방출 캠페인에서 새 pre-access 프로토콜로 평가한다.",
       "why_now": "현재 주 목표에 포함된 실패 물리량별 독립 holdout을 병행하고, 통과 전 런타임 승격을 막음",
       "claim_boundary": "This protocol evaluates a rigid source vessel discharging through a nominal circular aperture. It does not validate a vehicle-fueling loop, cryogenic two-phase release, a site vent stack, pipe backpressure, ignition, dispersion, or emergency separation distance."
     },
