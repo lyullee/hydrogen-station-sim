@@ -99,6 +99,39 @@ def _serialized_native_physics(method):
     return wrapped
 
 
+def _install_hyram_solout_compatibility() -> None:
+    """Adapt SciPy 1.18's extended DOPRI callback to HyRAM 6.1.
+
+    HyRAM 6.1 declares the legacy ``solout(t, y)`` callback.  Some newer
+    SciPy builds pass additional integrator bookkeeping values to the bound
+    callback, which otherwise raises before the plume calculation starts.
+    The first two arguments remain the time and state vector; narrowing only
+    that callback boundary leaves HyRAM's equations and numerical parameters
+    unchanged.  The marker prevents wrapping the private SciPy method twice.
+    """
+    try:
+        from scipy.integrate import _ode
+    except ImportError:
+        return
+    integrator = getattr(_ode, "dopri5", None)
+    if integrator is None or getattr(integrator, "_h2station_solout_compat", False):
+        return
+    original = getattr(integrator, "_solout", None)
+    if original is None:
+        return
+
+    def compatible_solout(self, *args):
+        if len(args) == 2:
+            return original(self, *args)
+        if len(args) >= 2:
+            return original(self, args[0], args[1])
+        return original(self, *args)
+
+    compatible_solout.__name__ = "_h2station_compatible_solout"
+    setattr(integrator, "_solout", compatible_solout)
+    setattr(integrator, "_h2station_solout_compat", True)
+
+
 class HyRAMRiskMonitor:
     """Runs HyRAM consequence models no faster than a configured sample period."""
 
@@ -112,7 +145,9 @@ class HyRAMRiskMonitor:
     @staticmethod
     def _physics_api() -> Any:
         try:
-            return import_module("hyram.phys.api")
+            api = import_module("hyram.phys.api")
+            _install_hyram_solout_compatibility()
+            return api
         except ImportError as exc:
             raise HyRAMNotInstalledError(
                 "Install the optional risk dependencies with: pip install -e '.[risk]'"

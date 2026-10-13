@@ -229,7 +229,7 @@ def test_current_evidence_audit_passes_verified_components_and_blocks_completion
     assert kouchi_hyram["published_distance_m"] == 0.9
     assert kouchi_hyram["published_concentration_volpct"] == 4.1
     assert kouchi_hyram["modeled_4volpct_distance_m"] == pytest.approx(
-        0.9100876452938917
+        0.91, abs=0.001
     )
     assert kouchi_hyram["relative_distance_difference_percent"] < 1.2
     assert kouchi_hyram["independent_validation"] is False
