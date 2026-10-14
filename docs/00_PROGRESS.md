@@ -1,5 +1,17 @@
 # Development Progress
 
+## 2026-10-14 - Re-synchronize readiness audit after the Type-IV evidence update
+
+The IJHE readiness audit and validation-gap report were regenerated from the
+current source tree after the bounded Type-IV evidence routing work. The
+counts remain **134 PASS / 11 FAIL / 7 PENDING** (88.2% overall; 91.7% in the
+declared primary scope), so no scientific gate was promoted. The current
+committed source also retains the full regression result of **1,599 passed / 0
+failed / 0 skipped**. The remaining blockers are independent physical
+holdouts, rights-cleared raw traces, and author-controlled submission
+metadata; the station-to-vehicle full-loop lane remains an explicit paper
+limitation.
+
 ## 2026-10-14 - Reproduce the frozen spatial rank on the USN actual-hydrogen dataset
 
 The frozen `orientation_class_rank_v2` formula was replayed against all 22
