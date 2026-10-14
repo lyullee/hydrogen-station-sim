@@ -85,8 +85,8 @@
       "ethics_and_expert_review": "optional_for_physics_validation; required only for a claim that SAGA improves human safety guidance"
     }
   },
-  "source_commit": "4af538e7eef92c34b2f97cecc4216e68de8525f4",
-  "latest_completed_work": "PRESLHY E3.5 공식 RADAR tar의 11.3 GB 전체를 받지 않고 헤더만 재확인했습니다. 설명·기술 메타데이터와 실험 영상 멤버를 확인했으나 새 미접근 수치 holdout은 없어 gate·runtime·진행률은 유지합니다.",
+  "source_commit": "0cd064eef2d4fcc824e82fecae4fe2f31ad09542",
+  "latest_completed_work": "재충전 READY/RECHARGE 반복을 줄이기 위해 120초 가상 anti-chatter guard를 기본 적용했습니다. 비식별 holdout의 176초 최단 간격보다 짧은 제어 기본값이며 외부검증·안전한계로 승격하지 않았습니다.",
   "latest_full_regression": {
     "tests_passed": 1618,
     "tests_failed": 0,
@@ -339,6 +339,11 @@
       "id": "preslhy_tar_header_recheck_2026_10_14",
       "progress_percent": 100.0,
       "status": "공식 11.3 GB tar의 Range/스트림 헤더를 메타데이터 수준에서 재확인했습니다. 새 수치자료를 열지 않았고 liquid-H2 consequence 경계자료로만 유지했습니다."
+    },
+    {
+      "id": "recharge_anti_chatter_guard_2026_10_14",
+      "progress_percent": 100.0,
+      "status": "검증 실패한 fitted dwell 대신 120초 operator-control guard를 기본 적용하고 0~600초 override를 추가했습니다. 관련 테스트 45건이 통과했습니다."
     }
   ],
   "latest_context_focused_regression": {
