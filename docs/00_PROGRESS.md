@@ -2616,3 +2616,25 @@ the full-loop claim pass.
   ranges. The publisher endpoint still returned HTTP 429 during the retry, so
   the integrity gate remains open. Verification: the focused KIT intake suite
   passes 8/8; readiness remains 134 PASS / 11 FAIL / 7 PENDING.
+
+## 2026-10-14 - High-aspect-ratio tank literature routed to LLM evidence
+
+- Added a claim-bounded LLM evidence route for Couteau et al. (2025), an open
+  350 L Type-IV high-aspect-ratio tank study (2.33 m length, 0.24 m internal
+  diameter, aspect ratio 4.8, eight thermocouples).
+- Tank-thermal questions now receive the reported mechanism—front/inlet forced
+  convection with back-zone buoyancy and limited jet reach—together with the
+  DOI, repository page and CC BY 4.0 status.
+- The route explicitly marks raw logger unavailable, independent holdout false,
+  prospective validation false, runtime parameter application false and claim
+  supported false. It is explanatory literature context only and cannot alter
+  the simulator or readiness gates.
+- Added regression coverage; focused LLM/evidence suite passes 54/54. Readiness
+  remains 134 PASS / 11 FAIL / 7 PENDING (88.2% gate closure).
+
+
+## 2026-10-14 - LLM 근거 라우팅 후 감사·회귀 재동기화
+
+- `llm_grounding.py` 변경으로 오래된 소스 해시를 보유하던 Type-IV 런타임·사고선례 무결성 산출물을 재생성하고, 최신 readiness audit와 validation-gap triage를 동기화했다.
+- 최신 감사: 134 PASS / 11 FAIL / 7 PENDING (88.2%); 새 문헌 근거 추가가 독립 검증 게이트를 승격하지 않도록 유지했다.
+- 전체 회귀: 1,591 passed / 0 failed / 0 skipped. 감사·triage·LLM 근거 집중 검증도 통과했다.

@@ -33,6 +33,7 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert idle["source"]["field_measurement"] is False
     station_context = idle["response_evidence"]["public_real_station_context"]
     assert station_context["source"]["doi"] == "10.1016/j.jclepro.2021.129737"
+
     assert station_context["full_loop_external_holdout_eligible"] is False
     assert station_context["source"]["public_raw_synchronized_rows"] is False
     assert any(
@@ -123,6 +124,7 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
     assert prompt_decision_evidence(idle)["compressor_package"][
         "topology"
     ].startswith("finite discharge-package inventory")
+
     scope = prompt_decision_evidence(idle)["support_scope"]
     assert scope["station_side"] is True
     assert scope["full_loop"] is False
@@ -1514,6 +1516,41 @@ def test_manifest_distinguishes_not_requested_from_calculated_impact():
         "relevant_precedents_by_response_plan"
     ]["overpressure"]
     assert calculated["evidence_digest"] != idle["evidence_digest"]
+
+
+def test_high_aspect_ratio_tank_literature_is_routed_with_claim_boundary():
+    frame = {
+        "time_s": 12.5,
+        "nozzle_flow_g_s": 0.0,
+        "header_pressure_mpa": 44.8,
+        "header_temperature_c": 24.2,
+        "header_mass_kg": 0.16,
+        "header_inflow_g_s": 12.4,
+        "compressor_package_pressure_mpa": 57.0,
+        "compressor_package_temperature_c": 31.5,
+        "compressor_package_mass_kg": 0.74,
+        "component_internal_volume_m3": {"compressor": 0.02},
+    }
+    manifest = build_evidence_manifest(
+        frame,
+        {"PT-0901": {"value": 88.0, "unit": "MPa", "quality": "GOOD"}},
+        [],
+        False,
+        question="저장탱크 온도와 고아스펙비 탱크 열전달 근거를 설명해줘",
+        selected_sensor="PT-0901",
+    )
+    evidence = manifest["response_evidence"][
+        "public_high_aspect_ratio_tank_literature"
+    ]
+    assert evidence["source"]["doi"] == "10.1016/j.ijhydene.2025.152513"
+    assert evidence["reported_geometry"]["aspect_ratio"] == 4.8
+    assert evidence["public_raw_data"] is False
+    assert evidence["independent_holdout"] is False
+    assert evidence["runtime_parameter_application"] is False
+    compact = prompt_decision_evidence(manifest)
+    assert compact["public_high_aspect_ratio_tank_literature"][
+        "claim_supported"
+    ] is False
 
 
 def test_manifest_preserves_virtual_detector_public_uncertainty_envelope():

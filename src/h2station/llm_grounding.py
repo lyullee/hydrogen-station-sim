@@ -1970,6 +1970,63 @@ def _public_kit_lh2_exploratory_evidence() -> dict[str, Any] | None:
     }
 
 
+def _public_high_aspect_ratio_tank_literature_evidence() -> dict[str, Any] | None:
+    """Expose the open high-aspect-ratio tank study as bounded LLM context.
+
+    The paper is useful for explaining why a long Type-IV tank needs axial
+    thermal zones (inlet/front forced convection versus back-zone buoyancy),
+    but its machine-readable logger is not public.  Keep this separate from
+    validation evidence so the provider cannot treat the literature mechanism
+    as a fitted runtime parameter or an external holdout result.
+    """
+
+    root = Path(__file__).resolve().parents[2]
+    try:
+        registry = json.loads(
+            (root / "research/data_sources.json").read_text(encoding="utf-8")
+        )
+    except (OSError, UnicodeError, ValueError, json.JSONDecodeError):
+        return None
+    source = (registry.get("sources") or {}).get(
+        "couteau_2025_empa_high_aspect_ratio_tank"
+    )
+    if not isinstance(source, dict):
+        return None
+    geometry = source.get("reported_geometry") or {}
+    required = (
+        source.get("doi"), source.get("landing_page"),
+        source.get("repository_page"), source.get("title"),
+        geometry.get("tank_volume_l"), geometry.get("tank_length_m"),
+        geometry.get("tank_internal_diameter_m"), geometry.get("aspect_ratio"),
+        geometry.get("thermocouple_count"), source.get("reported_mechanism"),
+    )
+    if any(value in (None, "") for value in required):
+        return None
+    return {
+        "evidence_role": "public_literature_high_aspect_ratio_tank_thermal_mechanism",
+        "source": {
+            "id": "couteau_2025_empa_high_aspect_ratio_tank",
+            "title": source["title"],
+            "doi": source["doi"],
+            "url": source["landing_page"],
+            "repository_page": source["repository_page"],
+            "license": source.get("license"),
+        },
+        "reported_geometry": geometry,
+        "reported_mechanism": source["reported_mechanism"],
+        "public_raw_data": source.get("public_raw_data") is True,
+        "independent_holdout": False,
+        "prospective_validation": False,
+        "runtime_parameter_application": False,
+        "claim_supported": False,
+        "claim_limit": (
+            "공개 논문의 탱크 열전달 구조 근거만 제공한다. 원시 logger가 공개되지 않아 "
+            "독립 holdout, 정량 검증, 런타임 파라미터 보정 또는 충전소 full-loop 안전성 "
+            "주장을 뒷받침하지 않는다."
+        ),
+    }
+
+
 def _virtual_response_action_execution_evidence() -> dict[str, Any] | None:
     """Expose the simulation-only command/feedback consistency audit.
 
@@ -11001,6 +11058,11 @@ def build_evidence_manifest(
         envelope["response_evidence"][
             "public_kit_lh2_exploratory_evidence"
         ] = kit_lh2_exploratory
+    high_aspect_ratio_tank = _public_high_aspect_ratio_tank_literature_evidence()
+    if high_aspect_ratio_tank is not None:
+        envelope["response_evidence"][
+            "public_high_aspect_ratio_tank_literature"
+        ] = high_aspect_ratio_tank
     virtual_action_execution = _virtual_response_action_execution_evidence()
     if virtual_action_execution is not None:
         envelope["response_evidence"][
@@ -12071,6 +12133,21 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
                 "claim_limit",
             )
             if public_tank_trace.get(key) is not None
+        }
+    high_aspect_ratio_tank = evidence.get(
+        "public_high_aspect_ratio_tank_literature"
+    )
+    if isinstance(high_aspect_ratio_tank, dict):
+        summary["public_high_aspect_ratio_tank_literature"] = {
+            key: high_aspect_ratio_tank.get(key)
+            for key in (
+                "evidence_role", "source", "reported_geometry",
+                "reported_mechanism", "public_raw_data",
+                "independent_holdout", "prospective_validation",
+                "runtime_parameter_application", "claim_supported",
+                "claim_limit",
+            )
+            if high_aspect_ratio_tank.get(key) is not None
         }
     nrel_screen = evidence.get("public_nrel_boundary_screen")
     if isinstance(nrel_screen, dict):
@@ -14349,6 +14426,17 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
     kit_lh2_exploratory = response.get(
         "public_kit_lh2_exploratory_evidence"
     ) or {}
+    high_aspect_ratio_tank = response.get(
+        "public_high_aspect_ratio_tank_literature"
+    ) or {}
+    high_aspect_ratio_tank_relevant = bool(
+        high_aspect_ratio_tank
+        and any(token in lead_context for token in (
+            "탱크", "뱅크", "저장", "압력", "온도", "열전달", "열관리",
+            "tank", "bank", "storage", "pressure", "temperature",
+            "thermal", "heat transfer", "aspect ratio",
+        ))
+    )
     spatial_guidance_relevant = bool(
         spatial_stratification
         and (
@@ -14724,6 +14812,19 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
             "public_peak_flow_g_s", "raw_rows_public", "validation_claim",
             "claim_limit",
         )),
+        **({
+            "public_high_aspect_ratio_tank_literature": {
+                key: high_aspect_ratio_tank.get(key)
+                for key in (
+                    "evidence_role", "source", "reported_geometry",
+                    "reported_mechanism", "public_raw_data",
+                    "independent_holdout", "prospective_validation",
+                    "runtime_parameter_application", "claim_supported",
+                    "claim_limit",
+                )
+                if high_aspect_ratio_tank.get(key) is not None
+            },
+        } if high_aspect_ratio_tank and high_aspect_ratio_tank_relevant else {}),
         **({
             "public_operational_evidence_leads": operational_evidence_projection,
         } if operational_evidence_projection is not None else {}),
