@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-14T12:45:22+00:00",
+  "generated_at": "2026-10-14T12:48:26+00:00",
   "metric_definition": "PASS gates divided by PASS+FAIL+PENDING gates; not a publication-readiness probability",
   "gate_counts": {
     "PASS": 134,
@@ -85,8 +85,8 @@
       "ethics_and_expert_review": "optional_for_physics_validation; required only for a claim that SAGA improves human safety guidance"
     }
   },
-  "source_commit": "a68200d",
-  "latest_completed_work": "ELVHYS WP4.2 실제 수소 공간 holdout 29건을 SAGA 근거 봉투와 선택 라우팅에 연결했습니다. 공동 spatial screen 실패, 런타임 보정 금지, 안전거리·충전소 배치 검증 불가 경계를 유지했고 관련 LLM 회귀 38건이 통과했습니다.",
+  "source_commit": "9244e4a",
+  "latest_completed_work": "실제 수소 ELVHYS 공간 holdout 29건을 SAGA 근거 봉투와 로컬 근거 인벤토리에 연결했습니다. 검지기·공간 질문에만 선택 노출하고 공동 screen 실패·런타임 보정 금지·안전거리/충전소 배치 검증 불가 경계를 유지했으며 관련 회귀 38건이 통과했습니다.",
   "latest_full_regression": {
     "tests_passed": 1625,
     "tests_failed": 0,
