@@ -85,15 +85,15 @@
       "ethics_and_expert_review": "optional_for_physics_validation; required only for a claim that SAGA improves human safety guidance"
     }
   },
-  "source_commit": "239522119fdfac20cfa4c60f9ad643f8e740fe95",
-  "latest_completed_work": "공정 수준 WARNING/CRITICAL 또는 누출·안전밸브·화재 입력이 센서별 HAZOP 매핑보다 먼저 들어오는 경우에도 피해영향 계산과 종합 4단계 대응을 제공하도록 센서 분석 경로를 보완했습니다. 전체 Python 회귀 1,625건이 실패 없이 통과했고 과학적 게이트 수치는 변경하지 않았습니다.",
+  "source_commit": "e8a4b138921d266dd5ee7e15558ee7fd31273c25",
+  "latest_completed_work": "최신 privacy-bounded readiness 원장을 메인·센서 직답 LLM 프롬프트에 연결해 검증·정확도 질문에서 전체 게이트와 주 범위 진행률, full-loop 한계를 함께 표시하도록 보완했습니다. 집중 61건과 전체 Python 회귀 1,625건이 실패 없이 통과했고 과학적 게이트 수치는 변경하지 않았습니다.",
   "latest_full_regression": {
     "tests_passed": 1625,
     "tests_failed": 0,
     "tests_skipped": 0,
     "warnings": 224,
     "scope": "python -m pytest -q",
-    "source_commit": "239522119fdfac20cfa4c60f9ad643f8e740fe95",
+    "source_commit": "e8a4b138921d266dd5ee7e15558ee7fd31273c25",
     "artifact": "research/full_regression_test_run_2026_10_14.json"
   },
   "remaining_workstreams": [

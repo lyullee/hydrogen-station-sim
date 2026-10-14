@@ -1,5 +1,16 @@
 # Development Progress
 
+## 2026-10-14 - Ground validation questions in the latest readiness ledger
+
+Interactive main and sensor direct-answer prompts now receive the latest
+privacy-bounded readiness snapshot. Validation, accuracy, evidence, progress
+and publication questions are instructed to distinguish the all-gate status
+(134 PASS / 11 FAIL / 7 PENDING) from the amended primary scope (91.7%), and
+to keep station-to-vehicle full-loop and SAGA-effectiveness claims disabled
+until their gates pass. The provider envelope contains only aggregate counts,
+flags and bounded scope fields; no raw rows, local paths or private IDs are
+included. The focused LLM/direct-answer regression passes 61/61.
+
 ## 2026-10-14 - Close station-warning response gap in selected-sensor analysis
 
 Selected-sensor analysis now treats a station-level advisory, warning or

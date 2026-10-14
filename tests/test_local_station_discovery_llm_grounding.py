@@ -221,12 +221,12 @@ def test_primary_scope_amendment_reaches_llm_without_reclassifying_audit_gates()
     assert scope["status"] == "available"
     assert scope["artifact_integrity"] is True
     assert scope["gate_counts"] == {
-        "PASS": 131,
+        "PASS": 133,
         "FAIL": 10,
         "PENDING": 2,
-        "TOTAL": 143,
+        "TOTAL": 145,
     }
-    assert scope["gate_closure_percent"] == 91.6
+    assert scope["gate_closure_percent"] == 91.7
     assert scope["station_to_vehicle_scope"] == (
         "removed_from_primary_goal_after_public_search"
     )
@@ -248,9 +248,9 @@ def test_primary_scope_amendment_reaches_llm_without_reclassifying_audit_gates()
     assert "optional_for_physics_validation" in scope["ethics_and_expert_review"]
 
     decision = prompt_decision_evidence(manifest)
-    assert decision["primary_scope_progress"]["gate_closure_percent"] == 91.6
+    assert decision["primary_scope_progress"]["gate_closure_percent"] == 91.7
     summary = prompt_evidence_summary(manifest)
-    assert summary["primary_scope_progress"]["gate_counts"]["TOTAL"] == 143
+    assert summary["primary_scope_progress"]["gate_counts"]["TOTAL"] == 145
     header = prompt_evidence_header(manifest)
     assert header["primary_scope_progress"]["station_to_vehicle_scope"] == (
         "removed_from_primary_goal_after_public_search"

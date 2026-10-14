@@ -199,6 +199,7 @@ def _primary_scope_progress() -> dict[str, Any]:
     # Prefer the newest privacy-bounded snapshot, while retaining a fallback
     # for packaged deployments that have not yet received that day's ledger.
     for filename in (
+        "goal_progress_snapshot_2026_10_14.json",
         "goal_progress_snapshot_2026_10_13.json",
         "goal_progress_snapshot_2026_10_12.json",
         "goal_progress_snapshot_2026_10_11.json",
@@ -17923,6 +17924,34 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
         decision["primary_scope_progress"] = response.get(
             "primary_scope_progress"
         ) or {}
+        readiness = response.get("validation_readiness")
+        if isinstance(readiness, dict):
+            raw_counts = readiness.get("gate_counts")
+            decision["validation_readiness"] = {
+                "status": readiness.get("status"),
+                "ledger_integrity": readiness.get("ledger_integrity") is True,
+                "gate_counts": {
+                    key: raw_counts.get(key)
+                    for key in ("PASS", "FAIL", "PENDING")
+                    if isinstance(raw_counts, dict)
+                    and isinstance(raw_counts.get(key), int)
+                    and not isinstance(raw_counts.get(key), bool)
+                },
+                "open_gate_count": readiness.get("open_gate_count"),
+                "bounded_ijhe_submission_ready": readiness.get(
+                    "bounded_ijhe_submission_ready"
+                ) is True,
+                "full_user_objective_ready": readiness.get(
+                    "full_user_objective_ready"
+                ) is True,
+                "full_loop_external_validation_supported": readiness.get(
+                    "full_loop_external_validation_supported"
+                ) is True,
+                "expert_effectiveness_evaluation_supported": readiness.get(
+                    "expert_effectiveness_evaluation_supported"
+                ) is True,
+                "claim_tier": readiness.get("claim_tier"),
+            }
     # The gate-triage view is useful for evidence/data questions but is too
     # expensive for ordinary operational turns.  Keep the default provider
     # envelope compact and expose it only when the operator asks about

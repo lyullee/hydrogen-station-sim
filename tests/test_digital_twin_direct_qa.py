@@ -168,6 +168,12 @@ def test_direct_qa_calculates_impact_for_alarm_and_explicit_hypothesis(monkeypat
             assert "질문에 대한 직접 답변" in hypothetical["question_answer"]
             assert llm_prompts[-1]["context"]["impact_results"][0]["maximum_heat_flux_w_m2"] == 6200.0
             assert llm_prompts[-1]["context"]["evidence_basis"]["impact"]["calculation_status"] == "calculated"
+            readiness = llm_prompts[-1]["context"]["evidence_basis"]["validation_readiness"]
+            assert readiness["gate_counts"] == {"PASS": 134, "FAIL": 11, "PENDING": 7}
+            assert readiness["full_loop_external_validation_supported"] is False
+            assert llm_prompts[-1]["context"]["evidence_basis"]["primary_scope_progress"][
+                "gate_closure_percent"
+            ] == 91.7
             assert llm_prompts[-1]["context"]["evidence_basis"]["validation_boundaries"][
                 "station_to_vehicle"
             ]["claim_supported"] is False

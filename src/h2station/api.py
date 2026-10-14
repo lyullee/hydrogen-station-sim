@@ -213,9 +213,41 @@ def _provider_evidence_basis(manifest: dict[str, Any]) -> dict[str, Any]:
             "public_operating_envelope_screen", "public_h2iq_aggregate_reference",
             "public_operational_evidence_leads",
             "station_side_data_scope", "public_h2protocol_validation_boundary",
+            # Keep aggregate readiness in the provider envelope.  Without
+            # this bounded field, a validation/accuracy question can be
+            # answered from component evidence alone and accidentally sound
+            # like full-loop or publication-ready validation.
+            "validation_readiness", "primary_scope_progress",
         )
         if key in full
     }
+    readiness = keep.get("validation_readiness")
+    if isinstance(readiness, dict):
+        keep["validation_readiness"] = {
+            key: readiness.get(key)
+            for key in (
+                "gate_counts", "open_gate_count",
+                "bounded_ijhe_submission_ready", "full_user_objective_ready",
+                "full_loop_external_validation_supported",
+                "expert_effectiveness_evaluation_supported",
+            )
+            if readiness.get(key) is not None
+        }
+    scope = keep.get("primary_scope_progress")
+    if isinstance(scope, dict):
+        keep["primary_scope_progress"] = {
+            key: scope.get(key)
+            for key in (
+                "status", "gate_counts", "gate_closure_percent",
+                "same_site_station_side_holdout_supported",
+                "independent_component_holdout_supported",
+                "station_to_vehicle_scope",
+            )
+            if scope.get(key) is not None
+        }
+        keep["primary_scope_progress"]["active_scope_open_gate_count"] = len(
+            scope.get("active_scope_open_gate_ids") or []
+        )
     # Public operational leads are useful grounding, but their UI projection
     # contains long prose and repeated allowed/not-allowed lists.  The
     # provider only needs the source identity, decision and claim boundary;
@@ -4054,6 +4086,9 @@ async def saga_analysis(job_id: str, request: SagaAnalysisInput) -> dict[str, An
         "현재 경보 여부와 내부 등록 기준을 구분하세요. 사용자에게는 실제 센서 태그와 운전 상태만 한국어로 간결하게 답하세요. "
         "정상 운전이며 사용자가 피해영향을 요청하지 않았다면 계산값은 내부 판단에만 사용하고 답변에 피해영향 수치·가정 누출 결과를 쓰지 마세요.\n"
         f"요청 유형: {request.trigger}\n이전 대화(현재 센서보다 우선하지 않음):\n{history}\n"
+        "질문이 검증·정확도·신뢰도·근거·진행률·논문·데이터 품질을 묻는 경우에는 validation_readiness와 primary_scope_progress를 우선 근거로 사용하세요. "
+        "전체 게이트 통과율과 주 범위 통과율을 구분하고, FAIL/PENDING 게이트가 남아 있으면 검증 완료나 논문 게재 가능으로 표현하지 마세요. "
+        "station-to-vehicle full-loop 외부검증과 SAGA 효과성 평가는 별도 상태로 표시하고, 없는 수치·확률·성공률을 추정하지 마세요. "
         f"운전자 질문: {request.question}\n현재 데이터 및 HAZOP DB 발췌:\n"
         + json.dumps(context, ensure_ascii=False, default=str)[:7500])[:9900]
     try:
@@ -5094,6 +5129,9 @@ async def analyze_simulation_sensor(job_id: str, sensor_id: str,
          if request.question else
          "가장 중요한 현재 상태와 조치를 4~6문장으로 간결하게 답하세요. 상세 절차는 화면에 별도 표시됩니다. ") +
         "추가 계산을 사용자에게 요청하지 마세요.\n"
+        "질문이 검증·정확도·신뢰도·근거·진행률·논문·데이터 품질을 묻는 경우에는 evidence_basis.validation_readiness와 evidence_basis.primary_scope_progress를 우선 사용하세요. "
+        "전체 게이트 통과율과 주 범위 통과율을 구분하고 FAIL/PENDING 게이트가 남아 있으면 검증 완료나 논문 게재 가능으로 표현하지 마세요. "
+        "station-to-vehicle full-loop 외부검증과 SAGA 효과성 평가는 별도 상태로 명시하고 없는 수치·확률·성공률을 추정하지 마세요. "
         f"운전자 추가 질문: {request.question or '현재 센서 상태와 위험 및 대응 우선순위를 분석해줘.'}\n선택 센서 데이터:\n"
         + json.dumps(context, ensure_ascii=False, default=str)[:6000])[:8200]
     try:
