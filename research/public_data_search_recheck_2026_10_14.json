@@ -133,6 +133,16 @@
       "access_observation": "The index confirms open repositories for Grüne ventilation, PRESLHY, pressure-peaking and tunnel campaigns; the listed records are already represented in the repository or lack synchronized HRS station/controller/vehicle channels.",
       "eligibility": "CATALOGUE_BOUNDARY_ONLY",
       "blocking_reason": "A catalogue page is not a new raw holdout and cannot be counted again after outcome access."
+    },
+    {
+      "id": "yang_2024_customized_chamber_h2_spatial",
+      "title": "Quantitative analysis of hydrogen leakage and diffusion processes based on real-time concentration measurement at different spatial positions in a customized chamber",
+      "url": "https://doi.org/10.1016/j.ijhydene.2024.04.051",
+      "article_doi": "10.1016/j.ijhydene.2024.04.051",
+      "data_type": "actual-hydrogen chamber release measurements with 26 spatial concentration sensors",
+      "access_observation": "The article abstract reports repeated real-hydrogen releases, measured leakage flow, 26 sensor positions and time-resolved concentration behavior. The accessible publisher/index routes did not expose a rights-cleared machine-readable sensor-time-series export, coordinate file, calibration record or redistribution terms.",
+      "eligibility": "BOUNDARY_EVIDENCE_ONLY",
+      "blocking_reason": "Without the raw sensor time series, coordinate crosswalk, release metadata and rights statement, this source cannot close the independent spatial-detector holdout. It can support a future pre-access custodian request only."
     }
   ],
   "conclusion": {
