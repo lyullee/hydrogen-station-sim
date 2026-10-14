@@ -1,6 +1,6 @@
 # GitHub 우선순위 검증 재확인 — 2026-10-14
 
-현재 `main`의 최신 커밋 `0217fb3575fd024725f9c86c4d6382b2b03c2c4e`에 대해 GitHub Actions `Priority validation` 실행 `38500454286`을 확인했다.
+현재 `main`의 최신 커밋 `a9e92b3be27e357b079821115f938da431ab0ee6`에 대해 GitHub Actions `Priority validation` 실행 `38500711316`을 확인했다.
 
 | 항목 | 결과 |
 |---|---|
@@ -14,7 +14,7 @@
 
 이전 실패 메일은 `d59ffac`, `6814dc7`, `bc4619c` 등 과거 커밋 실행에 해당한다. 현재 `main` 최신 실행과 혼동하지 않도록 기록만 남기며, 과거 결과를 삭제하거나 성공으로 재작성하지 않는다.
 
-최신 실행: https://github.com/lyullee/hydrogen-station-sim/actions/runs/38500454286
+최신 실행: https://github.com/lyullee/hydrogen-station-sim/actions/runs/38500711316
 
 ## 주장 경계
 
