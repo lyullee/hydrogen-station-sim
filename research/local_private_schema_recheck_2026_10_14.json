@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "artifact_type": "local_private_schema_recheck",
+  "generated_at": "2026-10-14",
+  "status": "privacy_bounded_recheck",
+  "privacy": {
+    "source_paths_published": false,
+    "source_filenames_published": false,
+    "source_headers_published": false,
+    "raw_rows_persisted": false,
+    "absolute_timestamps_published": false,
+    "site_company_manufacturer_published": false
+  },
+  "bundles": [
+    {
+      "label": "controlled_station_side_bundle",
+      "csv_files": 8,
+      "measurement_files": 8,
+      "station_pressure_files": 8,
+      "station_temperature_files": 8,
+      "flow_files": 8,
+      "control_state_files": 8,
+      "lifecycle_files": 8,
+      "vehicle_side_candidate_files": 0,
+      "parseable_timestamp_files": 8,
+      "unit_attested": false,
+      "full_loop_candidate": false
+    },
+    {
+      "label": "quarantined_local_candidate_bundle",
+      "csv_files": 110,
+      "physical_rows": 4270579,
+      "header_candidate_families": {
+        "pressure": 2,
+        "temperature": 1,
+        "flow_or_mass": 27,
+        "compressor": 1,
+        "valve_or_esd": 1,
+        "lifecycle": 1,
+        "vehicle_or_dispenser": 37
+      },
+      "schema_candidate_vehicle_side_files": 36,
+      "parseable_timestamp_sample_files": 105,
+      "unit_attested": false,
+      "common_clock_attested": false,
+      "full_loop_candidate": false,
+      "interpretation": "Vehicle/dispenser counts are header-level candidates only. A separate bounded candidate review found no common-clock station-to-vehicle contract eligible for scoring."
+    }
+  ],
+  "decision": {
+    "new_independent_vehicle_holdout_found": false,
+    "station_side_schema_intake_supported": true,
+    "station_side_dynamic_validation_status": "retained_as_existing_scope",
+    "full_loop_gate_status": "unchanged_open",
+    "runtime_model_changed": false,
+    "reason": "The recheck confirms additional local signal volume, but unit semantics, calibration, rights, event linkage and synchronized vehicle channels are not attested. No validation gate is promoted from schema candidates alone."
+  },
+  "claim_boundary": "Aggregate local schema and bounded candidate-screen results only. This record does not publish raw measurements or source identity and does not validate a vehicle fill, safety distance, field operation or certification."
+}
