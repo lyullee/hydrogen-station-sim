@@ -1,4 +1,4 @@
-# Privacy-bounded data coverage summary (2026-10-13)
+# Privacy-bounded data coverage summary (2026-10-14)
 
 이 문서는 확보된 공개·비식별 자료로 지금 검증할 수 있는 범위와, 완전한 충전소-차량 검증에 필요한 최소 입력을 자동으로 정리한 산출물이다.
 

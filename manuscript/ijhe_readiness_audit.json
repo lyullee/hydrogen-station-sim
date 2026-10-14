@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-13T23:40:24.747566+00:00",
+  "generated_at": "2026-10-14T00:57:46.816899+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -791,9 +791,9 @@
         ],
         "aggregates": [
           {
-            "pressure_rmse_mpa_mean": 2.1920961990250705,
-            "temperature_rmse_c_mean": 23.27982147421733,
-            "soc_rmse_percentage_points_mean": 5.581601238498376
+            "pressure_rmse_mpa_mean": 2.19115801683631,
+            "temperature_rmse_c_mean": 23.279895936447268,
+            "soc_rmse_percentage_points_mean": 5.580992900009421
           },
           {
             "pressure_rmse_mpa_mean": 1.8156882965866448,
@@ -801,9 +801,9 @@
             "soc_rmse_percentage_points_mean": 5.581868463392878
           },
           {
-            "pressure_rmse_mpa_mean": 4.375541156305331,
-            "temperature_rmse_c_mean": 9.052443267854247,
-            "soc_rmse_percentage_points_mean": 5.5833493152424865
+            "pressure_rmse_mpa_mean": 4.375922315837227,
+            "temperature_rmse_c_mean": 9.052229650073286,
+            "soc_rmse_percentage_points_mean": 5.583563785890824
           }
         ]
       }
