@@ -56,6 +56,3 @@
 - [최신 전체 회귀 기록](full_regression_test_run_2026_10_14.json)
 - [제출 준비 요약](../manuscript/submission_readiness.md)
 - [잔여 작업 triage](REMAINING_WORK_TRIAGE_2026_10_14.md)
-
-
-
