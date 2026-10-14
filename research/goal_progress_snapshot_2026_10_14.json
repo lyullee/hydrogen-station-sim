@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-14T06:04:38Z",
+  "generated_at": "2026-10-14T06:10:53Z",
   "metric_definition": "PASS gates divided by PASS+FAIL+PENDING gates; not a publication-readiness probability",
   "gate_counts": {
     "PASS": 134,
@@ -85,8 +85,8 @@
       "ethics_and_expert_review": "optional_for_physics_validation; required only for a claim that SAGA improves human safety guidance"
     }
   },
-  "source_commit": "788c42d5fb9093fad9d4aa670ad13f61f6a6075a",
-  "latest_completed_work": "Preserved flow-limited release-boundary semantics in the unavailable HyRAM fallback, added a regression test, and refreshed all 14 deterministic evidence projections without promoting a scientific validation gate.",
+  "source_commit": "2b2da96232d300ad38e2bfb67c18c9d8c42a5656",
+  "latest_completed_work": "Preserved flow-limited release-boundary semantics in the unavailable HyRAM fallback, refreshed all 14 deterministic evidence projections, and sanitized external interpreter paths from refresh diagnostics without promoting a scientific validation gate.",
   "latest_full_regression": {
     "tests_passed": 1602,
     "tests_failed": 0,
