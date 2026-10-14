@@ -10,7 +10,7 @@
   "warnings": 222,
   "elapsed_seconds": 246.15,
   "duration_seconds": 246.15,
-  "source_commit": "7afa50e",
+  "source_commit": "7afa50e2a1214e45b1e6842fada1f112db6d72e9",
   "readiness_snapshot": "research/ijhe_readiness_audit.json",
   "interpretation": "All 1,618 executable tests pass for the current source commit. This verifies implementation integrity only; it does not convert independent validation FAIL/PENDING gates to PASS.",
   "working_tree_dirty_at_run": true,
