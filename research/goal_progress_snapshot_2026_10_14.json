@@ -86,7 +86,7 @@
     }
   },
   "source_commit": "4be709a",
-  "latest_completed_work": "Published actual-hydrogen confined-ceiling jet evidence is now grounded in the LLM manifest, compact evidence summary, targeted decision prompt and audit header. The source records 4 MPa release, 0.16 mm nozzle, 1.5/2.0/2.5 m source heights and R² 0.98; raw traces remain author-request-only, so no calibration, spatial holdout or runtime promotion was made.",
+  "latest_completed_work": "HySafe SBEPV5 D27 actual-hydrogen multi-compartment benchmark is now grounded as bounded LLM context for detector-layout and sensor-quality guidance. The report records a 1.20 x 0.20 x 0.90 m 12-compartment vessel, 12 mm nozzle and 12 sensors with 8 reported reliable sensors; raw Excel was not accessed, so no calibration, holdout, runtime or gate promotion was made.",
   "latest_full_regression": {
     "tests_passed": 1606,
     "tests_failed": 0,
@@ -122,13 +122,18 @@
     }
   ],
   "latest_focused_regression": {
-    "tests_passed": 60,
+    "tests_passed": 61,
     "tests_failed": 0,
     "tests_skipped": 0,
     "warnings": 88,
     "scope": "tests/test_closed_loop_calibrated_llm_grounding.py tests/test_llm_grounding.py tests/test_local_evidence_api.py"
   },
   "completed_process_improvements": [
+    {
+      "id": "hysafe_sbepv5_actual_h2_context_grounding_2026_10_14",
+      "progress_percent": 100.0,
+      "status": "HySafe SBEPV5 D27 actual-hydrogen multi-compartment context was added to the LLM manifest, compact evidence summary and targeted decision prompt. Report-level geometry, release and sensor-quality conditions are exposed; raw Excel was not accessed, so independent holdout, runtime calibration and validation-gate promotion remain disabled; 61 focused tests pass."
+    },
     {
       "id": "frontiers_actual_h2_ceiling_jet_context_grounding_2026_10_14",
       "progress_percent": 100.0,

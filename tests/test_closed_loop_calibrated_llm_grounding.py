@@ -507,3 +507,37 @@ def test_frontiers_actual_h2_ceiling_jet_context_is_grounded_without_calibration
     assert decision["response_guidance"]["natural_ventilation"][
         "confined_ceiling_jet_report_context"
     ]["spatial_holdout_validation"] is False
+
+
+def test_hysafe_sbepv5_actual_h2_context_is_bounded_without_gate_promotion():
+    manifest = build_evidence_manifest(
+        {"time_s": 1.0}, {}, [], False, question="실제 수소 다구획 검지기 배치와 센서 품질"
+    )
+    evidence = manifest["response_evidence"][
+        "public_hysafe_sbepv5_actual_h2_context"
+    ]
+    assert evidence["source"]["report_url"].endswith("1.1.281.pdf")
+    scope = evidence["experiment_scope"]
+    assert scope["case_id"] == "D27"
+    assert scope["test_gas"] == "pure hydrogen"
+    assert scope["geometry_m"] == [1.2, 0.2, 0.9]
+    assert scope["compartment_count"] == 12
+    assert scope["sensor_count"] == 12
+    assert scope["reported_reliable_sensor_count"] == 8
+    assert evidence["data_access"]["raw_machine_readable_accessed"] is False
+    assert evidence["runtime_parameter_application"] is False
+    assert evidence["validation_gate_effect"] == "none"
+
+    summary = prompt_evidence_summary(manifest)[
+        "public_hysafe_sbepv5_actual_h2_context"
+    ]
+    assert summary["experiment_scope"]["known_sensor_quality_issue_ids"] == [
+        "3", "4", "6", "11"
+    ]
+    decision = prompt_decision_evidence(manifest)
+    context = decision["response_guidance"][
+        "hysafe_sbepv5_actual_h2_context"
+    ]
+    assert context["runtime_parameter_application"] is False
+    assert context["claim_supported"] is False
+    assert context["validation_gate_effect"] == "none"

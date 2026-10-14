@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "artifact_type": "public_actual_hydrogen_compartment_dispersion_benchmark_context",
+  "status": "REPORT_LEVEL_ACTUAL_HYDROGEN_COMPARTMENT_CONTEXT",
+  "recorded_at": "2026-10-14",
+  "source": {
+    "id": "hysafe_sbepv5_d27",
+    "title": "Results of the HySafe CFD Validation Benchmark SBEPV5",
+    "report_url": "https://www.h2tools.org/sites/default/files/2019-08/1.1.281.pdf",
+    "license_status": "public report; raw Excel redistribution status not verified"
+  },
+  "experiment": {
+    "case_id": "D27",
+    "test_gas": "pure hydrogen",
+    "geometry_m": [
+      1.2,
+      0.2,
+      0.9
+    ],
+    "compartment_count": 12,
+    "baffle_plate_count": 4,
+    "release_duration_s": 60,
+    "nozzle_diameter_mm": 12,
+    "flow_rate_nl_s": 1.15,
+    "exit_velocity_m_s": 10.17,
+    "sensor_count": 12,
+    "reported_reliable_sensor_count": 8,
+    "known_sensor_quality_issue_ids": [
+      "3",
+      "4",
+      "6",
+      "11"
+    ]
+  },
+  "data_access": {
+    "raw_machine_readable_accessed": false,
+    "raw_rows_committed": false,
+    "numeric_replay_performed": false,
+    "independent_holdout": false,
+    "prospective_validation": false
+  },
+  "llm_context_grounding": true,
+  "runtime_parameter_application": false,
+  "validation_gate_effect": "none",
+  "claim_boundary": "실제 수소 다구획 공간분포 실험의 장치·방출·센서 품질 문맥만 제공한다. 보고서에 기술된 원시 Excel을 확보하지 않았으므로 원시 재현, 보정, 독립 holdout, 검지기 배치 정확도, HyRAM 피해거리 또는 충전소 full-loop 안전성 주장을 뒷받침하지 않는다."
+}

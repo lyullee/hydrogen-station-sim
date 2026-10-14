@@ -2457,6 +2457,85 @@ def _public_natural_ventilation_evidence() -> dict[str, Any] | None:
     return result
 
 
+def _public_hysafe_sbepv5_actual_h2_context() -> dict[str, Any] | None:
+    """Expose the HySafe SBEPV5 D27 experiment as bounded LLM context.
+
+    The public report documents a multi-compartment, actual-hydrogen release
+    benchmark and reports sensor-quality limitations.  The machine-readable
+    raw Excel was not obtained for this repository, so this record is useful
+    for detector-placement and response wording only.  It must not become a
+    calibration set, spatial holdout, or runtime release model.
+    """
+
+    artifact = "research/hysafe_sbepv5_actual_h2_compartment_evidence_2026_10_14.json"
+    path = Path(__file__).resolve().parents[2] / artifact
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError, json.JSONDecodeError):
+        return None
+    source = record.get("source") or {}
+    experiment = record.get("experiment") or {}
+    data_access = record.get("data_access") or {}
+    if (
+        record.get("schema_version") != 1
+        or record.get("status")
+        != "REPORT_LEVEL_ACTUAL_HYDROGEN_COMPARTMENT_CONTEXT"
+        or source.get("report_url")
+        != "https://www.h2tools.org/sites/default/files/2019-08/1.1.281.pdf"
+        or experiment.get("case_id") != "D27"
+        or experiment.get("test_gas") != "pure hydrogen"
+        or experiment.get("geometry_m") != [1.2, 0.2, 0.9]
+        or experiment.get("compartment_count") != 12
+        or experiment.get("baffle_plate_count") != 4
+        or experiment.get("release_duration_s") != 60
+        or experiment.get("nozzle_diameter_mm") != 12
+        or experiment.get("sensor_count") != 12
+        or experiment.get("reported_reliable_sensor_count") != 8
+        or data_access.get("raw_machine_readable_accessed") is not False
+        or data_access.get("raw_rows_committed") is not False
+        or data_access.get("numeric_replay_performed") is not False
+        or data_access.get("independent_holdout") is not False
+        or data_access.get("prospective_validation") is not False
+        or record.get("llm_context_grounding") is not True
+        or record.get("runtime_parameter_application") is not False
+        or record.get("validation_gate_effect") != "none"
+    ):
+        return None
+    return {
+        "artifact": artifact,
+        "evidence_role": "public actual-hydrogen multi-compartment detector-layout context",
+        "source": {
+            "id": source.get("id"),
+            "title": source.get("title"),
+            "report_url": source.get("report_url"),
+            "license_status": source.get("license_status"),
+        },
+        "experiment_scope": {
+            key: experiment.get(key)
+            for key in (
+                "case_id", "test_gas", "geometry_m", "compartment_count",
+                "baffle_plate_count", "release_duration_s", "nozzle_diameter_mm",
+                "flow_rate_nl_s", "exit_velocity_m_s", "sensor_count",
+                "reported_reliable_sensor_count", "known_sensor_quality_issue_ids",
+            )
+        },
+        "data_access": {
+            key: data_access.get(key)
+            for key in (
+                "raw_machine_readable_accessed", "raw_rows_committed",
+                "numeric_replay_performed", "independent_holdout",
+                "prospective_validation",
+            )
+        },
+        "independent_holdout": False,
+        "prospective_validation": False,
+        "runtime_parameter_application": False,
+        "validation_gate_effect": "none",
+        "claim_supported": False,
+        "claim_limit": str(record.get("claim_boundary") or ""),
+    }
+
+
 def _public_detector_logic_evidence() -> dict[str, Any] | None:
     """Expose the public concentration-detector replay as bounded evidence.
 
@@ -11440,6 +11519,11 @@ def build_evidence_manifest(
         envelope["response_evidence"][
             "public_natural_ventilation_evidence"
         ] = natural_ventilation
+    hysafe_sbepv5 = _public_hysafe_sbepv5_actual_h2_context()
+    if hysafe_sbepv5 is not None:
+        envelope["response_evidence"][
+            "public_hysafe_sbepv5_actual_h2_context"
+        ] = hysafe_sbepv5
     detector_logic = _public_detector_logic_evidence()
     if detector_logic is not None:
         envelope["response_evidence"]["public_detector_logic_evidence"] = detector_logic
@@ -13644,6 +13728,19 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
                 "spatial_holdout_validation": False,
                 "claim_limit": short(ceiling_context.get("claim_limit")),
             }
+    hysafe_sbepv5 = evidence.get("public_hysafe_sbepv5_actual_h2_context")
+    if isinstance(hysafe_sbepv5, dict):
+        summary["public_hysafe_sbepv5_actual_h2_context"] = {
+            "source": hysafe_sbepv5.get("source") or {},
+            "experiment_scope": hysafe_sbepv5.get("experiment_scope") or {},
+            "data_access": hysafe_sbepv5.get("data_access") or {},
+            "independent_holdout": False,
+            "prospective_validation": False,
+            "runtime_parameter_application": False,
+            "validation_gate_effect": "none",
+            "claim_supported": False,
+            "claim_limit": short(hysafe_sbepv5.get("claim_limit"), 320),
+        }
     confidential = evidence.get("confidential_measured_boundary_replay")
     if isinstance(confidential, dict):
         summary["confidential_measured_boundary_replay"] = {
@@ -14503,6 +14600,9 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
     natural_ventilation = response.get(
         "public_natural_ventilation_evidence"
     ) or {}
+    hysafe_sbepv5 = response.get(
+        "public_hysafe_sbepv5_actual_h2_context"
+    ) or {}
     actual_hydrogen_spatial = response.get(
         "public_actual_hydrogen_spatial_benchmark"
     ) or {}
@@ -14638,6 +14738,13 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
         for token in (
             "검지", "검출", "경보", "가스", "농도", "누출",
             "detector", "detection", "alarm", "concentration", "leak",
+        )
+    )
+    hysafe_sbepv5_relevant = actual_h2_evidence_relevant or any(
+        token in lead_context
+        for token in (
+            "검지", "검출", "센서", "다구획", "구획", "공간분포",
+            "detector", "sensor", "compartment", "dispersion", "placement",
         )
     )
     schefer_nonadiabatic_relevant = any(token in lead_context for token in (
@@ -17501,6 +17608,24 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                 ).get("claim_limit"),
             },
             "claim_limit": short(natural_ventilation.get("claim_limit")),
+        }
+    if isinstance(hysafe_sbepv5, dict) and hysafe_sbepv5 and hysafe_sbepv5_relevant:
+        decision["response_guidance"][
+            "hysafe_sbepv5_actual_h2_context"
+        ] = {
+            "source": hysafe_sbepv5.get("source") or {},
+            "experiment_scope": hysafe_sbepv5.get("experiment_scope") or {},
+            "data_access": hysafe_sbepv5.get("data_access") or {},
+            "use_for": [
+                "다구획 수소 누출에서 검지기 배치와 센서 품질 확인 문맥",
+                "실제 수소 실험 조건을 반영한 대응 설명의 근거",
+            ],
+            "independent_holdout": False,
+            "prospective_validation": False,
+            "runtime_parameter_application": False,
+            "validation_gate_effect": "none",
+            "claim_supported": False,
+            "claim_limit": short(hysafe_sbepv5.get("claim_limit"), 320),
         }
     return decision
 
