@@ -170,6 +170,29 @@ def _seed_existing_prefix(
     return size
 
 
+def _missing_ranges(
+    all_ranges: list[tuple[int, int]],
+    chunk_dir: Path,
+    seeded_prefix_bytes: int = 0,
+) -> list[tuple[int, int]]:
+    """Return only ranges that are not already present at the expected size.
+
+    A previous session may have downloaded valid ranges beyond a sequential
+    prefix before it was interrupted. Reusing those opaque chunks avoids
+    needless transfers and reduces pressure on the publisher's range endpoint.
+    """
+
+    missing: list[tuple[int, int]] = []
+    for start, end in all_ranges:
+        if start < seeded_prefix_bytes:
+            continue
+        expected = end - start + 1
+        part = chunk_dir / f"{start:012d}.part"
+        if not part.exists() or part.stat().st_size != expected:
+            missing.append((start, end))
+    return missing
+
+
 def fetch(
     output: Path,
     chunk_bytes: int,
@@ -195,9 +218,7 @@ def fetch(
         (start, min(start + chunk_bytes, total) - 1)
         for start in range(0, total, chunk_bytes)
     ]
-    download_ranges = [
-        item for item in all_ranges if item[0] >= seeded_bytes
-    ]
+    download_ranges = _missing_ranges(all_ranges, chunk_dir, seeded_bytes)
     url = headers["Download-URL"]
     with concurrent.futures.ThreadPoolExecutor(max_workers=workers) as pool:
         futures = {
