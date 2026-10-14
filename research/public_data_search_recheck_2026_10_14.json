@@ -328,6 +328,41 @@
       ],
       "eligible_new_raw_holdout_found": false,
       "interpretation": "The seventh targeted pass found no new eligible raw spatial or station-side holdout. USN is already consumed; HyDelta is report-level with insufficient coordinate/trace format; GASFLOW is simulation-only; the calibration archive lacks spatial apparatus context. No gate, runtime parameter or progress percentage changes."
+    },
+    "search_round_2026_10_14_eighth_pass": {
+      "search_date": "2026-10-14",
+      "new_candidates_checked": [
+        {
+          "id": "nrel_retail_composite_data_products",
+          "url": "https://www.nrel.gov/hydrogen/infrastructure-cdps-retail.html",
+          "observed": "공개 CDP가 충전 횟수·압력·충전량·최종압력 등 집계 지표를 제공하지만 공통시간축 압력·온도·유량 원시 로거는 제공하지 않음",
+          "eligibility": "BOUNDARY_EVIDENCE_ONLY",
+          "reason": "집계 CDP는 독립 과도응답 holdout이 아님"
+        },
+        {
+          "id": "kuroki_hitrf_36l_temperature_rise",
+          "url": "https://doi.org/10.1002/ente.202300239",
+          "observed": "HITRF 36 L 탱크 충전의 압력·입구온도·탱크온도 실험을 설명하지만 공개 데이터 공유 경로는 확인되지 않음",
+          "eligibility": "CUSTODIAN_REQUEST_ONLY",
+          "reason": "출판된 경계조건·그림만으로는 기계판독 독립 trace를 구성할 수 없음"
+        },
+        {
+          "id": "calstate_la_in_situ_b2b",
+          "url": "https://doi.org/10.1016/j.jclepro.2021.129737",
+          "observed": "실제 충전소 back-to-back 운전 로그 분석을 보고하지만 공개 record에서 원시 synchronized logger bundle은 확인되지 않음",
+          "eligibility": "CUSTODIAN_REQUEST_ONLY",
+          "reason": "운전 집계/논문 결과는 새 holdout이 아님"
+        },
+        {
+          "id": "usn_open_channel_current_recheck",
+          "url": "https://doi.org/10.23642/USN.26117989",
+          "observed": "실제 수소 open-channel mass-flow·pressure·29 sensor concentration archive는 이미 저장소에서 사용됨",
+          "eligibility": "ALREADY_CONSUMED_ACTUAL_H2_DIAGNOSTIC",
+          "reason": "재사용하면 독립성 규칙 위반"
+        }
+      ],
+      "eligible_new_raw_holdout_found": false,
+      "interpretation": "8차 공개자료 검색에서도 새 권리정리 미사용 원시 holdout은 발견되지 않았다. NREL CDP는 집계자료, Kuroki·Cal State LA는 custodian 요청 대상, USN은 이미 사용된 실제수소 진단이다. gate·runtime·진행률은 변경하지 않았다."
     }
   }
 }
