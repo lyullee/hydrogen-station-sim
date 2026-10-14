@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "protocol_id": "andreasen_hyddown_hydrogen_blowdown_holdout_2026_10_14",
+  "status": "FROZEN_BEFORE_NUMERICAL_ACCESS",
+  "generated_at_utc": "2026-10-14T00:00:00Z",
+  "freeze_source_commit": "f2b47d6",
+  "source": {
+    "doi": "10.5281/zenodo.20728325",
+    "landing_url": "https://zenodo.org/records/20728325",
+    "archive_filename": "blowdown_reproducibility_archive.zip",
+    "archive_url": "https://zenodo.org/api/records/20728325/files/blowdown_reproducibility_archive.zip/content",
+    "archive_bytes": 3193229,
+    "archive_md5": "a210c0d9b40562cc1349737d838b77f8",
+    "license": "CC BY 4.0",
+    "outcomes_accessed_before_freeze": false
+  },
+  "scope": {
+    "included_case_family": "hydrogen_discharge",
+    "expected_case_ids": ["Byrnes_run7", "Byrnes_run8", "Byrnes_run9"],
+    "excluded_case_family": "hydrogen_filling",
+    "claim": "An independent public hydrogen pressure-vessel blowdown trace can be replayed with the frozen real-gas vessel model without case-specific parameter fitting."
+  },
+  "model": {
+    "runner": "scripts/run_andreasen_hyddown_blowdown_holdout.py",
+    "implementation": "h2station.preslhy_nonadiabatic.simulate_nonadiabatic_blowdown",
+    "parameters": "source YAML geometry, wall properties, ambient boundary and discharge coefficient only",
+    "parameter_fitting": false,
+    "runtime_parameter_application": false
+  },
+  "screens": {
+    "pressure_nrmse_percent_initial_pressure_max": 10.0,
+    "half_pressure_relative_error_percent_max": 20.0,
+    "joint_pass_rule": "all declared hydrogen discharge cases pass both screens"
+  },
+  "anti_leakage": {
+    "numeric_outcomes_may_be_read_after_protocol_commit": true,
+    "case_selection_after_outcome_access": false,
+    "threshold_changes_after_outcome_access": false,
+    "raw_rows_committed": false
+  },
+  "claim_boundary": "This protocol covers only public hydrogen vessel blowdown component behavior. It does not validate a station-to-vehicle loop, filling control, ignition, dispersion, radiation, ESD effectiveness or emergency separation distance."
+}
