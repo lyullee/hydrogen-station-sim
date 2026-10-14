@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "artifact_type": "custodian_replay_execution_checklist",
+  "status": "READY_FOR_CUSTODIAN_EXECUTION",
+  "raw_rows_in_repository": false,
+  "steps": [
+    {
+      "id": "access_rights",
+      "required": true,
+      "completion": "custodian_attestation",
+      "evidence": ["authorized_data_owner", "research_reuse_terms", "derived_metrics_permission"]
+    },
+    {
+      "id": "schema_pilot",
+      "required": true,
+      "completion": "privacy_safe_schema_report",
+      "evidence": ["required_channels", "units", "sampling_interval", "quality_summary", "source_sha256"]
+    },
+    {
+      "id": "preaccess_freeze",
+      "required": true,
+      "completion": "hash_locked_manifest",
+      "evidence": ["model_sha256", "protocol_sha256", "evaluator_sha256", "outcomes_accessed_before_freeze=false", "parameter_fitting_performed=false"]
+    },
+    {
+      "id": "custodian_replay",
+      "required": true,
+      "completion": "event_level_aggregate_result",
+      "evidence": ["all_events_included", "frozen_metrics", "bootstrap_interval", "failure_reason_when_failed"]
+    },
+    {
+      "id": "independent_review",
+      "required": true,
+      "completion": "reviewer_attestation",
+      "evidence": ["manifest_match", "no_post_freeze_tuning", "claim_boundary_reviewed"]
+    }
+  ],
+  "promotion_rule": {
+    "all_required_steps": true,
+    "all_frozen_screens_pass": true,
+    "missing_or_changed_evidence": "retain_pending_or_fail",
+    "raw_rows_persisted": false
+  },
+  "claim_boundary": "This checklist is an execution aid. It is not a validation result, safety claim, regulatory approval, or evidence of data access."
+}
