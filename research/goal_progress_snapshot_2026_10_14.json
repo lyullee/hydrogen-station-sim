@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-14T06:10:53Z",
+  "generated_at": "2026-10-14T06:16:01Z",
   "metric_definition": "PASS gates divided by PASS+FAIL+PENDING gates; not a publication-readiness probability",
   "gate_counts": {
     "PASS": 134,
@@ -85,14 +85,14 @@
       "ethics_and_expert_review": "optional_for_physics_validation; required only for a claim that SAGA improves human safety guidance"
     }
   },
-  "source_commit": "2b2da96232d300ad38e2bfb67c18c9d8c42a5656",
+  "source_commit": "b796d5e7d361b498dfda3ccc4522b921c85f1c4d",
   "latest_completed_work": "Preserved flow-limited release-boundary semantics in the unavailable HyRAM fallback, refreshed all 14 deterministic evidence projections, and sanitized external interpreter paths from refresh diagnostics without promoting a scientific validation gate.",
   "latest_full_regression": {
-    "tests_passed": 1602,
+    "tests_passed": 1604,
     "tests_failed": 0,
     "tests_skipped": 0,
     "warnings": 222,
-    "elapsed_seconds": 278.43
+    "elapsed_seconds": 275.49
   },
   "remaining_workstreams": [
     {
@@ -129,6 +129,11 @@
     "scope": "tests/test_ijhe_readiness_audit.py tests/test_ijhe_audit_snapshot_consistency.py tests/test_validation_gap_report.py tests/test_llm_grounding.py"
   },
   "completed_process_improvements": [
+    {
+      "id": "full_regression_after_release_boundary_fix_2026_10_14",
+      "progress_percent": 100.0,
+      "status": "Full Python regression completed after the release-boundary and diagnostics changes: 1,604 passed, 0 failed, 222 warnings in 275.49 s. Warnings are existing deprecations, HyRAM PhysicsWarning and openpyxl notices; no scientific gate was promoted."
+    },
     {
       "id": "flow_limited_hyram_fallback_boundary_2026_10_14",
       "progress_percent": 100.0,
