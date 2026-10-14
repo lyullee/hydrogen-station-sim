@@ -13,7 +13,8 @@
 |---|---|---|
 | 최신 전체 회귀 | 완료 | 1,626 passed / 0 failed / 0 skipped / 224 warnings |
 | IJHE 형식·PDF 무결성 | 완료 | 24페이지 컴파일, 인용·그림·참조·PDF 해시 확인 |
-| readiness 원장·미러 동기화 | 완료 | 134 PASS / 11 FAIL / 7 PENDING |`n| 릴리즈 비밀값 정적 감사 | 완료 | 고신뢰 비밀값 0건·환경파일 0개·추적 파일 2,287개 검사 |
+| readiness 원장·미러 동기화 | 완료 | 134 PASS / 11 FAIL / 7 PENDING |
+| 릴리즈 비밀값 정적 감사 | 완료 | 고신뢰 비밀값 0건·환경파일 0개·추적 파일 2,287개 검사 |
 | GitHub 우선순위 CI | 완료 | 커밋 `befd83d` 실행 38582577038 성공 |
 | 논문 제출 준비 | 미완료 | 독립 물리 게이트와 제출 메타데이터 미확정 |
 | 전체 목표 완료 | 미완료 | `full_user_objective_ready=false` |
@@ -55,5 +56,6 @@
 - [최신 전체 회귀 기록](full_regression_test_run_2026_10_14.json)
 - [제출 준비 요약](../manuscript/submission_readiness.md)
 - [잔여 작업 triage](REMAINING_WORK_TRIAGE_2026_10_14.md)
+
 
 
