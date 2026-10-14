@@ -1,6 +1,6 @@
 # 프로젝트 잔여 작업 종료 체크리스트
 
-기준 커밋: `7cca221`
+기준 커밋: `283a128`
 기준일: 2026-10-14
 
 이 문서는 수소충전소 디지털 트윈·SAGA 세션 목표의 종료 조건을 한 곳에서
@@ -14,7 +14,7 @@
 | 최신 전체 회귀 | 완료 | 1,626 passed / 0 failed / 0 skipped / 224 warnings |
 | IJHE 형식·PDF 무결성 | 완료 | 24페이지 컴파일, 인용·그림·참조·PDF 해시 확인 |
 | readiness 원장·미러 동기화 | 완료 | 134 PASS / 11 FAIL / 7 PENDING |
-| GitHub 우선순위 CI | 완료 | 커밋 `6446e2f` 실행 38579339898 성공 |
+| GitHub 우선순위 CI | 완료 | 커밋 `283a128` 실행 38581388846 성공 |
 | 논문 제출 준비 | 미완료 | 독립 물리 게이트와 제출 메타데이터 미확정 |
 | 전체 목표 완료 | 미완료 | `full_user_objective_ready=false` |
 
@@ -55,3 +55,4 @@
 - [최신 전체 회귀 기록](full_regression_test_run_2026_10_14.json)
 - [제출 준비 요약](../manuscript/submission_readiness.md)
 - [잔여 작업 triage](REMAINING_WORK_TRIAGE_2026_10_14.md)
+
