@@ -76,6 +76,31 @@ def test_schefer_2006_line_transient_diagnostic_keeps_flow_boundaries_explicit()
     ] is True
 
 
+def test_related_grune_vector_diagnostic_is_grounded_without_gate_promotion():
+    manifest = build_evidence_manifest(
+        {"time_s": 1.0}, {}, [], False, question="Grune 압력 감쇠 진단"
+    )
+    evidence = manifest["response_evidence"][
+        "cross_campaign_release_validation_boundary"
+    ]["grune_ichs2011_vector_diagnostic"]
+    assert evidence["source_doi"] == "10.1016/j.ijhydene.2013.08.076"
+    assert evidence["points"] == 319
+    assert evidence["pressure_nrmse_percent"] == pytest.approx(18.62509004294874)
+    assert evidence["half_pressure_time_relative_error_percent"] == pytest.approx(
+        69.28627897088084
+    )
+    assert evidence["runtime_parameter_updated"] is False
+    assert evidence["validation_gate_promoted"] is False
+    compact = prompt_evidence_summary(manifest)[
+        "cross_campaign_release_validation_boundary"
+    ]["grune_ichs2011_vector_diagnostic"]
+    assert compact["joint_primary_screen_pass"] is False
+    decision = prompt_decision_evidence(manifest)["validation_boundaries"]
+    assert decision["release_cross_campaign"][
+        "grune_ichs2011_vector_diagnostic"
+    ]["validation_gate_promoted"] is False
+
+
 def test_actual_hydrogen_spatial_benchmark_is_grounded_without_promotion():
     manifest = build_evidence_manifest(
         {"time_s": 1.0}, {}, [], False, question="공개 수소 공간분포 근거"

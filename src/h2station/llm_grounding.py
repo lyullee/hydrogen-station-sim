@@ -4941,6 +4941,66 @@ def _cross_campaign_release_validation_evidence() -> dict[str, Any] | None:
             "안전 검증으로 확대할 수 없습니다."
         ),
     }
+    # A related ICHS 2011 conference figure exposes a complete vector inset
+    # for the same 0.37 L / 4 mm apparatus. It is useful for diagnosing the
+    # source-model mismatch, but it is not the prospectively reserved 2014
+    # raw trace. Keep the existing secondary-figure result visible to the
+    # assistant without promoting it to validation or runtime tuning.
+    try:
+        related_protocol = json.loads(
+            (
+                root
+                / "research/grune_2014_secondary_public_figure_protocol_2026_10_12.json"
+            ).read_text(encoding="utf-8")
+        )
+        related_result = json.loads(
+            (
+                root
+                / "research/grune_2014_secondary_public_figure_result_2026_10_12.json"
+            ).read_text(encoding="utf-8")
+        )
+        vector_source = related_protocol.get("source") or {}
+        vector_extraction = related_protocol.get("extraction") or {}
+        vector_result = related_result.get("result") or {}
+        if (
+            related_protocol.get("artifact_type")
+            == "grune_2014_secondary_public_figure_protocol"
+            and related_protocol.get("status")
+            == "secondary_figure_route_locked_before_vector_extraction"
+            and int(vector_extraction.get("points_written") or 0) >= 15
+            and related_result.get("claim_supported") is False
+            and vector_result.get("joint_primary_screen_pass") is False
+        ):
+            result["grune_ichs2011_vector_diagnostic"] = {
+                "artifact": (
+                    "research/grune_2014_secondary_public_figure_result_2026_10_12.json"
+                ),
+                "evidence_role": "related_public_vector_pressure_diagnostic_only",
+                "source_doi": "10.1016/j.ijhydene.2013.08.076",
+                "source_url": str(vector_source.get("source_url") or ""),
+                "points": int(vector_result.get("points") or 0),
+                "pressure_nrmse_percent": vector_result.get(
+                    "pressure_nrmse_percent_initial_measured"
+                ),
+                "median_absolute_percentage_error_percent": vector_result.get(
+                    "median_absolute_percentage_error_percent"
+                ),
+                "experimental_half_pressure_time_s": vector_result.get(
+                    "experimental_half_pressure_time_s"
+                ),
+                "predicted_half_pressure_time_s": vector_result.get(
+                    "predicted_half_pressure_time_s"
+                ),
+                "half_pressure_time_relative_error_percent": vector_result.get(
+                    "half_pressure_time_relative_error_percent"
+                ),
+                "joint_primary_screen_pass": False,
+                "runtime_parameter_updated": False,
+                "validation_gate_promoted": False,
+                "claim_limit": str(related_result.get("claim_boundary") or ""),
+            }
+    except (OSError, ValueError, json.JSONDecodeError):
+        pass
     # Keep the Schefer apparatus-boundary clue visible to the decision-support
     # model without treating related-campaign geometry as a validated transfer
     # or a reason to rewrite the frozen pressure-decay result.
@@ -12478,6 +12538,7 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
                 "runtime_model_changed_after_outcomes", "claim_limit",
                 "posthoc_model_form_diagnostic",
                 "schefer_2007_apparatus_boundary_diagnostic",
+                "grune_ichs2011_vector_diagnostic",
             )
             if cross_campaign_release.get(key) is not None
         }
@@ -16409,6 +16470,9 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                 "apparatus_holdout": cross_campaign_release.get(
                     "apparatus_resolved_holdout_received"
                 ) is True,
+                "grune_ichs2011_vector_diagnostic": cross_campaign_release.get(
+                    "grune_ichs2011_vector_diagnostic"
+                ) or {},
             },
             **({
                 "public_hytunnel_carpark": {
@@ -18023,6 +18087,9 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
             ) or {},
             "schefer_2007_apparatus_boundary_diagnostic": cross_campaign_release.get(
                 "schefer_2007_apparatus_boundary_diagnostic"
+            ) or {},
+            "grune_ichs2011_vector_diagnostic": cross_campaign_release.get(
+                "grune_ichs2011_vector_diagnostic"
             ) or {},
             "claim_limit": cross_campaign_release.get("claim_limit"),
         },
