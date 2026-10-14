@@ -85,8 +85,8 @@
       "ethics_and_expert_review": "optional_for_physics_validation; required only for a claim that SAGA improves human safety guidance"
     }
   },
-  "source_commit": "ab843bf",
-  "latest_completed_work": "Completed priority-manifest/privacy cleanup, full regression confirmation, Andreasen overlap invalidation, and HySaM public-data inventory with an explicit no-gate-promotion boundary.",
+  "source_commit": "b993c8f",
+  "latest_completed_work": "Completed priority-manifest/privacy cleanup, full regression confirmation, Andreasen overlap invalidation, HySaM inventory, and a public validation-data recheck with explicit exclusion boundaries.",
   "latest_full_regression": {
     "tests_passed": 1602,
     "tests_failed": 0,
@@ -129,6 +129,11 @@
     "scope": "tests/test_ijhe_readiness_audit.py tests/test_ijhe_audit_snapshot_consistency.py tests/test_validation_gap_report.py tests/test_llm_grounding.py"
   },
   "completed_process_improvements": [
+    {
+      "id": "public_validation_data_recheck_2026_10_14",
+      "progress_percent": 100.0,
+      "status": "Rechecked new hydrogen dispersion, ventilation and station-operation sources; no new replayable independent HRS experiment was found, and computational/report-only/already-consumed sources were explicitly excluded from gate promotion."
+    },
     {
       "id": "hysam_public_dataset_boundary_inventory_2026_10_14",
       "progress_percent": 100.0,
