@@ -1,18 +1,18 @@
 {
   "schema_version": 1,
   "artifact_type": "full_regression_test_run",
-  "generated_at": "2026-10-14T08:00:01Z",
+  "generated_at": "2026-10-14T08:34:54Z",
   "command": "python -m pytest -q",
   "status": "PASS",
-  "tests_passed": 1609,
+  "tests_passed": 1612,
   "tests_failed": 0,
   "tests_skipped": 0,
   "warnings": 222,
-  "elapsed_seconds": 267.45,
-  "duration_seconds": 267.45,
-  "source_commit": "59beaa1",
+  "elapsed_seconds": 247.92,
+  "duration_seconds": 247.92,
+  "source_commit": "85aabc9",
   "readiness_snapshot": "research/ijhe_readiness_audit.json",
-  "interpretation": "All 1,609 executable tests pass for the current source commit. This verifies implementation integrity only; it does not convert independent validation FAIL/PENDING gates to PASS.",
+  "interpretation": "All 1,612 executable tests pass for the current source commit. This verifies implementation integrity only; it does not convert independent validation FAIL/PENDING gates to PASS.",
   "working_tree_dirty_at_run": true,
-  "run_recorded_at": "2026-10-14T08:00:01Z"
+  "run_recorded_at": "2026-10-14T08:34:54Z"
 }

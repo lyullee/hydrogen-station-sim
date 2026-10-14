@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-14T08:22:00Z",
+  "generated_at": "2026-10-14T08:34:54Z",
   "metric_definition": "PASS gates divided by PASS+FAIL+PENDING gates; not a publication-readiness probability",
   "gate_counts": {
     "PASS": 134,
@@ -85,14 +85,14 @@
       "ethics_and_expert_review": "optional_for_physics_validation; required only for a claim that SAGA improves human safety guidance"
     }
   },
-  "source_commit": "cfc3385",
-  "latest_completed_work": "Physics-core recheck completed: 31 focused release-network, thermal, apparatus, pressure-trace and line-transient tests passed with no failures. The record remains bounded to implementation consistency; it does not promote development models or close independent external-validation gates.",
+  "source_commit": "85aabc9",
+  "latest_completed_work": "전체 회귀검사를 최신 소스에서 재실행해 1,612 passed / 0 failed / 0 skipped / 222 warnings를 확인했다. 이 결과는 코드·재현성 무결성만 확인하며 독립 외부검증 게이트를 승격하지 않는다.",
   "latest_full_regression": {
-    "tests_passed": 1609,
+    "tests_passed": 1612,
     "tests_failed": 0,
     "tests_skipped": 0,
     "warnings": 222,
-    "elapsed_seconds": 267.45
+    "elapsed_seconds": 247.92
   },
   "remaining_workstreams": [
     {
