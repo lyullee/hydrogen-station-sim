@@ -85,7 +85,7 @@
       "ethics_and_expert_review": "optional_for_physics_validation; required only for a claim that SAGA improves human safety guidance"
     }
   },
-  "source_commit": "66f0838db34a6f631740308a355a8a622be76d68",
+  "source_commit": "e7ac8b9da4d852aafac9063ae643e1eced2478b8",
   "latest_completed_work": "근거 요약 수치와 원자료의 드리프트를 막는 자동 검증 3건을 추가하고, 감사 원장 생성시각 불일치를 evidence chain 재생성으로 바로잡은 뒤 전체 Python 회귀 1,622건을 실패 없이 통과했습니다. 과학적 게이트 수치는 변경하지 않았습니다.",
   "latest_full_regression": {
     "tests_passed": 1622,
