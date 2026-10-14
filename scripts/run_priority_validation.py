@@ -80,6 +80,17 @@ DEFAULT_CHECKS: tuple[PriorityCheck, ...] = (
         ),
     ),
     PriorityCheck(
+        "typeiii_protocol_contract",
+        "P0",
+        (
+            "-m",
+            "pytest",
+            "tests/test_dickens_typeiii_protocol_validator.py",
+            "tests/test_dickens_typeiii_geometry_resolved_protocol.py",
+            "-q",
+        ),
+    ),
+    PriorityCheck(
         "virtual_safety_and_response",
         "P1",
         ("-m", "pytest", "tests/test_virtual_safety.py", "tests/test_emergency_response.py", "-q"),

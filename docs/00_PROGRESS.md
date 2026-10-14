@@ -10,7 +10,9 @@ declarations, four frozen primary screens, source-hash requirements and failure
 retention. The committed result is
 `research/dickens_typeiii_protocol_validation_2026_10_14.json`; it is valid as
 an intake contract while deliberately keeping `outcome_access_allowed=false`.
-The validator and the existing protocol checks pass **3/3**. This improves
+The validator and the existing protocol checks pass **3/3**. The validator is
+also part of the P0 priority CI lane, so a broken intake contract fails the
+software/process signal before any numerical run. This improves
 reproducibility and prevents premature gate promotion, but it does not close
 the retained Type-III scientific validation failure.
 
@@ -19,8 +21,9 @@ the retained Type-III scientific validation failure.
 The current priority runner completed without a software or process failure;
 the machine-readable result is frozen in
 `research/priority_focus_run_2026_10_14.json` from the latest source commit.
-All three focused software suites passed (**75/75 tests**): LLM evidence
-grounding, privacy-safe full-loop intake and virtual safety/response. The five
+All four focused software suites passed (**78/78 tests**): LLM evidence
+grounding, the Type-III intake contract, privacy-safe full-loop intake and
+virtual safety/response. The five
 critical development diagnostics also completed, but their scientific screen
 remains **FAIL** for the MC measured-boundary tank replay, H2SAFE spatial
 response and NREL H2FillS HDVS replay; these are negative development results,
