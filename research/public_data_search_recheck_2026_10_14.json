@@ -242,6 +242,57 @@
       ],
       "eligible_new_raw_holdout_found": false,
       "interpretation": "The KIT RADAR record is a valuable actual-LH2 consequence source, but the retained archive prefix fails the publisher checksum and four workbook outcomes were already opened for descriptive exploration. It is retained as boundary evidence only; no validation gate, runtime parameter or progress percentage changes."
+    },
+    "search_round_2026_10_14_sixth_pass": {
+      "search_date": "2026-10-14",
+      "new_candidates_checked": [
+        {
+          "id": "h2fills_official_page_recheck",
+          "url": "https://www.nrel.gov/hydrogen/h2fills",
+          "observed": "Official H2FillS page describes a thermodynamic filling model and empirical-data validation, but no newly accessible rights-cleared raw station or tank trace was found; the local HDVS workbook is already consumed and rights-bounded.",
+          "eligibility": "ALREADY_CONSUMED_PARTIAL_TANK_BOUNDARY",
+          "reason": "The current local H2FillS sample is already represented by a frozen negative screen; it cannot be recounted as a new holdout."
+        },
+        {
+          "id": "oedi_h2safe_current_catalog",
+          "url": "https://data.openei.org/submissions/8799",
+          "doi": "10.7799/17118570",
+          "observed": "Current OEDI record exposes H2SAFE time-series, coordinates and geometry resources, but identifies the five experiments as helium surrogate.",
+          "eligibility": "ALREADY_USED_HELIUM_DEVELOPMENT_COHORT",
+          "reason": "The DOI and cohort are already in the candidate-development lane; it is not actual-hydrogen independent evidence."
+        },
+        {
+          "id": "h2stations_api_v2",
+          "url": "https://docs.h2-stations.eu/for-data-users/api-v2/",
+          "observed": "The public API provides station layout, availability, usage, storage and pricing signals; access requires a bearer token and it does not expose synchronized pressure-temperature-flow logger traces.",
+          "eligibility": "BOUNDARY_EVIDENCE_ONLY",
+          "reason": "Station metadata/status is not a component physical holdout."
+        },
+        {
+          "id": "california_mdhd_infrastructure_open_data",
+          "url": "https://lab.data.ca.gov/dataset/medium-and-heavy-duty-infrastructure",
+          "observed": "The CC-attribution dataset provides hydrogen station locations, dispenser/nozzle counts and infrastructure metadata.",
+          "eligibility": "BOUNDARY_EVIDENCE_ONLY",
+          "reason": "No time-resolved process channels or apparatus boundary are included."
+        },
+        {
+          "id": "cip_2020_35_70mpa_article_recheck",
+          "url": "https://esst.cip.com.cn/article/2020/2095-4239/2095-4239-2020-9-3-702.shtml",
+          "doi": "10.19799/j.cnki.2095-4239.2020.0049",
+          "observed": "The article-linked T3/T4 CSV files are summary table exports; no synchronized pressure-temperature-flow logger bundle was found.",
+          "eligibility": "ALREADY_RECHECKED_ENDPOINT_TABLES_ONLY",
+          "reason": "The repository already hash-checks these files and keeps them out of full-loop validation."
+        },
+        {
+          "id": "monde_2012_typeiii_typeiv_article",
+          "url": "https://doi.org/10.1016/j.ijhydene.2011.12.136",
+          "observed": "The article states complete experimental data were opened for analysis, but the accessible publisher/index routes did not provide a rights-cleared machine-readable archive.",
+          "eligibility": "BOUNDARY_EVIDENCE_ONLY",
+          "reason": "A publication statement without a retrievable raw archive cannot close a prospective holdout."
+        }
+      ],
+      "eligible_new_raw_holdout_found": false,
+      "interpretation": "The sixth targeted pass found no new rights-cleared, previously uninspected raw trace. H2FillS and H2SAFE are already consumed lanes; H2-Stations and California infrastructure data are metadata/status only; CIP and Monde are article/table or access-boundary evidence. No runtime parameter, validation gate or progress percentage changed."
     }
   }
 }
