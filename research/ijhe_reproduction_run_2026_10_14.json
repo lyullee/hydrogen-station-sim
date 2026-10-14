@@ -1,11 +1,11 @@
 {
   "schema_version": 1,
   "artifact_type": "ijhe_reproducibility_run",
-  "generated_at_utc": "2026-10-14T14:12:55.163281+00:00",
+  "generated_at_utc": "2026-10-14T14:31:16.773625+00:00",
   "status": "SCIENTIFIC_GATES_OPEN",
   "repository": {
     "root": ".",
-    "commit": "841ade7baff1ec1762b3c4caec00fe31072b738c",
+    "commit": "07c613e0397580acdabeb21c5a3a8b4939ff4460",
     "dirty": true
   },
   "environment": {
@@ -29,7 +29,7 @@
           75,
           72
         ],
-        "approximate_manuscript_words_before_references": 8000,
+        "approximate_manuscript_words_before_references": 7988,
         "figures": 3,
         "tables": 3,
         "citation_keys": 57,
@@ -54,7 +54,7 @@
     },
     "compile_status_rebuilt": {
       "schema_version": 2,
-      "verified_at_utc": "2026-10-14T14:12:52.927971+00:00",
+      "verified_at_utc": "2026-10-14T14:31:14.467029+00:00",
       "success": true,
       "compiler": {
         "name": "Tectonic",
@@ -64,20 +64,20 @@
       },
       "source": {
         "path": "manuscript/ijhe_manuscript_draft.tex",
-        "bytes": 78369,
-        "sha256": "7a472ddcff7e12878e8666b6ef1e93674b988692e5a1e61dcb38f25846049b2c"
+        "bytes": 78373,
+        "sha256": "8738ed23f2eac5182c4fdf78d158e3e5b849c3d92fa90d2de0abc4b2e55cf221"
       },
       "pdf": {
         "path": "output/pdf/ijhe_manuscript_draft.pdf",
-        "bytes": 840380,
-        "sha256": "4131981f711350a5c18b255822b5c6f3b18f2fda6de4aace7591c40c4b07de09",
+        "bytes": 840489,
+        "sha256": "a09ee55e75b1b20360df1836406a9b4378d76aff2d52fed7761d8a815d2a30aa",
         "page_count": 24,
         "extracted_character_count": 72475
       },
       "compile_log": {
         "path": "output/pdf/ijhe_manuscript_draft.log",
         "bytes": 19550,
-        "sha256": "02daeb1e2e4a1128af310ddba70e2b0824b43a21d21b78f5e77d5466eefe32b0",
+        "sha256": "b06bf6e2a2feecbc5fea6949e7c213629c0b4c81640b730db6c42b1994a63dc0",
         "unresolved_citations": 0,
         "unresolved_references": 0,
         "fatal_errors": [],
@@ -145,7 +145,7 @@
           "tests/test_goal_progress_snapshot.py",
           "tests/test_ijhe_reproduction.py"
         ],
-        "output_tail": "............                                                             [100%]\n12 passed in 1.83s"
+        "output_tail": "............                                                             [100%]\n12 passed in 1.94s"
       }
     ]
   },
