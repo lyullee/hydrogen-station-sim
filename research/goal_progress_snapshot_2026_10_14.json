@@ -85,14 +85,14 @@
       "ethics_and_expert_review": "optional_for_physics_validation; required only for a claim that SAGA improves human safety guidance"
     }
   },
-  "source_commit": "91cbb648f41ec76ec128a5c038a90196542f6a3b",
-  "latest_completed_work": "TU Delft 실제 수소 계측 캐비닛 연구를 검지기 배치·환기 설명 전용 LLM 근거로 연결하고 provenance refresh를 수행했다. 전체 회귀는 1,614 passed / 0 failed / 0 skipped / 222 warnings로 통과했으며, 과학 게이트 수와 88.2% readiness는 변경하지 않았다.",
+  "source_commit": "6a3d69f839219dae1849dd9842814821bf0835df",
+  "latest_completed_work": "BAM 현장 HRS 이상탐지 연구를 정상운전·센서품질·이상탐지 질문 전용 LLM 근거로 연결하고 provenance refresh를 수행했다. 전체 회귀는 1,616 passed / 0 failed / 0 skipped / 222 warnings로 통과했으며, 과학 게이트 수와 88.2% readiness는 변경하지 않았다.",
   "latest_full_regression": {
-    "tests_passed": 1614,
+    "tests_passed": 1616,
     "tests_failed": 0,
     "tests_skipped": 0,
     "warnings": 222,
-    "elapsed_seconds": 222.24
+    "elapsed_seconds": 226.5
   },
   "remaining_workstreams": [
     {
