@@ -453,3 +453,29 @@ def test_elvhys_actual_cryogenic_hydrogen_dataset_is_grounded_without_promotion(
     assert compact["schema_screen_pass"] is True
     decision = prompt_decision_evidence(manifest)["decision_support_evidence"]
     assert decision["public_elvhys_dataset"]["promotion_prohibited"] is True
+
+
+def test_hydelta_indoor_report_context_is_grounded_without_spatial_promotion():
+    manifest = build_evidence_manifest(
+        {"time_s": 1.0}, {}, [], False, question="실내 수소 누출 환기 공간분포"
+    )
+    evidence = manifest["response_evidence"][
+        "public_natural_ventilation_evidence"
+    ]
+    context = evidence["indoor_spatial_report_context"]
+    assert context["doi"] == "10.5281/zenodo.8154318"
+    assert context["experiment_count"] == 32
+    assert context["sensor_count"] == 50
+    assert context["numeric_spatial_holdout_eligible"] is False
+    assert context["runtime_candidate_enabled"] is False
+
+    summary = prompt_evidence_summary(manifest)[
+        "public_natural_ventilation_evidence"
+    ]
+    assert summary["indoor_spatial_report_context"][
+        "numeric_spatial_holdout_eligible"
+    ] is False
+    decision = prompt_decision_evidence(manifest)
+    assert decision["response_guidance"]["natural_ventilation"][
+        "indoor_spatial_report_context"
+    ]["runtime_candidate_enabled"] is False

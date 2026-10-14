@@ -2252,7 +2252,7 @@ def _public_controlled_flare_evidence() -> dict[str, Any] | None:
         or runtime.get("ad_hoc_ignition_of_vent_stream_authorized") is not False
     ):
         return None
-    return {
+    result = {
         "artifact": artifact,
         "doi": source.get("doi"),
         "record_url": source.get("record_url"),
@@ -2271,6 +2271,8 @@ def _public_controlled_flare_evidence() -> dict[str, Any] | None:
         "runtime_use": runtime,
         "claim_limit": str(record.get("claim_boundary") or ""),
     }
+
+    return result
 
 
 def _public_natural_ventilation_evidence() -> dict[str, Any] | None:
@@ -2309,7 +2311,7 @@ def _public_natural_ventilation_evidence() -> dict[str, Any] | None:
         or runtime.get("site_safety_distance_validation") is not False
     ):
         return None
-    return {
+    result = {
         "artifact": artifact,
         "doi": source.get("doi"),
         "record_url": source.get("record_url"),
@@ -2344,6 +2346,62 @@ def _public_natural_ventilation_evidence() -> dict[str, Any] | None:
         "empirical_screen": empirical_screen,
         "claim_limit": str(record.get("claim_boundary") or ""),
     }
+
+    # D6A.1 is an actual-H2 indoor report with a 50-sensor matrix, but it
+    # publishes figures/categories rather than the numeric coordinate and
+    # per-sensor response fields required by the frozen spatial holdout.  Keep
+    # it available as bounded ventilation/stratification context only.
+    indoor_path = Path(__file__).resolve().parents[2] / (
+        "research/hydelta_indoor_spatial_holdout_eligibility_2026_10_08.json"
+    )
+    try:
+        indoor = json.loads(indoor_path.read_text(encoding="utf-8"))
+    except (OSError, ValueError, json.JSONDecodeError):
+        indoor = None
+    if isinstance(indoor, dict):
+        indoor_source = indoor.get("source") or {}
+        indoor_identity = indoor_source.get("publisher_file_identity") or {}
+        indoor_report = indoor.get("report_checks") or {}
+        indoor_eligibility = indoor.get("eligibility") or {}
+        indoor_decision = indoor.get("decision") or {}
+        indoor_scope = indoor.get("usable_evidence") or {}
+        if (
+            indoor.get("artifact_type")
+            == "pre_access_frozen_hydelta_spatial_holdout_eligibility_result"
+            and indoor.get("status") == "INELIGIBLE_NO_MODEL_EVALUATION"
+            and indoor_source.get("doi") == "10.5281/zenodo.8154318"
+            and indoor_source.get("license") == "CC BY 4.0"
+            and indoor_identity.get("identity_match") is True
+            and indoor_report.get("actual_hydrogen_test_medium_reported") is True
+            and indoor_report.get("fifty_sensor_matrix_reported") is True
+            and indoor_scope.get("actual_hydrogen_experiment_count_inventory") == 32
+            and indoor_scope.get("sensor_count") == 50
+            and indoor_decision.get("model_evaluation_executed") is False
+            and indoor_decision.get("runtime_candidate_enabled") is False
+            and indoor_eligibility.get("source_coordinates", {}).get("passed") is False
+            and indoor_eligibility.get("per_sensor_numeric_response", {}).get("passed") is False
+        ):
+            result["indoor_spatial_report_context"] = {
+                "artifact": "research/hydelta_indoor_spatial_holdout_eligibility_2026_10_08.json",
+                "doi": indoor_source.get("doi"),
+                "license": indoor_source.get("license"),
+                "experiment_count": indoor_scope.get(
+                    "actual_hydrogen_experiment_count_inventory"
+                ),
+                "sensor_count": indoor_scope.get("sensor_count"),
+                "release_rates_normal_dm3_h": indoor_scope.get(
+                    "release_rates_normal_dm3_h"
+                ),
+                "configuration_count": indoor_scope.get("configuration_count"),
+                "container_working_volume_m3": indoor_scope.get(
+                    "container_working_volume_m3"
+                ),
+                "qualitative_roles": list(indoor_scope.get("qualitative_roles") or []),
+                "numeric_spatial_holdout_eligible": False,
+                "runtime_candidate_enabled": False,
+                "claim_limit": str(indoor.get("claim_boundary") or ""),
+            }
+    return result
 
 
 def _public_detector_logic_evidence() -> dict[str, Any] | None:
@@ -13498,6 +13556,21 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
             "runtime_parameter_application": False,
             "claim_limit": short(natural_ventilation.get("claim_limit")),
         }
+        indoor_context = natural_ventilation.get("indoor_spatial_report_context")
+        if isinstance(indoor_context, dict):
+            summary["public_natural_ventilation_evidence"][
+                "indoor_spatial_report_context"
+            ] = {
+                "doi": indoor_context.get("doi"),
+                "experiment_count": indoor_context.get("experiment_count"),
+                "sensor_count": indoor_context.get("sensor_count"),
+                "release_rates_normal_dm3_h": indoor_context.get(
+                    "release_rates_normal_dm3_h"
+                ),
+                "numeric_spatial_holdout_eligible": False,
+                "runtime_candidate_enabled": False,
+                "claim_limit": short(indoor_context.get("claim_limit")),
+            }
     confidential = evidence.get("confidential_measured_boundary_replay")
     if isinstance(confidential, dict):
         summary["confidential_measured_boundary_replay"] = {
@@ -17258,11 +17331,18 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
             "tested_safeguards": list(findings.get("tested_safeguards") or []),
             "claim_limit": short(controlled_flare.get("claim_limit")),
         }
+    ventilation_question = any(
+        token in lead_context
+        for token in ("환기", "실내", "공간분포", "공간 분포", "ventilation", "indoor")
+    )
     if (
-        "HYDELTA_VENTILATION_2023"
-        in decision["response_guidance"]["source_ids"]
-        and isinstance(natural_ventilation, dict)
+        isinstance(natural_ventilation, dict)
         and natural_ventilation
+        and (
+            "HYDELTA_VENTILATION_2023"
+            in decision["response_guidance"]["source_ids"]
+            or ventilation_question
+        )
     ):
         findings = natural_ventilation.get("reported_findings") or {}
         runtime_use = natural_ventilation.get("runtime_use") or {}
@@ -17284,6 +17364,25 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
             "maximum_reported_inside_concentration_volpct_h2": findings.get(
                 "maximum_reported_inside_concentration_volpct_h2"
             ),
+            "indoor_spatial_report_context": {
+                "doi": (
+                    natural_ventilation.get("indoor_spatial_report_context") or {}
+                ).get("doi"),
+                "experiment_count": (
+                    natural_ventilation.get("indoor_spatial_report_context") or {}
+                ).get("experiment_count"),
+                "sensor_count": (
+                    natural_ventilation.get("indoor_spatial_report_context") or {}
+                ).get("sensor_count"),
+                "release_rates_normal_dm3_h": (
+                    natural_ventilation.get("indoor_spatial_report_context") or {}
+                ).get("release_rates_normal_dm3_h"),
+                "numeric_spatial_holdout_eligible": False,
+                "runtime_candidate_enabled": False,
+                "claim_limit": (
+                    natural_ventilation.get("indoor_spatial_report_context") or {}
+                ).get("claim_limit"),
+            },
             "claim_limit": short(natural_ventilation.get("claim_limit")),
         }
     return decision
@@ -18838,6 +18937,25 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
             "reported_findings": natural_ventilation.get("reported_findings") or {},
             "runtime_use": natural_ventilation.get("runtime_use") or {},
             "empirical_screen": natural_ventilation.get("empirical_screen") or {},
+            "indoor_spatial_report_context": {
+                "doi": (
+                    natural_ventilation.get("indoor_spatial_report_context") or {}
+                ).get("doi"),
+                "experiment_count": (
+                    natural_ventilation.get("indoor_spatial_report_context") or {}
+                ).get("experiment_count"),
+                "sensor_count": (
+                    natural_ventilation.get("indoor_spatial_report_context") or {}
+                ).get("sensor_count"),
+                "release_rates_normal_dm3_h": (
+                    natural_ventilation.get("indoor_spatial_report_context") or {}
+                ).get("release_rates_normal_dm3_h"),
+                "numeric_spatial_holdout_eligible": False,
+                "runtime_candidate_enabled": False,
+                "claim_limit": (
+                    natural_ventilation.get("indoor_spatial_report_context") or {}
+                ).get("claim_limit"),
+            },
             "claim_limit": natural_ventilation.get("claim_limit"),
         },
         "confidential_local_accident_response_coverage": {
