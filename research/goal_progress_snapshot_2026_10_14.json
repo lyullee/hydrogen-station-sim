@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-14T12:52:00+00:00",
+  "generated_at": "2026-10-14T22:21:46+09:00",
   "metric_definition": "PASS gates divided by PASS+FAIL+PENDING gates; not a publication-readiness probability",
   "gate_counts": {
     "PASS": 134,
@@ -85,8 +85,8 @@
       "ethics_and_expert_review": "optional_for_physics_validation; required only for a claim that SAGA improves human safety guidance"
     }
   },
-  "source_commit": "550a4dc",
-  "latest_completed_work": "실제 수소 ELVHYS 공간 holdout 29건을 SAGA 근거 봉투와 로컬 근거 인벤토리에 연결했습니다. 검지기·공간 질문에만 선택 노출하고 공동 screen 실패·런타임 보정 금지·안전거리/충전소 배치 검증 불가 경계를 유지했으며 관련 회귀 38건이 통과했습니다.",
+  "source_commit": "4a07e2b",
+  "latest_completed_work": "KITopen DOI 10.5445/IR/1000096833가 기존 PRESLHY RADAR 원자료 DOI 10.35097/1187의 중복 카탈로그임을 확인하고 새 holdout으로 중복 집계하지 않았습니다.",
   "latest_full_regression": {
     "tests_passed": 1625,
     "tests_failed": 0,
@@ -355,6 +355,11 @@
       "id": "tank_runtime_audit_hash_resync_after_recharge_guard_2026_10_14",
       "progress_percent": 100.0,
       "status": "재충전 anti-chatter 기본값 추가로 변경된 scenario.py·api.py 소스 해시를 Type-IV 탱크 런타임 감사에 재생성했습니다. readiness 감사 일관성 및 운전 가드 관련 31개 테스트가 통과했고 과학적 gate 수치는 134 PASS / 11 FAIL / 7 PENDING으로 유지됩니다."
+    },
+    {
+      "id": "preslhy_kitopen_duplicate_reconciliation_2026_10_14",
+      "progress_percent": 100.0,
+      "status": "KITopen DOI 10.5445/IR/1000096833가 동일 RADAR record vuyYifgxlfOuFrSP 및 1,313,122,304-byte CC BY 4.0 archive를 가리키는 중복 카탈로그임을 확인했다. 새 독립 holdout·런타임·과학 게이트는 추가하지 않았다."
     }
   ],
   "latest_context_focused_regression": {
