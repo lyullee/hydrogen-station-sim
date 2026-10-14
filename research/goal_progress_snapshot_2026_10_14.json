@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-14T10:08:00Z",
+  "generated_at": "2026-10-14T10:10:00Z",
   "metric_definition": "PASS gates divided by PASS+FAIL+PENDING gates; not a publication-readiness probability",
   "gate_counts": {
     "PASS": 134,
@@ -85,7 +85,7 @@
       "ethics_and_expert_review": "optional_for_physics_validation; required only for a claim that SAGA improves human safety guidance"
     }
   },
-  "source_commit": "fdc8f60fca721d67582f83bbeac074695f7995ed",
+  "source_commit": "828dbac1d4437558939a43ee951a8cd75c0de003",
   "latest_completed_work": "전체 Python 회귀검증 1,618 passed / 0 failed / 0 skipped / 222 warnings를 최신 커밋에 기록했습니다. 과학적 readiness gate 수치는 134 PASS / 11 FAIL / 7 PENDING으로 유지됩니다.",
   "latest_full_regression": {
     "tests_passed": 1618,
@@ -319,6 +319,11 @@
       "id": "grune_public_access_recheck_2026_10_14",
       "progress_percent": 100.0,
       "status": "KIT 공식 레코드·출판사 랜딩·공개 사본을 재확인했으나 완전한 권리 확인 압력-시간 원자료는 발견되지 않았습니다. Grüne 독립 검증 게이트는 PENDING으로 유지하고 런타임·과학적 수치를 변경하지 않았습니다."
+    },
+    {
+      "id": "replay_evidence_timestamp_alignment_2026_10_14",
+      "progress_percent": 100.0,
+      "status": "Grüne 접근 재확인 후 재생·추적성 산출물의 생성시각과 readiness 참조 해시를 최신 상태로 동기화했습니다. 과학적 gate 수치는 변경하지 않았습니다."
     }
   ],
   "latest_context_focused_regression": {
