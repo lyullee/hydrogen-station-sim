@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-14T07:51:57Z",
+  "generated_at": "2026-10-14T08:00:01Z",
   "metric_definition": "PASS gates divided by PASS+FAIL+PENDING gates; not a publication-readiness probability",
   "gate_counts": {
     "PASS": 134,
@@ -92,7 +92,7 @@
     "tests_failed": 0,
     "tests_skipped": 0,
     "warnings": 222,
-    "elapsed_seconds": 240.64
+    "elapsed_seconds": 267.45
   },
   "remaining_workstreams": [
     {
