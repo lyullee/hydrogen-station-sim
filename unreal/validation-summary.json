@@ -18,6 +18,6 @@
   "llm_routes_changed":false,
   "physics_and_hyram_solver_changed_by_this_integration":false,
   "evidence_files":["output/unreal/environment.json","output/unreal/web-smoke.json","output/unreal/assets/manifest.json","output/unreal/assets/validation.json","scripts/build_unreal_release.ps1","scripts/start_packaged_unreal.ps1"],
-  "epic_cache_recovery":"Webcache preserved in dated backup; launcher logs show valid EOS installation and completed EMS content refresh, but no engine installation transaction; post-unlock UI verification pending",
+  "epic_cache_recovery":"Webcache preserved in dated backup. Launcher 20.3.5 logs confirm WaitingForBuildsAndItemFiles, zero item files and zero entitled apps, matching the current UE entitlement defect; the exact catalog installer URI and an Epic-signed legacy installer are prepared for post-unlock recovery.",
   "build_tools":"PASS: VS 2022 Build Tools 17.14, MSVC 14.38/14.44, MSBuild and Windows SDK 10.0.26100 detected; standalone x64 C++ compile and execution passed. A pending Windows file rename remains, but the toolchain itself is operational."
 }

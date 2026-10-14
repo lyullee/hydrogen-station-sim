@@ -4,9 +4,9 @@
 
 ## 현재 설치 상태
 
-2026-10-15: Epic Games Launcher 설치 완료. VS 2022 C++ Build Tools 설치 완료, 설치 프로그램이 재부팅 필요를 보고했다. UE 엔진은 아직 설치되지 않았다. Launcher 설치 화면에서 버전 타일이 나타나지 않는 문제를 확인했으며, 자체 업데이트 파일 검증 실패 BV02/BV05와 접근 오류 기록이 있었다. 로그인 자체는 성공 기록이 있다. 잠긴 Windows 화면을 우회해 조작하지 않는다.
+2026-10-15: Epic Games Launcher 설치 완료. VS 2022 Build Tools 17.14, MSVC 14.38/14.44, MSBuild, Windows SDK 10.0.26100을 확인했고 독립 x64 C++ 컴파일·실행 시험을 통과했다. UE 엔진은 아직 설치되지 않았다. Launcher 20.3.5 로그의 `WaitingForBuildsAndItemFiles`, `Loaded 0 item files`, `found 0 entitled apps`로 보아 설치 버튼 무반응은 컴파일러나 저장 공간 문제가 아니라 Epic 계정/Launcher가 UE entitlement를 받지 못한 상태다. 같은 버전에서 동일 증상이 보고되어 있다. 잠긴 Windows 화면을 우회해 조작하지 않는다.
 
-Launcher 자체 복구 뒤 종료·재시작을 시도했으며 Windows 잠금으로 UI 재확인은 보류됐다. Epic의 캐시 초기화 절차를 삭제 대신 날짜별 백업으로 수행하는 `scripts/repair_epic_cache.ps1`를 준비했다. 계정·설치 게임 폴더는 변경하지 않는다. 로그의 파일 검증 실패가 설치 타일 미표시의 확정 원인이라는 뜻은 아니며, 잠금 해제 후 결과 확인이 필요하다. 참고: https://www.epicgames.com/help/c-32735058/a20673770?lang=en-US
+Launcher 자체 복구 뒤 종료·재시작을 시도했으며 Windows 잠금으로 UI 재확인은 보류됐다. Epic의 캐시 초기화 절차를 삭제 대신 날짜별 백업으로 수행하는 `scripts/repair_epic_cache.ps1`를 준비했다. 계정·설치 게임 폴더는 변경하지 않는다. Epic의 갱신된 로컬 UE 카탈로그에는 UE 5.6 항목이 있으므로 `scripts/open_unreal_installer.ps1`가 정확한 설치 URI를 열 수 있다. 그래도 entitlement가 갱신되지 않으면 Epic 지원의 계정 entitlement 갱신 또는 Epic이 서명한 레거시 Launcher 18.12.1을 통한 설치가 필요하다. 레거시 MSI는 공식 CDN에서 내려받아 Epic Games Inc. 유효 서명과 SHA-256을 확인했으며 저장소에는 포함하지 않았다. 참고: https://forums.unrealengine.com/t/launcher-20-3-5-install-engine-and-do-nothing-engine-versions-empty-log-shows-found-0-entitled-apps-new-account/2840123
 
 환경 확인: 저장소 루트에서 `.venv\Scripts\python.exe scripts/check_unreal_environment.py` 실행. 별도 엔진 경로는 `HRS_UNREAL_ROOT`로 지정한다. 계정·비밀번호·API 키를 이 프로젝트에 넣지 않는다.
 
