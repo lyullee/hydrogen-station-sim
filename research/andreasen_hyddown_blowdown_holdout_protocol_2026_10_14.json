@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "protocol_id": "andreasen_hyddown_hydrogen_blowdown_holdout_2026_10_14",
-  "status": "FROZEN_BEFORE_NUMERICAL_ACCESS",
+  "status": "INVALIDATED_PRIOR_NUMERICAL_ACCESS",
   "generated_at_utc": "2026-10-14T00:00:00Z",
   "freeze_source_commit": "f2b47d6",
   "source": {
@@ -12,7 +12,8 @@
     "archive_bytes": 3193229,
     "archive_md5": "a210c0d9b40562cc1349737d838b77f8",
     "license": "CC BY 4.0",
-    "outcomes_accessed_before_freeze": false
+    "outcomes_accessed_before_freeze": true,
+    "invalidation_reason": "The same three YAML cases and numerical outcomes are already retained in research/byrnes_zenodo_exploratory_result.json and research/byrnes_typei_thermal_prospective_result_2026_10_08.json; this archive is not an independent untouched holdout."
   },
   "scope": {
     "included_case_family": "hydrogen_discharge",
@@ -33,7 +34,7 @@
     "joint_pass_rule": "all declared hydrogen discharge cases pass both screens"
   },
   "anti_leakage": {
-    "numeric_outcomes_may_be_read_after_protocol_commit": true,
+    "numeric_outcomes_may_be_read_after_protocol_commit": false,
     "case_selection_after_outcome_access": false,
     "threshold_changes_after_outcome_access": false,
     "raw_rows_committed": false
