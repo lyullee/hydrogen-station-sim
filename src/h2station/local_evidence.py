@@ -2534,6 +2534,40 @@ def public_evidence_inventory_summary() -> dict[str, Any]:
                     "promotion_prohibited": True,
                     "claim_limit": str(diagnostic.get("claim_boundary") or ""),
                 }
+            # Published aggregate first-detection context from a separate
+            # semi-closed actual-H2 tent study.  The table is post-access and
+            # deliberately remains descriptive rather than a runtime input.
+            first_detection = _read_json(
+                _ROOT / "research/korean_tent_first_detection_diagnostic_2026_10_14.json"
+            )
+            first_source = first_detection.get("source") or {}
+            first_metrics = first_detection.get("metrics") or {}
+            first_eligibility = first_detection.get("eligibility_decision") or {}
+            if (
+                first_detection.get("artifact_type")
+                == "post_access_published_first_detection_diagnostic"
+                and first_source.get("doi") == "10.7316/JHNE.2026.37.4.295"
+                and first_eligibility.get("runtime_parameter_updated") is False
+                and first_eligibility.get("validation_gate_changed") is False
+            ):
+                result["public_actual_hydrogen_spatial_benchmark"][
+                    "published_first_detection_diagnostic"
+                ] = {
+                    "artifact": "research/korean_tent_first_detection_diagnostic_2026_10_14.json",
+                    "source_doi": str(first_source.get("doi")),
+                    "case_count": int(first_metrics.get("case_count") or 0),
+                    "nearest_source_top1_accuracy": first_metrics.get(
+                        "nearest_source_top1_accuracy"
+                    ),
+                    "nearest_source_top2_recall": first_metrics.get(
+                        "nearest_source_top2_recall"
+                    ),
+                    "independent_holdout": False,
+                    "runtime_parameter_updated": False,
+                    "validation_gate_changed": False,
+                    "promotion_prohibited": True,
+                    "claim_limit": str(first_detection.get("claim_boundary") or ""),
+                }
     except (OSError, KeyError, TypeError, ValueError, json.JSONDecodeError):
         pass
     try:

@@ -134,6 +134,15 @@ def test_actual_hydrogen_spatial_benchmark_is_grounded_without_promotion():
     assert prompt_spatial["runtime_parameter_updated"] is False
     assert prompt_spatial["promotion_prohibited"] is True
     assert prompt_spatial["post_access_diagnostic"]["hydrogen_point_count"] == 5148
+    first_detection = evidence["published_first_detection_diagnostic"]
+    assert first_detection["source_doi"] == "10.7316/JHNE.2026.37.4.295"
+    assert first_detection["case_count"] == 10
+    assert first_detection["nearest_source_top1_accuracy"] == pytest.approx(0.7)
+    assert first_detection["runtime_parameter_updated"] is False
+    assert first_detection["promotion_prohibited"] is True
+    assert prompt_spatial["published_first_detection_diagnostic"][
+        "validation_gate_changed"
+    ] is False
 
 
 def test_preslhy_actual_hydrogen_transport_diagnostic_is_grounded_without_promotion():

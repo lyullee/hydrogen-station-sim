@@ -2930,6 +2930,53 @@ def _public_actual_hydrogen_spatial_benchmark() -> dict[str, Any] | None:
             "promotion_prohibited": True,
             "claim_limit": str(diagnostic.get("claim_boundary") or ""),
         }
+    # A separate published Korean semi-closed-tent study reports only the
+    # first sensor to reach 10,000 ppm for ten cases.  Keep it as bounded,
+    # post-access context: it is useful for explaining why direction/flow and
+    # ceiling/edge effects matter, but it is not a station holdout or a
+    # detector-routing calibration source.
+    first_detection_path = root / (
+        "research/korean_tent_first_detection_diagnostic_2026_10_14.json"
+    )
+    try:
+        first_detection = json.loads(
+            first_detection_path.read_text(encoding="utf-8")
+        )
+    except (OSError, UnicodeError, json.JSONDecodeError):
+        first_detection = None
+    first_source = (first_detection or {}).get("source") or {}
+    first_metrics = (first_detection or {}).get("metrics") or {}
+    if (
+        isinstance(first_detection, dict)
+        and first_detection.get("artifact_type")
+        == "post_access_published_first_detection_diagnostic"
+        and first_source.get("doi") == "10.7316/JHNE.2026.37.4.295"
+        and first_detection.get("eligibility_decision", {}).get(
+            "runtime_parameter_updated"
+        ) is False
+        and first_detection.get("eligibility_decision", {}).get(
+            "validation_gate_changed"
+        ) is False
+    ):
+        result["published_first_detection_diagnostic"] = {
+            "artifact": "research/korean_tent_first_detection_diagnostic_2026_10_14.json",
+            "source_doi": str(first_source.get("doi")),
+            "case_count": int(first_metrics.get("case_count") or 0),
+            "threshold_ppm": int(
+                ((first_detection.get("apparatus") or {}).get("threshold_ppm")) or 0
+            ),
+            "nearest_source_top1_accuracy": first_metrics.get(
+                "nearest_source_top1_accuracy"
+            ),
+            "nearest_source_top2_recall": first_metrics.get(
+                "nearest_source_top2_recall"
+            ),
+            "independent_holdout": False,
+            "runtime_parameter_updated": False,
+            "validation_gate_changed": False,
+            "promotion_prohibited": True,
+            "claim_limit": str(first_detection.get("claim_boundary") or ""),
+        }
     return result
 
 
@@ -13312,6 +13359,7 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
                 "hydrogen_worksheet_count", "coordinate_grid_worksheet_count",
                 "independent_holdout", "runtime_parameter_updated",
                 "promotion_prohibited", "claim_limit", "post_access_diagnostic",
+                "published_first_detection_diagnostic",
             )
             if actual_hydrogen_spatial.get(key) is not None
         }
@@ -16017,6 +16065,9 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                     "promotion_prohibited": True,
                     "post_access_diagnostic": actual_hydrogen_spatial.get(
                         "post_access_diagnostic"
+                    ),
+                    "published_first_detection_diagnostic": actual_hydrogen_spatial.get(
+                        "published_first_detection_diagnostic"
                     ),
                     "claim_limit": short(
                         actual_hydrogen_spatial.get("claim_limit"), 260
