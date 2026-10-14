@@ -85,7 +85,7 @@
       "ethics_and_expert_review": "optional_for_physics_validation; required only for a claim that SAGA improves human safety guidance"
     }
   },
-  "source_commit": "5847a74",
+  "source_commit": "294bd37",
   "latest_completed_work": "The manuscript now documents the published actual-H2 semi-closed-tent detector diagnostic with its 0.70 top-1 and 0.80 top-2 transparent baseline and explicit post-access boundary; the 24-page Tectonic PDF, format gate, readiness audit and claim matrix were refreshed, and focused IJHE reproduction tests pass. Scientific gate counts remain unchanged.",
   "latest_full_regression": {
     "tests_passed": 1606,
