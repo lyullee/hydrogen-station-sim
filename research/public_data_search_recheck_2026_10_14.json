@@ -143,6 +143,17 @@
       "access_observation": "The article abstract reports repeated real-hydrogen releases, measured leakage flow, 26 sensor positions and time-resolved concentration behavior. The accessible publisher/index routes did not expose a rights-cleared machine-readable sensor-time-series export, coordinate file, calibration record or redistribution terms.",
       "eligibility": "BOUNDARY_EVIDENCE_ONLY",
       "blocking_reason": "Without the raw sensor time series, coordinate crosswalk, release metadata and rights statement, this source cannot close the independent spatial-detector holdout. It can support a future pre-access custodian request only."
+    },
+    {
+      "id": "kit_lh2_consequence_1483",
+      "title": "FCH JU LH2 release and ignition consequence experiments",
+      "url": "https://radar.kit.edu/radar/en/dataset/umUTdrjbbQCUDIXE",
+      "doi": "10.35097/1483",
+      "data_type": "open liquid-hydrogen release and ignition consequence archive with pressure, heat-flux, temperature, mass-flow, weather and video families",
+      "access_observation": "The official record reports a 5.0 GB CC BY-SA 4.0 archive. The locally retained archive prefix is incomplete and does not match the publisher MD5. Four workbook members were opened for descriptive exploration only; no parameter fitting or runtime change was made.",
+      "eligibility": "NOT_ELIGIBLE_AS_NEW_RAW_HOLDOUT",
+      "blocking_reason": "The exact publisher archive is not integrity-verified and the outcome was already accessed before a new prospective holdout protocol. It cannot close a gaseous HRS component gate or be counted as a new independent holdout.",
+      "intake_artifact": "research/kit_lh2_consequence_access_audit_2026_10_11.json"
     }
   ],
   "conclusion": {
@@ -223,6 +234,14 @@
       ],
       "eligible_new_raw_holdout_found": false,
       "interpretation": "The fourth pass confirms that the newly indexed NLR entry is the already-used helium cohort and that PRESLHY E3.5 is a valuable liquid-hydrogen consequence source but does not provide a new gaseous HRS holdout under the current access history. No gate, runtime parameter or progress percentage is changed."
+    },
+    "search_round_2026_10_14_fifth_pass": {
+      "search_date": "2026-10-14",
+      "new_candidates_checked": [
+        "kit_lh2_consequence_1483"
+      ],
+      "eligible_new_raw_holdout_found": false,
+      "interpretation": "The KIT RADAR record is a valuable actual-LH2 consequence source, but the retained archive prefix fails the publisher checksum and four workbook outcomes were already opened for descriptive exploration. It is retained as boundary evidence only; no validation gate, runtime parameter or progress percentage changes."
     }
   }
 }
