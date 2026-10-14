@@ -1,5 +1,14 @@
 # Development Progress
 
+## 2026-10-14 - Stabilize virtual risk-range recalculation display
+
+The risk-range state now keeps a previously rendered hypothetical SAGA/HyRAM
+geometry while an in-flight recalculation returns a zero-distance placeholder.
+It is retained only for the existing short grace window and is removed when no
+scenario result returns. The browser regression covers the pending and expiry
+paths; no consequence value, runtime safety threshold or validation gate was
+changed.
+
 ## 2026-10-14 - Correct local FTPData provenance classification
 
 The local inventory was rechecked against the current folder contents. It
