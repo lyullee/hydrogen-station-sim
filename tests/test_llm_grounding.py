@@ -1553,6 +1553,29 @@ def test_high_aspect_ratio_tank_literature_is_routed_with_claim_boundary():
     ] is False
 
 
+def test_hyddown_hydrogen_archive_is_routed_without_promoting_validation():
+    manifest = build_evidence_manifest(
+        {"time_s": 1.0},
+        {},
+        [],
+        False,
+        question="공개 수소 방출과 충전 실험 근거를 설명해줘",
+    )
+    evidence = manifest["response_evidence"][
+        "public_hyddown_hydrogen_validation_evidence"
+    ]
+    assert evidence["source"]["doi"] == "10.5281/zenodo.20728325"
+    assert evidence["source"]["license"] == "CC BY 4.0"
+    assert evidence["experiment_scope"]["hydrogen_discharge_case_count"] == 3
+    assert evidence["experiment_scope"]["hydrogen_filling_case_count"] == 3
+    assert evidence["raw_rows_committed"] is False
+    assert evidence["independent_holdout"] is False
+    compact = prompt_decision_evidence(manifest)
+    assert compact["public_hyddown_hydrogen_validation_evidence"][
+        "validation_gate_effect"
+    ] == "none"
+
+
 def test_manifest_preserves_virtual_detector_public_uncertainty_envelope():
     manifest = build_evidence_manifest(
         {"time_s": 1.0},

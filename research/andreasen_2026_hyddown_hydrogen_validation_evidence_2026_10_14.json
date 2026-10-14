@@ -1,0 +1,77 @@
+{
+  "source": {
+    "local_archive_sha256": "ed9db84e1b3301d18ff70e0ca392529bbde9d30ffa3acb9ef127d5f77f2882e5",
+    "id": "andreasen_2026_hyddown_hydrogen_validation",
+    "archive_filename": "blowdown_reproducibility_archive.zip",
+    "doi": "10.5281/zenodo.20728325",
+    "archive_bytes": 3193229,
+    "title": "Supplementary material for Open Source Tools for Pressure Vessel Thermo-Mechanical Response and Safety Analysis",
+    "license": "CC BY 4.0",
+    "archive_md5": "a210c0d9b40562cc1349737d838b77f8",
+    "url": "https://doi.org/10.5281/zenodo.20728325"
+  },
+  "experiments": {
+    "hydrogen_discharge": [
+      {
+        "initial_pressure_mpa": 13.8,
+        "nominal_orifice_mm": 2.7,
+        "pressure_points": 10,
+        "id": "Byrnes_run7",
+        "gas_temperature_points": 10,
+        "wall_temperature_points": 10,
+        "source": "Byrnes et al. discharge"
+      },
+      {
+        "initial_pressure_mpa": 13.8,
+        "nominal_orifice_mm": 0.7,
+        "pressure_points": 10,
+        "id": "Byrnes_run8",
+        "gas_temperature_points": 10,
+        "wall_temperature_points": 10,
+        "source": "Byrnes et al. discharge"
+      },
+      {
+        "initial_pressure_mpa": 13.8,
+        "nominal_orifice_mm": 4.0,
+        "pressure_points": 10,
+        "id": "Byrnes_run9",
+        "gas_temperature_points": 10,
+        "wall_temperature_points": 5,
+        "source": "Byrnes et al. discharge"
+      }
+    ],
+    "hydrogen_filling": [
+      {
+        "gas_temperature_points": 10,
+        "id": "Striednig_fillingH2_5MPa_min",
+        "source": "Striednig et al. filling",
+        "target_rate_mpa_min": 5
+      },
+      {
+        "gas_temperature_points": 10,
+        "id": "Striednig_fillingH2_10MPa_min",
+        "source": "Striednig et al. filling",
+        "target_rate_mpa_min": 10
+      },
+      {
+        "gas_temperature_points": 10,
+        "id": "Striednig_fillingH2_30MPa_min",
+        "source": "Striednig et al. filling",
+        "target_rate_mpa_min": 30
+      }
+    ]
+  },
+  "schema_version": 1,
+  "status": "PUBLIC_ARCHIVE_INTEGRITY_VERIFIED",
+  "parameter_fitting_performed": false,
+  "claim_limit": "공개 CC BY 4.0 재현 아카이브의 수소 방출·충전 실험 채널과 범위를 LLM 근거로 제공한다. 이 기록은 원시 행을 저장소에 복사하지 않으며, 현재 모델의 독립 holdout·충전소 full-loop·ESD 효과·안전거리 검증을 의미하지 않는다.",
+  "prospective_validation": false,
+  "runtime_parameter_application": false,
+  "model_replayed": false,
+  "generated_at_utc": "2026-10-14T03:11:47.2320054Z",
+  "artifact_type": "public_hyddown_hydrogen_validation_evidence",
+  "validation_gate_effect": "none",
+  "claim_supported": false,
+  "independent_holdout": false,
+  "raw_rows_committed": false
+}

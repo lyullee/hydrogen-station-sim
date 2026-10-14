@@ -438,6 +438,41 @@
       "rights_note": "The article is open under CC BY 4.0, but the accessible publication and repository routes did not expose a machine-readable experimental logger export or a data-specific reuse statement.",
       "eligibility_note": "Evidence for multi-zone thermal model structure and a future tank-thermal data request; not an independent raw holdout and not a station-to-vehicle validation result."
     },
+    "andreasen_2026_hyddown_hydrogen_validation": {
+      "title": "Supplementary material for Open Source Tools for Pressure Vessel Thermo-Mechanical Response and Safety Analysis",
+      "authors": [
+        "Anders Andreasen"
+      ],
+      "publisher": "Zenodo / Journal of Loss Prevention in the Process Industries",
+      "landing_page": "https://doi.org/10.5281/zenodo.20728325",
+      "doi": "10.5281/zenodo.20728325",
+      "license": "CC BY 4.0",
+      "public_raw_data": true,
+      "archive": {
+        "filename": "blowdown_reproducibility_archive.zip",
+        "bytes": 3193229,
+        "md5": "a210c0d9b40562cc1349737d838b77f8"
+      },
+      "reported_cases": {
+        "hydrogen_discharge": [
+          "Byrnes_run7",
+          "Byrnes_run8",
+          "Byrnes_run9"
+        ],
+        "hydrogen_filling": [
+          "Striednig_fillingH2_5MPa_min",
+          "Striednig_fillingH2_10MPa_min",
+          "Striednig_fillingH2_30MPa_min"
+        ]
+      },
+      "channel_scope": [
+        "pressure",
+        "gas_temperature",
+        "wall_temperature"
+      ],
+      "rights_note": "The Zenodo record is open and identifies the archive as CC BY 4.0; the embedded YAML files contain the digitized experimental points used by the authors' reproducibility scripts.",
+      "eligibility_note": "Public component-level hydrogen discharge/filling evidence with source geometry and embedded validation points; not a station-to-vehicle full-loop trace, controller/ESD evaluation or site-safety-distance validation."
+    },
     "wieser_2025_fch2rail_refueling": {
       "title": "Development, application and optimization of hydrogen refueling processes for railway vehicles",
       "authors": [

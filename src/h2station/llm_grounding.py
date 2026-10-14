@@ -2027,6 +2027,65 @@ def _public_high_aspect_ratio_tank_literature_evidence() -> dict[str, Any] | Non
     }
 
 
+def _public_hyddown_hydrogen_validation_evidence() -> dict[str, Any] | None:
+    """Expose the open HydDown hydrogen validation archive as context only.
+
+    The archive contains CC BY 4.0 embedded validation points for hydrogen
+    discharge and filling.  This route deliberately exposes experiment scope
+    and channel availability rather than copying raw rows or presenting the
+    third-party HydDown results as a validation of this station twin.
+    """
+
+    artifact = "research/andreasen_2026_hyddown_hydrogen_validation_evidence_2026_10_14.json"
+    root = Path(__file__).resolve().parents[2]
+    try:
+        record = json.loads((root / artifact).read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, ValueError, json.JSONDecodeError):
+        return None
+    source = record.get("source") or {}
+    experiments = record.get("experiments") or {}
+    discharge = experiments.get("hydrogen_discharge") or []
+    filling = experiments.get("hydrogen_filling") or []
+    if (
+        record.get("schema_version") != 1
+        or record.get("status") != "PUBLIC_ARCHIVE_INTEGRITY_VERIFIED"
+        or source.get("doi") != "10.5281/zenodo.20728325"
+        or source.get("license") != "CC BY 4.0"
+        or source.get("archive_md5") != "a210c0d9b40562cc1349737d838b77f8"
+        or len(discharge) != 3
+        or len(filling) != 3
+        or record.get("raw_rows_committed") is not False
+        or record.get("model_replayed") is not False
+        or record.get("parameter_fitting_performed") is not False
+    ):
+        return None
+    return {
+        "artifact": artifact,
+        "evidence_role": "public_hydrogen_discharge_and_filling_validation_archive_context",
+        "source": {
+            "id": source.get("id"),
+            "title": source.get("title"),
+            "doi": source.get("doi"),
+            "url": source.get("url"),
+            "license": source.get("license"),
+        },
+        "experiment_scope": {
+            "hydrogen_discharge_case_count": len(discharge),
+            "hydrogen_filling_case_count": len(filling),
+            "discharge_case_ids": [str(item.get("id")) for item in discharge],
+            "filling_case_ids": [str(item.get("id")) for item in filling],
+            "channels": ["pressure", "gas_temperature", "wall_temperature"],
+        },
+        "raw_rows_committed": False,
+        "independent_holdout": False,
+        "prospective_validation": False,
+        "runtime_parameter_application": False,
+        "validation_gate_effect": "none",
+        "claim_supported": False,
+        "claim_limit": str(record.get("claim_limit") or ""),
+    }
+
+
 def _virtual_response_action_execution_evidence() -> dict[str, Any] | None:
     """Expose the simulation-only command/feedback consistency audit.
 
@@ -11063,6 +11122,11 @@ def build_evidence_manifest(
         envelope["response_evidence"][
             "public_high_aspect_ratio_tank_literature"
         ] = high_aspect_ratio_tank
+    hyddown_hydrogen = _public_hyddown_hydrogen_validation_evidence()
+    if hyddown_hydrogen is not None:
+        envelope["response_evidence"][
+            "public_hyddown_hydrogen_validation_evidence"
+        ] = hyddown_hydrogen
     virtual_action_execution = _virtual_response_action_execution_evidence()
     if virtual_action_execution is not None:
         envelope["response_evidence"][
@@ -12148,6 +12212,20 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
                 "claim_limit",
             )
             if high_aspect_ratio_tank.get(key) is not None
+        }
+    hyddown_hydrogen = evidence.get(
+        "public_hyddown_hydrogen_validation_evidence"
+    )
+    if isinstance(hyddown_hydrogen, dict):
+        summary["public_hyddown_hydrogen_validation_evidence"] = {
+            key: hyddown_hydrogen.get(key)
+            for key in (
+                "evidence_role", "source", "experiment_scope",
+                "raw_rows_committed", "independent_holdout",
+                "prospective_validation", "runtime_parameter_application",
+                "validation_gate_effect", "claim_supported", "claim_limit",
+            )
+            if hyddown_hydrogen.get(key) is not None
         }
     nrel_screen = evidence.get("public_nrel_boundary_screen")
     if isinstance(nrel_screen, dict):
@@ -14437,6 +14515,17 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
             "thermal", "heat transfer", "aspect ratio",
         ))
     )
+    hyddown_hydrogen = response.get(
+        "public_hyddown_hydrogen_validation_evidence"
+    ) or {}
+    hyddown_hydrogen_relevant = bool(
+        hyddown_hydrogen
+        and any(token in lead_context for token in (
+            "수소", "방출", "누출", "블로다운", "충전", "압력", "온도",
+            "hydrogen", "discharge", "blowdown", "release", "filling",
+            "pressure", "temperature",
+        ))
+    )
     spatial_guidance_relevant = bool(
         spatial_stratification
         and (
@@ -14825,6 +14914,18 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                 if high_aspect_ratio_tank.get(key) is not None
             },
         } if high_aspect_ratio_tank and high_aspect_ratio_tank_relevant else {}),
+        **({
+            "public_hyddown_hydrogen_validation_evidence": {
+                key: hyddown_hydrogen.get(key)
+                for key in (
+                    "evidence_role", "source", "experiment_scope",
+                    "raw_rows_committed", "independent_holdout",
+                    "prospective_validation", "runtime_parameter_application",
+                    "validation_gate_effect", "claim_supported", "claim_limit",
+                )
+                if hyddown_hydrogen.get(key) is not None
+            },
+        } if hyddown_hydrogen and hyddown_hydrogen_relevant else {}),
         **({
             "public_operational_evidence_leads": operational_evidence_projection,
         } if operational_evidence_projection is not None else {}),

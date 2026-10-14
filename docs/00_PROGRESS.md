@@ -2638,3 +2638,10 @@ the full-loop claim pass.
 - `llm_grounding.py` 변경으로 오래된 소스 해시를 보유하던 Type-IV 런타임·사고선례 무결성 산출물을 재생성하고, 최신 readiness audit와 validation-gap triage를 동기화했다.
 - 최신 감사: 134 PASS / 11 FAIL / 7 PENDING (88.2%); 새 문헌 근거 추가가 독립 검증 게이트를 승격하지 않도록 유지했다.
 - 전체 회귀: 1,591 passed / 0 failed / 0 skipped. 감사·triage·LLM 근거 집중 검증도 통과했다.
+
+## 2026-10-14 - 공개 HydDown 수소 방출·충전 아카이브 연결
+
+- Zenodo `10.5281/zenodo.20728325`의 CC BY 4.0 재현 아카이브를 내려받아 MD5와 크기를 확인했다. 공개 YAML에는 Byrnes 수소 방출 3건과 Striednig 수소 충전 3건의 압력·가스온도·벽온도 실험 채널 범위가 포함되어 있다.
+- 원시 행은 저장소에 커밋하지 않고, 아카이브 식별자·해시·실험 범위만 `research/andreasen_2026_hyddown_hydrogen_validation_evidence_2026_10_14.json`에 보존했다.
+- 수소 방출·충전·압력·온도 질문에서 LLM이 이 근거를 인용할 수 있게 했으며, 독립 holdout·충전소 full-loop·ESD 효과·안전거리 검증·런타임 파라미터 보정은 명시적으로 금지했다.
+- 집중 LLM/근거 검증: 55/55 통과. 이 문헌 연결은 readiness 게이트를 승격하지 않으며, 현재 감사 판정은 134 PASS / 11 FAIL / 7 PENDING으로 유지한다.
