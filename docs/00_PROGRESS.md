@@ -2657,3 +2657,9 @@ the full-loop claim pass.
 - GitHub `priority-validation` workflow가 외부 과학 검증의 의도된 FAIL을 곧바로 작업 실패로 반환해 반복 실패 메일을 만들던 구조를 분리했다.
 - 과학 검증 결과와 `readiness_status=BLOCKED`는 업로드 보고서에 그대로 남기고, 소프트웨어·프로세스 집중 검사가 실패한 경우에만 작업을 실패 처리하도록 변경했다.
 - workflow 계약 회귀 9/9 통과; 변경 커밋 `e4e4d27`을 `main`에 반영했다. readiness 게이트 수는 134 PASS / 11 FAIL / 7 PENDING으로 유지된다.
+
+## 2026-10-14 - PRESLHY 80 K 후보모델 경계 진단
+
+- 기존 비단열 DisCha 후보모델을 소비된 공개 PRESLHY 80 K 자료 11건에 적용해 저온 영역의 독립성을 확인했다.
+- 11건 중 3건만 고정 압력·반감시간 공동 화면을 통과했다(27.3%). 따라서 저온 2상 방출 모델로의 승격, 런타임 적용, 검증 게이트 승격을 모두 금지하고 결과를 `research/preslhy_80k_nonadiabatic_diagnostic_2026_10_14.json`에 보존했다.
+- 진단 회귀 2/2 통과. 이 결과는 다음 모델 보완에서 밸브·배관 재고와 저온 열전달을 우선 검토해야 한다는 근거로 사용한다.

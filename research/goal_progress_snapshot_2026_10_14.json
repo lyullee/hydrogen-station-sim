@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-14T04:05:00+00:00",
+  "generated_at": "2026-10-14T04:20:00+00:00",
   "metric_definition": "PASS gates divided by PASS+FAIL+PENDING gates; not a publication-readiness probability",
   "gate_counts": {
     "PASS": 134,
@@ -86,7 +86,7 @@
     }
   },
   "source_commit": "a4e9347",
-  "latest_completed_work": "Public adjacent HY2RES PLC operational-context route added; CI now separates intended external-science blockers from software/process regressions; full regression remains 1593 passed.",
+  "latest_completed_work": "CI science-boundary separation and PRESLHY 80 K non-adiabatic candidate diagnostic completed; software/process checks pass, cryogenic candidate is retained as a non-promoted failure.",
   "latest_full_regression": {
     "tests_passed": 1593,
     "tests_failed": 0,
@@ -133,6 +133,11 @@
       "id": "priority_ci_science_boundary",
       "progress_percent": 100.0,
       "status": "Workflow reports scientific BLOCKED state without red build when software/process checks pass; software regressions still fail CI."
+    },
+    {
+      "id": "preslhy_80k_nonadiabatic_boundary_diagnostic",
+      "progress_percent": 100.0,
+      "status": "11 consumed 80 K cases evaluated; 3/11 joint screen passes; candidate remains development-only and is not runtime or validation-gate eligible."
     }
   ]
 }
