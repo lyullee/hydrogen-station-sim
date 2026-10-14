@@ -1,5 +1,20 @@
 # Development Progress
 
+## 2026-10-14 - Verify the current runtime boundary and recheck remaining data lanes
+
+The current implementation was rechecked after the runtime evidence-chain
+refresh. The JavaScript regression covering streamed UTF-8 LLM output and
+vehicle-specific route highlighting passed **3/3**, while the readiness,
+validation-gap, audit-consistency and LLM-grounding checks passed **47/47**.
+The local privacy-bounded station archive remains substantial, but its current
+schema inventory has no attested vehicle-side channel family; it therefore
+supports station-side evidence only and cannot close the synchronized
+station-to-vehicle lane. A fresh public-source recheck also found no
+rights-cleared complete Grüne pressure-time logger trace that could replace the
+retained figure-derived diagnostic. The readiness count remains **134 PASS / 11
+FAIL / 7 PENDING** (88.2% overall; 91.7% in the declared primary scope), and
+no scientific gate or runtime parameter was promoted by this verification.
+
 ## 2026-10-14 - Refresh the runtime evidence chain after the latest source state
 
 The hash-linked runtime, accident-replay, consequence-grounding and IJHE
