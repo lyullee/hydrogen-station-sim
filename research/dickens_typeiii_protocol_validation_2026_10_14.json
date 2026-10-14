@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "artifact_type": "dickens_typeiii_protocol_validation",
+  "generated_at": "2026-10-14",
+  "protocol": "research\\dickens_typeiii_geometry_resolved_prospective_protocol_2026_10_10.json",
+  "protocol_sha256": "6eace0b4aff59857b3f695e46aa015a5f21b4bd37125517d9dc020c8b65416ba",
+  "protocol_valid": true,
+  "outcome_access_allowed": false,
+  "numerical_values_inspected": false,
+  "required_input_contract": [
+    "ambient_temperature_k",
+    "geometry_and_materials",
+    "initial_conditions",
+    "inlet_pressure_mpa",
+    "inlet_temperature_k",
+    "mass_flow_kg_s",
+    "mean_gas_temperature_k",
+    "sampling_and_quality",
+    "tank_pressure_mpa",
+    "time_s"
+  ],
+  "primary_screens": {
+    "pressure_nrmse_percent_measured_span_max": 5.0,
+    "pressure_rmse_mpa_max": 2.0,
+    "gas_temperature_rmse_k_max": 10.0,
+    "gas_temperature_peak_absolute_error_k_max": 15.0,
+    "joint_rule": "All four screens must pass for a case to count as a joint pass; a failed or incomplete case is retained."
+  },
+  "reasons": [],
+  "claim_boundary": "A valid result only confirms that the prospective intake contract is intact. It does not validate the Type-III model, the HRS, consequence distances, or SAGA."
+}

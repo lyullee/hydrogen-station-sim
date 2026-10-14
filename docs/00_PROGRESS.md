@@ -1,5 +1,19 @@
 # Development Progress
 
+## 2026-10-14 - Add a fail-closed intake validator for the resolved Type-III protocol
+
+The new `scripts/validate_dickens_typeiii_protocol.py` checker validates the
+geometry-resolved Dickens Type-III prospective contract without opening any
+measurement archive or inspecting numerical outcomes. It verifies the required
+boundary channels, unresolved custodian-controlled tank length, outcome-unseen
+declarations, four frozen primary screens, source-hash requirements and failure
+retention. The committed result is
+`research/dickens_typeiii_protocol_validation_2026_10_14.json`; it is valid as
+an intake contract while deliberately keeping `outcome_access_allowed=false`.
+The validator and the existing protocol checks pass **3/3**. This improves
+reproducibility and prevents premature gate promotion, but it does not close
+the retained Type-III scientific validation failure.
+
 ## 2026-10-14 - Re-run the impact-first priority lane after the evidence refresh
 
 The current priority runner completed without a software or process failure;
