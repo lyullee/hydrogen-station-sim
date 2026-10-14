@@ -14,13 +14,13 @@ Launcher 자체 복구 뒤 종료·재시작을 시도했으며 Windows 잠금�
 
 1. UE 5.6 계열 설치를 완료한다. 빌드 도구 재부팅은 다른 작업을 종료할 수 있는 시점에 사용자가 수행한다.
 2. 계산 서버: `.venv\Scripts\python.exe -m uvicorn h2station.api:app --app-dir src --host 127.0.0.1 --port 8000`.
-3. 엔진 경로를 지정하고 시제품 준비: `./scripts/start_unreal_pilot.ps1 -EngineRoot 'C:\Program Files\Epic Games\UE_5.6' -Build -Bootstrap`. 고해상도 참조 GLB까지 가져오려면 먼저 웹 자산 내보내기·Khronos 검증을 실행한 뒤 `-ImportAssets`를 추가한다. 가져오기는 기존 편집 자산을 덮어쓰지 않는다.
+3. 엔진 경로를 지정하고 시제품 준비: `./scripts/start_unreal_pilot.ps1 -EngineRoot 'C:\Program Files\Epic Games\UE_5.6' -Build -Bootstrap`. 고해상도 참조 GLB까지 가져와 현장 좌표에 배치하려면 먼저 웹 자산 내보내기·Khronos 검증을 실행한 뒤 `-ImportAssets -PlaceAssets`를 추가한다. 가져오기와 배치는 설비 ID 태그가 있는 기존 편집 액터를 덮어쓰지 않는다.
 4. Pixel Streaming 서버: `./scripts/start_pixel_streaming.ps1`. 파일 `infrastructure-lock.json`의 버전과 커밋을 사용한다. 이 실행 스크립트는 로컬 PC에만 수신 포트를 연다.
 5. UE 실행: `./scripts/start_unreal_pilot.ps1 -EngineRoot 'C:\Program Files\Epic Games\UE_5.6' -Run -SignallingUrl 'ws://127.0.0.1:18888'`.
 6. 계산 서버 시작 전에 환경변수 `H2STATION_UNREAL_PLAYER_URL=http://127.0.0.1:18080`를 설정한다. 키가 아닌 플레이어 주소다.
 7. 기존 웹에서 새 시뮬레이션을 시작하고 `Unreal 3D`를 누른다. 플레이어의 영상 시작 안내에 따라 연결한다. 표준 3D 전환은 계산을 중지하지 않는다.
 
-Win64 배포본은 엔진 설치 후 `./scripts/build_unreal_release.ps1 -EngineRoot 'C:\Program Files\Epic Games\UE_5.6' -Configuration Shipping`으로 만든다. 이 명령은 소스 계약 검사, C++ 빌드, 맵·재질 생성, 검증된 GLB 가져오기, cook·pak·archive를 순차 수행하고 실행 파일 SHA-256이 포함된 `hrs-unreal-build.json`을 남긴다. 패키지 실행은 `./scripts/start_packaged_unreal.ps1 -PackageDirectory '<패키지 폴더>'`를 사용한다. 실행 전에 해시를 다시 검사하며 기본값은 숨김 창과 로컬 API·Pixel Streaming 주소다. 현장 확인이 필요하면 `-Visible`을 추가한다.
+Win64 배포본은 엔진 설치 후 `./scripts/build_unreal_release.ps1 -EngineRoot 'C:\Program Files\Epic Games\UE_5.6' -Configuration Shipping`으로 만든다. 이 명령은 소스 계약 검사, C++ 빌드, 맵·재질 생성, 검증된 GLB 가져오기, Interchange 기반 장면 배치와 실물 치수 범위 검사, cook·pak·archive를 순차 수행하고 실행 파일 SHA-256이 포함된 `hrs-unreal-build.json`을 남긴다. 패키지 실행은 `./scripts/start_packaged_unreal.ps1 -PackageDirectory '<패키지 폴더>'`를 사용한다. 실행 전에 해시를 다시 검사하며 기본값은 숨김 창과 로컬 API·Pixel Streaming 주소다. 현장 확인이 필요하면 `-Visible`을 추가한다.
 
 UE 프로젝트 파일: `HRSUnreal/HRSUnreal.uproject`. 에셋 생성 스크립트는 이미 편집한 맵·재질을 덮어쓰지 않는다. 생성된 Content 및 바이너리는 Git에서 제외하고 소스·설정·생성 스크립트를 보관한다. 신규 UE 버전에 대한 검증은 별도로 수행한다.
 
@@ -54,7 +54,7 @@ UE 프로젝트 파일: `HRSUnreal/HRSUnreal.uproject`. 에셋 생성 스크립�
 
 진행률은 `progress.json`의 수락 항목에서 `verified`의 비율이다. `source_ready`는 소스가 작성됐어도 UE 실행을 확인하기 전에는 완료로 세지 않는다. `scripts/report_unreal_progress.py`로 단계별 진행률을 출력한다.
 
-기존 저·중·고압 뱅크, 압축기, 프리쿨러, 차량, 튜브 트레일러의 총 7개 GLB 자산을 `output/unreal/assets`에 생성했다. Khronos glTF Validator 2.0.0-dev.3.10 검증에서 오류·경고 0이다. Unreal 가져오기와 축/크기 검증은 별도로 필요하다. glTF는 미터/Y-up이고 UE는 센티미터/Z-up이므로 공식 glTF 가져오기 설정의 `import_scale=100`으로 단 한 번 변환한다. `/Game/HRS/Models`는 패키징 시 항상 cook된다. 재생성은 `scripts/export_unreal_assets.cjs`, 검증은 `scripts/validate_unreal_assets.cjs`, UE 가져오기는 `HRSUnreal/Scripts/import_reference_assets.py`를 사용한다. Playwright 모듈 경로는 `HRS_PLAYWRIGHT_MODULE`로 지정할 수 있다.
+기존 저·중·고압 뱅크, 압축기, 프리쿨러, 차량, 튜브 트레일러의 총 7개 GLB 자산을 `output/unreal/assets`에 생성했다. Khronos glTF Validator 2.0.0-dev.3.10 검증에서 오류·경고 0이다. glTF는 미터/Y-up이고 UE는 센티미터/Z-up이므로 공식 glTF 가져오기 설정의 `import_scale=100`으로 단 한 번 변환한다. `place_reference_scenes.py`는 8개 설비 인스턴스를 Station 맵에 배치하고 원본 치수 대비 75–125% 범위를 벗어나면 빌드를 중단한다. 설비 ID 태그를 통해 C++의 실시간 값·선택·표시 상태와 연결하며, 모델이 있을 때만 단순 형상을 숨긴다. `/Game/HRS/Models`와 `/Game/HRS/Scenes`는 패키징 시 항상 cook된다. 재생성은 `scripts/export_unreal_assets.cjs`, 검증은 `scripts/validate_unreal_assets.cjs`, UE 콘텐츠 가져오기는 `HRSUnreal/Scripts/import_reference_assets.py`, 맵 배치는 `HRSUnreal/Scripts/place_reference_scenes.py`를 사용한다. Playwright 모듈 경로는 `HRS_PLAYWRIGHT_MODULE`로 지정할 수 있다.
 
 웹 연결 검증은 `scripts/verify_unreal_web.cjs`를 사용한다. 전용 로컬 API와 Pixel Streaming 서버를 먼저 실행한다. 테스트 페이지에서만 플레이어 설정을 대체하며 운영 환경변수는 변경하지 않는다. 실제 시뮬레이터의 뱅크 압력·질량과 표시 대상 변경·초기화 연결을 검증한다. UE 영상 검증은 아니며 보고서에도 명시한다. 공식 플레이어의 XR 자동 탐색은 데스크톱 시제품에서 불필요하므로 공식 API의 XR 컨트롤 비활성 옵션을 사용한다.
 

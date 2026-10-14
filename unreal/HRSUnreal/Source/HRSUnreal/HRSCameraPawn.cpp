@@ -3,6 +3,7 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/PlayerController.h"
 #include "Engine/World.h"
+#include "GameFramework/Actor.h"
 #include "EngineUtils.h"
 #include "Components/InputComponent.h"
 #include "Components/PrimitiveComponent.h"
@@ -56,9 +57,11 @@ void AHRSCameraPawn::Pick()
     FVector2D Now; PC->GetMousePosition(Now.X, Now.Y);
     if (FVector2D::Distance(Now, MouseDown) > 5) return;
     FHitResult Hit;
-    if (PC->GetHitResultUnderCursor(ECC_Visibility, false, Hit) && Hit.GetComponent() &&
-        Hit.GetComponent()->ComponentTags.Num() && Station())
+    if (!PC->GetHitResultUnderCursor(ECC_Visibility, false, Hit) || !Station()) return;
+    if (Hit.GetComponent() && Hit.GetComponent()->ComponentTags.Num())
         Station()->Select(Hit.GetComponent()->ComponentTags[0].ToString());
+    else if (Hit.GetActor() && Hit.GetActor()->Tags.Num())
+        Station()->Select(Hit.GetActor()->Tags[0].ToString());
 }
 void AHRSCameraPawn::Low() { if (Station()) Station()->Select(TEXT("cascade.low")); }
 void AHRSCameraPawn::Medium() { if (Station()) Station()->Select(TEXT("cascade.medium")); }

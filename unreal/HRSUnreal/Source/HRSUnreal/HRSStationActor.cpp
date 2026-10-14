@@ -16,6 +16,7 @@
 #include "Camera/PlayerCameraManager.h"
 #include "GameFramework/PlayerController.h"
 #include "Engine/World.h"
+#include "EngineUtils.h"
 #include "Materials/MaterialInterface.h"
 #include "Misc/DateTime.h"
 #include "Math/RotationMatrix.h"
@@ -306,6 +307,60 @@ void AHRSStationActor::BuildReferenceStation()
     }
 }
 
+void AHRSStationActor::DiscoverImportedModels()
+{
+    ImportedModelActors.Empty();
+    for (TActorIterator<AActor> It(GetWorld()); It; ++It)
+    {
+        AActor* Actor = *It;
+        if (!Actor || Actor == this) continue;
+        for (const FName& Tag : Actor->Tags)
+        {
+            const FString ComponentId = Tag.ToString();
+            if (Origins.Contains(ComponentId))
+            {
+                ImportedModelActors.FindOrAdd(ComponentId).Add(Actor);
+                break;
+            }
+        }
+    }
+    if (ImportedModelActors.Num() == 0) return;
+
+    // Keep operational valves and overlays visible; hide only the tagged
+    // primitive geometry that the imported reference scene replaces.
+    TSet<UStaticMeshComponent*> ValveSet;
+    for (const auto& Row : ValveMeshes) ValveSet.Add(Row.Value);
+    TArray<UStaticMeshComponent*> Components;
+    GetComponents<UStaticMeshComponent>(Components);
+    for (UStaticMeshComponent* Component : Components)
+    {
+        if (!Component || ValveSet.Contains(Component)) continue;
+        for (const FName& Tag : Component->ComponentTags)
+        {
+            if (ImportedModelActors.Contains(Tag.ToString()))
+            {
+                Component->SetVisibility(false);
+                Component->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+                break;
+            }
+        }
+    }
+}
+
+void AHRSStationActor::SetImportedModelVisibility(const FString& ComponentId, bool bVisible)
+{
+    const TArray<TWeakObjectPtr<AActor>>* Actors = ImportedModelActors.Find(ComponentId);
+    if (!Actors) return;
+    for (const TWeakObjectPtr<AActor>& WeakActor : *Actors)
+    {
+        if (AActor* Actor = WeakActor.Get())
+        {
+            Actor->SetActorHiddenInGame(!bVisible);
+            Actor->SetActorEnableCollision(bVisible);
+        }
+    }
+}
+
 void AHRSStationActor::BeginPlay()
 {
     Super::BeginPlay();
@@ -318,6 +373,7 @@ void AHRSStationActor::BeginPlay()
     BuildBank(TEXT("low"), FVector(-100, -600, 0), FLinearColor(.1, .48, .53));
     BuildBank(TEXT("medium"), FVector(300, -600, 0), FLinearColor(.52, .34, .13));
     BuildBank(TEXT("high"), FVector(700, -600, 0), FLinearColor(.32, .23, .56));
+    DiscoverImportedModels();
     StatusText = Text(FVector(300, 1180, 520), TEXT("Waiting for station session\n1/2/3 select | X inlet | Z outlet | E ESD | F stop\nR risk | D distance | C cameras | G detectors"), 22);
     GetWorldTimerManager().SetTimer(SessionTimer, this, &AHRSStationActor::PollBinding, 1.f, true, 0.f);
 }
@@ -350,6 +406,7 @@ void AHRSStationActor::ResetVisualState()
     for (auto Part : Hose1Connected) Part->SetVisibility(false);
     for (auto Part : Hose2Connected) Part->SetVisibility(false);
     for (auto& Row : ValveMeshes) Tint(Row.Value, FLinearColor(.45, .45, .45));
+    for (auto& Row : ImportedModelActors) SetImportedModelVisibility(Row.Key, true);
     for (auto& Row : Labels) Row.Value->SetText(FText::FromString(Names[Row.Key] + TEXT("\nP -- MPa  T -- C\nInventory -- kg")));
     StatusText->SetText(FText::FromString(TEXT("No active renderer session\nDefault view: photographs in web mode; cameras and detectors hidden")));
 }
@@ -529,12 +586,18 @@ void AHRSStationActor::ApplyAuxiliaryState(const TSharedPtr<FJsonObject>& Safety
     const auto Vehicles = Obj(Safety, TEXT("vehicles"));
     if (Vehicles)
     {
+        const bool bVehicle1Visible = Num(Vehicles, TEXT("vehicle_1"), 1) > 0;
+        const bool bVehicle2Visible = Num(Vehicles, TEXT("vehicle_2"), 1) > 0;
+        const bool bTrailerVisible = Num(Vehicles, TEXT("trailer"), 1) > 0;
         if (auto* Vehicle = EquipmentMeshes.FindRef(TEXT("vehicle.tank")))
-            Vehicle->SetVisibility(Num(Vehicles, TEXT("vehicle_1"), 1) > 0);
+            Vehicle->SetVisibility(!ImportedModelActors.Contains(TEXT("vehicle.tank")) && bVehicle1Visible);
+        SetImportedModelVisibility(TEXT("vehicle.tank"), bVehicle1Visible);
         if (auto* Vehicle = EquipmentMeshes.FindRef(TEXT("vehicle_2.tank")))
-            Vehicle->SetVisibility(Num(Vehicles, TEXT("vehicle_2"), 1) > 0);
+            Vehicle->SetVisibility(!ImportedModelActors.Contains(TEXT("vehicle_2.tank")) && bVehicle2Visible);
+        SetImportedModelVisibility(TEXT("vehicle_2.tank"), bVehicle2Visible);
         if (auto* Trailer = EquipmentMeshes.FindRef(TEXT("supply")))
-            Trailer->SetVisibility(Num(Vehicles, TEXT("trailer"), 1) > 0);
+            Trailer->SetVisibility(!ImportedModelActors.Contains(TEXT("supply")) && bTrailerVisible);
+        SetImportedModelVisibility(TEXT("supply"), bTrailerVisible);
     }
     const auto Recovery = Obj(Safety, TEXT("recovery"));
     if (Recovery && StatusText)

@@ -5,6 +5,7 @@ param(
     [switch]$Build,
     [switch]$Bootstrap,
     [switch]$ImportAssets,
+    [switch]$PlaceAssets,
     [switch]$Run
 )
 $ErrorActionPreference = 'Stop'
@@ -16,6 +17,7 @@ $editorCmd = Join-Path $engineDir 'Engine\Binaries\Win64\UnrealEditor-Cmd.exe'
 $buildScript = Join-Path $engineDir 'Engine\Build\BatchFiles\Build.bat'
 $bootstrapScript = Join-Path $repoRoot 'unreal\HRSUnreal\Scripts\bootstrap_scene.py'
 $importScript = Join-Path $repoRoot 'unreal\HRSUnreal\Scripts\import_reference_assets.py'
+$placeScript = Join-Path $repoRoot 'unreal\HRSUnreal\Scripts\place_reference_scenes.py'
 if (-not (Test-Path -LiteralPath $editor)) { throw 'EngineRoot must contain Engine\Binaries\Win64\UnrealEditor.exe' }
 if ($Build) {
     & $buildScript HRSUnrealEditor Win64 Development "-Project=$projectPath" -WaitMutex -NoHotReloadFromIDE
@@ -29,6 +31,10 @@ if ($ImportAssets) {
     & $editorCmd $projectPath "-ExecutePythonScript=$importScript" -unattended -stdout -FullStdOutLogOutput
     if ($LASTEXITCODE -ne 0) { throw "Unreal reference asset import failed: $LASTEXITCODE" }
 }
+if ($PlaceAssets) {
+    & $editorCmd $projectPath "-ExecutePythonScript=$placeScript" -unattended -stdout -FullStdOutLogOutput
+    if ($LASTEXITCODE -ne 0) { throw "Unreal reference scene placement failed: $LASTEXITCODE" }
+}
 if ($Run) {
     # Runs hidden until the user deliberately opens the pilot window.
     $arguments = @('"' + $projectPath + '"', '-game', '-windowed', '-ResX=1920', '-ResY=1080',
@@ -36,6 +42,6 @@ if ($Run) {
         '-HRSApi=' + $ApiUrl, '-HRSRenderer=default')
     Start-Process -FilePath $editor -ArgumentList $arguments -WindowStyle Hidden
 }
-if (-not ($Build -or $Bootstrap -or $ImportAssets -or $Run)) {
-    Write-Output 'Engine and project paths verified. Add -Build -Bootstrap -ImportAssets -Run to prepare and run the pilot.'
+if (-not ($Build -or $Bootstrap -or $ImportAssets -or $PlaceAssets -or $Run)) {
+    Write-Output 'Engine and project paths verified. Add -Build -Bootstrap -ImportAssets -PlaceAssets -Run to prepare and run the pilot.'
 }

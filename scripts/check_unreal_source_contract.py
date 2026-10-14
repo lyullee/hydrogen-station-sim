@@ -15,6 +15,7 @@ START = (ROOT / "scripts/start_unreal_pilot.ps1").read_text(encoding="utf-8")
 PACKAGE = (ROOT / "scripts/build_unreal_release.ps1").read_text(encoding="utf-8")
 RUN_PACKAGE = (ROOT / "scripts/start_packaged_unreal.ps1").read_text(encoding="utf-8")
 IMPORTER = (ROOT / "unreal/HRSUnreal/Scripts/import_reference_assets.py").read_text(encoding="utf-8")
+PLACER = (ROOT / "unreal/HRSUnreal/Scripts/place_reference_scenes.py").read_text(encoding="utf-8")
 GAME_CONFIG = (ROOT / "unreal/HRSUnreal/Config/DefaultGame.ini").read_text(encoding="utf-8")
 
 problems: list[str] = []
@@ -60,6 +61,15 @@ if 'set_editor_property("import_scale", 100.0)' not in IMPORTER:
     problems.append("glTF importer must convert metres to Unreal centimetres exactly once")
 if '+DirectoriesToAlwaysCook=(Path="/Game/HRS/Models")' not in GAME_CONFIG:
     problems.append("reference model directory is missing from package cook settings")
+if '+DirectoriesToAlwaysCook=(Path="/Game/HRS/Scenes")' not in GAME_CONFIG:
+    problems.append("reference scene directory is missing from package cook settings")
+for token in ("InterchangeManager", "import_scene", "validate_scale", "bounds_cm",
+              "supply", "compressor", "cooler", "cascade.low", "cascade.medium",
+              "cascade.high", "vehicle.tank", "vehicle_2.tank"):
+    if token not in PLACER:
+        problems.append(f"reference scene placement contract is missing: {token}")
+if "PlaceAssets" not in START or "$prepare.PlaceAssets = $true" not in PACKAGE:
+    problems.append("release build must place reference scenes before cooking")
 for token in ("BuildCookRun", "-platform=Win64", "-cook", "-pak", "hrs-unreal-build.json"):
     if token not in PACKAGE:
         problems.append(f"packaging contract is missing: {token}")
@@ -77,6 +87,7 @@ print(json.dumps({
     "valves": len(expected_valves),
     "gltf_import_scale": 100.0,
     "reference_models_cooked": True,
+    "reference_scenes_placed_by_pipeline": True,
     "packaging_pipeline": True,
     "operator_inputs": ["orbit", "middle-pan", "wheel-zoom", "camera-toggle", "detector-toggle"],
 }, ensure_ascii=False))

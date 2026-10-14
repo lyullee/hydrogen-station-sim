@@ -3,7 +3,7 @@
   "objective": "기존 공정·HyRAM·HAZOP·SAGA를 유지하는 Unreal 3D 모드 구축",
   "progress_basis": "verified acceptance items / all acceptance items; source_ready is not completed; not an effort or time estimate",
   "goal_complete": false,
-  "current_blocker": "Unreal Engine is not installed; Windows desktop is locked; Build Tools installer reports reboot required",
+  "current_blocker": "Unreal Engine is not installed; the Epic Launcher account/library UI did not create an install transaction; Windows desktop is locked; Build Tools installer reports reboot required",
   "phases": [
     {
       "name": "환경 및 데이터 계약",
@@ -38,12 +38,12 @@
       "items": [
         {"id":"reusable-model-export-pipeline", "status":"verified", "evidence":"7 existing model builder exports"},
         {"id":"gltf-validation", "status":"verified", "evidence":"7 GLBs; Khronos validator: 0 errors, 0 warnings"},
-        {"id":"ue-import-axis-scale", "status":"source_ready", "evidence":"validated GLB importer preserves metres/Y-up conversion for engine verification"},
-        {"id":"full-station-assembly", "status":"source_ready", "evidence":"14 contract equipment IDs in HRSStationActor; source contract PASS"},
+        {"id":"ue-import-axis-scale", "status":"source_ready", "evidence":"validated GLB importer applies 100x metre-to-centimetre conversion; placement rejects bounds outside 75-125% until engine verification"},
+        {"id":"full-station-assembly", "status":"source_ready", "evidence":"14 contract equipment IDs; 7 GLB types mapped to 8 station instances; imported actor tags replace only matching fallback geometry"},
         {"id":"two-dispensers", "status":"source_ready", "evidence":"two independent dispenser, vehicle and hose state paths"},
         {"id":"road-canopy-site", "status":"source_ready", "evidence":"reference road, canopy, operations room, boundary and pipe corridor"},
         {"id":"cctv-and-detector-markers", "status":"source_ready", "evidence":"24 detector and 5 camera coordinates in manifest"},
-        {"id":"equipment-selection-and-visual-qa", "status":"source_ready", "evidence":"click tags and keyboard selection; visual QA requires UE"}
+        {"id":"equipment-selection-and-visual-qa", "status":"source_ready", "evidence":"component and actor tag picking; Interchange hierarchy placement; visual QA requires UE"}
       ]
     },
     {
@@ -84,7 +84,7 @@
         {"id":"input-latency", "status":"source_ready", "evidence":"dedicated-run E key to server ESD acknowledgement gate"},
         {"id":"60min-memory-stability", "status":"source_ready", "evidence":"browser 3600 s gate plus UnrealEditor process memory sampler"},
         {"id":"reset-reconnect-stress", "status":"source_ready", "evidence":"three-or-more dedicated binding/ESD/stop/unbind cycles"},
-        {"id":"packaged-release-and-runbook-verified", "status":"source_ready"}
+        {"id":"packaged-release-and-runbook-verified", "status":"source_ready", "evidence":"build pipeline compiles, bootstraps, imports, places, bounds-checks, cooks, archives and hashes; execution requires UE"}
       ]
     }
   ]

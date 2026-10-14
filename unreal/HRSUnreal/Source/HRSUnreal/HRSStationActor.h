@@ -10,6 +10,7 @@ class UStaticMeshComponent;
 class UTextRenderComponent;
 class UMaterialInterface;
 class IWebSocket;
+class AActor;
 
 UCLASS()
 class HRSUNREAL_API AHRSStationActor : public AActor
@@ -52,6 +53,7 @@ private:
     TMap<FString, FVector> Origins;
     TMap<FString, FVector> Dimensions;
     TMap<FString, FString> Names;
+    TMap<FString, TArray<TWeakObjectPtr<AActor>>> ImportedModelActors;
     FString ApiBase = TEXT("http://127.0.0.1:8000");
     FString RendererId = TEXT("default");
     FString CurrentRun;
@@ -92,6 +94,8 @@ private:
     void ApplyProcessState(const TSharedPtr<FJsonObject>& Snapshot);
     void ApplyIncidentState(const TSharedPtr<FJsonObject>& Snapshot);
     void BuildReferenceStation();
+    void DiscoverImportedModels();
+    void SetImportedModelVisibility(const FString& ComponentId, bool bVisible);
     void BuildBank(const FString& Bank, const FVector& Origin, const FLinearColor& Color);
     void BuildHose(TArray<TObjectPtr<UStaticMeshComponent>>& Parts,
         const TArray<FVector>& Points, const FString& ComponentId);

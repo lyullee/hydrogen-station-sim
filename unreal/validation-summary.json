@@ -3,7 +3,7 @@
   "status": "BRIDGE_AND_ASSETS_VERIFIED_ENGINE_PENDING",
   "python_focused_tests": {"passed":33, "failed":0},
   "javascript_focused_tests": {"passed":10, "failed":0},
-  "unreal_source_contract": {"status":"PASS", "equipment":14, "valves":15, "detectors":24, "cameras":5, "gltf_import_scale":100.0, "reference_models_cooked":true, "packaging_pipeline":true},
+  "unreal_source_contract": {"status":"PASS", "equipment":14, "valves":15, "detectors":24, "cameras":5, "gltf_import_scale":100.0, "reference_models_cooked":true, "reference_scenes_placed_by_pipeline":true, "packaging_pipeline":true},
   "real_browser_checks": {"passed":5, "page_errors":0, "engine_video_verified":false},
   "pixel_streaming_infrastructure": {
     "build":"PASS",
@@ -18,6 +18,6 @@
   "llm_routes_changed":false,
   "physics_and_hyram_solver_changed_by_this_integration":false,
   "evidence_files":["output/unreal/environment.json","output/unreal/web-smoke.json","output/unreal/assets/manifest.json","output/unreal/assets/validation.json","scripts/build_unreal_release.ps1","scripts/start_packaged_unreal.ps1"],
-  "epic_cache_recovery":"Webcache preserved in dated backup; post-unlock UI verification pending",
+  "epic_cache_recovery":"Webcache preserved in dated backup; launcher logs show valid EOS installation and completed EMS content refresh, but no engine installation transaction; post-unlock UI verification pending",
   "build_tools":"Installed; installer requested reboot; no automatic reboot performed"
 }

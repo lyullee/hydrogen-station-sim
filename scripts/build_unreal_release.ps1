@@ -38,6 +38,7 @@ if (-not $SkipReferenceAssets) {
     $assetReport = Get-Content -LiteralPath $assetValidation -Raw | ConvertFrom-Json
     if ($assetReport.status -ne 'PASS') { throw 'Reference GLB validation must be PASS before import' }
     $prepare.ImportAssets = $true
+    $prepare.PlaceAssets = $true
 }
 & $pilot @prepare
 
@@ -63,7 +64,7 @@ $manifest = [ordered]@{
     configuration = $Configuration
     executable = [IO.Path]::GetRelativePath($archive, $exe.FullName).Replace('\','/')
     executable_sha256 = (Get-FileHash -LiteralPath $exe.FullName -Algorithm SHA256).Hash.ToLowerInvariant()
-    reference_assets = if ($SkipReferenceAssets) { 'skipped' } else { 'validated_and_imported' }
+    reference_assets = if ($SkipReferenceAssets) { 'skipped' } else { 'validated_imported_and_placed' }
     source_commit = (git -C $repoRoot rev-parse HEAD).Trim()
     verification = 'PACKAGE_CREATED_NOT_RUNTIME_VERIFIED'
 }
