@@ -85,8 +85,8 @@
       "ethics_and_expert_review": "optional_for_physics_validation; required only for a claim that SAGA improves human safety guidance"
     }
   },
-  "source_commit": "85aabc9",
-  "latest_completed_work": "전체 회귀검사를 최신 소스에서 재실행해 1,612 passed / 0 failed / 0 skipped / 222 warnings를 확인했다. 이 결과는 코드·재현성 무결성만 확인하며 독립 외부검증 게이트를 승격하지 않는다.",
+  "source_commit": "1049180",
+  "latest_completed_work": "전체 회귀 1,612 passed / 0 failed에 이어 critical 우선순위 검사를 재실행했다. 소프트웨어·프로세스 검사는 PASS였고 MC 차량탱크, H2SAFE 공간검지, NREL HDVS 과학 화면은 이전과 같이 FAIL로 유지되어 사후 승격되지 않았다.",
   "latest_full_regression": {
     "tests_passed": 1612,
     "tests_failed": 0,
@@ -133,6 +133,11 @@
       "id": "local_private_schema_recheck_2026_10_14",
       "progress_percent": 100.0,
       "status": "Two local confidential bundles were re-screened with aggregate-only outputs. Additional signal volume was confirmed, but no synchronized station-to-vehicle holdout was admitted because unit semantics, calibration, common-clock linkage and rights attestations are missing."
+    },
+    {
+      "id": "priority_validation_recheck_2026_10_14",
+      "progress_percent": 100.0,
+      "status": "Critical priority run refreshed after the full regression: all software/process checks passed; the three known scientific screens remain explicitly failed and unpromoted."
     },
     {
       "id": "direct_answer_prompt_budget_regression_fix_2026_10_14",

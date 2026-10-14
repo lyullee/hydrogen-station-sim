@@ -87,5 +87,5 @@
 
 - 최신 critical 우선순위 재실행(`research/priority_focus_run_2026_10_14.json`): 소프트웨어 검사는 PASS(LLM 근거 경계 24건, full-loop 입력 경계 19건, 가상 안전·대응 25건)였고 약 5.0초에 완료됐다. 과학적 화면은 `mc_tank_boundary`(8건 중 0건), `h2safe_spatial_response`(1개 화면 실패), `nrel_h2fills_hdvs_tank`(7건 중 0건)에서 실패했다. 이 결과는 개발 진단으로만 보존하며 런타임 파라미터·독립 검증 게이트·논문 주장을 변경하지 않는다.
 - Jankuj Zenodo 10.5281/zenodo.17913628의 10월 14일 압력 holdout 프로토콜은 동일 원자료가 10월 8일에 이미 수치 분석된 사실을 확인해 무효화했다. 해당 자료는 사후 진단으로만 유지하며 신규 독립 holdout이나 검증 게이트로 재계상하지 않는다. 무효화 사유와 archive hash는 `research/jankuj_zenodo_17913628_pressure_holdout_protocol_2026_10_14.json`에 고정했다.
-- 비공개 로컬 자료를 다시 집계한 결과, 두 묶음에서 station-side 압력·온도·유량·상태 신호와 추가 차량/디스펜서 헤더 후보가 확인됐다. 그러나 후보 헤더는 단위·교정·공통 시계·권리·이벤트 연결을 증명하지 않으므로 신규 full-loop holdout이나 runtime 승격으로 사용하지 않았다. 개인정보 없는 결과는 `research/local_private_schema_recheck_2026_10_14.json`에 고정했고, 최신 우선순위 진단은 커밋 `e23bb69` 기준으로 갱신했다.
+- 비공개 로컬 자료를 다시 집계한 결과, 두 묶음에서 station-side 압력·온도·유량·상태 신호와 추가 차량/디스펜서 헤더 후보가 확인됐다. 그러나 후보 헤더는 단위·교정·공통 시계·권리·이벤트 연결을 증명하지 않으므로 신규 full-loop holdout이나 runtime 승격으로 사용하지 않았다. 개인정보 없는 결과는 `research/local_private_schema_recheck_2026_10_14.json`에 고정했고, 최신 우선순위 진단은 커밋 `1049180`에 기록했다.
 - 방출 네트워크·압력구동 열모델·장치 경계·라인 과도응답의 핵심 물리 회귀를 최신 소스에서 다시 실행해 31 passed / 0 failed / 1 warning을 확인했다. 이 결과는 `research/physics_core_regression_recheck_2026_10_14.json`에 고정했으며 개발용 라인·방출 모델을 운영 런타임이나 독립 외부검증으로 승격하지 않는다.
