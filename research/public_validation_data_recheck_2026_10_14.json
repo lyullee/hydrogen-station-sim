@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-14",
+  "purpose": "public-data recheck for the active HRS digital-twin validation goal",
+  "search_scope": [
+    "hydrogen dispersion experiments",
+    "hydrogen ventilation experiments",
+    "station-operation traces"
+  ],
+  "candidates": [
+    {
+      "doi": "10.5281/zenodo.18740541",
+      "title": "Part I: CFD Hydrogen Dispersion Scenarios for Source Localization Benchmarking",
+      "access_observed": "Zenodo API record returned zero downloadable files",
+      "decision": "NOT_ELIGIBLE_FOR_NUMERICAL_REPLAY",
+      "reason": "No machine-readable scenario files were available at the time of inspection; CFD output would also be computational rather than experimental evidence."
+    },
+    {
+      "doi": "10.5281/zenodo.18754802",
+      "title": "Part IV: CFD Hydrogen Dispersion Scenarios for Source Localization Benchmarking",
+      "access_observed": "Zenodo API record returned zero downloadable files",
+      "decision": "NOT_ELIGIBLE_FOR_NUMERICAL_REPLAY",
+      "reason": "No machine-readable scenario files were available at the time of inspection; computational benchmark is not a substitute for a public experiment."
+    },
+    {
+      "doi": "10.5281/zenodo.8164602",
+      "title": "D6B.1A & D6B.1B ventilation in gas stations in natural-gas and hydrogen atmospheres",
+      "access_observed": "Two PDF report files, no raw sensor time series",
+      "decision": "CONTEXT_ONLY",
+      "reason": "The report is useful for ventilation context but does not provide a replayable synchronized concentration/flow trace with apparatus metadata."
+    },
+    {
+      "doi": "10.23642/usn.26117989.v2",
+      "title": "Experimental Data of Hydrogen Dispersion in an Open-ended Rectangular Channel",
+      "access_observed": "22 raw archives are already retained and used in existing consequence/component evidence",
+      "decision": "DUPLICATE_ALREADY_CONSUMED",
+      "reason": "A second intake would violate independent-holdout provenance and cannot promote a new gate."
+    },
+    {
+      "doi": "10.5281/zenodo.20590842",
+      "title": "Group B -- HySam system measurement data",
+      "access_observed": "Three CC BY 4.0 workbooks inventoried separately",
+      "decision": "INVENTORY_ONLY_NOT_VALIDATION_GATE",
+      "reason": "Sampling-system time series lack an HRS storage-bank/compressor/dispenser topology and synchronized vehicle trace."
+    }
+  ],
+  "conclusion": {
+    "new_eligible_public_hydrogen_experiment_found": false,
+    "full_station_to_vehicle_trace_found": false,
+    "gate_counts_changed": false,
+    "next_action": "retain current physics/component blockers and avoid promoting a non-HRS, report-only, computational, or already-consumed source"
+  }
+}
