@@ -82,3 +82,7 @@ Current readiness remains 134 PASS / 11 FAIL / 7 PENDING (88.2%) overall and 91.
 
 - 로컬 근거 인벤토리 API에도 동일한 집계 결과를 연결해 화면·LLM·감사 API가 같은 판정을 사용하도록 했다. 원시 좌표·파일 경로·사례 식별자는 계속 제외한다.
 
+
+## 2026-10-14 - KITopen PRESLHY DOI 중복 확인
+
+KITopen DOI `10.5445/IR/1000096833`은 새 실험 아카이브가 아니라 기존 RADAR record `vuyYifgxlfOuFrSP`(DOI `10.35097/1187`)를 가리키는 별도 카탈로그 기록으로 확인됐다. 동일한 1,313,122,304-byte CC BY 4.0 archive와 `PRE3P1A_KIT_Dmm_ttK_DATA.zip` 명명 규칙을 확인했고, `research/preslhy_kitopen_record_reconciliation_2026_10_14.json`에 보존했다. 새 독립 holdout·검증 게이트·런타임 변경은 없다.

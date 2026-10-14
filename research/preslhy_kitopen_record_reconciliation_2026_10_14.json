@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "artifact_type": "public_dataset_record_reconciliation",
+  "recorded_at": "2026-10-14",
+  "status": "DUPLICATE_EXISTING_PUBLIC_ARCHIVE_NO_NEW_HOLDOUT",
+  "candidate": {
+    "title": "PRESLHY Experiment series E3.1 (Cryogenic Hydrogen Blow-down/Discharge) results – part A high pressure",
+    "kit_doi": "10.5445/IR/1000096833",
+    "kit_record": "https://publikationen.bibliothek.kit.edu/1000096833",
+    "license": "CC BY 4.0",
+    "publication_year": 2019,
+    "record_type": "Dataset",
+    "scope_summary": ">200 DisCha hydrogen blow-down experiments, including ambient and cryogenic temperature campaigns"
+  },
+  "existing_archive": {
+    "doi": "10.35097/1187",
+    "landing_page": "https://radar.kit.edu/radar/en/dataset/vuyYifgxlfOuFrSP",
+    "radar_record_id": "vuyYifgxlfOuFrSP",
+    "archive_url": "https://www.radar-service.eu/radar-backend/archives/vuyYifgxlfOuFrSP/versions/1/content",
+    "archive_bytes": 1313122304,
+    "license": "CC BY 4.0",
+    "manifest_pattern": "PRE3P1A_KIT_Dmm_ttK_DATA.zip",
+    "repository_artifact": "research/preslhy_blowdown_external_validation.json"
+  },
+  "reconciliation": {
+    "kit_record_points_to_same_radar_record": true,
+    "shared_radar_record_id": true,
+    "shared_archive_size_bytes": true,
+    "shared_archive_size": 1313122304,
+    "shared_license": true,
+    "shared_experiment_manifest_pattern": true,
+    "new_independent_machine_readable_archive_found": false,
+    "raw_bytes_downloaded_for_this_recheck": false,
+    "comparison_basis": [
+      "KITopen metadata links directly to the RADAR record vuyYifgxlfOuFrSP.",
+      "The RADAR record identifies DOI 10.35097/1187 and a 1,313,122,304-byte CC BY 4.0 archive.",
+      "The KITopen readme uses the same PRE3P1A_KIT_Dmm_ttK_DATA.zip package naming recorded in the existing frozen protocol.",
+      "The existing validation artifact already pins the same RADAR archive URL, byte count, license and package manifest."
+    ]
+  },
+  "decision": {
+    "new_holdout": false,
+    "readiness_gate_effect": "none",
+    "runtime_parameter_change": false,
+    "validation_result_change": false,
+    "claim_boundary": "This reconciliation prevents double-counting a catalog DOI as an independent experiment. It does not add station-to-vehicle, ESD, safety-distance, ignition, dispersion or emergency-response validation."
+  },
+  "source_links": [
+    "https://publikationen.bibliothek.kit.edu/1000096833",
+    "https://radar.kit.edu/radar/en/dataset/vuyYifgxlfOuFrSP",
+    "https://doi.org/10.5445/IR/1000096833",
+    "https://doi.org/10.35097/1187"
+  ]
+}

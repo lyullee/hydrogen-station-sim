@@ -2862,3 +2862,8 @@ the full-loop claim pass.
 
 - 로컬 근거 인벤토리 API에도 동일한 집계 결과를 연결해 화면·LLM·감사 API가 같은 판정을 사용하도록 했다. 원시 좌표·파일 경로·사례 식별자는 계속 제외한다.
 
+
+## 2026-10-14 - KITopen PRESLHY DOI 중복 확인
+
+- KITopen DOI `10.5445/IR/1000096833`을 재확인했다. 해당 기록은 기존 RADAR 데이터셋 `vuyYifgxlfOuFrSP`(DOI `10.35097/1187`)로 직접 연결되며, 1,313,122,304 byte·CC BY 4.0 아카이브와 `PRE3P1A_KIT_Dmm_ttK_DATA.zip` 패키지 체계를 공유한다.
+- `research/preslhy_kitopen_record_reconciliation_2026_10_14.json`에 재conciliation 근거를 고정했다. 새 독립 원자료나 holdout으로 중복 집계하지 않았고, 검증 결과·런타임 파라미터·readiness 게이트는 변경하지 않았다.
