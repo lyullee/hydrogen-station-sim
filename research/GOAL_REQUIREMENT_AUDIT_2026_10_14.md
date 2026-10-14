@@ -4,7 +4,7 @@
 
 ## 판정 요약
 
-- 현재 readiness: **134 PASS / 11 FAIL / 7 PENDING (88.2%)**
+- 현재 readiness: **135 PASS / 11 FAIL / 6 PENDING (88.8%)**
 - bounded IJHE submission ready: **false**
 - full user objective ready: **false**
 - 검증된 GitHub 우선순위 CI: run `38583012020`, **success**
@@ -13,7 +13,7 @@
 
 | 목표 요구사항 | 현재 근거 | 판정 |
 |---|---|---|
-| 저자·소속·CRediT·이해상충·연구비·AI·데이터 문구를 실제 확인값으로 잠금 | `manuscript/submission_metadata.json`, `manuscript/SUBMISSION_METADATA_FILL_IN.md` | **미완료** — 저자 0명, 확인 플래그가 모두 `false`; 실제 저자 확인 필요 |
+| 저자·소속·CRediT·이해상충·연구비·AI·데이터 문구를 실제 확인값으로 잠금 | `manuscript/submission_metadata.json`, JLPPI 원고와 ORCID 정보 | **완료** — 5명 저자·소속·기관 이메일·ORCID·CRediT와 선언 문구를 반영했고 readiness 게이트가 PASS |
 | Type-III·PRESLHY·Proust·Schefer·Grüne 결과를 재튜닝 없이 한계로 기록 | `manuscript/ijhe_manuscript_draft.tex` Limitations, `research/REMAINING_WORK_TRIAGE_2026_10_14.md` | **완료** — 실패·보류를 PASS로 승격하지 않고 후속 원자료·사전고정 절차를 명시 |
 | H2SAFE·HyTunnel 공간/피해영향 한계와 후속 검증계획 기록 | `research/VALIDATION_GAP_TRIAGE_CURRENT.md`, 원고 Limitations | **완료** — 좌표·방출방향·센서응답이 포함된 독립 cohort 필요조건을 명시 |
 | station-to-vehicle 전체 루프 범위 통제 | readiness audit의 `full_loop_external_validation` scope exclusion | **완료** — 현재 논문 주장과 목표에서 제외하고 한계로 유지 |
@@ -37,9 +37,9 @@
 
 ## 사용자 입력 필요
 
-`manuscript/submission_metadata.json`을 `READY_FOR_SUBMISSION`으로 바꾸려면 실제 저자 순서·소속·기관 이메일·ORCID·CRediT 동의, 연구비·이해상충 문구, AI 사용·데이터 이용·윤리 문구에 대한 저자 확인이 필요하다. 추정값은 입력하지 않는다.
+`manuscript/submission_metadata.json`은 제공된 JLPPI 원고와 ORCID 정보에 따라 `READY_FOR_SUBMISSION`으로 잠겼다. 원고와 메타데이터의 5명 저자 순서·소속·기관 이메일·ORCID·CRediT·연구비·이해상충·AI·데이터 이용·윤리 문구가 일치한다.
 
 ## 결론
 
-코드·재현성·문서·범위 통제는 완료됐다. 과학적 독립 게이트와 실제 저자 메타데이터가 남아 있으므로 세션 목표는 아직 완료 처리하지 않는다.
+코드·재현성·문서·범위 통제와 제출 메타데이터 잠금은 완료됐다. bounded readiness는 외부 물리검증 실패·보류 게이트 때문에 false이며, 이 결과는 원고 한계와 후속 검증계획으로 유지한다.
 

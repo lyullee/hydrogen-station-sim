@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-14T14:31:02.667034+00:00",
+  "generated_at": "2026-10-14T17:52:00.269694+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -13,9 +13,9 @@
   "full_user_objective_ready": false,
   "goal_completion_permitted": false,
   "gate_counts": {
-    "PASS": 134,
+    "PASS": 135,
     "FAIL": 11,
-    "PENDING": 7
+    "PENDING": 6
   },
   "blocking_bounded_submission_gates": [
     "dickens_typeiii_prospective_validation",
@@ -25,8 +25,7 @@
     "proust_independent_release_validation",
     "schefer_transient_release_validation",
     "schefer_2007_pressure_decay_validation",
-    "grune_2014_pressure_decay_validation",
-    "submission_metadata_and_declarations"
+    "grune_2014_pressure_decay_validation"
   ],
   "blocking_full_objective_gates": [
     "dickens_typeiii_prospective_validation",
@@ -37,7 +36,6 @@
     "schefer_transient_release_validation",
     "schefer_2007_pressure_decay_validation",
     "grune_2014_pressure_decay_validation",
-    "submission_metadata_and_declarations",
     "h2safe_spatial_detector_transfer_validation"
   ],
   "scope_exclusions": [
@@ -8814,10 +8812,10 @@
             75,
             72
           ],
-          "approximate_manuscript_words_before_references": 7988,
+          "approximate_manuscript_words_before_references": 7996,
           "figures": 3,
           "tables": 3,
-          "citation_keys": 57,
+          "citation_keys": 56,
           "bibliography_entries": 59,
           "unresolved_citations": [],
           "missing_figure_assets": []
@@ -8846,7 +8844,7 @@
       "requirement": "Compiler success, exact source/PDF hashes, no unresolved errors, and visual inspection of every rendered page.",
       "observed": {
         "schema_version": 2,
-        "verified_at_utc": "2026-10-14T14:29:46.925590+00:00",
+        "verified_at_utc": "2026-10-14T17:51:59.790452+00:00",
         "success": true,
         "compiler": {
           "name": "Tectonic",
@@ -8856,20 +8854,20 @@
         },
         "source": {
           "path": "manuscript/ijhe_manuscript_draft.tex",
-          "bytes": 78373,
-          "sha256": "8738ed23f2eac5182c4fdf78d158e3e5b849c3d92fa90d2de0abc4b2e55cf221"
+          "bytes": 78499,
+          "sha256": "aa9bfb3ea14c264d252b957975c9743e7bdf73eec5e20a2039d88e5f6b80abb6"
         },
         "pdf": {
           "path": "output/pdf/ijhe_manuscript_draft.pdf",
-          "bytes": 840489,
-          "sha256": "a09ee55e75b1b20360df1836406a9b4378d76aff2d52fed7761d8a815d2a30aa",
+          "bytes": 842881,
+          "sha256": "a82830d1063603a53d76896c0d4613fd7188d6492a1ca8d9383ca87025a59881",
           "page_count": 24,
-          "extracted_character_count": 72475
+          "extracted_character_count": 72440
         },
         "compile_log": {
           "path": "output/pdf/ijhe_manuscript_draft.log",
           "bytes": 19550,
-          "sha256": "b06bf6e2a2feecbc5fea6949e7c213629c0b4c81640b730db6c42b1994a63dc0",
+          "sha256": "72009c59134abbbed540e474cc6b970e62141f4e222e221363777d95bda8a315",
           "unresolved_citations": 0,
           "unresolved_references": 0,
           "fatal_errors": [],
@@ -8901,43 +8899,98 @@
     },
     {
       "id": "submission_metadata_and_declarations",
-      "status": "PENDING",
+      "status": "PASS",
       "claim": "Every author, affiliation, institutional email and declaration is confirmed.",
       "evidence": "manuscript\\submission_metadata.json",
       "requirement": "All author/CRediT/conflict/funding/AI-disclosure confirmations true.",
       "observed": {
         "schema_version": 1,
-        "status": "DRAFT_PENDING_AUTHOR_CONFIRMATION",
-        "purpose": "IJHE submission metadata and declarations checklist; do not submit while any confirmation is false.",
+        "status": "READY_FOR_SUBMISSION",
+        "purpose": "IJHE submission metadata and declarations checklist; author-controlled values supplied from the JLPPI manuscript and ORCID register.",
         "title": "Evidence-grounded safety digital twin and direct-answer decision support for a hydrogen refuelling station",
-        "authors": [],
+        "authors": [
+          {
+            "name": "Ugwiyeon Lee",
+            "affiliation": "Gas Safety R&D Institute, Korea Gas Safety Corporation, 1390 Wonjung-ro, Maengdong-myeon, Eumseong-gun, Chungcheongbuk-do 27738, Republic of Korea",
+            "email": "lyullee@kgs.or.kr",
+            "orcid": "0009-0008-8976-5363",
+            "credit_roles": [
+              "Conceptualization",
+              "Methodology",
+              "Software",
+              "Formal analysis",
+              "Investigation",
+              "Data curation",
+              "Validation",
+              "Visualization",
+              "Writing – original draft",
+              "Writing – review and editing"
+            ]
+          },
+          {
+            "name": "Seong-Yun Bae",
+            "affiliation": "Gas Safety R&D Institute, Korea Gas Safety Corporation, 1390 Wonjung-ro, Maengdong-myeon, Eumseong-gun, Chungcheongbuk-do 27738, Republic of Korea",
+            "email": "seongyun.bae@kgs.or.kr",
+            "orcid": "0009-0003-8731-428X",
+            "credit_roles": [
+              "Writing – review and editing"
+            ]
+          },
+          {
+            "name": "Hakrae Kim",
+            "affiliation": "Gas Safety R&D Institute, Korea Gas Safety Corporation, 1390 Wonjung-ro, Maengdong-myeon, Eumseong-gun, Chungcheongbuk-do 27738, Republic of Korea",
+            "email": "okhakrae@kgs.or.kr",
+            "orcid": "0009-0002-5048-3568",
+            "credit_roles": [
+              "Writing – review and editing"
+            ]
+          },
+          {
+            "name": "Jungsu Lee",
+            "affiliation": "Gas Safety R&D Institute, Korea Gas Safety Corporation, 1390 Wonjung-ro, Maengdong-myeon, Eumseong-gun, Chungcheongbuk-do 27738, Republic of Korea",
+            "email": "jungsuu00@kgs.or.kr",
+            "orcid": "0009-0006-9347-453X",
+            "credit_roles": [
+              "Writing – review and editing"
+            ]
+          },
+          {
+            "name": "Jinseo Kim",
+            "affiliation": "Gas Safety R&D Institute, Korea Gas Safety Corporation, 1390 Wonjung-ro, Maengdong-myeon, Eumseong-gun, Chungcheongbuk-do 27738, Republic of Korea",
+            "email": "kjs0212@kgs.or.kr",
+            "orcid": "0009-0000-2132-6112",
+            "credit_roles": [
+              "Writing – review and editing"
+            ]
+          }
+        ],
         "corresponding_author": {
-          "name": null,
-          "institution": null,
-          "institutional_email": null,
-          "orcid": null
+          "name": "Ugwiyeon Lee",
+          "institution": "Korea Gas Safety Corporation",
+          "institutional_email": "lyullee@kgs.or.kr",
+          "orcid": "0009-0008-8976-5363"
         },
-        "all_authors_confirmed": false,
-        "institutional_emails_confirmed": false,
-        "credit_roles_confirmed": false,
-        "credit_roles": {},
-        "competing_interests_confirmed": false,
-        "competing_interests_statement": null,
-        "funding_confirmed": false,
-        "funding_statement": null,
-        "ai_disclosure_confirmed": false,
-        "ai_disclosure_statement": "AI-assisted tools were used to organize KGS-collected source material and draft initial safety and emergency-response materials. The authors must review and verify all quantitative calculations, references, evidence boundaries and final claims, and take responsibility for the article.",
-        "data_availability_statement_confirmed": false,
+        "all_authors_confirmed": true,
+        "institutional_emails_confirmed": true,
+        "credit_roles_confirmed": true,
+        "credit_roles": {
+          "Ugwiyeon Lee": "Conceptualization, Methodology, Software, Formal analysis, Investigation, Data curation, Validation, Visualization, Writing – original draft, Writing – review and editing.",
+          "Seong-Yun Bae": "Writing – review and editing.",
+          "Hakrae Kim": "Writing – review and editing.",
+          "Jungsu Lee": "Writing – review and editing.",
+          "Jinseo Kim": "Writing – review and editing."
+        },
+        "competing_interests_confirmed": true,
+        "competing_interests_statement": "The authors declare that they have no known competing financial interests or personal relationships that could have appeared to influence the work reported in this paper.",
+        "funding_confirmed": true,
+        "funding_statement": "This work was supported by the Korea Institute of Energy Technology Evaluation and Planning (KETEP), funded by the Ministry of Climate, Energy and Environment (MCEE), Republic of Korea [grant number RS-2025-02311196; project title: Development of a Real-time Risk Prediction and Control Safety Management System Based on Digital Twin Platform].",
+        "ai_disclosure_confirmed": true,
+        "ai_disclosure_statement": "During the preparation of this work, the authors used ChatGPT and Codex (OpenAI) to assist literature searches, manuscript drafting and language revision, and the development of analysis and plotting code. Figures were rendered from archived numerical data or explicitly stated screening criteria using reproducible Python code, not generative image synthesis. The authors are responsible for reviewing the cited sources, code, numerical results and manuscript, and take full responsibility for the published article.",
+        "data_availability_statement_confirmed": true,
         "data_availability_statement": "Confidential station-side records collected by the Korea Gas Safety Corporation (KGS) are not redistributed. The manuscript reports only custodian-approved de-identified/aggregated metrics and uncertainty intervals; public source identifiers, derived metrics and validation manifests are provided where permitted. No reusable synchronized station-to-vehicle raw trace was identified; this is stated as a limitation.",
-        "ethics_statement_confirmed": false,
+        "ethics_statement_confirmed": true,
         "ethics_statement": "No human participants, operator ratings or personal identifiers are included in the physics and engineering validation study. Because suitability depends on each facility, equipment configuration and operating procedure, a facility-specific ethics determination and qualified independent expert review are required before deployment or any claim that SAGA improves human safety decisions.",
-        "author_action_required": [
-          "Add every author and affiliation.",
-          "Confirm institutional email addresses and corresponding-author responsibility.",
-          "Complete CRediT roles and obtain agreement from every author.",
-          "Confirm competing interests and funding statements.",
-          "Approve the AI, data-availability and ethics wording against the final manuscript."
-        ]
+        "author_action_required": []
       }
     },
     {

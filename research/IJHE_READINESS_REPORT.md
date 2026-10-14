@@ -168,7 +168,7 @@ The local result is an evidence-readiness gate, not a guarantee of editorial acc
 | `preoutcome_design_sensitivity` | **PASS** | The fixed incident-study sample limitations were quantified before outcomes. | `research\hiad_design_sensitivity.json` |
 | `ijhe_format_gate` | **PASS** | The manuscript satisfies the explicit IJHE length/front-matter limits checked locally. | `manuscript\ijhe_format_check.json` |
 | `ijhe_latex_compilation` | **PASS** | The exact current manuscript LaTeX source compiles successfully. | `manuscript\ijhe_compile_status.json` |
-| `submission_metadata_and_declarations` | **PENDING** | Every author, affiliation, institutional email and declaration is confirmed. | `manuscript\submission_metadata.json` |
+| `submission_metadata_and_declarations` | **PASS** | Every author, affiliation, institutional email and declaration is confirmed. | `manuscript\submission_metadata.json` |
 | `software_doi` | **PASS** | The reproducible software release has a persistent DOI. | `CITATION.cff` |
 
 ## Blocking bounded-submission gates
@@ -181,7 +181,6 @@ The local result is an evidence-readiness gate, not a guarantee of editorial acc
 - `schefer_transient_release_validation`
 - `schefer_2007_pressure_decay_validation`
 - `grune_2014_pressure_decay_validation`
-- `submission_metadata_and_declarations`
 
 ## Blocking full-objective gates
 
@@ -193,7 +192,6 @@ The local result is an evidence-readiness gate, not a guarantee of editorial acc
 - `schefer_transient_release_validation`
 - `schefer_2007_pressure_decay_validation`
 - `grune_2014_pressure_decay_validation`
-- `submission_metadata_and_declarations`
 - `h2safe_spatial_detector_transfer_validation`
 
 Only full_user_objective_ready=true permits goal completion. The current objective is explicitly scoped to station-side/component evidence and consequence/decision-support claims. Synchronized station-to-vehicle full-loop validation and human-effectiveness claims are excluded and must remain stated limitations until their re-entry conditions are met.

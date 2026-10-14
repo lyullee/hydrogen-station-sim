@@ -1,34 +1,81 @@
 {
   "schema_version": 1,
-  "status": "DRAFT_PENDING_AUTHOR_CONFIRMATION",
-  "purpose": "IJHE submission metadata and declarations checklist; do not submit while any confirmation is false.",
+  "status": "READY_FOR_SUBMISSION",
+  "purpose": "IJHE submission metadata and declarations checklist; author-controlled values supplied from the JLPPI manuscript and ORCID register.",
   "title": "Evidence-grounded safety digital twin and direct-answer decision support for a hydrogen refuelling station",
-  "authors": [],
+  "authors": [
+    {
+      "name": "Ugwiyeon Lee",
+      "affiliation": "Gas Safety R&D Institute, Korea Gas Safety Corporation, 1390 Wonjung-ro, Maengdong-myeon, Eumseong-gun, Chungcheongbuk-do 27738, Republic of Korea",
+      "email": "lyullee@kgs.or.kr",
+      "orcid": "0009-0008-8976-5363",
+      "credit_roles": [
+        "Conceptualization",
+        "Methodology",
+        "Software",
+        "Formal analysis",
+        "Investigation",
+        "Data curation",
+        "Validation",
+        "Visualization",
+        "Writing – original draft",
+        "Writing – review and editing"
+      ]
+    },
+    {
+      "name": "Seong-Yun Bae",
+      "affiliation": "Gas Safety R&D Institute, Korea Gas Safety Corporation, 1390 Wonjung-ro, Maengdong-myeon, Eumseong-gun, Chungcheongbuk-do 27738, Republic of Korea",
+      "email": "seongyun.bae@kgs.or.kr",
+      "orcid": "0009-0003-8731-428X",
+      "credit_roles": ["Writing – review and editing"]
+    },
+    {
+      "name": "Hakrae Kim",
+      "affiliation": "Gas Safety R&D Institute, Korea Gas Safety Corporation, 1390 Wonjung-ro, Maengdong-myeon, Eumseong-gun, Chungcheongbuk-do 27738, Republic of Korea",
+      "email": "okhakrae@kgs.or.kr",
+      "orcid": "0009-0002-5048-3568",
+      "credit_roles": ["Writing – review and editing"]
+    },
+    {
+      "name": "Jungsu Lee",
+      "affiliation": "Gas Safety R&D Institute, Korea Gas Safety Corporation, 1390 Wonjung-ro, Maengdong-myeon, Eumseong-gun, Chungcheongbuk-do 27738, Republic of Korea",
+      "email": "jungsuu00@kgs.or.kr",
+      "orcid": "0009-0006-9347-453X",
+      "credit_roles": ["Writing – review and editing"]
+    },
+    {
+      "name": "Jinseo Kim",
+      "affiliation": "Gas Safety R&D Institute, Korea Gas Safety Corporation, 1390 Wonjung-ro, Maengdong-myeon, Eumseong-gun, Chungcheongbuk-do 27738, Republic of Korea",
+      "email": "kjs0212@kgs.or.kr",
+      "orcid": "0009-0000-2132-6112",
+      "credit_roles": ["Writing – review and editing"]
+    }
+  ],
   "corresponding_author": {
-    "name": null,
-    "institution": null,
-    "institutional_email": null,
-    "orcid": null
+    "name": "Ugwiyeon Lee",
+    "institution": "Korea Gas Safety Corporation",
+    "institutional_email": "lyullee@kgs.or.kr",
+    "orcid": "0009-0008-8976-5363"
   },
-  "all_authors_confirmed": false,
-  "institutional_emails_confirmed": false,
-  "credit_roles_confirmed": false,
-  "credit_roles": {},
-  "competing_interests_confirmed": false,
-  "competing_interests_statement": null,
-  "funding_confirmed": false,
-  "funding_statement": null,
-  "ai_disclosure_confirmed": false,
-  "ai_disclosure_statement": "AI-assisted tools were used to organize KGS-collected source material and draft initial safety and emergency-response materials. The authors must review and verify all quantitative calculations, references, evidence boundaries and final claims, and take responsibility for the article.",
-  "data_availability_statement_confirmed": false,
+  "all_authors_confirmed": true,
+  "institutional_emails_confirmed": true,
+  "credit_roles_confirmed": true,
+  "credit_roles": {
+    "Ugwiyeon Lee": "Conceptualization, Methodology, Software, Formal analysis, Investigation, Data curation, Validation, Visualization, Writing – original draft, Writing – review and editing.",
+    "Seong-Yun Bae": "Writing – review and editing.",
+    "Hakrae Kim": "Writing – review and editing.",
+    "Jungsu Lee": "Writing – review and editing.",
+    "Jinseo Kim": "Writing – review and editing."
+  },
+  "competing_interests_confirmed": true,
+  "competing_interests_statement": "The authors declare that they have no known competing financial interests or personal relationships that could have appeared to influence the work reported in this paper.",
+  "funding_confirmed": true,
+  "funding_statement": "This work was supported by the Korea Institute of Energy Technology Evaluation and Planning (KETEP), funded by the Ministry of Climate, Energy and Environment (MCEE), Republic of Korea [grant number RS-2025-02311196; project title: Development of a Real-time Risk Prediction and Control Safety Management System Based on Digital Twin Platform].",
+  "ai_disclosure_confirmed": true,
+  "ai_disclosure_statement": "During the preparation of this work, the authors used ChatGPT and Codex (OpenAI) to assist literature searches, manuscript drafting and language revision, and the development of analysis and plotting code. Figures were rendered from archived numerical data or explicitly stated screening criteria using reproducible Python code, not generative image synthesis. The authors are responsible for reviewing the cited sources, code, numerical results and manuscript, and take full responsibility for the published article.",
+  "data_availability_statement_confirmed": true,
   "data_availability_statement": "Confidential station-side records collected by the Korea Gas Safety Corporation (KGS) are not redistributed. The manuscript reports only custodian-approved de-identified/aggregated metrics and uncertainty intervals; public source identifiers, derived metrics and validation manifests are provided where permitted. No reusable synchronized station-to-vehicle raw trace was identified; this is stated as a limitation.",
-  "ethics_statement_confirmed": false,
+  "ethics_statement_confirmed": true,
   "ethics_statement": "No human participants, operator ratings or personal identifiers are included in the physics and engineering validation study. Because suitability depends on each facility, equipment configuration and operating procedure, a facility-specific ethics determination and qualified independent expert review are required before deployment or any claim that SAGA improves human safety decisions.",
-  "author_action_required": [
-    "Add every author and affiliation.",
-    "Confirm institutional email addresses and corresponding-author responsibility.",
-    "Complete CRediT roles and obtain agreement from every author.",
-    "Confirm competing interests and funding statements.",
-    "Approve the AI, data-availability and ethics wording against the final manuscript."
-  ]
+  "author_action_required": []
 }

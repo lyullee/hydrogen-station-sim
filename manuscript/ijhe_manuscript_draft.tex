@@ -27,8 +27,15 @@
 
 \title{External validation and evidence-gated decision support for a virtual
 hydrogen refuelling station digital twin}
-\author{Author names withheld in working draft\\
-\small Affiliation and corresponding-author details to be confirmed}
+\author{\parbox{0.92\textwidth}{\centering
+Ugwiyeon Lee\textsuperscript{a}*, Seong-Yun Bae\textsuperscript{a},\\
+Hakrae Kim\textsuperscript{a}, Jungsu Lee\textsuperscript{a}, Jinseo Kim\textsuperscript{a}\\
+\small \textsuperscript{a}Gas Safety R\&D Institute, Korea Gas Safety Corporation\\
+\small 1390 Wonjung-ro, Maengdong-myeon, Eumseong-gun,\\
+\small Chungcheongbuk-do 27738, Republic of Korea\\
+\small *Corresponding author. E-mail address: lyullee@kgs.or.kr (U. Lee).\\
+\small ORCID: U. Lee 0009-0008-8976-5363; S.-Y. Bae 0009-0003-8731-428X;\\
+\small H. Kim 0009-0002-5048-3568; J. Lee 0009-0006-9347-453X; J. Kim 0009-0000-2132-6112}}
 \date{Working draft: 12 October 2026}
 
 \begin{document}
@@ -911,27 +918,13 @@ Raw-file headers confirmed four kPa channels at 500 kHz. The archive omits
 case-resolved obstacle, ignition and sensor coordinates and ambient records; a
 frozen input contract prevents fitting them to consumed peaks.
 
-H2SAFE provides five controlled helium releases with one-second concentration
-traces and spatial metadata \cite{h2safe2026}; its rechecked archive has no
-synchronized station/controller, dispenser/nozzle or vehicle/receptacle channels
-and cannot validate a station-to-vehicle loop.
-
-NIST's 18 one-second garage workbooks provide eight helium channels, differential
-pressure, three vents and three source locations \cite{pitts2011}. Opened after
-the H2SAFE freeze, they support ventilation/spatial context only; helium and the
-missing time crosswalk preclude fitting, detector placement, H$_2$ conversion and
-full-loop validation.
-
-An actual-H$_2$ study used a 96 m$^3$ semi-closed tent, five upper sensors,
-four nozzles and ten release conditions \cite{korean_tent2026}. A nearest-source
-baseline matched 7/10 (top-1 0.70; top-2 0.80) but missed direction/high-flow
-shifts. This post-access aggregate evidence changes no runtime or validation
-gate; it only motivates future spatial holdouts.
-
-One pre-access screen selected Experiment 16 from a 29-experiment compressor
-archive \cite{mhc2025}. Its 1,186 records contain pressure, flow and temperature,
-but units and adsorption/thermal boundaries differ; it remains compatibility
-evidence only, with no runtime or HRS claims derived.
+H2SAFE supplied five controlled helium releases with spatial metadata \cite{h2safe2026};
+missing station/controller and vehicle channels keep it descriptive. NIST garage
+workbooks likewise provide ventilation context only because they use helium and lack
+a time crosswalk \cite{pitts2011}. A ten-condition actual-H$_2$ tent study matched
+7/10 nearest-source cases but remains aggregate evidence for future spatial holdouts
+\cite{korean_tent2026}. A pre-access compressor screen is compatibility evidence
+only because its units and thermal boundaries differ \cite{mhc2025}.
 
 \subsection{Evidence-gated language-model assistance}
 LLM assistance follows deterministic calculations and structured provenance,
@@ -956,15 +949,13 @@ No openly reusable synchronized station-to-vehicle raw cohort was identified, so
 vehicle-side full-loop accuracy is outside the primary claim. ELVHYS provides
 provenance and timebase context without vehicle/controller telemetry
 \cite{elvhys2025}; HIAD reports are retrospective and do not replace expert
-review. A public liquid-hydrogen station catalogue is access-controlled and is
-retained only as an access-boundary candidate \cite{nbsdc2026}.
+review.
 
 Frozen component screens remain incomplete: Type-III temperature, PRESLHY
-ambient/Part-B/E5.1, Proust and Schefer 2006/2007 remain negative; Grüne is
-pending; H2SAFE/HyTunnel spatial and consequence transfer is unvalidated.
-Closing them requires new outcome-unseen raw cohorts, frozen protocols and
-predeclared screens. No failed screen changes runtime parameters, alarm
-thresholds, detector placement, HyRAM distance reporting or response logic.
+ambient/Part-B/E5.1, Proust, Schefer 2006/2007 and Grüne remain negative or pending;
+H2SAFE/HyTunnel transfer is unvalidated. Closure requires outcome-unseen cohorts,
+frozen protocols and predeclared screens. Failed screens do not change runtime
+parameters, alarm thresholds, detector placement, HyRAM distances or response logic.
 
 \section{Conclusions}
 A hydrogen-station safety digital twin was evaluated with separate evidence gates
@@ -993,43 +984,49 @@ a reproducible prototype, without supporting SAE-compliant fuelling control,
 field safety certification or autonomous emergency management.
 
 \section*{Data and code availability}
-Source code, study scripts, frozen machine-readable evidence and documentation are
-available under the MIT License at
-\url{https://github.com/lyullee/hydrogen-station-sim}; archived release DOI:
-\href{https://doi.org/10.5281/zenodo.23084421}{10.5281/zenodo.23084421}.
-Third-party archives retain their original terms; HyRAM+ remains GPL-3.0.
+Source code, study scripts, frozen evidence and documentation are available under
+the MIT License at \url{https://github.com/lyullee/hydrogen-station-sim}; archived
+release DOI: \href{https://doi.org/10.5281/zenodo.23084421}{10.5281/zenodo.23084421}.
+Third-party terms remain in force; HyRAM+ remains GPL-3.0.
 
-Confidential station records collected by the Korea Gas Safety Corporation
-(KGS) are not deposited. The manuscript reports only custodian-approved
-de-identified aggregates and uncertainty intervals; a secure editor/reviewer
-inspection route is provided when permitted. A measurement schema, controlled-
-access protocol and synthetic traces are supplied for public reproduction. If raw inspection cannot be arranged, claims are limited to the
-published aggregates and publicly reproducible component evidence.
-The public manuscript intentionally withholds the operator, site, country,
-calendar dates, manufacturer, equipment model numbers, tag names and detailed
-geometry; those fields are retained only in the owner-controlled record.
+Confidential KGS station records are not deposited. We report only custodian-approved
+de-identified aggregates and uncertainty intervals; permitted source identifiers,
+derived metrics and validation manifests are public. A measurement schema,
+controlled-access protocol and synthetic traces support reproduction; without raw
+inspection, claims remain limited to published aggregates and public component
+evidence. Operator, site, country, dates, manufacturer, model, tag and detailed
+geometry fields remain in the owner-controlled record.
 
 \section*{CRediT authorship contribution statement}
-\textit{To be completed by the authors before submission.}
+Ugwiyeon Lee: Conceptualization, Methodology, Software, Formal analysis, Investigation,
+Data curation, Validation, Visualization, Writing -- original draft, Writing -- review
+and editing. Seong-Yun Bae: Writing -- review and editing. Hakrae Kim: Writing -- review
+and editing. Jungsu Lee: Writing -- review and editing. Jinseo Kim: Writing -- review
+and editing.
 
 \section*{Declaration of competing interest}
-\textit{To be completed and approved by every author before submission.}
+The authors declare that they have no known competing financial interests or personal
+relationships that could have appeared to influence the work reported in this paper.
 
 \section*{Funding}
-\textit{Funding source and grant number, or a no-specific-funding statement, must
-be confirmed before submission.}
+This work was supported by the Korea Institute of Energy Technology Evaluation and
+Planning (KETEP), funded by the Ministry of Climate, Energy and Environment (MCEE),
+Republic of Korea [grant number RS-2025-02311196; project title: Development of a
+Real-time Risk Prediction and Control Safety Management System Based on Digital Twin
+Platform].
 
 \section*{Acknowledgements}
 \textit{Institutional and technical acknowledgements to be confirmed.}
 
 \section*{Declaration of generative AI and AI-assisted technologies in the
 manuscript preparation process}
-During preparation of this working draft, the authors used AI-assisted tools
-(including OpenAI Codex) to organize KGS-collected source material and draft
-initial safety and emergency-response materials, as well as to assist with
-structure and formatting. The authors must review and verify all quantitative
-calculations, references, evidence boundaries and claims before submission and
-take full responsibility for the final article.
+During the preparation of this work, the authors used ChatGPT and Codex (OpenAI)
+to assist literature searches, manuscript drafting and language revision, and the
+development of analysis and plotting code. Figures were rendered from archived
+numerical data or explicitly stated screening criteria using reproducible Python
+code, not generative image synthesis. The authors are responsible for reviewing the
+cited sources, code, numerical results and manuscript, and take full responsibility
+for the published article.
 
 \begin{thebibliography}{99}
 

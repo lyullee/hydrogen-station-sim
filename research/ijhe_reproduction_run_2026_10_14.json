@@ -1,11 +1,11 @@
 {
   "schema_version": 1,
   "artifact_type": "ijhe_reproducibility_run",
-  "generated_at_utc": "2026-10-14T14:31:16.773625+00:00",
+  "generated_at_utc": "2026-10-14T17:52:03.224292+00:00",
   "status": "SCIENTIFIC_GATES_OPEN",
   "repository": {
     "root": ".",
-    "commit": "07c613e0397580acdabeb21c5a3a8b4939ff4460",
+    "commit": "1f3be686bee1c6e49953e491c423a2e3b5d307ff",
     "dirty": true
   },
   "environment": {
@@ -29,10 +29,10 @@
           75,
           72
         ],
-        "approximate_manuscript_words_before_references": 7988,
+        "approximate_manuscript_words_before_references": 7996,
         "figures": 3,
         "tables": 3,
-        "citation_keys": 57,
+        "citation_keys": 56,
         "bibliography_entries": 59,
         "unresolved_citations": [],
         "missing_figure_assets": []
@@ -54,7 +54,7 @@
     },
     "compile_status_rebuilt": {
       "schema_version": 2,
-      "verified_at_utc": "2026-10-14T14:31:14.467029+00:00",
+      "verified_at_utc": "2026-10-14T17:52:01.308863+00:00",
       "success": true,
       "compiler": {
         "name": "Tectonic",
@@ -64,20 +64,20 @@
       },
       "source": {
         "path": "manuscript/ijhe_manuscript_draft.tex",
-        "bytes": 78373,
-        "sha256": "8738ed23f2eac5182c4fdf78d158e3e5b849c3d92fa90d2de0abc4b2e55cf221"
+        "bytes": 78499,
+        "sha256": "aa9bfb3ea14c264d252b957975c9743e7bdf73eec5e20a2039d88e5f6b80abb6"
       },
       "pdf": {
         "path": "output/pdf/ijhe_manuscript_draft.pdf",
-        "bytes": 840489,
-        "sha256": "a09ee55e75b1b20360df1836406a9b4378d76aff2d52fed7761d8a815d2a30aa",
+        "bytes": 842881,
+        "sha256": "a82830d1063603a53d76896c0d4613fd7188d6492a1ca8d9383ca87025a59881",
         "page_count": 24,
-        "extracted_character_count": 72475
+        "extracted_character_count": 72077
       },
       "compile_log": {
         "path": "output/pdf/ijhe_manuscript_draft.log",
         "bytes": 19550,
-        "sha256": "b06bf6e2a2feecbc5fea6949e7c213629c0b4c81640b730db6c42b1994a63dc0",
+        "sha256": "72009c59134abbbed540e474cc6b970e62141f4e222e221363777d95bda8a315",
         "unresolved_citations": 0,
         "unresolved_references": 0,
         "fatal_errors": [],
@@ -111,9 +111,9 @@
       "full_user_objective_ready": false,
       "goal_completion_permitted": false,
       "gate_counts": {
-        "PASS": 134,
+        "PASS": 135,
         "FAIL": 11,
-        "PENDING": 7
+        "PENDING": 6
       },
       "blocking_bounded_submission_gates": [
         "dickens_typeiii_prospective_validation",
@@ -123,8 +123,7 @@
         "proust_independent_release_validation",
         "schefer_transient_release_validation",
         "schefer_2007_pressure_decay_validation",
-        "grune_2014_pressure_decay_validation",
-        "submission_metadata_and_declarations"
+        "grune_2014_pressure_decay_validation"
       ]
     },
     "claim_boundary": "This is an evidence-readiness result, not a guarantee of peer-review acceptance, field safety, or regulatory compliance."
@@ -145,7 +144,7 @@
           "tests/test_goal_progress_snapshot.py",
           "tests/test_ijhe_reproduction.py"
         ],
-        "output_tail": "............                                                             [100%]\n12 passed in 1.94s"
+        "output_tail": "............                                                             [100%]\n12 passed in 1.58s"
       }
     ]
   },

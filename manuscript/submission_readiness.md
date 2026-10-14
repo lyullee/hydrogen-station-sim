@@ -20,7 +20,7 @@ Audit snapshot: **2026-10-14 KST**
 | Full validated-digital-twin objective ready | **False** |
 | Goal completion permitted | **False** |
 
-Gate counts: **134 PASS · 11 FAIL · 7 PENDING**.
+Gate counts: **135 PASS · 11 FAIL · 6 PENDING**.
 
 The latest full working-tree regression passed **1,626 tests with 0 failures and 0 skips** plus 224 dependency/data-reader and physics warnings in approximately 293 s (`research/full_regression_test_run_2026_10_14.json`). It was run from source commit `115ceaa`, so it is an implementation-integrity record rather than a clean-release attestation. A broad LLM/SAGA, virtual-safety, HAZOP and HIAD accident-path selection passed **159 tests with 2 warnings** (`research/paper_llm_safety_broad_regression_2026_10_12.json`). These software checks do not convert independent physical-validation failures or the author-confirmation gate into passes.
 
@@ -587,11 +587,11 @@ The local format gate currently passes:
 - abstract: 150 words (limit checked: 150);
 - keywords: 6;
 - highlights: 5, each within the checked character limit;
-- approximate manuscript body: 7,984 words before references;
+- approximate manuscript body: 7,996 words before references;
 - figures: 3; tables: 3;
 - citations resolved and figure assets present;
 - LaTeX compilation: **PASS**. Tectonic 0.17.0 compiled the exact current source
-  to a 23-page PDF. Source and PDF hashes match the compilation record; all 23
+  to a 24-page PDF. Source and PDF hashes match the compilation record; all 24
   pages were rendered and inspected, with no unresolved citations, references,
   replacement characters, clipped content or overlapping elements.
 
@@ -704,7 +704,7 @@ development evidence rather than a source for geometry fitting.
 
 ## Blocking gates
 
-The current primary scope has 12 unresolved or failed gates:
+The current primary scope has 11 unresolved or failed gates:
 
 1. `dickens_typeiii_prospective_validation`
 2. `grune_2014_pressure_decay_validation`
@@ -717,7 +717,6 @@ The current primary scope has 12 unresolved or failed gates:
 9. `proust_independent_release_validation`
 10. `schefer_transient_release_validation`
 11. `schefer_2007_pressure_decay_validation`
-12. `submission_metadata_and_declarations`
 
 The legacy audit retains the following broader re-entry lanes for a future
 station-to-vehicle or human-effectiveness study. They are **not requirements of
