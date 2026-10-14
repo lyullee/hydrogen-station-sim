@@ -29,6 +29,12 @@ def test_local_evidence_summary_is_privacy_bounded() -> None:
     ]
     assert transport["trace_count"] == 33
     assert transport["runtime_promotion"] is False
+    orientation = public_evidence_inventory_summary()[
+        "public_usn_orientation_transfer_diagnostic"
+    ]
+    assert orientation["experiment_count"] == 22
+    assert orientation["joint_screen_pass"] is True
+    assert orientation["runtime_application"] is False
     assert summary["adjacent_process"]["high_pressure_process"][
         "csv_event_row_count"
     ] == 2_411_774

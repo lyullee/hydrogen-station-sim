@@ -42,6 +42,7 @@ _EXPERIMENTAL_BENCHMARKS = _ROOT / "research/public_experimental_benchmarks_2026
 _GRUNE_PS_SPATIAL_INTAKE = _ROOT / "research/grune_ps_h2_dispersion_intake_2026_10_14.json"
 _GRUNE_PS_SPATIAL_DIAGNOSTIC = _ROOT / "research/grune_ps_actual_h2_spatial_diagnostic_2026_10_14.json"
 _PRESLHY_E31_CONCENTRATION_DIAGNOSTIC = _ROOT / "research/preslhy_e31_concentration_transport_diagnostic_2026_10_14.json"
+_USN_ORIENTATION_TRANSFER_DIAGNOSTIC = _ROOT / "research/usn_orientation_class_spatial_transfer_diagnostic_2026_10_14.json"
 _CARB_BENCHMARK = _ROOT / "research/carb_2024_hrs_inuse_field_benchmark_2026_10_08.json"
 _STRIEDNIG_DIAGNOSTIC = _ROOT / "research/striednig_hyddown_diagnostic_result_2026_10_10.json"
 _NREL_HDVS_BOUNDARY = _ROOT / "research/nrel_hdvs_raw_trace_boundary_2026_10_05.json"
@@ -2362,6 +2363,55 @@ def public_evidence_inventory_summary() -> dict[str, Any]:
                 "runtime_promotion": False,
                 "independent_validation_gate_impact": "none",
                 "claim_limit": str(record.get("interpretation") or ""),
+            }
+    except (OSError, KeyError, TypeError, ValueError, json.JSONDecodeError):
+        pass
+    try:
+        record = _read_json(_USN_ORIENTATION_TRANSFER_DIAGNOSTIC)
+        source = record.get("source") or {}
+        aggregate = record.get("aggregate") or {}
+        decision = record.get("decision") or {}
+        boundary = record.get("provenance_boundary") or {}
+        if (
+            record.get("artifact_type")
+            == "post_access_usn_orientation_class_spatial_transfer_diagnostic"
+            and record.get("status")
+            == "POST_ACCESS_REPRODUCIBILITY_DIAGNOSTIC_NOT_INDEPENDENT_VALIDATION"
+            and source.get("dataset_doi") == "10.23642/USN.26117989.v2"
+            and source.get("article_doi") == "10.1016/j.jlp.2025.105669"
+            and source.get("test_gas") == "actual hydrogen"
+            and source.get("license") == "CC BY 4.0"
+            and aggregate.get("experiment_count") == 22
+            and aggregate.get("joint_screen_pass") is True
+            and boundary.get("independent_holdout") is False
+            and boundary.get("runtime_application") is False
+            and decision.get("runtime_detector_routing_changed") is False
+            and decision.get("gate_changed") is False
+        ):
+            result["public_usn_orientation_transfer_diagnostic"] = {
+                "status": "available",
+                "evidence_role": "post-access actual-hydrogen detector orientation reproducibility diagnostic",
+                "dataset_doi": source.get("dataset_doi"),
+                "article_doi": source.get("article_doi"),
+                "license": source.get("license"),
+                "experiment_count": aggregate.get("experiment_count"),
+                "median_spearman": aggregate.get("median_spearman"),
+                "spearman_at_least_0_4_fraction": aggregate.get(
+                    "spearman_at_least_0_4_fraction"
+                ),
+                "mean_top5_recall": aggregate.get("mean_top5_recall"),
+                "nearest_in_response_quartile_fraction": aggregate.get(
+                    "nearest_in_response_quartile_fraction"
+                ),
+                "joint_screen_pass": aggregate.get("joint_screen_pass"),
+                "runtime_detector_routing_changed": decision.get(
+                    "runtime_detector_routing_changed"
+                ),
+                "independent_holdout": boundary.get("independent_holdout"),
+                "prospective_validation": boundary.get("prospective_validation"),
+                "runtime_application": boundary.get("runtime_application"),
+                "gate_changed": decision.get("gate_changed"),
+                "claim_limit": str(record.get("claim_boundary") or ""),
             }
     except (OSError, KeyError, TypeError, ValueError, json.JSONDecodeError):
         pass

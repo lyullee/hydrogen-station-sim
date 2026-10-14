@@ -60,4 +60,4 @@ This artifact compares coarse public HIAD outcome metadata with the already froz
 The public incident narrative and emergency-action text are not used as model inputs. A match only means the declared coarse family contract is consistent. It does not validate event frequency, numerical consequence magnitude, field safety distance, operator benefit, ethics, or human effectiveness.
 
 Source HIAD SHA-256: `27b7fc752fe7ad706eb48854447bb203605be30b745515a259fad89325cc2536`
-Source replay SHA-256: `c3bad126209fcfb2890999ba5ccf88938a4a962e09c2d1d84c6cb19a877bcb89`
+Source replay SHA-256: `5af98c2a035b6e34670618be7178518ec97025b3bd4ddf760229d83e46aa4938`

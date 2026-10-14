@@ -2480,6 +2480,63 @@ def _public_actual_hydrogen_spatial_stratification_evidence() -> dict[str, Any] 
     }
 
 
+def _public_usn_orientation_transfer_diagnostic() -> dict[str, Any] | None:
+    """Expose the post-access actual-H2 orientation-rank reproducibility screen."""
+
+    artifact = "research/usn_orientation_class_spatial_transfer_diagnostic_2026_10_14.json"
+    path = Path(__file__).resolve().parents[2] / artifact
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, json.JSONDecodeError):
+        return None
+    source = record.get("source") or {}
+    aggregate = record.get("aggregate") or {}
+    decision = record.get("decision") or {}
+    boundary = record.get("provenance_boundary") or {}
+    if (
+        record.get("artifact_type")
+        != "post_access_usn_orientation_class_spatial_transfer_diagnostic"
+        or record.get("status")
+        != "POST_ACCESS_REPRODUCIBILITY_DIAGNOSTIC_NOT_INDEPENDENT_VALIDATION"
+        or source.get("dataset_doi") != "10.23642/USN.26117989.v2"
+        or source.get("article_doi") != "10.1016/j.jlp.2025.105669"
+        or source.get("test_gas") != "actual hydrogen"
+        or source.get("license") != "CC BY 4.0"
+        or aggregate.get("experiment_count") != 22
+        or aggregate.get("joint_screen_pass") is not True
+        or boundary.get("independent_holdout") is not False
+        or boundary.get("runtime_application") is not False
+        or decision.get("runtime_detector_routing_changed") is not False
+        or decision.get("gate_changed") is not False
+    ):
+        return None
+    return {
+        "artifact": artifact,
+        "evidence_role": "post-access actual-hydrogen detector orientation reproducibility diagnostic",
+        "dataset_doi": source.get("dataset_doi"),
+        "article_doi": source.get("article_doi"),
+        "license": source.get("license"),
+        "experiment_count": aggregate.get("experiment_count"),
+        "median_spearman": aggregate.get("median_spearman"),
+        "spearman_at_least_0_4_fraction": aggregate.get(
+            "spearman_at_least_0_4_fraction"
+        ),
+        "mean_top5_recall": aggregate.get("mean_top5_recall"),
+        "nearest_in_response_quartile_fraction": aggregate.get(
+            "nearest_in_response_quartile_fraction"
+        ),
+        "joint_screen_pass": aggregate.get("joint_screen_pass"),
+        "runtime_detector_routing_changed": decision.get(
+            "runtime_detector_routing_changed"
+        ),
+        "independent_holdout": boundary.get("independent_holdout"),
+        "prospective_validation": boundary.get("prospective_validation"),
+        "runtime_application": boundary.get("runtime_application"),
+        "gate_changed": decision.get("gate_changed"),
+        "claim_limit": str(record.get("claim_boundary") or ""),
+    }
+
+
 def _public_dispersion_proxy_evidence() -> dict[str, Any] | None:
     """Expose the concentration scale used by the virtual detector proxy."""
 
@@ -10692,6 +10749,11 @@ def build_evidence_manifest(
         envelope["response_evidence"][
             "public_actual_hydrogen_spatial_stratification_evidence"
         ] = spatial_stratification
+    orientation_transfer = _public_usn_orientation_transfer_diagnostic()
+    if orientation_transfer is not None:
+        envelope["response_evidence"][
+            "public_usn_orientation_transfer_diagnostic"
+        ] = orientation_transfer
     dispersion_proxy = _public_dispersion_proxy_evidence()
     if dispersion_proxy is not None:
         envelope["response_evidence"]["public_dispersion_proxy_evidence"] = dispersion_proxy
@@ -12556,6 +12618,21 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
             )
             if spatial_stratification.get(key) is not None
         }
+    orientation_transfer = evidence.get("public_usn_orientation_transfer_diagnostic")
+    if isinstance(orientation_transfer, dict):
+        summary["public_usn_orientation_transfer_diagnostic"] = {
+            key: orientation_transfer.get(key)
+            for key in (
+                "artifact", "evidence_role", "dataset_doi", "article_doi",
+                "license", "experiment_count", "median_spearman",
+                "spearman_at_least_0_4_fraction", "mean_top5_recall",
+                "nearest_in_response_quartile_fraction", "joint_screen_pass",
+                "runtime_detector_routing_changed", "independent_holdout",
+                "prospective_validation", "runtime_application", "gate_changed",
+                "claim_limit",
+            )
+            if orientation_transfer.get(key) is not None
+        }
     dispersion_proxy = evidence.get("public_dispersion_proxy_evidence")
     if isinstance(dispersion_proxy, dict):
         summary["public_dispersion_proxy_evidence"] = {
@@ -13833,6 +13910,9 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
     spatial_stratification = response.get(
         "public_actual_hydrogen_spatial_stratification_evidence"
     ) or {}
+    orientation_transfer = response.get(
+        "public_usn_orientation_transfer_diagnostic"
+    ) or {}
     elvhys_alarm_diagnostic = response.get(
         "public_elvhys_post_failure_alarm_diagnostic"
     ) or {}
@@ -14538,6 +14618,21 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                     if preslhy_transport.get(key) is not None
                 },
             } if preslhy_transport and preslhy_transport_relevant else {}),
+            **({
+                "public_usn_orientation_transfer_diagnostic": {
+                    key: orientation_transfer.get(key)
+                    for key in (
+                        "artifact", "evidence_role", "dataset_doi", "article_doi",
+                        "license", "experiment_count", "median_spearman",
+                        "spearman_at_least_0_4_fraction", "mean_top5_recall",
+                        "nearest_in_response_quartile_fraction", "joint_screen_pass",
+                        "runtime_detector_routing_changed", "independent_holdout",
+                        "prospective_validation", "runtime_application", "gate_changed",
+                        "claim_limit",
+                    )
+                    if orientation_transfer.get(key) is not None
+                },
+            } if orientation_transfer and usn_actual_h2_spatial_relevant else {}),
             **({
                 "public_elvhys_dataset": {
                     key: elvhys.get(key)

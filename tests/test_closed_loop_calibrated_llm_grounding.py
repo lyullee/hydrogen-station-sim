@@ -89,6 +89,27 @@ def test_preslhy_actual_hydrogen_transport_diagnostic_is_grounded_without_promot
     assert projected["runtime_promotion"] is False
 
 
+def test_usn_orientation_transfer_diagnostic_is_grounded_without_runtime_routing():
+    manifest = build_evidence_manifest(
+        {"time_s": 1.0}, {}, [], False, question="수소 검지기 위치 검증 근거"
+    )
+    evidence = manifest["response_evidence"][
+        "public_usn_orientation_transfer_diagnostic"
+    ]
+    assert evidence["dataset_doi"] == "10.23642/USN.26117989.v2"
+    assert evidence["article_doi"] == "10.1016/j.jlp.2025.105669"
+    assert evidence["experiment_count"] == 22
+    assert evidence["joint_screen_pass"] is True
+    assert evidence["runtime_detector_routing_changed"] is False
+    assert evidence["independent_holdout"] is False
+    assert evidence["runtime_application"] is False
+    projected = prompt_decision_evidence(manifest)["decision_support_evidence"][
+        "public_usn_orientation_transfer_diagnostic"
+    ]
+    assert projected["mean_top5_recall"] == pytest.approx(0.8727272727272729)
+    assert projected["gate_changed"] is False
+
+
 def test_mc_geometry_transfer_diagnostic_is_grounded_without_rule_promotion():
     manifest = build_evidence_manifest(
         {"time_s": 1.0}, {}, [], False, question="탱크 모델 검증 상태"
