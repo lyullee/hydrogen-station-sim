@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-14T03:34:05+00:00",
+  "generated_at": "2026-10-14T03:53:39+00:00",
   "metric_definition": "PASS gates divided by PASS+FAIL+PENDING gates; not a publication-readiness probability",
   "gate_counts": {
     "PASS": 134,
@@ -85,14 +85,14 @@
       "ethics_and_expert_review": "optional_for_physics_validation; required only for a claim that SAGA improves human safety guidance"
     }
   },
-  "source_commit": "e603690",
-  "latest_completed_work": "Public HydDown hydrogen discharge/filling evidence route and adjacent HY2RES PLC operational-context route added; focused LLM/evidence regression passed.",
+  "source_commit": "d82c95c",
+  "latest_completed_work": "Public HydDown hydrogen discharge/filling evidence route and adjacent HY2RES PLC operational-context route added; full regression passed.",
   "latest_full_regression": {
-    "tests_passed": 1592,
+    "tests_passed": 1593,
     "tests_failed": 0,
     "tests_skipped": 0,
     "warnings": 222,
-    "elapsed_seconds": 317.25
+    "elapsed_seconds": 340.93
   },
   "remaining_workstreams": [
     {
