@@ -17,6 +17,10 @@ RUN_PACKAGE = (ROOT / "scripts/start_packaged_unreal.ps1").read_text(encoding="u
 IMPORTER = (ROOT / "unreal/HRSUnreal/Scripts/import_reference_assets.py").read_text(encoding="utf-8")
 PLACER = (ROOT / "unreal/HRSUnreal/Scripts/place_reference_scenes.py").read_text(encoding="utf-8")
 GAME_CONFIG = (ROOT / "unreal/HRSUnreal/Config/DefaultGame.ini").read_text(encoding="utf-8")
+TARGETS = [
+    (ROOT / "unreal/HRSUnreal/Source/HRSUnreal.Target.cs").read_text(encoding="utf-8"),
+    (ROOT / "unreal/HRSUnreal/Source/HRSUnrealEditor.Target.cs").read_text(encoding="utf-8"),
+]
 
 problems: list[str] = []
 equipment = {row["component_id"] for row in MANIFEST["equipment"]}
@@ -76,6 +80,11 @@ for token in ("BuildCookRun", "-platform=Win64", "-cook", "-pak", "hrs-unreal-bu
 for token in ("executable_sha256", "-PixelStreamingURL=", "-HRSApi=", "-HRSRenderer="):
     if token not in RUN_PACKAGE:
         problems.append(f"packaged runtime contract is missing: {token}")
+for target in TARGETS:
+    if "DefaultBuildSettings = BuildSettingsVersion.V5" not in target:
+        problems.append("UE target must use BuildSettingsVersion.V5")
+    if "IncludeOrderVersion = EngineIncludeOrderVersion.Unreal5_6" not in target:
+        problems.append("UE target must pin the Unreal 5.6 include order")
 
 if problems:
     raise SystemExit("Unreal source contract FAIL\n- " + "\n- ".join(problems))
@@ -89,5 +98,6 @@ print(json.dumps({
     "reference_models_cooked": True,
     "reference_scenes_placed_by_pipeline": True,
     "packaging_pipeline": True,
+    "ue56_include_order_pinned": True,
     "operator_inputs": ["orbit", "middle-pan", "wheel-zoom", "camera-toggle", "detector-toggle"],
 }, ensure_ascii=False))

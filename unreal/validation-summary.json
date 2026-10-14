@@ -3,7 +3,7 @@
   "status": "BRIDGE_AND_ASSETS_VERIFIED_ENGINE_PENDING",
   "python_focused_tests": {"passed":33, "failed":0},
   "javascript_focused_tests": {"passed":10, "failed":0},
-  "unreal_source_contract": {"status":"PASS", "equipment":14, "valves":15, "detectors":24, "cameras":5, "gltf_import_scale":100.0, "reference_models_cooked":true, "reference_scenes_placed_by_pipeline":true, "packaging_pipeline":true},
+  "unreal_source_contract": {"status":"PASS", "equipment":14, "valves":15, "detectors":24, "cameras":5, "gltf_import_scale":100.0, "reference_models_cooked":true, "reference_scenes_placed_by_pipeline":true, "packaging_pipeline":true, "ue56_include_order_pinned":true},
   "real_browser_checks": {"passed":5, "page_errors":0, "engine_video_verified":false},
   "pixel_streaming_infrastructure": {
     "build":"PASS",
