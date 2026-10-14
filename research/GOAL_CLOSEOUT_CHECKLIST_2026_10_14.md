@@ -14,7 +14,7 @@
 | 최신 전체 회귀 | 완료 | 1,626 passed / 0 failed / 0 skipped / 224 warnings |
 | IJHE 형식·PDF 무결성 | 완료 | 24페이지 컴파일, 인용·그림·참조·PDF 해시 확인 |
 | readiness 원장·미러 동기화 | 완료 | 134 PASS / 11 FAIL / 7 PENDING |
-| GitHub 우선순위 CI | 완료 | 커밋 `510370a` 실행 성공 |
+| GitHub 우선순위 CI | 완료 | 커밋 `6446e2f` 실행 38579339898 성공 |
 | 논문 제출 준비 | 미완료 | 독립 물리 게이트와 제출 메타데이터 미확정 |
 | 전체 목표 완료 | 미완료 | `full_user_objective_ready=false` |
 
