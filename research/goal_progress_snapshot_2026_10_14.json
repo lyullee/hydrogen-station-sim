@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-14T05:39:06Z",
+  "generated_at": "2026-10-14T05:58:33Z",
   "metric_definition": "PASS gates divided by PASS+FAIL+PENDING gates; not a publication-readiness probability",
   "gate_counts": {
     "PASS": 134,
@@ -85,8 +85,8 @@
       "ethics_and_expert_review": "optional_for_physics_validation; required only for a claim that SAGA improves human safety guidance"
     }
   },
-  "source_commit": "b993c8f",
-  "latest_completed_work": "Completed priority-manifest/privacy cleanup, full regression confirmation, Andreasen overlap invalidation, HySaM inventory, and a public validation-data recheck with explicit exclusion boundaries.",
+  "source_commit": "c370f617a59d771d07a221823d2bafbb5770d53d",
+  "latest_completed_work": "Completed priority-manifest/privacy cleanup, full regression confirmation, Andreasen overlap invalidation, HySaM inventory, and the public validation-data recheck with explicit exclusion boundaries; snapshot provenance is synchronized to the latest commit.",
   "latest_full_regression": {
     "tests_passed": 1602,
     "tests_failed": 0,
