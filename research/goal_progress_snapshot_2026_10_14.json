@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-14T05:03:59Z",
+  "generated_at": "2026-10-14T05:34:40Z",
   "metric_definition": "PASS gates divided by PASS+FAIL+PENDING gates; not a publication-readiness probability",
   "gate_counts": {
     "PASS": 134,
@@ -85,8 +85,8 @@
       "ethics_and_expert_review": "optional_for_physics_validation; required only for a claim that SAGA improves human safety guidance"
     }
   },
-  "source_commit": "2bc2361",
-  "latest_completed_work": "Refreshed the hash-linked public accident and readiness evidence projections after correcting local provenance and invalidating the reused Jankuj holdout; HIAD/KHK replay and response handoff records are synchronized, with no scientific gate promoted.",
+  "source_commit": "945d8bc",
+  "latest_completed_work": "Repaired priority validation and release-manifest consistency after the full regression triage; generated local-path evidence output was removed, and no scientific gate was promoted.",
   "latest_full_regression": {
     "tests_passed": 1599,
     "tests_failed": 0,
@@ -129,6 +129,11 @@
     "scope": "tests/test_ijhe_readiness_audit.py tests/test_ijhe_audit_snapshot_consistency.py tests/test_validation_gap_report.py tests/test_llm_grounding.py"
   },
   "completed_process_improvements": [
+    {
+      "id": "full_regression_process_fix_2026_10_14",
+      "progress_percent": 100.0,
+      "status": "The priority-check count and release manifest are synchronized at four checks; the research metadata privacy regression is clean after removing the generated local-path artifact. Scientific gate counts remain unchanged."
+    },
     {
       "id": "runtime_evidence_chain_hash_resync_2026_10_14",
       "progress_percent": 100.0,
@@ -205,4 +210,4 @@
       "status": "The current streamed LLM/vehicle-route runtime and readiness/data-lane audit passed 3 JavaScript and 47 Python tests; the station-side/full-loop boundary remains explicit and no scientific gate was promoted."
     }
   ]
-}
+}\n
