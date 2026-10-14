@@ -7857,9 +7857,6 @@ def _public_source_links(evidence: dict[str, Any]) -> list[dict[str, Any]]:
             ),
             "현장 HRS 정상운전·이상탐지 방법론 문맥(원시 로그·독립 holdout 아님)",
         )
-    zhang_lh2_context = evidence.get(
-        "public_zhang_lh2_release_context"
-    ) or {}
     zhang_source = zhang_lh2_context.get("source") or {}
     zhang_doi = str(zhang_source.get("doi") or "").strip()
     if zhang_doi:
