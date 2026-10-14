@@ -1,0 +1,91 @@
+{
+  "schema_version": 1,
+  "artifact_type": "release_failure_crosswalk",
+  "generated_from": [
+    "research/schefer_2006_line_transient_diagnostic_2026_10_09.json",
+    "research/schefer_2007_nonadiabatic_diagnostic_2026_10_14.json",
+    "research/release_model_posthoc_sensitivity_latest.json",
+    "research/preslhy_blowdown_external_validation.json",
+    "research/preslhy_blowdown_freeze_integrity_audit_2026_10_13.json",
+    "research/preslhy_partb_nonadiabatic_diagnostic_2026_10_05.json",
+    "research/proust_release_boundary_semantics_diagnostic_2026_10_12.json"
+  ],
+  "evidence_role": "post_outcome_diagnostic_only",
+  "claim_boundary": "This crosswalk does not promote a failed result, select a runtime parameter, or establish an independent validation claim. A new untouched holdout is required after any model change.",
+  "findings": [
+    {
+      "id": "apparatus_boundary_and_line_inventory",
+      "affected_gates": [
+        "schefer_transient_release_validation",
+        "proust_independent_release_validation",
+        "preslhy_blowdown_external_validation"
+      ],
+      "evidence": [
+        "The Schefer line diagnostic preserves separate source/outlet boundaries but still fails the frozen timing and error screens.",
+        "Proust effective discharge coefficient varies by nominal diameter, so one global coefficient cannot reconcile all series.",
+        "PRESLHY performance varies strongly by nozzle diameter and pressure group."
+      ],
+      "interpretation": "The controlling boundary is likely a network of vessel, line, valve and terminal restriction rather than a single fixed aperture coefficient.",
+      "next_evidence": "Freeze measured line length/diameter, valve opening law, upstream pressure-temperature boundary and terminal geometry before reading outcomes."
+    },
+    {
+      "id": "valve_and_transient_timing",
+      "affected_gates": [
+        "schefer_transient_release_validation",
+        "schefer_2007_pressure_decay_validation"
+      ],
+      "evidence": [
+        "A post-outcome 4 s source-valve sensitivity reduces Schefer 2006 outlet median APE to 19.83%, but does not establish a pass.",
+        "Schefer 2007 non-adiabatic wall sensitivity changes the pressure transient but leaves the joint screen failed."
+      ],
+      "interpretation": "Opening/closing dynamics and instrument boundary timing may explain the remaining transient mismatch, but the available traces cannot identify a production time constant.",
+      "next_evidence": "Obtain a new event with valve command, valve position or flow-meter timing on the same clock as vessel pressure."
+    },
+    {
+      "id": "diameter_and_discharge_regime",
+      "affected_gates": [
+        "preslhy_blowdown_external_validation",
+        "preslhy_partb_ambient_external_validation",
+        "preslhy_revised_holdout_validation",
+        "proust_independent_release_validation"
+      ],
+      "evidence": [
+        "PRESLHY's controlling frozen result is 0.500 (11/22); the later 0.727 rerun is post-outcome and demoted. The 1.0 mm group is 0/4 while 4.0 mm is 7/7 in the retained stratification.",
+        "Part-B non-adiabatic sensitivity remains 0.600; both 2 mm cases retain approximately 25.3% half-time error.",
+        "Proust reports diameter-dependent effective discharge coefficients."
+      ],
+      "interpretation": "A single choked-flow relation is insufficient across the observed diameter and pressure regimes; a declared regime transition or measured manifold loss is needed.",
+      "next_evidence": "Use an untouched campaign spanning at least two diameters and pressure regimes with measured upstream conditions and aperture/manifold geometry."
+    },
+    {
+      "id": "thermal_boundary",
+      "affected_gates": [
+        "dickens_typeiii_prospective_validation",
+        "schefer_2007_pressure_decay_validation",
+        "preslhy_partb_ambient_external_validation"
+      ],
+      "evidence": [
+        "Dickens passes pressure screens but fails gas-temperature screens.",
+        "Adding consumed wall-thermal sensitivity to Schefer 2007 and PRESLHY Part-B does not close the joint screens."
+      ],
+      "interpretation": "Thermal state is a real limitation, but a generic wall heat-transfer coefficient alone is not sufficient; inlet and wall geometry/temperature history are under-specified.",
+      "next_evidence": "Freeze measured wall mass/heat capacity, inlet temperature history and geometry for a new independent charge or blowdown event."
+    }
+  ],
+  "model_change_order": [
+    "Resolve apparatus boundary and line/valve inventory.",
+    "Declare diameter/regime semantics and thermal boundary inputs.",
+    "Freeze the revised model and protocol before inspecting outcomes.",
+    "Evaluate a new independent holdout and retain the current negative controls."
+  ],
+  "diagnostic_summary": {
+    "schefer_2006_best_posthoc_valve_time_constant_s": 4.0,
+    "schefer_2006_best_posthoc_outlet_median_ape_percent": 19.827557401376218,
+    "preslhy_frozen_joint_pass_fraction": 0.5,
+    "preslhy_post_outcome_joint_pass_fraction": 0.7272727272727273,
+    "preslhy_part_b_diagnostic_joint_pass_fraction": 0.6,
+    "proust_effective_cd_range_min": 0.16114851706720124,
+    "proust_effective_cd_range_max": 0.17828481984940386,
+    "schefer_2007_diagnostic_points": 16
+  }
+}
