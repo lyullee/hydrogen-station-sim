@@ -1,0 +1,210 @@
+{
+  "generated_at_utc": "2026-10-14T23:12:14.074083+00:00",
+  "manuscript": "manuscript/ijhe_manuscript_reconstructed.tex",
+  "source_sha256": "07838e20e9c6413cf3b8ac4b368dbb6130d4005d43ee29ecfba92bd936d85016",
+  "scope": "Selected central numerical claims checked against existing aggregate artifacts; not a new experiment or exhaustive scientific review.",
+  "authorship_block_preserved": true,
+  "references_in_first_citation_order": true,
+  "selected_numeric_checks": [
+    {
+      "claim": "Type-IV validation pressure RMSE",
+      "artifact": "research/tank_model_validation_v2.json",
+      "artifact_sha256": "4480505cd2e094f64c03421545bfb2a0235a7f58b66e2a5cb5ed529d4d669840",
+      "field_path": [
+        "validation",
+        "pressure_rmse_mpa",
+        "mean"
+      ],
+      "source_value": 3.8413052037435977,
+      "displayed_value": "3.841",
+      "evidence_role": "public measured-boundary component",
+      "displayed_value_present": true
+    },
+    {
+      "claim": "Type-IV validation temperature RMSE",
+      "artifact": "research/tank_model_validation_v2.json",
+      "artifact_sha256": "4480505cd2e094f64c03421545bfb2a0235a7f58b66e2a5cb5ed529d4d669840",
+      "field_path": [
+        "validation",
+        "temperature_rmse_c",
+        "mean"
+      ],
+      "source_value": 4.832748408545587,
+      "displayed_value": "4.833",
+      "evidence_role": "public measured-boundary component",
+      "displayed_value_present": true
+    },
+    {
+      "claim": "Type-IV validation SOC RMSE",
+      "artifact": "research/tank_model_validation_v2.json",
+      "artifact_sha256": "4480505cd2e094f64c03421545bfb2a0235a7f58b66e2a5cb5ed529d4d669840",
+      "field_path": [
+        "validation",
+        "soc_rmse_percentage_points",
+        "mean"
+      ],
+      "source_value": 3.8495521984109318,
+      "displayed_value": "3.850",
+      "evidence_role": "public measured-boundary component",
+      "displayed_value_present": true
+    },
+    {
+      "claim": "Recharge holdout MAE",
+      "artifact": "research/confidential_station_recharge_pressure_forecast_holdout_2026_10_08.json",
+      "artifact_sha256": "c870990c3416de59593c7a893dc33939a0a42665bf08db972290dd412d13b999",
+      "field_path": [
+        "holdout",
+        "combined",
+        "mae_mpa"
+      ],
+      "source_value": 0.184407,
+      "displayed_value": "0.184",
+      "evidence_role": "same-site conditional 30-second surrogate",
+      "displayed_value_present": true
+    },
+    {
+      "claim": "Recharge persistence MAE",
+      "artifact": "research/confidential_station_recharge_pressure_forecast_holdout_2026_10_08.json",
+      "artifact_sha256": "c870990c3416de59593c7a893dc33939a0a42665bf08db972290dd412d13b999",
+      "field_path": [
+        "holdout",
+        "combined",
+        "persistence_mae_mpa"
+      ],
+      "source_value": 0.655914,
+      "displayed_value": "0.656",
+      "evidence_role": "same-site comparator",
+      "displayed_value_present": true
+    },
+    {
+      "claim": "Recharge prefix extrapolation MAE",
+      "artifact": "research/confidential_station_recharge_pressure_forecast_holdout_2026_10_08.json",
+      "artifact_sha256": "c870990c3416de59593c7a893dc33939a0a42665bf08db972290dd412d13b999",
+      "field_path": [
+        "holdout",
+        "combined",
+        "uncalibrated_prefix_mae_mpa"
+      ],
+      "source_value": 0.19583,
+      "displayed_value": "0.196",
+      "evidence_role": "same-site comparator",
+      "displayed_value_present": true
+    },
+    {
+      "claim": "Recharge holdout P90 error",
+      "artifact": "research/confidential_station_recharge_pressure_forecast_holdout_2026_10_08.json",
+      "artifact_sha256": "c870990c3416de59593c7a893dc33939a0a42665bf08db972290dd412d13b999",
+      "field_path": [
+        "holdout",
+        "combined",
+        "p90_absolute_error_mpa"
+      ],
+      "source_value": 0.529255,
+      "displayed_value": "0.529",
+      "evidence_role": "same-site conditional 30-second surrogate",
+      "displayed_value_present": true
+    },
+    {
+      "claim": "Alarm-only proxy",
+      "artifact": "research/hiad_machine_response_benchmark_2026_10_08.json",
+      "artifact_sha256": "7293cd3723ef2421a05e659db73020f2a566f427aa119936ea2946fbb4c2a87c",
+      "field_path": [
+        "aggregate",
+        "variant_summary",
+        "alarm-only",
+        "mean_machine_proxy_score"
+      ],
+      "source_value": 0.40061274509803924,
+      "displayed_value": "0.401",
+      "evidence_role": "original retrospective output",
+      "displayed_value_present": true
+    },
+    {
+      "claim": "SAGA proxy",
+      "artifact": "research/hiad_machine_response_benchmark_2026_10_08.json",
+      "artifact_sha256": "7293cd3723ef2421a05e659db73020f2a566f427aa119936ea2946fbb4c2a87c",
+      "field_path": [
+        "aggregate",
+        "variant_summary",
+        "saga-linked",
+        "mean_machine_proxy_score"
+      ],
+      "source_value": 0.7601715686274509,
+      "displayed_value": "0.760",
+      "evidence_role": "original retrospective output",
+      "displayed_value_present": true
+    },
+    {
+      "claim": "SAGA stage coverage",
+      "artifact": "research/hiad_machine_response_benchmark_2026_10_08.json",
+      "artifact_sha256": "7293cd3723ef2421a05e659db73020f2a566f427aa119936ea2946fbb4c2a87c",
+      "field_path": [
+        "aggregate",
+        "variant_summary",
+        "saga-linked",
+        "mean_stage_coverage"
+      ],
+      "source_value": 0.9823529411764705,
+      "displayed_value": "0.982",
+      "evidence_role": "original retrospective output",
+      "displayed_value_present": true
+    },
+    {
+      "claim": "Guarded-output reference F1",
+      "artifact": "research/hiad_response_selectivity_audit_2026_10_08.json",
+      "artifact_sha256": "b83593176620f57f0c8318e270f0c020897e75f6bb75e42a8838069c512874e0",
+      "field_path": [
+        "variant_summary",
+        "saga_linked_guarded",
+        "reference_f1"
+      ],
+      "source_value": 0.5638911593457048,
+      "displayed_value": "0.564",
+      "evidence_role": "post-outcome different output revision",
+      "displayed_value_present": true
+    },
+    {
+      "claim": "Guarded-output precision",
+      "artifact": "research/hiad_response_selectivity_audit_2026_10_08.json",
+      "artifact_sha256": "b83593176620f57f0c8318e270f0c020897e75f6bb75e42a8838069c512874e0",
+      "field_path": [
+        "variant_summary",
+        "saga_linked_guarded",
+        "reference_precision"
+      ],
+      "source_value": 0.6797979797979797,
+      "displayed_value": "0.680",
+      "evidence_role": "post-outcome different output revision",
+      "displayed_value_present": true
+    },
+    {
+      "claim": "Guarded-output word count",
+      "artifact": "research/hiad_response_selectivity_audit_2026_10_08.json",
+      "artifact_sha256": "b83593176620f57f0c8318e270f0c020897e75f6bb75e42a8838069c512874e0",
+      "field_path": [
+        "variant_summary",
+        "saga_linked_guarded",
+        "word_count"
+      ],
+      "source_value": 140.4848484848485,
+      "displayed_value": "140.5",
+      "evidence_role": "post-outcome different output revision",
+      "displayed_value_present": true
+    },
+    {
+      "claim": "Alarm-only word count",
+      "artifact": "research/hiad_response_selectivity_audit_2026_10_08.json",
+      "artifact_sha256": "b83593176620f57f0c8318e270f0c020897e75f6bb75e42a8838069c512874e0",
+      "field_path": [
+        "variant_summary",
+        "alarm_only",
+        "word_count"
+      ],
+      "source_value": 28.09090909090909,
+      "displayed_value": "28.1",
+      "evidence_role": "post-outcome selectivity comparator",
+      "displayed_value_present": true
+    }
+  ],
+  "passed": true
+}

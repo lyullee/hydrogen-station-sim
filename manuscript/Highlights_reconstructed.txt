@@ -1,0 +1,5 @@
+- A virtual H70 station links process states, hazards and executable safety actions.
+- SAGA explains deterministic evidence through isolated station and sensor APIs.
+- Public experiments and private temporal holdouts support distinct model boundaries.
+- Failed controller and release transfers remain explicit limits on application.
+- A 34-incident response proxy improves with SAGA; human effectiveness is untested.

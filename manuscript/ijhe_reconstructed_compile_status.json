@@ -1,0 +1,50 @@
+{
+  "schema_version": 2,
+  "verified_at_utc": "2026-10-14T23:12:13.915969+00:00",
+  "success": true,
+  "compiler": {
+    "name": "Tectonic",
+    "version": "0.17.0",
+    "official_release_url": "https://github.com/tectonic-typesetting/tectonic/releases/tag/tectonic@0.17.0",
+    "archive_sha256": "f61ce51f0b0ade1015b7de7ef368541c5424e9756ecbd0d7af97d6d48030845"
+  },
+  "source": {
+    "path": "manuscript/ijhe_manuscript_reconstructed.tex",
+    "bytes": 59433,
+    "sha256": "07838e20e9c6413cf3b8ac4b368dbb6130d4005d43ee29ecfba92bd936d85016"
+  },
+  "pdf": {
+    "path": "output/pdf/ijhe_manuscript_reconstructed.pdf",
+    "bytes": 646332,
+    "sha256": "7e188c7cfaf3b7723a310edbabc4a3b55d87695193e948dbb65e27a343cc0fea",
+    "page_count": 19,
+    "extracted_character_count": 55605
+  },
+  "compile_log": {
+    "path": "output/pdf/ijhe_manuscript_reconstructed.log",
+    "bytes": 18996,
+    "sha256": "1bbeecf39bcb8c08abbade76ac710d070b9e0f8f86c2ddd5061b0a415136a716",
+    "unresolved_citations": 0,
+    "unresolved_references": 0,
+    "fatal_errors": [],
+    "underfull_hbox_count": 7,
+    "overfull_hbox_count": 0,
+    "maximum_overfull_width_pt": 0.0
+  },
+  "content_checks": {
+    "replacement_characters": 0,
+    "double_question_placeholder_tokens": 0,
+    "references_heading_present": true,
+    "working_manuscript_notice_present": true
+  },
+  "visual_qa": {
+    "renderer": "Poppler pdftoppm",
+    "pages_rendered": 19,
+    "pages_inspected": 19,
+    "all_pages_rendered_and_inspected": true,
+    "clipping_or_overlap_detected": false
+  },
+  "source_matches_pdf_build": true,
+  "format_check_passed": true,
+  "claim_boundary": "This proves that the exact working source compiled and rendered. It does not resolve scientific validation, independent review, authorship metadata, or journal acceptance."
+}

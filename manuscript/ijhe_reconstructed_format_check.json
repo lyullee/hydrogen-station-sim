@@ -1,0 +1,37 @@
+{
+  "manuscript": "manuscript\\ijhe_manuscript_reconstructed.tex",
+  "highlights": "manuscript\\Highlights_reconstructed.txt",
+  "counts": {
+    "abstract_words": 127,
+    "keywords": 6,
+    "highlight_bullets": 5,
+    "highlight_characters": [
+      82,
+      78,
+      83,
+      78,
+      81
+    ],
+    "approximate_manuscript_words_before_references": 6596,
+    "figures": 3,
+    "tables": 5,
+    "citation_keys": 26,
+    "bibliography_entries": 26,
+    "unresolved_citations": [],
+    "missing_figure_assets": []
+  },
+  "checks": {
+    "abstract_at_most_150_words": true,
+    "keywords_at_most_6": true,
+    "highlights_count_3_to_5": true,
+    "each_highlight_at_most_85_characters": true,
+    "research_paper_at_most_8000_words_approximate": true,
+    "diagrams_at_most_12": true,
+    "all_citations_resolved": true,
+    "all_figure_assets_present": true,
+    "balanced_braces": true,
+    "document_environment_present": true
+  },
+  "format_gate_passed": true,
+  "scientific_readiness_assessed": false
+}
