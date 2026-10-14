@@ -52,13 +52,14 @@ def import_asset(name: str) -> list[str]:
     task.set_editor_property("automated", True)
     task.set_editor_property("replace_existing", False)
     task.set_editor_property("save", True)
-    # UE 5.6 exposes GLTFImportOptions.  Default importer settings remain a
-    # safe fallback because glTF carries metres/Y-up metadata itself.
+    # Unreal units are centimetres while glTF is metres. The legacy glTF
+    # importer documents 100 as the metre-to-centimetre conversion. Keep the
+    # explicit value so a 4.6 m bank cannot silently become a 4.6 cm object.
     options_type = getattr(unreal, "GLTFImportOptions", None)
     if options_type is not None:
         options = options_type()
         if hasattr(options, "import_scale"):
-            options.set_editor_property("import_scale", 1.0)
+            options.set_editor_property("import_scale", 100.0)
         task.set_editor_property("options", options)
     unreal.AssetToolsHelpers.get_asset_tools().import_asset_tasks([task])
     imported = list(task.get_editor_property("imported_object_paths"))

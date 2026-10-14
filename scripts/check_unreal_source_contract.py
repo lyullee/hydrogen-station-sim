@@ -12,6 +12,8 @@ CPP = (ROOT / "unreal/HRSUnreal/Source/HRSUnreal/HRSStationActor.cpp").read_text
 HEADER = (ROOT / "unreal/HRSUnreal/Source/HRSUnreal/HRSStationActor.h").read_text(encoding="utf-8")
 PAWN = (ROOT / "unreal/HRSUnreal/Source/HRSUnreal/HRSCameraPawn.cpp").read_text(encoding="utf-8")
 START = (ROOT / "scripts/start_unreal_pilot.ps1").read_text(encoding="utf-8")
+IMPORTER = (ROOT / "unreal/HRSUnreal/Scripts/import_reference_assets.py").read_text(encoding="utf-8")
+GAME_CONFIG = (ROOT / "unreal/HRSUnreal/Config/DefaultGame.ini").read_text(encoding="utf-8")
 
 problems: list[str] = []
 equipment = {row["component_id"] for row in MANIFEST["equipment"]}
@@ -52,6 +54,11 @@ for key in ("EKeys::C", "EKeys::G", "EKeys::MiddleMouseButton", "EKeys::MouseScr
 if "ws://127.0.0.1:18888" not in START or "ws://127.0.0.1:8888" in START:
     problems.append("pilot signalling port does not match infrastructure lock")
 
+if 'set_editor_property("import_scale", 100.0)' not in IMPORTER:
+    problems.append("glTF importer must convert metres to Unreal centimetres exactly once")
+if '+DirectoriesToAlwaysCook=(Path="/Game/HRS/Models")' not in GAME_CONFIG:
+    problems.append("reference model directory is missing from package cook settings")
+
 if problems:
     raise SystemExit("Unreal source contract FAIL\n- " + "\n- ".join(problems))
 print(json.dumps({
@@ -60,5 +67,7 @@ print(json.dumps({
     "detectors": len(MANIFEST["detectors"]),
     "cameras": len(MANIFEST["cameras"]),
     "valves": len(expected_valves),
+    "gltf_import_scale": 100.0,
+    "reference_models_cooked": True,
     "operator_inputs": ["orbit", "middle-pan", "wheel-zoom", "camera-toggle", "detector-toggle"],
 }, ensure_ascii=False))

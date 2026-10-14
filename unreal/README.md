@@ -52,7 +52,7 @@ UE 프로젝트 파일: `HRSUnreal/HRSUnreal.uproject`. 에셋 생성 스크립�
 
 진행률은 `progress.json`의 수락 항목에서 `verified`의 비율이다. `source_ready`는 소스가 작성됐어도 UE 실행을 확인하기 전에는 완료로 세지 않는다. `scripts/report_unreal_progress.py`로 단계별 진행률을 출력한다.
 
-기존 저·중·고압 뱅크, 압축기, 프리쿨러, 차량, 튜브 트레일러의 총 7개 GLB 자산을 `output/unreal/assets`에 생성했다. Khronos glTF Validator 2.0.0-dev.3.10 검증에서 오류·경고 0이다. Unreal 가져오기와 축/크기 검증은 별도로 필요하다. glTF 자체가 미터/Y-up을 사용하므로 UE 가져오기 변환과 위치 매니페스트 변환을 중복 적용하지 않는다. 재생성은 `scripts/export_unreal_assets.cjs`, 검증은 `scripts/validate_unreal_assets.cjs`, UE 가져오기는 `HRSUnreal/Scripts/import_reference_assets.py`를 사용한다. Playwright 모듈 경로는 `HRS_PLAYWRIGHT_MODULE`로 지정할 수 있다.
+기존 저·중·고압 뱅크, 압축기, 프리쿨러, 차량, 튜브 트레일러의 총 7개 GLB 자산을 `output/unreal/assets`에 생성했다. Khronos glTF Validator 2.0.0-dev.3.10 검증에서 오류·경고 0이다. Unreal 가져오기와 축/크기 검증은 별도로 필요하다. glTF는 미터/Y-up이고 UE는 센티미터/Z-up이므로 공식 glTF 가져오기 설정의 `import_scale=100`으로 단 한 번 변환한다. `/Game/HRS/Models`는 패키징 시 항상 cook된다. 재생성은 `scripts/export_unreal_assets.cjs`, 검증은 `scripts/validate_unreal_assets.cjs`, UE 가져오기는 `HRSUnreal/Scripts/import_reference_assets.py`를 사용한다. Playwright 모듈 경로는 `HRS_PLAYWRIGHT_MODULE`로 지정할 수 있다.
 
 웹 연결 검증은 `scripts/verify_unreal_web.cjs`를 사용한다. 전용 로컬 API와 Pixel Streaming 서버를 먼저 실행한다. 테스트 페이지에서만 플레이어 설정을 대체하며 운영 환경변수는 변경하지 않는다. 실제 시뮬레이터의 뱅크 압력·질량과 표시 대상 변경·초기화 연결을 검증한다. UE 영상 검증은 아니며 보고서에도 명시한다. 공식 플레이어의 XR 자동 탐색은 데스크톱 시제품에서 불필요하므로 공식 API의 XR 컨트롤 비활성 옵션을 사용한다.
 
