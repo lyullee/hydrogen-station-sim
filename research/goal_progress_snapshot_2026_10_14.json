@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-14T09:58:23Z",
+  "generated_at": "2026-10-14T10:05:00Z",
   "metric_definition": "PASS gates divided by PASS+FAIL+PENDING gates; not a publication-readiness probability",
   "gate_counts": {
     "PASS": 134,
@@ -85,8 +85,8 @@
       "ethics_and_expert_review": "optional_for_physics_validation; required only for a claim that SAGA improves human safety guidance"
     }
   },
-  "source_commit": "c8c5f2efc2556f434d4bc28ed4fb1a44f2a2fc19",
-  "latest_completed_work": "전체 Python 회귀를 최신 커밋에서 재실행해 1,618 passed / 0 failed / 0 skipped / 222 warnings를 확인했다. 결정론적 evidence chain과 readiness 해시도 최신 코드에 맞춰 동기화됐으며 과학적 게이트는 승격하지 않았다.",
+  "source_commit": "108f3001a985e874aede01b267cbd8cb543edb3a",
+  "latest_completed_work": "전체 Python 회귀검증 1,618 passed / 0 failed / 0 skipped / 222 warnings를 최신 커밋에 기록했습니다. 과학적 readiness gate 수치는 134 PASS / 11 FAIL / 7 PENDING으로 유지됩니다.",
   "latest_full_regression": {
     "tests_passed": 1618,
     "tests_failed": 0,
@@ -309,6 +309,11 @@
       "id": "full_regression_after_evidence_chain_refresh_2026_10_14",
       "progress_percent": 100.0,
       "status": "최신 커밋에서 전체 Python 회귀 1,618건을 재실행해 실패 없이 통과했다. 기존 과학적 FAIL/PENDING 판정은 그대로 유지했다."
+    },
+    {
+      "id": "full_regression_provenance_alignment_2026_10_14",
+      "progress_percent": 100.0,
+      "status": "최신 전체 회귀검증 기록과 진행 스냅샷의 커밋 출처를 108f300으로 정렬했습니다. 과학적 gate 수치는 변경하지 않았습니다."
     }
   ],
   "latest_context_focused_regression": {
