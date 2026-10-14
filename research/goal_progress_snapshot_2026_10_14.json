@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-14T08:34:54Z",
+  "generated_at": "2026-10-14T09:43:09Z",
   "metric_definition": "PASS gates divided by PASS+FAIL+PENDING gates; not a publication-readiness probability",
   "gate_counts": {
     "PASS": 134,
@@ -85,8 +85,8 @@
       "ethics_and_expert_review": "optional_for_physics_validation; required only for a claim that SAGA improves human safety guidance"
     }
   },
-  "source_commit": "7afa50e2a1214e45b1e6842fada1f112db6d72e9",
-  "latest_completed_work": "실제 액체수소 대규모 방출 실험(doi:10.3390/app14093645)을 극저온 방출·공간 피해영향 설명 전용 LLM 근거로 연결했다. 원시 시계열과 기계판독 좌표가 없어 독립 검증·위험거리 보정에는 사용하지 않으며, 전체 회귀는 1,618 passed / 0 failed / 0 skipped / 222 warnings로 통과했다.",
+  "source_commit": "302386f2d7f00f27ff630b89e7ec0ea765195030",
+  "latest_completed_work": "Applied Sciences 2024 액체수소 대용량 방출 실험 근거를 추가해 관련 질문의 LLM 근거 라우팅을 보강했고, evidence chain과 해시 동기화를 완료했다. 전체 회귀는 1,618 passed / 0 failed / 0 skipped / 222 warnings였다. 이후 중복 근거 조회를 제거하고 감사 기록 해시를 최신 코드에 맞췄다.",
   "latest_full_regression": {
     "tests_passed": 1618,
     "tests_failed": 0,
@@ -293,6 +293,11 @@
       "id": "runtime_and_data_lane_verification_2026_10_14",
       "progress_percent": 100.0,
       "status": "The current streamed LLM/vehicle-route runtime and readiness/data-lane audit passed 3 JavaScript and 47 Python tests; the station-side/full-loop boundary remains explicit and no scientific gate was promoted."
+    },
+    {
+      "id": "readiness_audit_hash_resync_after_evidence_cleanup_2026_10_14",
+      "progress_percent": 100.0,
+      "status": "최근 LLM 근거 정리 커밋 이후 Type-IV 런타임 보정과 KHK 사고 선례 라우팅 감사의 소스 해시를 재생성했고 readiness 판정 134 PASS / 11 FAIL / 7 PENDING을 그대로 확인했다. 과학적 게이트는 승격하지 않았다."
     }
   ],
   "latest_context_focused_regression": {
