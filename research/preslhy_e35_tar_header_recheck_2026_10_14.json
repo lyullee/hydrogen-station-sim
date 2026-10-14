@@ -1,0 +1,88 @@
+{
+  "schema_version": 1,
+  "artifact_type": "preslhy_e35_public_tar_header_recheck",
+  "recorded_at": "2026-10-14",
+  "source": {
+    "doi": "10.35097/1481",
+    "landing_page": "https://radar.kit.edu/radar/en/dataset/nWczysTWjmuzgFKm",
+    "archive_url": "https://radar.kit.edu/radar-backend/archives/nWczysTWjmuzgFKm/versions/1/content",
+    "archive_size_bytes": 11341115392,
+    "archive_md5": "aa89132abb34eff9b2b4ce40a6e2975f",
+    "license": "CC BY-SA 4.0"
+  },
+  "method": {
+    "access_mode": "HTTP Range and streamed tar-header parsing",
+    "raw_archive_downloaded": false,
+    "numerical_outcomes_read": false,
+    "purpose": "bound archive structure and identify candidate member files before any new numerical protocol"
+  },
+  "observed_headers": [
+    {
+      "offset": 0,
+      "name": "10.35097-1481/",
+      "size_bytes": 0,
+      "type": "directory"
+    },
+    {
+      "offset": 512,
+      "name": "10.35097-1481/data/",
+      "size_bytes": 0,
+      "type": "directory"
+    },
+    {
+      "offset": 1024,
+      "name": "10.35097-1481/data/readme.txt",
+      "size_bytes": 1689,
+      "type": "file"
+    },
+    {
+      "offset": 3584,
+      "name": "10.35097-1481/data/descriptive-md/",
+      "size_bytes": 0,
+      "type": "directory"
+    },
+    {
+      "offset": 4096,
+      "name": "10.35097-1481/data/descriptive-md/dataset.desc_md.xml",
+      "size_bytes": 5800,
+      "type": "file"
+    },
+    {
+      "offset": 10752,
+      "name": "10.35097-1481/data/technical-md/",
+      "size_bytes": 0,
+      "type": "directory"
+    },
+    {
+      "offset": 11264,
+      "name": "10.35097-1481/data/technical-md/dataset.tech_md.xml",
+      "size_bytes": 604,
+      "type": "file"
+    },
+    {
+      "offset": 12800,
+      "name": "10.35097-1481/data/dataset/",
+      "size_bytes": 0,
+      "type": "directory"
+    },
+    {
+      "offset": 13312,
+      "name": "10.35097-1481/data/dataset/20.mp4",
+      "size_bytes": 390843096,
+      "type": "file"
+    },
+    {
+      "offset": 390857216,
+      "name": "10.35097-1481/data/dataset/15.mp4",
+      "size_bytes": 361885847,
+      "type": "file"
+    }
+  ],
+  "decision": {
+    "new_numerical_member_accessed": false,
+    "new_prospective_holdout_created": false,
+    "gate_impact": "none",
+    "runtime_impact": "none",
+    "claim_boundary": "This record proves only bounded archive structure and public metadata access. It does not validate the HRS runtime or close a gaseous station-side/full-loop gate."
+  }
+}

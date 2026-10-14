@@ -363,6 +363,21 @@
       ],
       "eligible_new_raw_holdout_found": false,
       "interpretation": "8차 공개자료 검색에서도 새 권리정리 미사용 원시 holdout은 발견되지 않았다. NREL CDP는 집계자료, Kuroki·Cal State LA는 custodian 요청 대상, USN은 이미 사용된 실제수소 진단이다. gate·runtime·진행률은 변경하지 않았다."
+    },
+    "search_round_2026_10_14_ninth_pass": {
+      "search_date": "2026-10-14",
+      "new_candidates_checked": [
+        {
+          "id": "preslhy_e35_radar_tar_header_recheck",
+          "url": "https://radar.kit.edu/radar/en/dataset/nWczysTWjmuzgFKm",
+          "doi": "10.35097/1481",
+          "observed": "Official RADAR tar endpoint was rechecked without downloading the 11.3 GB archive. Header-only access confirmed the archive prefix contains descriptive metadata plus large numbered experiment video members (20.mp4 and 15.mp4); the previously accessed workbook remains the only retained numerical member in this repository.",
+          "eligibility": "CONSEQUENCE_BOUNDARY_CANDIDATE_NOT_NEW_HOLDOUT",
+          "reason": "The campaign is liquid-hydrogen release/consequence data rather than gaseous HRS station-side or station-to-vehicle data. The numerical workbook was accessed before a new prospective protocol, and this header-only recheck produced no new rights-cleared unaccessed numerical holdout."
+        }
+      ],
+      "eligible_new_raw_holdout_found": false,
+      "interpretation": "A bounded archive-structure recheck added no new eligible raw holdout. No runtime parameter, validation gate or progress percentage changes."
     }
   }
 }

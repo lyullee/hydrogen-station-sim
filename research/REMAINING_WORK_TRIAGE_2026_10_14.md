@@ -93,3 +93,4 @@
 - 일곱 번째 공개자료 재검색에서 USN·HyDelta·GASFLOW·공개 수소센서 보정자료를 확인했다. USN은 이미 사용한 실제 수소 진단이고, HyDelta는 좌표·원시 시계열이 부족하며, GASFLOW는 시뮬레이션이고, 보정자료는 다중 위치 공간 장치 맥락이 없어 새 독립 holdout으로 채택하지 않았다. 결과는 `research/public_data_search_recheck_2026_10_14.json`의 seventh pass에 기록했다.
 - 방출 네트워크·압력구동 열모델·장치 경계·라인 과도응답의 핵심 물리 회귀를 최신 소스에서 다시 실행해 31 passed / 0 failed / 1 warning을 확인했다. 이 결과는 `research/physics_core_regression_recheck_2026_10_14.json`에 고정했으며 개발용 라인·방출 모델을 운영 런타임이나 독립 외부검증으로 승격하지 않는다.
 2026-10-14 8차 공개자료 검색에서 NREL retail CDP, Kuroki HITRF 36 L, Cal State LA back-to-back, USN open-channel 경로를 재확인했다. 새 권리정리 미사용 원시 holdout은 없었고, 집계·custodian 요청·이미 사용된 자료로 분류했다. gate·runtime·진행률은 변경하지 않았다.
+2026-10-14 9차 공개자료 점검에서 PRESLHY E3.5 공식 RADAR tar 헤더를 Range/스트림 메타데이터로 재확인했다. 11.3 GB 전체를 받지 않고 설명·기술 메타데이터와 대형 실험 영상 멤버만 확인했으며, 새 미접근 수치 holdout은 발견되지 않았다. liquid-H2 consequence 경계자료로 유지하고 gate·runtime·진행률은 변경하지 않았다.
