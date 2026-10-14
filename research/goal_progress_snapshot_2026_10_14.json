@@ -85,7 +85,7 @@
       "ethics_and_expert_review": "optional_for_physics_validation; required only for a claim that SAGA improves human safety guidance"
     }
   },
-  "source_commit": "e287442",
+  "source_commit": "3e37d82",
   "latest_completed_work": "critical 우선순위 검사와 일곱 번째 공개자료 재검색을 완료했다. 새 독립 원자료는 확인되지 않았고, USN은 이미 소비된 진단, HyDelta는 좌표·원시 시계열 부족, GASFLOW는 시뮬레이션, 센서 보정자료는 공간 장치 맥락 부족으로 분류했다.",
   "latest_full_regression": {
     "tests_passed": 1612,
