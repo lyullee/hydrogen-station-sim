@@ -27,6 +27,7 @@ from .delayed_ignition import delayed_ignition_envelope
 from .jet_flame import jet_flame_envelope
 from .live import CallableHyRAMBackend, HyRAMDynamicReleaseRequest
 from .release_uncertainty import release_flow_uncertainty_envelope
+from ..runtime_evidence_gate import runtime_evidence_gate
 
 
 # The default is a one-direction screening transect at 1.5 m elevation,
@@ -355,6 +356,10 @@ class UnavailableHyRAMBackend:
                 enclosure_volume_m3=request.enclosure_volume_m3,
                 mass_flow_kg_s=request.mass_flow_override_kg_s,
             ))
+        output.update(consequence_validation_context())
+        output["runtime_evidence_gate"] = runtime_evidence_gate(
+            output, model_id=self.name, model_version="unavailable"
+        )
         return output
 
 
@@ -589,6 +594,9 @@ class NativeHyRAMBackend:
         # Risk must be calculated after indoor consequences have been merged.
         output.update(consequence_risk_summary(output))
         output.update(consequence_validation_context())
+        output["runtime_evidence_gate"] = runtime_evidence_gate(
+            output, model_id=self.name, model_version="6.1"
+        )
         return output
 
 

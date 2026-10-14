@@ -1,0 +1,11 @@
+{
+  "repository": "https://github.com/EpicGamesExt/PixelStreamingInfrastructure.git",
+  "branch": "UE5.6",
+  "commit": "eaf43b04f9979a7755ef5baa6a07bc7400ac1351",
+  "node_version": "22.14.0",
+  "license": "MIT, retained in the upstream checkout",
+  "local_player_port": 18080,
+  "local_streamer_port": 18888,
+  "bind_host": "127.0.0.1",
+  "unreal_engine_license": "Epic Unreal Engine EULA; engine binaries are not redistributed with this repository"
+}

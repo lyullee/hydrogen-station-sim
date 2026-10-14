@@ -577,6 +577,28 @@ def test_every_catalog_sensor_has_finite_sample_and_detector_fault_uses_db_tag()
     assert signals['GD-0101']['value']>=1.5
 
 
+@pytest.mark.parametrize(
+    "kind,origin,quality",
+    [
+        (FaultKind.SENSOR_DROPOUT, "SIMULATED_SENSOR_DROPOUT", "BAD"),
+        (FaultKind.SENSOR_CLOCK_SKEW, "SIMULATED_SENSOR_CLOCK_SKEW", "STALE"),
+    ],
+)
+def test_sensor_transport_faults_are_explicit_and_not_good(kind, origin, quality):
+    fault = FaultEvent("sensor-transport", kind, "GD-0901", 0, magnitude=5)
+    built = build_reference_scenario(
+        ReferenceScenario(fault_events=(fault,)), UnavailableHyRAMBackend()
+    )
+    monitor = HazopMonitor(virtual_detectors=True)
+    built.simulator.hazop_monitor = monitor
+    built.simulator.simulate(built.initial_state, .2, .2)
+    signal = monitor.latest["signals"]["GD-0901"]
+    assert signal["origin"] == origin
+    assert signal["quality"] == quality
+    if kind is FaultKind.SENSOR_CLOCK_SKEW:
+        assert signal["time_s"] == 0.0
+
+
 def test_solver_stop_is_checked_inside_window_and_esd_survives_restart():
     fault=FaultEvent('esd',FaultKind.EMERGENCY_STOP,'station',0)
     built=build_reference_scenario(ReferenceScenario(fault_events=(fault,)),UnavailableHyRAMBackend())

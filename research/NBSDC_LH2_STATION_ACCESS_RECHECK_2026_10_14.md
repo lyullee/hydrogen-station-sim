@@ -28,6 +28,6 @@ be reproduced with:
 
 This is an `ACCESS_BOUNDARY_ONLY` result. The candidate is not an independent
 validation cohort yet, and it does not change any gate, runtime parameter, or
-the 91.7% scope-adjusted closure. A custodian-approved raw-file release and
+the 92.4% scope-adjusted closure. A custodian-approved raw-file release and
 reuse conditions are required. Once those are available, a pre-access protocol
 must be frozen before numerical rows are inspected.

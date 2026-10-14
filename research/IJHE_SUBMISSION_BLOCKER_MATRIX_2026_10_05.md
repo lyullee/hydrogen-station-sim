@@ -1,13 +1,13 @@
 # IJHE objective blocker matrix
 
-Generated: `2026-10-13T22:17:24.419014+00:00`
+Generated: `2026-10-14T18:45:56.499774+00:00`
 
 This is an evidence-readiness record, not a prediction of journal acceptance.
 
 - Bounded IJHE submission ready: **False**
 - Full validated-digital-twin objective ready: **False**
 - Automatic goal completion permitted: **False**
-- Gate counts: `{'PASS': 134, 'FAIL': 11, 'PENDING': 7}`
+- Gate counts: `{'PASS': 135, 'FAIL': 11, 'PENDING': 6}`
 
 ## Blocking matrix
 
@@ -16,7 +16,7 @@ This is an evidence-readiness record, not a prediction of journal acceptance.
 | `tank_thermal_transfer_validation` | **FAIL** | Resolve the source-versus-archive tank length, freeze the source-confirmed 5 mm/82 mm inlet geometry and time-resolved inlet-temperature boundary before opening a new filling trace, then pass the joint pressure and temperature screens without post-outcome parameter selection. |
 | `consequence_model_external_validation` | **FAIL_OR_PENDING** | Pass a pre-access frozen, rights-cleared physical outdoor jet-fire/overpressure holdout with matched pressure, temperature, aperture or measured mass flow and weather, or narrow every claim to the already passed ignited confined pressure-peaking component. |
 | `h2safe_spatial_detector_transfer` | **FAIL** | Develop a ventilation-, boundary- and near-field-aware candidate without fitting it to the HyTunnel validation outcomes, freeze its implementation and thresholds, and then pass every spatial screen on another untouched actual-hydrogen cohort. |
-| `submission_declarations` | **PENDING** | All author and declaration fields completed and independently checked before submission. |
+| `submission_declarations` | **PASS** | All author and declaration fields completed and independently checked before submission. |
 
 ## Evidence boundary
 

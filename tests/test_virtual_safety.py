@@ -122,6 +122,17 @@ def test_actuator_failure_and_recovery_gate():
     assert safety.snapshot()["purge_h2_fraction"]["medium"] < .01
 
 
+def test_partial_closure_has_residual_flow_and_fails_closed_confirmation():
+    safety = VirtualSafetyRuntime()
+    safety.set_fault("bank.high.outlet", "partial_closed", 0)
+    action = safety.issue("valve.close", "bank.high.outlet", 0)
+    safety.tick(.5)
+    state = safety.snapshot()["valves"]["bank.high.outlet"]
+    assert action["status"] == "commanded"
+    assert state["flow_fraction"] == pytest.approx(.25)
+    assert state["status"] == "failed"
+
+
 def test_vehicle_departure_requires_stopped_transfer_and_confirmed_isolation():
     process = ProcessRuntime(ProcessSettings(vehicle_1=True).model_dump())
     safety = process.safety
@@ -303,6 +314,30 @@ def test_esd_and_confirmed_immediate_stop_queue_active_incident_end():
     # Repeated samples cannot queue duplicate removals or duplicate response records.
     assert _queue_incident_resolution(job, process, 2.2) == []
     assert job["pending_fault_commands"] == [("remove", "training-leak")]
+
+
+def test_combined_fault_regression_preserves_residual_hazard_until_ventilation_and_signals_are_safe():
+    process = ProcessRuntime(ProcessSettings(vehicle_1=True).model_dump())
+    safety = process.safety
+    safety.set_fault("bank.high.outlet", "partial_closed", 0)
+    safety.set_fault("bank.high.inlet", "feedback_fault", 0)
+    safety.set_fault("ventilation.storage", "failure", 0)
+    safety.issue("esd.trip", "station", 1, process=process)
+    safety.issue("operation.stop", "all", 1, process=process)
+    safety.record_incident_resolution(["combined-leak"], 1)
+    unsafe = {"total_leak_flow_g_s": 0, "gas_max_volpct_h2": 0,
+              "detectors_good": True}
+    for time_s in (2, 3, 4):
+        safety.record_metrics(time_s, unsafe)
+    assert safety.snapshot()["residual_hazard"]["status"] == "monitoring"
+    assert "환기" in safety.snapshot()["residual_hazard"]["reason"]
+    safety.set_fault("ventilation.storage", "none", 4)
+    for time_s in (5, 6, 7):
+        safety.record_metrics(time_s, unsafe)
+    state = safety.snapshot()
+    assert state["residual_hazard"]["status"] == "cleared"
+    assert state["valves"]["bank.high.outlet"]["flow_fraction"] == pytest.approx(.25)
+    assert state["valves"]["bank.high.inlet"]["feedback_open"] is False
 
 
 def test_live_safety_api_separates_command_feedback_and_replays():

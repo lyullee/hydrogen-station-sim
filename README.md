@@ -42,6 +42,8 @@ Original project software and associated documentation are available under the [
 - [IJHE working manuscript](manuscript/ijhe_manuscript_draft.tex): claim-bounded English draft, journal-format checks, figures, graphical abstract and the remaining submission gates.
 - [IJHE reproducibility route](manuscript/REPRODUCIBILITY.md): one-command integrity check, focused tests, full-regression option and the scientific-readiness claim boundary.
 - [Goal closeout checklist](research/GOAL_CLOSEOUT_CHECKLIST_2026_10_14.md): machine-verified completion, required author confirmations, remaining independent-data gates and fixed paper limitations.
+- [New-data search and bounded development decision](research/NEW_DATA_SEARCH_AND_DEVELOPMENT_SCOPE_2026_10_15.md): sources rechecked, unavailable raw-data lanes excluded, and re-entry conditions.
+- [Runtime evidence, uncertainty and paired response runs](docs/53_RUNTIME_EVIDENCE_UNCERTAINTY_AND_COUNTERFACTUALS.md): fail-closed model-use gate, bounded consequence ensemble, automatic counterfactual API and new fault coverage.
 
 The monitor and remote now have a Korean/English language selector. New main and sensor assistant requests use the selected output language while consequence calculations and source data remain unchanged. English answers are advisory translations/analyses; verify exact safety requirements against their original source.
 

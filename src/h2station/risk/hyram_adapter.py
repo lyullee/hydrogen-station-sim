@@ -110,8 +110,17 @@ def _install_hyram_solout_compatibility() -> None:
     unchanged.  The marker prevents wrapping the private SciPy method twice.
     """
     try:
+        import scipy
         from scipy.integrate import _ode
     except ImportError:
+        return
+    # The project intentionally pins SciPy below 1.16 for HyRAM 6.1.  Its
+    # private callback already has the legacy contract there; wrapping it
+    # changes the f2py call boundary and can yield an empty ``args`` tuple.
+    # Keep the shim dormant unless a future deployment explicitly runs the
+    # extended-callback family it was written for.
+    version = tuple(int(part) for part in scipy.__version__.split(".")[:2])
+    if version < (1, 18):
         return
     integrator = getattr(_ode, "dopri5", None)
     if integrator is None or getattr(integrator, "_h2station_solout_compat", False):

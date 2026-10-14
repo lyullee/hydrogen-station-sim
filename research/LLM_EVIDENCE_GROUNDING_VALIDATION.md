@@ -99,7 +99,7 @@ The following tests passed in the repository virtual environment:
 20 passed, 3 warnings
 ```
 
-The latest full working-tree regression passed 1,626 tests with no failures and no skips in approximately 293.18 s; `research/full_regression_test_run_2026_10_14.json` records the base commit and `working_tree_dirty_at_run=true`. The focused LLM/accident-path regression and direct-route spot check also remain recorded separately. The tests verify that normal monitoring keeps impact calculation marked as
+The latest full working-tree regression passed 1,650 tests with no failures and no skips in approximately 254.77 s; `research/full_regression_test_run_2026_10_14.json` records the base commit and `working_tree_dirty_at_run=true`. The focused LLM/accident-path regression and direct-route spot check also remain recorded separately. The tests verify that normal monitoring keeps impact calculation marked as
 `not_requested`, emergency or explicit-impact paths preserve calculated
 results and input tags, non-finite values are discarded, the main and sensor
 assistant routes remain isolated, and a generated answer cannot negate a

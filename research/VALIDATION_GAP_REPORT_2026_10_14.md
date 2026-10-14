@@ -3,7 +3,7 @@
 현재 검증 게이트를 데이터 공백, 모델 공백, 검토 공백으로 분류한 의사결정용 보고서다. 새로운 수치 검증을 수행하거나 실패 게이트를 승격하지 않는다.
 
 - PASS 134 / FAIL 11 / PENDING 7
-- 주 목표 범위: PASS 133 / FAIL 10 / PENDING 2 (91.7%)
+- 주 목표 범위: PASS 134 / FAIL 10 / PENDING 1 (92.4%)
 - 완전한 사용자 목표 준비 여부: 아니오
 - 주된 병목: independent component-physics holdouts and protocol provenance
 

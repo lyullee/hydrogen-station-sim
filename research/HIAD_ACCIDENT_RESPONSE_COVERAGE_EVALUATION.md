@@ -35,4 +35,4 @@ This artifact shows only that action categories derived from public HIAD metadat
 - `response_stage_contract_sha256`: `52146ec0bf65f2be73d714f2b3f154d7bb51813b22c6bb7555549362a4b1701f`
 - `action_playbook_coverage_sha256`: `8194c02019425bd217aa7bd474d82608c980ee5b1b55fcc0c86e6293210e8edf`
 - `playbook_catalog_sha256`: `997da81d9f273031dc5d160d1fdee826cc1defaa3cbf5651f9bd0c7c7988e052`
-- `virtual_safety_runtime_sha256`: `5d55b14ab716417ec0eb92086e0bd5c9e6a7db7f48da6baa866834db4915f775`
+- `virtual_safety_runtime_sha256`: `7fccc00d8e58d131f58e43ae82ae545a466a25b22e0efebf46d9ac4fc3a7040a`

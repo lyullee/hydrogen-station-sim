@@ -20,7 +20,7 @@
     "engine": "HyRAM+",
     "version": "6.1",
     "adapter": "src/h2station/risk/hyram_adapter.py",
-    "adapter_sha256": "ab9139bea2ae97cf93b0205eaf342cee77d6f2455ae0db9e211f770d1dabfd3d",
+    "adapter_sha256": "131df6b4df42285e246e1b7cf9afd039de9d415b051a854629dac5f2ebffcc59",
     "source_pressure_pa": 40000000.0,
     "assumed_source_temperature_k": 298.15,
     "orifice_diameter_m": 0.0002,
@@ -34,12 +34,12 @@
   },
   "result": {
     "modeled_mass_flow_kg_s": 0.000742912520035636,
-    "modeled_4volpct_streamline_distance_m": 0.9096671383675019,
+    "modeled_4volpct_streamline_distance_m": 0.9100876452938917,
     "published_near_lfl_point_distance_m": 0.9,
     "published_point_concentration_volpct": 4.1,
-    "absolute_distance_difference_m": 0.009667138367501882,
-    "relative_distance_difference_fraction": 0.010741264852779868,
-    "relative_distance_difference_percent": 1.0741264852779868
+    "absolute_distance_difference_m": 0.010087645293891723,
+    "relative_distance_difference_fraction": 0.011208494770990804,
+    "relative_distance_difference_percent": 1.1208494770990804
   },
   "interpretation": {
     "published_point_is_exact_4volpct_contour": false,

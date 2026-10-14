@@ -13,7 +13,7 @@ The latest CI run passed at commit `115ceaa`: [run 38576334925](https://github.c
 
 ## Evidence boundary
 
-The readiness ledger currently records **134 PASS, 11 FAIL, and 7 PENDING** gates overall. The primary station-side scope records **133 PASS, 10 FAIL, and 2 PENDING** (91.7% closure). The software is therefore reproducible, but this candidate is not independently validated or publication-ready.
+The readiness ledger currently records **135 PASS, 11 FAIL, and 6 PENDING** gates overall. The primary station-side scope records **134 PASS, 10 FAIL, and 1 PENDING** (92.4% closure). The software is therefore reproducible, but this candidate is not independently validated or publication-ready.
 
 The open gates are listed in `research/ijhe_submission_blocker_matrix_2026_10_12.md` and in the manifest. In particular, the full synchronized station-to-vehicle raw-data claim remains outside the primary scope and is disclosed as a limitation.
 

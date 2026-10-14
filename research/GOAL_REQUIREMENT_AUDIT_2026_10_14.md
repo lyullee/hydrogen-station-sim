@@ -19,7 +19,7 @@
 | station-to-vehicle 전체 루프 범위 통제 | readiness audit의 `full_loop_external_validation` scope exclusion | **완료** — 현재 논문 주장과 목표에서 제외하고 한계로 유지 |
 | SAGA 사람 대상 효과평가 범위 통제 | readiness audit의 optional pending gates | **완료** — 운영자 효과성·안전개선 주장을 하지 않음 |
 | 논문 주장·그림·컴파일·릴리즈 산출물 점검 | `manuscript/ijhe_compile_status.json`, `manuscript/ijhe_format_check.json`, `research/ijhe_reproduction_run_2026_10_14.json` | **완료** — 24페이지 컴파일, 형식·인용·그림·참조 확인 |
-| 최신 회귀와 CI 동기화 | `research/full_regression_test_run_2026_10_14.json`, GitHub Actions run `38583012020` | **완료** — 기록된 전체 회귀 1,626 passed; CI success |
+| 최신 회귀와 CI 동기화 | `research/full_regression_test_run_2026_10_14.json`, GitHub Actions run `38583012020` | **부분 완료** — 현재 작업 트리 전체 회귀 1,650 passed; 기록된 이전 CI success 이후 변경은 신규 CI 확인 필요 |
 | 릴리즈 비밀값 점검 | `research/secret_surface_audit_2026_10_14.json` | **완료** — 추적 파일 2,287개 검사, 고신뢰 비밀값 0건, 환경파일 0개 |
 
 ## 남은 과학 게이트

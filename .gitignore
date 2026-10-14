@@ -31,3 +31,15 @@ Thumbs.db
 /output/pdf/ijhe_manuscript_draft.pdf
 /output/partial_mc_default_recheck/
 /output/partial_mc_default_recheck_120/
+
+# Unreal generated assets and compiled artifacts; source and contracts are versioned.
+/unreal/HRSUnreal/Binaries/
+/unreal/HRSUnreal/Intermediate/
+/unreal/HRSUnreal/Saved/
+/unreal/HRSUnreal/DerivedDataCache/
+/unreal/HRSUnreal/Content/
+/unreal/PixelStreamingInfrastructure/
+/unreal/.tooling/
+/output/unreal/
+*.sln
+*.suo

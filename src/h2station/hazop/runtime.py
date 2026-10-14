@@ -166,6 +166,15 @@ class HazopMonitor:
                 self.mapper.frozen.setdefault(key, signal["value"])
                 signal["value"] = self.mapper.frozen[key]
                 signal["origin"] = "SIMULATED_SENSOR_FREEZE"
+            elif event.kind.value == "sensor-dropout":
+                signal["quality"] = "BAD"
+                signal["origin"] = "SIMULATED_SENSOR_DROPOUT"
+            elif event.kind.value == "sensor-clock-skew":
+                signal["time_s"] = max(
+                    0.0, float(signal.get("time_s", t)) - event.magnitude
+                )
+                signal["quality"] = "STALE"
+                signal["origin"] = "SIMULATED_SENSOR_CLOCK_SKEW"
             frame["legacy_plc_sensor_faults"] = [tag for tag in frame["legacy_plc_sensor_faults"] if tag != event.target]
         result = self.engine.evaluate(frame)
         by_release = {x.release_id:x for x in risk_snapshots}

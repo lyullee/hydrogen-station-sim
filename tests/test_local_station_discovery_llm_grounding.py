@@ -182,9 +182,9 @@ def test_role_aware_schema_contract_is_exposed_without_private_headers():
 def test_validation_readiness_ledger_reaches_all_llm_views_without_paths():
     manifest = _manifest()
     expected = {
-        "PASS": 134,
+        "PASS": 135,
         "FAIL": 11,
-        "PENDING": 7,
+        "PENDING": 6,
     }
     readiness = manifest["response_evidence"]["validation_readiness"]
     assert readiness["status"] == "available"
@@ -197,7 +197,7 @@ def test_validation_readiness_ledger_reaches_all_llm_views_without_paths():
     assert readiness["expert_effectiveness_evaluation_supported"] is False
     assert readiness["independent_expert_review_complete"] is False
     assert readiness["claim_tier"] == "component_and_station_side_only"
-    assert readiness["open_gate_count"] == 18
+    assert readiness["open_gate_count"] == 17
     assert "full_loop_external_validation" in readiness["open_gate_ids"]
     assert readiness["evidence_use_policy"]["diagnostic"]
     assert "C:\\" not in str(readiness)
@@ -208,7 +208,7 @@ def test_validation_readiness_ledger_reaches_all_llm_views_without_paths():
     assert summary["full_user_objective_ready"] is False
 
     decision = prompt_decision_evidence(manifest)["validation_boundaries"]
-    assert decision["r"] == "134/11/7;0l0"
+    assert decision["r"] == "135/11/6;0l0"
 
     header = prompt_evidence_header(manifest)["validation_readiness"]
     assert header["gate_counts"] == expected
@@ -221,12 +221,12 @@ def test_primary_scope_amendment_reaches_llm_without_reclassifying_audit_gates()
     assert scope["status"] == "available"
     assert scope["artifact_integrity"] is True
     assert scope["gate_counts"] == {
-        "PASS": 133,
+        "PASS": 134,
         "FAIL": 10,
-        "PENDING": 2,
+        "PENDING": 1,
         "TOTAL": 145,
     }
-    assert scope["gate_closure_percent"] == 91.7
+    assert scope["gate_closure_percent"] == 92.4
     assert scope["station_to_vehicle_scope"] == (
         "removed_from_primary_goal_after_public_search"
     )
@@ -239,7 +239,6 @@ def test_primary_scope_amendment_reaches_llm_without_reclassifying_audit_gates()
         "proust_independent_release_validation",
         "schefer_2007_pressure_decay_validation",
         "schefer_transient_release_validation",
-        "submission_metadata_and_declarations",
     ]
     assert scope["active_scope_blocking_gate_ids"] == scope["active_scope_open_gate_ids"]
     assert "full_loop_external_validation" not in scope["active_scope_open_gate_ids"]
@@ -248,7 +247,7 @@ def test_primary_scope_amendment_reaches_llm_without_reclassifying_audit_gates()
     assert "optional_for_physics_validation" in scope["ethics_and_expert_review"]
 
     decision = prompt_decision_evidence(manifest)
-    assert decision["primary_scope_progress"]["gate_closure_percent"] == 91.7
+    assert decision["primary_scope_progress"]["gate_closure_percent"] == 92.4
     summary = prompt_evidence_summary(manifest)
     assert summary["primary_scope_progress"]["gate_counts"]["TOTAL"] == 145
     header = prompt_evidence_header(manifest)
@@ -299,7 +298,6 @@ def test_frozen_split_and_ethics_boundaries_reach_all_llm_projections():
         "proust_independent_release_validation",
         "schefer_2007_pressure_decay_validation",
         "schefer_transient_release_validation",
-        "submission_metadata_and_declarations",
     ]
     assert "full_loop_external_validation" not in data_used["validation_scope"][
         "active_scope_open_gate_ids"

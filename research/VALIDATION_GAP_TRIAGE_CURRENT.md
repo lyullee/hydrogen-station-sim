@@ -2,8 +2,8 @@
 
 현재 검증 게이트를 데이터 공백, 모델 공백, 검토 공백으로 분류한 의사결정용 보고서다. 새로운 수치 검증을 수행하거나 실패 게이트를 승격하지 않는다.
 
-- PASS 134 / FAIL 11 / PENDING 7
-- 주 목표 범위: PASS 133 / FAIL 10 / PENDING 2 (91.7%)
+- PASS 135 / FAIL 11 / PENDING 6
+- 주 목표 범위: PASS 134 / FAIL 10 / PENDING 1 (92.4%)
 - 완전한 사용자 목표 준비 여부: 아니오
 - 주된 병목: independent component-physics holdouts and protocol provenance
 
@@ -33,7 +33,6 @@ Grüne 사례에는 공개 ICHS 도표에서 추출한 완전 곡선 진단을 �
 | P1 | review_and_publication | `independent_expert_review_complete` | PENDING | 선택 항목: 사람 대상 SAGA 효과를 주장할 때만 고정된 HIAD 평가 프로토콜에 따라 casebook·응답·전문가 평가를 수집하고 freeze hash를 남긴다. |
 | P1 | review_and_publication | `institutional_ethics_determination` | PENDING | 선택 항목: SAGA가 운영자의 안전 판단을 개선한다고 주장할 때만 기관의 승인·면제·비대상 중 하나와 식별자를 확정하고 연구 기록에 보존한다. |
 | P1 | review_and_publication | `saga_effectiveness_and_safety_supported` | PENDING | 선택 항목: 사람 대상 SAGA 효과를 주장할 때만 고정된 HIAD 평가 프로토콜에 따라 casebook·응답·전문가 평가를 수집하고 freeze hash를 남긴다. |
-| P1 | review_and_publication | `submission_metadata_and_declarations` | PENDING | 저자·기여·이해상충·자금·AI 사용 공개를 확인한 뒤 제출 메타데이터를 잠근다. |
 
 ## 실행 순서
 

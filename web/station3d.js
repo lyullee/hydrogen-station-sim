@@ -2008,7 +2008,7 @@ function buildStation() {
   let lastMarkerPaint=0;
   let lastRiskLabelPaint=0;
   function animate(timestamp) {
-    requestAnimationFrame(animate);if(!visible||document.hidden||document.body.dataset.monitorView!=='3d'||timestamp-lastRender<33)return;lastRender=timestamp;readLive();updateDispenserHoses();
+    requestAnimationFrame(animate);if(stage.classList.contains('unreal-active')||!visible||document.hidden||document.body.dataset.monitorView!=='3d'||timestamp-lastRender<33)return;lastRender=timestamp;readLive();updateDispenserHoses();
     if(Math.abs(pendingWheel)>.1){
       const step=Math.abs(pendingWheel)<.5?pendingWheel:pendingWheel*.28;pendingWheel-=step;
       const wheel=new WheelEvent('wheel',{deltaY:step,deltaMode:0,clientX:wheelPosition.x,clientY:wheelPosition.y,cancelable:true});

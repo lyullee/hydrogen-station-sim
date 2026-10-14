@@ -103,6 +103,7 @@ async function streamJob(id) {
 }
 window.connectStationJob=id=>streamJob(id).catch(e=>window.notifyOperator?.(e.message));
 window.resetStationMonitor=()=>{
+  window.dispatchEvent(new Event('station-reset'));
   state.socket?.close();state.generation++;stopPlayback();
   try{localStorage.removeItem('hrs-active-job');}catch{}
   const url=new URL(location.href);url.searchParams.delete('job');

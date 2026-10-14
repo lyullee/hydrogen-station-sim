@@ -1,8 +1,27 @@
 # Development Progress
 
+## 2026-10-15 - Close data-independent runtime evidence and response gaps
+
+- A fresh primary-source search found no immediately reusable new raw cohort for
+  synchronized station-to-vehicle validation, release-network identification or
+  orientation/HVAC-aware detector validation. These lanes remain explicit paper
+  limitations with documented re-entry conditions.
+- Runtime consequence results now expose a fail-closed evidence gate; the current
+  component-only result cannot authorize model-driven autonomous actuation.
+- A reproducible bounded ensemble reports consequence P05/P50/P95 sensitivity and
+  ranked inputs without representing them as confidence intervals or safety radii.
+- A paired-run API automatically launches no-action, isolation, ESD and combined
+  response variants from identical initial and fault inputs.
+- Fault coverage now includes partial valve closure, detector dropout, detector clock
+  skew, ventilation failure and residual-hazard monitoring after source termination.
+- Focused regression: **73 passed / 0 failed** for HAZOP, virtual safety,
+  counterfactual, uncertainty and evidence-gate suites. The final repository-wide
+  regression then completed with **1,650 passed / 0 failed / 0 skipped** and 23
+  dependency/data-reader or physics warnings in 254.77 seconds.
+
 ## 2026-10-14 - Latest full regression on synchronized release state
 
-- The full Python regression completed on source commit `115ceaa` with **1,626
+- The preceding full Python regression completed on source commit `115ceaa` with **1,626
   passed / 0 failed / 0 skipped** in 293.18 seconds. The run retained 224
   dependency/data-reader and HyRAM physics warnings; none were test failures.
 - The result verifies implementation integrity only. The scientific readiness

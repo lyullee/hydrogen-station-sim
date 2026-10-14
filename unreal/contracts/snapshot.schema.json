@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Hydrogen station renderer snapshot v1",
+  "type": "object",
+  "required": ["schema_version", "run_id", "sequence", "time_s", "status", "produced_at", "data_available", "equipment", "detectors", "releases", "safety", "risk_zones"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "run_id": {"type":"string"},
+    "sequence": {"type":"integer", "minimum":-1},
+    "time_s": {"type":["number","null"]},
+    "status": {"type":"string"},
+    "produced_at": {"type":"string", "format":"date-time"},
+    "data_available": {"type":"boolean"},
+    "esd": {"type":["boolean","null"]},
+    "equipment": {"type":"array", "items": {"type":"object", "required":["component_id","pressure_mpa","temperature_c","mass_kg","flow_g_s"], "properties": {
+      "component_id":{"type":"string"},
+      "pressure_mpa":{"type":["number","null"]},
+      "temperature_c":{"type":["number","null"]},
+      "mass_kg":{"type":["number","null"]},
+      "flow_g_s":{"type":["number","null"]}
+    }}},
+    "detectors":{"type":"array"},
+    "releases":{"type":"array"},
+    "safety":{"type":"object"},
+    "risk_zones":{"type":"object"}
+  }
+}

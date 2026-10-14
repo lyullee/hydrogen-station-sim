@@ -76,7 +76,7 @@ For a repeatable exercise, record the Git commit, Python/dependency versions, jo
 readiness ledger. It is an evidence gate, not a prediction of editorial
 acceptance. The current snapshot contains **135 PASS, 11 FAIL and 6 PENDING**
 gates; bounded IJHE submission readiness and the full user objective are both
-false. The declared station-side primary scope is **133 PASS, 10 FAIL and 2
+false. The declared station-side primary scope is **134 PASS, 10 FAIL and 1
 PENDING**. In particular, the frozen station-to-vehicle full-loop screen is
 not supported, and the independent expert-effectiveness evaluation is not
 complete.
@@ -166,3 +166,24 @@ POST /api/simulations
 The process settings object has additional defaulted fields; omitted fields use the Pydantic defaults. The application then polls `/api/simulations/{job_id}` or subscribes to `/api/simulations/{job_id}/stream`. A user question can be sent to `/api/simulations/{job_id}/assistants/main` with `{"question":"What is the current storage status?","language":"en"}`. Select a sensor via `/api/simulations/{job_id}/sensors/{sensor_id}` and ask its dedicated assistant at `.../assistants/sensors/{sensor_id}`. A virtual action uses `/api/simulations/{job_id}/safety/actions` with a validated `kind` and `target`; the subsequent `/safety` snapshot is needed to confirm completion. Query `/api/health` on both the twin and SAGA before diagnosing an assistant failure.
 
 No API response should be interpreted as a real station actuation. The reference model retains jobs only in the current Python process and is unsuitable for multi-worker load balancing without shared state.
+
+## 11. Runtime evidence gate and response counterfactuals
+
+Consequence payloads now carry a machine-readable evidence gate. It reports the
+model and version, input quality, validation status, applicability range,
+uncertainty state, evidence artifacts and permitted use. The current component
+screen can support an operator advisory, but the absence of site-specific
+full-loop validation blocks model-driven automatic actuation. PLC/interlock logic
+remains an independent deterministic path.
+
+An on-demand bounded ensemble propagates declared uncertainty in source pressure,
+temperature, aperture and discharge coefficient to available flow, heat-flux,
+overpressure, plume-distance and risk outputs. Its P05/P50/P95 values are sensitivity
+percentiles rather than confidence intervals or safety distances.
+
+The counterfactual-batch API freezes one finite scenario and launches no-action,
+isolation, ESD, and combined ESD/isolation/ventilation runs. This removes manual
+scenario mismatch when comparing response timing. New regression cases cover
+partial valve closure, bad/stale sensor transport, false valve feedback,
+ventilation failure and residual-hazard clearance after the injected source ends.
+See `docs/53_RUNTIME_EVIDENCE_UNCERTAINTY_AND_COUNTERFACTUALS.md` for the contract.

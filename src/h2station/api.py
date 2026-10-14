@@ -601,6 +601,17 @@ class ProcessSettings(BaseModel):
         return self
 
 
+class ScheduledSafetyActionInput(BaseModel):
+    time_s: float = Field(ge=0.0, le=3600.0)
+    kind: Literal["valve.close", "valve.open", "vent.close", "vent.open",
+                  "operation.start", "operation.stop", "esd.trip",
+                  "ventilation.on", "ventilation.off", "cooling.on", "cooling.off",
+                  "power.isolate", "power.restore", "access.restrict", "access.release",
+                  "personnel.evacuate", "vehicle.evacuate", "responders.notify"]
+    target: str
+    note: str = Field(default="counterfactual protocol", max_length=240)
+
+
 class SimulationInput(BaseModel):
     model_config = ConfigDict(allow_inf_nan=False)
     duration_s: float = Field(default=300.0, gt=0.0, le=3600.0)
@@ -674,11 +685,16 @@ class SimulationInput(BaseModel):
     communication_loss_policy: Literal["abort", "hold-and-resume"] = "abort"
     process_settings: ProcessSettings | None = None
     faults: list[FaultInput] = Field(default_factory=list)
+    scheduled_safety_actions: list[ScheduledSafetyActionInput] = Field(default_factory=list)
 
     @model_validator(mode="after")
     def unique_fault_ids(self):
         if len({f.event_id for f in self.faults}) != len(self.faults):
             raise ValueError("Fault event IDs must be unique")
+        if self.scheduled_safety_actions and self.process_settings is None:
+            raise ValueError("scheduled safety actions require operator process_settings")
+        if any(action.time_s > self.duration_s for action in self.scheduled_safety_actions):
+            raise ValueError("scheduled safety action exceeds simulation duration")
         if self.vehicle_geometry_basis == "capacity_eos" and (
             self.vehicle_capacity_kg is None or self.vehicle_2_capacity_kg is None
         ):
@@ -738,7 +754,12 @@ class VirtualSafetyActionInput(BaseModel):
 
 
 class VirtualDeviceFaultInput(BaseModel):
-    fault: Literal["none", "stuck_open", "stuck_closed", "seat_leak", "feedback_fault", "failure"]
+    fault: Literal["none", "stuck_open", "stuck_closed", "partial_closed", "seat_leak", "feedback_fault", "failure"]
+
+
+class CounterfactualBatchInput(BaseModel):
+    simulation: SimulationInput
+    intervention_time_s: float = Field(default=5.0, ge=0.0, le=3600.0)
 
 
 class VirtualEnvironmentInput(BaseModel):
@@ -1165,8 +1186,6 @@ def _execute_simulation(job_id: str, request: SimulationInput) -> None:
                 reset_safety = bool(job.pop("pending_safety_reset", False))
                 if reset_safety:
                     built.simulator.safety_plc.reset()
-                if not commands:
-                    return
                 registry = job["fault_registry"]
                 for command, payload in commands:
                     if command in {"add", "add_relative"}:
@@ -1179,8 +1198,20 @@ def _execute_simulation(job_id: str, request: SimulationInput) -> None:
                                 del registry[payload]
                             else:
                                 registry[payload] = replace(event, end_time_s=max(time_s, event.start_time_s + 1e-6))
-                commands.clear()
-                built.simulator.fault_injector.schedule = FaultSchedule(tuple(registry.values()))
+                if commands:
+                    commands.clear()
+                    built.simulator.fault_injector.schedule = FaultSchedule(
+                        tuple(registry.values())
+                    )
+                scheduled = job.get("scheduled_safety_actions") or []
+                while scheduled and float(scheduled[0]["time_s"]) <= time_s + 1e-9:
+                    planned = scheduled.pop(0)
+                    if process_runtime is None:
+                        break
+                    process_runtime.safety.issue(
+                        planned["kind"], planned["target"], time_s,
+                        process=process_runtime, note=planned.get("note", ""),
+                    )
         hazop_monitor = HazopMonitor(run_id=job_id, store=EventStore(), virtual_detectors=True)
         built.simulator.hazop_monitor = hazop_monitor
         # The causal pressure forecast only consumes a ten-second prefix, but
@@ -2092,6 +2123,10 @@ def create_simulation(request: SimulationInput) -> dict[str, Any]:
             "pending_fault_commands": [],
             "fault_registry": {fault.event_id: fault.to_event() for fault in request.faults},
             "auto_resolved_fault_ids": [],
+            "scheduled_safety_actions": sorted(
+                (action.model_dump() for action in request.scheduled_safety_actions),
+                key=lambda row: row["time_s"],
+            ),
             "operations": process_runtime.snapshot() if process_runtime is not None else None,
             "calibration_profile": _runtime_calibration_payload(
                 measured_profile,
@@ -2105,6 +2140,57 @@ def create_simulation(request: SimulationInput) -> dict[str, Any]:
         }
     _executor.submit(_execute_simulation, job_id, request)
     return {"id": job_id, "status": "queued"}
+
+
+def _counterfactual_action_sets(request: CounterfactualBatchInput) -> dict[str, list[ScheduledSafetyActionInput]]:
+    """Return fixed, reviewable interventions for the same frozen scenario."""
+    t = request.intervention_time_s
+    leak_targets = [fault.target for fault in request.simulation.faults
+                    if fault.kind is FaultKind.HYDROGEN_LEAK]
+    target = leak_targets[0] if leak_targets else "cascade.high"
+    bank = target.split(".", 1)[1] if target.startswith("cascade.") else "high"
+    isolation = [
+        ScheduledSafetyActionInput(time_s=t, kind="operation.stop", target="all"),
+        ScheduledSafetyActionInput(time_s=t, kind="valve.close", target=f"bank.{bank}.inlet"),
+        ScheduledSafetyActionInput(time_s=t, kind="valve.close", target=f"bank.{bank}.outlet"),
+    ]
+    esd = [
+        ScheduledSafetyActionInput(time_s=t, kind="esd.trip", target="station"),
+        ScheduledSafetyActionInput(time_s=t, kind="operation.stop", target="all"),
+    ]
+    managed = esd + isolation[1:] + [
+        ScheduledSafetyActionInput(time_s=t, kind="ventilation.on", target="storage"),
+        ScheduledSafetyActionInput(time_s=t, kind="access.restrict", target="storage"),
+        ScheduledSafetyActionInput(time_s=t, kind="personnel.evacuate", target="storage"),
+    ]
+    return {"no_action": [], "isolation": isolation, "esd": esd,
+            "esd_isolation_ventilation": managed}
+
+
+@app.post("/api/simulations/counterfactual-batch", status_code=202)
+def create_counterfactual_batch(request: CounterfactualBatchInput) -> dict[str, Any]:
+    """Launch paired response runs with identical initial and fault inputs."""
+    if request.simulation.continuous:
+        raise HTTPException(status_code=422, detail="Counterfactual batch requires a finite run")
+    if request.intervention_time_s > request.simulation.duration_s:
+        raise HTTPException(status_code=422, detail="Intervention exceeds simulation duration")
+    if request.simulation.process_settings is None:
+        raise HTTPException(status_code=422, detail="Operator process_settings are required")
+    runs = {}
+    for strategy, actions in _counterfactual_action_sets(request).items():
+        run_request = request.simulation.model_copy(
+            update={"scheduled_safety_actions": actions}
+        )
+        runs[strategy] = create_simulation(run_request)["id"]
+    return {
+        "status": "queued",
+        "runs": runs,
+        "pairing": "IDENTICAL_INITIAL_STATE_AND_FAULT_INPUTS",
+        "interpretation": (
+            "Compare runs only after all jobs complete. Results are virtual-training "
+            "counterfactuals, not proof of field emergency effectiveness."
+        ),
+    }
 
 
 @app.get("/api/simulations/{job_id}")
@@ -5231,6 +5317,29 @@ def simulation_hazop(job_id: str) -> dict[str, Any]:
 def hazop_events(run_id: str) -> dict[str, Any]:
     return {"run_id":run_id, "events":EventStore().events(run_id)}
 
+
+def _read_unreal_state(job_id: str) -> tuple[dict, dict | None, dict | None, dict | None]:
+    """Read an immutable public frame; never run HyRAM for a renderer tick."""
+    with _jobs_lock:
+        job = _jobs.get(job_id)
+        if job is None:
+            raise HTTPException(404, "Simulation not found")
+        frames = job.get("frames") or []
+        frame = frames[-1] if frames else None
+        runtime = _process_runtimes.get(job_id)
+        safety = runtime.safety.snapshot(include_actions=False) if runtime is not None else None
+        metadata = {key: job.get(key) for key in ("status", "created_at")}
+        risk = (_risk_zone_cache.get(job_id) or {}).get("payload")
+    return metadata, frame, safety, risk
+
+
+from .unreal_api import make_unreal_router
+_unreal_router = make_unreal_router(_read_unreal_state)
+# FastAPI 0.115's lazy ``include_router`` adds a private sentinel without a
+# path to ``app.routes``.  Register these self-contained read-only routes
+# directly so route inspection and ASGI dispatch keep the normal Starlette
+# route contract.
+app.router.routes.extend(_unreal_router.routes)
 
 _web_directory = Path(__file__).resolve().parents[2] / "web"
 app.mount("/", StaticFiles(directory=_web_directory, html=True), name="monitor")

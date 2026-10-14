@@ -411,5 +411,14 @@ class ModelMapper:
                 self.frozen.setdefault(key, signals[event.target]["value"])
                 signals[event.target]["value"] = self.frozen[key]
                 signals[event.target]["origin"] = "SIMULATED_SENSOR_FREEZE"
+            elif event.kind.value == "sensor-dropout":
+                signals[event.target]["quality"] = "BAD"
+                signals[event.target]["origin"] = "SIMULATED_SENSOR_DROPOUT"
+            elif event.kind.value == "sensor-clock-skew":
+                signals[event.target]["time_s"] = max(
+                    0.0, float(signals[event.target].get("time_s", t)) - event.magnitude
+                )
+                signals[event.target]["quality"] = "STALE"
+                signals[event.target]["origin"] = "SIMULATED_SENSOR_CLOCK_SKEW"
         return {"time_s": t, "signals": signals, "modes": modes,
-                "time_basis": "SIMULATION_SECONDS", "legacy_plc_sensor_faults": [e.target for e in fault_events if e.kind.value in ("sensor-bias","sensor-freeze") and e.target not in signals]}
+                "time_basis": "SIMULATION_SECONDS", "legacy_plc_sensor_faults": [e.target for e in fault_events if e.kind.value in ("sensor-bias","sensor-freeze","sensor-dropout","sensor-clock-skew") and e.target not in signals]}

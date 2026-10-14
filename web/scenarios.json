@@ -1587,6 +1587,24 @@
       ],
       "fields": [],
       "note": "정의 범위를 벗어난 통신값을 모사하고 보수적으로 충전을 종료합니다."
+    },
+    {
+      "id": "sensor-dropout",
+      "label": "센서 통신 두절",
+      "targets": [
+        {"value": "GD-0901", "label": "GD-0901 · N09", "unit": "vol%_H2", "location": "고압 저장뱅크 가스검지기"}
+      ],
+      "fields": [],
+      "note": "마지막 수치는 유지하되 품질을 BAD로 표시해 정상 신호로 사용하지 않습니다."
+    },
+    {
+      "id": "sensor-clock-skew",
+      "label": "센서 시각 불일치",
+      "targets": [
+        {"value": "GD-0901", "label": "GD-0901 · N09", "unit": "vol%_H2", "location": "고압 저장뱅크 가스검지기"}
+      ],
+      "fields": ["magnitude"],
+      "note": "magnitude 초만큼 시각을 지연하고 품질을 STALE로 표시합니다."
     }
   ],
   "scenarios": [
@@ -2843,6 +2861,26 @@
           "end_time_s": 20.0,
           "event_id": "communication-05-1"
         }
+      ]
+    },
+    {
+      "id": "sensor-13",
+      "category": "sensor",
+      "title": "고압뱅크 가스검지기 통신 두절",
+      "description": "검지기 값의 통신 두절과 BAD 품질 처리를 확인합니다.",
+      "faults": [
+        {"kind": "sensor-dropout", "target": "GD-0901", "start_time_s": 5.0,
+         "end_time_s": 20.0, "event_id": "sensor-13-1"}
+      ]
+    },
+    {
+      "id": "sensor-14",
+      "category": "sensor",
+      "title": "고압뱅크 가스검지기 시각 불일치",
+      "description": "검지기 시각이 5초 지연된 STALE 품질을 확인합니다.",
+      "faults": [
+        {"kind": "sensor-clock-skew", "target": "GD-0901", "start_time_s": 5.0,
+         "end_time_s": 20.0, "magnitude": 5.0, "event_id": "sensor-14-1"}
       ]
     }
   ]

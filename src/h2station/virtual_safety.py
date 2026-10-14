@@ -30,7 +30,7 @@ VALVE_LABELS = {
     "dispenser.2": "차량 2 충전라인 차단",
     **{f"vent.{bank}": f"{bank} 뱅크 설계 벤트" for bank in BANKS},
 }
-FAULTS = ("none", "stuck_open", "stuck_closed", "seat_leak", "feedback_fault")
+FAULTS = ("none", "stuck_open", "stuck_closed", "partial_closed", "seat_leak", "feedback_fault")
 RECOVERY_CHECKS = (
     "source_removed", "leak_repaired", "tightness_test", "detector_test",
     "valve_test", "purge_complete", "pressure_test", "supervisor_approval",
@@ -50,6 +50,8 @@ class VirtualActuator:
     action_id: str | None = None
 
     def flow_fraction(self) -> float:
+        if self.fault == "partial_closed":
+            return 0.25
         if self.actual_open:
             return 1.0
         return 0.03 if self.fault == "seat_leak" else 0.0
@@ -100,6 +102,11 @@ class VirtualSafetyRuntime:
         self.inert_purge_available = True
         self.diagnostic: dict[str, Any] | None = None
         self._hazard_ids: set[str] = set()
+        self.residual_hazard = {
+            "status": "none", "source_ended_s": None,
+            "safe_samples": 0, "required_safe_samples": 3,
+            "reason": None,
+        }
         self.actions: list[dict[str, Any]] = []
         self._pending_metric_actions: dict[str, dict[str, Any]] = {}
         self.latest_time_s = 0.0
@@ -289,6 +296,22 @@ class VirtualSafetyRuntime:
 
     def record_metrics(self, time_s: float, metrics: Mapping[str, Any]) -> None:
         with self._lock:
+            if self.residual_hazard["status"] == "monitoring":
+                safe = (
+                    float(metrics.get("total_leak_flow_g_s") or 0.0) <= .01
+                    and float(metrics.get("gas_max_volpct_h2") or 0.0) < .2
+                    and bool(metrics.get("detectors_good"))
+                    and not any(row["fault"] for row in self.ventilation.values())
+                )
+                self.residual_hazard["safe_samples"] = (
+                    int(self.residual_hazard["safe_samples"]) + 1 if safe else 0
+                )
+                self.residual_hazard["reason"] = (
+                    None if safe else
+                    "잔류 누출·가스 신호, 검지기 품질 또는 환기 고장을 확인하십시오."
+                )
+                if self.residual_hazard["safe_samples"] >= self.residual_hazard["required_safe_samples"]:
+                    self.residual_hazard["status"] = "cleared"
             if self.diagnostic is not None:
                 self.diagnostic["detectors_good"] = (self.diagnostic["detectors_good"] and
                                                      bool(metrics.get("detectors_good")))
@@ -311,6 +334,11 @@ class VirtualSafetyRuntime:
                       "after": {"ended_fault_ids": list(fault_ids)},
                       "baseline_metrics": {}, "after_metrics": None}
             self.actions.append(action)
+            self.residual_hazard = {
+                "status": "monitoring", "source_ended_s": time_s,
+                "safe_samples": 0, "required_safe_samples": 3,
+                "reason": "사고 입력은 종료되었으나 잔류 가스와 환기 상태 확인이 필요합니다.",
+            }
             return deepcopy(action)
 
     def observe_hazards(self, active_faults: tuple[str, ...] | list[str]) -> None:
@@ -395,6 +423,8 @@ class VirtualSafetyRuntime:
                 if valve.fault == "stuck_open":
                     valve.actual_open = True
                 elif valve.fault == "stuck_closed":
+                    valve.actual_open = False
+                elif valve.fault == "partial_closed":
                     valve.actual_open = False
                 else:
                     valve.actual_open = valve.commanded_open
@@ -563,6 +593,7 @@ class VirtualSafetyRuntime:
                     "purge_h2_fraction": dict(self.purge_h2_fraction),
                     "inert_purge_available": self.inert_purge_available,
                     "diagnostic": deepcopy(self.diagnostic),
+                    "residual_hazard": deepcopy(self.residual_hazard),
                     "actions": deepcopy(self.actions[-300:]) if include_actions else []}
 
 

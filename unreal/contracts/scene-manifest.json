@@ -1,0 +1,514 @@
+{
+  "schema_version": 1,
+  "layout_basis": "PUBLIC_REFERENCE_SCHEMATIC",
+  "coordinate_mapping": "three_metres(x,y,z) -> unreal_centimetres(100*x,100*z,100*y)",
+  "units": {
+    "position": "cm",
+    "pressure": "MPa_abs",
+    "temperature": "degC",
+    "flow": "g/s",
+    "mass": "kg",
+    "effect_distance": "m",
+    "time": "simulation_s"
+  },
+  "equipment": [
+    {
+      "component_id": "cascade.low",
+      "ui_id": "low",
+      "label": "저압 저장 뱅크",
+      "node_id": "N07",
+      "position_cm": [
+        -100.0,
+        -600.0,
+        0.0
+      ],
+      "dimensions_cm": [
+        265.0,
+        460.0,
+        280.0
+      ],
+      "dimensions_basis": "illustrative_reference_envelope"
+    },
+    {
+      "component_id": "cascade.medium",
+      "ui_id": "medium",
+      "label": "중압 저장 뱅크",
+      "node_id": "N08",
+      "position_cm": [
+        300.0,
+        -600.0,
+        0.0
+      ],
+      "dimensions_cm": [
+        265.0,
+        460.0,
+        280.0
+      ],
+      "dimensions_basis": "illustrative_reference_envelope"
+    },
+    {
+      "component_id": "cascade.high",
+      "ui_id": "high",
+      "label": "고압 저장 뱅크",
+      "node_id": "N09",
+      "position_cm": [
+        700.0,
+        -600.0,
+        0.0
+      ],
+      "dimensions_cm": [
+        265.0,
+        460.0,
+        280.0
+      ],
+      "dimensions_basis": "illustrative_reference_envelope"
+    },
+    {
+      "component_id": "supply",
+      "ui_id": "supply",
+      "label": "공급 트레일러",
+      "node_id": "N01",
+      "position_cm": [
+        -2200.0,
+        -150.0,
+        0.0
+      ],
+      "dimensions_cm": [
+        260.0,
+        1600.0,
+        370.0
+      ],
+      "dimensions_basis": "illustrative_reference_envelope"
+    },
+    {
+      "component_id": "compressor",
+      "ui_id": "compressor",
+      "label": "수소 압축기",
+      "node_id": "N06",
+      "position_cm": [
+        -640.0,
+        -600.0,
+        0.0
+      ],
+      "dimensions_cm": [
+        500.0,
+        440.0,
+        360.0
+      ],
+      "dimensions_basis": "illustrative_reference_envelope"
+    },
+    {
+      "component_id": "cooler",
+      "ui_id": "cooler",
+      "label": "프리쿨러",
+      "node_id": "N19",
+      "position_cm": [
+        1100.0,
+        -600.0,
+        0.0
+      ],
+      "dimensions_cm": [
+        420.0,
+        400.0,
+        300.0
+      ],
+      "dimensions_basis": "illustrative_reference_envelope"
+    },
+    {
+      "component_id": "header",
+      "ui_id": "header",
+      "label": "공통 헤더",
+      "node_id": "N10",
+      "position_cm": [
+        300.0,
+        -300.0,
+        0.0
+      ],
+      "dimensions_cm": [
+        400.0,
+        100.0,
+        150.0
+      ],
+      "dimensions_basis": "illustrative_reference_envelope"
+    },
+    {
+      "component_id": "dispenser.pcv",
+      "ui_id": "dispenser",
+      "label": "디스펜서 1",
+      "node_id": "N11",
+      "position_cm": [
+        0.0,
+        420.0,
+        0.0
+      ],
+      "dimensions_cm": [
+        120.0,
+        100.0,
+        220.0
+      ],
+      "dimensions_basis": "illustrative_reference_envelope"
+    },
+    {
+      "component_id": "dispenser_2.pcv",
+      "ui_id": "standby",
+      "label": "디스펜서 2",
+      "node_id": "N15",
+      "position_cm": [
+        800.0,
+        420.0,
+        0.0
+      ],
+      "dimensions_cm": [
+        120.0,
+        100.0,
+        220.0
+      ],
+      "dimensions_basis": "illustrative_reference_envelope"
+    },
+    {
+      "component_id": "dispenser.hose",
+      "ui_id": "dispenser",
+      "label": "충전 호스 1",
+      "node_id": "N13",
+      "position_cm": [
+        180.0,
+        520.0,
+        120.0
+      ],
+      "dimensions_cm": [
+        240.0,
+        200.0,
+        100.0
+      ],
+      "dimensions_basis": "illustrative_reference_envelope"
+    },
+    {
+      "component_id": "dispenser_2.hose",
+      "ui_id": "standby",
+      "label": "충전 호스 2",
+      "node_id": "N17",
+      "position_cm": [
+        980.0,
+        520.0,
+        120.0
+      ],
+      "dimensions_cm": [
+        240.0,
+        200.0,
+        100.0
+      ],
+      "dimensions_basis": "illustrative_reference_envelope"
+    },
+    {
+      "component_id": "vehicle.tank",
+      "ui_id": "vehicle",
+      "label": "차량 1",
+      "node_id": "N14",
+      "position_cm": [
+        280.0,
+        700.0,
+        0.0
+      ],
+      "dimensions_cm": [
+        490.0,
+        190.0,
+        150.0
+      ],
+      "dimensions_basis": "illustrative_reference_envelope"
+    },
+    {
+      "component_id": "vehicle_2.tank",
+      "ui_id": "vehicle2",
+      "label": "차량 2",
+      "node_id": "N18",
+      "position_cm": [
+        1080.0,
+        700.0,
+        0.0
+      ],
+      "dimensions_cm": [
+        490.0,
+        190.0,
+        150.0
+      ],
+      "dimensions_basis": "illustrative_reference_envelope"
+    },
+    {
+      "component_id": "vent",
+      "ui_id": "vent",
+      "label": "벤트 출구",
+      "node_id": "N20",
+      "position_cm": [
+        1400.0,
+        -900.0,
+        0.0
+      ],
+      "dimensions_cm": [
+        100.0,
+        100.0,
+        600.0
+      ],
+      "dimensions_basis": "illustrative_reference_envelope"
+    }
+  ],
+  "detectors": [
+    {
+      "sensor_id": "GD-0101",
+      "kind": "gas",
+      "position_cm": [
+        -2200.0,
+        500.0,
+        270.0
+      ]
+    },
+    {
+      "sensor_id": "GD-0201",
+      "kind": "gas",
+      "position_cm": [
+        -2200.0,
+        -800.0,
+        250.0
+      ]
+    },
+    {
+      "sensor_id": "GD-0601",
+      "kind": "gas",
+      "position_cm": [
+        -600.0,
+        -400.0,
+        280.0
+      ]
+    },
+    {
+      "sensor_id": "GD-0701",
+      "kind": "gas",
+      "position_cm": [
+        -200.0,
+        -500.0,
+        270.0
+      ]
+    },
+    {
+      "sensor_id": "GD-0801",
+      "kind": "gas",
+      "position_cm": [
+        100.0,
+        -500.0,
+        270.0
+      ]
+    },
+    {
+      "sensor_id": "GD-0901",
+      "kind": "gas",
+      "position_cm": [
+        500.0,
+        -500.0,
+        270.0
+      ]
+    },
+    {
+      "sensor_id": "GD-1001",
+      "kind": "gas",
+      "position_cm": [
+        800.0,
+        -300.0,
+        270.0
+      ]
+    },
+    {
+      "sensor_id": "GD-1301",
+      "kind": "gas",
+      "position_cm": [
+        0.0,
+        425.0,
+        466.0
+      ]
+    },
+    {
+      "sensor_id": "GD-1701",
+      "kind": "gas",
+      "position_cm": [
+        800.0,
+        425.0,
+        466.0
+      ]
+    },
+    {
+      "sensor_id": "GD-1901",
+      "kind": "gas",
+      "position_cm": [
+        1100.0,
+        -400.0,
+        270.0
+      ]
+    },
+    {
+      "sensor_id": "GD-2001",
+      "kind": "gas",
+      "position_cm": [
+        1200.0,
+        -300.0,
+        280.0
+      ]
+    },
+    {
+      "sensor_id": "GD-2101",
+      "kind": "gas",
+      "position_cm": [
+        -600.0,
+        -300.0,
+        380.0
+      ]
+    },
+    {
+      "sensor_id": "GD-2201",
+      "kind": "gas",
+      "position_cm": [
+        300.0,
+        -500.0,
+        370.0
+      ]
+    },
+    {
+      "sensor_id": "GD-2301",
+      "kind": "gas",
+      "position_cm": [
+        400.0,
+        400.0,
+        470.0
+      ]
+    },
+    {
+      "sensor_id": "GD-2302",
+      "kind": "gas",
+      "position_cm": [
+        1100.0,
+        -400.0,
+        350.0
+      ]
+    },
+    {
+      "sensor_id": "FD-0101",
+      "kind": "flame",
+      "position_cm": [
+        -2200.0,
+        300.0,
+        330.0
+      ]
+    },
+    {
+      "sensor_id": "FD-0601",
+      "kind": "flame",
+      "position_cm": [
+        -600.0,
+        -300.0,
+        370.0
+      ]
+    },
+    {
+      "sensor_id": "FD-0701",
+      "kind": "flame",
+      "position_cm": [
+        -200.0,
+        -400.0,
+        350.0
+      ]
+    },
+    {
+      "sensor_id": "FD-0801",
+      "kind": "flame",
+      "position_cm": [
+        100.0,
+        -400.0,
+        350.0
+      ]
+    },
+    {
+      "sensor_id": "FD-0901",
+      "kind": "flame",
+      "position_cm": [
+        500.0,
+        -400.0,
+        350.0
+      ]
+    },
+    {
+      "sensor_id": "FD-1301",
+      "kind": "flame",
+      "position_cm": [
+        0.0,
+        360.0,
+        455.0
+      ]
+    },
+    {
+      "sensor_id": "FD-1701",
+      "kind": "flame",
+      "position_cm": [
+        800.0,
+        360.0,
+        455.0
+      ]
+    },
+    {
+      "sensor_id": "FD-1901",
+      "kind": "flame",
+      "position_cm": [
+        1100.0,
+        -300.0,
+        360.0
+      ]
+    },
+    {
+      "sensor_id": "FD-2001",
+      "kind": "flame",
+      "position_cm": [
+        1200.0,
+        -200.0,
+        350.0
+      ]
+    }
+  ],
+  "cameras": [
+    {
+      "camera_id": "CAM-01",
+      "position_cm": [
+        300.0,
+        -360.0,
+        340.0
+      ]
+    },
+    {
+      "camera_id": "CAM-02",
+      "position_cm": [
+        -620.0,
+        -380.0,
+        310.0
+      ]
+    },
+    {
+      "camera_id": "CAM-03",
+      "position_cm": [
+        410.0,
+        325.0,
+        360.0
+      ]
+    },
+    {
+      "camera_id": "CAM-04",
+      "position_cm": [
+        1350.0,
+        -330.0,
+        300.0
+      ]
+    },
+    {
+      "camera_id": "CAM-05",
+      "position_cm": [
+        -2200.0,
+        120.0,
+        380.0
+      ]
+    }
+  ]
+}

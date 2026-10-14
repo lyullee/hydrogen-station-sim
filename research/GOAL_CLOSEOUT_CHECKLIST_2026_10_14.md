@@ -11,7 +11,7 @@
 
 | 항목 | 상태 | 근거 |
 |---|---|---|
-| 최신 전체 회귀 | 완료 | 1,626 passed / 0 failed / 0 skipped / 224 warnings |
+| 최신 전체 회귀 | 완료 | 1,650 passed / 0 failed / 0 skipped / 23 warnings |
 | IJHE 형식·PDF 무결성 | 완료 | 24페이지 컴파일, 인용·그림·참조·PDF 해시 확인 |
 | readiness 원장·미러 동기화 | 완료 | 135 PASS / 11 FAIL / 6 PENDING |
 | 릴리즈 비밀값 정적 감사 | 완료 | 고신뢰 비밀값 0건·환경파일 0개·추적 파일 2,287개 검사 |

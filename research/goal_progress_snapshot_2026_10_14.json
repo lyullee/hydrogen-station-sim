@@ -1,23 +1,23 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-14T22:21:46+09:00",
+  "generated_at": "2026-10-14T18:45:56+00:00",
   "metric_definition": "PASS gates divided by PASS+FAIL+PENDING gates; not a publication-readiness probability",
   "gate_counts": {
-    "PASS": 134,
+    "PASS": 135,
     "FAIL": 11,
-    "PENDING": 7,
+    "PENDING": 6,
     "TOTAL": 152
   },
-  "gate_closure_percent": 88.2,
+  "gate_closure_percent": 88.8,
   "primary_scope_progress_2026_10_11": {
     "metric_definition": "Scope-adjusted gate closure after removing the declared station-to-vehicle full-loop, optional SAGA human-evaluation lanes and non-validation public access-boundary checks; this is not a scientific improvement claim.",
     "gate_counts": {
-      "PASS": 133,
+      "PASS": 134,
       "FAIL": 10,
-      "PENDING": 2,
+      "PENDING": 1,
       "TOTAL": 145
     },
-    "gate_closure_percent": 91.7,
+    "gate_closure_percent": 92.4,
     "excluded_gate_ids": [
       "full_loop_external_validation",
       "hiad_casebook_frozen",
@@ -39,8 +39,7 @@
     "proust_independent_release_validation",
     "schefer_transient_release_validation",
     "schefer_2007_pressure_decay_validation",
-    "grune_2014_pressure_decay_validation",
-    "submission_metadata_and_declarations"
+    "grune_2014_pressure_decay_validation"
   ],
   "blocking_full_objective_gates": [
     "dickens_typeiii_prospective_validation",
@@ -51,7 +50,6 @@
     "schefer_transient_release_validation",
     "schefer_2007_pressure_decay_validation",
     "grune_2014_pressure_decay_validation",
-    "submission_metadata_and_declarations",
     "h2safe_spatial_detector_transfer_validation"
   ],
   "interpretation": {
@@ -84,289 +82,5 @@
       "station_to_vehicle_raw_data": "removed_from_primary_goal_after_public_search",
       "ethics_and_expert_review": "optional_for_physics_validation; required only for a claim that SAGA improves human safety guidance"
     }
-  },
-  "source_commit": "115ceaa",
-  "latest_completed_work": "KITopen DOI 10.5445/IR/1000096833가 기존 PRESLHY RADAR 원자료 DOI 10.35097/1187의 중복 카탈로그임을 확인하고 새 holdout으로 중복 집계하지 않았습니다.",
-  "latest_full_regression": {
-    "tests_passed": 1626,
-    "tests_failed": 0,
-    "tests_skipped": 0,
-    "warnings": 224,
-    "scope": "python -m pytest -q",
-    "source_commit": "115ceaa",
-    "artifact": "research/full_regression_test_run_2026_10_14.json"
-  },
-  "remaining_workstreams": [
-    {
-      "id": "component_external_validation",
-      "progress_percent": 88.2,
-      "status": "11 FAIL / 7 PENDING gates remain across bounded submission and optional study lanes"
-    },
-    {
-      "id": "station_side_digital_twin",
-      "progress_percent": 91.7,
-      "status": "Primary scope gate closure; implementation regression passes but scientific validation gates remain"
-    },
-    {
-      "id": "saga_direct_answer_grounding",
-      "progress_percent": 100.0,
-      "status": "Evidence-bound direct-answer routing and scenario/action grounding tests pass; adjacent public PLC context is routed only for relevant questions; effectiveness claim remains pending"
-    },
-    {
-      "id": "station_to_vehicle_full_loop",
-      "progress_percent": 0.0,
-      "status": "Excluded from primary goal; no synchronized public station-to-vehicle raw trace identified; limitation documented"
-    },
-    {
-      "id": "ijhe_submission_package",
-      "progress_percent": 88.2,
-      "status": "Format/LaTeX/software DOI gates pass; submission metadata and unresolved validation gates remain"
-    }
-  ],
-  "latest_focused_regression": {
-    "tests_passed": 3,
-    "tests_failed": 0,
-    "tests_skipped": 0,
-    "warnings": 1,
-    "scope": "tests/test_objective_evidence_summary.py"
-  },
-  "completed_process_improvements": [
-    {
-      "id": "critical_priority_lane_recheck_latest_2026_10_14",
-      "progress_percent": 100.0,
-      "status": "The latest critical priority run completed in 5.4 seconds. Software/process checks passed, while mc_tank_boundary, h2safe_spatial_response and nrel_h2fills_hdvs_tank remained scientifically failed and unpromoted; no runtime or claim boundary was changed."
-    },
-    {
-      "id": "tudelft_detector_placement_context_2026_10_14",
-      "progress_percent": 100.0,
-      "status": "TU Delft actual-hydrogen metering-cabinet report context is routed selectively to detector-placement and ventilation questions. It remains report-level context only: no raw time series, machine-readable 3-D coordinates, runtime detector routing, threshold calibration, safety-distance calibration or validation-gate promotion; 41 focused tests pass."
-    },
-    {
-      "id": "local_private_schema_recheck_2026_10_14",
-      "progress_percent": 100.0,
-      "status": "Two local confidential bundles were re-screened with aggregate-only outputs. Additional signal volume was confirmed, but no synchronized station-to-vehicle holdout was admitted because unit semantics, calibration, common-clock linkage and rights attestations are missing."
-    },
-    {
-      "id": "priority_validation_recheck_2026_10_14",
-      "progress_percent": 100.0,
-      "status": "Critical priority run refreshed after the full regression: all software/process checks passed; the three known scientific screens remain explicitly failed and unpromoted."
-    },
-    {
-      "id": "public_data_search_seventh_pass_2026_10_14",
-      "progress_percent": 100.0,
-      "status": "USN, HyDelta, GASFLOW and open sensor-calibration candidates were screened. No new eligible independent raw spatial or station-side holdout was found; access and claim boundaries were recorded without gate promotion."
-    },
-    {
-      "id": "direct_answer_prompt_budget_regression_fix_2026_10_14",
-      "progress_percent": 100.0,
-      "status": "Provider context was compacted without removing the full API evidence manifest. Main and sensor direct-answer, impact and staged-response tests pass; the refreshed 14-step evidence chain and full 1,609-test regression pass; scientific gate counts remain unchanged."
-    },
-    {
-      "id": "hysafe_sbepv5_actual_h2_context_grounding_2026_10_14",
-      "progress_percent": 100.0,
-      "status": "HySafe SBEPV5 D27 actual-hydrogen multi-compartment context was added to the LLM manifest, compact evidence summary and targeted decision prompt. Report-level geometry, release and sensor-quality conditions are exposed; raw Excel was not accessed, so independent holdout, runtime calibration and validation-gate promotion remain disabled; 61 focused tests pass."
-    },
-    {
-      "id": "frontiers_actual_h2_ceiling_jet_context_grounding_2026_10_14",
-      "progress_percent": 100.0,
-      "status": "Frontiers actual-hydrogen confined-ceiling experiment was added as bounded LLM context with DOI 10.3389/fenrg.2024.1456316. Conditions and reported R² 0.98 are exposed, while author-request-only raw data keep calibration, spatial holdout, runtime and gate promotion disabled; 60 focused tests pass."
-    },
-    {
-      "id": "hydelta_d6a1_indoor_context_grounding_2026_10_14",
-      "progress_percent": 100.0,
-      "status": "HyDelta D6A.1 actual-hydrogen indoor report context is grounded in the LLM evidence, summary and targeted decision prompt. The 32 experiments/50-sensor matrix is visible with DOI 10.5281/zenodo.8154318, while missing numeric coordinates and per-sensor responses keep spatial holdout eligibility and runtime promotion false; 59 focused tests pass."
-    },
-    {
-      "id": "grune_public_raw_trace_recheck_2026_10_14",
-      "progress_percent": 100.0,
-      "status": "KIT, publisher, H2Tools and ICHS records were rechecked. The result is a documented no-new-rights-cleared-raw-trace outcome; figure-derived diagnostics remain secondary and do not promote the Grune validation gate."
-    },
-    {
-      "id": "ijhe_manuscript_actual_h2_evidence_2026_10_14",
-      "progress_percent": 100.0,
-      "status": "The published actual-H2 detector study is documented as post-access development evidence only; the 24-page Tectonic PDF compiles, all rendered pages were inspected, format/readiness artifacts are synchronized, and 12 focused reproduction tests pass. No scientific gate or runtime parameter was promoted."
-    },
-    {
-      "id": "full_regression_after_detector_evidence_grounding_2026_10_14",
-      "progress_percent": 100.0,
-      "status": "Full Python regression completed after grounding the published actual-H2 detector diagnostic: 1,606 passed, 0 failed, 222 warnings in 268.92 s. Readiness, runtime-precedent and claim-matrix hashes are synchronized; no scientific gate was promoted."
-    },
-    {
-      "id": "korean_tent_first_detection_diagnostic_2026_10_14",
-      "progress_percent": 100.0,
-      "status": "Published aggregate first-detection data were encoded with sensor/nozzle coordinates and a transparent nearest-source baseline. The result is post-access diagnostic evidence only; it does not update runtime parameters or promote a validation gate."
-    },
-    {
-      "id": "full_regression_after_release_boundary_fix_2026_10_14",
-      "progress_percent": 100.0,
-      "status": "Full Python regression completed after the release-boundary and diagnostics changes: 1,604 passed, 0 failed, 222 warnings in 275.49 s. Warnings are existing deprecations, HyRAM PhysicsWarning and openpyxl notices; no scientific gate was promoted."
-    },
-    {
-      "id": "flow_limited_hyram_fallback_boundary_2026_10_14",
-      "progress_percent": 100.0,
-      "status": "Unavailable HyRAM fallback now preserves flow-limited release-boundary semantics, equivalent-orifice metadata, process-flow limits and distance claim limits; the deterministic evidence chain was refreshed successfully. Scientific gate counts remain unchanged."
-    },
-    {
-      "id": "public_validation_data_recheck_2026_10_14",
-      "progress_percent": 100.0,
-      "status": "Rechecked new hydrogen dispersion, ventilation and station-operation sources; no new replayable independent HRS experiment was found, and computational/report-only/already-consumed sources were explicitly excluded from gate promotion."
-    },
-    {
-      "id": "hysam_public_dataset_boundary_inventory_2026_10_14",
-      "progress_percent": 100.0,
-      "status": "Three CC BY 4.0 HySaM workbooks were hash-locked and inventoried; they provide sampling-system time series but no HRS topology or station-to-vehicle trace, so they remain inventory-only and do not promote an IJHE validation gate."
-    },
-    {
-      "id": "andreasen_holdout_overlap_invalidation_2026_10_14",
-      "progress_percent": 100.0,
-      "status": "The Zenodo Andreasen/HyDown archive was checked after protocol freeze and found to overlap tracked Byrnes exploratory/prospective artifacts; the attempt is explicitly invalidated and no scientific gate or progress percentage is promoted."
-    },
-    {
-      "id": "full_regression_process_fix_2026_10_14",
-      "progress_percent": 100.0,
-      "status": "The priority-check count and release manifest are synchronized at four checks; research metadata privacy is clean after removing the generated local-path artifact. Scientific gate counts remain unchanged."
-    },
-    {
-      "id": "runtime_evidence_chain_hash_resync_2026_10_14",
-      "progress_percent": 100.0,
-      "status": "The deterministic refresh chain passed all steps and corrected downstream hashes for HIAD/KHK replay, response handoff, readiness, claim matrix and blocker reports; scientific gate counts remain unchanged."
-    },
-    {
-      "id": "goal_snapshot_commit_alignment_2026_10_14",
-      "progress_percent": 100.0,
-      "status": "The authoritative progress snapshot now points to the latest committed provenance and documentation state; gate counts and scientific readiness are unchanged."
-    },
-    {
-      "id": "jankuj_reused_holdout_invalidation_2026_10_14",
-      "progress_percent": 100.0,
-      "status": "The false prospective-access declaration is corrected with matching archive hashes and a regression test; no runtime, validation gate or progress percentage is promoted."
-    },
-    {
-      "id": "local_ftpdata_duplicate_provenance_correction_2026_10_14",
-      "progress_percent": 100.0,
-      "status": "The current local inventory now records the one discovered CSV, links it to the duplicate recheck, and keeps new_independent_holdout=false; the numerical validation gate and progress percentage remain unchanged."
-    },
-    {
-      "id": "typeiii_protocol_priority_ci_2026_10_14",
-      "progress_percent": 100.0,
-      "status": "The Type-III intake contract is a P0 CI check; the latest priority run passed 78/78 focused software tests and preserves scientific diagnostic failures without gate promotion."
-    },
-    {
-      "id": "dickens_typeiii_intake_contract_validator_2026_10_14",
-      "progress_percent": 100.0,
-      "status": "Geometry-resolved Type-III input contract, outcome-unseen declarations, source-hash safeguards and frozen screens are automatically checked; protocol readiness passes while the scientific validation gate remains open."
-    },
-    {
-      "id": "priority_lane_recheck_2026_10_14",
-      "progress_percent": 100.0,
-      "status": "Focused software/process lane passed 75/75; diagnostic execution completed 5/5 while MC tank, H2SAFE spatial and NREL HDVS scientific screens remain failed and unpromoted."
-    },
-    {
-      "id": "priority_ci_science_boundary",
-      "progress_percent": 100.0,
-      "status": "Workflow reports scientific BLOCKED state without red build when software/process checks pass; software regressions still fail CI."
-    },
-    {
-      "id": "preslhy_80k_nonadiabatic_boundary_diagnostic",
-      "progress_percent": 100.0,
-      "status": "11 consumed 80 K cases evaluated; 3/11 joint screen passes; candidate remains development-only and is not runtime or validation-gate eligible."
-    },
-    {
-      "id": "direct_answer_and_response_regression_recheck",
-      "progress_percent": 100.0,
-      "status": "90 direct-answer/HAZOP/emergency tests and 11 separated-assistant/risk-overlay Node tests pass; no external scientific gate promoted."
-    },
-    {
-      "id": "full_regression_and_local_archive_provenance_recheck",
-      "progress_percent": 100.0,
-      "status": "1,595 Python tests pass; 22 local USN archive members match the retained public archive byte-for-byte. No scientific gate promoted."
-    },
-    {
-      "id": "type4_burst_mechanical_evidence_and_audit_resync",
-      "progress_percent": 100.0,
-      "status": "Zenodo 10.5281/zenodo.10983652 is hash-locked as bounded Type-IV hydraulic mechanical context; LLM routing is selective, derived audit artifacts are synchronized, and the final full regression is 1,599/1,599. No scientific readiness gate was promoted."
-    },
-    {
-      "id": "readiness_audit_resync_2026_10_14",
-      "progress_percent": 100.0,
-      "status": "Readiness audit, validation-gap reports and progress records were regenerated from the current source; 12 audit consistency tests pass; scientific gate counts remain 134 PASS / 11 FAIL / 7 PENDING."
-    },
-    {
-      "id": "runtime_evidence_chain_refresh_2026_10_14",
-      "progress_percent": 100.0,
-      "status": "All 14 deterministic refresh steps passed; readiness and claim boundaries were re-synchronized without promoting a scientific gate."
-    },
-    {
-      "id": "runtime_and_data_lane_verification_2026_10_14",
-      "progress_percent": 100.0,
-      "status": "The current streamed LLM/vehicle-route runtime and readiness/data-lane audit passed 3 JavaScript and 47 Python tests; the station-side/full-loop boundary remains explicit and no scientific gate was promoted."
-    },
-    {
-      "id": "readiness_audit_hash_resync_after_evidence_cleanup_2026_10_14",
-      "progress_percent": 100.0,
-      "status": "최근 LLM 근거 정리 커밋 이후 Type-IV 런타임 보정과 KHK 사고 선례 라우팅 감사의 소스 해시를 재생성했고 readiness 판정 134 PASS / 11 FAIL / 7 PENDING을 그대로 확인했다. 과학적 게이트는 승격하지 않았다."
-    },
-    {
-      "id": "runtime_evidence_chain_refresh_after_audit_resync_2026_10_14",
-      "progress_percent": 100.0,
-      "status": "결정론적 evidence chain 14단계를 재실행해 전 단계 PASS를 확인했다. 런타임·사고 선례·HIAD/KHK replay·readiness·gap matrix가 모두 최신 해시로 동기화됐고 과학적 게이트는 승격하지 않았다."
-    },
-    {
-      "id": "full_regression_after_evidence_chain_refresh_2026_10_14",
-      "progress_percent": 100.0,
-      "status": "Evidence chain 갱신과 anti-chatter 런타임 변경 후 전체 Python 회귀 1,622건이 실패 없이 통과했습니다. 경고 222건은 기존 dependency/deprecation·HyRAM physics 경고이며 독립 과학 gate 승격은 하지 않았습니다."
-    },
-    {
-      "id": "full_regression_provenance_alignment_2026_10_14",
-      "progress_percent": 100.0,
-      "status": "최신 전체 회귀검증 기록과 진행 스냅샷의 커밋 출처를 108f300으로 정렬했습니다. 과학적 gate 수치는 변경하지 않았습니다."
-    },
-    {
-      "id": "grune_public_access_recheck_2026_10_14",
-      "progress_percent": 100.0,
-      "status": "KIT 공식 레코드·출판사 랜딩·공개 사본을 재확인했으나 완전한 권리 확인 압력-시간 원자료는 발견되지 않았습니다. Grüne 독립 검증 게이트는 PENDING으로 유지하고 런타임·과학적 수치를 변경하지 않았습니다."
-    },
-    {
-      "id": "replay_evidence_timestamp_alignment_2026_10_14",
-      "progress_percent": 100.0,
-      "status": "Grüne 접근 재확인 후 재생·추적성 산출물의 생성시각과 readiness 참조 해시를 최신 상태로 동기화했습니다. 과학적 gate 수치는 변경하지 않았습니다."
-    },
-    {
-      "id": "grune_data_request_draft_2026_10_14",
-      "progress_percent": 100.0,
-      "status": "독립 압력-시간 원자료 확보에 필요한 파일·단위·계측·권리 확인 항목을 요청 초안으로 고정했습니다. 외부 연락이나 gate 승격은 수행하지 않았습니다."
-    },
-    {
-      "id": "public_data_search_eighth_pass_2026_10_14",
-      "progress_percent": 100.0,
-      "status": "NREL CDP·HITRF/Kuroki·Cal State LA·USN 경로를 재확인했으나 새 권리정리 미사용 원시 holdout은 없었습니다. 집계자료·custodian 요청·이미 사용된 자료로 분류하고 gate와 런타임을 변경하지 않았습니다."
-    },
-    {
-      "id": "preslhy_tar_header_recheck_2026_10_14",
-      "progress_percent": 100.0,
-      "status": "공식 11.3 GB tar의 Range/스트림 헤더를 메타데이터 수준에서 재확인했습니다. 새 수치자료를 열지 않았고 liquid-H2 consequence 경계자료로만 유지했습니다."
-    },
-    {
-      "id": "recharge_anti_chatter_guard_2026_10_14",
-      "progress_percent": 100.0,
-      "status": "검증 실패한 fitted dwell 대신 120초 operator-control guard를 기본 적용하고 0~600초 override를 추가했습니다. 관련 테스트 45건이 통과했습니다."
-    },
-    {
-      "id": "tank_runtime_audit_hash_resync_after_recharge_guard_2026_10_14",
-      "progress_percent": 100.0,
-      "status": "재충전 anti-chatter 기본값 추가로 변경된 scenario.py·api.py 소스 해시를 Type-IV 탱크 런타임 감사에 재생성했습니다. readiness 감사 일관성 및 운전 가드 관련 31개 테스트가 통과했고 과학적 gate 수치는 134 PASS / 11 FAIL / 7 PENDING으로 유지됩니다."
-    },
-    {
-      "id": "preslhy_kitopen_duplicate_reconciliation_2026_10_14",
-      "progress_percent": 100.0,
-      "status": "KITopen DOI 10.5445/IR/1000096833가 동일 RADAR record vuyYifgxlfOuFrSP 및 1,313,122,304-byte CC BY 4.0 archive를 가리키는 중복 카탈로그임을 확인했다. 새 독립 holdout·런타임·과학 게이트는 추가하지 않았다."
-    }
-  ],
-  "latest_context_focused_regression": {
-    "tests_passed": 43,
-    "tests_failed": 0,
-    "tests_skipped": 0,
-    "warnings": 1,
-    "scope": "tests/test_tudelft_detector_context.py tests/test_bam_hrs_anomaly_context.py tests/test_zhang_lh2_release_context.py tests/test_llm_grounding.py"
   }
 }

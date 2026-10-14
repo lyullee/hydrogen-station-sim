@@ -1,0 +1,22 @@
+{
+  "date": "2026-10-15",
+  "status": "BRIDGE_AND_ASSETS_VERIFIED_ENGINE_PENDING",
+  "python_focused_tests": {"passed":31, "failed":0},
+  "javascript_focused_tests": {"passed":10, "failed":0},
+  "real_browser_checks": {"passed":5, "page_errors":0, "engine_video_verified":false},
+  "pixel_streaming_infrastructure": {
+    "build":"PASS",
+    "branch":"UE5.6",
+    "commit":"eaf43b04f9979a7755ef5baa6a07bc7400ac1351",
+    "listeners":"127.0.0.1 only",
+    "actual_unreal_stream":"NOT_VERIFIED"
+  },
+  "gltf_assets": {"count":7, "validator":"Khronos glTF Validator 2.0.0-dev.3.10", "errors":0, "warnings":0, "unreal_import_verified":false},
+  "unreal_cpp_compile":"NOT_RUN_ENGINE_NOT_INSTALLED",
+  "fps_latency_soak":"NOT_RUN",
+  "llm_routes_changed":false,
+  "physics_and_hyram_solver_changed_by_this_integration":false,
+  "evidence_files":["output/unreal/environment.json","output/unreal/web-smoke.json","output/unreal/assets/manifest.json","output/unreal/assets/validation.json"],
+  "epic_cache_recovery":"Webcache preserved in dated backup; post-unlock UI verification pending",
+  "build_tools":"Installed; installer requested reboot; no automatic reboot performed"
+}

@@ -14,6 +14,8 @@ from .protocol import FuelingCommunicationState, FuelingPhase
 class FaultKind(str, Enum):
     SENSOR_BIAS = "sensor-bias"
     SENSOR_FREEZE = "sensor-freeze"
+    SENSOR_DROPOUT = "sensor-dropout"
+    SENSOR_CLOCK_SKEW = "sensor-clock-skew"
     PCV_STUCK_OPEN = "pcv-stuck-open"
     PCV_STUCK_CLOSED = "pcv-stuck-closed"
     PCV_SEAT_LEAK = "pcv-seat-leak"
@@ -97,6 +99,8 @@ class FaultEvent:
                 raise ValueError("External fires require a positive heat-transfer UA")
         if self.kind is FaultKind.TEMPERATURE_DISTURBANCE and self.external_temperature_k is None:
             raise ValueError("Temperature disturbances require an external temperature")
+        if self.kind is FaultKind.SENSOR_CLOCK_SKEW and self.magnitude < 0.0:
+            raise ValueError("Sensor clock skew magnitude is a non-negative delay in seconds")
         if self.kind is FaultKind.PIPE_RESTRICTION and not 0.0 <= self.magnitude <= 1.0:
             raise ValueError("Pipe restriction magnitude is an open-area multiplier from 0 to 1")
         if self.kind in {

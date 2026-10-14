@@ -1,0 +1,91 @@
+{
+  "updated_on": "2026-10-15",
+  "objective": "기존 공정·HyRAM·HAZOP·SAGA를 유지하는 Unreal 3D 모드 구축",
+  "progress_basis": "verified acceptance items / all acceptance items; source_ready is not completed; not an effort or time estimate",
+  "goal_complete": false,
+  "current_blocker": "Unreal Engine is not installed; Windows desktop is locked; Build Tools installer reports reboot required",
+  "phases": [
+    {
+      "name": "환경 및 데이터 계약",
+      "items": [
+        {"id":"launcher", "status":"verified", "evidence":"winget installation success; environment inspector"},
+        {"id":"cpp-tools", "status":"verified", "evidence":"VS 2022 BuildTools installed; reboot still required"},
+        {"id":"version-pin", "status":"verified", "evidence":"UE5.6 infrastructure commit pinned and built with Node 22.14.0"},
+        {"id":"coordinates-units", "status":"verified", "evidence":"tests/test_unreal_visualization.py"},
+        {"id":"equipment-id-and-missing-data", "status":"verified", "evidence":"manifest; zero/null and two-vehicle contract checks"},
+        {"id":"api-boundaries", "status":"verified", "evidence":"read-only renderer tests forbid risk evaluation; separate assistant regression"},
+        {"id":"engine-installed", "status":"pending"},
+        {"id":"ue-project-build", "status":"pending"}
+      ]
+    },
+    {
+      "name": "저장 뱅크 시제품",
+      "items": [
+        {"id":"snapshot-and-stream", "status":"verified", "evidence":"API routing, WebSocket heartbeat and feedback checks"},
+        {"id":"live-bank-telemetry", "status":"verified", "evidence":"real simulator browser smoke verifies three pressures and inventories"},
+        {"id":"binding-and-reset", "status":"verified", "evidence":"browser smoke; stale intent rejection"},
+        {"id":"signalling-and-player", "status":"verified", "evidence":"official server/frontend build and loopback listener/player smoke; no UE video yet"},
+        {"id":"ue-bank-scene", "status":"source_ready", "evidence":"HRSStationActor.cpp"},
+        {"id":"ue-safety-commands", "status":"source_ready", "evidence":"server-owned command/feedback code; no automatic retry"},
+        {"id":"ue-valve-feedback", "status":"source_ready"},
+        {"id":"ue-leak-and-range", "status":"source_ready"},
+        {"id":"ue-disconnect-reconnect", "status":"source_ready"},
+        {"id":"actual-ue-video-and-operation", "status":"pending"}
+      ]
+    },
+    {
+      "name": "전체 설비 이전",
+      "items": [
+        {"id":"reusable-model-export-pipeline", "status":"verified", "evidence":"7 existing model builder exports"},
+        {"id":"gltf-validation", "status":"verified", "evidence":"7 GLBs; Khronos validator: 0 errors, 0 warnings"},
+        {"id":"ue-import-axis-scale", "status":"pending"},
+        {"id":"full-station-assembly", "status":"pending"},
+        {"id":"two-dispensers", "status":"pending"},
+        {"id":"road-canopy-site", "status":"pending"},
+        {"id":"cctv-and-detector-markers", "status":"source_ready", "evidence":"24 detector and 5 camera coordinates in manifest"},
+        {"id":"equipment-selection-and-visual-qa", "status":"pending"}
+      ]
+    },
+    {
+      "name": "운전 및 안전 애니메이션",
+      "items": [
+        {"id":"two-hose-connection", "status":"pending"},
+        {"id":"all-valves-and-failures", "status":"pending"},
+        {"id":"vent-path-and-residual", "status":"pending"},
+        {"id":"ventilation", "status":"pending"},
+        {"id":"cooling", "status":"pending"},
+        {"id":"evacuation", "status":"pending"},
+        {"id":"recovery-procedure", "status":"pending"},
+        {"id":"esd-state-consistency", "status":"source_ready"}
+      ]
+    },
+    {
+      "name": "사고 및 위험 시각화",
+      "items": [
+        {"id":"leak-plume", "status":"source_ready"},
+        {"id":"fire", "status":"pending"},
+        {"id":"issue-highlight", "status":"pending"},
+        {"id":"labelled-consequence-boundary", "status":"source_ready"},
+        {"id":"relative-and-absolute-index", "status":"pending"},
+        {"id":"equipment-floor-zones", "status":"source_ready"},
+        {"id":"display-toggles-settings", "status":"pending"},
+        {"id":"no-flicker-and-low-intensity", "status":"pending"}
+      ]
+    },
+    {
+      "name": "검증 및 배포",
+      "items": [
+        {"id":"python-regression", "status":"verified", "evidence":"31 tests passed"},
+        {"id":"js-regression", "status":"verified", "evidence":"10 tests passed"},
+        {"id":"real-web-integration", "status":"verified", "evidence":"5 real-browser checks passed; no page errors; no UE video claim"},
+        {"id":"ue-build-and-material-bootstrap", "status":"pending"},
+        {"id":"web-ue-process-value-parity", "status":"pending"},
+        {"id":"1080p-30fps", "status":"pending"},
+        {"id":"input-latency", "status":"pending"},
+        {"id":"60min-memory-stability", "status":"pending"},
+        {"id":"reset-reconnect-stress", "status":"pending"},
+        {"id":"packaged-release-and-runbook-verified", "status":"source_ready"}
+      ]
+    }
+  ]
+}
