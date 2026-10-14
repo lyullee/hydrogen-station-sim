@@ -3016,6 +3016,88 @@ def _public_bam_hrs_anomaly_detection_context() -> dict[str, Any] | None:
     }
 
 
+def _public_zhang_lh2_release_context() -> dict[str, Any] | None:
+    """Expose bounded actual-LH2 open-space release context.
+
+    The open-access article reports physical observations and sensor layout,
+    but not a rights-cleared machine-readable time series. Keep it explanatory
+    only so it cannot silently calibrate the station model or safety distances.
+    """
+
+    artifact = "research/zhang_large_volume_lh2_release_context_2026_10_14.json"
+    path = Path(__file__).resolve().parents[2] / artifact
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, json.JSONDecodeError):
+        return None
+    source = record.get("source") or {}
+    scope = record.get("experiment_scope") or {}
+    findings = record.get("reported_findings") or {}
+    runtime = record.get("runtime_use") or {}
+    if (
+        record.get("artifact_type") != "public_actual_lh2_release_spatial_context"
+        or record.get("status") != "ARTICLE_LEVEL_CONTEXT_ONLY"
+        or source.get("doi") != "10.3390/app14093645"
+        or source.get("open_access_article") is not True
+        or source.get("raw_data_access") != "article_level_only"
+        or scope.get("actual_liquid_hydrogen") is not True
+        or scope.get("open_space_release_experiments") is not True
+        or scope.get("reported_release_volume_range_m3") != [0.5, 3.0]
+        or scope.get("storage_tank_volume_m3") != 4.0
+        or scope.get("leak_hole_diameters_mm") != [50, 100]
+        or scope.get("sensor_heights_m") != [2, 8, 12, 20]
+        or scope.get("hydrogen_concentration_and_temperature_arrays") is not True
+        or scope.get("raw_time_series_committed") is not False
+        or scope.get("machine_readable_coordinates_committed") is not False
+        or findings.get("near_source_high_concentration_cloud") is not True
+        or findings.get("visible_cloud_near_ground") is not True
+        or findings.get("ground_material_changed_spread_and_decay") is not True
+        or findings.get("far_field_arrival_time_lag_reported") is not True
+        or findings.get("near_source_high_concentration_duration_s_reported") != 15
+        or runtime.get("llm_cryogenic_release_context") is not True
+        or runtime.get("llm_spatial_consequence_context") is not True
+        or runtime.get("runtime_dispersion_calibration") is not False
+        or runtime.get("runtime_safety_distance_calibration") is not False
+        or runtime.get("independent_external_holdout_supported") is not False
+        or runtime.get("station_to_vehicle_full_loop_supported") is not False
+        or runtime.get("validation_gate_changed") is not False
+    ):
+        return None
+    return {
+        "artifact": artifact,
+        "source": {
+            "title": source.get("title"),
+            "publisher": source.get("publisher"),
+            "doi": source.get("doi"),
+            "record_url": source.get("record_url"),
+            "publication_date": source.get("publication_date"),
+            "open_access_article": True,
+            "raw_data_access": source.get("raw_data_access"),
+        },
+        "evidence_role": "article-level actual-LH2 open-space release and spatial-consequence context",
+        "experiment_scope": {
+            "reported_release_volume_range_m3": scope.get("reported_release_volume_range_m3"),
+            "storage_tank_volume_m3": scope.get("storage_tank_volume_m3"),
+            "leak_hole_diameters_mm": scope.get("leak_hole_diameters_mm"),
+            "sensor_heights_m": scope.get("sensor_heights_m"),
+            "hydrogen_concentration_and_temperature_arrays": True,
+        },
+        "reported_findings": {
+            "near_source_high_concentration_cloud": True,
+            "visible_cloud_near_ground": True,
+            "ground_material_changed_spread_and_decay": True,
+            "far_field_arrival_time_lag_reported": True,
+            "near_source_high_concentration_duration_s_reported": 15,
+        },
+        "runtime_dispersion_calibration": False,
+        "runtime_safety_distance_calibration": False,
+        "independent_external_holdout_supported": False,
+        "station_to_vehicle_full_loop_supported": False,
+        "validation_gate_changed": False,
+        "claim_limit": str(record.get("claim_boundary") or ""),
+    }
+
+
 def _public_usn_orientation_transfer_diagnostic() -> dict[str, Any] | None:
     """Expose the post-access actual-H2 orientation-rank reproducibility screen."""
 
@@ -7757,6 +7839,9 @@ def _public_source_links(evidence: dict[str, Any]) -> list[dict[str, Any]]:
     bam_hrs_anomaly_context = evidence.get(
         "public_bam_hrs_anomaly_detection_context"
     ) or {}
+    zhang_lh2_context = evidence.get(
+        "public_zhang_lh2_release_context"
+    ) or {}
     bam_source = bam_hrs_anomaly_context.get("source") or {}
     bam_doi = str(bam_source.get("doi") or "").strip()
     if bam_doi:
@@ -7771,6 +7856,24 @@ def _public_source_links(evidence: dict[str, Any]) -> list[dict[str, Any]]:
                 or f"https://doi.org/{bam_doi}"
             ),
             "현장 HRS 정상운전·이상탐지 방법론 문맥(원시 로그·독립 holdout 아님)",
+        )
+    zhang_lh2_context = evidence.get(
+        "public_zhang_lh2_release_context"
+    ) or {}
+    zhang_source = zhang_lh2_context.get("source") or {}
+    zhang_doi = str(zhang_source.get("doi") or "").strip()
+    if zhang_doi:
+        add(
+            "PUBLIC_ZHANG_LH2_RELEASE_CONTEXT",
+            str(
+                zhang_source.get("title")
+                or "Actual-LH2 large-volume open-space release experiment"
+            ),
+            str(
+                zhang_source.get("record_url")
+                or f"https://doi.org/{zhang_doi}"
+            ),
+            "실제 액체수소 방출·근거리 농도·지면 영향 문맥(원시 시계열·위험거리 보정 아님)",
         )
     proxy = evidence.get("public_dispersion_proxy_evidence") or {}
     proxy_doi = str(proxy.get("doi") or "")
@@ -11745,6 +11848,11 @@ def build_evidence_manifest(
         envelope["response_evidence"][
             "public_bam_hrs_anomaly_detection_context"
         ] = bam_hrs_anomaly_context
+    zhang_lh2_context = _public_zhang_lh2_release_context()
+    if zhang_lh2_context is not None:
+        envelope["response_evidence"][
+            "public_zhang_lh2_release_context"
+        ] = zhang_lh2_context
     orientation_transfer = _public_usn_orientation_transfer_diagnostic()
     if orientation_transfer is not None:
         envelope["response_evidence"][
@@ -13746,6 +13854,20 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
             )
             if bam_hrs_anomaly_context.get(key) is not None
         }
+    zhang_lh2_context = evidence.get("public_zhang_lh2_release_context")
+    if isinstance(zhang_lh2_context, dict):
+        summary["public_zhang_lh2_release_context"] = {
+            key: zhang_lh2_context.get(key)
+            for key in (
+                "artifact", "source", "evidence_role", "experiment_scope",
+                "reported_findings", "runtime_dispersion_calibration",
+                "runtime_safety_distance_calibration",
+                "independent_external_holdout_supported",
+                "station_to_vehicle_full_loop_supported",
+                "validation_gate_changed", "claim_limit",
+            )
+            if zhang_lh2_context.get(key) is not None
+        }
     orientation_transfer = evidence.get("public_usn_orientation_transfer_diagnostic")
     if isinstance(orientation_transfer, dict):
         summary["public_usn_orientation_transfer_diagnostic"] = {
@@ -15302,6 +15424,15 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
             "monitoring", "trend", "drift", "detection",
         ))
     )
+    zhang_lh2_context = response.get("public_zhang_lh2_release_context") or {}
+    zhang_lh2_context_relevant = bool(
+        zhang_lh2_context
+        and any(token in detector_context for token in (
+            "액체수소", "액체 수소", "극저온", "lh2", "cryogenic",
+            "액체 방출", "저온 방출", "대규모 방출", "liquid hydrogen",
+            "cryogenic release", "피해영향", "위험거리", "consequence",
+        ))
+    )
     elvhys_alarm_relevant = bool(
         elvhys_alarm_diagnostic
         and (
@@ -16607,6 +16738,31 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                     ),
                 }
             } if bam_hrs_anomaly_relevant else {}),
+            **({
+                "public_zhang_lh2_release_context": {
+                    "source": zhang_lh2_context.get("source") or {},
+                    "evidence_role": zhang_lh2_context.get("evidence_role"),
+                    "experiment_scope": zhang_lh2_context.get(
+                        "experiment_scope"
+                    ) or {},
+                    "reported_findings": zhang_lh2_context.get(
+                        "reported_findings"
+                    ) or {},
+                    "use_for": [
+                        "실제 액체수소 대규모 방출에서 근거리 고농도·지면 인접 가시운을 설명",
+                        "지면 재질과 방출 조건이 확산·감쇠·원거리 도달 지연에 미치는 영향을 설명",
+                        "극저온 방출 상황의 센서 위치·대피 판단에서 단일 거리값을 과신하지 않도록 안내",
+                    ],
+                    "runtime_dispersion_calibration": False,
+                    "runtime_safety_distance_calibration": False,
+                    "independent_external_holdout_supported": False,
+                    "station_to_vehicle_full_loop_supported": False,
+                    "validation_gate_changed": False,
+                    "claim_limit": short(
+                        zhang_lh2_context.get("claim_limit"), 360
+                    ),
+                }
+            } if zhang_lh2_context_relevant else {}),
             **({
                 "public_actual_hydrogen_spatial_benchmark": {
                     "evidence_role": actual_hydrogen_spatial.get("evidence_role"),
@@ -18352,6 +18508,9 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
     bam_hrs_anomaly_context = evidence.get(
         "public_bam_hrs_anomaly_detection_context"
     ) or {}
+    zhang_lh2_context = evidence.get(
+        "public_zhang_lh2_release_context"
+    ) or {}
     dispersion_proxy = evidence.get("public_dispersion_proxy_evidence") or {}
     grune_ventilation = evidence.get("public_grune_ventilation_evidence") or {}
     confidential = evidence.get("confidential_measured_boundary_replay") or {}
@@ -19356,6 +19515,18 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
                 "validation_gate_changed", "claim_limit",
             )
             if bam_hrs_anomaly_context.get(key) is not None
+        },
+        "public_zhang_lh2_release_context": {
+            key: zhang_lh2_context.get(key)
+            for key in (
+                "artifact", "source", "evidence_role", "experiment_scope",
+                "reported_findings", "runtime_dispersion_calibration",
+                "runtime_safety_distance_calibration",
+                "independent_external_holdout_supported",
+                "station_to_vehicle_full_loop_supported",
+                "validation_gate_changed", "claim_limit",
+            )
+            if zhang_lh2_context.get(key) is not None
         },
         "public_grune_ventilation_envelope": {
             "doi": grune_ventilation.get("doi"),

@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-14",
+  "artifact_type": "public_actual_lh2_release_spatial_context",
+  "status": "ARTICLE_LEVEL_CONTEXT_ONLY",
+  "source": {
+    "title": "An Experimental Study on the Large-Volume Liquid Hydrogen Release in an Open Space",
+    "publisher": "Applied Sciences",
+    "doi": "10.3390/app14093645",
+    "record_url": "https://doi.org/10.3390/app14093645",
+    "publication_date": "2024-04-25",
+    "open_access_article": true,
+    "raw_data_access": "article_level_only",
+    "data_availability_statement": "Original contributions are included in the article; further inquiries are directed to the corresponding author."
+  },
+  "experiment_scope": {
+    "actual_liquid_hydrogen": true,
+    "open_space_release_experiments": true,
+    "reported_release_volume_range_m3": [0.5, 3.0],
+    "storage_tank_volume_m3": 4.0,
+    "leak_hole_diameters_mm": [50, 100],
+    "sensor_heights_m": [2, 8, 12, 20],
+    "hydrogen_concentration_and_temperature_arrays": true,
+    "raw_time_series_committed": false,
+    "machine_readable_coordinates_committed": false
+  },
+  "reported_findings": {
+    "near_source_high_concentration_cloud": true,
+    "visible_cloud_near_ground": true,
+    "ground_material_changed_spread_and_decay": true,
+    "far_field_arrival_time_lag_reported": true,
+    "near_source_high_concentration_duration_s_reported": 15
+  },
+  "runtime_use": {
+    "llm_cryogenic_release_context": true,
+    "llm_spatial_consequence_context": true,
+    "runtime_dispersion_calibration": false,
+    "runtime_safety_distance_calibration": false,
+    "independent_external_holdout_supported": false,
+    "station_to_vehicle_full_loop_supported": false,
+    "validation_gate_changed": false
+  },
+  "claim_boundary": "This open-access article provides actual-LH2 open-space release observations and report-level sensor geometry, but no rights-cleared raw time series or machine-readable station coordinates are committed here. It may support cautious explanations of cryogenic release, near-source accumulation, ground effects and delayed far-field arrival; it must not calibrate runtime dispersion, safety distances or independent validation gates."
+}
