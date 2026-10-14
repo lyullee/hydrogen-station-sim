@@ -1576,6 +1576,29 @@ def test_hyddown_hydrogen_archive_is_routed_without_promoting_validation():
     ] == "none"
 
 
+def test_hy2res_adjacent_operational_archive_is_routed_with_hrs_boundary():
+    manifest = build_evidence_manifest(
+        {"time_s": 1.0},
+        {},
+        [],
+        False,
+        question="공개 수소 공정의 압력·압축기·유량 시계열 데이터 근거를 설명해줘",
+    )
+    evidence = manifest["response_evidence"][
+        "public_adjacent_h2_operational_context"
+    ]
+    assert evidence["source"]["doi"] == "10.5281/zenodo.15166733"
+    assert evidence["source"]["license"] == "CC BY 4.0"
+    assert evidence["observed_archive"]["row_count"] == 300768
+    assert evidence["runtime_parameter_application"] is False
+    assert evidence["HRS_station_dataset"] is False
+    compact = prompt_decision_evidence(manifest)
+    projected = compact["public_adjacent_h2_operational_context"]
+    assert projected["HRS_station_dataset"] is False
+    assert projected["synchronized_station_to_vehicle_trace"] is False
+    assert "HRS" in projected["claim_limit"]
+
+
 def test_manifest_preserves_virtual_detector_public_uncertainty_envelope():
     manifest = build_evidence_manifest(
         {"time_s": 1.0},

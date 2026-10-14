@@ -2645,3 +2645,9 @@ the full-loop claim pass.
 - 원시 행은 저장소에 커밋하지 않고, 아카이브 식별자·해시·실험 범위만 `research/andreasen_2026_hyddown_hydrogen_validation_evidence_2026_10_14.json`에 보존했다.
 - 수소 방출·충전·압력·온도 질문에서 LLM이 이 근거를 인용할 수 있게 했으며, 독립 holdout·충전소 full-loop·ESD 효과·안전거리 검증·런타임 파라미터 보정은 명시적으로 금지했다.
 - 집중 LLM/근거 검증: 55/55 통과. 이 문헌 연결은 readiness 게이트를 승격하지 않으며, 현재 감사 판정은 134 PASS / 11 FAIL / 7 PENDING으로 유지한다.
+
+## 2026-10-14 - 공개 인접 수소공정 PLC 운영자료 연결
+
+- Universidad de Cantabria의 Zenodo `10.5281/zenodo.15166733` 공개 PLC 자료를 확인하고 원본 CSV MD5 `9a3c3e3b1668596854b43bfd790d3e0e`, 300,768행, 5초 샘플링, 버퍼·압축수소 탱크 압력과 수소 유량 채널을 기록했다.
+- 이 자료는 주거용 재생에너지-수소 시스템이며 HRS가 아니므로 `research/zenodo_15166733_hy2res_operational_context_2026_10_14.json`에 인접 공정 운영근거로만 보존했다. HRS 런타임 보정, station-to-vehicle 검증, ESD·안전거리·피해영향 검증은 금지했다.
+- 공정·압력·유량·압축기·공개 데이터 질문에서만 SAGA 근거 요약에 노출하고, 일반 운전 답변에는 과도한 문맥이 들어가지 않도록 조건부 라우팅했다. 관련 회귀 33/33 통과; readiness 게이트 수는 134 PASS / 11 FAIL / 7 PENDING으로 변하지 않았다.

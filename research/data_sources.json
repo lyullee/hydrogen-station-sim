@@ -1020,6 +1020,22 @@
       "diagnostic_artifact": "research/zenodo_7895795_jetfire_postaccess_diagnostic_2026_10_14.json",
       "rights_note": "The record is CC BY 4.0. Raw workbooks remain in the external quarantine tree; the repository retains source identity, hashes and derived diagnostics only.",
       "eligibility_note": "Actual-hydrogen thermal and pressure trends support a post-access diagnostic. The files were opened before this artifact was written, so they are not an independent holdout and do not calibrate HyRAM, release coefficients, safety distances or ESD performance."
+    },
+    "zenodo_15166733_hy2res_adjacent_operational_context": {
+      "title": "Measurements from a residential hydrogen-based energy system reported between March and April 2024",
+      "publisher": "Universidad de Cantabria / Zenodo",
+      "landing_page": "https://zenodo.org/records/15166733",
+      "doi": "10.5281/zenodo.15166733",
+      "license": "CC BY 4.0",
+      "file": "HY2RES_202404.csv",
+      "file_bytes": 38621947,
+      "file_md5": "9a3c3e3b1668596854b43bfd790d3e0e",
+      "sampling_interval_s": 5,
+      "row_count": 300768,
+      "evidence_role": "Public adjacent hydrogen-process operational context.",
+      "artifact": "research/zenodo_15166733_hy2res_operational_context_2026_10_14.json",
+      "rights_note": "The archive is openly licensed CC BY 4.0; raw rows remain in the gitignored public-validation intake tree and are not vendored into the repository.",
+      "eligibility_note": "The archive is a residential PLC system rather than an HRS. It can ground pressure, compressor, hydrogen-flow and threshold-driven sequence explanations, but it cannot validate HRS station-to-vehicle behaviour, ESD, safety distance or consequence calculations."
     }
   }
 }

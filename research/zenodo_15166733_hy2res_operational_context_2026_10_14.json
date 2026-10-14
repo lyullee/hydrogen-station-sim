@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "artifact_type": "public_adjacent_hydrogen_operational_dataset_context",
+  "recorded_at": "2026-10-14",
+  "status": "PUBLIC_ARCHIVE_INTEGRITY_VERIFIED",
+  "evidence_role": "public adjacent hydrogen-process operational context",
+  "source": {
+    "title": "Measurements from a residential hydrogen-based energy system reported between March and April 2024",
+    "doi": "10.5281/zenodo.15166733",
+    "url": "https://zenodo.org/records/15166733",
+    "publisher": "Zenodo",
+    "institution": "Universidad de Cantabria",
+    "license": "CC BY 4.0",
+    "access_right": "open",
+    "collection_window": "2024-03-27 through 2024-04-15",
+    "sampling_interval_s": 5,
+    "file": "HY2RES_202404.csv",
+    "file_bytes": 38621947,
+    "file_md5": "9a3c3e3b1668596854b43bfd790d3e0e"
+  },
+  "observed_archive": {
+    "row_count": 300768,
+    "delimiter": ";",
+    "datetime_first": "2024-03-27 11:34:27",
+    "datetime_last": "2024-04-15 02:00:00",
+    "break_markers": {
+      "OPEN": 20,
+      "CLOSE": 20
+    },
+    "channel_families": [
+      "PLC power and load channels",
+      "battery state of charge",
+      "buffer pressure",
+      "compressed-hydrogen tank pressure",
+      "fuel-cell pressure and hydrogen flow",
+      "electrolyzer hydrogen generation flow and total",
+      "ambient temperature"
+    ],
+    "ranges": {
+      "pres_buf_bar": [28.0, 34.3],
+      "pres_comp_bar": [84.5, 110.7],
+      "h2_flow_nl_per_h": [0.0, 376.9],
+      "temperature_c": [5.3, 26.3],
+      "soc_percent": [20.0, 100.0]
+    }
+  },
+  "eligibility": {
+    "public_raw_rows_available": true,
+    "rights_cleared_for_attribution": true,
+    "hydrogen_process_operational_context": true,
+    "HRS_station_dataset": false,
+    "synchronized_station_to_vehicle_trace": false,
+    "station_controller_or_ESD_validation": false,
+    "quantitative_consequence_validation": false,
+    "runtime_parameter_application": false,
+    "independent_HRS_holdout": false
+  },
+  "allowed_use": [
+    "LLM explanation of pressure, compressor, hydrogen-flow and threshold-driven process sequencing",
+    "adjacent hydrogen operational-context comparison",
+    "schema and sampling-interval examples for future data-intake design"
+  ],
+  "prohibited_use": [
+    "HRS station-to-vehicle validation",
+    "calibration or retuning of the HRS runtime model",
+    "ESD, valve, dispenser or vehicle-controller effectiveness claims",
+    "hydrogen safety-distance, dispersion or consequence validation"
+  ],
+  "claim_boundary": "This is an open residential hydrogen-system PLC archive. It strengthens adjacent process-context grounding, but its equipment topology, pressure range and control objective are not an HRS station and must not be used as a station validation result or safety limit."
+}

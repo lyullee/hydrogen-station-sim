@@ -5346,6 +5346,73 @@ def _public_real_station_context() -> dict[str, Any] | None:
     }
 
 
+def _public_adjacent_h2_operational_context() -> dict[str, Any] | None:
+    """Expose a public hydrogen PLC archive with a strict HRS claim fence.
+
+    The HY2RES record contains real pressure, compressor and hydrogen-flow
+    time series, but it describes a residential renewable-hydrogen pilot rather
+    than a refuelling station.  It is useful for operator-language and schema
+    grounding only; it must never calibrate the HRS runtime or close a station
+    validation gate.
+    """
+
+    root = Path(__file__).resolve().parents[2]
+    path = root / (
+        "research/zenodo_15166733_hy2res_operational_context_2026_10_14.json"
+    )
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError, json.JSONDecodeError):
+        return None
+    source = record.get("source") or {}
+    observed = record.get("observed_archive") or {}
+    eligibility = record.get("eligibility") or {}
+    if (
+        record.get("artifact_type")
+        != "public_adjacent_hydrogen_operational_dataset_context"
+        or record.get("status") != "PUBLIC_ARCHIVE_INTEGRITY_VERIFIED"
+        or source.get("doi") != "10.5281/zenodo.15166733"
+        or source.get("license") != "CC BY 4.0"
+        or source.get("file_md5") != "9a3c3e3b1668596854b43bfd790d3e0e"
+        or observed.get("row_count") != 300768
+        or eligibility.get("HRS_station_dataset") is not False
+        or eligibility.get("runtime_parameter_application") is not False
+        or eligibility.get("synchronized_station_to_vehicle_trace") is not False
+        or eligibility.get("quantitative_consequence_validation") is not False
+        or not record.get("claim_boundary")
+    ):
+        return None
+    return {
+        "artifact": str(path.relative_to(root)).replace("\\", "/"),
+        "evidence_role": str(record.get("evidence_role") or ""),
+        "source": {
+            key: source.get(key)
+            for key in (
+                "title", "doi", "url", "publisher", "institution", "license",
+                "collection_window", "sampling_interval_s", "file", "file_bytes",
+                "file_md5",
+            )
+            if source.get(key) is not None
+        },
+        "observed_archive": {
+            key: observed.get(key)
+            for key in (
+                "row_count", "delimiter", "datetime_first", "datetime_last",
+                "break_markers", "channel_families", "ranges",
+            )
+            if observed.get(key) is not None
+        },
+        "allowed_use": [str(value) for value in record.get("allowed_use") or []],
+        "prohibited_use": [
+            str(value) for value in record.get("prohibited_use") or []
+        ],
+        "runtime_parameter_application": False,
+        "HRS_station_dataset": False,
+        "synchronized_station_to_vehicle_trace": False,
+        "claim_limit": str(record.get("claim_boundary") or ""),
+    }
+
+
 def _closed_loop_calibrated_confirmatory_diagnostic_evidence() -> dict[str, Any] | None:
     """Expose the latest calibrated comparison with an explicit claim fence.
 
@@ -11576,6 +11643,11 @@ def build_evidence_manifest(
         envelope["response_evidence"][
             "public_real_station_context"
         ] = real_station_context
+    adjacent_h2_operational = _public_adjacent_h2_operational_context()
+    if adjacent_h2_operational is not None:
+        envelope["response_evidence"][
+            "public_adjacent_h2_operational_context"
+        ] = adjacent_h2_operational
     operation_practice = _public_station_operation_practice_reference()
     if operation_practice is not None:
         envelope["response_evidence"][
@@ -13851,6 +13923,27 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
             ) is True,
             "claim_limit": short(adjacent_process.get("claim_limit"), 320),
         }
+    adjacent_h2_operational = evidence.get(
+        "public_adjacent_h2_operational_context"
+    )
+    if isinstance(adjacent_h2_operational, dict):
+        summary["public_adjacent_h2_operational_context"] = {
+            "evidence_role": adjacent_h2_operational.get("evidence_role"),
+            "source": adjacent_h2_operational.get("source") or {},
+            "observed_archive": adjacent_h2_operational.get(
+                "observed_archive"
+            ) or {},
+            "runtime_parameter_application": adjacent_h2_operational.get(
+                "runtime_parameter_application"
+            ) is True,
+            "HRS_station_dataset": adjacent_h2_operational.get(
+                "HRS_station_dataset"
+            ) is True,
+            "synchronized_station_to_vehicle_trace": adjacent_h2_operational.get(
+                "synchronized_station_to_vehicle_trace"
+            ) is True,
+            "claim_limit": short(adjacent_h2_operational.get("claim_limit"), 360),
+        }
     docudata_discovery = evidence.get("local_docudata_full_discovery")
     if isinstance(docudata_discovery, dict):
         summary["local_docudata_full_discovery"] = {
@@ -14195,6 +14288,9 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
     adjacent_process = response.get(
         "local_adjacent_hydrogen_process_context"
     ) or {}
+    adjacent_h2_operational = response.get(
+        "public_adjacent_h2_operational_context"
+    ) or {}
     docudata_discovery = response.get("local_docudata_full_discovery") or {}
     local_public_catalog = response.get("local_public_validation_catalog") or {}
     local_public_candidate_scan = response.get("local_public_candidate_scan") or {}
@@ -14318,6 +14414,17 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
             or any(token in lead_context for token in (
                 "운영", "충전소", "계측", "프로토콜", "품질",
                 "operation", "station", "instrumentation", "protocol",
+            ))
+        )
+    )
+    adjacent_h2_operational_relevant = bool(
+        adjacent_h2_operational
+        and (
+            public_catalog_relevant
+            or any(token in lead_context for token in (
+                "운영", "공정", "압력", "유량", "압축기", "수소",
+                "operation", "process", "pressure", "flow", "compressor",
+                "hydrogen", "dataset", "data", "validation",
             ))
         )
     )
@@ -14926,6 +15033,18 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                 if hyddown_hydrogen.get(key) is not None
             },
         } if hyddown_hydrogen and hyddown_hydrogen_relevant else {}),
+        **({
+            "public_adjacent_h2_operational_context": {
+                key: adjacent_h2_operational.get(key)
+                for key in (
+                    "evidence_role", "source", "observed_archive", "allowed_use",
+                    "prohibited_use", "runtime_parameter_application",
+                    "HRS_station_dataset", "synchronized_station_to_vehicle_trace",
+                    "claim_limit",
+                )
+                if adjacent_h2_operational.get(key) is not None
+            },
+        } if adjacent_h2_operational and adjacent_h2_operational_relevant else {}),
         **({
             "public_operational_evidence_leads": operational_evidence_projection,
         } if operational_evidence_projection is not None else {}),
