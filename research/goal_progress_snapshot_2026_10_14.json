@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-14T04:39:07Z",
+  "generated_at": "2026-10-14T04:52:45Z",
   "metric_definition": "PASS gates divided by PASS+FAIL+PENDING gates; not a publication-readiness probability",
   "gate_counts": {
     "PASS": 134,
@@ -85,8 +85,8 @@
       "ethics_and_expert_review": "optional_for_physics_validation; required only for a claim that SAGA improves human safety guidance"
     }
   },
-  "source_commit": "e866dfe",
-  "latest_completed_work": "Readiness audit and validation-gap records re-synchronized after the Type-IV evidence update; focused audit consistency regression 12/12 passed.",
+  "source_commit": "7ab1019",
+  "latest_completed_work": "Runtime evidence chain refreshed from current source: all 14 hash-linked audit, replay, grounding and IJHE projection steps passed; scientific gate counts remain 134 PASS / 11 FAIL / 7 PENDING.",
   "latest_full_regression": {
     "tests_passed": 1599,
     "tests_failed": 0,
@@ -158,6 +158,11 @@
       "id": "readiness_audit_resync_2026_10_14",
       "progress_percent": 100.0,
       "status": "Readiness audit, validation-gap reports and progress records were regenerated from the current source; 12 audit consistency tests pass; scientific gate counts remain 134 PASS / 11 FAIL / 7 PENDING."
+    },
+    {
+      "id": "runtime_evidence_chain_refresh_2026_10_14",
+      "progress_percent": 100.0,
+      "status": "All 14 deterministic refresh steps passed; readiness and claim boundaries were re-synchronized without promoting a scientific gate."
     }
   ]
 }
