@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-14T04:52:45Z",
+  "generated_at": "2026-10-14T05:01:31Z",
   "metric_definition": "PASS gates divided by PASS+FAIL+PENDING gates; not a publication-readiness probability",
   "gate_counts": {
     "PASS": 134,
@@ -85,8 +85,8 @@
       "ethics_and_expert_review": "optional_for_physics_validation; required only for a claim that SAGA improves human safety guidance"
     }
   },
-  "source_commit": "05aa5d5",
-  "latest_completed_work": "Runtime, LLM-stream and data-lane verification completed: 3 JavaScript tests and 47 audit/grounding/readiness tests passed; no scientific gate or runtime parameter was promoted.",
+  "source_commit": "b595f03",
+  "latest_completed_work": "Impact-first priority lane rechecked: 75/75 focused software tests passed and 5/5 development diagnostics completed; scientific failures remain negative evidence with no runtime or gate promotion.",
   "latest_full_regression": {
     "tests_passed": 1599,
     "tests_failed": 0,
@@ -129,6 +129,11 @@
     "scope": "tests/test_ijhe_readiness_audit.py tests/test_ijhe_audit_snapshot_consistency.py tests/test_validation_gap_report.py tests/test_llm_grounding.py"
   },
   "completed_process_improvements": [
+    {
+      "id": "priority_lane_recheck_2026_10_14",
+      "progress_percent": 100.0,
+      "status": "Focused software/process lane passed 75/75; diagnostic execution completed 5/5 while MC tank, H2SAFE spatial and NREL HDVS scientific screens remain failed and unpromoted."
+    },
     {
       "id": "priority_ci_science_boundary",
       "progress_percent": 100.0,
