@@ -85,8 +85,8 @@
       "ethics_and_expert_review": "optional_for_physics_validation; required only for a claim that SAGA improves human safety guidance"
     }
   },
-  "source_commit": "f56d888",
-  "latest_completed_work": "Added and tested a fail-closed Dickens Type-III prospective protocol validator; it confirms the intake contract while keeping outcome access blocked and does not promote any scientific gate.",
+  "source_commit": "3516954",
+  "latest_completed_work": "P0 priority CI now includes the fail-closed Dickens Type-III intake contract; the latest priority run passed 78/78 focused software tests and completed 5/5 diagnostics, while the independent scientific screens remain negative where reported.",
   "latest_full_regression": {
     "tests_passed": 1599,
     "tests_failed": 0,
@@ -129,6 +129,11 @@
     "scope": "tests/test_ijhe_readiness_audit.py tests/test_ijhe_audit_snapshot_consistency.py tests/test_validation_gap_report.py tests/test_llm_grounding.py"
   },
   "completed_process_improvements": [
+    {
+      "id": "typeiii_protocol_priority_ci_2026_10_14",
+      "progress_percent": 100.0,
+      "status": "The Type-III intake contract is a P0 CI check; the latest priority run passed 78/78 focused software tests and preserves scientific diagnostic failures without gate promotion."
+    },
     {
       "id": "dickens_typeiii_intake_contract_validator_2026_10_14",
       "progress_percent": 100.0,
