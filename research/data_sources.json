@@ -412,6 +412,32 @@
       "rights_note": "The open article is CC BY 4.0. The article describes four Empa HRS Type-IV tank-filling experiments and measured temperature evolution, but no machine-readable raw trace or supplementary data file was identified in the public repository record.",
       "eligibility_note": "Strong independent tank-thermal submodel and data-request lead; not an eligible full-loop HRS holdout until synchronized pressure, temperature, flow and initial-condition files are obtained."
     },
+    "couteau_2025_empa_high_aspect_ratio_tank": {
+      "title": "Thermal and heat transfer dynamics in high pressure, high aspect ratio hydrogen tank filling processes",
+      "authors": [
+        "Arthur Couteau",
+        "Henry Raymond Alvarez",
+        "Patrick Jenny",
+        "Panayotis Dimopoulos Eggenschwiler"
+      ],
+      "publisher": "ETH Zurich / Empa / International Journal of Hydrogen Energy",
+      "landing_page": "https://doi.org/10.1016/j.ijhydene.2025.152513",
+      "repository_page": "https://www.dora.lib4ri.ch/empa/islandora/object/empa%3A43111",
+      "doi": "10.1016/j.ijhydene.2025.152513",
+      "license": "CC BY 4.0",
+      "reported_experiment_count": 1,
+      "public_raw_data": false,
+      "reported_geometry": {
+        "tank_volume_l": 350,
+        "tank_length_m": 2.33,
+        "tank_internal_diameter_m": 0.24,
+        "aspect_ratio": 4.8,
+        "thermocouple_count": 8
+      },
+      "reported_mechanism": "High-aspect-ratio tanks require axial thermal blocks: forced convection dominates the inlet/front zone while buoyancy and reduced jet reach govern the back zone.",
+      "rights_note": "The article is open under CC BY 4.0, but the accessible publication and repository routes did not expose a machine-readable experimental logger export or a data-specific reuse statement.",
+      "eligibility_note": "Evidence for multi-zone thermal model structure and a future tank-thermal data request; not an independent raw holdout and not a station-to-vehicle validation result."
+    },
     "wieser_2025_fch2rail_refueling": {
       "title": "Development, application and optimization of hydrogen refueling processes for railway vehicles",
       "authors": [
