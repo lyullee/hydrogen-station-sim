@@ -115,6 +115,24 @@
       "eligibility": "POST_ACCESS_DEVELOPMENT_SPATIAL_EVIDENCE_ONLY",
       "blocking_reason": "The archive was opened after the current spatial-detector analysis and is not time-resolved station data, so it cannot close the independent H2SAFE spatial-transfer gate or authorize runtime detector routing.",
       "intake_artifact": "research/grune_ps_h2_dispersion_intake_2026_10_14.json"
+    },
+    {
+      "id": "nhyra_h2_releases_database_first_version_2026",
+      "title": "First version of the H2 releases database (NHyRA WP1)",
+      "url": "https://nhyra.eu/wp-content/uploads/2026/01/NHyRA_WP1_1.2_First-version-of-the-H2-releases-database-_v1.pdf",
+      "data_type": "public database assessment/report for hydrogen release experiments",
+      "access_observation": "The public PDF describes a planned/compiled release database and safety-data scope, but the accessed record did not expose a rights-cleared machine-readable pressure-temperature-mass-flow trace or a frozen case-level outcome bundle.",
+      "eligibility": "BOUNDARY_EVIDENCE_ONLY",
+      "blocking_reason": "A database overview without reusable case-level raw traces cannot close an independent component holdout or station-to-vehicle validation gate."
+    },
+    {
+      "id": "hytunnel_open_data_repositories_index_2026",
+      "title": "HyTunnel-CS open data repositories index",
+      "url": "https://hytunnel.net/?page_id=1289",
+      "data_type": "public repository catalogue for hydrogen safety campaigns",
+      "access_observation": "The index confirms open repositories for Grüne ventilation, PRESLHY, pressure-peaking and tunnel campaigns; the listed records are already represented in the repository or lack synchronized HRS station/controller/vehicle channels.",
+      "eligibility": "CATALOGUE_BOUNDARY_ONLY",
+      "blocking_reason": "A catalogue page is not a new raw holdout and cannot be counted again after outcome access."
     }
   ],
   "conclusion": {
@@ -132,6 +150,15 @@
       ],
       "eligible_new_raw_holdout_found": false,
       "interpretation": "The Cal State LA study is a strong real-operation reference but its public access path does not expose the raw synchronized logger bundle. HySam files are open measurements but are for sampling-system conditions, not a station-to-vehicle or station-side release holdout. The Grüne/PS archive adds actual-hydrogen spatial development evidence but not an independent station or detector-transfer holdout."
+    },
+    "search_round_2026_10_14_second_pass": {
+      "search_date": "2026-10-14",
+      "new_candidates_checked": [
+        "nhyra_h2_releases_database_first_version_2026",
+        "hytunnel_open_data_repositories_index_2026"
+      ],
+      "eligible_new_raw_holdout_found": false,
+      "interpretation": "The NHyRA document is a public database overview without an accessed case-level raw trace. The HyTunnel catalogue confirms repository coverage but adds no new uninspected station-side or station-to-vehicle raw bundle."
     }
   }
 }
