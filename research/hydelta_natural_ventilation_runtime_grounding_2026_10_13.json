@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-14T06:09:31.327654+00:00",
+  "generated_at": "2026-10-14T07:12:45.507849+00:00",
   "status": "PASS",
   "source": {
     "doi": "10.5281/zenodo.8164602",
@@ -43,6 +43,20 @@
       "measured_gas_clearance_required": true,
       "measure_before_opening_recommended": true,
       "maximum_reported_inside_concentration_volpct_h2": 24.0,
+      "indoor_spatial_report_context": {
+        "doi": "10.5281/zenodo.8154318",
+        "experiment_count": 32,
+        "sensor_count": 50,
+        "release_rates_normal_dm3_h": [
+          50,
+          100,
+          300,
+          1000
+        ],
+        "numeric_spatial_holdout_eligible": false,
+        "runtime_candidate_enabled": false,
+        "claim_limit": "HyDelta D6A.1 is retained as public actual-hydrogen report-level evidence for indoor concentration stratification, sensor coverage and ventilation context. It does not independently validate the frozen spatial ranker because the report does not publish the machine-readable spatial outcome fields required by the pre-access protocol."
+      },
       "claim_limit": "The CC BY 4.0 report provides actual-hydrogen, cabinet-scale measured concentration evidence for ventilation and response wording. The values are rep…"
     },
     "exact_empirical_screen": {

@@ -85,8 +85,8 @@
       "ethics_and_expert_review": "optional_for_physics_validation; required only for a claim that SAGA improves human safety guidance"
     }
   },
-  "source_commit": "61bc1bb",
-  "latest_completed_work": "A fresh official/public recheck of the Grune pressure-decay source was recorded: KIT, publisher, H2Tools and ICHS documents expose narrative/figure evidence but no rights-cleared machine-readable raw pressure-time trace. The pending gate remains closed rather than being promoted from figure-derived data; the manuscript and focused reproduction checks remain clean.",
+  "source_commit": "9ef7a67",
+  "latest_completed_work": "HyDelta D6A.1 actual-hydrogen indoor report context is now routed into the bounded LLM evidence envelope for ventilation/indoor spatial questions. The report remains qualitative context only: 32 experiments and a 50-sensor matrix are exposed, but missing numeric coordinates and per-sensor responses keep spatial holdout and runtime promotion disabled. The focused LLM grounding regression passes.",
   "latest_full_regression": {
     "tests_passed": 1606,
     "tests_failed": 0,
@@ -122,13 +122,18 @@
     }
   ],
   "latest_focused_regression": {
-    "tests_passed": 12,
+    "tests_passed": 59,
     "tests_failed": 0,
     "tests_skipped": 0,
-    "warnings": 1,
-    "scope": "tests/test_ijhe_readiness_audit.py tests/test_ijhe_audit_snapshot_consistency.py tests/test_ijhe_manuscript_format.py tests/test_ijhe_compile_artifact.py tests/test_goal_progress_snapshot.py tests/test_ijhe_reproduction.py"
+    "warnings": 88,
+    "scope": "tests/test_closed_loop_calibrated_llm_grounding.py tests/test_llm_grounding.py tests/test_local_evidence_api.py"
   },
   "completed_process_improvements": [
+    {
+      "id": "hydelta_d6a1_indoor_context_grounding_2026_10_14",
+      "progress_percent": 100.0,
+      "status": "HyDelta D6A.1 actual-hydrogen indoor report context is grounded in the LLM evidence, summary and targeted decision prompt. The 32 experiments/50-sensor matrix is visible with DOI 10.5281/zenodo.8154318, while missing numeric coordinates and per-sensor responses keep spatial holdout eligibility and runtime promotion false; 59 focused tests pass."
+    },
     {
       "id": "grune_public_raw_trace_recheck_2026_10_14",
       "progress_percent": 100.0,
