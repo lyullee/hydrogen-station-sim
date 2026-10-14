@@ -85,7 +85,7 @@
       "ethics_and_expert_review": "optional_for_physics_validation; required only for a claim that SAGA improves human safety guidance"
     }
   },
-  "source_commit": "788c42d0e4d2b1537f4f0e202c018ea26c0d6d7a",
+  "source_commit": "788c42d5fb9093fad9d4aa670ad13f61f6a6075a",
   "latest_completed_work": "Preserved flow-limited release-boundary semantics in the unavailable HyRAM fallback, added a regression test, and refreshed all 14 deterministic evidence projections without promoting a scientific validation gate.",
   "latest_full_regression": {
     "tests_passed": 1602,
