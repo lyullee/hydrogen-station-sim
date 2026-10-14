@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-14T10:16:00Z",
+  "generated_at": "2026-10-14T10:55:57+00:00",
   "metric_definition": "PASS gates divided by PASS+FAIL+PENDING gates; not a publication-readiness probability",
   "gate_counts": {
     "PASS": 134,
@@ -85,7 +85,7 @@
       "ethics_and_expert_review": "optional_for_physics_validation; required only for a claim that SAGA improves human safety guidance"
     }
   },
-  "source_commit": "0cd064eef2d4fcc824e82fecae4fe2f31ad09542",
+  "source_commit": "3fbae43fb88053ff7d7bf8aa13f0a156426a4c67",
   "latest_completed_work": "재충전 READY/RECHARGE 반복을 줄이기 위해 120초 가상 anti-chatter guard를 기본 적용했습니다. 비식별 holdout의 176초 최단 간격보다 짧은 제어 기본값이며 외부검증·안전한계로 승격하지 않았습니다.",
   "latest_full_regression": {
     "tests_passed": 1618,
@@ -344,6 +344,11 @@
       "id": "recharge_anti_chatter_guard_2026_10_14",
       "progress_percent": 100.0,
       "status": "검증 실패한 fitted dwell 대신 120초 operator-control guard를 기본 적용하고 0~600초 override를 추가했습니다. 관련 테스트 45건이 통과했습니다."
+    },
+    {
+      "id": "tank_runtime_audit_hash_resync_after_recharge_guard_2026_10_14",
+      "progress_percent": 100.0,
+      "status": "재충전 anti-chatter 기본값 추가로 변경된 scenario.py·api.py 소스 해시를 Type-IV 탱크 런타임 감사에 재생성했습니다. readiness 감사 일관성 및 운전 가드 관련 31개 테스트가 통과했고 과학적 gate 수치는 134 PASS / 11 FAIL / 7 PENDING으로 유지됩니다."
     }
   ],
   "latest_context_focused_regression": {
