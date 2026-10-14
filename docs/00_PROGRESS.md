@@ -2777,3 +2777,9 @@ the full-loop claim pass.
 - `5f300d8`의 Type-IV 기계무결성 근거 연결 후 파생 감사 원장을 `83e9a1f`에서 재동기화했다.
 - 커밋된 현재 소스에서 전체 Python 회귀 **1,599 passed / 0 failed / 0 skipped / 222 warnings**를 확인했다(302.56초).
 - readiness 판정은 134 PASS / 11 FAIL / 7 PENDING, 전체 목표 완료 불가 상태로 유지된다. 이번 자료는 구조 무결성 문맥만 보강하며 HRS 운전·누출·HyRAM·ESD 검증 게이트를 승격하지 않는다.
+
+## 2026-10-14 - 재충전 반복 방지와 최신 전체 회귀
+
+- 가상 충전 제어에 120초 기본 `READY/RECHARGE` 최소 대기시간을 추가했다. 0~600초 범위의 공정 설정 override를 지원하며, 검증된 외부 체류시간을 런타임 기본값으로 사후 적용하지 않는다.
+- 시나리오·API 회귀와 감사 원장을 갱신한 뒤 전체 Python 회귀를 다시 실행해 **1,619 passed / 0 failed / 0 skipped / 222 warnings**를 확인했다. 결과는 `research/full_regression_test_run_2026_10_14.json`에 고정했고 커밋은 `2e1ed1b`다.
+- 이 변경은 가상 운전의 급격한 재충전 반복을 줄이는 제어 개선이며, 독립 외부 물리 검증 게이트나 IJHE 제출 판정을 승격하지 않는다. 현재 readiness는 **134 PASS / 11 FAIL / 7 PENDING (88.2%)**, 선언한 주 논문 범위는 **91.7%**로 유지된다.
