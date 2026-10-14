@@ -2,7 +2,9 @@
 from __future__ import annotations
 
 import asyncio
+from datetime import datetime, timezone
 import json
+import math
 import os
 import time
 from typing import Callable, Any
@@ -18,6 +20,21 @@ from .visualization import build_snapshot, scene_manifest
 class RendererBinding(BaseModel):
     run_id: str | None = Field(default=None, max_length=80, pattern=r"^[a-zA-Z0-9_-]+$")
     request_serial: int | None = Field(default=None, ge=0, le=9007199254740991, strict=True)
+
+
+class EquipmentDisplay(BaseModel):
+    component_id: str = Field(max_length=80, pattern=r"^[a-zA-Z0-9_.-]+$")
+    pressure_mpa: float | None = None
+    temperature_c: float | None = None
+    mass_kg: float | None = None
+    flow_g_s: float | None = None
+
+
+class RendererFeedback(BaseModel):
+    run_id: str = Field(max_length=80, pattern=r"^[a-zA-Z0-9_-]+$")
+    generation: int = Field(ge=0, le=2147483647, strict=True)
+    sequence: int = Field(ge=-1, le=9007199254740991, strict=True)
+    equipment: list[EquipmentDisplay] = Field(max_length=64)
 
 
 def terminal(status: str) -> bool:
@@ -55,6 +72,65 @@ def make_unreal_router(read_state: Callable[[str], tuple[dict, dict | None, dict
                 old = {**old, "request_serial": serial}
             sessions[renderer_id] = old
             return dict(old)
+
+    @router.get("/api/integrations/unreal/session/{renderer_id}/feedback")
+    def get_feedback(renderer_id: str) -> dict[str, Any]:
+        with session_lock:
+            session = sessions.get(renderer_id)
+            if not session or "feedback" not in session:
+                raise HTTPException(404, "No renderer feedback")
+            return dict(session["feedback"])
+
+    @router.post("/api/integrations/unreal/session/{renderer_id}/feedback")
+    def record_feedback(renderer_id: str, request: RendererFeedback) -> dict[str, Any]:
+        if not renderer_id.isascii() or not renderer_id.replace("-", "").replace("_", "").isalnum() or len(renderer_id) > 64:
+            raise HTTPException(422, "Invalid renderer id")
+        # Reject non-finite renderer telemetry here rather than in Pydantic's
+        # validation handler. Some JSON clients accept NaN/Infinity even
+        # though JSON does not; keeping those values out of the validation
+        # error payload guarantees that the 422 response is itself valid JSON.
+        for equipment in request.equipment:
+            for field in ("pressure_mpa", "temperature_c", "mass_kg", "flow_g_s"):
+                value = getattr(equipment, field)
+                if value is not None and not math.isfinite(value):
+                    raise HTTPException(422, "Displayed values must be finite or null")
+        job, frame, safety, risk = read_state(request.run_id)
+        current_sequence = int((frame or {}).get("sequence", -1))
+        if request.sequence > current_sequence:
+            raise HTTPException(409, "Renderer feedback is ahead of the server frame")
+        with session_lock:
+            session = sessions.get(renderer_id)
+            if (not session or session.get("run_id") != request.run_id
+                    or session.get("generation") != request.generation):
+                raise HTTPException(409, "Renderer feedback does not match the active binding")
+            previous = session.get("feedback") or {}
+            if request.sequence < int(previous.get("sequence", -1)):
+                raise HTTPException(409, "Stale renderer feedback")
+            parity: dict[str, Any] = {"status": "superseded", "matches": None, "mismatches": []}
+            if request.sequence == current_sequence:
+                server = build_snapshot(request.run_id, job, frame, safety, risk)
+                expected = {row["component_id"]: row for row in server["equipment"]}
+                received = {row.component_id: row.model_dump() for row in request.equipment}
+                mismatches = []
+                for component_id in sorted(set(expected) | set(received)):
+                    if component_id not in expected or component_id not in received:
+                        mismatches.append({"component_id": component_id, "field": "presence"})
+                        continue
+                    for field in ("pressure_mpa", "temperature_c", "mass_kg", "flow_g_s"):
+                        left, right = expected[component_id].get(field), received[component_id].get(field)
+                        if left is None or right is None:
+                            equal = left is None and right is None
+                        else:
+                            equal = math.isclose(float(left), float(right), rel_tol=1e-7, abs_tol=1e-7)
+                        if not equal:
+                            mismatches.append({"component_id": component_id, "field": field,
+                                               "server": left, "renderer": right})
+                parity = {"status": "compared", "matches": not mismatches,
+                          "mismatches": mismatches[:64]}
+            feedback = {**request.model_dump(), "received_at": datetime.now(timezone.utc).isoformat(),
+                        "parity": parity}
+            session["feedback"] = feedback
+            return dict(feedback)
 
     @router.get("/api/integrations/unreal/config")
     def config() -> dict[str, Any]:

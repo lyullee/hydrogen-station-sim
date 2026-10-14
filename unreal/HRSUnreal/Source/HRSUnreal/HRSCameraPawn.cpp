@@ -69,6 +69,8 @@ void AHRSCameraPawn::Esd() { if (Station()) Station()->IssueAction(TEXT("esd.tri
 void AHRSCameraPawn::Stop() { if (Station()) Station()->IssueAction(TEXT("operation.stop"), TEXT("all")); }
 void AHRSCameraPawn::Risk() { if (Station()) Station()->ToggleRisk(); }
 void AHRSCameraPawn::EffectDistance() { if (Station()) Station()->ToggleDistance(); }
+void AHRSCameraPawn::Cameras() { if (Station()) Station()->ToggleCameras(); }
+void AHRSCameraPawn::Detectors() { if (Station()) Station()->ToggleDetectors(); }
 void AHRSCameraPawn::SetupPlayerInputComponent(UInputComponent* Input)
 {
     Super::SetupPlayerInputComponent(Input);
@@ -85,4 +87,6 @@ void AHRSCameraPawn::SetupPlayerInputComponent(UInputComponent* Input)
     Input->BindKey(EKeys::F, IE_Pressed, this, &AHRSCameraPawn::Stop);
     Input->BindKey(EKeys::R, IE_Pressed, this, &AHRSCameraPawn::Risk);
     Input->BindKey(EKeys::D, IE_Pressed, this, &AHRSCameraPawn::EffectDistance);
+    Input->BindKey(EKeys::C, IE_Pressed, this, &AHRSCameraPawn::Cameras);
+    Input->BindKey(EKeys::G, IE_Pressed, this, &AHRSCameraPawn::Detectors);
 }

@@ -77,6 +77,37 @@ def test_nonfinite_and_waiting_state_are_unknown(state):
     assert waiting["esd"] is None and waiting["releases"] == []
 
 
+def test_operational_animation_inputs_remain_server_owned_and_complete(state):
+    state["frame"].update({
+        "process_activity": {
+            "vehicle_1": {"state": "flowing", "flow_g_s": 31.2},
+            "vehicle_2": {"state": "blocked", "reason": "esd", "flow_g_s": 0.0},
+        },
+        "process_operations": {
+            "settings": {"vehicle_1": True, "vehicle_2": False,
+                         "risk_display_mode": "relative"},
+        },
+        "flame_detectors": {"FD-0901": {"value": True, "quality": "GOOD", "unit": "bool"}},
+    })
+    state["safety"].update({
+        "ventilation": {"storage": {"commanded": True, "running": True, "fault": False}},
+        "cooling": {"high": {"commanded": True, "running": True, "fault": False}},
+        "personnel": {"storage": 0}, "evacuated": {"storage": 2},
+        "access_restricted": {"storage": True}, "power_isolated": {"storage": True},
+        "purge_bank": "high", "purge_h2_fraction": {"high": 0.15},
+        "recovery": {"source_removed": True, "leak_repaired": False},
+    })
+    risk = {"status": "calculated", "zones": [{"component": "cascade.high",
+             "absolute_score": 45.0, "relative_score": 100.0}]}
+    snapshot = build_snapshot("test-run", state["job"], state["frame"], state["safety"], risk)
+    assert snapshot["process_activity"]["vehicle_1"]["state"] == "flowing"
+    assert snapshot["process_operations"]["settings"]["risk_display_mode"] == "relative"
+    assert snapshot["safety"]["ventilation"]["storage"]["running"] is True
+    assert snapshot["safety"]["purge_bank"] == "high"
+    assert next(row for row in snapshot["detectors"] if row["sensor_id"] == "FD-0901")["value"] == 1.0
+    assert snapshot["risk_zones"]["zones"][0]["relative_score"] == 100.0
+
+
 def test_snapshot_and_stream_do_not_call_physics_or_llm(state):
     client = client_for(state)
     assert client.get("/api/simulations/unknown/visualization/snapshot").status_code == 404
@@ -149,3 +180,29 @@ def test_late_binding_cannot_restore_incident_after_reset(state):
     assert client.post(base, json={"run_id": "test-run", "request_serial": 101}).status_code == 409
     assert client.get(base).json()["run_id"] is None
     assert client.post(base, json={"run_id": "test-run", "request_serial": 102}).status_code == 409
+
+
+def test_renderer_feedback_is_bound_ordered_and_finite(state):
+    client = client_for(state)
+    base = "/api/integrations/unreal/session/default"
+    feedback_url = base + "/feedback"
+    payload = {"run_id": "test-run", "generation": 1, "sequence": 7,
+               "equipment": [{"component_id": "cascade.high", "pressure_mpa": 96.0,
+                              "temperature_c": -12.5, "mass_kg": 20.0, "flow_g_s": None}]}
+    assert client.post(feedback_url, json=payload).status_code == 409
+    assert client.post(base, json={"run_id": "test-run", "request_serial": 10}).status_code == 200
+    assert client.post(feedback_url, json=payload).status_code == 200
+    stored = client.get(feedback_url).json()
+    assert stored["sequence"] == 7 and stored["equipment"][0]["pressure_mpa"] == 96.0
+    assert "received_at" in stored
+    assert stored["parity"]["status"] == "compared" and stored["parity"]["matches"] is False
+    complete = build_snapshot("test-run", state["job"], state["frame"], state["safety"])["equipment"]
+    matched = client.post(feedback_url, json={**payload, "equipment": complete}).json()
+    assert matched["parity"] == {"status": "compared", "matches": True, "mismatches": []}
+    assert client.post(feedback_url, json={**payload, "sequence": 8}).status_code == 409
+    assert client.post(feedback_url, json={**payload, "sequence": 6}).status_code == 409
+    assert client.post(feedback_url, content=json.dumps({**payload,
+        "equipment": [{"component_id": "cascade.high", "pressure_mpa": float("nan")}]}),
+        headers={"content-type": "application/json"}).status_code == 422
+    assert client.post(base, json={"run_id": None, "request_serial": 11}).status_code == 200
+    assert client.get(feedback_url).status_code == 404

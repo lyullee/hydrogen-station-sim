@@ -38,24 +38,24 @@
       "items": [
         {"id":"reusable-model-export-pipeline", "status":"verified", "evidence":"7 existing model builder exports"},
         {"id":"gltf-validation", "status":"verified", "evidence":"7 GLBs; Khronos validator: 0 errors, 0 warnings"},
-        {"id":"ue-import-axis-scale", "status":"pending"},
-        {"id":"full-station-assembly", "status":"pending"},
-        {"id":"two-dispensers", "status":"pending"},
-        {"id":"road-canopy-site", "status":"pending"},
+        {"id":"ue-import-axis-scale", "status":"source_ready", "evidence":"validated GLB importer preserves metres/Y-up conversion for engine verification"},
+        {"id":"full-station-assembly", "status":"source_ready", "evidence":"14 contract equipment IDs in HRSStationActor; source contract PASS"},
+        {"id":"two-dispensers", "status":"source_ready", "evidence":"two independent dispenser, vehicle and hose state paths"},
+        {"id":"road-canopy-site", "status":"source_ready", "evidence":"reference road, canopy, operations room, boundary and pipe corridor"},
         {"id":"cctv-and-detector-markers", "status":"source_ready", "evidence":"24 detector and 5 camera coordinates in manifest"},
-        {"id":"equipment-selection-and-visual-qa", "status":"pending"}
+        {"id":"equipment-selection-and-visual-qa", "status":"source_ready", "evidence":"click tags and keyboard selection; visual QA requires UE"}
       ]
     },
     {
       "name": "운전 및 안전 애니메이션",
       "items": [
-        {"id":"two-hose-connection", "status":"pending"},
-        {"id":"all-valves-and-failures", "status":"pending"},
-        {"id":"vent-path-and-residual", "status":"pending"},
-        {"id":"ventilation", "status":"pending"},
-        {"id":"cooling", "status":"pending"},
-        {"id":"evacuation", "status":"pending"},
-        {"id":"recovery-procedure", "status":"pending"},
+        {"id":"two-hose-connection", "status":"source_ready", "evidence":"each hose switches parked/vehicle geometry from independent process state"},
+        {"id":"all-valves-and-failures", "status":"source_ready", "evidence":"15 server valve IDs receive commanded/moving/actual/failure feedback"},
+        {"id":"vent-path-and-residual", "status":"source_ready", "evidence":"three vent valves, stack and server-owned release jet state"},
+        {"id":"ventilation", "status":"source_ready", "evidence":"four zone fan states and failure color"},
+        {"id":"cooling", "status":"source_ready", "evidence":"three bank cooling states and failure color"},
+        {"id":"evacuation", "status":"source_ready", "evidence":"zone personnel move to muster area; evacuated vehicle state displayed"},
+        {"id":"recovery-procedure", "status":"source_ready", "evidence":"purge and diagnostic state markers plus 8-step recovery completion counter"},
         {"id":"esd-state-consistency", "status":"source_ready"}
       ]
     },
@@ -63,13 +63,13 @@
       "name": "사고 및 위험 시각화",
       "items": [
         {"id":"leak-plume", "status":"source_ready"},
-        {"id":"fire", "status":"pending"},
-        {"id":"issue-highlight", "status":"pending"},
+        {"id":"fire", "status":"source_ready", "evidence":"external-fire and confirmed FD signals control low-intensity fire markers"},
+        {"id":"issue-highlight", "status":"source_ready", "evidence":"active faults, releases and alarmed detectors highlight target equipment"},
         {"id":"labelled-consequence-boundary", "status":"source_ready"},
-        {"id":"relative-and-absolute-index", "status":"pending"},
+        {"id":"relative-and-absolute-index", "status":"source_ready", "evidence":"risk_display_mode selects cached server relative/absolute score"},
         {"id":"equipment-floor-zones", "status":"source_ready"},
-        {"id":"display-toggles-settings", "status":"pending"},
-        {"id":"no-flicker-and-low-intensity", "status":"pending"}
+        {"id":"display-toggles-settings", "status":"source_ready", "evidence":"risk, distance, CCTV and detector toggles; CCTV/detectors default off"},
+        {"id":"no-flicker-and-low-intensity", "status":"source_ready", "evidence":"reuses components and disables bloom; no per-frame geometry rebuild"}
       ]
     },
     {
@@ -79,11 +79,11 @@
         {"id":"js-regression", "status":"verified", "evidence":"10 tests passed"},
         {"id":"real-web-integration", "status":"verified", "evidence":"5 real-browser checks passed; no page errors; no UE video claim"},
         {"id":"ue-build-and-material-bootstrap", "status":"pending"},
-        {"id":"web-ue-process-value-parity", "status":"pending"},
-        {"id":"1080p-30fps", "status":"pending"},
-        {"id":"input-latency", "status":"pending"},
-        {"id":"60min-memory-stability", "status":"pending"},
-        {"id":"reset-reconnect-stress", "status":"pending"},
+        {"id":"web-ue-process-value-parity", "status":"source_ready", "evidence":"generation/sequence-bound renderer feedback compares all 14 displayed equipment values"},
+        {"id":"1080p-30fps", "status":"source_ready", "evidence":"browser video-frame gate requires 1080p and >=28.5 decoded FPS"},
+        {"id":"input-latency", "status":"source_ready", "evidence":"dedicated-run E key to server ESD acknowledgement gate"},
+        {"id":"60min-memory-stability", "status":"source_ready", "evidence":"browser 3600 s gate plus UnrealEditor process memory sampler"},
+        {"id":"reset-reconnect-stress", "status":"source_ready", "evidence":"three-or-more dedicated binding/ESD/stop/unbind cycles"},
         {"id":"packaged-release-and-runbook-verified", "status":"source_ready"}
       ]
     }

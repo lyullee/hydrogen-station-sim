@@ -22,5 +22,6 @@ private:
     void ZoomIn(); void ZoomOut(); void Pick(); void MousePressed();
     void Low(); void Medium(); void High();
     void Inlet(); void Outlet(); void Esd(); void Stop(); void Risk(); void EffectDistance();
+    void Cameras(); void Detectors();
     AHRSStationActor* Station() const;
 };
