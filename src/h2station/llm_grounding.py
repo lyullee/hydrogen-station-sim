@@ -4587,6 +4587,42 @@ def _temperature_observation_semantic_boundary() -> dict[str, Any] | None:
                 "관측연산자를 선택하지 않았고, 원래 전망검증의 온도 실패 결과도 유지합니다."
             ),
         }
+        repair_path = Path(__file__).resolve().parents[2] / (
+            "research/dickens_typeiii_model_repair_boundary_2026_10_14.json"
+        )
+        try:
+            repair = json.loads(repair_path.read_text(encoding="utf-8"))
+        except (OSError, ValueError, json.JSONDecodeError):
+            repair = None
+        if (
+            isinstance(repair, dict)
+            and repair.get("case_id") == "dickens_typeIII"
+            and repair.get("status") == "REPAIR_BOUNDARY_ONLY"
+            and repair.get("frozen_validation_gate") == "UNCHANGED_FAIL"
+            and repair.get("runtime_parameter_updated") is False
+            and repair.get("runtime_promotion_allowed") is False
+        ):
+            boundary["dickens_typeiii"]["model_repair_boundary"] = {
+                "artifact": (
+                    "research/dickens_typeiii_model_repair_boundary_2026_10_14.json"
+                ),
+                "candidate_nozzle_diameters_mm": list(
+                    repair.get("candidate_nozzle_diameters_mm") or []
+                ),
+                "candidate_observation_operators": list(
+                    repair.get("candidate_observation_operators") or []
+                ),
+                "unknown_source_metadata": list(
+                    repair.get("unknown_source_metadata") or []
+                ),
+                "required_pre_access_inputs": list(
+                    repair.get("required_pre_access_inputs") or []
+                ),
+                "frozen_validation_gate": repair.get("frozen_validation_gate"),
+                "runtime_parameter_updated": False,
+                "runtime_promotion_allowed": False,
+                "claim_limit": str(repair.get("claim_boundary") or ""),
+            }
     return boundary
 
 
@@ -11916,6 +11952,7 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
                 "validation_claim_supported": (
                     dickens.get("validation_claim_supported") is True
                 ),
+                "model_repair_boundary": dickens.get("model_repair_boundary") or {},
                 "claim_limit": short(dickens.get("claim_limit"), 320),
             },
             "claim_limit": short(temperature_observation.get("claim_limit"), 320),
@@ -17397,6 +17434,11 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
                     (
                         thermal_observation.get("dickens_typeiii") or {}
                     ).get("validation_claim_supported") is True
+                ),
+                "model_repair_boundary": (
+                    (
+                        thermal_observation.get("dickens_typeiii") or {}
+                    ).get("model_repair_boundary") or {}
                 ),
                 "claim_limit": (
                     (

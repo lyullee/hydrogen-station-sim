@@ -3,6 +3,7 @@ import pytest
 from h2station.llm_grounding import (
     build_evidence_manifest,
     prompt_decision_evidence,
+    prompt_evidence_header,
     prompt_evidence_summary,
 )
 
@@ -328,6 +329,31 @@ def test_dickens_followup_candidate_is_grounded_without_validation_promotion():
     assert evidence["status"] == "followup_candidate_only"
     assert evidence["selected_diagnostic"]["all_four_frozen_screens_pass"] is True
     assert evidence["full_loop_external_validation_ready"] is False
+
+
+def test_dickens_model_repair_boundary_is_grounded_without_runtime_promotion():
+    manifest = build_evidence_manifest(
+        {"time_s": 1.0}, {}, [], False, question="탱크 열전달 모델 수리 경계"
+    )
+    boundary = manifest["response_evidence"][
+        "temperature_observation_semantic_boundary"
+    ]["dickens_typeiii"]["model_repair_boundary"]
+    assert boundary["candidate_nozzle_diameters_mm"] == [3.0, 5.0, 7.0]
+    assert len(boundary["required_pre_access_inputs"]) >= 5
+    assert boundary["frozen_validation_gate"] == "UNCHANGED_FAIL"
+    assert boundary["runtime_parameter_updated"] is False
+    assert boundary["runtime_promotion_allowed"] is False
+
+    compact = prompt_evidence_summary(manifest)[
+        "temperature_observation_semantic_boundary"
+    ]["dickens_typeiii"]["model_repair_boundary"]
+    assert compact["runtime_promotion_allowed"] is False
+
+    header = prompt_evidence_header(manifest)[
+        "temperature_observation_semantic_boundary"
+    ]["dickens_typeiii"]["model_repair_boundary"]
+    assert header["candidate_observation_operators"]
+    assert header["frozen_validation_gate"] == "UNCHANGED_FAIL"
 
 
 def test_h2safe_spatial_negative_screen_is_grounded_without_runtime_promotion():
