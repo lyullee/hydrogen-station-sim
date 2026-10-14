@@ -2651,3 +2651,9 @@ the full-loop claim pass.
 - Universidad de Cantabria의 Zenodo `10.5281/zenodo.15166733` 공개 PLC 자료를 확인하고 원본 CSV MD5 `9a3c3e3b1668596854b43bfd790d3e0e`, 300,768행, 5초 샘플링, 버퍼·압축수소 탱크 압력과 수소 유량 채널을 기록했다.
 - 이 자료는 주거용 재생에너지-수소 시스템이며 HRS가 아니므로 `research/zenodo_15166733_hy2res_operational_context_2026_10_14.json`에 인접 공정 운영근거로만 보존했다. HRS 런타임 보정, station-to-vehicle 검증, ESD·안전거리·피해영향 검증은 금지했다.
 - 공정·압력·유량·압축기·공개 데이터 질문에서만 SAGA 근거 요약에 노출하고, 일반 운전 답변에는 과도한 문맥이 들어가지 않도록 조건부 라우팅했다. 관련 회귀 33/33 통과; readiness 게이트 수는 134 PASS / 11 FAIL / 7 PENDING으로 변하지 않았다.
+
+## 2026-10-14 - 과학 검증과 CI 결과 분리
+
+- GitHub `priority-validation` workflow가 외부 과학 검증의 의도된 FAIL을 곧바로 작업 실패로 반환해 반복 실패 메일을 만들던 구조를 분리했다.
+- 과학 검증 결과와 `readiness_status=BLOCKED`는 업로드 보고서에 그대로 남기고, 소프트웨어·프로세스 집중 검사가 실패한 경우에만 작업을 실패 처리하도록 변경했다.
+- workflow 계약 회귀 9/9 통과; 변경 커밋 `e4e4d27`을 `main`에 반영했다. readiness 게이트 수는 134 PASS / 11 FAIL / 7 PENDING으로 유지된다.
