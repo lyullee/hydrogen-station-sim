@@ -7,6 +7,7 @@ from scripts.refresh_runtime_evidence_chain import (
     ROOT,
     STEPS,
     RefreshStep,
+    _sanitize_output,
     refresh,
 )
 
@@ -84,3 +85,15 @@ def test_refresh_stops_after_the_first_failed_generator(monkeypatch) -> None:
     assert all(env["PYTHONIOENCODING"] == "utf-8" for env in environments)
     assert str(ROOT) not in report["steps"][0]["output_tail"]
     assert report["steps"][0]["output_tail"].count("<repository>") == 2
+
+
+def test_sanitize_output_removes_external_workstation_paths() -> None:
+    raw = (
+        r"C:\Users\tester\AppData\Local\Python\site-packages\hyram\_comps.py:162: "
+        "PhysicsWarning"
+    )
+
+    sanitized = _sanitize_output(raw)
+
+    assert "C:\\Users" not in sanitized
+    assert sanitized == "<local-path>:162: PhysicsWarning"

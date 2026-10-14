@@ -16,6 +16,7 @@ from dataclasses import dataclass
 import json
 import os
 from pathlib import Path
+import re
 import shutil
 import subprocess
 import sys
@@ -167,6 +168,14 @@ def _sanitize_output(value: str) -> str:
         root,
     ):
         value = value.replace(representation, "<repository>")
+    # Third-party warnings can contain absolute interpreter paths outside the
+    # repository (for example ``C:\\Users\\...\\site-packages``).  Keep the
+    # diagnostic file/line suffix while removing the workstation prefix.
+    value = re.sub(
+        r"[A-Za-z]:[\\/](?:Users|home)[^:\n]*:",
+        "<local-path>:",
+        value,
+    )
     return value
 
 
