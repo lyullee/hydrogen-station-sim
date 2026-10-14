@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "artifact_type": "physics_core_regression_run",
+  "run_date": "2026-10-14",
+  "command": "PYTHONPATH=src python -m pytest -q tests/test_release_network.py tests/test_release_network_development.py tests/test_pressure_driven_thermal.py tests/test_apparatus_release_validation.py tests/test_schefer_release_diagnostic.py tests/test_grune_2014_public_pressure_trace_recheck.py tests/test_grune_2014_holdout_result.py",
+  "scope": [
+    "release network mass and energy bookkeeping",
+    "finite valve opening and line-state separation",
+    "pressure-driven thermal integration",
+    "apparatus release schema and evaluation",
+    "Schefer release diagnostic boundaries",
+    "Grune public pressure-trace boundary checks"
+  ],
+  "result": {
+    "passed": 28,
+    "failed": 0,
+    "skipped": 0,
+    "warnings": 1,
+    "duration_seconds": 87.27
+  },
+  "interpretation": {
+    "code_consistency": "PASS",
+    "independent_validation_gate_changed": false,
+    "runtime_parameter_changed": false,
+    "post_outcome_tuning": false,
+    "claim_boundary": "This verifies implementation-level physical invariants and frozen evaluator boundaries. It is not an independent experimental validation result and does not promote any failed holdout."
+  }
+}
