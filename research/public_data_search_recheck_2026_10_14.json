@@ -190,6 +190,29 @@
       ],
       "eligible_new_raw_holdout_found": false,
       "interpretation": "This targeted third pass added no new eligible untouched raw trace. Existing source records reinforce the apparatus and license boundaries but do not justify changing a validation gate or runtime model."
+    },
+    "search_round_2026_10_14_fourth_pass": {
+      "search_date": "2026-10-14",
+      "new_candidates_checked": [
+        {
+          "id": "nrl_h2safe_catalog_current_record",
+          "url": "https://data.nlr.gov/submissions/330",
+          "doi": "10.7799/17118570",
+          "observed": "The current NLR catalog record confirms five indoor experiments using helium surrogate, with sensor coordinates, source coordinates and time-series resources.",
+          "eligibility": "ALREADY_USED_HELIUM_DEVELOPMENT_COHORT",
+          "reason": "The DOI and five-case cohort match the existing H2SAFE candidate-development record; it is not actual-hydrogen evidence and cannot be counted as a new independent holdout."
+        },
+        {
+          "id": "preslhy_e35_radarkit_record",
+          "url": "https://radar.kit.edu/radar/en/dataset/nWczysTWjmuzgFKm",
+          "doi": "10.35097/1481",
+          "observed": "The official record describes 25 liquid-hydrogen release experiments and an 11.3 GB CC BY-SA archive with pressure, mass-flow, temperature, concentration and weather channels.",
+          "eligibility": "CONSEQUENCE_BOUNDARY_CANDIDATE_NOT_HRS_FULL_LOOP",
+          "reason": "One workbook from this archive was already accessed before a new prospective protocol, and the campaign is elevated liquid-hydrogen release rather than a gaseous HRS station-side or station-to-vehicle loop. It cannot close the current gaseous HRS gates without a separately frozen, unaccessed member and a claim-limited protocol."
+        }
+      ],
+      "eligible_new_raw_holdout_found": false,
+      "interpretation": "The fourth pass confirms that the newly indexed NLR entry is the already-used helium cohort and that PRESLHY E3.5 is a valuable liquid-hydrogen consequence source but does not provide a new gaseous HRS holdout under the current access history. No gate, runtime parameter or progress percentage is changed."
     }
   }
 }
