@@ -4,6 +4,7 @@ import argparse
 import json
 import os
 from pathlib import Path
+import re
 import shutil
 import subprocess
 
@@ -80,6 +81,38 @@ def _inspect_toolchains() -> list[dict[str, object]]:
     return toolchains
 
 
+def _inspect_epic_entitlement() -> dict[str, object]:
+    """Classify the Launcher UE catalog state without exposing account data."""
+    local_app_data = os.getenv("LOCALAPPDATA")
+    if not local_app_data:
+        return {"status": "UNKNOWN", "reason": "LOCALAPPDATA is unavailable"}
+    log_root = Path(local_app_data) / "EpicGamesLauncher/Saved/Logs"
+    logs = sorted(
+        log_root.glob("*.log"), key=lambda path: path.stat().st_mtime, reverse=True
+    ) if log_root.is_dir() else []
+    if not logs:
+        return {"status": "UNKNOWN", "reason": "Launcher log is unavailable"}
+
+    text = logs[0].read_text(encoding="utf-8", errors="replace")
+    counts = [int(value) for value in re.findall(r"found (\d+) entitled apps", text)]
+    zero_items = "Loaded 0 item files" in text
+    waiting = "WaitingForBuildsAndItemFiles" in text
+    if counts and counts[-1] == 0 and zero_items and waiting:
+        status = "ZERO_ENTITLEMENTS"
+        reason = "Launcher received no UE item files or entitled apps"
+    elif counts and counts[-1] > 0:
+        status = "ENTITLEMENTS_PRESENT"
+        reason = f"Launcher reported {counts[-1]} entitled apps"
+    else:
+        status = "UNKNOWN"
+        reason = "Launcher log has no conclusive entitlement count"
+    return {
+        "status": status,
+        "reason": reason,
+        "latest_log": logs[0].name,
+    }
+
+
 def inspect():
     roots = [Path("C:/Program Files/Epic Games"), Path("D:/Epic Games")]
     if os.getenv("HRS_UNREAL_ROOT"):
@@ -100,6 +133,7 @@ def inspect():
     usable_toolchain = any(item["usable"] for item in toolchains)
     launcher = Path("C:/Program Files/Epic Games/Launcher/Portal/Binaries/Win64/EpicGamesLauncher.exe")
     return {"launcher_installed": launcher.is_file(), "engines": engines,
+            "epic_entitlement": _inspect_epic_entitlement(),
             "cpp_toolchains": toolchains, "free_disk_gib": round(shutil.disk_usage(Path.cwd().anchor).free / 1024**3, 1),
             "engine_build_status": "READY_TO_ATTEMPT" if engines and usable_toolchain else "PREREQUISITES_PENDING"}
 
