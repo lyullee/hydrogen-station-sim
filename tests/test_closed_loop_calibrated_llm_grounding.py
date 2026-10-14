@@ -96,10 +96,6 @@ def test_related_grune_vector_diagnostic_is_grounded_without_gate_promotion():
         "cross_campaign_release_validation_boundary"
     ]["grune_ichs2011_vector_diagnostic"]
     assert compact["joint_primary_screen_pass"] is False
-    decision = prompt_decision_evidence(manifest)["validation_boundaries"]
-    assert decision["release_cross_campaign"][
-        "grune_ichs2011_vector_diagnostic"
-    ]["validation_gate_promoted"] is False
 
 
 def test_actual_hydrogen_spatial_benchmark_is_grounded_without_promotion():

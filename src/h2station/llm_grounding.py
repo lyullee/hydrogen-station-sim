@@ -16507,9 +16507,6 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                 "apparatus_holdout": cross_campaign_release.get(
                     "apparatus_resolved_holdout_received"
                 ) is True,
-                "grune_ichs2011_vector_diagnostic": cross_campaign_release.get(
-                    "grune_ichs2011_vector_diagnostic"
-                ) or {},
             },
             **({
                 "public_hytunnel_carpark": {

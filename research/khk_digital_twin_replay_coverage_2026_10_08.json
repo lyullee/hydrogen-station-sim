@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "artifact_type": "khk_public_accident_to_digital_twin_canonical_replay_audit",
-  "generated_at_utc": "2026-10-14T01:39:27.363185+00:00",
+  "generated_at_utc": "2026-10-14T01:51:38.479482+00:00",
   "status": "completed_independent_public_accident_integration_audit",
   "evidence_role": "independent_retrospective_metadata_to_canonical_runtime_traceability_only",
   "source": {

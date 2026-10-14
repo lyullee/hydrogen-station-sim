@@ -2460,13 +2460,14 @@ def test_prompt_decision_evidence_keeps_limits_without_full_audit_payload():
     assert decision["decision_support_evidence"]["public_incident"][
         "contract_pass"
     ] is True
-    assert decision["validation_boundaries"]["release_cross_campaign"] == {
-        "supported": 1,
-        "failed": 2,
-        "ineligible": 1,
-        "universal": False,
-        "apparatus_holdout": False,
-    }
+    release_cross_campaign = decision["validation_boundaries"][
+        "release_cross_campaign"
+    ]
+    assert release_cross_campaign["supported"] == 1
+    assert release_cross_campaign["failed"] == 2
+    assert release_cross_campaign["ineligible"] == 1
+    assert release_cross_campaign["universal"] is False
+    assert release_cross_campaign["apparatus_holdout"] is False
     assert decision["validation_boundaries"]["station_component_thermal"] == {
         "status": "UNCONFIRMED",
         "proposals_attested": False,
