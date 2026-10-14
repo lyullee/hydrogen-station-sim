@@ -9,11 +9,11 @@ This is the reproducible release candidate for the current station-side hydrogen
 - software regression and CI checks;
 - bounded IJHE manuscript and technical documentation.
 
-The latest CI run passed at commit `f3c5f30a88aa01fbbe417e5d6564a3b01bf2df0d`: [run 38211947691](https://github.com/lyullee/hydrogen-station-sim/actions/runs/38211947691).
+The latest CI run passed at commit `115ceaa`: [run 38576334925](https://github.com/lyullee/hydrogen-station-sim/actions/runs/38576334925).
 
 ## Evidence boundary
 
-The readiness ledger currently records **133 PASS, 11 FAIL, and 7 PENDING** gates overall. The primary station-side scope records **132 PASS, 10 FAIL, and 2 PENDING** (91.7% closure). The software is therefore reproducible, but this candidate is not independently validated or publication-ready.
+The readiness ledger currently records **134 PASS, 11 FAIL, and 7 PENDING** gates overall. The primary station-side scope records **133 PASS, 10 FAIL, and 2 PENDING** (91.7% closure). The software is therefore reproducible, but this candidate is not independently validated or publication-ready.
 
 The open gates are listed in `research/ijhe_submission_blocker_matrix_2026_10_12.md` and in the manifest. In particular, the full synchronized station-to-vehicle raw-data claim remains outside the primary scope and is disclosed as a limitation.
 

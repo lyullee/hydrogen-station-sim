@@ -6,7 +6,7 @@
 
 - 현재 readiness 게이트: **134 PASS / 11 FAIL / 7 PENDING = 88.2%**
 - 이전 주 범위 보고서의 **133 PASS / 10 FAIL / 2 PENDING = 91.7%**는 별도 축약 분모이며 현재 제출판정과 혼용하지 않는다.
-- 전체 회귀: **1,625 passed / 0 failed / 0 skipped / 224 warnings**
+- 전체 회귀: **1,626 passed / 0 failed / 0 skipped / 224 warnings**
 - 최근 회귀 기록: `research/full_regression_test_run_2026_10_14.json` (현재 작업 트리 회귀 기록; 작업 트리의 기존 미추적 산출물은 유지)
 - 런타임 승격이 금지된 후보: Type-III 열전달 수정안, H2SAFE 공간 검지기 후보, 사후 보정된 누출·영향 모델
 - NREL H2FillS: `nrel_h2fills_2022_hdvs_typeiv.xlsx` 한 파일만 보유하며 이미 수치 결과를 확인했다. 따라서 새 독립 holdout으로 재사용하지 않는다.

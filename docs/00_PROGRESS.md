@@ -1,5 +1,14 @@
 # Development Progress
 
+## 2026-10-14 - Latest full regression on synchronized release state
+
+- The full Python regression completed on source commit `115ceaa` with **1,626
+  passed / 0 failed / 0 skipped** in 293.18 seconds. The run retained 224
+  dependency/data-reader and HyRAM physics warnings; none were test failures.
+- The result verifies implementation integrity only. The scientific readiness
+  ledger remains **134 PASS / 11 FAIL / 7 PENDING (88.2%)**, and no external
+  validation gate or runtime parameter was promoted.
+
 ## 2026-10-14 - Refresh hash-linked evidence after SAGA grounding update
 
 - The deterministic runtime evidence refresh completed in 58.8 seconds with

@@ -85,15 +85,15 @@
       "ethics_and_expert_review": "optional_for_physics_validation; required only for a claim that SAGA improves human safety guidance"
     }
   },
-  "source_commit": "4a07e2b",
+  "source_commit": "115ceaa",
   "latest_completed_work": "KITopen DOI 10.5445/IR/1000096833가 기존 PRESLHY RADAR 원자료 DOI 10.35097/1187의 중복 카탈로그임을 확인하고 새 holdout으로 중복 집계하지 않았습니다.",
   "latest_full_regression": {
-    "tests_passed": 1625,
+    "tests_passed": 1626,
     "tests_failed": 0,
     "tests_skipped": 0,
     "warnings": 224,
     "scope": "python -m pytest -q",
-    "source_commit": "e8a4b138921d266dd5ee7e15558ee7fd31273c25",
+    "source_commit": "115ceaa",
     "artifact": "research/full_regression_test_run_2026_10_14.json"
   },
   "remaining_workstreams": [
