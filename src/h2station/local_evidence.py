@@ -41,6 +41,7 @@ _ACCIDENTAL_RELEASE = _ROOT / "research/accidental_self_ignition_public_evidence
 _EXPERIMENTAL_BENCHMARKS = _ROOT / "research/public_experimental_benchmarks_2026_10_06.json"
 _GRUNE_PS_SPATIAL_INTAKE = _ROOT / "research/grune_ps_h2_dispersion_intake_2026_10_14.json"
 _GRUNE_PS_SPATIAL_DIAGNOSTIC = _ROOT / "research/grune_ps_actual_h2_spatial_diagnostic_2026_10_14.json"
+_PRESLHY_E31_CONCENTRATION_DIAGNOSTIC = _ROOT / "research/preslhy_e31_concentration_transport_diagnostic_2026_10_14.json"
 _CARB_BENCHMARK = _ROOT / "research/carb_2024_hrs_inuse_field_benchmark_2026_10_08.json"
 _STRIEDNIG_DIAGNOSTIC = _ROOT / "research/striednig_hyddown_diagnostic_result_2026_10_10.json"
 _NREL_HDVS_BOUNDARY = _ROOT / "research/nrel_hdvs_raw_trace_boundary_2026_10_05.json"
@@ -2329,6 +2330,39 @@ def public_evidence_inventory_summary() -> dict[str, Any]:
                     "promotion_prohibited": True,
                     "claim_limit": str(diagnostic.get("claim_boundary") or ""),
                 }
+    except (OSError, KeyError, TypeError, ValueError, json.JSONDecodeError):
+        pass
+    try:
+        record = _read_json(_PRESLHY_E31_CONCENTRATION_DIAGNOSTIC)
+        source = record.get("source_description") or {}
+        if (
+            record.get("diagnostic_type") == "POST_ACCESS_CONCENTRATION_TRANSPORT_DELAY_DIAGNOSTIC"
+            and record.get("runtime_promotion") is False
+            and record.get("independent_validation_gate_impact") == "none"
+            and source.get("doi") == "10.35097/1187"
+            and int(record.get("archive_count") or 0) == 6
+            and int(record.get("trace_count") or 0) == 33
+            and int(record.get("error_count") or 0) == 0
+        ):
+            result["public_preslhy_concentration_transport_diagnostic"] = {
+                "status": "available",
+                "evidence_role": "post_access measured-H2 concentration transport diagnostic",
+                "source_doi": source.get("doi"),
+                "concentration_channels": source.get("concentration_channels") or [],
+                "documented_transport_delay_s": source.get(
+                    "documented_transport_delay_s"
+                ),
+                "archive_count": int(record.get("archive_count") or 0),
+                "trace_count": int(record.get("trace_count") or 0),
+                "error_count": int(record.get("error_count") or 0),
+                "raw_onset_lag": record.get("raw_onset_lag") or {},
+                "corrected_onset_lag": record.get("corrected_onset_lag") or {},
+                "raw_peak_lag": record.get("raw_peak_lag") or {},
+                "corrected_peak_lag": record.get("corrected_peak_lag") or {},
+                "runtime_promotion": False,
+                "independent_validation_gate_impact": "none",
+                "claim_limit": str(record.get("interpretation") or ""),
+            }
     except (OSError, KeyError, TypeError, ValueError, json.JSONDecodeError):
         pass
     try:

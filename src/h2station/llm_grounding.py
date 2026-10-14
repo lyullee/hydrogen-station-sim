@@ -3951,6 +3951,62 @@ def _preslhy_validation_boundary() -> dict[str, Any] | None:
     }
 
 
+def _public_preslhy_concentration_transport_diagnostic() -> dict[str, Any] | None:
+    """Expose measured-H2 detector transport lag without changing runtime logic.
+
+    The E3.1 workbooks contain actual concentration channels and a documented
+    transport delay.  This replay is useful for explaining why a detector
+    alarm can trail a release, but it was performed after protocol freeze and
+    cannot advance an alarm, tune a setpoint, or close an external gate.
+    """
+
+    artifact = "research/preslhy_e31_concentration_transport_diagnostic_2026_10_14.json"
+    path = Path(__file__).resolve().parents[2] / artifact
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, json.JSONDecodeError):
+        return None
+    source = record.get("source_description") or {}
+    required = (
+        record.get("diagnostic_type") == "POST_ACCESS_CONCENTRATION_TRANSPORT_DELAY_DIAGNOSTIC"
+        and record.get("runtime_promotion") is False
+        and record.get("independent_validation_gate_impact") == "none"
+        and source.get("doi") == "10.35097/1187"
+        and int(record.get("archive_count") or 0) == 6
+        and int(record.get("trace_count") or 0) == 33
+        and int(record.get("error_count") or 0) == 0
+    )
+    if not required:
+        return None
+
+    def lag_summary(name: str) -> dict[str, Any]:
+        value = record.get(name) or {}
+        return {
+            "count": value.get("count"),
+            "median_s": value.get("median_s"),
+            "p10_s": value.get("p10_s"),
+            "p90_s": value.get("p90_s"),
+        }
+
+    return {
+        "artifact": artifact,
+        "evidence_role": "post-access measured-H2 concentration transport diagnostic",
+        "source_doi": source.get("doi"),
+        "concentration_channels": source.get("concentration_channels") or [],
+        "documented_transport_delay_s": source.get("documented_transport_delay_s"),
+        "archive_count": int(record.get("archive_count") or 0),
+        "trace_count": int(record.get("trace_count") or 0),
+        "error_count": int(record.get("error_count") or 0),
+        "raw_onset_lag": lag_summary("raw_onset_lag"),
+        "corrected_onset_lag": lag_summary("corrected_onset_lag"),
+        "raw_peak_lag": lag_summary("raw_peak_lag"),
+        "corrected_peak_lag": lag_summary("corrected_peak_lag"),
+        "runtime_promotion": False,
+        "independent_validation_gate_impact": "none",
+        "claim_limit": str(record.get("interpretation") or ""),
+    }
+
+
 def _public_preslhy_e35_file_access_evidence() -> dict[str, Any] | None:
     """Expose the bounded audit of the downloaded public E3.5 workbook.
 
@@ -10982,6 +11038,11 @@ def build_evidence_manifest(
     preslhy = _preslhy_validation_boundary()
     if preslhy is not None:
         envelope["response_evidence"]["preslhy_validation_boundary"] = preslhy
+    preslhy_transport = _public_preslhy_concentration_transport_diagnostic()
+    if preslhy_transport is not None:
+        envelope["response_evidence"][
+            "public_preslhy_concentration_transport_diagnostic"
+        ] = preslhy_transport
     public_preslhy_e35 = _public_preslhy_e35_file_access_evidence()
     if public_preslhy_e35 is not None:
         envelope["response_evidence"][
@@ -11995,6 +12056,22 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
                 "runtime_model_parameter_changed"
             ),
             "claim_limit": short(preslhy.get("claim_limit")),
+        }
+    preslhy_transport = evidence.get(
+        "public_preslhy_concentration_transport_diagnostic"
+    )
+    if isinstance(preslhy_transport, dict):
+        summary["public_preslhy_concentration_transport_diagnostic"] = {
+            key: preslhy_transport.get(key)
+            for key in (
+                "artifact", "evidence_role", "source_doi",
+                "concentration_channels", "documented_transport_delay_s",
+                "archive_count", "trace_count", "error_count",
+                "raw_onset_lag", "corrected_onset_lag", "raw_peak_lag",
+                "corrected_peak_lag", "runtime_promotion",
+                "independent_validation_gate_impact", "claim_limit",
+            )
+            if preslhy_transport.get(key) is not None
         }
     closed_loop = evidence.get("closed_loop_validation_boundary")
     if isinstance(closed_loop, dict):
@@ -13390,6 +13467,9 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
     public_preslhy_e35 = response.get(
         "public_preslhy_e35_file_access"
     ) or {}
+    preslhy_transport = response.get(
+        "public_preslhy_concentration_transport_diagnostic"
+    ) or {}
     preslhy_holdout = preslhy.get("independent_holdout") or {}
     operating_screen = response.get("public_operating_envelope_screen") or {}
     public_benchmarks = response.get("public_experimental_benchmarks") or {}
@@ -13599,6 +13679,13 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
     actual_h2_evidence_relevant = public_catalog_relevant or any(
         token in lead_context
         for token in ("actual hydrogen", "실제 수소", "actual_h2")
+    )
+    preslhy_transport_relevant = actual_h2_evidence_relevant or any(
+        token in lead_context
+        for token in (
+            "검지", "검출", "경보", "가스", "농도", "누출",
+            "detector", "detection", "alarm", "concentration", "leak",
+        )
     )
     elvhys_evidence_relevant = public_catalog_relevant or any(
         token in lead_context
@@ -14437,6 +14524,20 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                     if actual_h2_channel.get(key) is not None
                 },
             } if actual_h2_channel and actual_h2_evidence_relevant else {}),
+            **({
+                "public_preslhy_concentration_transport_diagnostic": {
+                    key: preslhy_transport.get(key)
+                    for key in (
+                        "artifact", "evidence_role", "source_doi",
+                        "concentration_channels", "documented_transport_delay_s",
+                        "archive_count", "trace_count", "error_count",
+                        "raw_onset_lag", "corrected_onset_lag", "raw_peak_lag",
+                        "corrected_peak_lag", "runtime_promotion",
+                        "independent_validation_gate_impact", "claim_limit",
+                    )
+                    if preslhy_transport.get(key) is not None
+                },
+            } if preslhy_transport and preslhy_transport_relevant else {}),
             **({
                 "public_elvhys_dataset": {
                     key: elvhys.get(key)

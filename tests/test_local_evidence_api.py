@@ -24,6 +24,11 @@ def test_local_evidence_summary_is_privacy_bounded() -> None:
     assert spatial["post_access_diagnostic"]["hydrogen_profile_count"] == 41
     assert spatial["post_access_diagnostic"]["hydrogen_point_count"] == 5148
     assert spatial["post_access_diagnostic"]["promotion_prohibited"] is True
+    transport = public_evidence_inventory_summary()[
+        "public_preslhy_concentration_transport_diagnostic"
+    ]
+    assert transport["trace_count"] == 33
+    assert transport["runtime_promotion"] is False
     assert summary["adjacent_process"]["high_pressure_process"][
         "csv_event_row_count"
     ] == 2_411_774

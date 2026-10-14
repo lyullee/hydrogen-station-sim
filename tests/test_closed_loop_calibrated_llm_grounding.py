@@ -66,6 +66,29 @@ def test_actual_hydrogen_spatial_benchmark_is_grounded_without_promotion():
     assert prompt_spatial["post_access_diagnostic"]["hydrogen_point_count"] == 5148
 
 
+def test_preslhy_actual_hydrogen_transport_diagnostic_is_grounded_without_promotion():
+    manifest = build_evidence_manifest(
+        {"time_s": 1.0}, {}, [], False, question="수소 누출 검지 지연 근거"
+    )
+    evidence = manifest["response_evidence"][
+        "public_preslhy_concentration_transport_diagnostic"
+    ]
+    assert evidence["source_doi"] == "10.35097/1187"
+    assert evidence["trace_count"] == 33
+    assert evidence["error_count"] == 0
+    assert evidence["documented_transport_delay_s"] == pytest.approx(3.75)
+    assert evidence["raw_onset_lag"]["median_s"] == pytest.approx(4.4)
+    assert evidence["corrected_onset_lag"]["median_s"] == pytest.approx(0.65)
+    assert evidence["runtime_promotion"] is False
+    assert evidence["independent_validation_gate_impact"] == "none"
+    decision = prompt_decision_evidence(manifest)
+    projected = decision["decision_support_evidence"][
+        "public_preslhy_concentration_transport_diagnostic"
+    ]
+    assert projected["corrected_onset_lag"]["median_s"] == pytest.approx(0.65)
+    assert projected["runtime_promotion"] is False
+
+
 def test_mc_geometry_transfer_diagnostic_is_grounded_without_rule_promotion():
     manifest = build_evidence_manifest(
         {"time_s": 1.0}, {}, [], False, question="탱크 모델 검증 상태"
