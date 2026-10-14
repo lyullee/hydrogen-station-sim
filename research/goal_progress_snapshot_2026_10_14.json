@@ -85,8 +85,8 @@
       "ethics_and_expert_review": "optional_for_physics_validation; required only for a claim that SAGA improves human safety guidance"
     }
   },
-  "source_commit": "84085b5",
-  "latest_completed_work": "Completed the priority-manifest and privacy cleanup, then confirmed the full repository regression after the fix.",
+  "source_commit": "8a9a3f4",
+  "latest_completed_work": "Completed the priority-manifest and privacy cleanup, confirmed the full repository regression, and invalidated an overlapping Andreasen public holdout attempt before promoting it as independent evidence.",
   "latest_full_regression": {
     "tests_passed": 1602,
     "tests_failed": 0,
@@ -129,6 +129,11 @@
     "scope": "tests/test_ijhe_readiness_audit.py tests/test_ijhe_audit_snapshot_consistency.py tests/test_validation_gap_report.py tests/test_llm_grounding.py"
   },
   "completed_process_improvements": [
+    {
+      "id": "andreasen_holdout_overlap_invalidation_2026_10_14",
+      "progress_percent": 100.0,
+      "status": "The Zenodo Andreasen/HyDown archive was checked after protocol freeze and found to overlap tracked Byrnes exploratory/prospective artifacts; the attempt is explicitly invalidated and no scientific gate or progress percentage is promoted."
+    },
     {
       "id": "full_regression_process_fix_2026_10_14",
       "progress_percent": 100.0,
