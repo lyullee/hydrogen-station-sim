@@ -33,6 +33,11 @@ default status is `SCIENTIFIC_GATES_OPEN` while any frozen external-validation
 gate is unresolved. That status is expected during development and is distinct
 from an integrity or software-test failure.
 
+The latest checked-in reproduction record is
+[`../research/ijhe_reproduction_run_2026_10_14.json`](../research/ijhe_reproduction_run_2026_10_14.json).
+It contains the successful 24-page PDF build, audit-mirror comparison and
+12-test paper-integrity focused run from source commit `841ade7`.
+
 To make a release workflow fail unless the bounded paper gate is closed, add
 `--require-bounded`. The command intentionally returns a non-zero code in that
 case; it never changes the audit or its thresholds.

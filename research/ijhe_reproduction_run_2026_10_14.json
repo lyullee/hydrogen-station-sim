@@ -1,0 +1,157 @@
+{
+  "schema_version": 1,
+  "artifact_type": "ijhe_reproducibility_run",
+  "generated_at_utc": "2026-10-14T14:12:55.163281+00:00",
+  "status": "SCIENTIFIC_GATES_OPEN",
+  "repository": {
+    "root": ".",
+    "commit": "841ade7baff1ec1762b3c4caec00fe31072b738c",
+    "dirty": true
+  },
+  "environment": {
+    "python": "3.14.8",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "interpreter": ".venv/Scripts/python.exe"
+  },
+  "artifact_integrity": {
+    "passed": true,
+    "manuscript_format": {
+      "manuscript": "manuscript/ijhe_manuscript_draft.tex",
+      "highlights": "manuscript/Highlights.txt",
+      "counts": {
+        "abstract_words": 147,
+        "keywords": 6,
+        "highlight_bullets": 5,
+        "highlight_characters": [
+          75,
+          74,
+          69,
+          75,
+          72
+        ],
+        "approximate_manuscript_words_before_references": 8000,
+        "figures": 3,
+        "tables": 3,
+        "citation_keys": 57,
+        "bibliography_entries": 59,
+        "unresolved_citations": [],
+        "missing_figure_assets": []
+      },
+      "checks": {
+        "abstract_at_most_150_words": true,
+        "keywords_at_most_6": true,
+        "highlights_count_3_to_5": true,
+        "each_highlight_at_most_85_characters": true,
+        "research_paper_at_most_8000_words_approximate": true,
+        "diagrams_at_most_12": true,
+        "all_citations_resolved": true,
+        "all_figure_assets_present": true,
+        "balanced_braces": true,
+        "document_environment_present": true
+      },
+      "format_gate_passed": true,
+      "scientific_readiness_assessed": false
+    },
+    "compile_status_rebuilt": {
+      "schema_version": 2,
+      "verified_at_utc": "2026-10-14T14:12:52.927971+00:00",
+      "success": true,
+      "compiler": {
+        "name": "Tectonic",
+        "version": "0.17.0",
+        "official_release_url": "https://github.com/tectonic-typesetting/tectonic/releases/tag/tectonic@0.17.0",
+        "archive_sha256": "f61ce51f0b0ade1015b7de7ef368541c5424e9756ecbd0d7af97d6d48030845"
+      },
+      "source": {
+        "path": "manuscript/ijhe_manuscript_draft.tex",
+        "bytes": 78369,
+        "sha256": "7a472ddcff7e12878e8666b6ef1e93674b988692e5a1e61dcb38f25846049b2c"
+      },
+      "pdf": {
+        "path": "output/pdf/ijhe_manuscript_draft.pdf",
+        "bytes": 840380,
+        "sha256": "4131981f711350a5c18b255822b5c6f3b18f2fda6de4aace7591c40c4b07de09",
+        "page_count": 24,
+        "extracted_character_count": 72475
+      },
+      "compile_log": {
+        "path": "output/pdf/ijhe_manuscript_draft.log",
+        "bytes": 19550,
+        "sha256": "02daeb1e2e4a1128af310ddba70e2b0824b43a21d21b78f5e77d5466eefe32b0",
+        "unresolved_citations": 0,
+        "unresolved_references": 0,
+        "fatal_errors": [],
+        "underfull_hbox_count": 11,
+        "overfull_hbox_count": 0,
+        "maximum_overfull_width_pt": 0.0
+      },
+      "content_checks": {
+        "replacement_characters": 0,
+        "double_question_placeholder_tokens": 0,
+        "references_heading_present": true,
+        "working_manuscript_notice_present": true
+      },
+      "visual_qa": {
+        "renderer": "Poppler pdftoppm",
+        "pages_rendered": 24,
+        "pages_inspected": 24,
+        "all_pages_rendered_and_inspected": true,
+        "clipping_or_overlap_detected": false
+      },
+      "source_matches_pdf_build": true,
+      "format_check_passed": true,
+      "claim_boundary": "This proves that the exact working source compiled and rendered. It does not resolve scientific validation, independent review, authorship metadata, or journal acceptance."
+    },
+    "audit_snapshot_matches_research_mirror": true
+  },
+  "scientific_readiness": {
+    "bounded_submission_ready": false,
+    "decision": {
+      "bounded_ijhe_submission_ready": false,
+      "full_user_objective_ready": false,
+      "goal_completion_permitted": false,
+      "gate_counts": {
+        "PASS": 134,
+        "FAIL": 11,
+        "PENDING": 7
+      },
+      "blocking_bounded_submission_gates": [
+        "dickens_typeiii_prospective_validation",
+        "preslhy_blowdown_external_validation",
+        "preslhy_partb_ambient_external_validation",
+        "preslhy_revised_holdout_validation",
+        "proust_independent_release_validation",
+        "schefer_transient_release_validation",
+        "schefer_2007_pressure_decay_validation",
+        "grune_2014_pressure_decay_validation",
+        "submission_metadata_and_declarations"
+      ]
+    },
+    "claim_boundary": "This is an evidence-readiness result, not a guarantee of peer-review acceptance, field safety, or regulatory compliance."
+  },
+  "software_checks": {
+    "requested": true,
+    "passed": true,
+    "runs": [
+      {
+        "status": "PASS",
+        "exit_code": 0,
+        "command": "-m pytest tests/test_ijhe_readiness_audit.py tests/test_ijhe_audit_snapshot_consistency.py tests/test_ijhe_manuscript_format.py tests/test_ijhe_compile_artifact.py tests/test_goal_progress_snapshot.py tests/test_ijhe_reproduction.py -q",
+        "tests": [
+          "tests/test_ijhe_readiness_audit.py",
+          "tests/test_ijhe_audit_snapshot_consistency.py",
+          "tests/test_ijhe_manuscript_format.py",
+          "tests/test_ijhe_compile_artifact.py",
+          "tests/test_goal_progress_snapshot.py",
+          "tests/test_ijhe_reproduction.py"
+        ],
+        "output_tail": "............                                                             [100%]\n12 passed in 1.83s"
+      }
+    ]
+  },
+  "reproduction_commands": {
+    "focused": ".venv/Scripts/python -m pytest tests/test_ijhe_readiness_audit.py tests/test_ijhe_audit_snapshot_consistency.py tests/test_ijhe_manuscript_format.py tests/test_ijhe_compile_artifact.py tests/test_goal_progress_snapshot.py tests/test_ijhe_reproduction.py -q",
+    "full": ".venv/Scripts/python -m pytest -q",
+    "audit": ".venv/Scripts/python scripts/audit_ijhe_readiness.py"
+  }
+}
