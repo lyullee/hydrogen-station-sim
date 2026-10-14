@@ -1,5 +1,14 @@
 # Development Progress
 
+## 2026-10-14 - Show validation progress in operator evidence panels
+
+The main SAGA and sensor workbench "data used" panels now render the
+privacy-bounded readiness counts, amended primary-scope closure percentage and
+remaining primary-scope gate count. This keeps the operator view aligned with
+the LLM evidence envelope without exposing raw rows, local paths or private
+identifiers. Both browser files pass `node --check`; the focused Python/API
+regression passes 56/56.
+
 ## 2026-10-14 - Ground validation questions in the latest readiness ledger
 
 Interactive main and sensor direct-answer prompts now receive the latest
