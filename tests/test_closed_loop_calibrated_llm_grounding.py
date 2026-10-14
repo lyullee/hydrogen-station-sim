@@ -47,6 +47,13 @@ def test_actual_hydrogen_spatial_benchmark_is_grounded_without_promotion():
     ]
     assert compact["source_doi"] == evidence["source_doi"]
     assert compact["promotion_prohibited"] is True
+    decision = prompt_decision_evidence(manifest)
+    prompt_spatial = decision["decision_support_evidence"][
+        "public_actual_hydrogen_spatial_benchmark"
+    ]
+    assert prompt_spatial["source_doi"] == evidence["source_doi"]
+    assert prompt_spatial["runtime_parameter_updated"] is False
+    assert prompt_spatial["promotion_prohibited"] is True
 
 
 def test_mc_geometry_transfer_diagnostic_is_grounded_without_rule_promotion():

@@ -13423,6 +13423,9 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
     natural_ventilation = response.get(
         "public_natural_ventilation_evidence"
     ) or {}
+    actual_hydrogen_spatial = response.get(
+        "public_actual_hydrogen_spatial_benchmark"
+    ) or {}
     local_incident = response.get("confidential_local_accident_response_coverage") or {}
     measured_boundary_replay = response.get(
         "confidential_measured_boundary_replay"
@@ -14925,6 +14928,25 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                     "top alarm/trip 100%; no runtime or station-map validation"
                 )
             } if spatial_guidance_relevant else {}),
+            **({
+                "public_actual_hydrogen_spatial_benchmark": {
+                    "evidence_role": actual_hydrogen_spatial.get("evidence_role"),
+                    "source_doi": actual_hydrogen_spatial.get("source_doi"),
+                    "license": actual_hydrogen_spatial.get("license"),
+                    "hydrogen_worksheet_count": actual_hydrogen_spatial.get(
+                        "hydrogen_worksheet_count"
+                    ),
+                    "coordinate_grid_worksheet_count": actual_hydrogen_spatial.get(
+                        "coordinate_grid_worksheet_count"
+                    ),
+                    "independent_holdout": False,
+                    "runtime_parameter_updated": False,
+                    "promotion_prohibited": True,
+                    "claim_limit": short(
+                        actual_hydrogen_spatial.get("claim_limit"), 260
+                    ),
+                }
+            } if actual_hydrogen_spatial and actual_h2_evidence_relevant else {}),
             **({
                 "carb_22_station_field_benchmark": {
                     "stations": (carb_field.get("population") or {}).get(
