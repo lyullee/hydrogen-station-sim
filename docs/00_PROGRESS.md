@@ -2814,5 +2814,5 @@ the full-loop claim pass.
 
 - `tests/test_objective_evidence_summary.py`를 추가해 진행률, 회귀 수치, 공개 실험·충전소 holdout·사고자료 집계가 원자료 JSON과 일치하는지 자동 확인한다.
 - 전체 회귀에서 발견된 readiness audit/validation-gap 생성시각 불일치를 `scripts/refresh_runtime_evidence_chain.py`로 재생성해 해소했다. evidence chain 14단계가 모두 PASS했다.
-- 최신 전체 회귀는 **1,622 passed / 0 failed / 0 skipped / 222 warnings**이며, readiness는 **134 PASS / 11 FAIL / 7 PENDING (88.2%)**, 주 논문 범위는 **91.7%**로 변하지 않았다.
+- 최신 전체 회귀는 **1,625 passed / 0 failed / 0 skipped / 224 warnings**이며, readiness는 **134 PASS / 11 FAIL / 7 PENDING (88.2%)**, 주 논문 범위는 **91.7%**로 변하지 않았다.
 
