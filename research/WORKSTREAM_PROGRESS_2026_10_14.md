@@ -59,6 +59,16 @@
 
 # 2026-10-14 critical priority recheck
 
+## 2026-10-14 hash-linked evidence refresh
+
+The deterministic runtime evidence chain was rebuilt after the SAGA evidence
+projection changed `llm_grounding.py`. All 15 refresh steps passed in 58.8 s,
+including the public Type-IV runtime calibration and public accident-precedent
+routing audits whose source hashes had temporarily fallen out of sync. No
+scientific gate or runtime parameter was promoted. The readiness ledger is
+again 134 PASS / 11 FAIL / 7 PENDING (88.2%) overall and 91.7% for the
+declared primary scope.
+
 The latest fast-lane run completed without a software/process failure. LLM evidence boundary (34 tests), Type-III protocol contract (3 tests), full-loop intake boundary (19 tests), and virtual safety/response checks (25 tests) passed. The bounded scientific screen still fails for the measured-boundary vehicle-tank replay (0/8 joint cases), H2SAFE spatial detector response (0/1), and NREL H2FillS HDVS Type-IV tank replay (0/7). The result is retained at `research/priority_focus_run_2026_10_14_latest.json`; no runtime parameter, validation gate, or publication claim was changed.
 
 Current readiness remains 134 PASS / 11 FAIL / 7 PENDING (88.2%) overall and 91.7% for the declared primary scope. The open scientific work still needs independent raw holdouts or custodian-released boundary channels; repeated post-access diagnostics are not counted as new validation.

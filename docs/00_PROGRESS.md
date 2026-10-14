@@ -1,5 +1,16 @@
 # Development Progress
 
+## 2026-10-14 - Refresh hash-linked evidence after SAGA grounding update
+
+- The deterministic runtime evidence refresh completed in 58.8 seconds with
+  all 15 projection/audit steps passing. The two temporary hash-mismatch
+  failures in the public Type-IV runtime calibration and KHK precedent routing
+  were caused by the new bounded SAGA evidence projection and are now rebuilt
+  against the current source hashes.
+- The refresh did not change a model parameter, frozen acceptance threshold or
+  scientific claim. The latest readiness audit is back to **134 PASS / 11 FAIL /
+  7 PENDING (88.2%)**, with the declared primary scope at **91.7%**.
+
 ## 2026-10-14 - Critical priority lane rechecked
 
 - The latest critical-priority run completed in 5.4 seconds. All three software/process lanes passed: LLM evidence boundary (34 tests), Type-III protocol contract (3 tests), and full-loop intake boundary (19 tests); virtual safety/response checks also passed (25 tests).
