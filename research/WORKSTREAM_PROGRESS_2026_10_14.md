@@ -57,3 +57,9 @@
 
 동기화된 station-to-vehicle 전체 원자료와 운영자 대응 효과 평가는 현재 주 논문 범위에서 제외하고 한계로 명시한다. 이 문서의 수치는 논문 게재 확률이 아니며, 독립 검증 게이트가 닫힌 비율이다.
 
+# 2026-10-14 critical priority recheck
+
+The latest fast-lane run completed without a software/process failure. LLM evidence boundary (34 tests), Type-III protocol contract (3 tests), full-loop intake boundary (19 tests), and virtual safety/response checks (25 tests) passed. The bounded scientific screen still fails for the measured-boundary vehicle-tank replay (0/8 joint cases), H2SAFE spatial detector response (0/1), and NREL H2FillS HDVS Type-IV tank replay (0/7). The result is retained at `research/priority_focus_run_2026_10_14_latest.json`; no runtime parameter, validation gate, or publication claim was changed.
+
+Current readiness remains 134 PASS / 11 FAIL / 7 PENDING (88.2%) overall and 91.7% for the declared primary scope. The open scientific work still needs independent raw holdouts or custodian-released boundary channels; repeated post-access diagnostics are not counted as new validation.
+
