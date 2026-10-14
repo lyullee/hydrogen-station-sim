@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-14T09:43:09Z",
+  "generated_at": "2026-10-14T09:47:19Z",
   "metric_definition": "PASS gates divided by PASS+FAIL+PENDING gates; not a publication-readiness probability",
   "gate_counts": {
     "PASS": 134,
@@ -85,7 +85,7 @@
       "ethics_and_expert_review": "optional_for_physics_validation; required only for a claim that SAGA improves human safety guidance"
     }
   },
-  "source_commit": "302386f2d7f00f27ff630b89e7ec0ea765195030",
+  "source_commit": "9f568e6c1ce351cf09c1a67f4c7867aa0ffb50b0",
   "latest_completed_work": "Applied Sciences 2024 액체수소 대용량 방출 실험 근거를 추가해 관련 질문의 LLM 근거 라우팅을 보강했고, evidence chain과 해시 동기화를 완료했다. 전체 회귀는 1,618 passed / 0 failed / 0 skipped / 222 warnings였다. 이후 중복 근거 조회를 제거하고 감사 기록 해시를 최신 코드에 맞췄다.",
   "latest_full_regression": {
     "tests_passed": 1618,
@@ -298,6 +298,11 @@
       "id": "readiness_audit_hash_resync_after_evidence_cleanup_2026_10_14",
       "progress_percent": 100.0,
       "status": "최근 LLM 근거 정리 커밋 이후 Type-IV 런타임 보정과 KHK 사고 선례 라우팅 감사의 소스 해시를 재생성했고 readiness 판정 134 PASS / 11 FAIL / 7 PENDING을 그대로 확인했다. 과학적 게이트는 승격하지 않았다."
+    },
+    {
+      "id": "runtime_evidence_chain_refresh_after_audit_resync_2026_10_14",
+      "progress_percent": 100.0,
+      "status": "결정론적 evidence chain 14단계를 재실행해 전 단계 PASS를 확인했다. 런타임·사고 선례·HIAD/KHK replay·readiness·gap matrix가 모두 최신 해시로 동기화됐고 과학적 게이트는 승격하지 않았다."
     }
   ],
   "latest_context_focused_regression": {
