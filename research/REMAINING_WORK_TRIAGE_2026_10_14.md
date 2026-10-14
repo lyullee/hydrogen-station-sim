@@ -26,6 +26,7 @@
 - 2026-10-14 공개자료 재검색에서 JRC/GasTeF 원시 시계열, 유럽 H2-Stations API, DTU Modelica 라이브러리, California in-use 보고서를 확인했다. 새 권리정리 원자료 holdout은 발견되지 않았고, 이미 개방한 H2SAFE·ELVHYS·USN 자료는 재사용하지 않았다. 상세 경계와 다음 수집 조건은 `research/public_data_search_recheck_2026_10_14.json`에 고정했다.
 - 같은 검색 라운드에서 NHyRA H2 releases database 1차 공개 문서와 HyTunnel-CS 공개 저장소 목록도 재확인했다. NHyRA 문서는 case-level 원시 시계열을 제공하지 않고, HyTunnel 목록은 이미 확인한 저장소의 카탈로그이므로 새 독립 holdout으로 계상하지 않았다. 이 반복 검색을 종료 조건에 반영해 같은 자료를 다시 조사하지 않도록 `research/public_data_search_recheck_2026_10_14.json`에 기록했다.
 - Grüne·Sempert의 Zenodo PS 데이터셋(DOI `10.5281/zenodo.4668554`)을 추가 확인했다. CC BY 4.0 공개자료이며 실제 수소 농도 공간표 41개, 환기 조건과 CAD 맥락을 포함하지만 현재 공간분석을 이미 본 뒤 접근했고 시간 동기화된 충전소 자료가 아니므로 H2SAFE 독립 게이트에는 승격하지 않았다. 무결성·구조는 `research/grune_ps_h2_dispersion_intake_2026_10_14.json`에 고정했다.
+- 같은 자료의 실제 수소 농도 공간표 41개, 5,148개 측정점을 모두 재현 읽기해 0.2/0.4/4.0 vol% 기준의 공간 점유율과 좌표 범위를 요약했다. 중앙 4.0 vol% 이상 점유율은 27.8%였으며, 이는 개발·논문 문맥용 공간 스냅샷 진단일 뿐 안전거리·대피반경·검지기 설정값으로 승격하지 않았다. 결과는 `research/grune_ps_actual_h2_spatial_diagnostic_2026_10_14.json`에 고정했다.
 - 추가로 Cal State LA의 1년 실충전 운영 연구(DOI `10.1016/j.jclepro.2021.129737`)와 MetHyTrucks HySam 공개 XLSX(DOI `10.5281/zenodo.20590842`)를 확인했다. 전자는 원시 station/vehicle logger export가 공개 접근 경로에 없고, 후자는 샘플링 시스템 조건자료라 station-to-vehicle 또는 station-side 방출 holdout이 아니다. 둘 다 경계자료로만 기록했다.
 - 최신 IJHE Type III/IV 충전 연구(DOI `10.1016/j.ijhydene.2026.156406`)도 확인했지만, 공개 접근 경로에서 원시 압력·온도·시간 파일과 권리정리된 보충 아카이브를 찾지 못해 경계자료로만 기록했다.
 - ICHS 2011 전면규모 차고 방출 실험은 실제 수소/혼합가스 센서 위치·응답시각 근거를 추가했지만, 원시 시계열과 재사용 조건이 없어 H2SAFE 공간 holdout을 닫지 못한다.

@@ -1,0 +1,2017 @@
+{
+  "schema_version": 1,
+  "artifact_type": "post_access_actual_hydrogen_spatial_diagnostic",
+  "recorded_at": "2026-10-14",
+  "status": "POST_ACCESS_DEVELOPMENT_DIAGNOSTIC",
+  "source": {
+    "title": "Efficiency of mechanical ventilation on H2 dispersion (PS)",
+    "doi": "10.5281/zenodo.4668554",
+    "record_url": "https://zenodo.org/records/4668554",
+    "license": "CC BY 4.0"
+  },
+  "integrity": {
+    "intake_artifact": "research/grune_ps_h2_dispersion_intake_2026_10_14.json",
+    "source_files": [
+      {
+        "name": "HTE2440PS000MIXED_300321.pdf",
+        "md5": "d4b59189dd4017c695cc652f4f572128",
+        "md5_matches_intake": true
+      },
+      {
+        "name": "HTE2440PS001MIXED_300321.xlsx",
+        "md5": "da176772755b1a2449a76df9e12b9cd3",
+        "md5_matches_intake": true
+      },
+      {
+        "name": "HTE2440PS002MIXED_300321.xlsx",
+        "md5": "20f996be57fc3d8cf7d091d1f982bd75",
+        "md5_matches_intake": true
+      },
+      {
+        "name": "HTE2440PS003MIXED_300321.xlsx",
+        "md5": "953b6a033553288831b1ee02b881dbec",
+        "md5_matches_intake": true
+      },
+      {
+        "name": "HTE2440PS004MIXED_300321.xlsx",
+        "md5": "093d3d8e6ef030615704ee9096d3d84f",
+        "md5_matches_intake": true
+      },
+      {
+        "name": "HTE2440PS005FLMT00300321.xlsx",
+        "md5": "c4b9195a2bb89213eda9aa2ac9e9ec07",
+        "md5_matches_intake": true
+      },
+      {
+        "name": "HTE2440PS006MIXED_300321.zip",
+        "md5": "ade3911c0df50ee70486153455f4bd12",
+        "md5_matches_intake": true
+      }
+    ],
+    "all_md5_match": true
+  },
+  "dataset": {
+    "hydrogen_profile_count": 41,
+    "helium_profile_count_excluded": 1,
+    "hydrogen_point_count": 5148,
+    "average_concentration_p50_pct": 2.331046806966618,
+    "average_concentration_p95_pct": 17.447760869565208,
+    "threshold_aggregates": {
+      "0.2": {
+        "threshold_volpct_h2": 0.2,
+        "profile_count_with_any_point_at_or_above_threshold": 41,
+        "median_point_fraction_at_or_above_threshold": 0.8024691358024691,
+        "coordinate_extent_is_descriptive": true
+      },
+      "0.4": {
+        "threshold_volpct_h2": 0.4,
+        "profile_count_with_any_point_at_or_above_threshold": 41,
+        "median_point_fraction_at_or_above_threshold": 0.7606837606837606,
+        "coordinate_extent_is_descriptive": true
+      },
+      "4.0": {
+        "threshold_volpct_h2": 4.0,
+        "profile_count_with_any_point_at_or_above_threshold": 41,
+        "median_point_fraction_at_or_above_threshold": 0.2777777777777778,
+        "coordinate_extent_is_descriptive": true
+      }
+    }
+  },
+  "profiles": [
+    {
+      "source_workbook": "HTE2440PS001MIXED_300321.xlsx",
+      "sheet_name": "1 mm 1g H2 W = 0",
+      "release_diameter_mm": 1.0,
+      "nominal_release_g_s": 1.0,
+      "wind_speed_m_s": 0.0,
+      "wind_mode": "no-wind",
+      "point_count": 117,
+      "concentration_average_max_pct": 32.9678,
+      "concentration_average_mean_pct": 3.2195954943303473,
+      "thresholds": {
+        "0.2": {
+          "threshold_volpct_h2": 0.2,
+          "measured_point_count": 117,
+          "point_count_at_or_above_threshold": 88,
+          "point_fraction_at_or_above_threshold": 0.7521367521367521,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 2000.0,
+          "y_min_mm": -175.0,
+          "y_max_mm": 175.0
+        },
+        "0.4": {
+          "threshold_volpct_h2": 0.4,
+          "measured_point_count": 117,
+          "point_count_at_or_above_threshold": 85,
+          "point_fraction_at_or_above_threshold": 0.7264957264957265,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 2000.0,
+          "y_min_mm": -175.0,
+          "y_max_mm": 175.0
+        },
+        "4.0": {
+          "threshold_volpct_h2": 4.0,
+          "measured_point_count": 117,
+          "point_count_at_or_above_threshold": 30,
+          "point_fraction_at_or_above_threshold": 0.2564102564102564,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 1000.0,
+          "y_min_mm": -25.0,
+          "y_max_mm": 75.0
+        }
+      },
+      "concentration_average_p50_pct": 2.0728301886792457
+    },
+    {
+      "source_workbook": "HTE2440PS001MIXED_300321.xlsx",
+      "sheet_name": "1 mm 1g H2 W = 1.5 co-flow",
+      "release_diameter_mm": 1.0,
+      "nominal_release_g_s": 1.0,
+      "wind_speed_m_s": 1.5,
+      "wind_mode": "co-flow",
+      "point_count": 117,
+      "concentration_average_max_pct": 32.4475,
+      "concentration_average_mean_pct": 2.773753967195823,
+      "thresholds": {
+        "0.2": {
+          "threshold_volpct_h2": 0.2,
+          "measured_point_count": 117,
+          "point_count_at_or_above_threshold": 88,
+          "point_fraction_at_or_above_threshold": 0.7521367521367521,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 2000.0,
+          "y_min_mm": -175.0,
+          "y_max_mm": 175.0
+        },
+        "0.4": {
+          "threshold_volpct_h2": 0.4,
+          "measured_point_count": 117,
+          "point_count_at_or_above_threshold": 86,
+          "point_fraction_at_or_above_threshold": 0.7350427350427351,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 2000.0,
+          "y_min_mm": -175.0,
+          "y_max_mm": 175.0
+        },
+        "4.0": {
+          "threshold_volpct_h2": 4.0,
+          "measured_point_count": 117,
+          "point_count_at_or_above_threshold": 23,
+          "point_fraction_at_or_above_threshold": 0.19658119658119658,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 1000.0,
+          "y_min_mm": -25.0,
+          "y_max_mm": 25.0
+        }
+      },
+      "concentration_average_p50_pct": 1.4255102040816325
+    },
+    {
+      "source_workbook": "HTE2440PS001MIXED_300321.xlsx",
+      "sheet_name": "1 mm 1g H2 W = 1.5 counter-flow",
+      "release_diameter_mm": 1.0,
+      "nominal_release_g_s": 1.0,
+      "wind_speed_m_s": 1.5,
+      "wind_mode": "counter-flow",
+      "point_count": 117,
+      "concentration_average_max_pct": 31.608431372549024,
+      "concentration_average_mean_pct": 3.502045625284655,
+      "thresholds": {
+        "0.2": {
+          "threshold_volpct_h2": 0.2,
+          "measured_point_count": 117,
+          "point_count_at_or_above_threshold": 104,
+          "point_fraction_at_or_above_threshold": 0.8888888888888888,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 2000.0,
+          "y_min_mm": -175.0,
+          "y_max_mm": 175.0
+        },
+        "0.4": {
+          "threshold_volpct_h2": 0.4,
+          "measured_point_count": 117,
+          "point_count_at_or_above_threshold": 98,
+          "point_fraction_at_or_above_threshold": 0.8376068376068376,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 2000.0,
+          "y_min_mm": -175.0,
+          "y_max_mm": 175.0
+        },
+        "4.0": {
+          "threshold_volpct_h2": 4.0,
+          "measured_point_count": 117,
+          "point_count_at_or_above_threshold": 31,
+          "point_fraction_at_or_above_threshold": 0.26495726495726496,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 1000.0,
+          "y_min_mm": -25.0,
+          "y_max_mm": 75.0
+        }
+      },
+      "concentration_average_p50_pct": 2.2613043478260866
+    },
+    {
+      "source_workbook": "HTE2440PS001MIXED_300321.xlsx",
+      "sheet_name": "1 mm 1g H2 W = 3.5 co-flow",
+      "release_diameter_mm": 1.0,
+      "nominal_release_g_s": 1.0,
+      "wind_speed_m_s": 3.5,
+      "wind_mode": "co-flow",
+      "point_count": 117,
+      "concentration_average_max_pct": 32.13700000000001,
+      "concentration_average_mean_pct": 2.22584675411884,
+      "thresholds": {
+        "0.2": {
+          "threshold_volpct_h2": 0.2,
+          "measured_point_count": 117,
+          "point_count_at_or_above_threshold": 84,
+          "point_fraction_at_or_above_threshold": 0.717948717948718,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 2000.0,
+          "y_min_mm": -175.0,
+          "y_max_mm": 175.0
+        },
+        "0.4": {
+          "threshold_volpct_h2": 0.4,
+          "measured_point_count": 117,
+          "point_count_at_or_above_threshold": 74,
+          "point_fraction_at_or_above_threshold": 0.6324786324786325,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 2000.0,
+          "y_min_mm": -175.0,
+          "y_max_mm": 175.0
+        },
+        "4.0": {
+          "threshold_volpct_h2": 4.0,
+          "measured_point_count": 117,
+          "point_count_at_or_above_threshold": 19,
+          "point_fraction_at_or_above_threshold": 0.1623931623931624,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 750.0,
+          "y_min_mm": -25.0,
+          "y_max_mm": 25.0
+        }
+      },
+      "concentration_average_p50_pct": 0.7016666666666668
+    },
+    {
+      "source_workbook": "HTE2440PS001MIXED_300321.xlsx",
+      "sheet_name": "1 mm 1g H2 W = 3.5 counter-flow",
+      "release_diameter_mm": 1.0,
+      "nominal_release_g_s": 1.0,
+      "wind_speed_m_s": 3.5,
+      "wind_mode": "counter-flow",
+      "point_count": 81,
+      "concentration_average_max_pct": 31.6892156862745,
+      "concentration_average_mean_pct": 3.3459284706355876,
+      "thresholds": {
+        "0.2": {
+          "threshold_volpct_h2": 0.2,
+          "measured_point_count": 81,
+          "point_count_at_or_above_threshold": 65,
+          "point_fraction_at_or_above_threshold": 0.8024691358024691,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 1000.0,
+          "y_min_mm": -175.0,
+          "y_max_mm": 175.0
+        },
+        "0.4": {
+          "threshold_volpct_h2": 0.4,
+          "measured_point_count": 81,
+          "point_count_at_or_above_threshold": 60,
+          "point_fraction_at_or_above_threshold": 0.7407407407407407,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 875.0,
+          "y_min_mm": -175.0,
+          "y_max_mm": 175.0
+        },
+        "4.0": {
+          "threshold_volpct_h2": 4.0,
+          "measured_point_count": 81,
+          "point_count_at_or_above_threshold": 19,
+          "point_fraction_at_or_above_threshold": 0.2345679012345679,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 625.0,
+          "y_min_mm": -25.0,
+          "y_max_mm": 75.0
+        }
+      },
+      "concentration_average_p50_pct": 2.0020370370370375
+    },
+    {
+      "source_workbook": "HTE2440PS001MIXED_300321.xlsx",
+      "sheet_name": "1 mm 1g H2 W = 5 co-flow",
+      "release_diameter_mm": 1.0,
+      "nominal_release_g_s": 1.0,
+      "wind_speed_m_s": 5.0,
+      "wind_mode": "co-flow",
+      "point_count": 117,
+      "concentration_average_max_pct": 31.615576923076926,
+      "concentration_average_mean_pct": 2.1110398905184313,
+      "thresholds": {
+        "0.2": {
+          "threshold_volpct_h2": 0.2,
+          "measured_point_count": 117,
+          "point_count_at_or_above_threshold": 85,
+          "point_fraction_at_or_above_threshold": 0.7264957264957265,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 2000.0,
+          "y_min_mm": -175.0,
+          "y_max_mm": 175.0
+        },
+        "0.4": {
+          "threshold_volpct_h2": 0.4,
+          "measured_point_count": 117,
+          "point_count_at_or_above_threshold": 73,
+          "point_fraction_at_or_above_threshold": 0.6239316239316239,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 2000.0,
+          "y_min_mm": -175.0,
+          "y_max_mm": 125.0
+        },
+        "4.0": {
+          "threshold_volpct_h2": 4.0,
+          "measured_point_count": 117,
+          "point_count_at_or_above_threshold": 16,
+          "point_fraction_at_or_above_threshold": 0.13675213675213677,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 625.0,
+          "y_min_mm": -25.0,
+          "y_max_mm": 25.0
+        }
+      },
+      "concentration_average_p50_pct": 0.6601785714285713
+    },
+    {
+      "source_workbook": "HTE2440PS001MIXED_300321.xlsx",
+      "sheet_name": "1 mm 1g H2 W = 5 counter-flow",
+      "release_diameter_mm": 1.0,
+      "nominal_release_g_s": 1.0,
+      "wind_speed_m_s": 5.0,
+      "wind_mode": "counter-flow",
+      "point_count": 90,
+      "concentration_average_max_pct": 31.360816326530614,
+      "concentration_average_mean_pct": 3.545615695650015,
+      "thresholds": {
+        "0.2": {
+          "threshold_volpct_h2": 0.2,
+          "measured_point_count": 90,
+          "point_count_at_or_above_threshold": 78,
+          "point_fraction_at_or_above_threshold": 0.8666666666666667,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 875.0,
+          "y_min_mm": -175.0,
+          "y_max_mm": 175.0
+        },
+        "0.4": {
+          "threshold_volpct_h2": 0.4,
+          "measured_point_count": 90,
+          "point_count_at_or_above_threshold": 76,
+          "point_fraction_at_or_above_threshold": 0.8444444444444444,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 875.0,
+          "y_min_mm": -175.0,
+          "y_max_mm": 175.0
+        },
+        "4.0": {
+          "threshold_volpct_h2": 4.0,
+          "measured_point_count": 90,
+          "point_count_at_or_above_threshold": 25,
+          "point_fraction_at_or_above_threshold": 0.2777777777777778,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 625.0,
+          "y_min_mm": -25.0,
+          "y_max_mm": 75.0
+        }
+      },
+      "concentration_average_p50_pct": 2.0500961538461535
+    },
+    {
+      "source_workbook": "HTE2440PS001MIXED_300321.xlsx",
+      "sheet_name": "1 mm 1g H2 W = 1.5 cross-flow",
+      "release_diameter_mm": 1.0,
+      "nominal_release_g_s": 1.0,
+      "wind_speed_m_s": 1.5,
+      "wind_mode": "cross-flow",
+      "point_count": 162,
+      "concentration_average_max_pct": 32.20774193548387,
+      "concentration_average_mean_pct": 2.7378534667635797,
+      "thresholds": {
+        "0.2": {
+          "threshold_volpct_h2": 0.2,
+          "measured_point_count": 162,
+          "point_count_at_or_above_threshold": 112,
+          "point_fraction_at_or_above_threshold": 0.691358024691358,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 1250.0,
+          "y_min_mm": -175.0,
+          "y_max_mm": 175.0
+        },
+        "0.4": {
+          "threshold_volpct_h2": 0.4,
+          "measured_point_count": 162,
+          "point_count_at_or_above_threshold": 101,
+          "point_fraction_at_or_above_threshold": 0.6234567901234568,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 1250.0,
+          "y_min_mm": -175.0,
+          "y_max_mm": 175.0
+        },
+        "4.0": {
+          "threshold_volpct_h2": 4.0,
+          "measured_point_count": 162,
+          "point_count_at_or_above_threshold": 27,
+          "point_fraction_at_or_above_threshold": 0.16666666666666666,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 625.0,
+          "y_min_mm": -75.0,
+          "y_max_mm": 175.0
+        }
+      },
+      "concentration_average_p50_pct": 1.1517941176470585
+    },
+    {
+      "source_workbook": "HTE2440PS001MIXED_300321.xlsx",
+      "sheet_name": "1 mm 1g H2 W = 3.5 cross-flow",
+      "release_diameter_mm": 1.0,
+      "nominal_release_g_s": 1.0,
+      "wind_speed_m_s": 3.5,
+      "wind_mode": "cross-flow",
+      "point_count": 108,
+      "concentration_average_max_pct": 28.826,
+      "concentration_average_mean_pct": 2.7010581366231006,
+      "thresholds": {
+        "0.2": {
+          "threshold_volpct_h2": 0.2,
+          "measured_point_count": 108,
+          "point_count_at_or_above_threshold": 72,
+          "point_fraction_at_or_above_threshold": 0.6666666666666666,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 750.0,
+          "y_min_mm": -175.0,
+          "y_max_mm": 175.0
+        },
+        "0.4": {
+          "threshold_volpct_h2": 0.4,
+          "measured_point_count": 108,
+          "point_count_at_or_above_threshold": 62,
+          "point_fraction_at_or_above_threshold": 0.5740740740740741,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 750.0,
+          "y_min_mm": -175.0,
+          "y_max_mm": 175.0
+        },
+        "4.0": {
+          "threshold_volpct_h2": 4.0,
+          "measured_point_count": 108,
+          "point_count_at_or_above_threshold": 15,
+          "point_fraction_at_or_above_threshold": 0.1388888888888889,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 375.0,
+          "y_min_mm": -75.0,
+          "y_max_mm": 175.0
+        }
+      },
+      "concentration_average_p50_pct": 0.8214238042269189
+    },
+    {
+      "source_workbook": "HTE2440PS001MIXED_300321.xlsx",
+      "sheet_name": "1 mm 1g H2 W = 5 cross-flow",
+      "release_diameter_mm": 1.0,
+      "nominal_release_g_s": 1.0,
+      "wind_speed_m_s": 5.0,
+      "wind_mode": "cross-flow",
+      "point_count": 108,
+      "concentration_average_max_pct": 29.445999999999998,
+      "concentration_average_mean_pct": 2.4816216076970696,
+      "thresholds": {
+        "0.2": {
+          "threshold_volpct_h2": 0.2,
+          "measured_point_count": 108,
+          "point_count_at_or_above_threshold": 69,
+          "point_fraction_at_or_above_threshold": 0.6388888888888888,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 750.0,
+          "y_min_mm": -175.0,
+          "y_max_mm": 175.0
+        },
+        "0.4": {
+          "threshold_volpct_h2": 0.4,
+          "measured_point_count": 108,
+          "point_count_at_or_above_threshold": 64,
+          "point_fraction_at_or_above_threshold": 0.5925925925925926,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 750.0,
+          "y_min_mm": -175.0,
+          "y_max_mm": 175.0
+        },
+        "4.0": {
+          "threshold_volpct_h2": 4.0,
+          "measured_point_count": 108,
+          "point_count_at_or_above_threshold": 15,
+          "point_fraction_at_or_above_threshold": 0.1388888888888889,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 375.0,
+          "y_min_mm": -125.0,
+          "y_max_mm": 175.0
+        }
+      },
+      "concentration_average_p50_pct": 0.7665877016129031
+    },
+    {
+      "source_workbook": "HTE2440PS002MIXED_300321.xlsx",
+      "sheet_name": "1 mm 5g H2 W = 0",
+      "release_diameter_mm": 1.0,
+      "nominal_release_g_s": 5.0,
+      "wind_speed_m_s": 0.0,
+      "wind_mode": "no-wind",
+      "point_count": 153,
+      "concentration_average_max_pct": 56.13090909090909,
+      "concentration_average_mean_pct": 5.771070900318025,
+      "thresholds": {
+        "0.2": {
+          "threshold_volpct_h2": 0.2,
+          "measured_point_count": 153,
+          "point_count_at_or_above_threshold": 127,
+          "point_fraction_at_or_above_threshold": 0.8300653594771242,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 3500.0,
+          "y_min_mm": -175.0,
+          "y_max_mm": 175.0
+        },
+        "0.4": {
+          "threshold_volpct_h2": 0.4,
+          "measured_point_count": 153,
+          "point_count_at_or_above_threshold": 125,
+          "point_fraction_at_or_above_threshold": 0.8169934640522876,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 3500.0,
+          "y_min_mm": -175.0,
+          "y_max_mm": 175.0
+        },
+        "4.0": {
+          "threshold_volpct_h2": 4.0,
+          "measured_point_count": 153,
+          "point_count_at_or_above_threshold": 72,
+          "point_fraction_at_or_above_threshold": 0.47058823529411764,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 2500.0,
+          "y_min_mm": -75.0,
+          "y_max_mm": 175.0
+        }
+      },
+      "concentration_average_p50_pct": 3.914799999999999
+    },
+    {
+      "source_workbook": "HTE2440PS002MIXED_300321.xlsx",
+      "sheet_name": "1 mm 5g H2 W = 1.5 co-flow",
+      "release_diameter_mm": 1.0,
+      "nominal_release_g_s": 5.0,
+      "wind_speed_m_s": 1.5,
+      "wind_mode": "co-flow",
+      "point_count": 153,
+      "concentration_average_max_pct": 55.43047619047618,
+      "concentration_average_mean_pct": 5.304787364880076,
+      "thresholds": {
+        "0.2": {
+          "threshold_volpct_h2": 0.2,
+          "measured_point_count": 153,
+          "point_count_at_or_above_threshold": 125,
+          "point_fraction_at_or_above_threshold": 0.8169934640522876,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 3500.0,
+          "y_min_mm": -175.0,
+          "y_max_mm": 175.0
+        },
+        "0.4": {
+          "threshold_volpct_h2": 0.4,
+          "measured_point_count": 153,
+          "point_count_at_or_above_threshold": 122,
+          "point_fraction_at_or_above_threshold": 0.7973856209150327,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 3500.0,
+          "y_min_mm": -175.0,
+          "y_max_mm": 175.0
+        },
+        "4.0": {
+          "threshold_volpct_h2": 4.0,
+          "measured_point_count": 153,
+          "point_count_at_or_above_threshold": 56,
+          "point_fraction_at_or_above_threshold": 0.3660130718954248,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 2000.0,
+          "y_min_mm": -125.0,
+          "y_max_mm": 125.0
+        }
+      },
+      "concentration_average_p50_pct": 3.2504761904761907
+    },
+    {
+      "source_workbook": "HTE2440PS002MIXED_300321.xlsx",
+      "sheet_name": "1 mm 5g H2 W = 1.5 counter-flow",
+      "release_diameter_mm": 1.0,
+      "nominal_release_g_s": 5.0,
+      "wind_speed_m_s": 1.5,
+      "wind_mode": "counter-flow",
+      "point_count": 153,
+      "concentration_average_max_pct": 56.67809523809525,
+      "concentration_average_mean_pct": 6.3874568759177395,
+      "thresholds": {
+        "0.2": {
+          "threshold_volpct_h2": 0.2,
+          "measured_point_count": 153,
+          "point_count_at_or_above_threshold": 153,
+          "point_fraction_at_or_above_threshold": 1.0,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 3500.0,
+          "y_min_mm": -175.0,
+          "y_max_mm": 175.0
+        },
+        "0.4": {
+          "threshold_volpct_h2": 0.4,
+          "measured_point_count": 153,
+          "point_count_at_or_above_threshold": 150,
+          "point_fraction_at_or_above_threshold": 0.9803921568627451,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 3500.0,
+          "y_min_mm": -175.0,
+          "y_max_mm": 175.0
+        },
+        "4.0": {
+          "threshold_volpct_h2": 4.0,
+          "measured_point_count": 153,
+          "point_count_at_or_above_threshold": 87,
+          "point_fraction_at_or_above_threshold": 0.5686274509803921,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 2500.0,
+          "y_min_mm": -125.0,
+          "y_max_mm": 175.0
+        }
+      },
+      "concentration_average_p50_pct": 4.355714285714287
+    },
+    {
+      "source_workbook": "HTE2440PS002MIXED_300321.xlsx",
+      "sheet_name": "1 mm 5g H2 W = 3.5 co-flow",
+      "release_diameter_mm": 1.0,
+      "nominal_release_g_s": 5.0,
+      "wind_speed_m_s": 3.5,
+      "wind_mode": "co-flow",
+      "point_count": 153,
+      "concentration_average_max_pct": 55.700476190476195,
+      "concentration_average_mean_pct": 4.2362097320790415,
+      "thresholds": {
+        "0.2": {
+          "threshold_volpct_h2": 0.2,
+          "measured_point_count": 153,
+          "point_count_at_or_above_threshold": 124,
+          "point_fraction_at_or_above_threshold": 0.8104575163398693,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 3500.0,
+          "y_min_mm": -175.0,
+          "y_max_mm": 175.0
+        },
+        "0.4": {
+          "threshold_volpct_h2": 0.4,
+          "measured_point_count": 153,
+          "point_count_at_or_above_threshold": 121,
+          "point_fraction_at_or_above_threshold": 0.7908496732026143,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 3500.0,
+          "y_min_mm": -175.0,
+          "y_max_mm": 175.0
+        },
+        "4.0": {
+          "threshold_volpct_h2": 4.0,
+          "measured_point_count": 153,
+          "point_count_at_or_above_threshold": 42,
+          "point_fraction_at_or_above_threshold": 0.27450980392156865,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 1500.0,
+          "y_min_mm": -75.0,
+          "y_max_mm": 75.0
+        }
+      },
+      "concentration_average_p50_pct": 2.008947368421053
+    },
+    {
+      "source_workbook": "HTE2440PS002MIXED_300321.xlsx",
+      "sheet_name": "1 mm 5g H2 W = 3.5 counter-flow",
+      "release_diameter_mm": 1.0,
+      "nominal_release_g_s": 5.0,
+      "wind_speed_m_s": 3.5,
+      "wind_mode": "counter-flow",
+      "point_count": 153,
+      "concentration_average_max_pct": 56.373809523809506,
+      "concentration_average_mean_pct": 6.41267096930337,
+      "thresholds": {
+        "0.2": {
+          "threshold_volpct_h2": 0.2,
+          "measured_point_count": 153,
+          "point_count_at_or_above_threshold": 153,
+          "point_fraction_at_or_above_threshold": 1.0,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 3500.0,
+          "y_min_mm": -175.0,
+          "y_max_mm": 175.0
+        },
+        "0.4": {
+          "threshold_volpct_h2": 0.4,
+          "measured_point_count": 153,
+          "point_count_at_or_above_threshold": 153,
+          "point_fraction_at_or_above_threshold": 1.0,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 3500.0,
+          "y_min_mm": -175.0,
+          "y_max_mm": 175.0
+        },
+        "4.0": {
+          "threshold_volpct_h2": 4.0,
+          "measured_point_count": 153,
+          "point_count_at_or_above_threshold": 86,
+          "point_fraction_at_or_above_threshold": 0.5620915032679739,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 2250.0,
+          "y_min_mm": -175.0,
+          "y_max_mm": 175.0
+        }
+      },
+      "concentration_average_p50_pct": 4.404800000000001
+    },
+    {
+      "source_workbook": "HTE2440PS002MIXED_300321.xlsx",
+      "sheet_name": "1 mm 5g H2 W = 5 co-flow",
+      "release_diameter_mm": 1.0,
+      "nominal_release_g_s": 5.0,
+      "wind_speed_m_s": 5.0,
+      "wind_mode": "co-flow",
+      "point_count": 153,
+      "concentration_average_max_pct": 55.337142857142865,
+      "concentration_average_mean_pct": 4.187095986579578,
+      "thresholds": {
+        "0.2": {
+          "threshold_volpct_h2": 0.2,
+          "measured_point_count": 153,
+          "point_count_at_or_above_threshold": 124,
+          "point_fraction_at_or_above_threshold": 0.8104575163398693,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 3500.0,
+          "y_min_mm": -175.0,
+          "y_max_mm": 175.0
+        },
+        "0.4": {
+          "threshold_volpct_h2": 0.4,
+          "measured_point_count": 153,
+          "point_count_at_or_above_threshold": 122,
+          "point_fraction_at_or_above_threshold": 0.7973856209150327,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 3500.0,
+          "y_min_mm": -175.0,
+          "y_max_mm": 175.0
+        },
+        "4.0": {
+          "threshold_volpct_h2": 4.0,
+          "measured_point_count": 153,
+          "point_count_at_or_above_threshold": 34,
+          "point_fraction_at_or_above_threshold": 0.2222222222222222,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 1000.0,
+          "y_min_mm": -75.0,
+          "y_max_mm": 75.0
+        }
+      },
+      "concentration_average_p50_pct": 2.105
+    },
+    {
+      "source_workbook": "HTE2440PS002MIXED_300321.xlsx",
+      "sheet_name": "1 mm 5g H2 = 5 counter-flow",
+      "release_diameter_mm": 1.0,
+      "nominal_release_g_s": 5.0,
+      "wind_speed_m_s": 0.0,
+      "wind_mode": "counter-flow",
+      "point_count": 135,
+      "concentration_average_max_pct": 56.462222222222216,
+      "concentration_average_mean_pct": 6.576473577662273,
+      "thresholds": {
+        "0.2": {
+          "threshold_volpct_h2": 0.2,
+          "measured_point_count": 135,
+          "point_count_at_or_above_threshold": 135,
+          "point_fraction_at_or_above_threshold": 1.0,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 2500.0,
+          "y_min_mm": -175.0,
+          "y_max_mm": 175.0
+        },
+        "0.4": {
+          "threshold_volpct_h2": 0.4,
+          "measured_point_count": 135,
+          "point_count_at_or_above_threshold": 135,
+          "point_fraction_at_or_above_threshold": 1.0,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 2500.0,
+          "y_min_mm": -175.0,
+          "y_max_mm": 175.0
+        },
+        "4.0": {
+          "threshold_volpct_h2": 4.0,
+          "measured_point_count": 135,
+          "point_count_at_or_above_threshold": 71,
+          "point_fraction_at_or_above_threshold": 0.5259259259259259,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 1750.0,
+          "y_min_mm": -125.0,
+          "y_max_mm": 175.0
+        }
+      },
+      "concentration_average_p50_pct": 4.308076923076923
+    },
+    {
+      "source_workbook": "HTE2440PS002MIXED_300321.xlsx",
+      "sheet_name": "1 mm 1.5g H2 W = 0",
+      "release_diameter_mm": 1.0,
+      "nominal_release_g_s": 1.5,
+      "wind_speed_m_s": 0.0,
+      "wind_mode": "no-wind",
+      "point_count": 117,
+      "concentration_average_max_pct": 39.27428571428572,
+      "concentration_average_mean_pct": 4.281076699129331,
+      "thresholds": {
+        "0.2": {
+          "threshold_volpct_h2": 0.2,
+          "measured_point_count": 117,
+          "point_count_at_or_above_threshold": 100,
+          "point_fraction_at_or_above_threshold": 0.8547008547008547,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 2000.0,
+          "y_min_mm": -175.0,
+          "y_max_mm": 175.0
+        },
+        "0.4": {
+          "threshold_volpct_h2": 0.4,
+          "measured_point_count": 117,
+          "point_count_at_or_above_threshold": 89,
+          "point_fraction_at_or_above_threshold": 0.7606837606837606,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 2000.0,
+          "y_min_mm": -175.0,
+          "y_max_mm": 175.0
+        },
+        "4.0": {
+          "threshold_volpct_h2": 4.0,
+          "measured_point_count": 117,
+          "point_count_at_or_above_threshold": 40,
+          "point_fraction_at_or_above_threshold": 0.3418803418803419,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 1500.0,
+          "y_min_mm": -75.0,
+          "y_max_mm": 75.0
+        }
+      },
+      "concentration_average_p50_pct": 3.0585
+    },
+    {
+      "source_workbook": "HTE2440PS002MIXED_300321.xlsx",
+      "sheet_name": "1 mm 1.5g H2 W = 1.5 cross-flo",
+      "release_diameter_mm": 1.0,
+      "nominal_release_g_s": 1.5,
+      "wind_speed_m_s": 1.5,
+      "wind_mode": "cross-flow",
+      "point_count": 126,
+      "concentration_average_max_pct": 38.2957894736842,
+      "concentration_average_mean_pct": 3.228955201353606,
+      "thresholds": {
+        "0.2": {
+          "threshold_volpct_h2": 0.2,
+          "measured_point_count": 126,
+          "point_count_at_or_above_threshold": 93,
+          "point_fraction_at_or_above_threshold": 0.7380952380952381,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 1250.0,
+          "y_min_mm": -175.0,
+          "y_max_mm": 175.0
+        },
+        "0.4": {
+          "threshold_volpct_h2": 0.4,
+          "measured_point_count": 126,
+          "point_count_at_or_above_threshold": 87,
+          "point_fraction_at_or_above_threshold": 0.6904761904761905,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 1250.0,
+          "y_min_mm": -175.0,
+          "y_max_mm": 175.0
+        },
+        "4.0": {
+          "threshold_volpct_h2": 4.0,
+          "measured_point_count": 126,
+          "point_count_at_or_above_threshold": 27,
+          "point_fraction_at_or_above_threshold": 0.21428571428571427,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 875.0,
+          "y_min_mm": -125.0,
+          "y_max_mm": 175.0
+        }
+      },
+      "concentration_average_p50_pct": 1.695057692307692
+    },
+    {
+      "source_workbook": "HTE2440PS002MIXED_300321.xlsx",
+      "sheet_name": "1 mm 1.5g H2 W = 5 cross-flow",
+      "release_diameter_mm": 1.0,
+      "nominal_release_g_s": 1.5,
+      "wind_speed_m_s": 5.0,
+      "wind_mode": "cross-flow",
+      "point_count": 99,
+      "concentration_average_max_pct": 36.65761904761904,
+      "concentration_average_mean_pct": 2.8022860602726207,
+      "thresholds": {
+        "0.2": {
+          "threshold_volpct_h2": 0.2,
+          "measured_point_count": 99,
+          "point_count_at_or_above_threshold": 70,
+          "point_fraction_at_or_above_threshold": 0.7070707070707071,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 875.0,
+          "y_min_mm": -175.0,
+          "y_max_mm": 175.0
+        },
+        "0.4": {
+          "threshold_volpct_h2": 0.4,
+          "measured_point_count": 99,
+          "point_count_at_or_above_threshold": 66,
+          "point_fraction_at_or_above_threshold": 0.6666666666666666,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 875.0,
+          "y_min_mm": -175.0,
+          "y_max_mm": 175.0
+        },
+        "4.0": {
+          "threshold_volpct_h2": 4.0,
+          "measured_point_count": 99,
+          "point_count_at_or_above_threshold": 16,
+          "point_fraction_at_or_above_threshold": 0.16161616161616163,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 500.0,
+          "y_min_mm": -75.0,
+          "y_max_mm": 175.0
+        }
+      },
+      "concentration_average_p50_pct": 0.8842857142857143
+    },
+    {
+      "source_workbook": "HTE2440PS003MIXED_300321.xlsx",
+      "sheet_name": "4 mm 1g H2 W=0",
+      "release_diameter_mm": 4.0,
+      "nominal_release_g_s": 1.0,
+      "wind_speed_m_s": 0.0,
+      "wind_mode": "no-wind",
+      "point_count": 117,
+      "concentration_average_max_pct": 44.683461538461565,
+      "concentration_average_mean_pct": 4.817137726111185,
+      "thresholds": {
+        "0.2": {
+          "threshold_volpct_h2": 0.2,
+          "measured_point_count": 117,
+          "point_count_at_or_above_threshold": 93,
+          "point_fraction_at_or_above_threshold": 0.7948717948717948,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 2000.0,
+          "y_min_mm": -175.0,
+          "y_max_mm": 175.0
+        },
+        "0.4": {
+          "threshold_volpct_h2": 0.4,
+          "measured_point_count": 117,
+          "point_count_at_or_above_threshold": 89,
+          "point_fraction_at_or_above_threshold": 0.7606837606837606,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 2000.0,
+          "y_min_mm": -175.0,
+          "y_max_mm": 175.0
+        },
+        "4.0": {
+          "threshold_volpct_h2": 4.0,
+          "measured_point_count": 117,
+          "point_count_at_or_above_threshold": 45,
+          "point_fraction_at_or_above_threshold": 0.38461538461538464,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 1500.0,
+          "y_min_mm": -75.0,
+          "y_max_mm": 75.0
+        }
+      },
+      "concentration_average_p50_pct": 3.0063414634146333
+    },
+    {
+      "source_workbook": "HTE2440PS003MIXED_300321.xlsx",
+      "sheet_name": "4 mm 1g H2 W = 1.5 co-flow",
+      "release_diameter_mm": 4.0,
+      "nominal_release_g_s": 1.0,
+      "wind_speed_m_s": 1.5,
+      "wind_mode": "co-flow",
+      "point_count": 99,
+      "concentration_average_max_pct": 24.204000000000004,
+      "concentration_average_mean_pct": 3.150333203302647,
+      "thresholds": {
+        "0.2": {
+          "threshold_volpct_h2": 0.2,
+          "measured_point_count": 99,
+          "point_count_at_or_above_threshold": 84,
+          "point_fraction_at_or_above_threshold": 0.8484848484848485,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 250.0,
+          "x_max_mm": 2000.0,
+          "y_min_mm": -175.0,
+          "y_max_mm": 175.0
+        },
+        "0.4": {
+          "threshold_volpct_h2": 0.4,
+          "measured_point_count": 99,
+          "point_count_at_or_above_threshold": 80,
+          "point_fraction_at_or_above_threshold": 0.8080808080808081,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 250.0,
+          "x_max_mm": 2000.0,
+          "y_min_mm": -175.0,
+          "y_max_mm": 175.0
+        },
+        "4.0": {
+          "threshold_volpct_h2": 4.0,
+          "measured_point_count": 99,
+          "point_count_at_or_above_threshold": 24,
+          "point_fraction_at_or_above_threshold": 0.24242424242424243,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 250.0,
+          "x_max_mm": 1000.0,
+          "y_min_mm": -75.0,
+          "y_max_mm": 75.0
+        }
+      },
+      "concentration_average_p50_pct": 1.7023404255319143
+    },
+    {
+      "source_workbook": "HTE2440PS003MIXED_300321.xlsx",
+      "sheet_name": "4 mm 1g H2 W = 1.5 counter-flow",
+      "release_diameter_mm": 4.0,
+      "nominal_release_g_s": 1.0,
+      "wind_speed_m_s": 1.5,
+      "wind_mode": "counter-flow",
+      "point_count": 117,
+      "concentration_average_max_pct": 44.13541666666668,
+      "concentration_average_mean_pct": 4.483417094861707,
+      "thresholds": {
+        "0.2": {
+          "threshold_volpct_h2": 0.2,
+          "measured_point_count": 117,
+          "point_count_at_or_above_threshold": 108,
+          "point_fraction_at_or_above_threshold": 0.9230769230769231,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 1750.0,
+          "y_min_mm": -175.0,
+          "y_max_mm": 175.0
+        },
+        "0.4": {
+          "threshold_volpct_h2": 0.4,
+          "measured_point_count": 117,
+          "point_count_at_or_above_threshold": 108,
+          "point_fraction_at_or_above_threshold": 0.9230769230769231,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 1750.0,
+          "y_min_mm": -175.0,
+          "y_max_mm": 175.0
+        },
+        "4.0": {
+          "threshold_volpct_h2": 4.0,
+          "measured_point_count": 117,
+          "point_count_at_or_above_threshold": 40,
+          "point_fraction_at_or_above_threshold": 0.3418803418803419,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 1000.0,
+          "y_min_mm": -125.0,
+          "y_max_mm": 125.0
+        }
+      },
+      "concentration_average_p50_pct": 2.0380327868852457
+    },
+    {
+      "source_workbook": "HTE2440PS003MIXED_300321.xlsx",
+      "sheet_name": "4 mm 1g H2 W = 3.5 co-flow",
+      "release_diameter_mm": 4.0,
+      "nominal_release_g_s": 1.0,
+      "wind_speed_m_s": 3.5,
+      "wind_mode": "co-flow",
+      "point_count": 99,
+      "concentration_average_max_pct": 20.975555555555555,
+      "concentration_average_mean_pct": 1.9342668160387784,
+      "thresholds": {
+        "0.2": {
+          "threshold_volpct_h2": 0.2,
+          "measured_point_count": 99,
+          "point_count_at_or_above_threshold": 84,
+          "point_fraction_at_or_above_threshold": 0.8484848484848485,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 250.0,
+          "x_max_mm": 2000.0,
+          "y_min_mm": -175.0,
+          "y_max_mm": 175.0
+        },
+        "0.4": {
+          "threshold_volpct_h2": 0.4,
+          "measured_point_count": 99,
+          "point_count_at_or_above_threshold": 78,
+          "point_fraction_at_or_above_threshold": 0.7878787878787878,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 250.0,
+          "x_max_mm": 2000.0,
+          "y_min_mm": -175.0,
+          "y_max_mm": 175.0
+        },
+        "4.0": {
+          "threshold_volpct_h2": 4.0,
+          "measured_point_count": 99,
+          "point_count_at_or_above_threshold": 12,
+          "point_fraction_at_or_above_threshold": 0.12121212121212122,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 250.0,
+          "x_max_mm": 625.0,
+          "y_min_mm": -25.0,
+          "y_max_mm": 25.0
+        }
+      },
+      "concentration_average_p50_pct": 0.7674
+    },
+    {
+      "source_workbook": "HTE2440PS003MIXED_300321.xlsx",
+      "sheet_name": "4 mm 1g H2 W = 3.5 counter-flow",
+      "release_diameter_mm": 4.0,
+      "nominal_release_g_s": 1.0,
+      "wind_speed_m_s": 3.5,
+      "wind_mode": "counter-flow",
+      "point_count": 63,
+      "concentration_average_max_pct": 40.700408163265315,
+      "concentration_average_mean_pct": 4.7325431886329845,
+      "thresholds": {
+        "0.2": {
+          "threshold_volpct_h2": 0.2,
+          "measured_point_count": 63,
+          "point_count_at_or_above_threshold": 54,
+          "point_fraction_at_or_above_threshold": 0.8571428571428571,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 625.0,
+          "y_min_mm": -175.0,
+          "y_max_mm": 175.0
+        },
+        "0.4": {
+          "threshold_volpct_h2": 0.4,
+          "measured_point_count": 63,
+          "point_count_at_or_above_threshold": 54,
+          "point_fraction_at_or_above_threshold": 0.8571428571428571,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 625.0,
+          "y_min_mm": -175.0,
+          "y_max_mm": 175.0
+        },
+        "4.0": {
+          "threshold_volpct_h2": 4.0,
+          "measured_point_count": 63,
+          "point_count_at_or_above_threshold": 19,
+          "point_fraction_at_or_above_threshold": 0.30158730158730157,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 500.0,
+          "y_min_mm": -75.0,
+          "y_max_mm": 75.0
+        }
+      },
+      "concentration_average_p50_pct": 1.9968000000000001
+    },
+    {
+      "source_workbook": "HTE2440PS003MIXED_300321.xlsx",
+      "sheet_name": "4 mm 1g H2 W = 5 co-flow",
+      "release_diameter_mm": 4.0,
+      "nominal_release_g_s": 1.0,
+      "wind_speed_m_s": 5.0,
+      "wind_mode": "co-flow",
+      "point_count": 99,
+      "concentration_average_max_pct": 20.856734693877545,
+      "concentration_average_mean_pct": 1.578444638037089,
+      "thresholds": {
+        "0.2": {
+          "threshold_volpct_h2": 0.2,
+          "measured_point_count": 99,
+          "point_count_at_or_above_threshold": 70,
+          "point_fraction_at_or_above_threshold": 0.7070707070707071,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 250.0,
+          "x_max_mm": 2000.0,
+          "y_min_mm": -175.0,
+          "y_max_mm": 175.0
+        },
+        "0.4": {
+          "threshold_volpct_h2": 0.4,
+          "measured_point_count": 99,
+          "point_count_at_or_above_threshold": 54,
+          "point_fraction_at_or_above_threshold": 0.5454545454545454,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 250.0,
+          "x_max_mm": 2000.0,
+          "y_min_mm": -175.0,
+          "y_max_mm": 125.0
+        },
+        "4.0": {
+          "threshold_volpct_h2": 4.0,
+          "measured_point_count": 99,
+          "point_count_at_or_above_threshold": 9,
+          "point_fraction_at_or_above_threshold": 0.09090909090909091,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 250.0,
+          "x_max_mm": 500.0,
+          "y_min_mm": -25.0,
+          "y_max_mm": 25.0
+        }
+      },
+      "concentration_average_p50_pct": 0.48204081632653084
+    },
+    {
+      "source_workbook": "HTE2440PS003MIXED_300321.xlsx",
+      "sheet_name": "4 mm 1g H2 W = 5 counter-flow",
+      "release_diameter_mm": 4.0,
+      "nominal_release_g_s": 1.0,
+      "wind_speed_m_s": 5.0,
+      "wind_mode": "counter-flow",
+      "point_count": 72,
+      "concentration_average_max_pct": 39.46461538461539,
+      "concentration_average_mean_pct": 4.7465633599434796,
+      "thresholds": {
+        "0.2": {
+          "threshold_volpct_h2": 0.2,
+          "measured_point_count": 72,
+          "point_count_at_or_above_threshold": 66,
+          "point_fraction_at_or_above_threshold": 0.9166666666666666,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 625.0,
+          "y_min_mm": -175.0,
+          "y_max_mm": 175.0
+        },
+        "0.4": {
+          "threshold_volpct_h2": 0.4,
+          "measured_point_count": 72,
+          "point_count_at_or_above_threshold": 65,
+          "point_fraction_at_or_above_threshold": 0.9027777777777778,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 625.0,
+          "y_min_mm": -175.0,
+          "y_max_mm": 175.0
+        },
+        "4.0": {
+          "threshold_volpct_h2": 4.0,
+          "measured_point_count": 72,
+          "point_count_at_or_above_threshold": 23,
+          "point_fraction_at_or_above_threshold": 0.3194444444444444,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 450.0,
+          "y_min_mm": -75.0,
+          "y_max_mm": 75.0
+        }
+      },
+      "concentration_average_p50_pct": 2.1886447750362845
+    },
+    {
+      "source_workbook": "HTE2440PS003MIXED_300321.xlsx",
+      "sheet_name": "4 mm 1g H2 W = 1.5 cross-flow",
+      "release_diameter_mm": 4.0,
+      "nominal_release_g_s": 1.0,
+      "wind_speed_m_s": 1.5,
+      "wind_mode": "cross-flow",
+      "point_count": 144,
+      "concentration_average_max_pct": 41.67509803921569,
+      "concentration_average_mean_pct": 3.647681950766917,
+      "thresholds": {
+        "0.2": {
+          "threshold_volpct_h2": 0.2,
+          "measured_point_count": 144,
+          "point_count_at_or_above_threshold": 93,
+          "point_fraction_at_or_above_threshold": 0.6458333333333334,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 875.0,
+          "y_min_mm": -175.0,
+          "y_max_mm": 175.0
+        },
+        "0.4": {
+          "threshold_volpct_h2": 0.4,
+          "measured_point_count": 144,
+          "point_count_at_or_above_threshold": 88,
+          "point_fraction_at_or_above_threshold": 0.6111111111111112,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 875.0,
+          "y_min_mm": -175.0,
+          "y_max_mm": 175.0
+        },
+        "4.0": {
+          "threshold_volpct_h2": 4.0,
+          "measured_point_count": 144,
+          "point_count_at_or_above_threshold": 33,
+          "point_fraction_at_or_above_threshold": 0.22916666666666666,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 625.0,
+          "y_min_mm": -125.0,
+          "y_max_mm": 175.0
+        }
+      },
+      "concentration_average_p50_pct": 1.1925999999999997
+    },
+    {
+      "source_workbook": "HTE2440PS003MIXED_300321.xlsx",
+      "sheet_name": "4 mm 1g H2 W = 3.5 cross-flow",
+      "release_diameter_mm": 4.0,
+      "nominal_release_g_s": 1.0,
+      "wind_speed_m_s": 3.5,
+      "wind_mode": "cross-flow",
+      "point_count": 108,
+      "concentration_average_max_pct": 40.19608695652173,
+      "concentration_average_mean_pct": 3.0282232667967968,
+      "thresholds": {
+        "0.2": {
+          "threshold_volpct_h2": 0.2,
+          "measured_point_count": 108,
+          "point_count_at_or_above_threshold": 71,
+          "point_fraction_at_or_above_threshold": 0.6574074074074074,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 625.0,
+          "y_min_mm": -175.0,
+          "y_max_mm": 175.0
+        },
+        "0.4": {
+          "threshold_volpct_h2": 0.4,
+          "measured_point_count": 108,
+          "point_count_at_or_above_threshold": 58,
+          "point_fraction_at_or_above_threshold": 0.5370370370370371,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 625.0,
+          "y_min_mm": -175.0,
+          "y_max_mm": 175.0
+        },
+        "4.0": {
+          "threshold_volpct_h2": 4.0,
+          "measured_point_count": 108,
+          "point_count_at_or_above_threshold": 21,
+          "point_fraction_at_or_above_threshold": 0.19444444444444445,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 375.0,
+          "y_min_mm": -175.0,
+          "y_max_mm": 175.0
+        }
+      },
+      "concentration_average_p50_pct": 0.5721392156862746
+    },
+    {
+      "source_workbook": "HTE2440PS003MIXED_300321.xlsx",
+      "sheet_name": "4 mm 1 g H2 W = 5 cross-flow",
+      "release_diameter_mm": 4.0,
+      "nominal_release_g_s": 1.0,
+      "wind_speed_m_s": 5.0,
+      "wind_mode": "cross-flow",
+      "point_count": 108,
+      "concentration_average_max_pct": 36.12479166666667,
+      "concentration_average_mean_pct": 2.7939946117520296,
+      "thresholds": {
+        "0.2": {
+          "threshold_volpct_h2": 0.2,
+          "measured_point_count": 108,
+          "point_count_at_or_above_threshold": 75,
+          "point_fraction_at_or_above_threshold": 0.6944444444444444,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 625.0,
+          "y_min_mm": -175.0,
+          "y_max_mm": 175.0
+        },
+        "0.4": {
+          "threshold_volpct_h2": 0.4,
+          "measured_point_count": 108,
+          "point_count_at_or_above_threshold": 65,
+          "point_fraction_at_or_above_threshold": 0.6018518518518519,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 625.0,
+          "y_min_mm": -175.0,
+          "y_max_mm": 175.0
+        },
+        "4.0": {
+          "threshold_volpct_h2": 4.0,
+          "measured_point_count": 108,
+          "point_count_at_or_above_threshold": 17,
+          "point_fraction_at_or_above_threshold": 0.1574074074074074,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 375.0,
+          "y_min_mm": -175.0,
+          "y_max_mm": 175.0
+        }
+      },
+      "concentration_average_p50_pct": 0.6649790969899667
+    },
+    {
+      "source_workbook": "HTE2440PS004MIXED_300321.xlsx",
+      "sheet_name": "4 mm 5g H2 W = 0",
+      "release_diameter_mm": 4.0,
+      "nominal_release_g_s": 5.0,
+      "wind_speed_m_s": 0.0,
+      "wind_mode": "no-wind",
+      "point_count": 198,
+      "concentration_average_max_pct": 61.906363636363636,
+      "concentration_average_mean_pct": 6.826569871974023,
+      "thresholds": {
+        "0.2": {
+          "threshold_volpct_h2": 0.2,
+          "measured_point_count": 198,
+          "point_count_at_or_above_threshold": 153,
+          "point_fraction_at_or_above_threshold": 0.7727272727272727,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 3500.0,
+          "y_min_mm": -175.0,
+          "y_max_mm": 175.0
+        },
+        "0.4": {
+          "threshold_volpct_h2": 0.4,
+          "measured_point_count": 198,
+          "point_count_at_or_above_threshold": 146,
+          "point_fraction_at_or_above_threshold": 0.7373737373737373,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 3500.0,
+          "y_min_mm": -175.0,
+          "y_max_mm": 175.0
+        },
+        "4.0": {
+          "threshold_volpct_h2": 4.0,
+          "measured_point_count": 198,
+          "point_count_at_or_above_threshold": 97,
+          "point_fraction_at_or_above_threshold": 0.4898989898989899,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 2500.0,
+          "y_min_mm": -125.0,
+          "y_max_mm": 175.0
+        }
+      },
+      "concentration_average_p50_pct": 3.8575494071146244
+    },
+    {
+      "source_workbook": "HTE2440PS004MIXED_300321.xlsx",
+      "sheet_name": "4 mm 5g H2 W = 1.5 m s co-flow",
+      "release_diameter_mm": 4.0,
+      "nominal_release_g_s": 5.0,
+      "wind_speed_m_s": 1.5,
+      "wind_mode": "co-flow",
+      "point_count": 153,
+      "concentration_average_max_pct": 60.202857142857155,
+      "concentration_average_mean_pct": 5.956926116603866,
+      "thresholds": {
+        "0.2": {
+          "threshold_volpct_h2": 0.2,
+          "measured_point_count": 153,
+          "point_count_at_or_above_threshold": 124,
+          "point_fraction_at_or_above_threshold": 0.8104575163398693,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 3500.0,
+          "y_min_mm": -175.0,
+          "y_max_mm": 175.0
+        },
+        "0.4": {
+          "threshold_volpct_h2": 0.4,
+          "measured_point_count": 153,
+          "point_count_at_or_above_threshold": 123,
+          "point_fraction_at_or_above_threshold": 0.803921568627451,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 3500.0,
+          "y_min_mm": -175.0,
+          "y_max_mm": 175.0
+        },
+        "4.0": {
+          "threshold_volpct_h2": 4.0,
+          "measured_point_count": 153,
+          "point_count_at_or_above_threshold": 69,
+          "point_fraction_at_or_above_threshold": 0.45098039215686275,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 2500.0,
+          "y_min_mm": -125.0,
+          "y_max_mm": 125.0
+        }
+      },
+      "concentration_average_p50_pct": 3.5673913043478267
+    },
+    {
+      "source_workbook": "HTE2440PS004MIXED_300321.xlsx",
+      "sheet_name": "4 mm 5g H2 W = 1.5 m s counter ",
+      "release_diameter_mm": 4.0,
+      "nominal_release_g_s": 5.0,
+      "wind_speed_m_s": 1.5,
+      "wind_mode": "counter-flow",
+      "point_count": 153,
+      "concentration_average_max_pct": 60.730000000000004,
+      "concentration_average_mean_pct": 7.044518703336916,
+      "thresholds": {
+        "0.2": {
+          "threshold_volpct_h2": 0.2,
+          "measured_point_count": 153,
+          "point_count_at_or_above_threshold": 153,
+          "point_fraction_at_or_above_threshold": 1.0,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 3500.0,
+          "y_min_mm": -175.0,
+          "y_max_mm": 175.0
+        },
+        "0.4": {
+          "threshold_volpct_h2": 0.4,
+          "measured_point_count": 153,
+          "point_count_at_or_above_threshold": 150,
+          "point_fraction_at_or_above_threshold": 0.9803921568627451,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 3500.0,
+          "y_min_mm": -175.0,
+          "y_max_mm": 175.0
+        },
+        "4.0": {
+          "threshold_volpct_h2": 4.0,
+          "measured_point_count": 153,
+          "point_count_at_or_above_threshold": 95,
+          "point_fraction_at_or_above_threshold": 0.6209150326797386,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 2500.0,
+          "y_min_mm": -175.0,
+          "y_max_mm": 175.0
+        }
+      },
+      "concentration_average_p50_pct": 4.938095238095238
+    },
+    {
+      "source_workbook": "HTE2440PS004MIXED_300321.xlsx",
+      "sheet_name": "4 mm 5g H2 W = 3.5 m s co-flow",
+      "release_diameter_mm": 4.0,
+      "nominal_release_g_s": 5.0,
+      "wind_speed_m_s": 3.5,
+      "wind_mode": "co-flow",
+      "point_count": 135,
+      "concentration_average_max_pct": 59.727619047619044,
+      "concentration_average_mean_pct": 5.362245545517284,
+      "thresholds": {
+        "0.2": {
+          "threshold_volpct_h2": 0.2,
+          "measured_point_count": 135,
+          "point_count_at_or_above_threshold": 106,
+          "point_fraction_at_or_above_threshold": 0.7851851851851852,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 2500.0,
+          "y_min_mm": -175.0,
+          "y_max_mm": 175.0
+        },
+        "0.4": {
+          "threshold_volpct_h2": 0.4,
+          "measured_point_count": 135,
+          "point_count_at_or_above_threshold": 101,
+          "point_fraction_at_or_above_threshold": 0.7481481481481481,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 2500.0,
+          "y_min_mm": -175.0,
+          "y_max_mm": 175.0
+        },
+        "4.0": {
+          "threshold_volpct_h2": 4.0,
+          "measured_point_count": 135,
+          "point_count_at_or_above_threshold": 46,
+          "point_fraction_at_or_above_threshold": 0.34074074074074073,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 2000.0,
+          "y_min_mm": -125.0,
+          "y_max_mm": 75.0
+        }
+      },
+      "concentration_average_p50_pct": 2.57
+    },
+    {
+      "source_workbook": "HTE2440PS004MIXED_300321.xlsx",
+      "sheet_name": "4 mm 5g H2 W = 3.5 m s counter",
+      "release_diameter_mm": 4.0,
+      "nominal_release_g_s": 5.0,
+      "wind_speed_m_s": 3.5,
+      "wind_mode": "counter-flow",
+      "point_count": 153,
+      "concentration_average_max_pct": 60.67227272727271,
+      "concentration_average_mean_pct": 6.5949362485401535,
+      "thresholds": {
+        "0.2": {
+          "threshold_volpct_h2": 0.2,
+          "measured_point_count": 153,
+          "point_count_at_or_above_threshold": 153,
+          "point_fraction_at_or_above_threshold": 1.0,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 3500.0,
+          "y_min_mm": -175.0,
+          "y_max_mm": 175.0
+        },
+        "0.4": {
+          "threshold_volpct_h2": 0.4,
+          "measured_point_count": 153,
+          "point_count_at_or_above_threshold": 147,
+          "point_fraction_at_or_above_threshold": 0.9607843137254902,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 3500.0,
+          "y_min_mm": -175.0,
+          "y_max_mm": 175.0
+        },
+        "4.0": {
+          "threshold_volpct_h2": 4.0,
+          "measured_point_count": 153,
+          "point_count_at_or_above_threshold": 85,
+          "point_fraction_at_or_above_threshold": 0.5555555555555556,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 2500.0,
+          "y_min_mm": -175.0,
+          "y_max_mm": 175.0
+        }
+      },
+      "concentration_average_p50_pct": 4.180476190476191
+    },
+    {
+      "source_workbook": "HTE2440PS004MIXED_300321.xlsx",
+      "sheet_name": "4 mm 5g H2 W = 5 m s co-flow",
+      "release_diameter_mm": 4.0,
+      "nominal_release_g_s": 5.0,
+      "wind_speed_m_s": 5.0,
+      "wind_mode": "co-flow",
+      "point_count": 135,
+      "concentration_average_max_pct": 59.94809523809524,
+      "concentration_average_mean_pct": 5.16006300537001,
+      "thresholds": {
+        "0.2": {
+          "threshold_volpct_h2": 0.2,
+          "measured_point_count": 135,
+          "point_count_at_or_above_threshold": 106,
+          "point_fraction_at_or_above_threshold": 0.7851851851851852,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 2500.0,
+          "y_min_mm": -175.0,
+          "y_max_mm": 175.0
+        },
+        "0.4": {
+          "threshold_volpct_h2": 0.4,
+          "measured_point_count": 135,
+          "point_count_at_or_above_threshold": 101,
+          "point_fraction_at_or_above_threshold": 0.7481481481481481,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 2500.0,
+          "y_min_mm": -175.0,
+          "y_max_mm": 175.0
+        },
+        "4.0": {
+          "threshold_volpct_h2": 4.0,
+          "measured_point_count": 135,
+          "point_count_at_or_above_threshold": 43,
+          "point_fraction_at_or_above_threshold": 0.31851851851851853,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 1750.0,
+          "y_min_mm": -125.0,
+          "y_max_mm": 75.0
+        }
+      },
+      "concentration_average_p50_pct": 2.4923809523809526
+    },
+    {
+      "source_workbook": "HTE2440PS004MIXED_300321.xlsx",
+      "sheet_name": "4 mm 5g H2 W = 5 m s counter",
+      "release_diameter_mm": 4.0,
+      "nominal_release_g_s": 5.0,
+      "wind_speed_m_s": 5.0,
+      "wind_mode": "counter-flow",
+      "point_count": 135,
+      "concentration_average_max_pct": 61.040952380952376,
+      "concentration_average_mean_pct": 6.983207483162514,
+      "thresholds": {
+        "0.2": {
+          "threshold_volpct_h2": 0.2,
+          "measured_point_count": 135,
+          "point_count_at_or_above_threshold": 135,
+          "point_fraction_at_or_above_threshold": 1.0,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 2500.0,
+          "y_min_mm": -175.0,
+          "y_max_mm": 175.0
+        },
+        "0.4": {
+          "threshold_volpct_h2": 0.4,
+          "measured_point_count": 135,
+          "point_count_at_or_above_threshold": 132,
+          "point_fraction_at_or_above_threshold": 0.9777777777777777,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 2500.0,
+          "y_min_mm": -175.0,
+          "y_max_mm": 175.0
+        },
+        "4.0": {
+          "threshold_volpct_h2": 4.0,
+          "measured_point_count": 135,
+          "point_count_at_or_above_threshold": 74,
+          "point_fraction_at_or_above_threshold": 0.5481481481481482,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 1750.0,
+          "y_min_mm": -175.0,
+          "y_max_mm": 175.0
+        }
+      },
+      "concentration_average_p50_pct": 4.366842105263157
+    },
+    {
+      "source_workbook": "HTE2440PS004MIXED_300321.xlsx",
+      "sheet_name": "4 mm 2.5g H2 W = 0",
+      "release_diameter_mm": 4.0,
+      "nominal_release_g_s": 2.5,
+      "wind_speed_m_s": 0.0,
+      "wind_mode": "no-wind",
+      "point_count": 135,
+      "concentration_average_max_pct": 52.9052380952381,
+      "concentration_average_mean_pct": 5.757361840628508,
+      "thresholds": {
+        "0.2": {
+          "threshold_volpct_h2": 0.2,
+          "measured_point_count": 135,
+          "point_count_at_or_above_threshold": 127,
+          "point_fraction_at_or_above_threshold": 0.9407407407407408,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 2500.0,
+          "y_min_mm": -175.0,
+          "y_max_mm": 175.0
+        },
+        "0.4": {
+          "threshold_volpct_h2": 0.4,
+          "measured_point_count": 135,
+          "point_count_at_or_above_threshold": 118,
+          "point_fraction_at_or_above_threshold": 0.8740740740740741,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 2500.0,
+          "y_min_mm": -175.0,
+          "y_max_mm": 175.0
+        },
+        "4.0": {
+          "threshold_volpct_h2": 4.0,
+          "measured_point_count": 135,
+          "point_count_at_or_above_threshold": 61,
+          "point_fraction_at_or_above_threshold": 0.45185185185185184,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 2250.0,
+          "y_min_mm": -125.0,
+          "y_max_mm": 125.0
+        }
+      },
+      "concentration_average_p50_pct": 3.8596000000000017
+    },
+    {
+      "source_workbook": "HTE2440PS004MIXED_300321.xlsx",
+      "sheet_name": "4 mm 2.5 g H2 W = 1.5 m s cross",
+      "release_diameter_mm": 4.0,
+      "nominal_release_g_s": 2.5,
+      "wind_speed_m_s": 1.5,
+      "wind_mode": "cross-flow",
+      "point_count": 162,
+      "concentration_average_max_pct": 51.42571428571428,
+      "concentration_average_mean_pct": 4.980878209491108,
+      "thresholds": {
+        "0.2": {
+          "threshold_volpct_h2": 0.2,
+          "measured_point_count": 162,
+          "point_count_at_or_above_threshold": 130,
+          "point_fraction_at_or_above_threshold": 0.8024691358024691,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 1500.0,
+          "y_min_mm": -175.0,
+          "y_max_mm": 175.0
+        },
+        "0.4": {
+          "threshold_volpct_h2": 0.4,
+          "measured_point_count": 162,
+          "point_count_at_or_above_threshold": 111,
+          "point_fraction_at_or_above_threshold": 0.6851851851851852,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 1500.0,
+          "y_min_mm": -175.0,
+          "y_max_mm": 175.0
+        },
+        "4.0": {
+          "threshold_volpct_h2": 4.0,
+          "measured_point_count": 162,
+          "point_count_at_or_above_threshold": 62,
+          "point_fraction_at_or_above_threshold": 0.38271604938271603,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 1250.0,
+          "y_min_mm": -175.0,
+          "y_max_mm": 175.0
+        }
+      },
+      "concentration_average_p50_pct": 2.5133768115942026
+    },
+    {
+      "source_workbook": "HTE2440PS004MIXED_300321.xlsx",
+      "sheet_name": "4 mm 2.5g H2 W = 3.5 m s cross",
+      "release_diameter_mm": 4.0,
+      "nominal_release_g_s": 2.5,
+      "wind_speed_m_s": 3.5,
+      "wind_mode": "cross-flow",
+      "point_count": 117,
+      "concentration_average_max_pct": 47.49090909090909,
+      "concentration_average_mean_pct": 4.517038896257058,
+      "thresholds": {
+        "0.2": {
+          "threshold_volpct_h2": 0.2,
+          "measured_point_count": 117,
+          "point_count_at_or_above_threshold": 92,
+          "point_fraction_at_or_above_threshold": 0.7863247863247863,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 1000.0,
+          "y_min_mm": -175.0,
+          "y_max_mm": 175.0
+        },
+        "0.4": {
+          "threshold_volpct_h2": 0.4,
+          "measured_point_count": 117,
+          "point_count_at_or_above_threshold": 79,
+          "point_fraction_at_or_above_threshold": 0.6752136752136753,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 1000.0,
+          "y_min_mm": -175.0,
+          "y_max_mm": 175.0
+        },
+        "4.0": {
+          "threshold_volpct_h2": 4.0,
+          "measured_point_count": 117,
+          "point_count_at_or_above_threshold": 35,
+          "point_fraction_at_or_above_threshold": 0.29914529914529914,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 750.0,
+          "y_min_mm": -175.0,
+          "y_max_mm": 175.0
+        }
+      },
+      "concentration_average_p50_pct": 1.8808333333333334
+    },
+    {
+      "source_workbook": "HTE2440PS004MIXED_300321.xlsx",
+      "sheet_name": "4 mm 2.5g H2 W = 5 m s cross",
+      "release_diameter_mm": 4.0,
+      "nominal_release_g_s": 2.5,
+      "wind_speed_m_s": 5.0,
+      "wind_mode": "cross-flow",
+      "point_count": 117,
+      "concentration_average_max_pct": 48.35363636363636,
+      "concentration_average_mean_pct": 4.24818909086596,
+      "thresholds": {
+        "0.2": {
+          "threshold_volpct_h2": 0.2,
+          "measured_point_count": 117,
+          "point_count_at_or_above_threshold": 85,
+          "point_fraction_at_or_above_threshold": 0.7264957264957265,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 1000.0,
+          "y_min_mm": -175.0,
+          "y_max_mm": 175.0
+        },
+        "0.4": {
+          "threshold_volpct_h2": 0.4,
+          "measured_point_count": 117,
+          "point_count_at_or_above_threshold": 77,
+          "point_fraction_at_or_above_threshold": 0.6581196581196581,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 875.0,
+          "y_min_mm": -175.0,
+          "y_max_mm": 175.0
+        },
+        "4.0": {
+          "threshold_volpct_h2": 4.0,
+          "measured_point_count": 117,
+          "point_count_at_or_above_threshold": 30,
+          "point_fraction_at_or_above_threshold": 0.2564102564102564,
+          "coordinate_extent_is_descriptive": true,
+          "x_min_mm": 125.0,
+          "x_max_mm": 625.0,
+          "y_min_mm": -175.0,
+          "y_max_mm": 175.0
+        }
+      },
+      "concentration_average_p50_pct": 1.7293999999999996
+    }
+  ],
+  "eligibility_decision": {
+    "independent_holdout": false,
+    "runtime_parameter_updated": false,
+    "validation_gate_changed": false,
+    "promotion_prohibited": true,
+    "reason": "The workbooks were opened after the frozen spatial protocol and provide spatial snapshots, not a synchronized station or vehicle time-series holdout."
+  },
+  "claim_boundary": "Measured actual-hydrogen concentration fields are summarized for development and manuscript context. Coordinate extents are not safety distances, evacuation radii, detector setpoints, CFD validation, or evidence of station-to-vehicle performance."
+}
