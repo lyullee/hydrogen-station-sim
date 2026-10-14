@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-14T03:13:03+00:00",
+  "generated_at": "2026-10-14T03:19:37+00:00",
   "metric_definition": "PASS gates divided by PASS+FAIL+PENDING gates; not a publication-readiness probability",
   "gate_counts": {
     "PASS": 134,
@@ -84,5 +84,41 @@
       "station_to_vehicle_raw_data": "removed_from_primary_goal_after_public_search",
       "ethics_and_expert_review": "optional_for_physics_validation; required only for a claim that SAGA improves human safety guidance"
     }
-  }
+  },
+  "source_commit": "90de08c",
+  "latest_completed_work": "Public HydDown hydrogen discharge/filling evidence route added; 1,592-test full regression passed.",
+  "latest_full_regression": {
+    "tests_passed": 1592,
+    "tests_failed": 0,
+    "tests_skipped": 0,
+    "warnings": 222,
+    "elapsed_seconds": 317.25
+  },
+  "remaining_workstreams": [
+    {
+      "id": "component_external_validation",
+      "progress_percent": 88.2,
+      "status": "11 FAIL / 7 PENDING gates remain across bounded submission and optional study lanes"
+    },
+    {
+      "id": "station_side_digital_twin",
+      "progress_percent": 91.7,
+      "status": "Primary scope gate closure; implementation regression passes but scientific validation gates remain"
+    },
+    {
+      "id": "saga_direct_answer_grounding",
+      "progress_percent": 100.0,
+      "status": "Evidence-bound direct-answer routing and scenario/action grounding tests pass; effectiveness claim remains pending"
+    },
+    {
+      "id": "station_to_vehicle_full_loop",
+      "progress_percent": 0.0,
+      "status": "Excluded from primary goal; no synchronized public station-to-vehicle raw trace identified; limitation documented"
+    },
+    {
+      "id": "ijhe_submission_package",
+      "progress_percent": 88.2,
+      "status": "Format/LaTeX/software DOI gates pass; submission metadata and unresolved validation gates remain"
+    }
+  ]
 }
