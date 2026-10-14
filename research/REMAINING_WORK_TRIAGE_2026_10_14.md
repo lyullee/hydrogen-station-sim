@@ -12,6 +12,7 @@
 - NREL H2FillS: `nrel_h2fills_2022_hdvs_typeiv.xlsx` 한 파일만 보유하며 이미 수치 결과를 확인했다. 따라서 새 독립 holdout으로 재사용하지 않는다.
 
 ## 이번 즉시 처리 완료
+- 방출모델 실패 게이트 교차분석을 `research/RELEASE_FAILURE_CROSSWALK_2026_10_14.md`와 `research/release_failure_crosswalk_2026_10_14.json`에 고정했다. Schefer·PRESLHY·Proust 실패를 장치 경계/라인·밸브, 직경·유동영역, 열경계의 네 공통 원인으로 묶었으며, 이 진단은 기존 판정과 런타임 파라미터를 변경하지 않는다.
 - SAGA 직접응답 경로 회귀를 별도 실행해 55 passed / 0 failed / 0 skipped를 확인했다. 직접 질의·피해영향평가 전달·가상 조치 명령·측정값 guard·응답 선택성 범위를 `research/direct_answer_llm_regression_2026_10_14.json`에 고정했다.
 
 - Figshare 실제 수소 개방형 채널 22개 archive에 고정 공간순위 후보를 재현 실행했다.
