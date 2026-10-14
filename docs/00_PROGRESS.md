@@ -1,5 +1,16 @@
 # Development Progress
 
+## 2026-10-14 - Close station-warning response gap in selected-sensor analysis
+
+Selected-sensor analysis now treats a station-level advisory, warning or
+critical state, active release, relief opening, fire-detection state or fault
+as emergency evidence even when the row-level HAZOP join has not completed.
+That path requests the consequence screen and attaches the consolidated,
+four-stage response plan instead of showing routine prevention only. A focused
+regression covers the warning-without-trigger case and the sensor workbench
+suite now passes **66/66**. This closes a response-routing defect without
+changing any scientific validation gate or physical parameter.
+
 ## 2026-10-14 - Stabilize virtual risk-range recalculation display
 
 The risk-range state now keeps a previously rendered hypothetical SAGA/HyRAM

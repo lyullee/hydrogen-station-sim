@@ -4432,6 +4432,25 @@ def simulation_sensor_detail(job_id: str, sensor_id: str, time_s: float | None =
     return payload
 
 
+def _station_requires_emergency_response(frame: dict[str, Any]) -> bool:
+    """Detect station-level danger before a row-level HAZOP join is ready."""
+    analysis = frame.get("analysis") or {}
+    if str(analysis.get("status") or "NORMAL").upper() in {"ADVISORY", "WARNING", "CRITICAL"}:
+        return True
+    if frame.get("active_faults") or (frame.get("hazop") or {}).get("releases"):
+        return True
+    operations = frame.get("process_operations") or {}
+    if isinstance(operations, dict) and any(bool(value) for value in (operations.get("relief_open") or {}).values()):
+        return True
+    fire_detection = analysis.get("fire_detection") or {}
+    if str(fire_detection.get("status") or "NONE").upper() in {"PENDING", "DETECTED"}:
+        return True
+    try:
+        return float(frame.get("total_leak_flow_g_s") or 0.0) > 0.001
+    except (TypeError, ValueError):
+        return False
+
+
 def _sensor_response_guidance(
     frame: dict[str, Any],
     catalog: dict[str, Any],
@@ -4448,6 +4467,11 @@ def _sensor_response_guidance(
     silently remove operator guidance from the selected-sensor view.
     """
     relevant_rules = active_rules + related_rules
+    # A station-level warning can briefly precede a row-level HAZOP trigger
+    # (for example while a release/fault is being mapped to its detector).
+    # Keep the selected-sensor view actionable during that interval instead of
+    # presenting only routine prevention guidance.
+    station_evidence = _station_requires_emergency_response(frame)
     actual_alert = bool(relevant_rules)
     if actual_alert:
         selected = response_selection(frame, catalog, question, "alarm", limit=None)
@@ -4579,6 +4603,78 @@ def _sensor_response_guidance(
         }
         return "\n\n".join(sections), consolidated
 
+    elif station_evidence:
+        selected = response_selection(frame, catalog, question, "alarm", limit=None)
+        focused = selected[:4]
+        if focused:
+            actual_alert = True
+            # The station-level event may not have a row-level mapping yet, so
+            # there are no linked rules to generate executable buttons from.
+            # The trusted playbook still supplies the staged operator guidance.
+            groups = [{"id": str(item["plan"]["id"]), "title": item["plan"]["title"],
+                       "plan": item["plan"], "evidence": list(item.get("evidence") or []),
+                       "rules": []} for item in focused]
+            def unique(items: list[Any], limit: int | None = None) -> list[Any]:
+                result, seen = [], set()
+                for item in items:
+                    key = re.sub(r"\s+", " ", str(item)).strip()
+                    if not key or key in seen:
+                        continue
+                    seen.add(key)
+                    result.append(item)
+                    if limit is not None and len(result) >= limit:
+                        break
+                return result
+            plans_for_groups = [group["plan"] for group in groups]
+            recognition = unique([step for plan in plans_for_groups for step in plan["recognition"]], 5)
+            immediate = unique([step for plan in plans_for_groups for step in plan["immediate"]], 9)
+            stabilize = unique([step for plan in plans_for_groups for step in plan["stabilize"]], 7)
+            restart = unique([step for plan in plans_for_groups for step in plan["restart"]], 6)
+            prevention = unique([step for plan in plans_for_groups for step in plan["prevention"]], 9)
+            playbooks = load_playbooks()
+            if len(playbooks.get("common_response") or []) >= 4:
+                immediate = unique(immediate + [playbooks["common_response"][3]], 10)
+            def numbered(steps: list[str]) -> str:
+                return "\n".join(f"{index}. {step}" for index, step in enumerate(steps, 1))
+            scenario_lines = []
+            for index, group in enumerate(groups, 1):
+                evidence = "; ".join(group["evidence"]) or "현재 공정 주의·경보 상태"
+                scenario_lines.append(f"{index}. **{group['title']}**\n   - 판단 근거: {evidence}")
+            sections = [
+                "### 종합 안전판단",
+                "> **판단** 공정 수준의 주의·경보가 확인되었지만 센서별 HAZOP 행이 아직 연결되지 않았습니다. 원인 미확정 상태의 보수적 대응계획으로 아래 순서를 실행하세요.",
+                "#### 발생 가능한 시나리오\n" + "\n".join(scenario_lines),
+                "### 즉시 실행할 단계별 대응",
+                "**1단계 · 상황 확인**\n" + numbered(recognition),
+                "**2단계 · 공정 정지·격리 및 인원 보호**\n" + numbered(immediate),
+                "**3단계 · 안정화 확인**\n" + numbered(stabilize),
+                "**4단계 · 복구·재가동 전 확인**\n" + numbered(restart),
+                "### 단계별 예방·안전관리",
+                "**1단계 · 예방·안전관리**\n" + numbered(prevention),
+            ]
+            source_ids = unique([source_id for plan in plans_for_groups
+                                 for source_id in plan.get("sources", [])])
+            sources = [playbooks["sources"][source_id] for source_id in source_ids
+                       if source_id in playbooks["sources"]]
+            if sources:
+                sections.append("**근거 자료**\n" + ", ".join(
+                    f"[{source['title']}]({source['url']})" for source in sources))
+            consolidated = {
+                "actual_alert": True, "mode": "consolidated",
+                "intro": "공정 수준 경보를 원인 미확정 상태의 보수적 행동계획으로 연결했습니다.",
+                "common_steps": [],
+                "scenarios": [{"id": group["id"], "title": group["title"],
+                               "evidence": group["evidence"], "combined_conditions": []}
+                              for group in groups],
+                "plans": [{"id": "consolidated_response", "title": "종합 대응계획",
+                           "evidence": unique([entry for group in groups for entry in group["evidence"]], 8),
+                           "recognition": recognition, "immediate": immediate,
+                           "stabilize": stabilize, "restart": restart,
+                           "prevention": prevention, "executable_actions": [],
+                           "sources": sources}],
+            }
+            return "\n\n".join(sections), consolidated
+
     # Healthy sensors deliberately show routine prevention only. Emergency,
     # stabilization and restart instructions belong to warning/alarm states.
     playbooks = load_playbooks()
@@ -4693,7 +4789,8 @@ async def analyze_simulation_sensor(job_id: str, sensor_id: str,
     alert = payload["sensor_status"] == "ALERT"
     impact_results: list[dict[str, Any]] = []
     current_triggers = [rule for rule in active_rules + related_rules if rule.get("state") == "TRIGGER"]
-    if current_triggers or _impact_requested(request.question):
+    station_emergency = _station_requires_emergency_response(frame)
+    if current_triggers or station_emergency or _impact_requested(request.question):
         backend = await asyncio.to_thread(_load_hyram_backend_cached)
         assessed = await asyncio.to_thread(
             _assess_sensor_cases_cached, frame, catalog, backend,
@@ -4705,7 +4802,7 @@ async def analyze_simulation_sensor(job_id: str, sensor_id: str,
     )
     evidence_manifest = build_evidence_manifest(
         frame, payload["related_signals"], impact_results,
-        bool(current_triggers or _impact_requested(request.question)),
+        bool(current_triggers or station_emergency or _impact_requested(request.question)),
         active_conditions=(active_rules + related_rules
                            + _response_plan_conditions(question_response_plans)),
         selected_sensor=sensor_id,

@@ -290,10 +290,50 @@ def test_retained_alarm_does_not_recalculate_impact_and_uses_short_answer(monkey
             api._jobs.pop(job_id, None)
 
 
+def test_station_warning_without_row_trigger_still_computes_impact_and_guidance(monkeypatch):
+    captured = {}
+
+    class FakeBackend:
+        available = True
+
+    monkeypatch.setattr(api, "load_hyram_backend", lambda: FakeBackend())
+    monkeypatch.setattr(api, "assess_sensor_cases", lambda *args: [{
+        "node_id": "N08", "calculation_status": "calculated",
+        "maximum_heat_flux_w_m2": 4800.0,
+    }])
+
+    def llm(prompt, answer_length):
+        captured["prompt"] = prompt
+        return {"answer": "공정 경보를 확인하고 단계별 조치를 진행합니다.", "model": "test"}
+
+    monkeypatch.setattr(api, "_invoke_saga", llm)
+    job_id = "sensor-workbench-station-warning"
+    _job(job_id)
+    with api._jobs_lock:
+        frame = api._jobs[job_id]["frames"][-1]
+        frame["analysis"] = {"status": "WARNING", "findings": ["원인 미확정 경보"]}
+    try:
+        with TestClient(api.app) as client:
+            response = client.post(f"/api/simulations/{job_id}/sensors/PT-0801/analyze", json={})
+        assert response.status_code == 200, response.text
+        payload = response.json()
+        assert payload["impact_results"][0]["calculation_status"] == "calculated"
+        assert payload["response_guidance"]["actual_alert"] is True
+        assert "즉시 실행할 단계별 대응" in payload["answer"]
+        assert '"calculation_status": "calculated"' in captured["prompt"]
+    finally:
+        with api._jobs_lock:
+            api._jobs.pop(job_id, None)
+
+
 def test_below_alarm_gas_reading_and_live_release_are_not_reported_as_no_leak(monkeypatch):
     captured = {}
-    monkeypatch.setattr(api, "load_hyram_backend", lambda: (_ for _ in ()).throw(
-        AssertionError("Retained alarm must not start a new impact calculation")))
+    # A live release is a station-level emergency even when the selected gas
+    # row is only a retained alarm. The response path may therefore request a
+    # consequence calculation; keep this test focused on truthfully reporting
+    # the non-zero gas/release evidence.
+    monkeypatch.setattr(api, "load_hyram_backend", lambda: object())
+    monkeypatch.setattr(api, "assess_sensor_cases", lambda *args: [])
 
     def llm(prompt, answer_length):
         captured["prompt"] = prompt
