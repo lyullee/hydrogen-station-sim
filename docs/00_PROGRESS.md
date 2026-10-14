@@ -2,7 +2,9 @@
 
 ## 2026-10-14 - Re-run the impact-first priority lane after the evidence refresh
 
-The current priority runner completed without a software or process failure.
+The current priority runner completed without a software or process failure;
+the machine-readable result is frozen in
+`research/priority_focus_run_2026_10_14.json` from the latest source commit.
 All three focused software suites passed (**75/75 tests**): LLM evidence
 grounding, privacy-safe full-loop intake and virtual safety/response. The five
 critical development diagnostics also completed, but their scientific screen
