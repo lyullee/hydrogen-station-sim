@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-14T10:55:57+00:00",
+  "generated_at": "2026-10-14T11:18:03+00:00",
   "metric_definition": "PASS gates divided by PASS+FAIL+PENDING gates; not a publication-readiness probability",
   "gate_counts": {
     "PASS": 134,
@@ -85,15 +85,16 @@
       "ethics_and_expert_review": "optional_for_physics_validation; required only for a claim that SAGA improves human safety guidance"
     }
   },
-  "source_commit": "3fbae43fb88053ff7d7bf8aa13f0a156426a4c67",
+  "source_commit": "66f0838db34a6f631740308a355a8a622be76d68",
   "latest_completed_work": "재충전 READY/RECHARGE 반복을 줄이기 위해 120초 가상 anti-chatter guard를 기본 적용했습니다. 비식별 holdout의 176초 최단 간격보다 짧은 제어 기본값이며 외부검증·안전한계로 승격하지 않았습니다.",
   "latest_full_regression": {
-    "tests_passed": 1618,
+    "tests_passed": 1619,
     "tests_failed": 0,
     "tests_skipped": 0,
     "warnings": 222,
-    "elapsed_seconds": 239.25,
-    "source_commit": "c8c5f2efc2556f434d4bc28ed4fb1a44f2a2fc19"
+    "scope": "python -m pytest -q",
+    "source_commit": "66f0838db34a6f631740308a355a8a622be76d68",
+    "artifact": "research/full_regression_test_run_2026_10_14.json"
   },
   "remaining_workstreams": [
     {
@@ -308,7 +309,7 @@
     {
       "id": "full_regression_after_evidence_chain_refresh_2026_10_14",
       "progress_percent": 100.0,
-      "status": "최신 커밋에서 전체 Python 회귀 1,618건을 재실행해 실패 없이 통과했다. 기존 과학적 FAIL/PENDING 판정은 그대로 유지했다."
+      "status": "Evidence chain 갱신과 anti-chatter 런타임 변경 후 전체 Python 회귀 1,619건이 실패 없이 통과했습니다. 경고 222건은 기존 dependency/deprecation·HyRAM physics 경고이며 독립 과학 gate 승격은 하지 않았습니다."
     },
     {
       "id": "full_regression_provenance_alignment_2026_10_14",
