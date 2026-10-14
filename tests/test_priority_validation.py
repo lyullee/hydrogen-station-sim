@@ -18,7 +18,7 @@ def test_priority_status_exposes_p0_before_lower_tracks() -> None:
 
 
 def test_default_checks_are_focused_and_parallelizable() -> None:
-    assert len(DEFAULT_CHECKS) == 3
+    assert len(DEFAULT_CHECKS) == 4
     assert {check.priority for check in DEFAULT_CHECKS} == {"P0", "P1"}
     assert all("pytest" in check.command for check in DEFAULT_CHECKS)
     assert all("test_" in " ".join(check.command) for check in DEFAULT_CHECKS)
