@@ -2601,3 +2601,18 @@ the full-loop claim pass.
 - Verification: 35 focused grounding/diagnostic tests pass. Readiness remains
   134 PASS / 11 FAIL / 7 PENDING (88.2% gate closure); no scientific gate was
   promoted.
+
+## 2026-10-14 - KIT LH₂ consequence archive integrity boundary
+
+- Recorded the official KIT RADAR/FCH JU consequence archive (`10.35097/1483`)
+  as a public actual-LH₂ evidence lead. The record reports release, pressure,
+  heat-flux, temperature, mass-flow, weather and video families under CC BY-SA
+  4.0.
+- The locally retained 964,689,920-byte prefix does not match the publisher
+  MD5, so the four workbook summaries remain descriptive exploration only. No
+  release coefficient, heat-flux model, HyRAM result or runtime parameter was
+  fitted or promoted from this source.
+- The range downloader now reuses valid cached chunks and requests only missing
+  ranges. The publisher endpoint still returned HTTP 429 during the retry, so
+  the integrity gate remains open. Verification: the focused KIT intake suite
+  passes 8/8; readiness remains 134 PASS / 11 FAIL / 7 PENDING.
