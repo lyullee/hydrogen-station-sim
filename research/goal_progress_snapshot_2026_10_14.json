@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-14T06:54:15Z",
+  "generated_at": "2026-10-14T07:00:16Z",
   "metric_definition": "PASS gates divided by PASS+FAIL+PENDING gates; not a publication-readiness probability",
   "gate_counts": {
     "PASS": 134,
@@ -85,8 +85,8 @@
       "ethics_and_expert_review": "optional_for_physics_validation; required only for a claim that SAGA improves human safety guidance"
     }
   },
-  "source_commit": "294bd37",
-  "latest_completed_work": "The manuscript now documents the published actual-H2 semi-closed-tent detector diagnostic with its 0.70 top-1 and 0.80 top-2 transparent baseline and explicit post-access boundary; the 24-page Tectonic PDF, format gate, readiness audit and claim matrix were refreshed, and focused IJHE reproduction tests pass. Scientific gate counts remain unchanged.",
+  "source_commit": "61bc1bb",
+  "latest_completed_work": "A fresh official/public recheck of the Grune pressure-decay source was recorded: KIT, publisher, H2Tools and ICHS documents expose narrative/figure evidence but no rights-cleared machine-readable raw pressure-time trace. The pending gate remains closed rather than being promoted from figure-derived data; the manuscript and focused reproduction checks remain clean.",
   "latest_full_regression": {
     "tests_passed": 1606,
     "tests_failed": 0,
@@ -129,6 +129,11 @@
     "scope": "tests/test_ijhe_readiness_audit.py tests/test_ijhe_audit_snapshot_consistency.py tests/test_ijhe_manuscript_format.py tests/test_ijhe_compile_artifact.py tests/test_goal_progress_snapshot.py tests/test_ijhe_reproduction.py"
   },
   "completed_process_improvements": [
+    {
+      "id": "grune_public_raw_trace_recheck_2026_10_14",
+      "progress_percent": 100.0,
+      "status": "KIT, publisher, H2Tools and ICHS records were rechecked. The result is a documented no-new-rights-cleared-raw-trace outcome; figure-derived diagnostics remain secondary and do not promote the Grune validation gate."
+    },
     {
       "id": "ijhe_manuscript_actual_h2_evidence_2026_10_14",
       "progress_percent": 100.0,
