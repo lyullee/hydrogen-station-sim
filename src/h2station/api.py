@@ -43,7 +43,11 @@ from .safe_operation import SafeOperationSample
 from .protocol import CommunicationLossPolicy, FuelingTemperatureCategory
 from .simulation_clock import SimulationClock
 from .virtual_safety import VALVE_LABELS, ZONES, RECOVERY_CHECKS, suggested_actions
-from .scenario import ReferenceScenario, build_reference_scenario
+from .scenario import (
+    REFERENCE_MINIMUM_RECHARGE_OFF_TIME_S,
+    ReferenceScenario,
+    build_reference_scenario,
+)
 from .calibration_profiles import (
     load_bank_pressure_envelopes,
     load_measured_boundary_calibration,
@@ -532,6 +536,14 @@ class ProcessSettings(BaseModel):
     # rounded 4.5 MPa development default reduces rapid restart cycling; it is
     # a controller-behavior setting, not a safety limit or full-loop validation.
     recharge_restart_margin_high_mpa: float = Field(default=4.5, ge=0.2, le=20.0)
+    # Reference anti-chatter guard.  This is an operator-control default, not
+    # a validated compressor dwell or a safety limit.  A measured profile can
+    # be explicitly enabled only when its temporal holdout passes.
+    recharge_minimum_off_time_s: float = Field(
+        default=REFERENCE_MINIMUM_RECHARGE_OFF_TIME_S,
+        ge=0.0,
+        le=600.0,
+    )
     risk_overlay_enabled: bool = True
     risk_display_mode: Literal["relative", "absolute"] = "relative"
     risk_update_interval_s: Literal[15, 30, 60, 120] = 30
@@ -1066,7 +1078,13 @@ def _execute_simulation(job_id: str, request: SimulationInput) -> None:
             ),
             station_minimum_recharge_off_time_s=(
                 recharge_dynamics_profile.minimum_recharge_off_time_s
-                if recharge_dynamics_profile is not None else 0.0
+                if recharge_dynamics_profile is not None
+                else float(
+                    process_settings_dict.get(
+                        "recharge_minimum_off_time_s",
+                        REFERENCE_MINIMUM_RECHARGE_OFF_TIME_S,
+                    )
+                )
             ),
             fault_events=tuple(fault.to_event() for fault in request.faults),
         )

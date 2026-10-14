@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "artifact_type": "recharge_restart_guard_reference_default",
+  "recorded_at": "2026-10-14",
+  "status": "RUNTIME_ANTI_CHATTER_GUARD_NOT_VALIDATION",
+  "runtime_default": {
+    "minimum_recharge_off_time_s": 120.0,
+    "operator_field": "recharge_minimum_off_time_s",
+    "override_range_s": [
+      0.0,
+      600.0
+    ],
+    "applies_when": "no temporally eligible owner-attested restart-dwell profile is enabled"
+  },
+  "engineering_basis": {
+    "confidential_station_artifact": "research/confidential_station_recharge_dynamics_multitrace_2026_10_08.json",
+    "observed_completed_off_to_on_intervals": 89,
+    "chronological_holdout_minimum_off_to_on_s": 176.0,
+    "candidate_fitted_dwell_s": 290.0,
+    "candidate_fitted_dwell_status": "rejected_for_runtime_because_holdout_minimum_is_shorter",
+    "public_operational_reference": {
+      "doi": "10.1016/j.ijhydene.2019.05.133",
+      "url": "https://doi.org/10.1016/j.ijhydene.2019.05.133",
+      "description": "Published medium-pressure metal-hydride HRS operation reports automatic standby/restart around a 200 bar upper and 195 bar lower pressure boundary and a multi-minute thermal cycle."
+    },
+    "selection_rationale": "120 s is below the observed 176 s chronological minimum and provides a deterministic sampled-controller anti-chatter delay without fitting to a failed holdout."
+  },
+  "claim_boundary": {
+    "validation_gate_changed": false,
+    "full_loop_validation": false,
+    "safety_limit": false,
+    "compressor_capacity_fit": false,
+    "note": "The guard reduces rapid READY/RECHARGE toggling in the virtual controller. Facility-specific restart timing must be confirmed before operational use."
+  }
+}

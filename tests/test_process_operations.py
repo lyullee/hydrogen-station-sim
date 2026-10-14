@@ -32,6 +32,15 @@ def test_process_settings_use_observed_high_bank_restart_band():
     assert settings.recharge_restart_margin_low_mpa == 2.0
     assert settings.recharge_restart_margin_medium_mpa == 3.0
     assert settings.recharge_restart_margin_high_mpa == 4.5
+    assert settings.recharge_minimum_off_time_s == 120.0
+
+
+def test_reference_scenario_uses_anti_chatter_guard_by_default():
+    built = build_reference_scenario(
+        ReferenceScenario(duration_s=0.4, control_period_s=0.2),
+        UnavailableHyRAMBackend(),
+    )
+    assert built.station.supervisor.parameters.minimum_recharge_off_time_s == 120.0
 
 
 def test_standalone_station_replay_carries_per_bank_restart_bands():

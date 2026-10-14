@@ -43,6 +43,13 @@ from .safety_runtime import (
     SafetyLimits,
     SafetyPLC,
 )
+
+
+# Reference controller guard used when an owner-attested restart-dwell profile
+# is unavailable.  It is deliberately shorter than the 176 s minimum seen in
+# the chronological station-side holdout, so it suppresses sampled-controller
+# chatter without pretending to be a validated compressor or safety limit.
+REFERENCE_MINIMUM_RECHARGE_OFF_TIME_S = 120.0
 from .tabulated import PropsSI
 from .vehicle import (
     CompositeTankFitParameters,
@@ -143,7 +150,9 @@ class ReferenceScenario:
     # Optional owner-attested station-side dynamic calibration.  It represents
     # the observed compressor restart dwell only; it is not a vehicle-fill or
     # compressor-capacity validation result.
-    station_minimum_recharge_off_time_s: float | None = None
+    station_minimum_recharge_off_time_s: float | None = (
+        REFERENCE_MINIMUM_RECHARGE_OFF_TIME_S
+    )
     # Finite common-header inventory between the cascade selectors and both
     # dispenser PCVs. These are declared reference geometry values, not fitted
     # station data; frozen station-side validation must evaluate them unchanged.
