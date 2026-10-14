@@ -12,7 +12,7 @@ Launcher 자체 복구 뒤 종료·재시작을 시도했으며 Windows 잠금�
 
 ## 서버와 프로젝트 실행
 
-1. UE 5.6 계열 설치를 완료한다. 빌드 도구 재부팅은 다른 작업을 종료할 수 있는 시점에 사용자가 수행한다.
+1. UE 5.6 계열 설치를 완료한다. 빌드 도구 재부팅은 다른 작업을 종료할 수 있는 시점에 사용자가 수행한다. 일반 `Install Engine` 버튼이 반응하지 않으면, 데스크톱 잠금을 푼 상태에서 `./scripts/open_unreal_installer.ps1 -Version 5.6`을 실행한다. 이 스크립트는 Epic이 갱신한 로컬 카탈로그에서 UE 5.6의 항목 ID를 읽고 공식 `action=installer` 프로토콜로 해당 설치 옵션 창을 바로 연다.
 2. 계산 서버: `.venv\Scripts\python.exe -m uvicorn h2station.api:app --app-dir src --host 127.0.0.1 --port 8000`.
 3. 엔진 경로를 지정하고 시제품 준비: `./scripts/start_unreal_pilot.ps1 -EngineRoot 'C:\Program Files\Epic Games\UE_5.6' -Build -Bootstrap`. 고해상도 참조 GLB까지 가져와 현장 좌표에 배치하려면 먼저 웹 자산 내보내기·Khronos 검증을 실행한 뒤 `-ImportAssets -PlaceAssets`를 추가한다. 가져오기와 배치는 설비 ID 태그가 있는 기존 편집 액터를 덮어쓰지 않는다.
 4. Pixel Streaming 서버: `./scripts/start_pixel_streaming.ps1`. 파일 `infrastructure-lock.json`의 버전과 커밋을 사용한다. 이 실행 스크립트는 로컬 PC에만 수신 포트를 연다.
