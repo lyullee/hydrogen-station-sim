@@ -5,7 +5,7 @@ import { consequenceDisplayGeometry } from '../web/consequence-geometry.mjs';
 
 const release=(radius)=>({id:'leak-1',component:'dispenser.hose',actual:true,
   consequence:{sampled_effect_radius_m:radius}});
-const hypothesis=(radius)=>({id:'scenario-N13',component:'dispenser.hose',actual:false,
+const hypothesis=(radius)=>({id:'scenario-N13',component:'dispenser.hose',actual:false,hypothetical:true,
   consequence:{sampled_effect_radius_m:radius}});
 
 test('an active release keeps its peak radius through a below-threshold recalculation',()=>{
@@ -32,6 +32,17 @@ test('hypothetical cases follow the current assessment, not a past peak',()=>{
   state=reconcileRiskRanges(state,[hypothesis(3)],100);
   assert.equal(state.get('scenario-N13').radius,3);
   state=reconcileRiskRanges(state,[],200);
+  assert.equal(state.has('scenario-N13'),false);
+});
+
+test('a hypothetical zero-distance recalculation keeps the visible range briefly',()=>{
+  let state=reconcileRiskRanges(new Map(),[hypothesis(5)],0);
+  state=reconcileRiskRanges(state,[hypothesis(0)],100);
+  assert.equal(state.get('scenario-N13').radius,5);
+  assert.equal(state.get('scenario-N13').displayState,'CALC_PENDING');
+  state=reconcileRiskRanges(state,[],200);
+  assert.equal(state.get('scenario-N13').displayState,'RECENTLY_ENDED');
+  state=reconcileRiskRanges(state,[],3201);
   assert.equal(state.has('scenario-N13'),false);
 });
 
