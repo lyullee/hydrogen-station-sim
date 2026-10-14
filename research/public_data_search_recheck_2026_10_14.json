@@ -293,6 +293,41 @@
       ],
       "eligible_new_raw_holdout_found": false,
       "interpretation": "The sixth targeted pass found no new rights-cleared, previously uninspected raw trace. H2FillS and H2SAFE are already consumed lanes; H2-Stations and California infrastructure data are metadata/status only; CIP and Monde are article/table or access-boundary evidence. No runtime parameter, validation gate or progress percentage changed."
+    },
+    "search_round_2026_10_14_seventh_pass": {
+      "search_date": "2026-10-14",
+      "new_candidates_checked": [
+        {
+          "id": "usn_open_channel_dataverse_current_record",
+          "url": "https://doi.org/10.23642/USN.26117989",
+          "observed": "DataverseNO exposes temporal mass-flow, filling-pressure and 29-hydrogen-sensor concentration files for an open-ended channel experiment.",
+          "eligibility": "ALREADY_CONSUMED_ACTUAL_H2_DIAGNOSTIC",
+          "reason": "The archive is already represented by the repository's USN pressure/spatial diagnostics; recounting it would violate the access-order rule and would not create a new independent holdout."
+        },
+        {
+          "id": "hydelta_d6a1_actual_h2_report",
+          "url": "https://zenodo.org/records/8154318",
+          "observed": "The public HyDelta D6A.1 report contains actual-hydrogen concentration profiles for indoor outflow experiments and relative sensor positions.",
+          "eligibility": "BOUNDARY_EVIDENCE_ONLY",
+          "reason": "The accessible report does not provide a rights-cleared machine-readable per-sensor trace with a numeric 3-D coordinate frame suitable for the frozen spatial holdout."
+        },
+        {
+          "id": "gasflow_parking_cfd_benchmark",
+          "url": "https://zenodo.org/records/18740541",
+          "observed": "The archive provides 180 GASFLOW-MPI hydrogen dispersion simulations with interpolable fields and scenario metadata.",
+          "eligibility": "NOT_EXPERIMENTAL_HOLDOUT",
+          "reason": "It is a computational benchmark rather than measured release data, so it cannot close an experimental detector-transfer or station consequence gate."
+        },
+        {
+          "id": "hydrogen_sensor_calibration_zenodo",
+          "url": "https://zenodo.org/records/4593853",
+          "observed": "The archive provides laboratory and field sensor cycles with hydrogen concentration targets and reference measurements.",
+          "eligibility": "NOT_SPATIAL_STATION_HOLDOUT",
+          "reason": "The record is sensor calibration/field monitoring data without a release apparatus, station map or synchronized multi-location concentration field."
+        }
+      ],
+      "eligible_new_raw_holdout_found": false,
+      "interpretation": "The seventh targeted pass found no new eligible raw spatial or station-side holdout. USN is already consumed; HyDelta is report-level with insufficient coordinate/trace format; GASFLOW is simulation-only; the calibration archive lacks spatial apparatus context. No gate, runtime parameter or progress percentage changes."
     }
   }
 }
