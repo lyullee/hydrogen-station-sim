@@ -85,6 +85,25 @@
       "access_observation": "These sources are already represented by frozen protocols and retained outcomes in the repository. Recounting them as new holdouts would violate the access-order rule.",
       "eligibility": "DO_NOT_REUSE_AS_NEW_HOLDOUT",
       "blocking_reason": "Outcome access and prior diagnostics are already recorded."
+    },
+    {
+      "id": "calstate_la_in_situ_back_to_back_article",
+      "title": "Hydrogen station in situ back-to-back fueling data for design and modeling",
+      "url": "https://doi.org/10.1016/j.jclepro.2021.129737",
+      "data_type": "one-year operational HRS fueling-event and station-response study",
+      "access_observation": "The article claims a comprehensive real-station dataset and reports pressure, cooling, thermodynamics and vehicle state-of-charge analyses. The publicly reachable article and institutional record expose the study description and plotted/aggregate results, but no rights-cleared machine-readable station/vehicle logger export or supplemental raw archive was found.",
+      "eligibility": "BOUNDARY_EVIDENCE_ONLY",
+      "blocking_reason": "It cannot close a prospective synchronized station-to-vehicle holdout without raw channels, a variable dictionary and pre-outcome access order."
+    },
+    {
+      "id": "met_hy_trucks_hysam_condition_files",
+      "title": "Group B HySam system measurement data (MetHyTrucks)",
+      "url": "https://zenodo.org/records/20590842",
+      "doi": "10.5281/zenodo.20590842",
+      "data_type": "open sampling-system condition workbooks with pressure/temperature channels",
+      "access_observation": "The Zenodo record exposes three open XLSX files for hydrogen sampling-system tests. They describe sampling hardware conditions rather than a station-to-vehicle fueling loop and do not provide dispenser/receptacle/controller synchronization.",
+      "eligibility": "NOT_ELIGIBLE_FOR_STATION_COMPONENT_HOLDOUT",
+      "blocking_reason": "The files are useful boundary/context data but do not represent the HRS source-line-dispenser-vehicle system required by the frozen gates."
     }
   ],
   "conclusion": {
@@ -93,6 +112,14 @@
     "runtime_model_changed": false,
     "progress_percent_changed": false,
     "next_action": "Obtain a rights-cleared, previously uninspected Type-III temperature-pressure trace or a new independent pressure-decay/release campaign, then freeze the scoring protocol before opening outcomes.",
-    "claim_boundary": "The current study may report the existing bounded component results and retained negative findings, but may not claim full independent Type-III thermal, outdoor consequence-distance, spatial detector-transfer or station-to-vehicle validation."
+    "claim_boundary": "The current study may report the existing bounded component results and retained negative findings, but may not claim full independent Type-III thermal, outdoor consequence-distance, spatial detector-transfer or station-to-vehicle validation.",
+    "search_round_2026_10_14_addendum": {
+      "new_candidates_checked": [
+        "calstate_la_in_situ_back_to_back_article",
+        "met_hy_trucks_hysam_condition_files"
+      ],
+      "eligible_new_raw_holdout_found": false,
+      "interpretation": "The Cal State LA study is a strong real-operation reference but its public access path does not expose the raw synchronized logger bundle. HySam files are open measurements but are for sampling-system conditions, not a station-to-vehicle or station-side release holdout."
+    }
   }
 }
