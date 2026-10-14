@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-14T08:00:01Z",
+  "generated_at": "2026-10-14T08:13:30Z",
   "metric_definition": "PASS gates divided by PASS+FAIL+PENDING gates; not a publication-readiness probability",
   "gate_counts": {
     "PASS": 134,
@@ -85,8 +85,8 @@
       "ethics_and_expert_review": "optional_for_physics_validation; required only for a claim that SAGA improves human safety guidance"
     }
   },
-  "source_commit": "4be709a",
-  "latest_completed_work": "Direct-answer LLM prompt budget regression was fixed. The complete evidence manifest remains in the API response, while interactive provider prompts now omit duplicated validation-scope inventories and long ventilation claim text. Main and sensor impact/direct-command routes pass the focused suite; no evidence gate or scientific claim was promoted.",
+  "source_commit": "e23bb69",
+  "latest_completed_work": "Privacy-bounded local data recheck completed: two local bundles were screened without retaining paths, headers, rows, exact dates or source identity. The additional volume is usable for station-side schema intake, but untrusted vehicle-side candidates remain ineligible without unit, calibration, common-clock and rights attestation; priority scientific failures remain unchanged.",
   "latest_full_regression": {
     "tests_passed": 1609,
     "tests_failed": 0,
@@ -129,6 +129,11 @@
     "scope": "tests/test_closed_loop_calibrated_llm_grounding.py tests/test_llm_grounding.py tests/test_local_evidence_api.py"
   },
   "completed_process_improvements": [
+    {
+      "id": "local_private_schema_recheck_2026_10_14",
+      "progress_percent": 100.0,
+      "status": "Two local confidential bundles were re-screened with aggregate-only outputs. Additional signal volume was confirmed, but no synchronized station-to-vehicle holdout was admitted because unit semantics, calibration, common-clock linkage and rights attestations are missing."
+    },
     {
       "id": "direct_answer_prompt_budget_regression_fix_2026_10_14",
       "progress_percent": 100.0,
