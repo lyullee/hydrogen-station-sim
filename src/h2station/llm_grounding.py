@@ -2594,6 +2594,52 @@ def _public_grune_ventilation_evidence() -> dict[str, Any] | None:
     }
 
 
+def _public_actual_hydrogen_spatial_benchmark() -> dict[str, Any] | None:
+    """Expose the post-access Zenodo spatial benchmark as bounded context.
+
+    The workbooks contain measured hydrogen concentration/ventilation grids,
+    but they are not a synchronized station-to-vehicle time series and were
+    accessed after the current spatial holdout work.  Keep that boundary
+    explicit so an LLM can cite the dataset without promoting it to runtime
+    calibration or independent validation.
+    """
+
+    path = Path(__file__).resolve().parents[2] / (
+        "research/grune_ps_h2_dispersion_intake_2026_10_14.json"
+    )
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, json.JSONDecodeError):
+        return None
+    source = record.get("source") or {}
+    schema = record.get("schema_summary") or {}
+    eligibility = record.get("eligibility") or {}
+    if (
+        record.get("artifact_type") != "public_actual_hydrogen_spatial_intake"
+        or record.get("evidence_role") != "post_access_development_diagnostic"
+        or source.get("license") != "CC BY 4.0"
+        or not source.get("doi")
+        or eligibility.get("actual_hydrogen_spatial_concentration_data") is not True
+        or eligibility.get("independent_h2safe_holdout") is not False
+        or record.get("runtime_parameter_updated") is not False
+    ):
+        return None
+    return {
+        "artifact": "research/grune_ps_h2_dispersion_intake_2026_10_14.json",
+        "evidence_role": "post-access public measured hydrogen spatial benchmark",
+        "source_doi": str(source.get("doi")),
+        "license": str(source.get("license")),
+        "hydrogen_worksheet_count": int(schema.get("hydrogen_worksheet_count") or 0),
+        "coordinate_grid_worksheet_count": int(
+            schema.get("coordinate_grid_worksheet_count") or 0
+        ),
+        "independent_holdout": False,
+        "runtime_parameter_updated": False,
+        "promotion_prohibited": True,
+        "claim_limit": str(record.get("claim_boundary") or ""),
+    }
+
+
 def _public_h2safe_indoor_surrogate_evidence() -> dict[str, Any] | None:
     """Expose bounded full-scale indoor surrogate data to the assistant.
 
@@ -10548,6 +10594,11 @@ def build_evidence_manifest(
         envelope["response_evidence"][
             "public_grune_ventilation_evidence"
         ] = grune_ventilation
+    actual_hydrogen_spatial = _public_actual_hydrogen_spatial_benchmark()
+    if actual_hydrogen_spatial is not None:
+        envelope["response_evidence"][
+            "public_actual_hydrogen_spatial_benchmark"
+        ] = actual_hydrogen_spatial
     h2safe_indoor = _public_h2safe_indoor_surrogate_evidence()
     if h2safe_indoor is not None:
         envelope["response_evidence"][
@@ -12395,6 +12446,18 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
                 "definition", "claim_limit",
             )
             if grune_ventilation.get(key) is not None
+        }
+    actual_hydrogen_spatial = evidence.get("public_actual_hydrogen_spatial_benchmark")
+    if isinstance(actual_hydrogen_spatial, dict):
+        summary["public_actual_hydrogen_spatial_benchmark"] = {
+            key: actual_hydrogen_spatial.get(key)
+            for key in (
+                "artifact", "evidence_role", "source_doi", "license",
+                "hydrogen_worksheet_count", "coordinate_grid_worksheet_count",
+                "independent_holdout", "runtime_parameter_updated",
+                "promotion_prohibited", "claim_limit",
+            )
+            if actual_hydrogen_spatial.get(key) is not None
         }
     h2safe_indoor = evidence.get("public_h2safe_indoor_surrogate_evidence")
     if isinstance(h2safe_indoor, dict):

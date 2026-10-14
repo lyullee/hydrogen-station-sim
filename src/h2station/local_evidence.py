@@ -39,6 +39,7 @@ _PRIVATE_RECHARGE_SCHEMA = _ROOT / "research/private_recharge_multitrace_schema_
 _KHK_ACCIDENTS = _ROOT / "research/khk_hydrogen_station_public_reports_inventory_2026_10_04.json"
 _ACCIDENTAL_RELEASE = _ROOT / "research/accidental_self_ignition_public_evidence_2026_10_04.json"
 _EXPERIMENTAL_BENCHMARKS = _ROOT / "research/public_experimental_benchmarks_2026_10_06.json"
+_GRUNE_PS_SPATIAL_INTAKE = _ROOT / "research/grune_ps_h2_dispersion_intake_2026_10_14.json"
 _CARB_BENCHMARK = _ROOT / "research/carb_2024_hrs_inuse_field_benchmark_2026_10_08.json"
 _STRIEDNIG_DIAGNOSTIC = _ROOT / "research/striednig_hyddown_diagnostic_result_2026_10_10.json"
 _NREL_HDVS_BOUNDARY = _ROOT / "research/nrel_hdvs_raw_trace_boundary_2026_10_05.json"
@@ -2254,6 +2255,33 @@ def public_evidence_inventory_summary() -> dict[str, Any]:
             # this false even if a malformed source description contains an
             # ambiguous phrase.
             result["public_experimental_benchmarks"]["full_loop_holdout_eligible"] = False
+    except (OSError, KeyError, TypeError, ValueError, json.JSONDecodeError):
+        pass
+    try:
+        record = _read_json(_GRUNE_PS_SPATIAL_INTAKE)
+        source = record.get("source") or {}
+        schema = record.get("schema_summary") or {}
+        eligibility = record.get("eligibility") or {}
+        if (
+            record.get("artifact_type") == "public_actual_hydrogen_spatial_intake"
+            and record.get("evidence_role") == "post_access_development_diagnostic"
+            and source.get("license") == "CC BY 4.0"
+            and eligibility.get("actual_hydrogen_spatial_concentration_data") is True
+            and eligibility.get("independent_h2safe_holdout") is False
+            and record.get("runtime_parameter_updated") is False
+        ):
+            result["public_actual_hydrogen_spatial_benchmark"] = {
+                "status": "available",
+                "source_doi": str(source.get("doi") or "") or None,
+                "license": str(source.get("license") or "") or None,
+                "hydrogen_worksheet_count": int(schema.get("hydrogen_worksheet_count") or 0),
+                "coordinate_grid_worksheet_count": int(
+                    schema.get("coordinate_grid_worksheet_count") or 0
+                ),
+                "independent_holdout": False,
+                "runtime_parameter_updated": False,
+                "claim_limit": str(record.get("claim_boundary") or ""),
+            }
     except (OSError, KeyError, TypeError, ValueError, json.JSONDecodeError):
         pass
     try:

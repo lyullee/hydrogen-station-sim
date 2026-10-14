@@ -28,6 +28,27 @@ def test_calibrated_confirmatory_diagnostic_is_grounded_as_non_validation():
     assert "not a new independent holdout" in compact["claim_limit"]
 
 
+def test_actual_hydrogen_spatial_benchmark_is_grounded_without_promotion():
+    manifest = build_evidence_manifest(
+        {"time_s": 1.0}, {}, [], False, question="공개 수소 공간분포 근거"
+    )
+    evidence = manifest["response_evidence"][
+        "public_actual_hydrogen_spatial_benchmark"
+    ]
+    assert evidence["source_doi"] == "10.5281/zenodo.4668554"
+    assert evidence["license"] == "CC BY 4.0"
+    assert evidence["hydrogen_worksheet_count"] == 41
+    assert evidence["coordinate_grid_worksheet_count"] == 42
+    assert evidence["independent_holdout"] is False
+    assert evidence["runtime_parameter_updated"] is False
+    assert evidence["promotion_prohibited"] is True
+    compact = prompt_evidence_summary(manifest)[
+        "public_actual_hydrogen_spatial_benchmark"
+    ]
+    assert compact["source_doi"] == evidence["source_doi"]
+    assert compact["promotion_prohibited"] is True
+
+
 def test_mc_geometry_transfer_diagnostic_is_grounded_without_rule_promotion():
     manifest = build_evidence_manifest(
         {"time_s": 1.0}, {}, [], False, question="탱크 모델 검증 상태"
