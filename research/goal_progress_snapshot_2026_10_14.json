@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-14T03:19:37+00:00",
+  "generated_at": "2026-10-14T03:34:05+00:00",
   "metric_definition": "PASS gates divided by PASS+FAIL+PENDING gates; not a publication-readiness probability",
   "gate_counts": {
     "PASS": 134,
@@ -85,8 +85,8 @@
       "ethics_and_expert_review": "optional_for_physics_validation; required only for a claim that SAGA improves human safety guidance"
     }
   },
-  "source_commit": "90de08c",
-  "latest_completed_work": "Public HydDown hydrogen discharge/filling evidence route added; 1,592-test full regression passed.",
+  "source_commit": "e603690",
+  "latest_completed_work": "Public HydDown hydrogen discharge/filling evidence route and adjacent HY2RES PLC operational-context route added; focused LLM/evidence regression passed.",
   "latest_full_regression": {
     "tests_passed": 1592,
     "tests_failed": 0,
@@ -108,7 +108,7 @@
     {
       "id": "saga_direct_answer_grounding",
       "progress_percent": 100.0,
-      "status": "Evidence-bound direct-answer routing and scenario/action grounding tests pass; effectiveness claim remains pending"
+      "status": "Evidence-bound direct-answer routing and scenario/action grounding tests pass; adjacent public PLC context is routed only for relevant questions; effectiveness claim remains pending"
     },
     {
       "id": "station_to_vehicle_full_loop",
@@ -120,5 +120,12 @@
       "progress_percent": 88.2,
       "status": "Format/LaTeX/software DOI gates pass; submission metadata and unresolved validation gates remain"
     }
-  ]
+  ],
+  "latest_focused_regression": {
+    "tests_passed": 33,
+    "tests_failed": 0,
+    "tests_skipped": 0,
+    "warnings": 1,
+    "scope": "tests/test_llm_grounding.py"
+  }
 }
