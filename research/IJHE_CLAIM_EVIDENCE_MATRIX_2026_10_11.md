@@ -4,7 +4,7 @@ This reviewer-facing companion is generated from `manuscript/ijhe_readiness_audi
 It records bounded component claims and preserves failed or incomplete transfers.
 It does not establish journal acceptance, field safety, or human-effectiveness.
 
-Audit SHA-256: `a016669d11aac896349369ba39c31d716af406b0d2eada8da2e6a1722afd16d2`
+Audit SHA-256: `877c9a6ba2887a8841d5785ee68c399bce00a30842b6a9fc62a4ef7e9cae72a5`
 
 | Claim boundary | Evidence | Decision | Interpretation |
 |---|---|---|---|

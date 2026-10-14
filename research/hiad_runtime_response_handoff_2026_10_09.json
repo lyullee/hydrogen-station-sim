@@ -1,12 +1,12 @@
 {
   "schema_version": 1,
   "artifact_type": "hiad_runtime_response_handoff_audit",
-  "generated_at_utc": "2026-10-14T09:46:43.288865+00:00",
+  "generated_at_utc": "2026-10-14T11:10:37.228631+00:00",
   "status": "completed_canonical_family_handoff_audit",
   "evidence_role": "retrospective_metadata_to_runtime_response_traceability_only",
   "source": {
     "replay_coverage_artifact": "research/hiad_digital_twin_replay_coverage_2026_10_08.json",
-    "replay_coverage_artifact_sha256": "5ba41715a8fbd34a20befe9547dc0f6e4cfec74ddb2547fdf57c567b14578291",
+    "replay_coverage_artifact_sha256": "87c7601e52c47645c3bd2c16cdc7c30436f932d2d1cf550f2f7ab3d0c19c4ad4",
     "response_module": "src/h2station/hazop/response.py",
     "response_module_sha256": "cbbcf741bde852242a319a236a324b7fe421b89de6e8ef0dd329422c009be4ab",
     "playbook_catalog": "src/h2station/data/emergency_playbooks.json",
