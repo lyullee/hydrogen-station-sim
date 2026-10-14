@@ -85,8 +85,8 @@
       "ethics_and_expert_review": "optional_for_physics_validation; required only for a claim that SAGA improves human safety guidance"
     }
   },
-  "source_commit": "e59d25e",
-  "latest_completed_work": "Corrected the local FTPData provenance boundary: the discovered CSV is explicitly classified as a byte-identical duplicate of the retained public USN/FFI archive; focused provenance tests pass and no duplicate is counted as a new holdout.",
+  "source_commit": "a2611b2",
+  "latest_completed_work": "Invalidated the Jankuj Zenodo pressure holdout protocol after confirming that the same archive and numeric workbook had already been accessed; the source remains descriptive/post-access only and cannot be counted as a new independent gate.",
   "latest_full_regression": {
     "tests_passed": 1599,
     "tests_failed": 0,
@@ -129,6 +129,11 @@
     "scope": "tests/test_ijhe_readiness_audit.py tests/test_ijhe_audit_snapshot_consistency.py tests/test_validation_gap_report.py tests/test_llm_grounding.py"
   },
   "completed_process_improvements": [
+    {
+      "id": "jankuj_reused_holdout_invalidation_2026_10_14",
+      "progress_percent": 100.0,
+      "status": "The false prospective-access declaration is corrected with matching archive hashes and a regression test; no runtime, validation gate or progress percentage is promoted."
+    },
     {
       "id": "local_ftpdata_duplicate_provenance_correction_2026_10_14",
       "progress_percent": 100.0,
