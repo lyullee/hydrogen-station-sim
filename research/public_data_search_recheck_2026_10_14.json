@@ -104,6 +104,17 @@
       "access_observation": "The Zenodo record exposes three open XLSX files for hydrogen sampling-system tests. They describe sampling hardware conditions rather than a station-to-vehicle fueling loop and do not provide dispenser/receptacle/controller synchronization.",
       "eligibility": "NOT_ELIGIBLE_FOR_STATION_COMPONENT_HOLDOUT",
       "blocking_reason": "The files are useful boundary/context data but do not represent the HRS source-line-dispenser-vehicle system required by the frozen gates."
+    },
+    {
+      "id": "grune_ps_h2_dispersion_zenodo",
+      "title": "Efficiency of mechanical ventilation on H2 dispersion (PS)",
+      "url": "https://zenodo.org/records/4668554",
+      "doi": "10.5281/zenodo.4668554",
+      "data_type": "open actual-hydrogen spatial concentration sheets, ventilation conditions and CAD facility context",
+      "access_observation": "The Zenodo record is open under CC BY 4.0 and exposes five XLSX workbooks with 41 hydrogen concentration worksheets, coordinate grids and declared ventilation conditions, plus a CAD archive. The archive is spatial/condition data rather than a common-clock HRS station or vehicle logger.",
+      "eligibility": "POST_ACCESS_DEVELOPMENT_SPATIAL_EVIDENCE_ONLY",
+      "blocking_reason": "The archive was opened after the current spatial-detector analysis and is not time-resolved station data, so it cannot close the independent H2SAFE spatial-transfer gate or authorize runtime detector routing.",
+      "intake_artifact": "research/grune_ps_h2_dispersion_intake_2026_10_14.json"
     }
   ],
   "conclusion": {
@@ -116,10 +127,11 @@
     "search_round_2026_10_14_addendum": {
       "new_candidates_checked": [
         "calstate_la_in_situ_back_to_back_article",
-        "met_hy_trucks_hysam_condition_files"
+        "met_hy_trucks_hysam_condition_files",
+        "grune_ps_h2_dispersion_zenodo"
       ],
       "eligible_new_raw_holdout_found": false,
-      "interpretation": "The Cal State LA study is a strong real-operation reference but its public access path does not expose the raw synchronized logger bundle. HySam files are open measurements but are for sampling-system conditions, not a station-to-vehicle or station-side release holdout."
+      "interpretation": "The Cal State LA study is a strong real-operation reference but its public access path does not expose the raw synchronized logger bundle. HySam files are open measurements but are for sampling-system conditions, not a station-to-vehicle or station-side release holdout. The Grüne/PS archive adds actual-hydrogen spatial development evidence but not an independent station or detector-transfer holdout."
     }
   }
 }
