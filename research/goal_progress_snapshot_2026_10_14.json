@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-14T06:16:01Z",
+  "generated_at": "2026-10-14T06:54:15Z",
   "metric_definition": "PASS gates divided by PASS+FAIL+PENDING gates; not a publication-readiness probability",
   "gate_counts": {
     "PASS": 134,
@@ -85,8 +85,8 @@
       "ethics_and_expert_review": "optional_for_physics_validation; required only for a claim that SAGA improves human safety guidance"
     }
   },
-  "source_commit": "c6e75f2",
-  "latest_completed_work": "Published actual-H2 detector evidence is now grounded in SAGA and local evidence inventories; all readiness, runtime-precedent and claim-matrix projections were refreshed, and the complete regression is clean.",
+  "source_commit": "5847a74",
+  "latest_completed_work": "The manuscript now documents the published actual-H2 semi-closed-tent detector diagnostic with its 0.70 top-1 and 0.80 top-2 transparent baseline and explicit post-access boundary; the 24-page Tectonic PDF, format gate, readiness audit and claim matrix were refreshed, and focused IJHE reproduction tests pass. Scientific gate counts remain unchanged.",
   "latest_full_regression": {
     "tests_passed": 1606,
     "tests_failed": 0,
@@ -122,13 +122,18 @@
     }
   ],
   "latest_focused_regression": {
-    "tests_passed": 47,
+    "tests_passed": 12,
     "tests_failed": 0,
     "tests_skipped": 0,
     "warnings": 1,
-    "scope": "tests/test_ijhe_readiness_audit.py tests/test_ijhe_audit_snapshot_consistency.py tests/test_validation_gap_report.py tests/test_llm_grounding.py"
+    "scope": "tests/test_ijhe_readiness_audit.py tests/test_ijhe_audit_snapshot_consistency.py tests/test_ijhe_manuscript_format.py tests/test_ijhe_compile_artifact.py tests/test_goal_progress_snapshot.py tests/test_ijhe_reproduction.py"
   },
   "completed_process_improvements": [
+    {
+      "id": "ijhe_manuscript_actual_h2_evidence_2026_10_14",
+      "progress_percent": 100.0,
+      "status": "The published actual-H2 detector study is documented as post-access development evidence only; the 24-page Tectonic PDF compiles, all rendered pages were inspected, format/readiness artifacts are synchronized, and 12 focused reproduction tests pass. No scientific gate or runtime parameter was promoted."
+    },
     {
       "id": "full_regression_after_detector_evidence_grounding_2026_10_14",
       "progress_percent": 100.0,
