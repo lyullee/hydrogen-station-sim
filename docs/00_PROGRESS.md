@@ -1,5 +1,24 @@
 # Development Progress
 
+## 2026-10-14 - Correct local FTPData provenance classification
+
+The local inventory was rechecked against the current folder contents. It
+contains one CSV trace, but the file is byte-identical to the retained public
+USN/FFI archive. The boundary record now lists the numeric file and links the
+duplicate hash recheck while preserving `new_independent_holdout=false`.
+This corrects the audit description without adding a second validation case.
+The focused provenance and snapshot checks pass; the readiness count remains
+**134 PASS / 11 FAIL / 7 PENDING**.
+
+## 2026-10-14 - Invalidate the reused Jankuj prospective protocol
+
+The Jankuj Zenodo pressure holdout declared as frozen before raw access was
+cross-checked against the retained archive. The same archive and numeric
+workbook were already opened in the 2026-10-08 post-access diagnostic, so the
+protocol is now explicitly marked `INVALIDATED_PRIOR_OUTCOME_ACCESS` with the
+matching SHA256/MD5 and a regression test. It remains descriptive evidence
+only; no runtime parameter, gate or claim was promoted.
+
 ## 2026-10-14 - Add a fail-closed intake validator for the resolved Type-III protocol
 
 The new `scripts/validate_dickens_typeiii_protocol.py` checker validates the
