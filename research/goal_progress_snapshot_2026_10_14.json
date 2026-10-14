@@ -85,8 +85,8 @@
       "ethics_and_expert_review": "optional_for_physics_validation; required only for a claim that SAGA improves human safety guidance"
     }
   },
-  "source_commit": "3e37d82",
-  "latest_completed_work": "critical 우선순위 검사와 일곱 번째 공개자료 재검색을 완료했다. 새 독립 원자료는 확인되지 않았고, USN은 이미 소비된 진단, HyDelta는 좌표·원시 시계열 부족, GASFLOW는 시뮬레이션, 센서 보정자료는 공간 장치 맥락 부족으로 분류했다.",
+  "source_commit": "91cbb648f41ec76ec128a5c038a90196542f6a3b",
+  "latest_completed_work": "TU Delft 실제 수소 계측 캐비닛 연구를 검지기 배치·환기 설명 전용 LLM 근거로 연결했다. 원시 시계열·3D 좌표·재사용 라이선스가 없어 런타임·검증 게이트로 승격하지 않았고, 집중 회귀 41건이 통과했다.",
   "latest_full_regression": {
     "tests_passed": 1612,
     "tests_failed": 0,
@@ -129,6 +129,11 @@
     "scope": "tests/test_closed_loop_calibrated_llm_grounding.py tests/test_llm_grounding.py tests/test_local_evidence_api.py"
   },
   "completed_process_improvements": [
+    {
+      "id": "tudelft_detector_placement_context_2026_10_14",
+      "progress_percent": 100.0,
+      "status": "TU Delft actual-hydrogen metering-cabinet report context is routed selectively to detector-placement and ventilation questions. It remains report-level context only: no raw time series, machine-readable 3-D coordinates, runtime detector routing, threshold calibration, safety-distance calibration or validation-gate promotion; 41 focused tests pass."
+    },
     {
       "id": "local_private_schema_recheck_2026_10_14",
       "progress_percent": 100.0,
@@ -289,5 +294,12 @@
       "progress_percent": 100.0,
       "status": "The current streamed LLM/vehicle-route runtime and readiness/data-lane audit passed 3 JavaScript and 47 Python tests; the station-side/full-loop boundary remains explicit and no scientific gate was promoted."
     }
-  ]
+  ],
+  "latest_context_focused_regression": {
+    "tests_passed": 41,
+    "tests_failed": 0,
+    "tests_skipped": 0,
+    "warnings": 1,
+    "scope": "tests/test_tudelft_detector_context.py tests/test_llm_grounding.py tests/test_hydelta_natural_ventilation_evidence.py"
+  }
 }
