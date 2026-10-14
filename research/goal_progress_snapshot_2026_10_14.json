@@ -85,8 +85,8 @@
       "ethics_and_expert_review": "optional_for_physics_validation; required only for a claim that SAGA improves human safety guidance"
     }
   },
-  "source_commit": "83e9a1f",
-  "latest_completed_work": "Type-IV 복합재 용기 기계무결성 공개근거를 선택적 LLM 라우팅으로 연결하고, 파생 감사 원장을 재동기화한 뒤 전체 회귀 1,599건을 통과시켰다.",
+  "source_commit": "e866dfe",
+  "latest_completed_work": "Readiness audit and validation-gap records re-synchronized after the Type-IV evidence update; focused audit consistency regression 12/12 passed.",
   "latest_full_regression": {
     "tests_passed": 1599,
     "tests_failed": 0,
@@ -153,6 +153,11 @@
       "id": "type4_burst_mechanical_evidence_and_audit_resync",
       "progress_percent": 100.0,
       "status": "Zenodo 10.5281/zenodo.10983652 is hash-locked as bounded Type-IV hydraulic mechanical context; LLM routing is selective, derived audit artifacts are synchronized, and the final full regression is 1,599/1,599. No scientific readiness gate was promoted."
+    },
+    {
+      "id": "readiness_audit_resync_2026_10_14",
+      "progress_percent": 100.0,
+      "status": "Readiness audit, validation-gap reports and progress records were regenerated from the current source; 12 audit consistency tests pass; scientific gate counts remain 134 PASS / 11 FAIL / 7 PENDING."
     }
   ]
 }
