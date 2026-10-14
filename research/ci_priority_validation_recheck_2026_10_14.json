@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "artifact_type": "github_priority_validation_recheck",
+  "recorded_at": "2026-10-14T02:20:56Z",
+  "repository": "lyullee/hydrogen-station-sim",
+  "branch": "main",
+  "head_sha": "0217fb3575fd024725f9c86c4d6382b2b03c2c4e",
+  "workflow": "Priority validation",
+  "run_id": 38500454286,
+  "run_url": "https://github.com/lyullee/hydrogen-station-sim/actions/runs/38500454286",
+  "status": "completed",
+  "conclusion": "success",
+  "software_and_process_reproducibility": "PASS",
+  "scientific_gate_promotion": false,
+  "scientific_screen_status": "FAIL",
+  "readiness_status": "BLOCKED",
+  "claim_boundary": "CI execution success does not prove independent external validation, safety-distance validity, regulatory compliance, operator-response effectiveness or IJHE submission readiness."
+}
