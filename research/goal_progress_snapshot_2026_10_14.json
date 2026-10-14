@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-14T08:13:30Z",
+  "generated_at": "2026-10-14T08:22:00Z",
   "metric_definition": "PASS gates divided by PASS+FAIL+PENDING gates; not a publication-readiness probability",
   "gate_counts": {
     "PASS": 134,
@@ -85,8 +85,8 @@
       "ethics_and_expert_review": "optional_for_physics_validation; required only for a claim that SAGA improves human safety guidance"
     }
   },
-  "source_commit": "e23bb69",
-  "latest_completed_work": "Privacy-bounded local data recheck completed: two local bundles were screened without retaining paths, headers, rows, exact dates or source identity. The additional volume is usable for station-side schema intake, but untrusted vehicle-side candidates remain ineligible without unit, calibration, common-clock and rights attestation; priority scientific failures remain unchanged.",
+  "source_commit": "cfc3385",
+  "latest_completed_work": "Physics-core recheck completed: 31 focused release-network, thermal, apparatus, pressure-trace and line-transient tests passed with no failures. The record remains bounded to implementation consistency; it does not promote development models or close independent external-validation gates.",
   "latest_full_regression": {
     "tests_passed": 1609,
     "tests_failed": 0,
