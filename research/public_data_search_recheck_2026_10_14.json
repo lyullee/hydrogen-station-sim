@@ -159,6 +159,37 @@
       ],
       "eligible_new_raw_holdout_found": false,
       "interpretation": "The NHyRA document is a public database overview without an accessed case-level raw trace. The HyTunnel catalogue confirms repository coverage but adds no new uninspected station-side or station-to-vehicle raw bundle."
+    },
+    "search_round_2026_10_14_third_pass": {
+      "search_date": "2026-10-14",
+      "new_candidates_checked": [
+        {
+          "id": "preslhy_e5_1_b2find_official_record",
+          "url": "https://b2find.eudat.eu/dataset/c52d34f1-147d-5b26-bdb5-2c5b5c97bea0",
+          "doi": "10.35097/1258",
+          "observed": "Official RADAR/B2FIND record exposes an open-access CC BY-SA 4.0 archive for E5.1 ignited discharge benchmarking.",
+          "eligibility": "ALREADY_CONSUMED_AND_FAILED_PRIMARY_HOLDOUT",
+          "reason": "The archive is already represented by the frozen PRESLHY E5.1 protocol/result in this repository; reusing it cannot create a new independent holdout or change the retained failure."
+        },
+        {
+          "id": "schefer_2007_publisher_record",
+          "url": "https://www.sciencedirect.com/science/article/pii/S0360319906003739",
+          "doi": "10.1016/j.ijhydene.2006.08.037",
+          "observed": "Publisher record describes the 431 bar blowdown and publishes a fitted pressure-history figure.",
+          "eligibility": "BOUNDARY_EVIDENCE_ONLY",
+          "reason": "No rights-cleared machine-readable pressure-time logger export was found in the accessible record; the existing Schefer holdout remains failed."
+        },
+        {
+          "id": "grune_2014_kit_record",
+          "url": "https://publikationen.bibliothek.kit.edu/110097219",
+          "doi": "10.1016/j.ijhydene.2013.08.076",
+          "observed": "KIT publication record confirms the 0.37 dm3, up-to-200 bar, 3/4/10 mm release campaign.",
+          "eligibility": "BOUNDARY_EVIDENCE_ONLY",
+          "reason": "The record does not provide a rights-cleared raw pressure-time table; the existing figure-derived diagnostic remains non-promoted."
+        }
+      ],
+      "eligible_new_raw_holdout_found": false,
+      "interpretation": "This targeted third pass added no new eligible untouched raw trace. Existing source records reinforce the apparatus and license boundaries but do not justify changing a validation gate or runtime model."
     }
   }
 }
