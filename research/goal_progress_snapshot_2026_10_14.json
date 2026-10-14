@@ -85,8 +85,8 @@
       "ethics_and_expert_review": "optional_for_physics_validation; required only for a claim that SAGA improves human safety guidance"
     }
   },
-  "source_commit": "8a9a3f4",
-  "latest_completed_work": "Completed the priority-manifest and privacy cleanup, confirmed the full repository regression, and invalidated an overlapping Andreasen public holdout attempt before promoting it as independent evidence.",
+  "source_commit": "ab843bf",
+  "latest_completed_work": "Completed priority-manifest/privacy cleanup, full regression confirmation, Andreasen overlap invalidation, and HySaM public-data inventory with an explicit no-gate-promotion boundary.",
   "latest_full_regression": {
     "tests_passed": 1602,
     "tests_failed": 0,
@@ -129,6 +129,11 @@
     "scope": "tests/test_ijhe_readiness_audit.py tests/test_ijhe_audit_snapshot_consistency.py tests/test_validation_gap_report.py tests/test_llm_grounding.py"
   },
   "completed_process_improvements": [
+    {
+      "id": "hysam_public_dataset_boundary_inventory_2026_10_14",
+      "progress_percent": 100.0,
+      "status": "Three CC BY 4.0 HySaM workbooks were hash-locked and inventoried; they provide sampling-system time series but no HRS topology or station-to-vehicle trace, so they remain inventory-only and do not promote an IJHE validation gate."
+    },
     {
       "id": "andreasen_holdout_overlap_invalidation_2026_10_14",
       "progress_percent": 100.0,
