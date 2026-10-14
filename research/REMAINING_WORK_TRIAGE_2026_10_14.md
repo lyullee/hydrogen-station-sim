@@ -86,3 +86,4 @@
 
 
 - 최신 critical 우선순위 재실행(`research/priority_focus_run_2026_10_14.json`): 소프트웨어 검사는 PASS(LLM 근거 경계 24건, full-loop 입력 경계 19건, 가상 안전·대응 25건)였고 약 5.0초에 완료됐다. 과학적 화면은 `mc_tank_boundary`(8건 중 0건), `h2safe_spatial_response`(1개 화면 실패), `nrel_h2fills_hdvs_tank`(7건 중 0건)에서 실패했다. 이 결과는 개발 진단으로만 보존하며 런타임 파라미터·독립 검증 게이트·논문 주장을 변경하지 않는다.
+- Jankuj Zenodo 10.5281/zenodo.17913628의 10월 14일 압력 holdout 프로토콜은 동일 원자료가 10월 8일에 이미 수치 분석된 사실을 확인해 무효화했다. 해당 자료는 사후 진단으로만 유지하며 신규 독립 holdout이나 검증 게이트로 재계상하지 않는다. 무효화 사유와 archive hash는 `research/jankuj_zenodo_17913628_pressure_holdout_protocol_2026_10_14.json`에 고정했다.

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "artifact_type": "prospective_public_actual_hydrogen_release_pressure_holdout_protocol",
-  "status": "FROZEN_BEFORE_RAW_ACCESS",
+  "status": "INVALIDATED_PRIOR_OUTCOME_ACCESS",
   "frozen_at": "2026-10-13T23:33:36.108483+00:00",
   "source": {
     "dataset_doi": "10.5281/zenodo.17913628",
@@ -9,7 +9,17 @@
     "title": "Dataset for: Accidental self-ignition of hydrogen released from pressurized cylinder (Figures 7-9)",
     "license": "CC BY 4.0",
     "raw_file": "fig_7-9_Accidental self-ignition of hydrogen_VJ.7z",
-    "raw_accessed_before_freeze": false
+    "raw_accessed_before_freeze": true
+  },
+  "protocol_valid": false,
+  "invalidation": {
+    "reason": "The same Zenodo archive and numeric Figure 7 workbook were already opened and recorded in the retained post-access diagnostic before this protocol was written.",
+    "prior_artifact": "research/jankuj_2026_pressure_decay_transfer_result_2026_10_08.json",
+    "matching_archive_sha256": "0a44613734bb2da4d9ea4a4e84fd438ff2a87916b8f9c91d55e9e37c9d8de804",
+    "matching_archive_md5": "e460d8596aef6d543239781747353f36",
+    "independent_holdout": false,
+    "runtime_parameter_change": false,
+    "validation_gate_effect": "none"
   },
   "model_lock": {
     "repository_commit": "31ed868",
@@ -33,6 +43,6 @@
     "half_pressure_time_relative_error_percent_max": 20.0,
     "joint_primary_requires_all": true
   },
-  "claim_boundary": "A pass can support only a prospective public component pressure-release validation claim for the documented cylinder/restriction domain. It does not validate ignition probability, flame, radiation, dispersion, detector placement, station control, ESD, station-to-vehicle behavior or field safety.",
+  "claim_boundary": "This protocol is invalidated because numerical outcomes were accessed before its freeze. The retained Jankuj evidence is descriptive/post-access only and cannot support a prospective component pressure-release validation claim. It does not validate ignition probability, flame, radiation, dispersion, detector placement, station control, ESD, station-to-vehicle behavior or field safety.",
   "raw_rows_committed": false
 }

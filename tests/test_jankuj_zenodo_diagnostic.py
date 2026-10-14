@@ -11,6 +11,19 @@ from h2station.llm_grounding import (
 
 ROOT = Path(__file__).resolve().parents[1]
 ARTIFACT = ROOT / "research/jankuj_zenodo_17913628_postaccess_diagnostic_2026_10_14.json"
+PROTOCOL = ROOT / "research/jankuj_zenodo_17913628_pressure_holdout_protocol_2026_10_14.json"
+
+
+def test_jankuj_holdout_protocol_cannot_be_reused_as_prospective_evidence():
+    protocol = json.loads(PROTOCOL.read_text(encoding="utf-8"))
+    assert protocol["status"] == "INVALIDATED_PRIOR_OUTCOME_ACCESS"
+    assert protocol["protocol_valid"] is False
+    assert protocol["source"]["raw_accessed_before_freeze"] is True
+    assert protocol["invalidation"]["independent_holdout"] is False
+    assert protocol["invalidation"]["validation_gate_effect"] == "none"
+    assert protocol["invalidation"]["prior_artifact"] == (
+        "research/jankuj_2026_pressure_decay_transfer_result_2026_10_08.json"
+    )
 
 
 def test_jankuj_diagnostic_is_bounded_actual_hydrogen_evidence():
