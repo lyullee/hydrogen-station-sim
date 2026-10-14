@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-14T03:53:39+00:00",
+  "generated_at": "2026-10-14T04:05:00+00:00",
   "metric_definition": "PASS gates divided by PASS+FAIL+PENDING gates; not a publication-readiness probability",
   "gate_counts": {
     "PASS": 134,
@@ -85,8 +85,8 @@
       "ethics_and_expert_review": "optional_for_physics_validation; required only for a claim that SAGA improves human safety guidance"
     }
   },
-  "source_commit": "d82c95c",
-  "latest_completed_work": "Public HydDown hydrogen discharge/filling evidence route and adjacent HY2RES PLC operational-context route added; full regression passed.",
+  "source_commit": "a4e9347",
+  "latest_completed_work": "Public adjacent HY2RES PLC operational-context route added; CI now separates intended external-science blockers from software/process regressions; full regression remains 1593 passed.",
   "latest_full_regression": {
     "tests_passed": 1593,
     "tests_failed": 0,
@@ -127,5 +127,12 @@
     "tests_skipped": 0,
     "warnings": 1,
     "scope": "tests/test_llm_grounding.py"
-  }
+  },
+  "completed_process_improvements": [
+    {
+      "id": "priority_ci_science_boundary",
+      "progress_percent": 100.0,
+      "status": "Workflow reports scientific BLOCKED state without red build when software/process checks pass; software regressions still fail CI."
+    }
+  ]
 }
