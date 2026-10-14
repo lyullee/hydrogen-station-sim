@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-14T10:12:00Z",
+  "generated_at": "2026-10-14T10:16:00Z",
   "metric_definition": "PASS gates divided by PASS+FAIL+PENDING gates; not a publication-readiness probability",
   "gate_counts": {
     "PASS": 134,
@@ -85,7 +85,7 @@
       "ethics_and_expert_review": "optional_for_physics_validation; required only for a claim that SAGA improves human safety guidance"
     }
   },
-  "source_commit": "fd9f22e7cafdab899f9bea187802b91e0297cd82",
+  "source_commit": "94d2c8054de93f5c94d1962cb04de91a20b0c71d",
   "latest_completed_work": "전체 Python 회귀검증 1,618 passed / 0 failed / 0 skipped / 222 warnings를 최신 커밋에 기록했습니다. 과학적 readiness gate 수치는 134 PASS / 11 FAIL / 7 PENDING으로 유지됩니다.",
   "latest_full_regression": {
     "tests_passed": 1618,
@@ -329,6 +329,11 @@
       "id": "grune_data_request_draft_2026_10_14",
       "progress_percent": 100.0,
       "status": "독립 압력-시간 원자료 확보에 필요한 파일·단위·계측·권리 확인 항목을 요청 초안으로 고정했습니다. 외부 연락이나 gate 승격은 수행하지 않았습니다."
+    },
+    {
+      "id": "public_data_search_eighth_pass_2026_10_14",
+      "progress_percent": 100.0,
+      "status": "NREL CDP·HITRF/Kuroki·Cal State LA·USN 경로를 재확인했으나 새 권리정리 미사용 원시 holdout은 없었습니다. 집계자료·custodian 요청·이미 사용된 자료로 분류하고 gate와 런타임을 변경하지 않았습니다."
     }
   ],
   "latest_context_focused_regression": {
