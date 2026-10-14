@@ -85,8 +85,8 @@
       "ethics_and_expert_review": "optional_for_physics_validation; required only for a claim that SAGA improves human safety guidance"
     }
   },
-  "source_commit": "9ef7a67",
-  "latest_completed_work": "HyDelta D6A.1 actual-hydrogen indoor report context is now routed into the bounded LLM evidence envelope for ventilation/indoor spatial questions. The report remains qualitative context only: 32 experiments and a 50-sensor matrix are exposed, but missing numeric coordinates and per-sensor responses keep spatial holdout and runtime promotion disabled. The focused LLM grounding regression passes.",
+  "source_commit": "4be709a",
+  "latest_completed_work": "Published actual-hydrogen confined-ceiling jet evidence is now grounded in the LLM manifest, compact evidence summary, targeted decision prompt and audit header. The source records 4 MPa release, 0.16 mm nozzle, 1.5/2.0/2.5 m source heights and R² 0.98; raw traces remain author-request-only, so no calibration, spatial holdout or runtime promotion was made.",
   "latest_full_regression": {
     "tests_passed": 1606,
     "tests_failed": 0,
@@ -122,13 +122,18 @@
     }
   ],
   "latest_focused_regression": {
-    "tests_passed": 59,
+    "tests_passed": 60,
     "tests_failed": 0,
     "tests_skipped": 0,
     "warnings": 88,
     "scope": "tests/test_closed_loop_calibrated_llm_grounding.py tests/test_llm_grounding.py tests/test_local_evidence_api.py"
   },
   "completed_process_improvements": [
+    {
+      "id": "frontiers_actual_h2_ceiling_jet_context_grounding_2026_10_14",
+      "progress_percent": 100.0,
+      "status": "Frontiers actual-hydrogen confined-ceiling experiment was added as bounded LLM context with DOI 10.3389/fenrg.2024.1456316. Conditions and reported R² 0.98 are exposed, while author-request-only raw data keep calibration, spatial holdout, runtime and gate promotion disabled; 60 focused tests pass."
+    },
     {
       "id": "hydelta_d6a1_indoor_context_grounding_2026_10_14",
       "progress_percent": 100.0,

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-14T07:12:45.507849+00:00",
+  "generated_at": "2026-10-14T07:17:56.173962+00:00",
   "status": "PASS",
   "source": {
     "doi": "10.5281/zenodo.8164602",
@@ -56,6 +56,26 @@
         "numeric_spatial_holdout_eligible": false,
         "runtime_candidate_enabled": false,
         "claim_limit": "HyDelta D6A.1 is retained as public actual-hydrogen report-level evidence for indoor concentration stratification, sensor coverage and ventilation context. It does not independently validate the frozen spatial ranker because the report does not publish the machine-readable spatial outcome fields required by the pre-access protocol."
+      },
+      "confined_ceiling_jet_report_context": {
+        "doi": "10.3389/fenrg.2024.1456316",
+        "enclosure_dimensions_m": [
+          6.0,
+          4.0,
+          3.0
+        ],
+        "leak_pressure_mpa": 4.0,
+        "nozzle_diameter_mm": 0.16,
+        "source_heights_m": [
+          1.5,
+          2.0,
+          2.5
+        ],
+        "self_similarity_r2": 0.98,
+        "raw_data_status": "author_request_only_not_accessed",
+        "runtime_parameter_application": false,
+        "spatial_holdout_validation": false,
+        "claim_limit": "Published actual-hydrogen confined-ceiling jet evidence for qualitative response guidance and experiment-design context. The article page states raw data are available from the authors; raw numerical traces were not accessed here. Do not use this record as an independent holdout, concentration calibration, detector coverage proof, HRS distance validation, ESD effectiveness evidence or field safety claim."
       },
       "claim_limit": "The CC BY 4.0 report provides actual-hydrogen, cabinet-scale measured concentration evidence for ventilation and response wording. The values are rep…"
     },
