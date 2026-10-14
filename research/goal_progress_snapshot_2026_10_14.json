@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-14T10:10:00Z",
+  "generated_at": "2026-10-14T10:12:00Z",
   "metric_definition": "PASS gates divided by PASS+FAIL+PENDING gates; not a publication-readiness probability",
   "gate_counts": {
     "PASS": 134,
@@ -85,7 +85,7 @@
       "ethics_and_expert_review": "optional_for_physics_validation; required only for a claim that SAGA improves human safety guidance"
     }
   },
-  "source_commit": "828dbac1d4437558939a43ee951a8cd75c0de003",
+  "source_commit": "fd9f22e7cafdab899f9bea187802b91e0297cd82",
   "latest_completed_work": "전체 Python 회귀검증 1,618 passed / 0 failed / 0 skipped / 222 warnings를 최신 커밋에 기록했습니다. 과학적 readiness gate 수치는 134 PASS / 11 FAIL / 7 PENDING으로 유지됩니다.",
   "latest_full_regression": {
     "tests_passed": 1618,
@@ -324,6 +324,11 @@
       "id": "replay_evidence_timestamp_alignment_2026_10_14",
       "progress_percent": 100.0,
       "status": "Grüne 접근 재확인 후 재생·추적성 산출물의 생성시각과 readiness 참조 해시를 최신 상태로 동기화했습니다. 과학적 gate 수치는 변경하지 않았습니다."
+    },
+    {
+      "id": "grune_data_request_draft_2026_10_14",
+      "progress_percent": 100.0,
+      "status": "독립 압력-시간 원자료 확보에 필요한 파일·단위·계측·권리 확인 항목을 요청 초안으로 고정했습니다. 외부 연락이나 gate 승격은 수행하지 않았습니다."
     }
   ],
   "latest_context_focused_regression": {
