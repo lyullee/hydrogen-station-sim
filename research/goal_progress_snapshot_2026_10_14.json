@@ -85,8 +85,8 @@
       "ethics_and_expert_review": "optional_for_physics_validation; required only for a claim that SAGA improves human safety guidance"
     }
   },
-  "source_commit": "159f081",
-  "latest_completed_work": "Corrected the local FTPData provenance inventory, invalidated the reused Jankuj pressure holdout protocol, and synchronized the progress documentation with the committed evidence boundary; no scientific gate was promoted.",
+  "source_commit": "2bc2361",
+  "latest_completed_work": "Refreshed the hash-linked public accident and readiness evidence projections after correcting local provenance and invalidating the reused Jankuj holdout; HIAD/KHK replay and response handoff records are synchronized, with no scientific gate promoted.",
   "latest_full_regression": {
     "tests_passed": 1599,
     "tests_failed": 0,
@@ -129,6 +129,11 @@
     "scope": "tests/test_ijhe_readiness_audit.py tests/test_ijhe_audit_snapshot_consistency.py tests/test_validation_gap_report.py tests/test_llm_grounding.py"
   },
   "completed_process_improvements": [
+    {
+      "id": "runtime_evidence_chain_hash_resync_2026_10_14",
+      "progress_percent": 100.0,
+      "status": "The deterministic refresh chain passed all steps and corrected downstream hashes for HIAD/KHK replay, response handoff, readiness, claim matrix and blocker reports; scientific gate counts remain unchanged."
+    },
     {
       "id": "goal_snapshot_commit_alignment_2026_10_14",
       "progress_percent": 100.0,
