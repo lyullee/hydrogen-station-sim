@@ -1,13 +1,17 @@
 {
   "schema_version": 1,
   "artifact_type": "public_grune_2014_pressure_trace_recheck",
-  "recorded_at": "2026-10-12",
+  "recorded_at": "2026-10-14",
   "status": "NO_NEW_MACHINE_READABLE_FULL_TRACE_FOUND",
   "source_review": {
     "primary_paper": {
       "title": "Experimental investigation of hydrogen release from a high pressure vessel",
       "url": "https://www.sciencedirect.com/science/article/pii/S0360319913020521",
-      "reviewed_for": ["supplementary files", "machine-readable pressure-time data", "data availability statement"]
+      "reviewed_for": [
+        "supplementary files",
+        "machine-readable pressure-time data",
+        "data availability statement"
+      ]
     },
     "publisher_landing": "https://publikationen.bibliothek.kit.edu/110097219",
     "conference_preprint": "https://conference.ing.unipi.it/ichs2011/papers/133.pdf",
@@ -20,9 +24,15 @@
       "machine_readable_grune_pressure_trace": false,
       "finding": "The public JHFC/JARI route exposes project reports and context, but the reported report index is unavailable and no Grüne 2014 pressure-time file or supplementary raw trace was found."
     },
-    "search_date": "2026-10-12",
-    "search_scope": "publisher and institutional landing pages, the public conference and H2Tools preprint PDFs, the official JHFC/JARI archive route, and targeted public-data searches for a rights-cleared pressure-time archive",
-    "h2tools_finding": "The H2Tools copy confirms the experiment description and plotted pressure-decay context but does not expose a reusable complete machine-readable pressure-time trace or a data-redistribution licence."
+    "search_date": "2026-10-14",
+    "search_scope": "KIT 공식 레코드, ScienceDirect 논문 랜딩, H2Tools 공개 사본 및 표적 raw-data 검색",
+    "h2tools_finding": "The H2Tools copy confirms the experiment description and plotted pressure-decay context but does not expose a reusable complete machine-readable pressure-time trace or a data-redistribution licence.",
+    "latest_official_record_recheck": {
+      "url": "https://publikationen.bibliothek.kit.edu/110097219",
+      "finding": "KITopen 레코드에서 논문 DOI·저자·연도·저널 정보는 확인했으나, 공개된 기계판독 압력-시간 원자료 또는 재사용 조건은 확인하지 못함",
+      "machine_readable_pressure_trace_found": false,
+      "rights_cleared_raw_archive_found": false
+    }
   },
   "existing_trace": {
     "protocol": "research/grune_2014_holdout_protocol.json",
@@ -36,13 +46,14 @@
     "machine_readable_full_pressure_trace_found": false,
     "rights_cleared_raw_archive_found": false,
     "paper_only_summary_is_sufficient_for_holdout": false,
-    "conference_pdf_adds_context_but_not_a_reusable_trace": true
+    "conference_pdf_adds_context_but_not_a_reusable_trace": true,
+    "latest_recheck_2026_10_14": "공식 레코드와 공개 사본을 재확인했으나 기존 51점 도식화 곡선을 넘어서는 완전한 압력-시간 원자료는 확인되지 않음"
   },
   "decision": {
     "promote_to_independent_validation": false,
     "runtime_change": false,
     "readiness_gate_effect": "none",
-    "next_evidence": "Obtain a rights-cleared raw pressure-time trace with the complete discharge endpoint and a frozen pre-access protocol before any new Grüne validation run."
+    "next_evidence": "KIT custodian으로부터 완전한 방출 종료점을 포함한 권리 확인 압력-시간 원자료를 받아, 수치 접근 전에 새 프로토콜을 고정"
   },
   "claim_boundary": "This recheck documents a public-source search and preserves the existing negative/insufficient trace result. It does not validate pressure decay, vessel discharge, station control, dispersion, ignition, safety distance, or full-loop fueling."
 }
