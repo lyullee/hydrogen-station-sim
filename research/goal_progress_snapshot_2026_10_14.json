@@ -85,14 +85,14 @@
       "ethics_and_expert_review": "optional_for_physics_validation; required only for a claim that SAGA improves human safety guidance"
     }
   },
-  "source_commit": "7e56652",
-  "latest_completed_work": "Grounded the published Korean actual-H2 first-detection diagnostic in both the local evidence inventory and SAGA prompt evidence, while preserving the post-access/no-runtime/no-gate-promotion boundary.",
+  "source_commit": "c6e75f2",
+  "latest_completed_work": "Published actual-H2 detector evidence is now grounded in SAGA and local evidence inventories; all readiness, runtime-precedent and claim-matrix projections were refreshed, and the complete regression is clean.",
   "latest_full_regression": {
-    "tests_passed": 1604,
+    "tests_passed": 1606,
     "tests_failed": 0,
     "tests_skipped": 0,
     "warnings": 222,
-    "elapsed_seconds": 275.49
+    "elapsed_seconds": 268.92
   },
   "remaining_workstreams": [
     {
@@ -129,6 +129,11 @@
     "scope": "tests/test_ijhe_readiness_audit.py tests/test_ijhe_audit_snapshot_consistency.py tests/test_validation_gap_report.py tests/test_llm_grounding.py"
   },
   "completed_process_improvements": [
+    {
+      "id": "full_regression_after_detector_evidence_grounding_2026_10_14",
+      "progress_percent": 100.0,
+      "status": "Full Python regression completed after grounding the published actual-H2 detector diagnostic: 1,606 passed, 0 failed, 222 warnings in 268.92 s. Readiness, runtime-precedent and claim-matrix hashes are synchronized; no scientific gate was promoted."
+    },
     {
       "id": "korean_tent_first_detection_diagnostic_2026_10_14",
       "progress_percent": 100.0,
