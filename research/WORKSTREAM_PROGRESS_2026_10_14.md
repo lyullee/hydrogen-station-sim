@@ -10,7 +10,7 @@
 |---|---:|---|---|
 | 전체 검증 게이트 | 88.2% | 134 PASS / 11 FAIL / 7 PENDING | 독립 검증 잔여 |
 | 논문 주 범위 | 91.7% | 133 PASS / 10 FAIL / 2 PENDING | IJHE 제출판정 미충족 |
-| 소프트웨어 회귀 | 100% | 1,619 passed / 0 failed / 0 skipped / 222 warnings | 현재 구현 회귀 통과 |
+| 소프트웨어 회귀 | 100% | 1,622 passed / 0 failed / 0 skipped / 222 warnings | 현재 구현 회귀 통과 |
 | 핵심 방출·압력·열전달 모듈 회귀 | 100% | 28 passed / 0 failed / 0 skipped | 구현 불변조건 통과, 실험 게이트와 별도 |
 | 독립 원자료 요청 패키지 | 100% | 기관별 최소 채널·비식별·custodian 실행 조건 작성 | 실제 데이터 관리자 회신 대기 |
 | custodian replay 실행 가이드 | 100% | 사전 해시 고정·스키마 점검·비보존 집계·승격 조건과 테스트 9건 | 실제 custodian 자료/회신 대기 |
@@ -18,7 +18,7 @@
 | bounded IJHE 제출 준비 | 미완료 | blocking gate 9개 잔여 | 외부 검증 필요 |
 | 전체 사용자 목표 | 미완료 | 추가 H2SAFE 공간전이 게이트 포함 | 외부 검증 필요 |
 
-최신 readiness audit도 동일한 134 PASS / 11 FAIL / 7 PENDING을 확인했다. 전체 회귀는 `2e1ed1b` 기록 기준 1,619건 통과했으며, KIT LH₂ 아카이브는 checksum 검증 전이라 독립 게이트에 포함하지 않았다.
+최신 readiness audit도 동일한 134 PASS / 11 FAIL / 7 PENDING을 확인했다. 전체 회귀는 최신 작업 트리 회귀 기록 기준 1,622건 통과했으며, KIT LH₂ 아카이브는 checksum 검증 전이라 독립 게이트에 포함하지 않았다.
 
 ## 남은 과업별 진행률
 

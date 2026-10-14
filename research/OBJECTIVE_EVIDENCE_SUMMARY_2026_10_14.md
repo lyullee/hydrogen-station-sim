@@ -10,7 +10,7 @@
 |---|---:|---|
 | 전체 readiness 게이트 | **134 PASS / 11 FAIL / 7 PENDING (88.2%)** | 모든 공개·비공개·선택 게이트를 포함한 보수적 원장 |
 | 선언한 주 논문 범위 | **133 PASS / 10 FAIL / 2 PENDING (91.7%)** | station-to-vehicle 전체 루프와 사람 대상 효과평가를 제외한 범위 |
-| 전체 Python 회귀 | **1,619 passed / 0 failed / 0 skipped / 222 warnings** | 구현·계약·근거 경계 회귀 |
+| 전체 Python 회귀 | **1,622 passed / 0 failed / 0 skipped / 222 warnings** | 구현·계약·근거 경계 회귀 |
 | bounded IJHE 제출 준비 | **미완료** | 독립 물리 검증 실패/보류와 저자 메타데이터 미확정 |
 
 ## 공개 실험 기반 수치 검증

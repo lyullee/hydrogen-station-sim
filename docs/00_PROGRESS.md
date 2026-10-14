@@ -2789,3 +2789,10 @@ the full-loop claim pass.
 - 공개 실험, 비식별 실제 충전소 holdout, 공개 HIAD 사고자료, 실제 사고 메타데이터, HyRAM 영향거리 표시 검증을 각각의 주장 범위로 분리한 `research/OBJECTIVE_EVIDENCE_SUMMARY_2026_10_14.md`를 추가했다.
 - 요약 수치는 Type-IV validation 12건, 실제 수소 점화 압력 27건, 충전소 측 holdout 30 points/3,664 pairs/394 cases, HIAD 34건, 비식별 사고 메타데이터 322건을 원장과 연결한다.
 - readiness·근거성·공개 사고자료·비상대응 핵심 회귀 **75 passed / 0 failed**를 확인했다. 이 보고서는 통과한 구성요소의 정확도를 보여주지만 station-to-vehicle 전체 루프와 SAGA 사람 대상 효과를 통과로 바꾸지 않는다.
+
+## 2026-10-14 - 근거 요약 무결성 검증과 감사 원장 재동기화
+
+- `tests/test_objective_evidence_summary.py`를 추가해 진행률, 회귀 수치, 공개 실험·충전소 holdout·사고자료 집계가 원자료 JSON과 일치하는지 자동 확인한다.
+- 전체 회귀에서 발견된 readiness audit/validation-gap 생성시각 불일치를 `scripts/refresh_runtime_evidence_chain.py`로 재생성해 해소했다. evidence chain 14단계가 모두 PASS했다.
+- 최신 전체 회귀는 **1,622 passed / 0 failed / 0 skipped / 222 warnings**이며, readiness는 **134 PASS / 11 FAIL / 7 PENDING (88.2%)**, 주 논문 범위는 **91.7%**로 변하지 않았다.
+
