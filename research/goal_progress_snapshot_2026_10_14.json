@@ -85,8 +85,8 @@
       "ethics_and_expert_review": "optional_for_physics_validation; required only for a claim that SAGA improves human safety guidance"
     }
   },
-  "source_commit": "a2611b2",
-  "latest_completed_work": "Invalidated the Jankuj Zenodo pressure holdout protocol after confirming that the same archive and numeric workbook had already been accessed; the source remains descriptive/post-access only and cannot be counted as a new independent gate.",
+  "source_commit": "159f081",
+  "latest_completed_work": "Corrected the local FTPData provenance inventory, invalidated the reused Jankuj pressure holdout protocol, and synchronized the progress documentation with the committed evidence boundary; no scientific gate was promoted.",
   "latest_full_regression": {
     "tests_passed": 1599,
     "tests_failed": 0,
@@ -129,6 +129,11 @@
     "scope": "tests/test_ijhe_readiness_audit.py tests/test_ijhe_audit_snapshot_consistency.py tests/test_validation_gap_report.py tests/test_llm_grounding.py"
   },
   "completed_process_improvements": [
+    {
+      "id": "goal_snapshot_commit_alignment_2026_10_14",
+      "progress_percent": 100.0,
+      "status": "The authoritative progress snapshot now points to the latest committed provenance and documentation state; gate counts and scientific readiness are unchanged."
+    },
     {
       "id": "jankuj_reused_holdout_invalidation_2026_10_14",
       "progress_percent": 100.0,
