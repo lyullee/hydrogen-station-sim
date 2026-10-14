@@ -2,7 +2,7 @@
 
 import pytest
 
-from h2station.risk.runtime_backend import NativeHyRAMBackend
+from h2station.risk.runtime_backend import NativeHyRAMBackend, UnavailableHyRAMBackend
 from h2station.risk.live import (
     DynamicLeakModel,
     HyRAMDynamicReleaseRequest,
@@ -174,3 +174,27 @@ def test_native_hyram_exposes_hytunnel_actual_hydrogen_sensitivity(monkeypatch):
     assert result["release_flow_upper_bound_kg_s"] > result[
         "release_flow_point_kg_s"
     ]
+
+
+def test_unavailable_backend_preserves_flow_limited_source_boundary():
+    request = HyRAMDynamicReleaseRequest(
+        release_id="limited-fallback", component_id="dispenser.hose", location="N13",
+        time_s=0.0, duration_s=1.0, source_pressure_pa=35.0e6,
+        source_temperature_k=288.15, ambient_pressure_pa=101325.0,
+        orifice_diameter_m=0.01, discharge_coefficient=0.8,
+        mass_flow_override_kg_s=0.06, cumulative_released_mass_kg=0.06,
+        release_angle_rad=0.0, release_height_m=1.0, indoor=False,
+        annual_frequency_per_year=None, immediate_ignition_probability=None,
+        delayed_ignition_probability=None, release_boundary="flow_limited_line",
+        process_flow_limit_kg_s=0.06,
+    )
+
+    result = UnavailableHyRAMBackend("test").evaluate_release(request)
+
+    assert result["status"] == "unavailable"
+    assert result["release_source_boundary"] == "flow_limited_line"
+    assert result["flow_limited_equivalent_orifice_applied"] is True
+    assert result["flow_limited_consequence_status"] == "EQUIVALENT_AREA_APPLIED"
+    assert result["consequence_equivalent_orifice_diameter_m"] < 0.01
+    assert "distance" in str(result["flow_limited_consequence_claim_limit"])
+    assert result["release_flow_uncertainty_status"] == "PROCESS_FLOW_LIMIT_PRESERVED"

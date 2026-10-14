@@ -334,6 +334,12 @@ class UnavailableHyRAMBackend:
             "release_source_boundary": request.release_boundary,
             "process_flow_limit_kg_s": request.process_flow_limit_kg_s,
         }
+        # Preserve the same source-boundary semantics when HyRAM is not
+        # available. The assistant still needs to know that a line-limited
+        # source is represented by an equivalent area and that its distance is
+        # unavailable, rather than treating the fallback as a free-orifice
+        # calculation with missing fields.
+        output.update(consequence_orifice_boundary(request))
         output.update(release_flow_uncertainty_envelope(
             source_pressure_pa=request.source_pressure_pa,
             source_temperature_k=request.source_temperature_k,

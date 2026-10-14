@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "artifact_type": "hiad_to_digital_twin_canonical_replay_coverage_audit",
-  "generated_at_utc": "2026-10-14T05:26:35.439372+00:00",
+  "generated_at_utc": "2026-10-14T06:03:06.483883+00:00",
   "status": "completed_family_level_integration_audit",
   "evidence_role": "retrospective_metadata_to_canonical_runtime_traceability_only",
   "source": {
@@ -15,7 +15,7 @@
       "src/h2station/hazop/runtime.py": "df8e34d063f886165057c673d887a62ddddf1a6b69a14917dc2f5c7cb0669748",
       "src/h2station/hazop/mapping.py": "1c9af0f4372a9543ad59ec1e2710d0bee24086ede10f562f3f9ba546ccbe1b85",
       "src/h2station/risk/live.py": "73b9d430fd02ccad87758aa206ce2f31fdb78604225f7f3a3579231097fd97d4",
-      "src/h2station/risk/runtime_backend.py": "a048cb5965e4fada78e19a1cbb78d268b57ae28620cbef04dc0b919f597eaec3",
+      "src/h2station/risk/runtime_backend.py": "d8937c69418d518740cf5a1d3466e35ea65f6702a8716664780a05c48871c982",
       "src/h2station/risk/cabinet_ventilation.py": "30b086c43da8901778ab9fb546cd63b049c0bfb64998c334e2516acf497cfc74",
       "src/h2station/data/emergency_playbooks.json": "997da81d9f273031dc5d160d1fdee826cc1defaa3cbf5651f9bd0c7c7988e052"
     },
