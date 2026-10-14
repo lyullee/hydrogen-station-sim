@@ -20,6 +20,8 @@ Launcher 자체 복구 뒤 종료·재시작을 시도했으며 Windows 잠금�
 6. 계산 서버 시작 전에 환경변수 `H2STATION_UNREAL_PLAYER_URL=http://127.0.0.1:18080`를 설정한다. 키가 아닌 플레이어 주소다.
 7. 기존 웹에서 새 시뮬레이션을 시작하고 `Unreal 3D`를 누른다. 플레이어의 영상 시작 안내에 따라 연결한다. 표준 3D 전환은 계산을 중지하지 않는다.
 
+Win64 배포본은 엔진 설치 후 `./scripts/build_unreal_release.ps1 -EngineRoot 'C:\Program Files\Epic Games\UE_5.6' -Configuration Shipping`으로 만든다. 이 명령은 소스 계약 검사, C++ 빌드, 맵·재질 생성, 검증된 GLB 가져오기, cook·pak·archive를 순차 수행하고 실행 파일 SHA-256이 포함된 `hrs-unreal-build.json`을 남긴다. 패키지 실행은 `./scripts/start_packaged_unreal.ps1 -PackageDirectory '<패키지 폴더>'`를 사용한다. 실행 전에 해시를 다시 검사하며 기본값은 숨김 창과 로컬 API·Pixel Streaming 주소다. 현장 확인이 필요하면 `-Visible`을 추가한다.
+
 UE 프로젝트 파일: `HRSUnreal/HRSUnreal.uproject`. 에셋 생성 스크립트는 이미 편집한 맵·재질을 덮어쓰지 않는다. 생성된 Content 및 바이너리는 Git에서 제외하고 소스·설정·생성 스크립트를 보관한다. 신규 UE 버전에 대한 검증은 별도로 수행한다.
 
 ## Pixel Streaming 서버 재현

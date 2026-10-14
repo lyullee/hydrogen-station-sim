@@ -12,6 +12,8 @@ CPP = (ROOT / "unreal/HRSUnreal/Source/HRSUnreal/HRSStationActor.cpp").read_text
 HEADER = (ROOT / "unreal/HRSUnreal/Source/HRSUnreal/HRSStationActor.h").read_text(encoding="utf-8")
 PAWN = (ROOT / "unreal/HRSUnreal/Source/HRSUnreal/HRSCameraPawn.cpp").read_text(encoding="utf-8")
 START = (ROOT / "scripts/start_unreal_pilot.ps1").read_text(encoding="utf-8")
+PACKAGE = (ROOT / "scripts/build_unreal_release.ps1").read_text(encoding="utf-8")
+RUN_PACKAGE = (ROOT / "scripts/start_packaged_unreal.ps1").read_text(encoding="utf-8")
 IMPORTER = (ROOT / "unreal/HRSUnreal/Scripts/import_reference_assets.py").read_text(encoding="utf-8")
 GAME_CONFIG = (ROOT / "unreal/HRSUnreal/Config/DefaultGame.ini").read_text(encoding="utf-8")
 
@@ -58,6 +60,12 @@ if 'set_editor_property("import_scale", 100.0)' not in IMPORTER:
     problems.append("glTF importer must convert metres to Unreal centimetres exactly once")
 if '+DirectoriesToAlwaysCook=(Path="/Game/HRS/Models")' not in GAME_CONFIG:
     problems.append("reference model directory is missing from package cook settings")
+for token in ("BuildCookRun", "-platform=Win64", "-cook", "-pak", "hrs-unreal-build.json"):
+    if token not in PACKAGE:
+        problems.append(f"packaging contract is missing: {token}")
+for token in ("executable_sha256", "-PixelStreamingURL=", "-HRSApi=", "-HRSRenderer="):
+    if token not in RUN_PACKAGE:
+        problems.append(f"packaged runtime contract is missing: {token}")
 
 if problems:
     raise SystemExit("Unreal source contract FAIL\n- " + "\n- ".join(problems))
@@ -69,5 +77,6 @@ print(json.dumps({
     "valves": len(expected_valves),
     "gltf_import_scale": 100.0,
     "reference_models_cooked": True,
+    "packaging_pipeline": True,
     "operator_inputs": ["orbit", "middle-pan", "wheel-zoom", "camera-toggle", "detector-toggle"],
 }, ensure_ascii=False))
