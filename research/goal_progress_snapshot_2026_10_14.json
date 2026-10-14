@@ -85,7 +85,7 @@
       "ethics_and_expert_review": "optional_for_physics_validation; required only for a claim that SAGA improves human safety guidance"
     }
   },
-  "source_commit": "b796d5e7d361b498dfda3ccc4522b921c85f1c4d",
+  "source_commit": "386801c",
   "latest_completed_work": "Added a post-access actual-H2 first-detection diagnostic from the published 96 m³ semi-closed tent study; nearest-source baseline scored 70% top-1 and 80% top-2 across 10 cases, while runtime and scientific gates remain unchanged.",
   "latest_full_regression": {
     "tests_passed": 1604,
