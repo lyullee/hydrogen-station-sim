@@ -3,7 +3,10 @@ from __future__ import annotations
 from fastapi.testclient import TestClient
 
 from h2station.api import app
-from h2station.local_evidence import local_station_evidence_summary
+from h2station.local_evidence import (
+    local_station_evidence_summary,
+    public_evidence_inventory_summary,
+)
 
 
 def test_local_evidence_summary_is_privacy_bounded() -> None:
@@ -17,6 +20,10 @@ def test_local_evidence_summary_is_privacy_bounded() -> None:
     assert summary["coverage"]["local_station_data_is_sparse"] is False
     assert summary["coverage"]["vehicle_side_full_loop_validation_ready"] is False
     assert summary["coverage"]["full_loop_decision"] == "NO_NEW_FULL_LOOP_HOLDOUT"
+    spatial = public_evidence_inventory_summary()["public_actual_hydrogen_spatial_benchmark"]
+    assert spatial["post_access_diagnostic"]["hydrogen_profile_count"] == 41
+    assert spatial["post_access_diagnostic"]["hydrogen_point_count"] == 5148
+    assert spatial["post_access_diagnostic"]["promotion_prohibited"] is True
     assert summary["adjacent_process"]["high_pressure_process"][
         "csv_event_row_count"
     ] == 2_411_774

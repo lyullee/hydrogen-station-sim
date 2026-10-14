@@ -2604,9 +2604,8 @@ def _public_actual_hydrogen_spatial_benchmark() -> dict[str, Any] | None:
     calibration or independent validation.
     """
 
-    path = Path(__file__).resolve().parents[2] / (
-        "research/grune_ps_h2_dispersion_intake_2026_10_14.json"
-    )
+    root = Path(__file__).resolve().parents[2]
+    path = root / "research/grune_ps_h2_dispersion_intake_2026_10_14.json"
     try:
         record = json.loads(path.read_text(encoding="utf-8"))
     except (OSError, UnicodeError, json.JSONDecodeError):
@@ -2624,7 +2623,7 @@ def _public_actual_hydrogen_spatial_benchmark() -> dict[str, Any] | None:
         or record.get("runtime_parameter_updated") is not False
     ):
         return None
-    return {
+    result = {
         "artifact": "research/grune_ps_h2_dispersion_intake_2026_10_14.json",
         "evidence_role": "post-access public measured hydrogen spatial benchmark",
         "source_doi": str(source.get("doi")),
@@ -2638,6 +2637,57 @@ def _public_actual_hydrogen_spatial_benchmark() -> dict[str, Any] | None:
         "promotion_prohibited": True,
         "claim_limit": str(record.get("claim_boundary") or ""),
     }
+    # A later replay of the actual-H2 sheets provides compact descriptive
+    # context. It remains post-access diagnostic evidence and is never a
+    # safety-distance, detector-setpoint, or runtime-calibration input.
+    diagnostic_path = root / (
+        "research/grune_ps_actual_h2_spatial_diagnostic_2026_10_14.json"
+    )
+    try:
+        diagnostic = json.loads(diagnostic_path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, json.JSONDecodeError):
+        diagnostic = None
+    diagnostic_source = (diagnostic or {}).get("source") or {}
+    dataset = (diagnostic or {}).get("dataset") or {}
+    thresholds = dataset.get("threshold_aggregates") or {}
+    if (
+        isinstance(diagnostic, dict)
+        and diagnostic.get("artifact_type") == "post_access_actual_hydrogen_spatial_diagnostic"
+        and diagnostic_source.get("doi") == source.get("doi")
+        and diagnostic_source.get("license") == source.get("license")
+        and diagnostic.get("claim_boundary")
+    ):
+        result["post_access_diagnostic"] = {
+            "artifact": "research/grune_ps_actual_h2_spatial_diagnostic_2026_10_14.json",
+            "hydrogen_profile_count": int(dataset.get("hydrogen_profile_count") or 0),
+            "helium_profile_count_excluded": int(
+                dataset.get("helium_profile_count_excluded") or 0
+            ),
+            "hydrogen_point_count": int(dataset.get("hydrogen_point_count") or 0),
+            "average_concentration_p50_pct": dataset.get("average_concentration_p50_pct"),
+            "average_concentration_p95_pct": dataset.get("average_concentration_p95_pct"),
+            "threshold_aggregates": {
+                str(key): {
+                    "threshold_volpct_h2": value.get("threshold_volpct_h2"),
+                    "profile_count_with_any_point_at_or_above_threshold": value.get(
+                        "profile_count_with_any_point_at_or_above_threshold"
+                    ),
+                    "median_point_fraction_at_or_above_threshold": value.get(
+                        "median_point_fraction_at_or_above_threshold"
+                    ),
+                    "coordinate_extent_is_descriptive": value.get(
+                        "coordinate_extent_is_descriptive"
+                    ),
+                }
+                for key, value in thresholds.items()
+                if isinstance(value, dict)
+            },
+            "independent_holdout": False,
+            "runtime_parameter_updated": False,
+            "promotion_prohibited": True,
+            "claim_limit": str(diagnostic.get("claim_boundary") or ""),
+        }
+    return result
 
 
 def _public_h2safe_indoor_surrogate_evidence() -> dict[str, Any] | None:
@@ -12455,7 +12505,7 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
                 "artifact", "evidence_role", "source_doi", "license",
                 "hydrogen_worksheet_count", "coordinate_grid_worksheet_count",
                 "independent_holdout", "runtime_parameter_updated",
-                "promotion_prohibited", "claim_limit",
+                "promotion_prohibited", "claim_limit", "post_access_diagnostic",
             )
             if actual_hydrogen_spatial.get(key) is not None
         }
@@ -14942,6 +14992,9 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                     "independent_holdout": False,
                     "runtime_parameter_updated": False,
                     "promotion_prohibited": True,
+                    "post_access_diagnostic": actual_hydrogen_spatial.get(
+                        "post_access_diagnostic"
+                    ),
                     "claim_limit": short(
                         actual_hydrogen_spatial.get("claim_limit"), 260
                     ),

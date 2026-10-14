@@ -40,6 +40,7 @@ _KHK_ACCIDENTS = _ROOT / "research/khk_hydrogen_station_public_reports_inventory
 _ACCIDENTAL_RELEASE = _ROOT / "research/accidental_self_ignition_public_evidence_2026_10_04.json"
 _EXPERIMENTAL_BENCHMARKS = _ROOT / "research/public_experimental_benchmarks_2026_10_06.json"
 _GRUNE_PS_SPATIAL_INTAKE = _ROOT / "research/grune_ps_h2_dispersion_intake_2026_10_14.json"
+_GRUNE_PS_SPATIAL_DIAGNOSTIC = _ROOT / "research/grune_ps_actual_h2_spatial_diagnostic_2026_10_14.json"
 _CARB_BENCHMARK = _ROOT / "research/carb_2024_hrs_inuse_field_benchmark_2026_10_08.json"
 _STRIEDNIG_DIAGNOSTIC = _ROOT / "research/striednig_hyddown_diagnostic_result_2026_10_10.json"
 _NREL_HDVS_BOUNDARY = _ROOT / "research/nrel_hdvs_raw_trace_boundary_2026_10_05.json"
@@ -2282,6 +2283,52 @@ def public_evidence_inventory_summary() -> dict[str, Any]:
                 "runtime_parameter_updated": False,
                 "claim_limit": str(record.get("claim_boundary") or ""),
             }
+            diagnostic = _read_json(_GRUNE_PS_SPATIAL_DIAGNOSTIC)
+            diagnostic_source = diagnostic.get("source") or {}
+            dataset = diagnostic.get("dataset") or {}
+            thresholds = dataset.get("threshold_aggregates") or {}
+            if (
+                diagnostic.get("artifact_type") == "post_access_actual_hydrogen_spatial_diagnostic"
+                and diagnostic_source.get("doi") == source.get("doi")
+                and diagnostic_source.get("license") == source.get("license")
+                and diagnostic.get("claim_boundary")
+            ):
+                result["public_actual_hydrogen_spatial_benchmark"][
+                    "post_access_diagnostic"
+                ] = {
+                    "artifact": "research/grune_ps_actual_h2_spatial_diagnostic_2026_10_14.json",
+                    "hydrogen_profile_count": int(dataset.get("hydrogen_profile_count") or 0),
+                    "helium_profile_count_excluded": int(
+                        dataset.get("helium_profile_count_excluded") or 0
+                    ),
+                    "hydrogen_point_count": int(dataset.get("hydrogen_point_count") or 0),
+                    "average_concentration_p50_pct": dataset.get(
+                        "average_concentration_p50_pct"
+                    ),
+                    "average_concentration_p95_pct": dataset.get(
+                        "average_concentration_p95_pct"
+                    ),
+                    "threshold_aggregates": {
+                        str(key): {
+                            "threshold_volpct_h2": value.get("threshold_volpct_h2"),
+                            "profile_count_with_any_point_at_or_above_threshold": value.get(
+                                "profile_count_with_any_point_at_or_above_threshold"
+                            ),
+                            "median_point_fraction_at_or_above_threshold": value.get(
+                                "median_point_fraction_at_or_above_threshold"
+                            ),
+                            "coordinate_extent_is_descriptive": value.get(
+                                "coordinate_extent_is_descriptive"
+                            ),
+                        }
+                        for key, value in thresholds.items()
+                        if isinstance(value, dict)
+                    },
+                    "independent_holdout": False,
+                    "runtime_parameter_updated": False,
+                    "promotion_prohibited": True,
+                    "claim_limit": str(diagnostic.get("claim_boundary") or ""),
+                }
     except (OSError, KeyError, TypeError, ValueError, json.JSONDecodeError):
         pass
     try:

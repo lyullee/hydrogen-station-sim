@@ -42,6 +42,15 @@ def test_actual_hydrogen_spatial_benchmark_is_grounded_without_promotion():
     assert evidence["independent_holdout"] is False
     assert evidence["runtime_parameter_updated"] is False
     assert evidence["promotion_prohibited"] is True
+    diagnostic = evidence["post_access_diagnostic"]
+    assert diagnostic["hydrogen_profile_count"] == 41
+    assert diagnostic["hydrogen_point_count"] == 5148
+    assert diagnostic["independent_holdout"] is False
+    assert diagnostic["runtime_parameter_updated"] is False
+    assert diagnostic["promotion_prohibited"] is True
+    assert diagnostic["threshold_aggregates"]["4.0"][
+        "median_point_fraction_at_or_above_threshold"
+    ] == pytest.approx(0.2777777777777778)
     compact = prompt_evidence_summary(manifest)[
         "public_actual_hydrogen_spatial_benchmark"
     ]
@@ -54,6 +63,7 @@ def test_actual_hydrogen_spatial_benchmark_is_grounded_without_promotion():
     assert prompt_spatial["source_doi"] == evidence["source_doi"]
     assert prompt_spatial["runtime_parameter_updated"] is False
     assert prompt_spatial["promotion_prohibited"] is True
+    assert prompt_spatial["post_access_diagnostic"]["hydrogen_point_count"] == 5148
 
 
 def test_mc_geometry_transfer_diagnostic_is_grounded_without_rule_promotion():
