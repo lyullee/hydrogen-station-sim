@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-14",
+  "artifact_type": "public_hrs_anomaly_detection_context",
+  "status": "ARTICLE_LEVEL_CONTEXT_ONLY",
+  "source": {
+    "title": "Data-Driven Intelligent Analysis System for Monitoring and Anomaly Detection in Hydrogen Refueling Station",
+    "publisher": "Applied Sciences / KETI / BAM",
+    "doi": "10.3390/app16157856",
+    "record_url": "https://doi.org/10.3390/app16157856",
+    "publication_date": "2026-08-06",
+    "open_access_article": true,
+    "raw_data_access": "article_level_only",
+    "data_availability_statement": "Original contributions are included in the article; further inquiries are directed to the authors."
+  },
+  "experiment_scope": {
+    "field_hydrogen_refueling_station": true,
+    "station_context": "BAM demonstration hydrogen refueling station",
+    "sensor_count": 8,
+    "acquisition_interval_s": 1,
+    "analysis_interval_s": 60,
+    "normal_operation_days": 3,
+    "raw_time_series_committed": false,
+    "semi_synthetic_anomaly_injection": true
+  },
+  "reported_methods": {
+    "point_anomaly_model": "LSTM-VAE",
+    "pattern_drift_model": "DBSCAN plus Mann-Kendall trend test",
+    "anomaly_types": [
+      "isolated spike",
+      "gradual drift",
+      "localized high-frequency noise"
+    ],
+    "representative_channels": [
+      "medium-pressure storage pressure",
+      "dispenser temperature",
+      "dispenser flow rate"
+    ]
+  },
+  "runtime_use": {
+    "llm_normal_operation_context": true,
+    "llm_sensor_quality_context": true,
+    "llm_anomaly_detection_context": true,
+    "runtime_threshold_calibration": false,
+    "runtime_model_parameter_application": false,
+    "independent_external_holdout_supported": false,
+    "station_to_vehicle_full_loop_supported": false,
+    "validation_gate_changed": false
+  },
+  "claim_boundary": "The publication provides article-level field HRS context and semi-synthetic anomaly-detection methodology, but no rights-cleared raw time series or independently reproducible station logs are committed here. It may support explanations of data-quality checks, anomaly classes and monitoring architecture; it must not be used to calibrate this station's thresholds, claim independent accuracy, or validate station-to-vehicle behavior."
+}

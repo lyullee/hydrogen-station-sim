@@ -2936,6 +2936,86 @@ def _public_tudelft_detector_placement_context() -> dict[str, Any] | None:
     }
 
 
+def _public_bam_hrs_anomaly_detection_context() -> dict[str, Any] | None:
+    """Expose a bounded article-level HRS anomaly-detection context.
+
+    The publication reports field-station monitoring and semi-synthetic
+    anomaly injections, but the underlying station logs are not deposited as
+    a rights-cleared reproducible holdout.  Keep the context explanatory only.
+    """
+
+    artifact = "research/bam_hrs_anomaly_detection_context_2026_10_14.json"
+    path = Path(__file__).resolve().parents[2] / artifact
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, json.JSONDecodeError):
+        return None
+    source = record.get("source") or {}
+    scope = record.get("experiment_scope") or {}
+    methods = record.get("reported_methods") or {}
+    runtime = record.get("runtime_use") or {}
+    if (
+        record.get("artifact_type") != "public_hrs_anomaly_detection_context"
+        or record.get("status") != "ARTICLE_LEVEL_CONTEXT_ONLY"
+        or source.get("doi") != "10.3390/app16157856"
+        or source.get("open_access_article") is not True
+        or source.get("raw_data_access") != "article_level_only"
+        or scope.get("field_hydrogen_refueling_station") is not True
+        or scope.get("sensor_count") != 8
+        or scope.get("acquisition_interval_s") != 1
+        or scope.get("analysis_interval_s") != 60
+        or scope.get("normal_operation_days") != 3
+        or scope.get("raw_time_series_committed") is not False
+        or scope.get("semi_synthetic_anomaly_injection") is not True
+        or methods.get("point_anomaly_model") != "LSTM-VAE"
+        or methods.get("pattern_drift_model") != "DBSCAN plus Mann-Kendall trend test"
+        or runtime.get("llm_normal_operation_context") is not True
+        or runtime.get("llm_sensor_quality_context") is not True
+        or runtime.get("llm_anomaly_detection_context") is not True
+        or runtime.get("runtime_threshold_calibration") is not False
+        or runtime.get("runtime_model_parameter_application") is not False
+        or runtime.get("independent_external_holdout_supported") is not False
+        or runtime.get("station_to_vehicle_full_loop_supported") is not False
+        or runtime.get("validation_gate_changed") is not False
+    ):
+        return None
+    return {
+        "artifact": artifact,
+        "source": {
+            "title": source.get("title"),
+            "publisher": source.get("publisher"),
+            "doi": source.get("doi"),
+            "record_url": source.get("record_url"),
+            "publication_date": source.get("publication_date"),
+            "open_access_article": True,
+            "raw_data_access": source.get("raw_data_access"),
+        },
+        "evidence_role": "article-level field HRS anomaly-detection context",
+        "experiment_scope": {
+            "station_context": scope.get("station_context"),
+            "sensor_count": scope.get("sensor_count"),
+            "acquisition_interval_s": scope.get("acquisition_interval_s"),
+            "analysis_interval_s": scope.get("analysis_interval_s"),
+            "normal_operation_days": scope.get("normal_operation_days"),
+            "semi_synthetic_anomaly_injection": True,
+        },
+        "reported_methods": {
+            "point_anomaly_model": methods.get("point_anomaly_model"),
+            "pattern_drift_model": methods.get("pattern_drift_model"),
+            "anomaly_types": list(methods.get("anomaly_types") or []),
+            "representative_channels": list(
+                methods.get("representative_channels") or []
+            ),
+        },
+        "runtime_threshold_calibration": False,
+        "runtime_model_parameter_application": False,
+        "independent_external_holdout_supported": False,
+        "station_to_vehicle_full_loop_supported": False,
+        "validation_gate_changed": False,
+        "claim_limit": str(record.get("claim_boundary") or ""),
+    }
+
+
 def _public_usn_orientation_transfer_diagnostic() -> dict[str, Any] | None:
     """Expose the post-access actual-H2 orientation-rank reproducibility screen."""
 
@@ -7674,6 +7754,24 @@ def _public_source_links(evidence: dict[str, Any]) -> list[dict[str, Any]]:
             tudelft_url,
             "실제 수소 캐비닛 검지기 배치·환기 맥락(원자료·station runtime 보정 아님)",
         )
+    bam_hrs_anomaly_context = evidence.get(
+        "public_bam_hrs_anomaly_detection_context"
+    ) or {}
+    bam_source = bam_hrs_anomaly_context.get("source") or {}
+    bam_doi = str(bam_source.get("doi") or "").strip()
+    if bam_doi:
+        add(
+            "PUBLIC_BAM_HRS_ANOMALY_CONTEXT",
+            str(
+                bam_source.get("title")
+                or "BAM field HRS anomaly-detection study"
+            ),
+            str(
+                bam_source.get("record_url")
+                or f"https://doi.org/{bam_doi}"
+            ),
+            "현장 HRS 정상운전·이상탐지 방법론 문맥(원시 로그·독립 holdout 아님)",
+        )
     proxy = evidence.get("public_dispersion_proxy_evidence") or {}
     proxy_doi = str(proxy.get("doi") or "")
     if proxy_doi:
@@ -11642,6 +11740,11 @@ def build_evidence_manifest(
         envelope["response_evidence"][
             "public_tudelft_detector_placement_context"
         ] = tudelft_detector_context
+    bam_hrs_anomaly_context = _public_bam_hrs_anomaly_detection_context()
+    if bam_hrs_anomaly_context is not None:
+        envelope["response_evidence"][
+            "public_bam_hrs_anomaly_detection_context"
+        ] = bam_hrs_anomaly_context
     orientation_transfer = _public_usn_orientation_transfer_diagnostic()
     if orientation_transfer is not None:
         envelope["response_evidence"][
@@ -13627,6 +13730,22 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
             )
             if tudelft_detector_context.get(key) is not None
         }
+    bam_hrs_anomaly_context = evidence.get(
+        "public_bam_hrs_anomaly_detection_context"
+    )
+    if isinstance(bam_hrs_anomaly_context, dict):
+        summary["public_bam_hrs_anomaly_detection_context"] = {
+            key: bam_hrs_anomaly_context.get(key)
+            for key in (
+                "artifact", "source", "evidence_role", "experiment_scope",
+                "reported_methods", "runtime_threshold_calibration",
+                "runtime_model_parameter_application",
+                "independent_external_holdout_supported",
+                "station_to_vehicle_full_loop_supported",
+                "validation_gate_changed", "claim_limit",
+            )
+            if bam_hrs_anomaly_context.get(key) is not None
+        }
     orientation_transfer = evidence.get("public_usn_orientation_transfer_diagnostic")
     if isinstance(orientation_transfer, dict):
         summary["public_usn_orientation_transfer_diagnostic"] = {
@@ -15035,6 +15154,9 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
     tudelft_detector_context = response.get(
         "public_tudelft_detector_placement_context"
     ) or {}
+    bam_hrs_anomaly_context = response.get(
+        "public_bam_hrs_anomaly_detection_context"
+    ) or {}
     orientation_transfer = response.get(
         "public_usn_orientation_transfer_diagnostic"
     ) or {}
@@ -15170,6 +15292,14 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
             "검지", "검출", "센서", "가스", "누출", "환기", "공간",
             "detector", "sensor", "leak", "ventilation", "indoor",
             "placement", "dispersion",
+        ))
+    )
+    bam_hrs_anomaly_relevant = bool(
+        bam_hrs_anomaly_context
+        and any(token in lead_context for token in (
+            "이상", "정상", "센서", "품질", "경보", "모니터링", "추세",
+            "드리프트", "감지", "anomaly", "normal", "sensor", "quality",
+            "monitoring", "trend", "drift", "detection",
         ))
     )
     elvhys_alarm_relevant = bool(
@@ -16452,6 +16582,31 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                     ),
                 }
             } if tudelft_detector_context_relevant else {}),
+            **({
+                "public_bam_hrs_anomaly_detection_context": {
+                    "source": bam_hrs_anomaly_context.get("source") or {},
+                    "evidence_role": bam_hrs_anomaly_context.get("evidence_role"),
+                    "experiment_scope": bam_hrs_anomaly_context.get(
+                        "experiment_scope"
+                    ) or {},
+                    "reported_methods": bam_hrs_anomaly_context.get(
+                        "reported_methods"
+                    ) or {},
+                    "use_for": [
+                        "HRS 정상운전 센서 모니터링과 데이터 품질 점검의 설명",
+                        "순간 이상·점진 드리프트·고주파 잡음의 구분",
+                        "LLM 답변에서 반합성 이상주입 결과와 현장 로그를 구분",
+                    ],
+                    "runtime_threshold_calibration": False,
+                    "runtime_model_parameter_application": False,
+                    "independent_external_holdout_supported": False,
+                    "station_to_vehicle_full_loop_supported": False,
+                    "validation_gate_changed": False,
+                    "claim_limit": short(
+                        bam_hrs_anomaly_context.get("claim_limit"), 360
+                    ),
+                }
+            } if bam_hrs_anomaly_relevant else {}),
             **({
                 "public_actual_hydrogen_spatial_benchmark": {
                     "evidence_role": actual_hydrogen_spatial.get("evidence_role"),
@@ -18194,6 +18349,9 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
     tudelft_detector_context = evidence.get(
         "public_tudelft_detector_placement_context"
     ) or {}
+    bam_hrs_anomaly_context = evidence.get(
+        "public_bam_hrs_anomaly_detection_context"
+    ) or {}
     dispersion_proxy = evidence.get("public_dispersion_proxy_evidence") or {}
     grune_ventilation = evidence.get("public_grune_ventilation_evidence") or {}
     confidential = evidence.get("confidential_measured_boundary_replay") or {}
@@ -19186,6 +19344,18 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
                 "full_loop_validation_supported", "claim_limit",
             )
             if tudelft_detector_context.get(key) is not None
+        },
+        "public_bam_hrs_anomaly_detection_context": {
+            key: bam_hrs_anomaly_context.get(key)
+            for key in (
+                "artifact", "source", "evidence_role", "experiment_scope",
+                "reported_methods", "runtime_threshold_calibration",
+                "runtime_model_parameter_application",
+                "independent_external_holdout_supported",
+                "station_to_vehicle_full_loop_supported",
+                "validation_gate_changed", "claim_limit",
+            )
+            if bam_hrs_anomaly_context.get(key) is not None
         },
         "public_grune_ventilation_envelope": {
             "doi": grune_ventilation.get("doi"),

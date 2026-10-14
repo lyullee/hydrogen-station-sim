@@ -12,6 +12,7 @@
 - NREL H2FillS: `nrel_h2fills_2022_hdvs_typeiv.xlsx` 한 파일만 보유하며 이미 수치 결과를 확인했다. 따라서 새 독립 holdout으로 재사용하지 않는다.
 
 ## 이번 즉시 처리 완료
+- BAM/KETI의 현장 HRS 이상탐지 연구(DOI `10.3390/app16157856`)를 `public_bam_hrs_anomaly_detection_context`로 추가했다. 8개 센서·1초 취득/1분 분석·3일 정상운전·LSTM-VAE/DBSCAN/Mann-Kendall 방법론은 정상운전·센서품질·이상탐지 질문에만 LLM 근거로 선택 주입한다. 원시 로그가 공개되지 않고 이상주입은 반합성이라 임계값 보정, 독립 holdout, station-to-vehicle 검증, 과학 게이트 승격은 금지한다. 집중 회귀는 43 passed / 0 failed / 1 warning이다.
 - TU Delft의 실제 수소 계측 캐비닛 연구를 `public_tudelft_detector_placement_context`로 추가했다. 7개 실험·7개 센서에서 보고된 상부 축적·환기 혼합 관찰은 검지기 배치와 환기 설명 질문에만 LLM 근거로 선택 주입하며, 원시 시계열·3D 좌표·재사용 라이선스가 없어 검증 holdout, 임계값, 안전거리, 런타임 라우팅으로 승격하지 않는다. 집중 회귀는 41 passed / 0 failed / 1 warning이다.
 - 방출모델 실패 게이트 교차분석을 `research/RELEASE_FAILURE_CROSSWALK_2026_10_14.md`와 `research/release_failure_crosswalk_2026_10_14.json`에 고정했다. Schefer·PRESLHY·Proust 실패를 장치 경계/라인·밸브, 직경·유동영역, 열경계의 네 공통 원인으로 묶었으며, 이 진단은 기존 판정과 런타임 파라미터를 변경하지 않는다.
 - SAGA 직접응답 경로 회귀를 별도 실행해 55 passed / 0 failed / 0 skipped를 확인했다. 직접 질의·피해영향평가 전달·가상 조치 명령·측정값 guard·응답 선택성 범위를 `research/direct_answer_llm_regression_2026_10_14.json`에 고정했다.
