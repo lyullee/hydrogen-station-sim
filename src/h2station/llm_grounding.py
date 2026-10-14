@@ -2401,6 +2401,59 @@ def _public_natural_ventilation_evidence() -> dict[str, Any] | None:
                 "runtime_candidate_enabled": False,
                 "claim_limit": str(indoor.get("claim_boundary") or ""),
             }
+
+    # A published actual-hydrogen ceiling-jet experiment is useful for
+    # response wording and experiment-design context.  Its raw traces are
+    # author-request only, so keep it out of calibration and holdout paths.
+    ceiling_path = Path(__file__).resolve().parents[2] / (
+        "research/frontiers_confined_h2_ceiling_jet_evidence_2026_10_14.json"
+    )
+    try:
+        ceiling = json.loads(ceiling_path.read_text(encoding="utf-8"))
+    except (OSError, ValueError, json.JSONDecodeError):
+        ceiling = None
+    if isinstance(ceiling, dict):
+        ceiling_source = ceiling.get("source") or {}
+        ceiling_scope = ceiling.get("experiment_scope") or {}
+        ceiling_findings = ceiling.get("reported_findings") or {}
+        ceiling_runtime = ceiling.get("runtime_use") or {}
+        if (
+            ceiling.get("artifact_type")
+            == "verified_report_level_actual_hydrogen_confined_ceiling_jet_evidence"
+            and ceiling.get("status")
+            == "verified_report_level_actual_hydrogen_confined_ceiling_jet_evidence"
+            and ceiling_source.get("doi") == "10.3389/fenrg.2024.1456316"
+            and ceiling_source.get("license") == "CC BY 4.0"
+            and ceiling_scope.get("actual_hydrogen") is True
+            and ceiling_runtime.get("llm_context_grounding") is True
+            and ceiling_runtime.get("runtime_parameter_application") is False
+            and ceiling_runtime.get("spatial_holdout_validation") is False
+        ):
+            result["confined_ceiling_jet_report_context"] = {
+                "doi": ceiling_source.get("doi"),
+                "record_url": ceiling_source.get("record_url"),
+                "license": ceiling_source.get("license"),
+                "enclosure_dimensions_m": ceiling_scope.get(
+                    "enclosure_dimensions_m"
+                ),
+                "leak_pressure_mpa": ceiling_scope.get("leak_pressure_mpa"),
+                "nozzle_diameter_mm": ceiling_scope.get("nozzle_diameter_mm"),
+                "source_heights_m": ceiling_scope.get("source_heights_m"),
+                "horizontal_sensor_offsets_m": ceiling_scope.get(
+                    "horizontal_sensor_offsets_m"
+                ),
+                "radial_measurement_offsets_m": ceiling_scope.get(
+                    "radial_measurement_offsets_m"
+                ),
+                "self_similarity_r2": ceiling_findings.get("self_similarity_r2"),
+                "ceiling_impingement_reflux_considered": ceiling_findings.get(
+                    "ceiling_impingement_reflux_considered"
+                ) is True,
+                "raw_data_status": ceiling_source.get("raw_data_status"),
+                "runtime_parameter_application": False,
+                "spatial_holdout_validation": False,
+                "claim_limit": str(ceiling.get("claim_boundary") or ""),
+            }
     return result
 
 
@@ -13571,6 +13624,26 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
                 "runtime_candidate_enabled": False,
                 "claim_limit": short(indoor_context.get("claim_limit")),
             }
+        ceiling_context = natural_ventilation.get(
+            "confined_ceiling_jet_report_context"
+        )
+        if isinstance(ceiling_context, dict):
+            summary["public_natural_ventilation_evidence"][
+                "confined_ceiling_jet_report_context"
+            ] = {
+                "doi": ceiling_context.get("doi"),
+                "enclosure_dimensions_m": ceiling_context.get(
+                    "enclosure_dimensions_m"
+                ),
+                "leak_pressure_mpa": ceiling_context.get("leak_pressure_mpa"),
+                "nozzle_diameter_mm": ceiling_context.get("nozzle_diameter_mm"),
+                "source_heights_m": ceiling_context.get("source_heights_m"),
+                "self_similarity_r2": ceiling_context.get("self_similarity_r2"),
+                "raw_data_status": ceiling_context.get("raw_data_status"),
+                "runtime_parameter_application": False,
+                "spatial_holdout_validation": False,
+                "claim_limit": short(ceiling_context.get("claim_limit")),
+            }
     confidential = evidence.get("confidential_measured_boundary_replay")
     if isinstance(confidential, dict):
         summary["confidential_measured_boundary_replay"] = {
@@ -17383,6 +17456,50 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                     natural_ventilation.get("indoor_spatial_report_context") or {}
                 ).get("claim_limit"),
             },
+            "confined_ceiling_jet_report_context": {
+                "doi": (
+                    natural_ventilation.get(
+                        "confined_ceiling_jet_report_context"
+                    ) or {}
+                ).get("doi"),
+                "enclosure_dimensions_m": (
+                    natural_ventilation.get(
+                        "confined_ceiling_jet_report_context"
+                    ) or {}
+                ).get("enclosure_dimensions_m"),
+                "leak_pressure_mpa": (
+                    natural_ventilation.get(
+                        "confined_ceiling_jet_report_context"
+                    ) or {}
+                ).get("leak_pressure_mpa"),
+                "nozzle_diameter_mm": (
+                    natural_ventilation.get(
+                        "confined_ceiling_jet_report_context"
+                    ) or {}
+                ).get("nozzle_diameter_mm"),
+                "source_heights_m": (
+                    natural_ventilation.get(
+                        "confined_ceiling_jet_report_context"
+                    ) or {}
+                ).get("source_heights_m"),
+                "self_similarity_r2": (
+                    natural_ventilation.get(
+                        "confined_ceiling_jet_report_context"
+                    ) or {}
+                ).get("self_similarity_r2"),
+                "raw_data_status": (
+                    natural_ventilation.get(
+                        "confined_ceiling_jet_report_context"
+                    ) or {}
+                ).get("raw_data_status"),
+                "runtime_parameter_application": False,
+                "spatial_holdout_validation": False,
+                "claim_limit": (
+                    natural_ventilation.get(
+                        "confined_ceiling_jet_report_context"
+                    ) or {}
+                ).get("claim_limit"),
+            },
             "claim_limit": short(natural_ventilation.get("claim_limit")),
         }
     return decision
@@ -18954,6 +19071,60 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
                 "runtime_candidate_enabled": False,
                 "claim_limit": (
                     natural_ventilation.get("indoor_spatial_report_context") or {}
+                ).get("claim_limit"),
+            },
+            "confined_ceiling_jet_report_context": {
+                "doi": (
+                    natural_ventilation.get(
+                        "confined_ceiling_jet_report_context"
+                    ) or {}
+                ).get("doi"),
+                "record_url": (
+                    natural_ventilation.get(
+                        "confined_ceiling_jet_report_context"
+                    ) or {}
+                ).get("record_url"),
+                "license": (
+                    natural_ventilation.get(
+                        "confined_ceiling_jet_report_context"
+                    ) or {}
+                ).get("license"),
+                "enclosure_dimensions_m": (
+                    natural_ventilation.get(
+                        "confined_ceiling_jet_report_context"
+                    ) or {}
+                ).get("enclosure_dimensions_m"),
+                "leak_pressure_mpa": (
+                    natural_ventilation.get(
+                        "confined_ceiling_jet_report_context"
+                    ) or {}
+                ).get("leak_pressure_mpa"),
+                "nozzle_diameter_mm": (
+                    natural_ventilation.get(
+                        "confined_ceiling_jet_report_context"
+                    ) or {}
+                ).get("nozzle_diameter_mm"),
+                "source_heights_m": (
+                    natural_ventilation.get(
+                        "confined_ceiling_jet_report_context"
+                    ) or {}
+                ).get("source_heights_m"),
+                "self_similarity_r2": (
+                    natural_ventilation.get(
+                        "confined_ceiling_jet_report_context"
+                    ) or {}
+                ).get("self_similarity_r2"),
+                "raw_data_status": (
+                    natural_ventilation.get(
+                        "confined_ceiling_jet_report_context"
+                    ) or {}
+                ).get("raw_data_status"),
+                "runtime_parameter_application": False,
+                "spatial_holdout_validation": False,
+                "claim_limit": (
+                    natural_ventilation.get(
+                        "confined_ceiling_jet_report_context"
+                    ) or {}
                 ).get("claim_limit"),
             },
             "claim_limit": natural_ventilation.get("claim_limit"),

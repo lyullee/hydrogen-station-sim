@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "artifact_type": "verified_report_level_actual_hydrogen_confined_ceiling_jet_evidence",
+  "status": "verified_report_level_actual_hydrogen_confined_ceiling_jet_evidence",
+  "recorded_at": "2026-10-14",
+  "source": {
+    "title": "Experimental study on dynamic response performance of hydrogen sensor in confined space under ceiling",
+    "doi": "10.3389/fenrg.2024.1456316",
+    "record_url": "https://www.frontiersin.org/journals/energy-research/articles/10.3389/fenrg.2024.1456316/full",
+    "publisher": "Frontiers in Energy Research",
+    "license": "CC BY 4.0",
+    "raw_data_status": "author_request_only_not_accessed",
+    "publisher_identity_basis": "publisher article page, DOI and CC BY statement"
+  },
+  "experiment_scope": {
+    "actual_hydrogen": true,
+    "enclosure_dimensions_m": [
+      6.0,
+      4.0,
+      3.0
+    ],
+    "leak_pressure_mpa": 4.0,
+    "nozzle_diameter_mm": 0.16,
+    "source_heights_m": [
+      1.5,
+      2.0,
+      2.5
+    ],
+    "horizontal_sensor_offsets_m": [
+      0.0,
+      0.5,
+      1.0,
+      1.5,
+      2.0
+    ],
+    "radial_measurement_offsets_m": [
+      0.0,
+      0.15,
+      1.0,
+      1.5,
+      2.0,
+      2.5
+    ],
+    "sensor_range_volpct_h2": [
+      0.0,
+      4.0
+    ],
+    "sensor_response_time_s": "<3"
+  },
+  "reported_findings": {
+    "self_similarity_r2": 0.98,
+    "axial_concentration_decreases_with_distance": true,
+    "radial_concentration_decreases_with_distance": true,
+    "ceiling_impingement_reflux_considered": true,
+    "far_radial_region_buoyancy_dominated": true,
+    "source_height_conditions_reported": true,
+    "sensor_coordinates_reported_in_article_figures": true
+  },
+  "runtime_use": {
+    "llm_context_grounding": true,
+    "runtime_parameter_application": false,
+    "dispersion_model_calibration": false,
+    "alarm_or_trip_setpoint_change": false,
+    "spatial_holdout_validation": false,
+    "independent_external_validation": false
+  },
+  "claim_boundary": "Published actual-hydrogen confined-ceiling jet evidence for qualitative response guidance and experiment-design context. The article page states raw data are available from the authors; raw numerical traces were not accessed here. Do not use this record as an independent holdout, concentration calibration, detector coverage proof, HRS distance validation, ESD effectiveness evidence or field safety claim."
+}

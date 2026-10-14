@@ -479,3 +479,31 @@ def test_hydelta_indoor_report_context_is_grounded_without_spatial_promotion():
     assert decision["response_guidance"]["natural_ventilation"][
         "indoor_spatial_report_context"
     ]["runtime_candidate_enabled"] is False
+
+
+def test_frontiers_actual_h2_ceiling_jet_context_is_grounded_without_calibration():
+    manifest = build_evidence_manifest(
+        {"time_s": 1.0}, {}, [], False, question="천장 환기 공간분포 수소 누출"
+    )
+    evidence = manifest["response_evidence"][
+        "public_natural_ventilation_evidence"
+    ]
+    context = evidence["confined_ceiling_jet_report_context"]
+    assert context["doi"] == "10.3389/fenrg.2024.1456316"
+    assert context["enclosure_dimensions_m"] == [6.0, 4.0, 3.0]
+    assert context["leak_pressure_mpa"] == 4.0
+    assert context["self_similarity_r2"] == 0.98
+    assert context["raw_data_status"] == "author_request_only_not_accessed"
+    assert context["runtime_parameter_application"] is False
+    assert context["spatial_holdout_validation"] is False
+
+    summary = prompt_evidence_summary(manifest)[
+        "public_natural_ventilation_evidence"
+    ]
+    assert summary["confined_ceiling_jet_report_context"][
+        "runtime_parameter_application"
+    ] is False
+    decision = prompt_decision_evidence(manifest)
+    assert decision["response_guidance"]["natural_ventilation"][
+        "confined_ceiling_jet_report_context"
+    ]["spatial_holdout_validation"] is False
