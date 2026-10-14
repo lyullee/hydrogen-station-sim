@@ -36,31 +36,27 @@ Hakrae Kim\textsuperscript{a}, Jungsu Lee\textsuperscript{a}, Jinseo Kim\textsup
 \small *Corresponding author. E-mail address: lyullee@kgs.or.kr (U. Lee).\\
 \small ORCID: U. Lee 0009-0008-8976-5363; S.-Y. Bae 0009-0003-8731-428X;\\
 \small H. Kim 0009-0002-5048-3568; J. Lee 0009-0006-9347-453X; J. Kim 0009-0000-2132-6112}}
-\date{Working draft: 12 October 2026}
+\date{Working draft: 15 October 2026}
 
 \begin{document}
 \maketitle
 \workingnote
 
 \begin{abstract}
-This study evaluates a virtual hydrogen refuelling station using separate
-evidence gates for process physics, consequence software and language-model
-decision support. A Type-IV tank model yielded validation errors of 3.841 MPa,
-4.833 $^{\circ}$C and 3.850 state-of-charge percentage points across 12 frozen
-fills. A public 15-workbook intake
-contained 58,440 synchronized samples; 8/9 comparable post-access transfer
-sessions passed descriptive flow--mass closure (18 sessions detected). A 22-case
-PRESLHY E3.1 blowdown evaluation passed
-50.0\% against a 70\% threshold, while a separate five-case ambient Part-B
-evaluation passed 3/5 (60\%). A non-adiabatic revision passed 20/22 consumed
-cases but only 2/3 eligible holdouts. Independent 90 MPa releases passed 0/3
-mass-flow series. HyRAM+ matched its API and an ignited-enclosure model passed
-27/27 peak-pressure screens. A 44-case large-scale delayed-ignition rank screen
-passed pooled correlation but failed all geometry-controlled ordering screens.
-Across 34 HIAD incidents, SAGA's machine proxy was
-0.760 versus 0.401 for alarm-only text; expert ratings remain pending. Evidence
-supports a claim-bounded prototype, not a field-qualified controller or
-autonomous emergency system.
+This study evaluates a claim-bounded virtual hydrogen refuelling station digital
+twin with separate gates for process physics, consequence calculations and
+language-model decision support. On 12 frozen Type-IV fills, pressure,
+gas-temperature and state-of-charge RMSE values were 3.841 MPa, 4.833
+$^{\circ}$C and 3.850 percentage points. The prospective eight-run
+station-to-vehicle transfer and a confidential recharge-dwell holdout failed
+their joint screens. The 22-case PRESLHY E3.1 ambient blowdown set passed
+11/22, while an ignited-enclosure pressure endpoint passed 27/27; HyRAM+
+source tests and three adapter-parity cases passed. A 44-case delayed-ignition
+screen retained pooled correlation but failed geometry-controlled ordering.
+Across 34 public HRS incidents, SAGA's deterministic response-structure proxy
+was 0.760 versus 0.401 for alarm-only text. The evidence supports a
+reproducible research prototype with fail-closed actuation boundaries, not
+SAE-compliant control, field certification or autonomous emergency management.
 \end{abstract}
 
 \noindent\textbf{Keywords:} hydrogen refueling station; digital twin; external
@@ -68,42 +64,30 @@ validation; HyRAM; process safety; decision support
 
 \section{Introduction}
 Hydrogen refuelling couples high-pressure storage, compression, cascade dispatch,
-pre-cooling, flow control and vehicle-tank heat transfer. A useful digital twin
-must conserve mass and energy, reproduce the fast-fill transient, expose safety
-states and distinguish measured or simulated evidence from assumed inputs.
+pre-cooling, flow control and vehicle-tank heat transfer. A digital twin intended
+for safety work must therefore do more than reproduce a plausible animation: it
+must conserve mass and energy, expose the boundary conditions used by each
+calculation, distinguish measured evidence from assumptions and prevent an
+operator-facing explanation from being mistaken for a validated control action.
 The physical decomposition follows the principal station elements in ISO
 19880-1, while a conforming light-duty fuelling controller would additionally
 require an authorized SAE J2601 implementation \cite{iso19880,saej2601}.
 Published models have addressed vehicle filling and partial or whole-station
 dynamics, including the H2FillS formulation \cite{kuroki2021}, optimization of
 cascade refuelling \cite{rothuizen2013}, vehicle-side pressure loss
-\cite{rothuizen2020}, and multi-zone tank heat transfer \cite{xiao2024}. These
-agreement at one component boundary cannot establish station-controller
-accuracy.
-Independent field evidence is available at a coarser resolution. An NRC Canada
-analysis of approximately 22,593 H70T40 dispensing events at four British
-Columbia stations reports protocol context, normal/incomplete/fault-fill
-categories and plotted pressure, temperature and flow patterns
-\cite{nrc2024}. The report has no synchronized raw logs; it supplies context,
-not a full-loop holdout.
-
-CARB tested 22 stations with an abbreviated HGV 4.3:22
-matrix \cite{carb2024}. None passed every test; five passed fault and
-communication tests and four passed nine fuelling-performance metrics.
-Pass rates were 45.5\% for general fault, 40.9\% protocol fault,
-50.0\% communication and 18.2\% fuelling performance. They motivated
-dispenser-specific communication faults, startup and pressure-
-corridor termination, T20/T30/T40 checks, and data-loss hold/resume. These
-training controls lack J2601 tables and HGV 4.3 thresholds.
-Genovese et al. report more than 4,500 Cal State LA HRFF events and 8,800 kg
-dispensed \cite{genovese2024}; Samuelsen et al. report UCI NFCRC fill summaries
-\cite{samuelsen2020}. Neither releases synchronized raw rows with reuse terms,
-so both provide operating context rather than a numerical holdout.
-
-PRHYDE reports four instrumented tanks (240 L H70, 350 L H50, 322 L H35 and
-165 L H70) at ZBT and Nikola with aggregate errors, but no synchronized logger
-arrays \cite{prhyde2023}; JHFC/NEDO likewise reports six 35/70 MPa conditions without
-machine-readable runs \cite{monde2012}. Both are context only.
+\cite{rothuizen2020}, and multi-zone tank heat transfer \cite{xiao2024}.
+Those studies establish important component models, but agreement at one
+boundary does not establish station-controller accuracy, consequence-model
+transportability or the safety of language-model advice. The practical gap is
+an evidence architecture that states which claim each dataset can support and
+which claim it cannot.
+Independent field evidence remains coarser than the present model boundary.
+NRC Canada, CARB, Genovese, Samuelsen, PRHYDE and JHFC/NEDO report station
+events, fault categories or aggregate tank errors, but do not release the
+synchronized, reusable pressure--temperature--flow arrays and controller states
+needed for a full-loop holdout \cite{nrc2024,carb2024,genovese2024,samuelsen2020,
+prhyde2023,monde2012}. They therefore motivate the operating and fault context
+without being treated as numerical validation datasets.
 
 Safety-oriented twins add a second model family. Release, dispersion, jet-fire,
 overpressure and quantitative-risk calculations are commonly delegated to a
@@ -113,7 +97,11 @@ operator-facing explanations. Each layer has separate evidence requirements:
 software tests do not validate physics, API parity does not validate geometry,
 and fluent text does not establish safe advice.
 
-This study asks four questions:
+This study defines the station boundary and evidence hierarchy, retains negative
+frozen evaluations, verifies HyRAM+ translation with uncertainty flags, and
+evaluates staged SAGA assistance separately from safety claims.
+
+The study consequently asks four narrower questions:
 \begin{enumerate}
   \item How accurately does the vehicle-tank submodel reproduce public fast-fill
   experiments when measured boundary conditions are imposed?
@@ -124,21 +112,17 @@ This study asks four questions:
   \item Can process- and evidence-linked SAGA responses provide traceable, guardrailed incident
   decision support under a deterministic proxy comparison?
 \end{enumerate}
-The fourth is a machine proxy, not human-safety evidence. A synchronized
-station-to-vehicle full-loop holdout was not found; the full-loop result is a
-negative diagnostic.
+The fourth is a machine proxy, not human-safety evidence; no synchronized
+station-to-vehicle full-loop holdout was available.
 
 \section{Materials and methods}
 \subsection{Digital-twin boundary}
 The virtual station represents tube-trailer supply, a three-stage compressor,
 low-, medium- and high-pressure storage banks, two independently dispatched
 dispenser circuits, pre-cooling, hose line-pack and Type-IV vehicle vessels.
-Sampled supervisory and safety logic is coupled to continuous mass and energy
-balances. Process operations remain event-driven: the state is held when no
-transfer, compression, venting or incident request is active. The visual scene,
-simulated sensors and emergency-action interface are research and training
-components; they are not an as-built survey or a certified safety instrumented
-system.
+Supervisory and safety logic is coupled to mass and energy balances; operations
+are event-driven. The visual scene, simulated sensors and emergency-action
+interface are research and training components, not a certified safety system.
 
 The process model owns pressure, temperature, inventory and mass flow. A release
 snapshot, including source state and explicitly selected aperture, is passed to
@@ -147,6 +131,15 @@ alarm and available consequence fields have been assembled. Sensor analysis,
 the main conversational interface and the separate SAGA retrieval service have
 isolated API contracts so that a command request is not silently replaced by a
 periodic status report.
+
+\subsection{Evidence hierarchy and claim policy}
+Gate 1 tests the measured-boundary tank; Gate 2 tests station transfer; Gate 3
+tests release and consequence components; Gate 4 tests software translation and
+decision support. Each gate uses a predeclared endpoint, eligibility rule and
+threshold. Failed or ineligible gates remain visible and cannot be repaired on
+the same records. Component evidence is not promoted to a station claim, and an
+LLM response is not a safety function without deterministic state, consequence
+fields and an explicit completion condition.
 
 \subsection{Vehicle-tank model}
 The Type-IV surrogate uses gas, liner and composite-shell energy states. For gas
@@ -436,7 +429,29 @@ expert review; this is reported as an application limitation and deployment
 condition rather than a physics-validation endpoint.
 
 \section{Results}
-\subsection{Measured-boundary tank validation}
+Results follow the evidence hierarchy. The summary is a claim map rather than a
+score: each pass is local to its endpoint and each negative result bounds
+use.
+
+\subsection{Evidence-gate overview}
+\begin{table}[htbp]
+\centering
+\caption{Evidence-gate summary. Each decision applies only to the stated endpoint.}
+\label{tab:gate-summary}
+\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{0.17\textwidth}>{\raggedright\arraybackslash}p{0.27\textwidth}>{\raggedright\arraybackslash}p{0.18\textwidth}>{\raggedright\arraybackslash}p{0.27\textwidth}}
+\toprule
+Gate & Evidence lane & Result & Interpretation \\
+\midrule
+1 & Type-IV measured-boundary tank (12 frozen fills) & RMSE 3.841 MPa, 4.833 $^{\circ}$C, 3.850 SOC points & Bounded vehicle-tank support \\
+2 & Station-to-vehicle transfer (8 prospective runs) & 0/8 joint screens; recharge dwell holdout failed & Controller/full-loop claim not supported \\
+3 & Ambient release and consequence components & PRESLHY 11/22; ignited enclosure 27/27 & Endpoint-specific, geometry-bounded evidence \\
+4 & HyRAM+ translation and SAGA proxy & 47 upstream tests; 3/3 parity; SAGA 0.760 vs 0.401 & Traceability and software evidence, not safety certification \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Gate 1: measured-boundary vehicle-tank physics}
 Table~\ref{tab:tank} reports the frozen split. Validation errors were lower than
 calibration means for all three primary quantities, although uncertainty remains
 wide across heterogeneous fill conditions. Figure~\ref{fig:parity} shows aligned
@@ -517,7 +532,7 @@ but failed temperature (19.179 K RMSE). An outcome-accessed forced-mixing
 sensitivity passed all four screens for three assumed nozzle diameters, but the
 frozen result remains failed and runtime parameters unchanged.
 
-\subsection{Negative closed-loop transfer diagnostic}
+\subsection{Gate 2: station-to-vehicle transfer diagnostic}
 After the preprocessing and nominal-pressure corrections, refitted tank, flow-area
 calibration and frozen v2 cooling sensitivity, one of eight development fills and
 two of eleven internal-comparison fills met all three project screens. Their mean
@@ -604,7 +619,7 @@ prospectively frozen holdout with an independently justified safety limit.
 The complete run metadata are archived in
 \texttt{research/closed\_loop\_temperature\_stop\_diagnostic\_2026\_10\_04.json}.
 
-\subsection{Negative confidential station recharge holdout}
+\subsection{Gate 2: confidential station-side holdout}
 Calibration (457,405 samples; 89 completed restarts) fitted a 290.0-s dwell.
 The disjoint holdout (196,037 samples; 32 restarts) contained a 176.0-s minimum,
 so the gate failed. The prior single-trace 265.2-s result was superseded and
@@ -619,7 +634,7 @@ band as an evidence-informed development default while leaving the failed time
 dwell disabled. This analysis was performed after outcome access and is not an
 independent holdout, safety limit, or full-loop validation result.
 
-\subsection{Prospective confined pressure-peaking screen}
+\subsection{Gate 3: confined pressure-peaking component}
 To test a separate consequence boundary without presenting it as station-loop
 validation, a second prospective protocol was frozen before accessing the raw
 outcomes of the HyTunnel-CS unignited pressure-peaking release archive
@@ -637,7 +652,7 @@ threshold, so the result is exploratory evidence for a confined unignited
 pressure-peaking submodel only. It does not validate outdoor dispersion,
 ignition, emergency response or the complete HRS fueling loop.
 
-\subsection{Negative ambient blowdown validation result}
+\subsection{Gate 3: ambient blowdown transfer}
 All 22 PRESLHY workbooks were eligible, spanning four nozzle diameters and low,
 medium and high initial-pressure groups. Eleven cases passed both primary screens,
 giving a joint pass fraction of 50.0\% (case-bootstrap 95\% CI 31.8--72.7\%), below
@@ -654,7 +669,7 @@ decision. Joint pass counts were 2/9 at high pressure, 6/7 at medium pressure an
 and 4 mm, respectively. HyTunnel-CS failed both bounded claims (6/18; 3/5);
 its post-outcome coefficient diagnostic remains separate.
 
-\subsection{Development revision and negative E5.1 holdout}
+\subsection{Gate 3: revised model and E5.1 holdout}
 Adding documented vessel-wall thermal inertia and real-gas discharge physics
 removed calculation failures on the consumed E3.1 set. Twenty of 22 development
 cases passed both original screens (90.9\%; case-bootstrap 95\% CI 77.3--100\%).
@@ -677,7 +692,7 @@ analysis retains the measured state and separately records the nominal label.
 The eligibility minimum and performance threshold both failed, so the revised
 source-depletion claim is not supported by this holdout.
 
-\subsection{Independent ambient Part-B pressure-decay transfer}
+\subsection{Gate 3: independent ambient Part-B transfer}
 A separate protocol evaluated five previously unopened ambient Part-B cases
 from the public PRESLHY archive \cite{preslhypartb}. All five met the frozen
 eligibility requirements and all pressure-error screens passed, but the two
@@ -687,7 +702,7 @@ This result is retained as a negative transfer of the rigid-source depletion
 model; it does not validate cryogenic two-phase flow, ignition, dispersion,
 station control or separation distance.
 
-\subsection{High-pressure aperture-flow transfer}
+\subsection{Gate 3: high-pressure aperture-flow transfer}
 The three INERIS/CEA 1, 2 and 3 mm series supplied 13, 10 and 12 states; none
 passed both screens. NRMSE was 16.27\%, 16.01\% and 32.62\%, with median errors
 of 25.07\%, 15.85\% and 32.88\%. Sensitivity checks left the decision at 0/3.
@@ -703,7 +718,7 @@ coefficient range (1~mm: 1.022--1.178; 2~mm: 0.619--0.747; 3~mm:
 outside the experiment. The interval is not a confidence interval or fitted site
 coefficient and does not validate consequence or separation distances.
 
-\subsection{Negative Sandia/SRI transient mass-flow transfer}
+\subsection{Gate 3: Sandia/SRI transient mass-flow transfer}
 The Figure 3b digitization supplied 25 unique experimental coordinates. The
 locked model passed the NRMSE screen at 5.83\% of measured peak, but median
 absolute percentage error was 22.85\% and half-peak-time error was 28.29\%.
@@ -714,7 +729,7 @@ peak followed by faster decay is consistent with omitted vessel-wall heat input
 and downstream-tube inventory, but that interpretation is diagnostic and no
 post-hoc parameter change enters the primary result.
 
-\subsection{Negative Sandia/SRI pressure-decay transfer}
+\subsection{Gate 3: Sandia/SRI pressure-decay transfer}
 The separate Figure 4 pressure trace supplied 222 unique coordinates. The
 locked model reproduced the initial pressure within 0.04\% and passed the
 half-pressure-time screen: measured and predicted times were 26.79 and 28.53 s,
@@ -730,7 +745,7 @@ workbook had already been inventoried before protocol freeze. The retained
 post-access diagnostic also failed all three holdout screens without refitting.
 It is reported for transparency and supplies no additional validation claim.
 
-\subsection{Positive bounded Ekoto mass-flow transfer}
+\subsection{Gate 3: bounded Ekoto mass-flow transfer}
 The Figure 3 digitization supplied 39 unique experimental coordinates. All
 three prospectively frozen screens passed: peak-normalized NRMSE was 3.84\%,
 median absolute percentage error was 12.79\%, and half-peak-time error was
@@ -740,7 +755,7 @@ parameter or code change was made. This supports a bounded source-depletion clai
 for the 13.45 MPa, 3.63 L scaled release, not the enclosing warehouse phenomena
 or a full refuelling station.
 
-\subsection{HyRAM+ source, tests and adapter parity}
+\subsection{Gate 4: HyRAM+ source, tests and adapter parity}
 The installed and upstream v6.1 Python sources matched over 38 files with aggregate
 SHA-256 \texttt{d5865e1ae7b5c77b985e06b45d7a5607543703c1834fc50f7c5d96f32a0c22de}.
 All 47 selected upstream validation tests passed, comprising 803 subtests and seven
@@ -795,7 +810,7 @@ frozen candidate raised Spearman $\rho$ from 0.600 to 0.943 with top-three recal
 runtime remains disabled. HyDelta was unscored because required coordinates,
 orientation and per-sensor numbers were absent; figures were not digitised.
 
-\subsection{Decision-support study status}
+\subsection{Gate 4: SAGA decision-support study}
 No human-effectiveness or expert-rated safety result is reported. The machine
 benchmark covers response structure and traceability, not operator accuracy,
 usability or safety. Facility-specific ethics and expert review remain deployment
@@ -813,7 +828,15 @@ Across 33 events, F1 was 0.564 versus 0.281, with longer SAGA responses. These
 software checks do not establish expert-judged effectiveness.
 
 \section{Discussion}
-\subsection{What is externally supported}
+The evidence does not reduce to one accuracy number because the twin contains
+different physical and informational boundaries. A useful interpretation is a
+stack: the tank model is the strongest externally supported physics layer; the
+station controller and recharge rule remain diagnostic; release and consequence
+models are valid only for their tested apparatus and endpoint; and SAGA is a
+traceability layer that turns those deterministic fields into staged guidance.
+This ordering is the principal engineering result of the study.
+
+\subsection{Synthesis of supported evidence}
 The strongest independent evidence concerns vehicle-tank thermodynamics under
 measured inlet mass flow and temperature. It supports comparisons in the tested
 fast-fill envelope under stated geometry and heat-transfer assumptions. A frozen
@@ -839,11 +862,9 @@ the thermophysical domain only where single-phase assumptions remain valid, and
 test valve/line dynamics as a separate effect. Any improved version requires a new hash-locked external
 holdout rather than rerating these cases as independent validation.
 
-The E5.1 campaign supplied a prospective test but did not rescue the claim. Its
-negative decision follows the frozen eligibility and performance rules, not case
-deletion: the primary set was small and lacked a successful high-pressure case.
-Shared DisCha facility and investigators make E5.1 separate-campaign, not
-independent-laboratory, evidence.
+The E5.1 campaign did not rescue the claim: its small eligible set lacked a
+successful high-pressure case, and the shared facility makes it a separate
+campaign rather than independent-laboratory evidence.
 
 The French campaign showed that one coefficient cannot represent diameter
 scaling across a 10 m delivery path. Its effective coefficient fell with
@@ -852,16 +873,10 @@ implied 0.568--0.594 while the real-gas equation matched theory. These consumed
 data require geometry-specific valve--pipe--orifice boundaries and a new
 untouched facility, rather than post-hoc coefficients.
 
-The separate Sandia/SRI transient had low aggregate NRMSE but the adiabatic model
-depleted flow too quickly. It motivates non-adiabatic cylinder walls and explicit
-7.6 m tube line-pack; the consumed approximate-duration trace is not fully blinded.
-
-The 2007 pressure trace makes the omitted dynamics more specific. A single
-adiabatic vessel state could match the initial value and half-pressure time while
-still missing both the rapid initial manifold transient and the heat-supported
-late tail. This experiment is now consumed evidence. It motivates explicit
-valve/manifold line-pack and wall thermal inertia, followed by a new facility-
-level holdout rather than post-hoc adjustment of the failed result.
+The Sandia/SRI transient and pressure-decay traces point to omitted wall heat,
+valve/manifold line-pack and downstream tubing. They are consumed diagnostics;
+the remedy is an apparatus-resolved model followed by a new facility-level
+holdout, not post-hoc adjustment of the failed results.
 
 The Ekoto holdout shows that the unchanged model is useful within a narrower
 regime: a short, small-inventory 13.45 MPa release with independently specified
@@ -870,7 +885,7 @@ $C_d$. Its joint pass does not resolve the failed 15.5 MPa long-tail mass-flow,
 and negative transfers together defines the model's present applicability more
 credibly than a single validation curve.
 
-\subsection{Consequence calculations and risk communication}
+\subsection{Implications for consequence calculations and risk communication}
 The consequence audit separates source identity, adapter parity and release-boundary
 semantics. Public dilution, heat-flux and overpressure data \cite{han2013,houf2007,hyram2024}
 support a bounded free-jet display. A post-access seven-method HRS QRA dataset
@@ -879,19 +894,13 @@ the runtime fell inside two of four thermal and no comparable overpressure envel
 Its 1.327 kg s$^{-1}$ free-orifice flow exceeded the benchmark's 0.060 kg s$^{-1}$
 limit. The software records this flow-boundary approximation without tuning or setback claims.
 
-Two literature comparisons were added. The 78-experiment Cirrone correlation reproduced
-the 21.9 kPa example and 24 rounded radial distances within 0.044 m \cite{cirrone2022}.
-The Molkov flame-length relation, supported by 123 reported experiments, gave 14.32\%
-mean absolute percentage error over 25 transcribed high-pressure rows; 22 were within
-30\% \cite{molkov2011}. Values are domain flagged. The former is cloud-centred radial
-overpressure and the latter visible free-jet flame length; neither is a site safety distance.
+Literature correlations for delayed-ignition overpressure and visible flame
+length were reproduced within their published domains \cite{cirrone2022,molkov2011};
+both remain display checks rather than site safety distances.
 
-Two prospectively controlled public consequence archives were evaluated. The
-first contained eight real-scale 350/700 bar releases through 0.5/1.0 mm TPRD
-outlets in a ventilated semi-confined space \cite{lachgaathaug2022}. Its peak
-mass flows were 4.04--13.00 g s$^{-1}$ and four heat-flux channels spanned
-0--57.29 kW m$^{-2}$. Missing experiment-to-nozzle-angle mapping precluded a
-model score, so these data remain descriptive thermal-boundary evidence.
+One public archive of eight real-scale TPRD releases lacked experiment-to-nozzle
+angle mapping and therefore remains descriptive thermal-boundary evidence
+\cite{lachgaathaug2022}.
 
 The second contained 31 immediately ignited releases in a 14.9 m$^3$ vented
 enclosure \cite{lach2021ignited}. After four previously opened cases were fixed
@@ -918,15 +927,12 @@ Raw-file headers confirmed four kPa channels at 500 kHz. The archive omits
 case-resolved obstacle, ignition and sensor coordinates and ambient records; a
 frozen input contract prevents fitting them to consumed peaks.
 
-H2SAFE supplied five controlled helium releases with spatial metadata \cite{h2safe2026};
-missing station/controller and vehicle channels keep it descriptive. NIST garage
-workbooks likewise provide ventilation context only because they use helium and lack
-a time crosswalk \cite{pitts2011}. A ten-condition actual-H$_2$ tent study matched
-7/10 nearest-source cases but remains aggregate evidence for future spatial holdouts
-\cite{korean_tent2026}. A pre-access compressor screen is compatibility evidence
-only because its units and thermal boundaries differ \cite{mhc2025}.
+H2SAFE, NIST garage and tent archives provide spatial or ventilation context but
+lack the station/controller channels and time crosswalk needed for a scored HRS
+holdout; the compressor screen is compatibility evidence only
+\cite{h2safe2026,pitts2011,korean_tent2026,mhc2025}.
 
-\subsection{Evidence-gated language-model assistance}
+\subsection{Evidence-gated SAGA assistance}
 LLM assistance follows deterministic calculations and structured provenance,
 scenario state, consequence fields and uncertainty flags; it does not estimate
 unsupported damage radii. Human-effectiveness assessment is outside this study.
@@ -941,7 +947,7 @@ more staged action terms than alarm-only text, while an API numeric guard blocke
 unsupported value--unit phrases. These are software-traceability results; no
 independent reviewer assessed unsafe omissions.
 
-\subsection{Limitations}
+\subsection{Limitations and next validation step}
 All sensors and actions are simulated. Geometry, weather, occupancy, valve
 coefficients, compressor maps and proprietary J2601 control remain assumptions.
 No openly reusable synchronized station-to-vehicle raw cohort was identified, so
@@ -958,29 +964,30 @@ parameters, alarm thresholds, detector placement, HyRAM distances or response lo
 
 \section{Conclusions}
 A hydrogen-station safety digital twin was evaluated with separate evidence gates
-for station-side/component physics, consequence-software translation and
-LLM decision support. The measured-boundary Type-IV tank model achieved validation
-mean RMSE values of 3.841 MPa, 4.833 $^{\circ}$C and 3.850 SOC percentage points.
-The complete 15-workbook MetHyTrucks intake added 58,440 synchronized public
-experimental samples and eight descriptive flow--mass closure passes, while its
-documented sampling-only boundary, metadata gaps and prior outcome access
-precluded a prospective full-loop claim.
-The out-of-scope closed-loop transfer diagnostic and prospective ambient-blowdown
-holdouts, including the five-case Part-B transfer, did not meet their declared
-screens; the former is reported only as a negative transfer result because
-synchronized reusable station-to-vehicle raw data were unavailable. The spatial
-detector transfer also remains disabled. An eight-trace confidential station dwell
-rule also failed its
-holdout and remains disabled. Independent release tests exposed pressure-,
-diameter- and apparatus-dependent errors that an aperture-only source cannot
-resolve. Ekoto passed all frozen mass-flow screens but is bounded to its 13.45 MPa,
-3.63 L source. All 27 ignited-enclosure holdouts
-met the 2 kPa peak-error screen (MAE 0.672 kPa), supporting only that component
-endpoint. The retrospective 34-event benchmark favored direct SAGA over
-alarm-only text (0.760 versus 0.401), while the API guard rejected an absent
-value in a 5/5 regression. Expert study remains pending. The evidence supports
-a reproducible prototype, without supporting SAE-compliant fuelling control,
-field safety certification or autonomous emergency management.
+for vehicle-boundary physics, station transfer, consequence components and SAGA
+decision support. The measured-boundary Type-IV tank model achieved validation
+RMSE values of 3.841 MPa, 4.833 $^{\circ}$C and 3.850 SOC percentage points.
+This is the primary externally supported physics result and is bounded to the
+tested fast-fill envelope and stated effective geometry.
+
+The remaining evidence defines the safe interpretation of the prototype. The
+15-workbook public intake supplied 58,440 synchronized samples and descriptive
+flow--mass closure, but its metadata and sampling-only boundary did not support a
+prospective full-loop controller claim. The frozen station-to-vehicle transfer,
+confidential recharge dwell, ambient blowdown and most high-pressure release
+transfers did not meet their declared screens. In contrast, the ignited-enclosure
+pressure endpoint passed 27/27 holdout cases, HyRAM+ translation passed its
+source/API checks, and the bounded Ekoto release passed all screens for its
+13.45 MPa, 3.63 L apparatus. These positive endpoints remain local to their
+tested geometry and phenomena.
+
+SAGA improved a retrospective response-structure proxy over alarm-only text
+(0.760 versus 0.401) and retained deterministic consequence fields, uncertainty
+flags and fail-closed actuation boundaries. It does not establish operator
+effectiveness, action correctness or autonomous emergency management. The result
+is a reproducible research and training prototype with explicit next validation
+steps, rather than a field-qualified controller or safety-certified decision
+system.
 
 \section*{Data and code availability}
 Source code, study scripts, frozen evidence and documentation are available under
