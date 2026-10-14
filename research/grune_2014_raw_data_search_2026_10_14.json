@@ -1,13 +1,14 @@
 {
   "schema_version": "1.0",
   "artifact_type": "public_raw_data_search",
-  "generated_at": "2026-10-14T06:34:00+09:00",
+  "generated_at": "2026-10-14T06:59:07.565709+00:00",
   "case_id": "grune_2014_pressure_decay",
   "search_scope": [
     "official KIT publication record",
     "publisher record for DOI 10.1016/j.ijhydene.2013.08.076",
     "H2Tools and ICHS conference mirrors",
-    "public repository and Zenodo searches for pressure-time traces"
+    "public repository and Zenodo searches for pressure-time traces",
+    "H2Tools technical report and ICHS 2011 conference PDF recheck"
   ],
   "sources_reviewed": [
     {
@@ -20,10 +21,20 @@
       "title": "Experimental study of ignited unsteady hydrogen releases from a high pressure reservoir",
       "url": "https://www.sciencedirect.com/science/article/pii/S0360319913020521",
       "observed": "Publisher article record; no rights-cleared raw pressure-time table was identified in the accessible record."
+    },
+    {
+      "title": "Hydrogen Release From a High-Pressure GH2 Reservoir in Case of a Small Leak",
+      "url": "https://h2tools.org/sites/default/files/2019-08/Hydrogen%20Release%20From%20a%20High-Pressure%20GH2%20Reservoir%20in%20Case%20of%20a%20Small%20Leak.pdf",
+      "observed": "H2Tools technical report reproduces a pressure-decay figure and summarizes the 0.37 dm3/4 mm high-pressure case; no rights-cleared machine-readable pressure-time table or raw logger archive was exposed."
+    },
+    {
+      "title": "Experimental study of ignited unsteady hydrogen releases from a high pressure reservoir (ICHS 2011 paper)",
+      "url": "https://conference.ing.unipi.it/ichs2011/papers/133.pdf",
+      "observed": "Conference PDF contains the secondary Figure 2 pressure-decay inset used for a figure-derived diagnostic; it is not an independent raw archive and reuse terms for extracted coordinates are not established."
     }
   ],
   "outcome": "NO_NEW_RIGHTS_CLEARED_RAW_TRACE_FOUND",
-  "gate_effect": "grune_2014_pressure_decay_validation remains PENDING",
-  "next_reentry_condition": "A custodian supplies a complete pressure-time trace with reuse permission and enough metadata to freeze an outcome-unseen protocol.",
+  "gate_effect": "grune_2014_pressure_decay_validation remains PENDING; figure-derived and narrative sources are retained as secondary diagnostics only.",
+  "next_reentry_condition": "A custodian supplies a complete pressure-time trace with reuse permission and enough metadata to freeze an outcome-unseen protocol; a narrative or figure reproduction alone is insufficient.",
   "claim_boundary": "This is a documented public-search result, not evidence that the experiment lacked raw data internally."
 }
