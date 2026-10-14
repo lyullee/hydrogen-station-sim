@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-14T04:35:00+00:00",
+  "generated_at": "2026-10-14T04:14:06Z",
   "metric_definition": "PASS gates divided by PASS+FAIL+PENDING gates; not a publication-readiness probability",
   "gate_counts": {
     "PASS": 134,
@@ -85,14 +85,14 @@
       "ethics_and_expert_review": "optional_for_physics_validation; required only for a claim that SAGA improves human safety guidance"
     }
   },
-  "source_commit": "a4e9347",
-  "latest_completed_work": "PRESLHY 80 K candidate boundary recorded; direct-answer, HAZOP/emergency-response and separated assistant/risk-overlay regressions rechecked (90 Python tests + 11 Node tests passed).",
+  "source_commit": "3403d6a",
+  "latest_completed_work": "Full regression recheck, direct-answer/HAZOP/emergency-response and separated assistant/risk-overlay regressions passed; local FTPData USN archive was confirmed byte-identical to the retained public archive.",
   "latest_full_regression": {
-    "tests_passed": 1593,
+    "tests_passed": 1595,
     "tests_failed": 0,
     "tests_skipped": 0,
     "warnings": 222,
-    "elapsed_seconds": 340.93
+    "elapsed_seconds": 224.24
   },
   "remaining_workstreams": [
     {
@@ -143,6 +143,11 @@
       "id": "direct_answer_and_response_regression_recheck",
       "progress_percent": 100.0,
       "status": "90 direct-answer/HAZOP/emergency tests and 11 separated-assistant/risk-overlay Node tests pass; no external scientific gate promoted."
+    },
+    {
+      "id": "full_regression_and_local_archive_provenance_recheck",
+      "progress_percent": 100.0,
+      "status": "1,595 Python tests pass; 22 local USN archive members match the retained public archive byte-for-byte. No scientific gate promoted."
     }
   ]
 }

@@ -1,0 +1,184 @@
+{
+  "schema_version": 1,
+  "artifact_type": "local_public_archive_duplicate_recheck",
+  "generated_at": "2026-10-14T00:00:00Z",
+  "source": {
+    "local_path_label": "FTPData/USN_26117989.zip",
+    "dataset_doi": "10.23642/usn.26117989.v2",
+    "article_doi": "10.1016/j.jlp.2025.105669",
+    "outer_sha256": "030ae788d4484a937e598afb004eae9a804c216cbc4a48bf66bd534f8482214e",
+    "archive_count": 22,
+    "readme_present": true,
+    "manifest_present": true
+  },
+  "comparison": {
+    "repository_root": "data/public_validation/raw/figshare_26117989",
+    "matched_archives": 22,
+    "missing_archives": [],
+    "mismatched_archives": [],
+    "members": [
+      {
+        "archive": "23_FFI_P101_T00003.zip",
+        "size_bytes": 2001430,
+        "sha256": "9672c49321a9619768b09aa695226ed3c7d7e2bf0210c2bf35d6d8ce88737cbb",
+        "repository_match": true,
+        "repository_path": "data/public_validation/raw/figshare_26117989/23_FFI_P101_T00003.zip"
+      },
+      {
+        "archive": "23_FFI_P101_T00004.zip",
+        "size_bytes": 2369546,
+        "sha256": "17e3f3e0014a7c9cefb97ba591c486feb9c734ec30a6421fbd35ceba457d74ae",
+        "repository_match": true,
+        "repository_path": "data/public_validation/raw/figshare_26117989/23_FFI_P101_T00004.zip"
+      },
+      {
+        "archive": "23_FFI_P101_T00005.zip",
+        "size_bytes": 1893720,
+        "sha256": "b6243a250ca5dcef7a1577132d3740af34efc0fe9baebbc02087203b23cea0d9",
+        "repository_match": true,
+        "repository_path": "data/public_validation/raw/figshare_26117989/23_FFI_P101_T00005.zip"
+      },
+      {
+        "archive": "23_FFI_P101_T00006.zip",
+        "size_bytes": 2060025,
+        "sha256": "42e969b035e94c1eabe74ab8da89a5b527ecc734e868b0b01e55ca4c345889c5",
+        "repository_match": true,
+        "repository_path": "data/public_validation/raw/figshare_26117989/23_FFI_P101_T00006.zip"
+      },
+      {
+        "archive": "23_FFI_P101_T00007.zip",
+        "size_bytes": 2116367,
+        "sha256": "fd0610fc26f8b45c81b632a18472b439d10689c57ea2643040da79315ac41c66",
+        "repository_match": true,
+        "repository_path": "data/public_validation/raw/figshare_26117989/23_FFI_P101_T00007.zip"
+      },
+      {
+        "archive": "23_FFI_P101_T00008.zip",
+        "size_bytes": 2183474,
+        "sha256": "eac542a8041c180f9359d9ad2f9cdfe0e7250a8c2b5c5fc78126bdbea0cb817e",
+        "repository_match": true,
+        "repository_path": "data/public_validation/raw/figshare_26117989/23_FFI_P101_T00008.zip"
+      },
+      {
+        "archive": "23_FFI_P101_T00009.zip",
+        "size_bytes": 2160984,
+        "sha256": "f54ecd967bdb325a10b6cdf74e5ed7edb003d2ceaed2383a326be7b57babb029",
+        "repository_match": true,
+        "repository_path": "data/public_validation/raw/figshare_26117989/23_FFI_P101_T00009.zip"
+      },
+      {
+        "archive": "23_FFI_P101_T00011.zip",
+        "size_bytes": 2133066,
+        "sha256": "f28bb82ee1d0f2d008670bd069e8e0a5d1ef3a29b874a822813beb778a50e9ca",
+        "repository_match": true,
+        "repository_path": "data/public_validation/raw/figshare_26117989/23_FFI_P101_T00011.zip"
+      },
+      {
+        "archive": "23_FFI_P101_T00012.zip",
+        "size_bytes": 2081982,
+        "sha256": "8dc8a7040b6f894c75a4aed3f8791f3e446a4512a3a3c3c04bc71a735a3a8eeb",
+        "repository_match": true,
+        "repository_path": "data/public_validation/raw/figshare_26117989/23_FFI_P101_T00012.zip"
+      },
+      {
+        "archive": "23_FFI_P101_T00013.zip",
+        "size_bytes": 2140030,
+        "sha256": "7812732ec04bafd18ec82cc352705814d6b60914f4a7add1fb2349b71aaefebe",
+        "repository_match": true,
+        "repository_path": "data/public_validation/raw/figshare_26117989/23_FFI_P101_T00013.zip"
+      },
+      {
+        "archive": "23_FFI_P101_T00014.zip",
+        "size_bytes": 2084607,
+        "sha256": "c571ba54c3d61faf467b9a85c5707b1983344335d3cd460705759c43ca2eac03",
+        "repository_match": true,
+        "repository_path": "data/public_validation/raw/figshare_26117989/23_FFI_P101_T00014.zip"
+      },
+      {
+        "archive": "23_FFI_P101_T00026.zip",
+        "size_bytes": 2199349,
+        "sha256": "caf1fbd8f6946380415559ebc78d3877dca6d681792bafe006c31baead818b12",
+        "repository_match": true,
+        "repository_path": "data/public_validation/raw/figshare_26117989/23_FFI_P101_T00026.zip"
+      },
+      {
+        "archive": "23_FFI_P101_T00027.zip",
+        "size_bytes": 2034963,
+        "sha256": "5b59ac382e0d55e68e3fd84ae7ab3fd6fb2c51b18b853b2e1cbeecf661e87d53",
+        "repository_match": true,
+        "repository_path": "data/public_validation/raw/figshare_26117989/23_FFI_P101_T00027.zip"
+      },
+      {
+        "archive": "23_FFI_P101_T00028.zip",
+        "size_bytes": 2045248,
+        "sha256": "146b5ed7dc2826c6564469f75ef757c9fb9bc6ff39df8c208c5f21d2211a05ce",
+        "repository_match": true,
+        "repository_path": "data/public_validation/raw/figshare_26117989/23_FFI_P101_T00028.zip"
+      },
+      {
+        "archive": "23_FFI_P101_T00029.zip",
+        "size_bytes": 2275908,
+        "sha256": "b243ece57613a2757239cccd38571a4170ccb063bc75ff7325348996e08f5301",
+        "repository_match": true,
+        "repository_path": "data/public_validation/raw/figshare_26117989/23_FFI_P101_T00029.zip"
+      },
+      {
+        "archive": "23_FFI_P101_T00030.zip",
+        "size_bytes": 2426741,
+        "sha256": "46003f0e3f7dc60f0fdf78c0705036398dcffdf39fc8840eef4212e9df16c32e",
+        "repository_match": true,
+        "repository_path": "data/public_validation/raw/figshare_26117989/23_FFI_P101_T00030.zip"
+      },
+      {
+        "archive": "23_FFI_P101_T00031.zip",
+        "size_bytes": 2248254,
+        "sha256": "023cba0cd4dfe1063c7145de2c14dbfe93bd7c240f4dfcda11a4d3f8f0973279",
+        "repository_match": true,
+        "repository_path": "data/public_validation/raw/figshare_26117989/23_FFI_P101_T00031.zip"
+      },
+      {
+        "archive": "23_FFI_P101_T00040.zip",
+        "size_bytes": 2428526,
+        "sha256": "2b0e70df3740f3ebc351e40904d5ed3a4374f72cd066e80a84ad5a55ed9f4e39",
+        "repository_match": true,
+        "repository_path": "data/public_validation/raw/figshare_26117989/23_FFI_P101_T00040.zip"
+      },
+      {
+        "archive": "23_FFI_P101_T00041.zip",
+        "size_bytes": 2287912,
+        "sha256": "e28dfb5854e917581f95dab4ab193012ee684dc5676725424127bf859408c949",
+        "repository_match": true,
+        "repository_path": "data/public_validation/raw/figshare_26117989/23_FFI_P101_T00041.zip"
+      },
+      {
+        "archive": "23_FFI_P101_T00042.zip",
+        "size_bytes": 2926567,
+        "sha256": "6d36e766fe813b9a4e081c7fa78abf8d137d7159da7a65bfc4b910d67d17b6f1",
+        "repository_match": true,
+        "repository_path": "data/public_validation/raw/figshare_26117989/23_FFI_P101_T00042.zip"
+      },
+      {
+        "archive": "23_FFI_P101_T00044.zip",
+        "size_bytes": 2840050,
+        "sha256": "3045f0d8cd3a7bcb18d8d5e9b35c85ec50b84d870c86a81d704725856bba3264",
+        "repository_match": true,
+        "repository_path": "data/public_validation/raw/figshare_26117989/23_FFI_P101_T00044.zip"
+      },
+      {
+        "archive": "23_FFI_P101_T00045.zip",
+        "size_bytes": 2302256,
+        "sha256": "81e31b7262b6f590957bce4129539376a029019c8d858bb3a52013f79dac9e07",
+        "repository_match": true,
+        "repository_path": "data/public_validation/raw/figshare_26117989/23_FFI_P101_T00045.zip"
+      }
+    ]
+  },
+  "evidence_classification": {
+    "new_independent_dataset": false,
+    "post_access_duplicate_check": true,
+    "runtime_parameter_application": false,
+    "readiness_gate_effect": false,
+    "station_to_vehicle_full_loop": false
+  },
+  "claim_boundary": "The local FTPData archive is byte-identical to the already retained public USN/FFI Figshare archive. It adds provenance confirmation only; it is not a new independent holdout and does not change runtime routing, validation gates, or publication claims."
+}
