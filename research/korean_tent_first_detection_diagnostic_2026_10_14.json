@@ -1,0 +1,285 @@
+{
+  "schema_version": 1,
+  "artifact_type": "post_access_published_first_detection_diagnostic",
+  "recorded_at": "2026-10-14",
+  "status": "POST_ACCESS_DEVELOPMENT_DIAGNOSTIC",
+  "source": {
+    "title": "Concentration Responses of Upper Hydrogen Sensor Under Different Release Conditions in Semi-closed Vinyl Tent",
+    "doi": "10.7316/JHNE.2026.37.4.295",
+    "record_url": "https://journal.hydrogen.or.kr/_PR/view/?aidx=50481&bidx=4524",
+    "license": "publisher page; aggregate values transcribed for research audit"
+  },
+  "apparatus": {
+    "volume_m3": 96.0,
+    "dimensions_m": [
+      8.0,
+      4.0,
+      3.0
+    ],
+    "sensor_coordinates_m": {
+      "S1": [
+        0.0,
+        4.0,
+        3.0
+      ],
+      "S2": [
+        4.0,
+        4.0,
+        3.0
+      ],
+      "S3": [
+        4.0,
+        2.0,
+        3.0
+      ],
+      "S4": [
+        4.0,
+        0.0,
+        3.0
+      ],
+      "S5": [
+        8.0,
+        0.0,
+        3.0
+      ]
+    },
+    "nozzle_coordinates_m": {
+      "G1": [
+        4.0,
+        2.0,
+        0.3
+      ],
+      "G2": [
+        8.0,
+        2.0,
+        0.3
+      ],
+      "G3": [
+        8.0,
+        4.0,
+        0.3
+      ],
+      "G4": [
+        6.0,
+        4.0,
+        0.3
+      ]
+    },
+    "threshold_ppm": 10000
+  },
+  "cases": [
+    {
+      "case": 1,
+      "nozzle": "G1",
+      "direction": "vertical_up",
+      "flow_l_min": 250,
+      "first_sensor": "S3",
+      "first_time_s": 15,
+      "nearest_sensor_rank": [
+        "S3",
+        "S2",
+        "S4",
+        "S1",
+        "S5"
+      ],
+      "observed_sensor_rank": 1,
+      "nearest_sensor_correct": true,
+      "nearest_sensor_top2": true
+    },
+    {
+      "case": 2,
+      "nozzle": "G2",
+      "direction": "vertical_up",
+      "flow_l_min": 250,
+      "first_sensor": "S5",
+      "first_time_s": 17,
+      "nearest_sensor_rank": [
+        "S5",
+        "S3",
+        "S2",
+        "S4",
+        "S1"
+      ],
+      "observed_sensor_rank": 1,
+      "nearest_sensor_correct": true,
+      "nearest_sensor_top2": true
+    },
+    {
+      "case": 3,
+      "nozzle": "G3",
+      "direction": "vertical_up",
+      "flow_l_min": 250,
+      "first_sensor": "S5",
+      "first_time_s": 24,
+      "nearest_sensor_rank": [
+        "S2",
+        "S5",
+        "S3",
+        "S4",
+        "S1"
+      ],
+      "observed_sensor_rank": 2,
+      "nearest_sensor_correct": false,
+      "nearest_sensor_top2": true
+    },
+    {
+      "case": 4,
+      "nozzle": "G4",
+      "direction": "vertical_up",
+      "flow_l_min": 250,
+      "first_sensor": "S2",
+      "first_time_s": 18,
+      "nearest_sensor_rank": [
+        "S2",
+        "S3",
+        "S4",
+        "S5",
+        "S1"
+      ],
+      "observed_sensor_rank": 1,
+      "nearest_sensor_correct": true,
+      "nearest_sensor_top2": true
+    },
+    {
+      "case": 5,
+      "nozzle": "G1",
+      "direction": "horizontal_backward",
+      "flow_l_min": 250,
+      "first_sensor": "S3",
+      "first_time_s": 15,
+      "nearest_sensor_rank": [
+        "S3",
+        "S2",
+        "S4",
+        "S1",
+        "S5"
+      ],
+      "observed_sensor_rank": 1,
+      "nearest_sensor_correct": true,
+      "nearest_sensor_top2": true
+    },
+    {
+      "case": 6,
+      "nozzle": "G1",
+      "direction": "horizontal_left",
+      "flow_l_min": 250,
+      "first_sensor": "S3",
+      "first_time_s": 19,
+      "nearest_sensor_rank": [
+        "S3",
+        "S2",
+        "S4",
+        "S1",
+        "S5"
+      ],
+      "observed_sensor_rank": 1,
+      "nearest_sensor_correct": true,
+      "nearest_sensor_top2": true
+    },
+    {
+      "case": 7,
+      "nozzle": "G1",
+      "direction": "horizontal_forward",
+      "flow_l_min": 250,
+      "first_sensor": "S4",
+      "first_time_s": 12,
+      "nearest_sensor_rank": [
+        "S3",
+        "S2",
+        "S4",
+        "S1",
+        "S5"
+      ],
+      "observed_sensor_rank": 3,
+      "nearest_sensor_correct": false,
+      "nearest_sensor_top2": false
+    },
+    {
+      "case": 8,
+      "nozzle": "G1",
+      "direction": "vertical_down",
+      "flow_l_min": 250,
+      "first_sensor": "S3",
+      "first_time_s": 12,
+      "nearest_sensor_rank": [
+        "S3",
+        "S2",
+        "S4",
+        "S1",
+        "S5"
+      ],
+      "observed_sensor_rank": 1,
+      "nearest_sensor_correct": true,
+      "nearest_sensor_top2": true
+    },
+    {
+      "case": 9,
+      "nozzle": "G1",
+      "direction": "vertical_up",
+      "flow_l_min": 150,
+      "first_sensor": "S3",
+      "first_time_s": 15,
+      "nearest_sensor_rank": [
+        "S3",
+        "S2",
+        "S4",
+        "S1",
+        "S5"
+      ],
+      "observed_sensor_rank": 1,
+      "nearest_sensor_correct": true,
+      "nearest_sensor_top2": true
+    },
+    {
+      "case": 10,
+      "nozzle": "G1",
+      "direction": "vertical_up",
+      "flow_l_min": 400,
+      "first_sensor": "S4",
+      "first_time_s": 15,
+      "nearest_sensor_rank": [
+        "S3",
+        "S2",
+        "S4",
+        "S1",
+        "S5"
+      ],
+      "observed_sensor_rank": 3,
+      "nearest_sensor_correct": false,
+      "nearest_sensor_top2": false
+    }
+  ],
+  "metrics": {
+    "case_count": 10,
+    "nearest_source_top1_accuracy": 0.7,
+    "nearest_source_top2_recall": 0.8,
+    "observed_rank_median": 1,
+    "observed_rank_values": [
+      1,
+      1,
+      2,
+      1,
+      1,
+      1,
+      3,
+      1,
+      1,
+      3
+    ],
+    "first_sensor_counts": {
+      "S1": 0,
+      "S2": 1,
+      "S3": 5,
+      "S4": 2,
+      "S5": 2
+    }
+  },
+  "eligibility_decision": {
+    "independent_holdout": false,
+    "runtime_parameter_updated": false,
+    "validation_gate_changed": false,
+    "promotion_prohibited": true,
+    "reason": "The published aggregate first-detection table was opened after the frozen spatial protocol; complete concentration traces, uncertainty records, and a station-matched geometry are not public."
+  },
+  "claim_boundary": "This diagnostic shows that source distance alone cannot reproduce first detection in this one 96 m3 semi-closed tent (release direction, flow, ceiling, and edge effects matter). It is not a detector setpoint, safety distance, evacuation radius, station validation, CFD validation, or runtime calibration."
+}

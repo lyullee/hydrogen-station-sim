@@ -86,7 +86,7 @@
     }
   },
   "source_commit": "b796d5e7d361b498dfda3ccc4522b921c85f1c4d",
-  "latest_completed_work": "Preserved flow-limited release-boundary semantics in the unavailable HyRAM fallback, refreshed all 14 deterministic evidence projections, and sanitized external interpreter paths from refresh diagnostics without promoting a scientific validation gate.",
+  "latest_completed_work": "Added a post-access actual-H2 first-detection diagnostic from the published 96 m³ semi-closed tent study; nearest-source baseline scored 70% top-1 and 80% top-2 across 10 cases, while runtime and scientific gates remain unchanged.",
   "latest_full_regression": {
     "tests_passed": 1604,
     "tests_failed": 0,
@@ -129,6 +129,11 @@
     "scope": "tests/test_ijhe_readiness_audit.py tests/test_ijhe_audit_snapshot_consistency.py tests/test_validation_gap_report.py tests/test_llm_grounding.py"
   },
   "completed_process_improvements": [
+    {
+      "id": "korean_tent_first_detection_diagnostic_2026_10_14",
+      "progress_percent": 100.0,
+      "status": "Published aggregate first-detection data were encoded with sensor/nozzle coordinates and a transparent nearest-source baseline. The result is post-access diagnostic evidence only; it does not update runtime parameters or promote a validation gate."
+    },
     {
       "id": "full_regression_after_release_boundary_fix_2026_10_14",
       "progress_percent": 100.0,
