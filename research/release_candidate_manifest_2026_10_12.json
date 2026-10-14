@@ -29,10 +29,10 @@
       "total": 152
     },
     "primary_scope_gates": {
-      "PASS": 132,
+      "PASS": 133,
       "FAIL": 10,
       "PENDING": 2,
-      "total": 144,
+      "total": 145,
       "closure_percent": 91.7
     }
   },
@@ -76,5 +76,11 @@
     "h2safe_spatial_detector_transfer_validation",
     "submission_metadata_and_declarations"
   ],
-  "release_rule": "This candidate is reproducible software and bounded research evidence; it must not be described as independently validated or publication-ready until the readiness flags above are true."
+  "release_rule": "This candidate is reproducible software and bounded research evidence; it must not be described as independently validated or publication-ready until the readiness flags above are true.",
+  "latest_full_regression_passed": 1586,
+  "latest_full_regression_failed": 0,
+  "latest_full_regression_skipped": 0,
+  "latest_full_regression_source_commit": "9e61bc4cd3d18e06dab1a15872c7512d93b54498",
+  "latest_full_regression_artifact": "research/full_regression_test_run_2026_10_14.json",
+  "latest_full_regression_elapsed_seconds": 213.42
 }
