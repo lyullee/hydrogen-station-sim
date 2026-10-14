@@ -1,32 +1,42 @@
-# Grüne 2014 pressure-time data request draft
+# Grüne 2014 pressure-trace data request draft
 
-This is a draft only. It is not an authorization to contact the authors or KIT and it contains no private station information.
+This draft requests only the minimum material needed to complete the frozen
+pressure-decay holdout for the 0.37 L, approximately 20 MPa, 4 mm release in:
 
-## Subject
-Request for a rights-cleared machine-readable pressure trace for the 4 mm, 200 bar hydrogen-release experiment
+> Grune, J.; Sempert, K.; Kuznetsov, M.; Jordan, T. (2014), *Experimental
+> study of ignited unsteady hydrogen releases from a high pressure reservoir*,
+> International Journal of Hydrogen Energy, DOI
+> [10.1016/j.ijhydene.2013.08.076](https://doi.org/10.1016/j.ijhydene.2013.08.076).
 
-## Recipient
-Corresponding authors of Grüne et al., *Experimental study of ignited unsteady hydrogen releases from a high pressure reservoir*, DOI [10.1016/j.ijhydene.2013.08.076](https://doi.org/10.1016/j.ijhydene.2013.08.076), or the KITopen data custodian for KITopen record [110097219](https://publikationen.bibliothek.kit.edu/110097219).
+## Requested files
 
-## Request
+- The measured reservoir pressure trace for the 4 mm, approximately 200 bar
+  case, including the complete discharge endpoint and any pre-trigger samples.
+- Time and pressure columns with units, absolute/gauge basis, sampling interval,
+  missing-value convention and the pressure-transducer range/accuracy.
+- The initial vessel volume, initial gas temperature and any valve, rupture-disc,
+  extension-tube or downstream-line dimensions needed to interpret the trace.
+- A short event log identifying trigger time, valve-opening delay, acquisition
+  start/stop and any clipping or rejected samples.
 
-We are preparing a reproducibility-bounded validation of a hydrogen source-depletion model. We would like to request, if available, the original machine-readable reservoir pressure-time export for the 4 mm nozzle, approximately 200 bar initial-pressure, 0.37 dm3 vessel case shown in Figure 2.
+## Rights and provenance confirmation
 
-Please provide:
+Please state whether the supplied values may be used as derived coordinates in an
+open scientific validation record and manuscript. The repository will retain a
+cryptographic digest and derived metrics only unless redistribution of the raw
+file is explicitly permitted. The source paper, authors, facility and DOI will
+remain cited; no site, operator or confidential equipment information is needed.
 
-1. pressure and time columns, including the pressure basis (absolute or gauge) and units;
-2. sampling interval, acquisition start/stop definition, valve-opening or release trigger timing, and any zero-time correction;
-3. the vessel volume, initial temperature, nozzle/valve geometry and any line or extension volume used for the trace;
-4. the identity of the measured curve if multiple valve/rupture-disc curves are present;
-5. calibration or uncertainty information and any missing-value conventions; and
-6. written permission to use derived coordinates and aggregate error metrics in an open research article and accompanying reproducibility record, with the source DOI cited.
+## Locked evaluation boundary
 
-A de-identified CSV or a small table is sufficient; the full station configuration is not requested. If the raw trace cannot be redistributed, a custodian-hosted read-only export or a rights-cleared derived table with the complete discharge endpoint would also be useful.
+The repository protocol is already frozen in
+`research/grune_2014_holdout_protocol.json`. Numerical values must be delivered
+before any model-parameter change or endpoint selection. The primary screens are
+pressure NRMSE, median absolute percentage error and half-pressure timing. A
+failed screen will remain a reported negative result; supplied data will not be
+used to retune the runtime model.
 
-## Reproducibility boundary
-
-The validation protocol is frozen in `research/grune_2014_holdout_protocol.json`. We will not change the model parameters, endpoints or thresholds after receiving the trace. The file will be quarantined, hashed, and checked before any numerical outcome is used. The trace would be used only for the stated vessel pressure-decay component screen; it would not be used to claim station control, ignition, dispersion, radiation, safety distance or full-loop fueling validation.
-
-## Current public-source result
-
-The accessible article and conference reproduction provide apparatus metadata and a complete figure-derived diagnostic curve, but no rights-cleared machine-readable raw trace. The figure-derived diagnostic remains post-access evidence and does not close the independent Grüne 2014 gate.
+Current public-access result: the KIT record and public paper copies expose
+publication metadata and figure-level context, but no complete rights-cleared
+machine-readable pressure-time trace has been found. See
+`research/grune_2014_public_pressure_trace_recheck_2026_10_12.json`.
