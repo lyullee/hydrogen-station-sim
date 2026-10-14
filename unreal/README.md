@@ -8,6 +8,8 @@
 
 Launcher 자체 복구 뒤 종료·재시작을 시도했으며 Windows 잠금으로 UI 재확인은 보류됐다. Epic의 캐시 초기화 절차를 삭제 대신 날짜별 백업으로 수행하는 `scripts/repair_epic_cache.ps1`를 준비했다. 계정·설치 게임 폴더는 변경하지 않는다. Epic의 갱신된 로컬 UE 카탈로그에는 UE 5.6 항목이 있으므로 `scripts/open_unreal_installer.ps1`가 정확한 설치 URI를 열 수 있다. 그래도 entitlement가 갱신되지 않으면 Epic 지원의 계정 entitlement 갱신 또는 Epic이 서명한 레거시 Launcher 18.12.1을 통한 설치가 필요하다. 레거시 MSI는 공식 CDN에서 내려받아 Epic Games Inc. 유효 서명과 SHA-256을 확인했으며 저장소에는 포함하지 않았다. 참고: https://forums.unrealengine.com/t/launcher-20-3-5-install-engine-and-do-nothing-engine-versions-empty-log-shows-found-0-entitled-apps-new-account/2840123
 
+레거시 복구는 관리자 PowerShell에서 `./scripts/install_epic_legacy_for_unreal.ps1`을 실행한다. 이 스크립트는 MSI의 Epic 서명과 고정 SHA-256을 먼저 검사하고, Launcher의 `Saved` 상태를 날짜별 디렉터리에 복사한 다음 현재 Launcher만 제거하고 레거시 버전을 설치한다. 게임 설치 폴더와 프로젝트는 삭제하지 않으며 자동 재부팅도 하지 않는다. 관리자 권한이 없으면 변경 전에 중단한다.
+
 환경 확인: 저장소 루트에서 `.venv\Scripts\python.exe scripts/check_unreal_environment.py` 실행. 별도 엔진 경로는 `HRS_UNREAL_ROOT`로 지정한다. 계정·비밀번호·API 키를 이 프로젝트에 넣지 않는다.
 
 ## 서버와 프로젝트 실행
