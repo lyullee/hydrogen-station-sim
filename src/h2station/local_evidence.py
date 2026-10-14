@@ -80,6 +80,9 @@ _CLOSED_LOOP_CALIBRATED_DIAGNOSTIC = _ROOT / (
 _SCHEFER_2007_NONADIABATIC_DIAGNOSTIC = _ROOT / (
     "research/schefer_2007_nonadiabatic_diagnostic_2026_10_14.json"
 )
+_SCHEFER_2006_LINE_TRANSIENT_DIAGNOSTIC = _ROOT / (
+    "research/schefer_2006_line_transient_diagnostic_2026_10_09.json"
+)
 _MC_GEOMETRY_TRANSFER_DIAGNOSTIC = _ROOT / (
     "research/mc_geometry_transfer_diagnostic_2026_10_08.json"
 )
@@ -357,6 +360,83 @@ def _scientific_container_discovery_summary() -> dict[str, Any] | None:
             "동기화·경계·권리 확인 전에는 실측 full-loop 검증이나 런타임 보정으로 사용할 수 없습니다."
         ),
     }
+
+
+def _schefer_2006_line_transient_diagnostic_summary() -> dict[str, Any] | None:
+    """Expose the Schefer line-inventory diagnostic without promotion."""
+
+    try:
+        record = _read_json(_SCHEFER_2006_LINE_TRANSIENT_DIAGNOSTIC)
+        model = record.get("model") or {}
+        views = record.get("instrument_boundary_views") or {}
+        sensitivity = [
+            row for row in record.get("post_outcome_valve_time_constant_sensitivity") or []
+            if isinstance(row, dict)
+        ]
+        required = (
+            record.get("artifact_type") == "post_outcome_line_inventory_diagnostic",
+            record.get("post_outcome_diagnostic") is True,
+            record.get("frozen_result_unchanged") is True,
+            record.get("runtime_parameter_updated") is False,
+            record.get("validation_gate_effect") == "none",
+            record.get("claim_supported") is False,
+            len(sensitivity) == 5,
+            all(isinstance(views.get(key), dict) for key in ("source_flow", "outlet_flow")),
+            isinstance(record.get("claim_boundary"), str),
+        )
+        if not all(required):
+            return None
+
+        def flow_view(value: dict[str, Any]) -> dict[str, float]:
+            return {
+                key: float(value[key])
+                for key in (
+                    "predicted_peak_mass_flow_g_s",
+                    "mass_flow_nrmse_percent_peak_measured",
+                    "median_absolute_percentage_error_percent",
+                )
+                if isinstance(value.get(key), (int, float))
+                and not isinstance(value.get(key), bool)
+            }
+
+        return {
+            "status": "diagnostic_only",
+            "evidence_role": (
+                "post-outcome line-inventory and valve-time sensitivity diagnostic"
+            ),
+            "artifact": "research/schefer_2006_line_transient_diagnostic_2026_10_09.json",
+            "model": {
+                key: float(model[key])
+                for key in (
+                    "source_volume_m3", "line_length_m", "line_inner_diameter_m",
+                    "outlet_inner_diameter_m", "line_volume_m3",
+                )
+                if isinstance(model.get(key), (int, float))
+                and not isinstance(model.get(key), bool)
+            },
+            "instrument_boundary_views": {
+                "source_flow": flow_view(views["source_flow"]),
+                "outlet_flow": flow_view(views["outlet_flow"]),
+            },
+            "valve_time_constant_sensitivity": [
+                {
+                    "source_valve_time_constant_s": float(
+                        row["source_valve_time_constant_s"]
+                    ),
+                    "source_flow": flow_view(row.get("source_flow") or {}),
+                    "outlet_flow": flow_view(row.get("outlet_flow") or {}),
+                }
+                for row in sensitivity
+            ],
+            "frozen_result_unchanged": True,
+            "runtime_parameter_updated": False,
+            "validation_gate_effect": "none",
+            "claim_supported": False,
+            "promotion_prohibited": True,
+            "claim_limit": str(record["claim_boundary"]),
+        }
+    except (OSError, KeyError, TypeError, ValueError, json.JSONDecodeError):
+        return None
 
 
 def _schefer_2007_nonadiabatic_diagnostic_summary() -> dict[str, Any] | None:
@@ -2002,6 +2082,20 @@ def public_evidence_inventory_summary() -> dict[str, Any]:
             "claim_supported": False,
             "promotion_prohibited": True,
         },
+        "public_schefer_2006_line_transient_diagnostic": {
+            "status": "unavailable",
+            "evidence_role": (
+                "post-outcome line-inventory and valve-time sensitivity diagnostic"
+            ),
+            "model": {},
+            "instrument_boundary_views": {},
+            "valve_time_constant_sensitivity": [],
+            "frozen_result_unchanged": True,
+            "runtime_parameter_updated": False,
+            "validation_gate_effect": "none",
+            "claim_supported": False,
+            "promotion_prohibited": True,
+        },
         "public_mc_geometry_transfer_diagnostic": {
             "status": "unavailable",
             "runs": [],
@@ -2684,6 +2778,11 @@ def public_evidence_inventory_summary() -> dict[str, Any]:
         result[
             "public_schefer_2007_nonadiabatic_diagnostic"
         ] = schefer_nonadiabatic
+    schefer_line_transient = _schefer_2006_line_transient_diagnostic_summary()
+    if schefer_line_transient is not None:
+        result[
+            "public_schefer_2006_line_transient_diagnostic"
+        ] = schefer_line_transient
     geometry = _mc_geometry_transfer_diagnostic_summary()
     if geometry is not None:
         result["public_mc_geometry_transfer_diagnostic"] = geometry

@@ -4169,6 +4169,88 @@ def _public_schefer_2007_nonadiabatic_diagnostic() -> dict[str, Any] | None:
     }
 
 
+def _public_schefer_2006_line_transient_diagnostic() -> dict[str, Any] | None:
+    """Expose the line-inventory/valve-time sensitivity without promotion."""
+
+    artifact = "research/schefer_2006_line_transient_diagnostic_2026_10_09.json"
+    path = Path(__file__).resolve().parents[2] / artifact
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, json.JSONDecodeError):
+        return None
+    model = record.get("model") or {}
+    views = record.get("instrument_boundary_views") or {}
+    sensitivity = [
+        row for row in record.get("post_outcome_valve_time_constant_sensitivity") or []
+        if isinstance(row, dict)
+    ]
+    required = (
+        record.get("artifact_type") == "post_outcome_line_inventory_diagnostic",
+        record.get("post_outcome_diagnostic") is True,
+        record.get("frozen_result_unchanged") is True,
+        record.get("runtime_parameter_updated") is False,
+        record.get("validation_gate_effect") == "none",
+        record.get("claim_supported") is False,
+        len(sensitivity) == 5,
+        all(isinstance(views.get(key), dict) for key in ("source_flow", "outlet_flow")),
+        all(
+            isinstance(row.get("source_valve_time_constant_s"), (int, float))
+            and isinstance(row.get("source_flow"), dict)
+            and isinstance(row.get("outlet_flow"), dict)
+            for row in sensitivity
+        ),
+        isinstance(record.get("claim_boundary"), str),
+    )
+    if not all(required):
+        return None
+
+    def flow_view(value: dict[str, Any]) -> dict[str, float]:
+        return {
+            key: float(value[key])
+            for key in (
+                "predicted_peak_mass_flow_g_s",
+                "mass_flow_nrmse_percent_peak_measured",
+                "median_absolute_percentage_error_percent",
+            )
+            if isinstance(value.get(key), (int, float))
+            and not isinstance(value.get(key), bool)
+        }
+
+    def sensitivity_view(row: dict[str, Any]) -> dict[str, Any]:
+        return {
+            "source_valve_time_constant_s": float(
+                row["source_valve_time_constant_s"]
+            ),
+            "source_flow": flow_view(row["source_flow"]),
+            "outlet_flow": flow_view(row["outlet_flow"]),
+        }
+
+    return {
+        "artifact": artifact,
+        "evidence_role": "post-outcome line-inventory and valve-time sensitivity diagnostic",
+        "model": {
+            key: float(model[key])
+            for key in (
+                "source_volume_m3", "line_length_m", "line_inner_diameter_m",
+                "outlet_inner_diameter_m", "line_volume_m3",
+            )
+            if isinstance(model.get(key), (int, float))
+            and not isinstance(model.get(key), bool)
+        },
+        "instrument_boundary_views": {
+            "source_flow": flow_view(views["source_flow"]),
+            "outlet_flow": flow_view(views["outlet_flow"]),
+        },
+        "valve_time_constant_sensitivity": [sensitivity_view(row) for row in sensitivity],
+        "frozen_result_unchanged": True,
+        "runtime_parameter_updated": False,
+        "validation_gate_effect": "none",
+        "claim_supported": False,
+        "promotion_prohibited": True,
+        "claim_limit": str(record["claim_boundary"]),
+    }
+
+
 def _public_preslhy_e35_file_access_evidence() -> dict[str, Any] | None:
     """Expose the bounded audit of the downloaded public E3.5 workbook.
 
@@ -11227,6 +11309,11 @@ def build_evidence_manifest(
         envelope["response_evidence"][
             "public_schefer_2007_nonadiabatic_diagnostic"
         ] = schefer_nonadiabatic
+    schefer_line_transient = _public_schefer_2006_line_transient_diagnostic()
+    if schefer_line_transient is not None:
+        envelope["response_evidence"][
+            "public_schefer_2006_line_transient_diagnostic"
+        ] = schefer_line_transient
     public_preslhy_e35 = _public_preslhy_e35_file_access_evidence()
     if public_preslhy_e35 is not None:
         envelope["response_evidence"][
@@ -12270,6 +12357,20 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
                 "claim_limit",
             )
             if schefer_nonadiabatic.get(key) is not None
+        }
+    schefer_line_transient = evidence.get(
+        "public_schefer_2006_line_transient_diagnostic"
+    )
+    if isinstance(schefer_line_transient, dict):
+        summary["public_schefer_2006_line_transient_diagnostic"] = {
+            key: schefer_line_transient.get(key)
+            for key in (
+                "artifact", "evidence_role", "model", "instrument_boundary_views",
+                "valve_time_constant_sensitivity", "frozen_result_unchanged",
+                "runtime_parameter_updated", "validation_gate_effect",
+                "claim_supported", "promotion_prohibited", "claim_limit",
+            )
+            if schefer_line_transient.get(key) is not None
         }
     closed_loop = evidence.get("closed_loop_validation_boundary")
     if isinstance(closed_loop, dict):
@@ -13686,6 +13787,9 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
     schefer_nonadiabatic = response.get(
         "public_schefer_2007_nonadiabatic_diagnostic"
     ) or {}
+    schefer_line_transient = response.get(
+        "public_schefer_2006_line_transient_diagnostic"
+    ) or {}
     preslhy_holdout = preslhy.get("independent_holdout") or {}
     operating_screen = response.get("public_operating_envelope_screen") or {}
     public_benchmarks = response.get("public_experimental_benchmarks") or {}
@@ -13909,6 +14013,13 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
         "blowdown", "heat transfer", "nonadiabatic", "model", "validation",
         "sensitivity",
     ))
+    schefer_line_transient_relevant = any(
+        token in lead_context
+        for token in (
+            "유량", "질량", "압력", "밸브", "배관", "과도", "transient",
+            "flow", "mass", "pressure", "valve", "line", "validation",
+        )
+    )
     elvhys_evidence_relevant = public_catalog_relevant or any(
         token in lead_context
         for token in ("elvhys", "극저온", "cryogenic")
@@ -14775,6 +14886,19 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                     if schefer_nonadiabatic.get(key) is not None
                 },
             } if schefer_nonadiabatic and schefer_nonadiabatic_relevant else {}),
+            **({
+                "public_schefer_2006_line_transient_diagnostic": {
+                    key: schefer_line_transient.get(key)
+                    for key in (
+                        "artifact", "evidence_role", "model",
+                        "instrument_boundary_views", "valve_time_constant_sensitivity",
+                        "frozen_result_unchanged", "runtime_parameter_updated",
+                        "validation_gate_effect", "claim_supported",
+                        "promotion_prohibited", "claim_limit",
+                    )
+                    if schefer_line_transient.get(key) is not None
+                },
+            } if schefer_line_transient and schefer_line_transient_relevant else {}),
             **({
                 "public_usn_orientation_transfer_diagnostic": {
                     key: orientation_transfer.get(key)

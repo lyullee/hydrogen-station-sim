@@ -55,6 +55,27 @@ def test_schefer_2007_nonadiabatic_sensitivity_is_grounded_without_promotion():
     ] is False
 
 
+def test_schefer_2006_line_transient_diagnostic_keeps_flow_boundaries_explicit():
+    manifest = build_evidence_manifest(
+        {"time_s": 1.0}, {}, [], False, question="배관 질량유량 과도 검증"
+    )
+    evidence = manifest["response_evidence"][
+        "public_schefer_2006_line_transient_diagnostic"
+    ]
+    assert evidence["model"]["line_volume_m3"] > 0
+    assert evidence["instrument_boundary_views"]["source_flow"][
+        "predicted_peak_mass_flow_g_s"
+    ] > 0
+    assert len(evidence["valve_time_constant_sensitivity"]) == 5
+    assert evidence["frozen_result_unchanged"] is True
+    assert evidence["runtime_parameter_updated"] is False
+    assert evidence["claim_supported"] is False
+    decision = prompt_decision_evidence(manifest)["decision_support_evidence"]
+    assert decision["public_schefer_2006_line_transient_diagnostic"][
+        "promotion_prohibited"
+    ] is True
+
+
 def test_actual_hydrogen_spatial_benchmark_is_grounded_without_promotion():
     manifest = build_evidence_manifest(
         {"time_s": 1.0}, {}, [], False, question="공개 수소 공간분포 근거"

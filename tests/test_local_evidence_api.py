@@ -42,6 +42,13 @@ def test_local_evidence_summary_is_privacy_bounded() -> None:
     assert schefer["screens"]["joint_primary_pass_count"] == 0
     assert schefer["runtime_promotion"] is False
     assert schefer["promotion_prohibited"] is True
+    line = public_evidence_inventory_summary()[
+        "public_schefer_2006_line_transient_diagnostic"
+    ]
+    assert line["status"] == "diagnostic_only"
+    assert line["model"]["line_volume_m3"] > 0
+    assert len(line["valve_time_constant_sensitivity"]) == 5
+    assert line["claim_supported"] is False
     assert summary["adjacent_process"]["high_pressure_process"][
         "csv_event_row_count"
     ] == 2_411_774
