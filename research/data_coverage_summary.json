@@ -12,9 +12,9 @@
   },
   "readiness": {
     "ijhe_gate_counts": {
-      "PASS": 134,
+      "PASS": 135,
       "FAIL": 11,
-      "PENDING": 7
+      "PENDING": 6
     },
     "bounded_submission_ready": false,
     "full_user_objective_ready": false

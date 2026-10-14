@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "artifact_type": "privacy_bounded_data_coverage_summary",
-  "generated_at": "2026-10-13",
+  "generated_at": "2026-10-14",
   "privacy": {
     "source_paths_published": false,
     "source_filenames_published": false,
@@ -12,9 +12,9 @@
   },
   "readiness": {
     "ijhe_gate_counts": {
-      "PASS": 134,
+      "PASS": 135,
       "FAIL": 11,
-      "PENDING": 7
+      "PENDING": 6
     },
     "bounded_submission_ready": false,
     "full_user_objective_ready": false
