@@ -4,15 +4,31 @@
   "artifact_type": "local_data_access_boundary",
   "source_description": "User-provided local FTPData folder inventory; names and absolute paths intentionally omitted.",
   "inventory": {
-    "file_count": 85,
-    "total_bytes": 2667082728,
+    "file_count": 98,
+    "total_bytes": 2723679935,
     "by_extension": {
+      ".csv": 1,
+      ".hwpx": 1,
+      ".jpeg": 4,
       ".jpg": 54,
+      ".json": 3,
+      ".md": 2,
       ".mp4": 29,
       ".pdf": 1,
-      ".hwpx": 1
+      ".txt": 1,
+      ".zip": 2
     },
-    "numeric_trace_extensions_found": [],
+    "numeric_trace_extensions_found": [
+      ".csv"
+    ],
+    "numeric_trace_files": [
+      {
+        "file_label": "USN_T00003/23_FFI_P101_T00003/23_FFI_P101_T00003.csv",
+        "classification": "duplicate_of_retained_public_usn_archive",
+        "duplicate_recheck": "research/ftpdata_usn_26117989_duplicate_recheck_2026_10_14.json",
+        "new_independent_holdout": false
+      }
+    ],
     "numeric_trace_extensions_checked": [
       ".csv",
       ".tsv",
@@ -31,7 +47,8 @@
   "evidence_boundary": {
     "supports": [
       "visual equipment and facility-context review from images and video",
-      "document review after separate rights and confidentiality screening"
+      "document review after separate rights and confidentiality screening",
+      "provenance confirmation for the already retained public USN/FFI archive"
     ],
     "does_not_support": [
       "independent pressure-time validation",
@@ -41,5 +58,5 @@
     ],
     "public_repository_policy": "Do not copy the source media or document contents into this public repository without an explicit release decision."
   },
-  "decision": "The folder cannot close any currently blocked numerical holdout gate. Use it for visual/model-context work only unless a separately exported, rights-cleared numeric trace is supplied."
+  "decision": "The folder contains one numeric CSV, but it is byte-identical to the already retained public USN/FFI archive. It confirms provenance only and cannot close any currently blocked numerical holdout gate. Use it for visual/model-context work or duplicate verification unless a separately exported, rights-cleared numeric trace is supplied."
 }
