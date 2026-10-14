@@ -1,5 +1,16 @@
 # Development Progress
 
+## 2026-10-14 - Refresh the runtime evidence chain after the latest source state
+
+The hash-linked runtime, accident-replay, consequence-grounding and IJHE
+readiness projections were regenerated from the current source tree. All 14
+refresh steps completed successfully, including the HyRAM-backed HIAD/KHK
+replay and the readiness audit. The audit still reports **134 PASS / 11 FAIL /
+7 PENDING** (88.2% overall; 91.7% in the declared primary scope), so this
+refresh changes provenance freshness only and does not promote any scientific
+gate. The focused priority runner also remains process-healthy while preserving
+the scientific diagnostic status as `FAIL` and readiness as `BLOCKED`.
+
 ## 2026-10-14 - Re-synchronize readiness audit after the Type-IV evidence update
 
 The IJHE readiness audit and validation-gap report were regenerated from the
