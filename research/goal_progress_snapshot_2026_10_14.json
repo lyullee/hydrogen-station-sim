@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-14T05:58:33Z",
+  "generated_at": "2026-10-14T06:04:38Z",
   "metric_definition": "PASS gates divided by PASS+FAIL+PENDING gates; not a publication-readiness probability",
   "gate_counts": {
     "PASS": 134,
@@ -85,8 +85,8 @@
       "ethics_and_expert_review": "optional_for_physics_validation; required only for a claim that SAGA improves human safety guidance"
     }
   },
-  "source_commit": "c370f617a59d771d07a221823d2bafbb5770d53d",
-  "latest_completed_work": "Completed priority-manifest/privacy cleanup, full regression confirmation, Andreasen overlap invalidation, HySaM inventory, and the public validation-data recheck with explicit exclusion boundaries; snapshot provenance is synchronized to the latest commit.",
+  "source_commit": "788c42d0e4d2b1537f4f0e202c018ea26c0d6d7a",
+  "latest_completed_work": "Preserved flow-limited release-boundary semantics in the unavailable HyRAM fallback, added a regression test, and refreshed all 14 deterministic evidence projections without promoting a scientific validation gate.",
   "latest_full_regression": {
     "tests_passed": 1602,
     "tests_failed": 0,
@@ -129,6 +129,11 @@
     "scope": "tests/test_ijhe_readiness_audit.py tests/test_ijhe_audit_snapshot_consistency.py tests/test_validation_gap_report.py tests/test_llm_grounding.py"
   },
   "completed_process_improvements": [
+    {
+      "id": "flow_limited_hyram_fallback_boundary_2026_10_14",
+      "progress_percent": 100.0,
+      "status": "Unavailable HyRAM fallback now preserves flow-limited release-boundary semantics, equivalent-orifice metadata, process-flow limits and distance claim limits; the deterministic evidence chain was refreshed successfully. Scientific gate counts remain unchanged."
+    },
     {
       "id": "public_validation_data_recheck_2026_10_14",
       "progress_percent": 100.0,
