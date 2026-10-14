@@ -53,6 +53,9 @@ _NREL_NFCTEC_ACCESS_BOUNDARY = _ROOT / (
 _H2SAFE_SPATIAL_DIAGNOSTIC = _ROOT / (
     "research/h2safe_spatial_response_diagnostic_2026_10_08.json"
 )
+_ELVHYS_SPATIAL_HOLDOUT_RESULT = _ROOT / (
+    "research/elvhys_wp42_spatial_holdout_result_2026_10_14.json"
+)
 _H2SAFE_HVAC_INPUT_READINESS = _ROOT / (
     "research/h2safe_hvac_input_readiness_2026_10_12.json"
 )
@@ -1078,6 +1081,72 @@ def _h2safe_spatial_diagnostic_summary() -> dict[str, Any] | None:
             "joint_spatial_screen_pass": False,
             "runtime_parameter_application": False,
             "full_loop_external_validation_ready": False,
+            "promotion_prohibited": True,
+            "claim_limit": str(record["claim_boundary"]),
+        }
+    except (OSError, KeyError, TypeError, ValueError, json.JSONDecodeError):
+        return None
+
+
+def _elvhys_actual_h2_spatial_holdout_summary() -> dict[str, Any] | None:
+    """Expose the negative ELVHYS actual-hydrogen spatial holdout safely."""
+
+    try:
+        record = _read_json(_ELVHYS_SPATIAL_HOLDOUT_RESULT)
+        source = record.get("source") or {}
+        aggregate = record.get("aggregate") or {}
+        screens = record.get("screens") or {}
+        selection = record.get("selection") or {}
+        required = (
+            record.get("schema_version") == 1,
+            record.get("artifact_type")
+            == "elvhys_wp42_actual_hydrogen_spatial_holdout_result",
+            record.get("status") == "FAIL",
+            source.get("doi") == "10.18710/JXJP0H",
+            source.get("license") == "CC0 1.0",
+            aggregate.get("eligible_case_count") == 29,
+            screens.get("all_declared_cases_eligible") is True,
+            screens.get("median_spearman_at_least_0_5") is False,
+            screens.get("fraction_cases_spearman_at_least_0_4_at_least_0_6")
+            is False,
+            screens.get("mean_top5_recall_at_least_0_6") is False,
+            screens.get("nearest_success_fraction_at_least_0_7") is True,
+            selection.get("parameter_tuning_after_access") is False,
+            record.get("runtime_promotion") is False,
+            isinstance(record.get("claim_boundary"), str),
+        )
+        if not all(required):
+            return None
+        return {
+            "status": "diagnostic_only_failed_joint_screen",
+            "evidence_role": "independent disjoint actual-hydrogen spatial holdout",
+            "source_doi": str(source["doi"]),
+            "license": str(source["license"]),
+            "test_gas": "actual hydrogen",
+            "candidate": str(record.get("candidate") or ""),
+            "eligible_case_count": int(aggregate["eligible_case_count"]),
+            "median_spearman": float(aggregate["median_spearman"]),
+            "fraction_spearman_at_least_0_4": float(
+                aggregate["fraction_spearman_at_least_0_4"]
+            ),
+            "mean_top5_recall": float(aggregate["mean_top5_recall"]),
+            "nearest_success_fraction": float(
+                aggregate["nearest_success_fraction"]
+            ),
+            "screens": {
+                str(key): bool(screens[key])
+                for key in (
+                    "all_declared_cases_eligible",
+                    "median_spearman_at_least_0_5",
+                    "fraction_cases_spearman_at_least_0_4_at_least_0_6",
+                    "mean_top5_recall_at_least_0_6",
+                    "nearest_success_fraction_at_least_0_7",
+                )
+            },
+            "joint_spatial_screen_pass": False,
+            "independent_holdout": True,
+            "runtime_parameter_application": False,
+            "validation_gate_changed": False,
             "promotion_prohibited": True,
             "claim_limit": str(record["claim_boundary"]),
         }
@@ -2845,6 +2914,9 @@ def public_evidence_inventory_summary() -> dict[str, Any]:
     h2safe_spatial = _h2safe_spatial_diagnostic_summary()
     if h2safe_spatial is not None:
         result["public_h2safe_spatial_diagnostic"] = h2safe_spatial
+    elvhys_spatial = _elvhys_actual_h2_spatial_holdout_summary()
+    if elvhys_spatial is not None:
+        result["public_elvhys_actual_h2_spatial_holdout"] = elvhys_spatial
     h2safe_hvac = _h2safe_hvac_input_readiness_summary()
     if h2safe_hvac is not None:
         result["public_h2safe_hvac_input_readiness"] = h2safe_hvac

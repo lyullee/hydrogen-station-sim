@@ -29,6 +29,15 @@ def test_local_evidence_summary_is_privacy_bounded() -> None:
     assert first_detection["case_count"] == 10
     assert first_detection["runtime_parameter_updated"] is False
     assert first_detection["promotion_prohibited"] is True
+    elvhys_spatial = public_evidence_inventory_summary()[
+        "public_elvhys_actual_h2_spatial_holdout"
+    ]
+    assert elvhys_spatial["source_doi"] == "10.18710/JXJP0H"
+    assert elvhys_spatial["test_gas"] == "actual hydrogen"
+    assert elvhys_spatial["eligible_case_count"] == 29
+    assert elvhys_spatial["joint_spatial_screen_pass"] is False
+    assert elvhys_spatial["runtime_parameter_application"] is False
+    assert elvhys_spatial["promotion_prohibited"] is True
     transport = public_evidence_inventory_summary()[
         "public_preslhy_concentration_transport_diagnostic"
     ]

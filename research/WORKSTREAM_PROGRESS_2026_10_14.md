@@ -70,3 +70,5 @@ Current readiness remains 134 PASS / 11 FAIL / 7 PENDING (88.2%) overall and 91.
 - 메인/센서 LLM의 일반 압력 질문에는 이 공간 holdout을 넣지 않도록 선택 라우팅했으며, DOI 출처 링크와 claim limit를 함께 보존했다. 관련 LLM 회귀 38건 통과.
 - readiness 게이트는 134 PASS / 11 FAIL / 7 PENDING (88.2%), 주 논문 범위는 91.7%로 유지된다. 이 작업은 근거 투명성을 높인 것이며 과학 검증 게이트를 승격하지 않는다.
 
+- 로컬 근거 인벤토리 API에도 동일한 집계 결과를 연결해 화면·LLM·감사 API가 같은 판정을 사용하도록 했다. 원시 좌표·파일 경로·사례 식별자는 계속 제외한다.
+
