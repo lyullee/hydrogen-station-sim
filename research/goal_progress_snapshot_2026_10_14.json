@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-14T07:00:16Z",
+  "generated_at": "2026-10-14T07:51:57Z",
   "metric_definition": "PASS gates divided by PASS+FAIL+PENDING gates; not a publication-readiness probability",
   "gate_counts": {
     "PASS": 134,
@@ -86,13 +86,13 @@
     }
   },
   "source_commit": "4be709a",
-  "latest_completed_work": "HySafe SBEPV5 D27 actual-hydrogen multi-compartment benchmark is now grounded as bounded LLM context for detector-layout and sensor-quality guidance. The report records a 1.20 x 0.20 x 0.90 m 12-compartment vessel, 12 mm nozzle and 12 sensors with 8 reported reliable sensors; raw Excel was not accessed, so no calibration, holdout, runtime or gate promotion was made.",
+  "latest_completed_work": "Direct-answer LLM prompt budget regression was fixed. The complete evidence manifest remains in the API response, while interactive provider prompts now omit duplicated validation-scope inventories and long ventilation claim text. Main and sensor impact/direct-command routes pass the focused suite; no evidence gate or scientific claim was promoted.",
   "latest_full_regression": {
-    "tests_passed": 1606,
+    "tests_passed": 1609,
     "tests_failed": 0,
     "tests_skipped": 0,
     "warnings": 222,
-    "elapsed_seconds": 268.92
+    "elapsed_seconds": 240.64
   },
   "remaining_workstreams": [
     {
@@ -129,6 +129,11 @@
     "scope": "tests/test_closed_loop_calibrated_llm_grounding.py tests/test_llm_grounding.py tests/test_local_evidence_api.py"
   },
   "completed_process_improvements": [
+    {
+      "id": "direct_answer_prompt_budget_regression_fix_2026_10_14",
+      "progress_percent": 100.0,
+      "status": "Provider context was compacted without removing the full API evidence manifest. Main and sensor direct-answer, impact and staged-response tests pass; the refreshed 14-step evidence chain and full 1,609-test regression pass; scientific gate counts remain unchanged."
+    },
     {
       "id": "hysafe_sbepv5_actual_h2_context_grounding_2026_10_14",
       "progress_percent": 100.0,

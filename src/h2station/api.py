@@ -263,7 +263,11 @@ def _provider_evidence_basis(manifest: dict[str, Any]) -> dict[str, Any]:
                 )
                 if station_data.get(key) is not None
             }
-        for key in ("validation", "support_scope", "validation_scope"):
+        # The complete validation-scope inventory is returned with the API
+        # response, but it is too verbose for an interactive provider prompt.
+        # Keep the compact station-side inventory here; the live prompt still
+        # receives the explicit station-to-vehicle boundary below.
+        for key in ("validation", "support_scope"):
             value = full_data_used.get(key)
             if isinstance(value, dict):
                 compact_data_used_for_provider[key] = value

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-14T07:24:40.533309+00:00",
+  "generated_at": "2026-10-14T07:45:58.559313+00:00",
   "status": "PASS",
   "source": {
     "doi": "10.5281/zenodo.8164602",
@@ -47,15 +47,8 @@
         "doi": "10.5281/zenodo.8154318",
         "experiment_count": 32,
         "sensor_count": 50,
-        "release_rates_normal_dm3_h": [
-          50,
-          100,
-          300,
-          1000
-        ],
         "numeric_spatial_holdout_eligible": false,
-        "runtime_candidate_enabled": false,
-        "claim_limit": "HyDelta D6A.1 is retained as public actual-hydrogen report-level evidence for indoor concentration stratification, sensor coverage and ventilation context. It does not independently validate the frozen spatial ranker because the report does not publish the machine-readable spatial outcome fields required by the pre-access protocol."
+        "runtime_candidate_enabled": false
       },
       "confined_ceiling_jet_report_context": {
         "doi": "10.3389/fenrg.2024.1456316",
@@ -74,10 +67,9 @@
         "self_similarity_r2": 0.98,
         "raw_data_status": "author_request_only_not_accessed",
         "runtime_parameter_application": false,
-        "spatial_holdout_validation": false,
-        "claim_limit": "Published actual-hydrogen confined-ceiling jet evidence for qualitative response guidance and experiment-design context. The article page states raw data are available from the authors; raw numerical traces were not accessed here. Do not use this record as an independent holdout, concentration calibration, detector coverage proof, HRS distance validation, ESD effectiveness evidence or field safety claim."
+        "spatial_holdout_validation": false
       },
-      "claim_limit": "The CC BY 4.0 report provides actual-hydrogen, cabinet-scale measured concentration evidence for ventilation and response wording. The values are rep…"
+      "claim_limit": "The CC BY 4.0 report provides actual-hydrogen, cabinet-scale measured concentration evidence for ventilation and response wording. The values are report tables rather than machine-readable time series, the mini-cabinet …"
     },
     "exact_empirical_screen": {
       "cabinet_ventilation_screen_status": "EXACT_MEASURED_CASE",

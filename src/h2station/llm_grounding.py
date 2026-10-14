@@ -17526,6 +17526,18 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
     ):
         findings = natural_ventilation.get("reported_findings") or {}
         runtime_use = natural_ventilation.get("runtime_use") or {}
+        # The complete report-level record remains in the returned manifest.
+        # Interactive prompts only need the few facts that change an
+        # operator's next action.  In particular, do not repeat long claim
+        # boundaries and release tables here: they were making direct-answer
+        # prompts exceed their hard context budget after the actual-H2
+        # evidence additions.
+        indoor_context = natural_ventilation.get(
+            "indoor_spatial_report_context"
+        ) or {}
+        ceiling_context = natural_ventilation.get(
+            "confined_ceiling_jet_report_context"
+        ) or {}
         decision["response_guidance"]["natural_ventilation"] = {
             "doi": natural_ventilation.get("doi"),
             "hydrogen_accumulates_as_upper_blanket": findings.get(
@@ -17545,69 +17557,26 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                 "maximum_reported_inside_concentration_volpct_h2"
             ),
             "indoor_spatial_report_context": {
-                "doi": (
-                    natural_ventilation.get("indoor_spatial_report_context") or {}
-                ).get("doi"),
-                "experiment_count": (
-                    natural_ventilation.get("indoor_spatial_report_context") or {}
-                ).get("experiment_count"),
-                "sensor_count": (
-                    natural_ventilation.get("indoor_spatial_report_context") or {}
-                ).get("sensor_count"),
-                "release_rates_normal_dm3_h": (
-                    natural_ventilation.get("indoor_spatial_report_context") or {}
-                ).get("release_rates_normal_dm3_h"),
+                "doi": indoor_context.get("doi"),
+                "experiment_count": indoor_context.get("experiment_count"),
+                "sensor_count": indoor_context.get("sensor_count"),
                 "numeric_spatial_holdout_eligible": False,
                 "runtime_candidate_enabled": False,
-                "claim_limit": (
-                    natural_ventilation.get("indoor_spatial_report_context") or {}
-                ).get("claim_limit"),
             },
             "confined_ceiling_jet_report_context": {
-                "doi": (
-                    natural_ventilation.get(
-                        "confined_ceiling_jet_report_context"
-                    ) or {}
-                ).get("doi"),
-                "enclosure_dimensions_m": (
-                    natural_ventilation.get(
-                        "confined_ceiling_jet_report_context"
-                    ) or {}
-                ).get("enclosure_dimensions_m"),
-                "leak_pressure_mpa": (
-                    natural_ventilation.get(
-                        "confined_ceiling_jet_report_context"
-                    ) or {}
-                ).get("leak_pressure_mpa"),
-                "nozzle_diameter_mm": (
-                    natural_ventilation.get(
-                        "confined_ceiling_jet_report_context"
-                    ) or {}
-                ).get("nozzle_diameter_mm"),
-                "source_heights_m": (
-                    natural_ventilation.get(
-                        "confined_ceiling_jet_report_context"
-                    ) or {}
-                ).get("source_heights_m"),
-                "self_similarity_r2": (
-                    natural_ventilation.get(
-                        "confined_ceiling_jet_report_context"
-                    ) or {}
-                ).get("self_similarity_r2"),
-                "raw_data_status": (
-                    natural_ventilation.get(
-                        "confined_ceiling_jet_report_context"
-                    ) or {}
-                ).get("raw_data_status"),
+                "doi": ceiling_context.get("doi"),
+                "enclosure_dimensions_m": ceiling_context.get(
+                    "enclosure_dimensions_m"
+                ),
+                "leak_pressure_mpa": ceiling_context.get("leak_pressure_mpa"),
+                "nozzle_diameter_mm": ceiling_context.get("nozzle_diameter_mm"),
+                "source_heights_m": ceiling_context.get("source_heights_m"),
+                "self_similarity_r2": ceiling_context.get("self_similarity_r2"),
+                "raw_data_status": ceiling_context.get("raw_data_status"),
                 "runtime_parameter_application": False,
                 "spatial_holdout_validation": False,
-                "claim_limit": (
-                    natural_ventilation.get(
-                        "confined_ceiling_jet_report_context"
-                    ) or {}
-                ).get("claim_limit"),
             },
-            "claim_limit": short(natural_ventilation.get("claim_limit")),
+            "claim_limit": short(natural_ventilation.get("claim_limit"), 220),
         }
     if isinstance(hysafe_sbepv5, dict) and hysafe_sbepv5 and hysafe_sbepv5_relevant:
         decision["response_guidance"][
