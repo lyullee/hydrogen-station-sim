@@ -85,8 +85,8 @@
       "ethics_and_expert_review": "optional_for_physics_validation; required only for a claim that SAGA improves human safety guidance"
     }
   },
-  "source_commit": "7ab1019",
-  "latest_completed_work": "Runtime evidence chain refreshed from current source: all 14 hash-linked audit, replay, grounding and IJHE projection steps passed; scientific gate counts remain 134 PASS / 11 FAIL / 7 PENDING.",
+  "source_commit": "05aa5d5",
+  "latest_completed_work": "Runtime, LLM-stream and data-lane verification completed: 3 JavaScript tests and 47 audit/grounding/readiness tests passed; no scientific gate or runtime parameter was promoted.",
   "latest_full_regression": {
     "tests_passed": 1599,
     "tests_failed": 0,
@@ -122,11 +122,11 @@
     }
   ],
   "latest_focused_regression": {
-    "tests_passed": 38,
+    "tests_passed": 47,
     "tests_failed": 0,
     "tests_skipped": 0,
     "warnings": 1,
-    "scope": "tests/test_llm_grounding.py tests/test_zenodo_10983652_type4_burst_intake.py tests/test_ijhe_audit_snapshot_consistency.py tests/test_ijhe_readiness_audit.py tests/test_runtime_public_accident_precedents.py tests/test_ijhe_claim_evidence_matrix.py tests/test_validation_gap_report.py"
+    "scope": "tests/test_ijhe_readiness_audit.py tests/test_ijhe_audit_snapshot_consistency.py tests/test_validation_gap_report.py tests/test_llm_grounding.py"
   },
   "completed_process_improvements": [
     {
@@ -163,6 +163,11 @@
       "id": "runtime_evidence_chain_refresh_2026_10_14",
       "progress_percent": 100.0,
       "status": "All 14 deterministic refresh steps passed; readiness and claim boundaries were re-synchronized without promoting a scientific gate."
+    },
+    {
+      "id": "runtime_and_data_lane_verification_2026_10_14",
+      "progress_percent": 100.0,
+      "status": "The current streamed LLM/vehicle-route runtime and readiness/data-lane audit passed 3 JavaScript and 47 Python tests; the station-side/full-loop boundary remains explicit and no scientific gate was promoted."
     }
   ]
 }
