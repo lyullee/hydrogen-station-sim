@@ -7362,6 +7362,79 @@ def _public_usn_actual_h2_spatial_diagnostic_evidence() -> dict[str, Any] | None
     }
 
 
+def _public_elvhys_actual_h2_spatial_holdout_evidence() -> dict[str, Any] | None:
+    """Expose the disjoint ELVHYS actual-H2 spatial holdout as a negative gate.
+
+    This artifact is useful for detector-placement questions because it tests
+    a spatial ordering claim on measured hydrogen.  Its joint screen failed,
+    so the result is deliberately diagnostic context only: it cannot calibrate
+    detector routing, consequence distances, or station runtime behaviour.
+    """
+
+    root = Path(__file__).resolve().parents[2]
+    path = root / "research/elvhys_wp42_spatial_holdout_result_2026_10_14.json"
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, json.JSONDecodeError):
+        return None
+    source = record.get("source") or {}
+    aggregate = record.get("aggregate") or {}
+    screens = record.get("screens") or {}
+    selection = record.get("selection") or {}
+    if (
+        record.get("schema_version") != 1
+        or record.get("artifact_type") != "elvhys_wp42_actual_hydrogen_spatial_holdout_result"
+        or record.get("status") != "FAIL"
+        or source.get("doi") != "10.18710/JXJP0H"
+        or source.get("license") != "CC0 1.0"
+        or aggregate.get("eligible_case_count") != 29
+        or screens.get("all_declared_cases_eligible") is not True
+        or screens.get("median_spearman_at_least_0_5") is not False
+        or screens.get("fraction_cases_spearman_at_least_0_4_at_least_0_6") is not False
+        or screens.get("mean_top5_recall_at_least_0_6") is not False
+        or screens.get("nearest_success_fraction_at_least_0_7") is not True
+        or selection.get("parameter_tuning_after_access") is not False
+        or record.get("runtime_promotion") is not False
+        or not record.get("claim_boundary")
+    ):
+        return None
+    return {
+        "artifact": "research/elvhys_wp42_spatial_holdout_result_2026_10_14.json",
+        "evidence_role": "independent disjoint actual-hydrogen spatial holdout; negative joint screen",
+        "source": {
+            "doi": source.get("doi"),
+            "license": source.get("license"),
+            "test_gas": "actual hydrogen",
+        },
+        "candidate": record.get("candidate"),
+        "aggregate": {
+            "eligible_case_count": aggregate.get("eligible_case_count"),
+            "median_spearman": aggregate.get("median_spearman"),
+            "fraction_spearman_at_least_0_4": aggregate.get(
+                "fraction_spearman_at_least_0_4"
+            ),
+            "mean_top5_recall": aggregate.get("mean_top5_recall"),
+            "nearest_success_fraction": aggregate.get("nearest_success_fraction"),
+        },
+        "screens": {
+            key: screens.get(key)
+            for key in (
+                "all_declared_cases_eligible",
+                "median_spearman_at_least_0_5",
+                "fraction_cases_spearman_at_least_0_4_at_least_0_6",
+                "mean_top5_recall_at_least_0_6",
+                "nearest_success_fraction_at_least_0_7",
+            )
+        },
+        "joint_screen_pass": False,
+        "independent_holdout": True,
+        "runtime_parameter_application": False,
+        "validation_gate_changed": False,
+        "promotion_prohibited": True,
+        "claim_limit": str(record.get("claim_boundary") or ""),
+    }
+
+
 def _public_source_links(evidence: dict[str, Any]) -> list[dict[str, Any]]:
     """Return a tiny, inspectable index of public sources used for grounding.
 
@@ -7435,6 +7508,9 @@ def _public_source_links(evidence: dict[str, Any]) -> list[dict[str, Any]]:
     usn_actual_h2_spatial = evidence.get(
         "public_usn_actual_h2_spatial_diagnostic"
     ) or {}
+    elvhys_actual_h2_spatial = evidence.get(
+        "public_elvhys_actual_h2_spatial_holdout"
+    ) or {}
     usn_source = usn_actual_h2_spatial.get("source") or {}
     usn_dataset_doi = str(usn_source.get("dataset_doi") or "").strip()
     usn_article_doi = str(usn_source.get("article_doi") or "").strip()
@@ -7451,6 +7527,19 @@ def _public_source_links(evidence: dict[str, Any]) -> list[dict[str, Any]]:
             "Hydrogen dispersion in an open-ended rectangular channel",
             f"https://doi.org/{usn_article_doi}",
             "센서 좌표·실험 배치 출처(안전거리·충전소 검증 아님)",
+        )
+
+    elvhys_spatial = evidence.get(
+        "public_elvhys_actual_h2_spatial_holdout"
+    ) or {}
+    elvhys_spatial_source = elvhys_spatial.get("source") or {}
+    elvhys_spatial_doi = str(elvhys_spatial_source.get("doi") or "").strip()
+    if elvhys_spatial_doi:
+        add(
+            "PUBLIC_ELVHYS_ACTUAL_H2_SPATIAL_HOLDOUT",
+            "ELVHYS actual-hydrogen spatial response holdout",
+            f"https://doi.org/{elvhys_spatial_doi}",
+            "실제 수소 공간 응답 순서의 독립 holdout 진단(공동 스크린 실패; 런타임 보정 아님)",
         )
 
     benchmarks = evidence.get("public_experimental_benchmarks") or {}
@@ -12201,6 +12290,11 @@ def build_evidence_manifest(
         envelope["response_evidence"][
             "public_usn_actual_h2_spatial_diagnostic"
         ] = usn_actual_h2_spatial
+    elvhys_actual_h2_spatial = _public_elvhys_actual_h2_spatial_holdout_evidence()
+    if elvhys_actual_h2_spatial is not None:
+        envelope["response_evidence"][
+            "public_elvhys_actual_h2_spatial_holdout"
+        ] = elvhys_actual_h2_spatial
     methytrucks_tank = _methytrucks_tank_diagnostic_evidence()
     if methytrucks_tank is not None:
         envelope["response_evidence"][
@@ -13165,6 +13259,35 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
             ) is True,
             "claim_supported": usn_actual_h2_spatial.get("claim_supported") is True,
             "claim_limit": short(usn_actual_h2_spatial.get("claim_limit"), 320),
+        }
+    elvhys_actual_h2_spatial = evidence.get(
+        "public_elvhys_actual_h2_spatial_holdout"
+    )
+    if isinstance(elvhys_actual_h2_spatial, dict):
+        summary["public_elvhys_actual_h2_spatial_holdout"] = {
+            "evidence_role": elvhys_actual_h2_spatial.get("evidence_role"),
+            "source": elvhys_actual_h2_spatial.get("source") or {},
+            "candidate": elvhys_actual_h2_spatial.get("candidate"),
+            "aggregate": elvhys_actual_h2_spatial.get("aggregate") or {},
+            "screens": elvhys_actual_h2_spatial.get("screens") or {},
+            "joint_screen_pass": elvhys_actual_h2_spatial.get(
+                "joint_screen_pass"
+            ) is True,
+            "independent_holdout": elvhys_actual_h2_spatial.get(
+                "independent_holdout"
+            ) is True,
+            "runtime_parameter_application": elvhys_actual_h2_spatial.get(
+                "runtime_parameter_application"
+            ) is True,
+            "validation_gate_changed": elvhys_actual_h2_spatial.get(
+                "validation_gate_changed"
+            ) is True,
+            "promotion_prohibited": elvhys_actual_h2_spatial.get(
+                "promotion_prohibited"
+            ) is True,
+            "claim_limit": short(
+                elvhys_actual_h2_spatial.get("claim_limit"), 360
+            ),
         }
     methytrucks_tank = evidence.get("methytrucks_tank_diagnostic_boundary")
     if isinstance(methytrucks_tank, dict):
@@ -15059,6 +15182,9 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
     usn_actual_h2_spatial = response.get(
         "public_usn_actual_h2_spatial_diagnostic"
     ) or {}
+    elvhys_actual_h2_spatial = response.get(
+        "public_elvhys_actual_h2_spatial_holdout"
+    ) or {}
     public_hrs_leads = response.get("public_hrs_measurement_leads") or {}
     operational_evidence_leads = response.get(
         "public_operational_evidence_leads"
@@ -15403,6 +15529,19 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
             )
             or any(token in detector_context for token in (
                 "검지", "센서 배치", "누출 감지", "detector", "sensor placement"
+            ))
+        )
+    )
+    elvhys_spatial_relevant = bool(
+        elvhys_actual_h2_spatial
+        and (
+            str(manifest.get("selected_sensor") or "").upper().startswith(
+                ("GD-", "FD-")
+            )
+            or any(token in detector_context for token in (
+                "검지", "검출", "센서 배치", "누출 감지", "가스", "공간",
+                "detector", "sensor placement", "leak detection", "gas",
+                "spatial", "dispersion",
             ))
         )
     )
@@ -16786,6 +16925,23 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                     ),
                 }
             } if actual_hydrogen_spatial and actual_h2_evidence_relevant else {}),
+            **({
+                "public_elvhys_actual_h2_spatial_holdout": {
+                    "evidence_role": elvhys_actual_h2_spatial.get("evidence_role"),
+                    "source": elvhys_actual_h2_spatial.get("source") or {},
+                    "candidate": elvhys_actual_h2_spatial.get("candidate"),
+                    "aggregate": elvhys_actual_h2_spatial.get("aggregate") or {},
+                    "screens": elvhys_actual_h2_spatial.get("screens") or {},
+                    "joint_screen_pass": False,
+                    "independent_holdout": True,
+                    "runtime_parameter_application": False,
+                    "validation_gate_changed": False,
+                    "promotion_prohibited": True,
+                    "claim_limit": short(
+                        elvhys_actual_h2_spatial.get("claim_limit"), 360
+                    ),
+                }
+            } if elvhys_spatial_relevant else {}),
             **({
                 "carb_22_station_field_benchmark": {
                     "stations": (carb_field.get("population") or {}).get(
@@ -18653,6 +18809,9 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
     usn_actual_h2_spatial = evidence.get(
         "public_usn_actual_h2_spatial_diagnostic"
     ) or {}
+    elvhys_actual_h2_spatial = evidence.get(
+        "public_elvhys_actual_h2_spatial_holdout"
+    ) or {}
     methytrucks_tank = evidence.get("methytrucks_tank_diagnostic_boundary") or {}
     qra_multimethod = evidence.get("qra_multimethod_comparison") or {}
     preslhy = evidence.get("preslhy_validation_boundary") or {}
@@ -19073,6 +19232,29 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
             ) is True,
             "claim_supported": usn_actual_h2_spatial.get("claim_supported") is True,
             "claim_limit": usn_actual_h2_spatial.get("claim_limit"),
+        },
+        "public_elvhys_actual_h2_spatial_holdout": {
+            "evidence_role": elvhys_actual_h2_spatial.get("evidence_role"),
+            "source": elvhys_actual_h2_spatial.get("source") or {},
+            "candidate": elvhys_actual_h2_spatial.get("candidate"),
+            "aggregate": elvhys_actual_h2_spatial.get("aggregate") or {},
+            "screens": elvhys_actual_h2_spatial.get("screens") or {},
+            "joint_screen_pass": elvhys_actual_h2_spatial.get(
+                "joint_screen_pass"
+            ) is True,
+            "independent_holdout": elvhys_actual_h2_spatial.get(
+                "independent_holdout"
+            ) is True,
+            "runtime_parameter_application": elvhys_actual_h2_spatial.get(
+                "runtime_parameter_application"
+            ) is True,
+            "validation_gate_changed": elvhys_actual_h2_spatial.get(
+                "validation_gate_changed"
+            ) is True,
+            "promotion_prohibited": elvhys_actual_h2_spatial.get(
+                "promotion_prohibited"
+            ) is True,
+            "claim_limit": elvhys_actual_h2_spatial.get("claim_limit"),
         },
         "qra_multimethod_comparison": {
             key: qra_multimethod.get(key)

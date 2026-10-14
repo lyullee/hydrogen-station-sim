@@ -2718,3 +2718,40 @@ def test_type4_burst_mechanical_archive_is_not_added_to_ordinary_pressure_prompt
     )
     compact = prompt_decision_evidence(manifest)
     assert "public_type4_burst_mechanical_evidence" not in compact
+
+
+def test_elvhys_actual_h2_spatial_holdout_is_bounded_and_detector_selective():
+    spatial_manifest = build_evidence_manifest(
+        {"time_s": 1.0}, {}, [], False,
+        selected_sensor="GD-0801",
+        question="실제 수소 공간분포와 검지기 위치 근거를 설명해줘",
+    )
+    evidence = spatial_manifest["response_evidence"][
+        "public_elvhys_actual_h2_spatial_holdout"
+    ]
+    assert evidence["source"]["doi"] == "10.18710/JXJP0H"
+    assert evidence["source"]["test_gas"] == "actual hydrogen"
+    assert evidence["aggregate"]["eligible_case_count"] == 29
+    assert evidence["joint_screen_pass"] is False
+    assert evidence["independent_holdout"] is True
+    assert evidence["runtime_parameter_application"] is False
+    assert evidence["validation_gate_changed"] is False
+    assert evidence["promotion_prohibited"] is True
+    compact = prompt_decision_evidence(spatial_manifest)
+    selected = compact["decision_support_evidence"][
+        "public_elvhys_actual_h2_spatial_holdout"
+    ]
+    assert selected["aggregate"]["median_spearman"] == pytest.approx(
+        0.21785714285714286
+    )
+    assert selected["joint_screen_pass"] is False
+
+    pressure_manifest = build_evidence_manifest(
+        {"time_s": 1.0}, {}, [], False,
+        selected_sensor="PT-0801",
+        question="현재 저장 뱅크 압력은 정상인가?",
+    )
+    assert (
+        "public_elvhys_actual_h2_spatial_holdout"
+        not in prompt_decision_evidence(pressure_manifest)["decision_support_evidence"]
+    )

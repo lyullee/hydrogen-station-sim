@@ -63,3 +63,10 @@ The latest fast-lane run completed without a software/process failure. LLM evide
 
 Current readiness remains 134 PASS / 11 FAIL / 7 PENDING (88.2%) overall and 91.7% for the declared primary scope. The open scientific work still needs independent raw holdouts or custodian-released boundary channels; repeated post-access diagnostics are not counted as new validation.
 
+## 2026-10-14 - 실제 수소 공간 holdout 근거를 SAGA에 선택 연결
+
+- ELVHYS WP4.2의 분리된 실제 수소 공간 응답 holdout(29 cases, DOI `10.18710/JXJP0H`)을 SAGA 근거 봉투에 추가했다. 원시 행·좌표·사례 식별자는 전달하지 않고 집계값과 판정 경계만 노출한다.
+- 검지기·공간분포 질문에서만 해당 근거를 선택적으로 제공한다. 공동 screen 실패를 그대로 표시하고, 런타임 검지기 배치·농도 크기·피해영향 거리·ESD·현장 안전 검증으로 해석하거나 파라미터를 자동 보정하지 않는다.
+- 메인/센서 LLM의 일반 압력 질문에는 이 공간 holdout을 넣지 않도록 선택 라우팅했으며, DOI 출처 링크와 claim limit를 함께 보존했다. 관련 LLM 회귀 38건 통과.
+- readiness 게이트는 134 PASS / 11 FAIL / 7 PENDING (88.2%), 주 논문 범위는 91.7%로 유지된다. 이 작업은 근거 투명성을 높인 것이며 과학 검증 게이트를 승격하지 않는다.
+
