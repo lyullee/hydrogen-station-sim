@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-14T04:14:06Z",
+  "generated_at": "2026-10-14T04:39:07Z",
   "metric_definition": "PASS gates divided by PASS+FAIL+PENDING gates; not a publication-readiness probability",
   "gate_counts": {
     "PASS": 134,
@@ -85,14 +85,14 @@
       "ethics_and_expert_review": "optional_for_physics_validation; required only for a claim that SAGA improves human safety guidance"
     }
   },
-  "source_commit": "3403d6a",
-  "latest_completed_work": "Full regression recheck, direct-answer/HAZOP/emergency-response and separated assistant/risk-overlay regressions passed; local FTPData USN archive was confirmed byte-identical to the retained public archive.",
+  "source_commit": "83e9a1f",
+  "latest_completed_work": "Type-IV 복합재 용기 기계무결성 공개근거를 선택적 LLM 라우팅으로 연결하고, 파생 감사 원장을 재동기화한 뒤 전체 회귀 1,599건을 통과시켰다.",
   "latest_full_regression": {
-    "tests_passed": 1595,
+    "tests_passed": 1599,
     "tests_failed": 0,
     "tests_skipped": 0,
     "warnings": 222,
-    "elapsed_seconds": 224.24
+    "elapsed_seconds": 302.56
   },
   "remaining_workstreams": [
     {
@@ -122,11 +122,11 @@
     }
   ],
   "latest_focused_regression": {
-    "tests_passed": 33,
+    "tests_passed": 38,
     "tests_failed": 0,
     "tests_skipped": 0,
     "warnings": 1,
-    "scope": "tests/test_llm_grounding.py"
+    "scope": "tests/test_llm_grounding.py tests/test_zenodo_10983652_type4_burst_intake.py tests/test_ijhe_audit_snapshot_consistency.py tests/test_ijhe_readiness_audit.py tests/test_runtime_public_accident_precedents.py tests/test_ijhe_claim_evidence_matrix.py tests/test_validation_gap_report.py"
   },
   "completed_process_improvements": [
     {
@@ -148,6 +148,11 @@
       "id": "full_regression_and_local_archive_provenance_recheck",
       "progress_percent": 100.0,
       "status": "1,595 Python tests pass; 22 local USN archive members match the retained public archive byte-for-byte. No scientific gate promoted."
+    },
+    {
+      "id": "type4_burst_mechanical_evidence_and_audit_resync",
+      "progress_percent": 100.0,
+      "status": "Zenodo 10.5281/zenodo.10983652 is hash-locked as bounded Type-IV hydraulic mechanical context; LLM routing is selective, derived audit artifacts are synchronized, and the final full regression is 1,599/1,599. No scientific readiness gate was promoted."
     }
   ]
 }
