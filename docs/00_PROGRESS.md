@@ -2783,3 +2783,9 @@ the full-loop claim pass.
 - 가상 충전 제어에 120초 기본 `READY/RECHARGE` 최소 대기시간을 추가했다. 0~600초 범위의 공정 설정 override를 지원하며, 검증된 외부 체류시간을 런타임 기본값으로 사후 적용하지 않는다.
 - 시나리오·API 회귀와 감사 원장을 갱신한 뒤 전체 Python 회귀를 다시 실행해 **1,619 passed / 0 failed / 0 skipped / 222 warnings**를 확인했다. 결과는 `research/full_regression_test_run_2026_10_14.json`에 고정했고 커밋은 `2e1ed1b`다.
 - 이 변경은 가상 운전의 급격한 재충전 반복을 줄이는 제어 개선이며, 독립 외부 물리 검증 게이트나 IJHE 제출 판정을 승격하지 않는다. 현재 readiness는 **134 PASS / 11 FAIL / 7 PENDING (88.2%)**, 선언한 주 논문 범위는 **91.7%**로 유지된다.
+
+## 2026-10-14 - 공개·실제자료 검증 범위 요약
+
+- 공개 실험, 비식별 실제 충전소 holdout, 공개 HIAD 사고자료, 실제 사고 메타데이터, HyRAM 영향거리 표시 검증을 각각의 주장 범위로 분리한 `research/OBJECTIVE_EVIDENCE_SUMMARY_2026_10_14.md`를 추가했다.
+- 요약 수치는 Type-IV validation 12건, 실제 수소 점화 압력 27건, 충전소 측 holdout 30 points/3,664 pairs/394 cases, HIAD 34건, 비식별 사고 메타데이터 322건을 원장과 연결한다.
+- readiness·근거성·공개 사고자료·비상대응 핵심 회귀 **75 passed / 0 failed**를 확인했다. 이 보고서는 통과한 구성요소의 정확도를 보여주지만 station-to-vehicle 전체 루프와 SAGA 사람 대상 효과를 통과로 바꾸지 않는다.
