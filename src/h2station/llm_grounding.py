@@ -2856,6 +2856,86 @@ def _public_actual_hydrogen_spatial_stratification_evidence() -> dict[str, Any] 
     }
 
 
+def _public_tudelft_detector_placement_context() -> dict[str, Any] | None:
+    """Expose a bounded actual-H2 detector-placement report context.
+
+    The repository record is useful for explaining buoyancy and ventilation
+    effects, but it has no rights-cleared raw time series or station geometry.
+    Strict provenance flags keep it out of runtime routing, threshold fitting,
+    safety-distance calculation and validation gates.
+    """
+
+    artifact = "research/tudelft_metering_cabinet_sensor_context_2026_10_14.json"
+    path = Path(__file__).resolve().parents[2] / artifact
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, json.JSONDecodeError):
+        return None
+    source = record.get("source") or {}
+    scope = record.get("experiment_scope") or {}
+    findings = record.get("reported_findings") or {}
+    runtime = record.get("runtime_use") or {}
+    if (
+        record.get("artifact_type")
+        != "public_actual_hydrogen_detector_placement_context"
+        or record.get("status") != "REPORT_LEVEL_CONTEXT_ONLY"
+        or source.get("publication_year") != 2022
+        or source.get("license_identified") is not False
+        or source.get("reuse_status") != "restricted_repository_reuse_check"
+        or scope.get("actual_hydrogen") is not True
+        or scope.get("experiment_count") != 7
+        or scope.get("sensor_count") != 7
+        or scope.get("raw_time_series_available") is not False
+        or scope.get("machine_readable_sensor_coordinates_available") is not False
+        or findings.get("top_center_location_had_highest_response") is not True
+        or findings.get("buoyant_hydrogen_accumulation_was_observed") is not True
+        or findings.get("closed_ventilation_increased_concentration") is not True
+        or findings.get("open_ventilation_changed_mixing_pattern") is not True
+        or runtime.get("llm_detector_placement_context") is not True
+        or runtime.get("llm_ventilation_context") is not True
+        or runtime.get("runtime_detector_routing") is not False
+        or runtime.get("runtime_threshold_calibration") is not False
+        or runtime.get("runtime_safety_distance_calibration") is not False
+        or runtime.get("independent_spatial_validation_supported") is not False
+        or runtime.get("full_loop_validation_supported") is not False
+    ):
+        return None
+    return {
+        "artifact": artifact,
+        "source": {
+            "title": source.get("title"),
+            "publisher": source.get("publisher"),
+            "publication_year": source.get("publication_year"),
+            "record_url": source.get("record_url"),
+            "license_identified": False,
+            "reuse_status": source.get("reuse_status"),
+        },
+        "evidence_role": "actual-hydrogen detector-placement and ventilation report context",
+        "experiment_scope": {
+            "experiment_count": scope.get("experiment_count"),
+            "sensor_count": scope.get("sensor_count"),
+            "geometry": scope.get("geometry"),
+            "actual_hydrogen": True,
+        },
+        "reported_findings": {
+            "top_center_location_had_highest_response": True,
+            "buoyant_hydrogen_accumulation_was_observed": True,
+            "closed_ventilation_increased_concentration": True,
+            "open_ventilation_changed_mixing_pattern": True,
+            "site_specific_5_percent_lel_alarm_recommendation_reported": (
+                findings.get("site_specific_5_percent_lel_alarm_recommendation_reported")
+                is True
+            ),
+        },
+        "numeric_spatial_holdout_eligible": False,
+        "runtime_parameter_application": False,
+        "runtime_detector_routing": False,
+        "independent_spatial_validation_supported": False,
+        "full_loop_validation_supported": False,
+        "claim_limit": str(record.get("claim_boundary") or ""),
+    }
+
+
 def _public_usn_orientation_transfer_diagnostic() -> dict[str, Any] | None:
     """Expose the post-access actual-H2 orientation-rank reproducibility screen."""
 
@@ -7579,6 +7659,21 @@ def _public_source_links(evidence: dict[str, Any]) -> list[dict[str, Any]]:
             f"https://doi.org/{spatial_article_doi}",
             "밀폐 유사 채널의 천장층·하향 제트 경로 검지기 배치 근거(충전소 배치 검증 아님)",
         )
+    tudelft_detector_context = evidence.get(
+        "public_tudelft_detector_placement_context"
+    ) or {}
+    tudelft_source = tudelft_detector_context.get("source") or {}
+    tudelft_url = str(tudelft_source.get("record_url") or "").strip()
+    if tudelft_url:
+        add(
+            "PUBLIC_TUDELFT_DETECTOR_PLACEMENT_CONTEXT",
+            str(
+                tudelft_source.get("title")
+                or "TU Delft actual-hydrogen metering-cabinet detector placement study"
+            ),
+            tudelft_url,
+            "실제 수소 캐비닛 검지기 배치·환기 맥락(원자료·station runtime 보정 아님)",
+        )
     proxy = evidence.get("public_dispersion_proxy_evidence") or {}
     proxy_doi = str(proxy.get("doi") or "")
     if proxy_doi:
@@ -11542,6 +11637,11 @@ def build_evidence_manifest(
         envelope["response_evidence"][
             "public_actual_hydrogen_spatial_stratification_evidence"
         ] = spatial_stratification
+    tudelft_detector_context = _public_tudelft_detector_placement_context()
+    if tudelft_detector_context is not None:
+        envelope["response_evidence"][
+            "public_tudelft_detector_placement_context"
+        ] = tudelft_detector_context
     orientation_transfer = _public_usn_orientation_transfer_diagnostic()
     if orientation_transfer is not None:
         envelope["response_evidence"][
@@ -13512,6 +13612,21 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
             )
             if spatial_stratification.get(key) is not None
         }
+    tudelft_detector_context = evidence.get(
+        "public_tudelft_detector_placement_context"
+    )
+    if isinstance(tudelft_detector_context, dict):
+        summary["public_tudelft_detector_placement_context"] = {
+            key: tudelft_detector_context.get(key)
+            for key in (
+                "artifact", "source", "evidence_role", "experiment_scope",
+                "reported_findings", "numeric_spatial_holdout_eligible",
+                "runtime_parameter_application", "runtime_detector_routing",
+                "independent_spatial_validation_supported",
+                "full_loop_validation_supported", "claim_limit",
+            )
+            if tudelft_detector_context.get(key) is not None
+        }
     orientation_transfer = evidence.get("public_usn_orientation_transfer_diagnostic")
     if isinstance(orientation_transfer, dict):
         summary["public_usn_orientation_transfer_diagnostic"] = {
@@ -14917,6 +15032,9 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
     spatial_stratification = response.get(
         "public_actual_hydrogen_spatial_stratification_evidence"
     ) or {}
+    tudelft_detector_context = response.get(
+        "public_tudelft_detector_placement_context"
+    ) or {}
     orientation_transfer = response.get(
         "public_usn_orientation_transfer_diagnostic"
     ) or {}
@@ -15045,6 +15163,14 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                 "검지", "센서 배치", "누출 감지", "detector", "sensor placement"
             ))
         )
+    )
+    tudelft_detector_context_relevant = bool(
+        tudelft_detector_context
+        and any(token in detector_context for token in (
+            "검지", "검출", "센서", "가스", "누출", "환기", "공간",
+            "detector", "sensor", "leak", "ventilation", "indoor",
+            "placement", "dispersion",
+        ))
     )
     elvhys_alarm_relevant = bool(
         elvhys_alarm_diagnostic
@@ -16302,6 +16428,30 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                     "top alarm/trip 100%; no runtime or station-map validation"
                 )
             } if spatial_guidance_relevant else {}),
+            **({
+                "public_tudelft_detector_placement_context": {
+                    "source": tudelft_detector_context.get("source") or {},
+                    "evidence_role": tudelft_detector_context.get("evidence_role"),
+                    "experiment_scope": tudelft_detector_context.get(
+                        "experiment_scope"
+                    ) or {},
+                    "reported_findings": tudelft_detector_context.get(
+                        "reported_findings"
+                    ) or {},
+                    "use_for": [
+                        "실제 수소의 부력과 캐비닛 상부 축적 경향을 설명",
+                        "환기 상태가 혼합과 잔류농도에 미치는 영향을 설명",
+                        "검지기 위치를 설비별 형상·환기와 함께 검토하도록 안내",
+                    ],
+                    "numeric_spatial_holdout_eligible": False,
+                    "runtime_parameter_application": False,
+                    "runtime_detector_routing": False,
+                    "independent_spatial_validation_supported": False,
+                    "claim_limit": short(
+                        tudelft_detector_context.get("claim_limit"), 360
+                    ),
+                }
+            } if tudelft_detector_context_relevant else {}),
             **({
                 "public_actual_hydrogen_spatial_benchmark": {
                     "evidence_role": actual_hydrogen_spatial.get("evidence_role"),
@@ -18041,6 +18191,9 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
     spatial_stratification = evidence.get(
         "public_actual_hydrogen_spatial_stratification_evidence"
     ) or {}
+    tudelft_detector_context = evidence.get(
+        "public_tudelft_detector_placement_context"
+    ) or {}
     dispersion_proxy = evidence.get("public_dispersion_proxy_evidence") or {}
     grune_ventilation = evidence.get("public_grune_ventilation_evidence") or {}
     confidential = evidence.get("confidential_measured_boundary_replay") or {}
@@ -19022,6 +19175,17 @@ def prompt_evidence_header(manifest: dict[str, Any]) -> dict[str, Any]:
                 "full_loop_validation_supported", "claim_limit",
             )
             if spatial_stratification.get(key) is not None
+        },
+        "public_tudelft_detector_placement_context": {
+            key: tudelft_detector_context.get(key)
+            for key in (
+                "artifact", "source", "evidence_role", "experiment_scope",
+                "reported_findings", "numeric_spatial_holdout_eligible",
+                "runtime_parameter_application", "runtime_detector_routing",
+                "independent_spatial_validation_supported",
+                "full_loop_validation_supported", "claim_limit",
+            )
+            if tudelft_detector_context.get(key) is not None
         },
         "public_grune_ventilation_envelope": {
             "doi": grune_ventilation.get("doi"),

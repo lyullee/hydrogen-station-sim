@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-14",
+  "artifact_type": "public_actual_hydrogen_detector_placement_context",
+  "status": "REPORT_LEVEL_CONTEXT_ONLY",
+  "source": {
+    "title": "Evaluation of hydrogen sensors and location inside a metering cabinet",
+    "publisher": "TU Delft repository",
+    "publication_year": 2022,
+    "record_url": "https://repository.tudelft.nl/record/uuid:22ee6ff0-af93-42af-ac82-5b8c3d530230",
+    "license_identified": false,
+    "reuse_status": "restricted_repository_reuse_check"
+  },
+  "experiment_scope": {
+    "actual_hydrogen": true,
+    "experiment_count": 7,
+    "sensor_count": 7,
+    "geometry": "metering cabinet",
+    "raw_time_series_available": false,
+    "machine_readable_sensor_coordinates_available": false
+  },
+  "reported_findings": {
+    "top_center_location_had_highest_response": true,
+    "buoyant_hydrogen_accumulation_was_observed": true,
+    "closed_ventilation_increased_concentration": true,
+    "open_ventilation_changed_mixing_pattern": true,
+    "site_specific_5_percent_lel_alarm_recommendation_reported": true
+  },
+  "runtime_use": {
+    "llm_detector_placement_context": true,
+    "llm_ventilation_context": true,
+    "runtime_detector_routing": false,
+    "runtime_threshold_calibration": false,
+    "runtime_safety_distance_calibration": false,
+    "independent_spatial_validation_supported": false,
+    "full_loop_validation_supported": false
+  },
+  "claim_boundary": "This is report-level contextual evidence from an actual-hydrogen metering-cabinet study. It may support cautious explanations about buoyancy, cabinet ventilation and the need to evaluate detector placement, but it has no rights-cleared raw time series or machine-readable three-dimensional coordinates. The cabinet geometry and site-specific alarm recommendation must not be transferred to a hydrogen refuelling station, used to calibrate thresholds, or presented as independent validation."
+}
