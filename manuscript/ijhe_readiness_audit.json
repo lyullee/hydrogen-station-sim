@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-14T06:28:06.998335+00:00",
+  "generated_at": "2026-10-14T06:52:20.833012+00:00",
   "target_journal": {
     "title": "International Journal of Hydrogen Energy",
     "issn": "0360-3199",
@@ -8814,11 +8814,11 @@
             75,
             72
           ],
-          "approximate_manuscript_words_before_references": 7999,
+          "approximate_manuscript_words_before_references": 8000,
           "figures": 3,
           "tables": 3,
-          "citation_keys": 56,
-          "bibliography_entries": 58,
+          "citation_keys": 57,
+          "bibliography_entries": 59,
           "unresolved_citations": [],
           "missing_figure_assets": []
         },
@@ -8846,7 +8846,7 @@
       "requirement": "Compiler success, exact source/PDF hashes, no unresolved errors, and visual inspection of every rendered page.",
       "observed": {
         "schema_version": 2,
-        "verified_at_utc": "2026-10-13T20:56:30.779138+00:00",
+        "verified_at_utc": "2026-10-14T06:51:22.179589+00:00",
         "success": true,
         "compiler": {
           "name": "Tectonic",
@@ -8856,20 +8856,20 @@
         },
         "source": {
           "path": "manuscript/ijhe_manuscript_draft.tex",
-          "bytes": 78012,
-          "sha256": "2c50ca6f5a563cda3441c2df140fd146704c4cc366bcde8df52b3b835cd0337b"
+          "bytes": 78369,
+          "sha256": "7a472ddcff7e12878e8666b6ef1e93674b988692e5a1e61dcb38f25846049b2c"
         },
         "pdf": {
           "path": "output/pdf/ijhe_manuscript_draft.pdf",
-          "bytes": 839763,
-          "sha256": "2a9c459d09a19a21ce16386de0ce14b38f7b80ed6c24cd7905af8521a1a9abf8",
+          "bytes": 840380,
+          "sha256": "4131981f711350a5c18b255822b5c6f3b18f2fda6de4aace7591c40c4b07de09",
           "page_count": 24,
-          "extracted_character_count": 72212
+          "extracted_character_count": 72475
         },
         "compile_log": {
           "path": "output/pdf/ijhe_manuscript_draft.log",
           "bytes": 19550,
-          "sha256": "b0d73a482bf22f509d794e2cca4308ee16be399d4f7fbda547176593d73fd056",
+          "sha256": "02daeb1e2e4a1128af310ddba70e2b0824b43a21d21b78f5e77d5466eefe32b0",
           "unresolved_citations": 0,
           "unresolved_references": 0,
           "fatal_errors": [],

@@ -916,20 +916,22 @@ traces and spatial metadata \cite{h2safe2026}; its rechecked archive has no
 synchronized station/controller, dispenser/nozzle or vehicle/receptacle channels
 and cannot validate a station-to-vehicle loop.
 
-The NIST reduced-scale garage archive contains 18 one-second workbooks with
-eight helium concentration channels and differential pressure across two release
-durations, three vent arrangements and three source locations \cite{pitts2011}.
-All files passed the archive audit, but were opened after the H2SAFE spatial
-protocol was frozen. Helium and the missing release-to-workbook time crosswalk
-make this a ventilation/spatial component candidate only, not a source for
-fitting, detector placement, hydrogen conversion or full-loop validation.
+NIST's 18 one-second garage workbooks provide eight helium channels, differential
+pressure, three vents and three source locations \cite{pitts2011}. Opened after
+the H2SAFE freeze, they support ventilation/spatial context only; helium and the
+missing time crosswalk preclude fitting, detector placement, H$_2$ conversion and
+full-loop validation.
 
-One screen selected Experiment 16 before access from
-29-experiment compressor archive \cite{mhc2025}. Experiment 16 has 1,186 records spanning 1,185 s
-with monotone time and pressure, flow and temperature channels. Flow is
-in L min$^{-1}$ and its adsorption/thermal
-boundary differs from the station compressor, it is retained as compatibility
-evidence only; no coefficients, runtime defaults or HRS claims are derived.
+An actual-H$_2$ study used a 96 m$^3$ semi-closed tent, five upper sensors,
+four nozzles and ten release conditions \cite{korean_tent2026}. A nearest-source
+baseline matched 7/10 (top-1 0.70; top-2 0.80) but missed direction/high-flow
+shifts. This post-access aggregate evidence changes no runtime or validation
+gate; it only motivates future spatial holdouts.
+
+One pre-access screen selected Experiment 16 from a 29-experiment compressor
+archive \cite{mhc2025}. Its 1,186 records contain pressure, flow and temperature,
+but units and adsorption/thermal boundaries differ; it remains compatibility
+evidence only, with no runtime or HRS claims derived.
 
 \subsection{Evidence-gated language-model assistance}
 LLM assistance follows deterministic calculations and structured provenance,
@@ -1214,6 +1216,12 @@ W.M. Pitts, J.C. Yang, M.G. Fernandez, \textit{Experimental Characterization
 of Helium Dispersion in a 1/4-Scale Two-Car Residential Garage}, NIST Technical
 Note 1694 (2011),
 \href{https://doi.org/10.6028/NIST.TN.1694}{doi:10.6028/NIST.TN.1694}.
+
+\bibitem{korean_tent2026}
+J. Park, B. Park, S. Yoon, Y. Kim, Concentration responses of upper hydrogen
+sensor under different release conditions in semi-closed vinyl tent,
+\textit{Journal of Hydrogen and New Energy} 37 (2026) 295--306,
+\href{https://doi.org/10.7316/JHNE.2026.37.4.295}{doi:10.7316/JHNE.2026.37.4.295}.
 
 \bibitem{lach2025thermal}
 A.W. Lach, K. Vaagsaether, A.V. Gaathaug, Thermal hazards from a downwards
