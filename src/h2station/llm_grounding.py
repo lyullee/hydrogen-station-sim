@@ -2086,6 +2086,76 @@ def _public_hyddown_hydrogen_validation_evidence() -> dict[str, Any] | None:
     }
 
 
+def _public_type4_burst_mechanical_evidence() -> dict[str, Any] | None:
+    """Expose the open Type-IV burst archive as bounded mechanical context.
+
+    The Zenodo archive contains a hydraulic-water burst test with synchronized
+    pressure and strain channels.  It is useful for explaining composite-vessel
+    integrity and burst-test observability, but it is not hydrogen-gas or HRS
+    operating evidence and must never become a runtime setpoint or release model.
+    """
+
+    artifact = "research/zenodo_10983652_type4_burst_dataset_intake_2026_10_14.json"
+    root = Path(__file__).resolve().parents[2]
+    try:
+        record = json.loads((root / artifact).read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, ValueError, json.JSONDecodeError):
+        return None
+    source = record.get("source") or {}
+    scope = record.get("measurement_scope") or {}
+    classification = record.get("evidence_classification") or {}
+    if (
+        record.get("schema_version") != 1
+        or record.get("status") != "PUBLIC_ARCHIVE_INTEGRITY_VERIFIED"
+        or source.get("dataset_doi") != "10.5281/zenodo.10983652"
+        or source.get("license") != "CC BY 4.0"
+        or scope.get("test_fluid") != "water (hydraulic burst test; not hydrogen)"
+        or scope.get("tested_sample") != "SN03"
+        or classification.get("runtime_parameter_application") is not False
+        or classification.get("readiness_gate_effect") is not False
+    ):
+        return None
+    return {
+        "artifact": artifact,
+        "evidence_role": "public_type4_composite_vessel_mechanical_integrity_context",
+        "source": {
+            "title": source.get("title"),
+            "doi": source.get("dataset_doi"),
+            "url": source.get("record_url"),
+            "article_doi": source.get("article_doi"),
+            "license": source.get("license"),
+            "publisher": source.get("publisher"),
+        },
+        "measurement_scope": {
+            key: scope.get(key)
+            for key in (
+                "test_fluid", "vessel_class", "tested_sample",
+                "reported_design_burst_pressure_bar", "pressure_raw_sample_rate_hz",
+                "strain_raw_sample_rate_hz", "synchronized_sample_rate_hz",
+                "pressure_raw_row_count", "pressure_time_span_s",
+                "pressure_observed_range_bar", "maximum_pressure_observation",
+                "synchronized_row_count", "synchronized_time_span_s",
+                "synchronized_pressure_range_bar", "strain_channel_count",
+            )
+            if scope.get(key) is not None
+        },
+        "public_rights_cleared": classification.get("public_rights_cleared") is True,
+        "component_mechanical_boundary": classification.get(
+            "component_mechanical_boundary"
+        ) is True,
+        "independent_runtime_validation": classification.get(
+            "independent_runtime_validation"
+        ) is True,
+        "prospective_validation": classification.get("prospective_validation") is True,
+        "runtime_parameter_application": classification.get(
+            "runtime_parameter_application"
+        ) is True,
+        "readiness_gate_effect": classification.get("readiness_gate_effect") is True,
+        "claim_supported": False,
+        "claim_limit": str(record.get("claim_boundary") or ""),
+    }
+
+
 def _virtual_response_action_execution_evidence() -> dict[str, Any] | None:
     """Expose the simulation-only command/feedback consistency audit.
 
@@ -11194,6 +11264,11 @@ def build_evidence_manifest(
         envelope["response_evidence"][
             "public_hyddown_hydrogen_validation_evidence"
         ] = hyddown_hydrogen
+    type4_burst_mechanical = _public_type4_burst_mechanical_evidence()
+    if type4_burst_mechanical is not None:
+        envelope["response_evidence"][
+            "public_type4_burst_mechanical_evidence"
+        ] = type4_burst_mechanical
     virtual_action_execution = _virtual_response_action_execution_evidence()
     if virtual_action_execution is not None:
         envelope["response_evidence"][
@@ -12298,6 +12373,21 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
                 "validation_gate_effect", "claim_supported", "claim_limit",
             )
             if hyddown_hydrogen.get(key) is not None
+        }
+    type4_burst_mechanical = evidence.get(
+        "public_type4_burst_mechanical_evidence"
+    )
+    if isinstance(type4_burst_mechanical, dict):
+        summary["public_type4_burst_mechanical_evidence"] = {
+            key: type4_burst_mechanical.get(key)
+            for key in (
+                "evidence_role", "source", "measurement_scope",
+                "public_rights_cleared", "component_mechanical_boundary",
+                "independent_runtime_validation", "prospective_validation",
+                "runtime_parameter_application", "readiness_gate_effect",
+                "claim_supported", "claim_limit",
+            )
+            if type4_burst_mechanical.get(key) is not None
         }
     nrel_screen = evidence.get("public_nrel_boundary_screen")
     if isinstance(nrel_screen, dict):
@@ -14633,6 +14723,17 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
             "pressure", "temperature",
         ))
     )
+    type4_burst_mechanical = response.get(
+        "public_type4_burst_mechanical_evidence"
+    ) or {}
+    type4_burst_mechanical_relevant = bool(
+        type4_burst_mechanical
+        and any(token in lead_context for token in (
+            "복합재", "복합 용기", "구조", "기계적", "무결성", "파열",
+            "변형", "스트레인", "burst", "composite", "mechanical",
+            "integrity", "strain", "rupture",
+        ))
+    )
     spatial_guidance_relevant = bool(
         spatial_stratification
         and (
@@ -15034,6 +15135,19 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
             },
         } if hyddown_hydrogen and hyddown_hydrogen_relevant else {}),
         **({
+            "public_type4_burst_mechanical_evidence": {
+                key: type4_burst_mechanical.get(key)
+                for key in (
+                    "evidence_role", "source", "measurement_scope",
+                    "public_rights_cleared", "component_mechanical_boundary",
+                    "independent_runtime_validation", "prospective_validation",
+                    "runtime_parameter_application", "readiness_gate_effect",
+                    "claim_supported", "claim_limit",
+                )
+                if type4_burst_mechanical.get(key) is not None
+            },
+        } if type4_burst_mechanical and type4_burst_mechanical_relevant else {}),
+        **({
             "public_adjacent_h2_operational_context": {
                 key: adjacent_h2_operational.get(key)
                 for key in (
@@ -15389,6 +15503,19 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                     if public_h2protocol_validation.get(key) is not None
                 },
             } if public_h2protocol_validation and h2protocol_validation_relevant else {}),
+            **({
+                "public_type4_burst_mechanical_evidence": {
+                    key: type4_burst_mechanical.get(key)
+                    for key in (
+                        "evidence_role", "source", "measurement_scope",
+                        "public_rights_cleared", "component_mechanical_boundary",
+                        "independent_runtime_validation", "prospective_validation",
+                        "runtime_parameter_application", "readiness_gate_effect",
+                        "claim_supported", "claim_limit",
+                    )
+                    if type4_burst_mechanical.get(key) is not None
+                },
+            } if type4_burst_mechanical and type4_burst_mechanical_relevant else {}),
             **({
                 "public_preslhy_e35_file_access": {
                     "evidence_role": public_preslhy_e35.get("evidence_role"),

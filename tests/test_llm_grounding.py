@@ -2685,3 +2685,36 @@ def test_elvhys_post_failure_alarm_diagnostic_is_grounded_without_promotion():
     assert compact["decision_support_evidence"][
         "public_elvhys_post_failure_alarm_diagnostic"
     ]["runtime_parameter_application"] is False
+
+
+def test_type4_burst_mechanical_archive_is_bounded_and_selective():
+    manifest = build_evidence_manifest(
+        {"time_s": 1.0}, {}, [], False,
+        question="Type IV 복합재 용기의 구조 무결성과 파열 시험 근거를 설명해줘",
+    )
+    evidence = manifest["response_evidence"][
+        "public_type4_burst_mechanical_evidence"
+    ]
+    assert evidence["source"]["doi"] == "10.5281/zenodo.10983652"
+    assert evidence["measurement_scope"]["test_fluid"] == (
+        "water (hydraulic burst test; not hydrogen)"
+    )
+    assert evidence["measurement_scope"]["strain_channel_count"] == 18
+    assert evidence["public_rights_cleared"] is True
+    assert evidence["component_mechanical_boundary"] is True
+    assert evidence["runtime_parameter_application"] is False
+    assert evidence["readiness_gate_effect"] is False
+    assert evidence["claim_supported"] is False
+    compact = prompt_decision_evidence(manifest)
+    assert compact["public_type4_burst_mechanical_evidence"]["claim_supported"] is False
+    assert compact["decision_support_evidence"][
+        "public_type4_burst_mechanical_evidence"
+    ]["runtime_parameter_application"] is False
+
+
+def test_type4_burst_mechanical_archive_is_not_added_to_ordinary_pressure_prompt():
+    manifest = build_evidence_manifest(
+        {"time_s": 1.0}, {}, [], False, question="현재 저장 뱅크 압력은 정상인가?"
+    )
+    compact = prompt_decision_evidence(manifest)
+    assert "public_type4_burst_mechanical_evidence" not in compact

@@ -995,7 +995,6 @@
       "rights_note": "The HydDown repository is MIT licensed, but redistribution rights for the original experimental arrays were not independently established. Only hashes, source metadata and aggregate errors are committed.",
       "eligibility_note": "The outcomes were inspected before this comparison and the vessel is a small Type-I metal tank. The result cannot serve as prospective Type-III/IV or full-station validation and does not select runtime parameters."
     },
-
     "nbsdc_static_hydrogen_compression_test_dataset_2026_10_12": {
       "title": "Static hydrogen compression apparatus hydrogen-supply performance test report dataset",
       "title_zh": "2019YFB1505103-010 静态氢压缩装置储供氢性能测试报告数据集",
@@ -1036,6 +1035,20 @@
       "artifact": "research/zenodo_15166733_hy2res_operational_context_2026_10_14.json",
       "rights_note": "The archive is openly licensed CC BY 4.0; raw rows remain in the gitignored public-validation intake tree and are not vendored into the repository.",
       "eligibility_note": "The archive is a residential PLC system rather than an HRS. It can ground pressure, compressor, hydrogen-flow and threshold-driven sequence explanations, but it cannot validate HRS station-to-vehicle behaviour, ESD, safety distance or consequence calculations."
+    },
+    "zenodo_10983652_type4_burst_pressure_strain": {
+      "title": "Hydraulic burst pressure test of Type IV composite pressure vessel",
+      "publisher": "Zenodo / DLR Institute of Lightweight Systems",
+      "landing_page": "https://zenodo.org/records/10983652",
+      "doi": "10.5281/zenodo.10983652",
+      "article_doi": "10.1016/j.dib.2025.111333",
+      "license": "CC BY 4.0",
+      "tested_sample": "SN03",
+      "test_fluid": "water (hydraulic burst test; not hydrogen)",
+      "scope": "Pressure and strain gauge measurements for a Type IV composite-vessel burst test; raw pressure, raw strain and synchronized 10 Hz files.",
+      "intake_artifact": "research/zenodo_10983652_type4_burst_dataset_intake_2026_10_14.json",
+      "rights_note": "Open CC BY 4.0 Zenodo archive. Raw files remain in the gitignored public-validation intake tree; the repository retains hashes and derived metadata only.",
+      "eligibility_note": "Mechanical integrity boundary context only. It is not a hydrogen gas, HRS operating or station-to-vehicle trace and cannot calibrate tank thermal dynamics, release rates, HyRAM distances, ESD effectiveness or runtime setpoints."
     }
   }
 }

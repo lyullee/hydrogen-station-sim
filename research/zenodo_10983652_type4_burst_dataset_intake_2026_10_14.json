@@ -1,0 +1,98 @@
+{
+  "schema_version": 1,
+  "artifact_type": "public_type4_burst_dataset_intake",
+  "recorded_at": "2026-10-14",
+  "status": "PUBLIC_ARCHIVE_INTEGRITY_VERIFIED",
+  "source": {
+    "title": "Hydraulic burst pressure test of Type IV composite pressure vessel",
+    "dataset_doi": "10.5281/zenodo.10983652",
+    "record_url": "https://zenodo.org/records/10983652",
+    "article_doi": "10.1016/j.dib.2025.111333",
+    "license": "CC BY 4.0",
+    "publisher": "Zenodo / DLR Institute of Lightweight Systems",
+    "archive_file": {
+      "sha256": "0b7659a148484e6cb665146ae69c99c380b93d973b01be1992aabaa3738d2a3e",
+      "md5": "c20c9cea381a2f34446a09739fa5ddcb",
+      "bytes": 19722200
+    },
+    "archive_file_md5_expected": "c20c9cea381a2f34446a09739fa5ddcb"
+  },
+  "measurement_scope": {
+    "test_fluid": "water (hydraulic burst test; not hydrogen)",
+    "vessel_class": "Type IV composite pressure vessel",
+    "tested_sample": "SN03",
+    "reported_design_burst_pressure_bar": 200,
+    "pressure_raw_sample_rate_hz": 100,
+    "strain_raw_sample_rate_hz": 300,
+    "synchronized_sample_rate_hz": 10,
+    "pressure_raw_row_count": 98187,
+    "pressure_time_span_s": [
+      0.0,
+      981.86
+    ],
+    "pressure_observed_range_bar": [
+      -7.133618785,
+      253.6605701
+    ],
+    "maximum_pressure_observation": {
+      "time_s": 969.41,
+      "pressure_bar": 253.6605701
+    },
+    "synchronized_row_count": 9715,
+    "synchronized_time_span_s": [
+      0.0,
+      971.4000461
+    ],
+    "synchronized_pressure_range_bar": [
+      -5.220702974,
+      252.3852929
+    ],
+    "strain_channel_count": 18,
+    "synchronized_strain_sentinel_count": 1417,
+    "synchronized_strain_numeric_count": 174870
+  },
+  "files": {
+    "pressure_raw_SN03.csv": {
+      "sha256": "393c276beab98b8c3bf29fe1ecea19f2f16329b893d64ceb8cbfa0438c4b33ad",
+      "md5": "a11f189e3a14a7a008671f070a9600ce",
+      "bytes": 1932171
+    },
+    "sensorinfo_straingauges_SN03.csv": {
+      "sha256": "d8e5b364f5ac38ac3b0094200620990aee96d654e598c6f6db095cc598449916",
+      "md5": "ade8b5cbbafc19411ac37f7efaf923ba",
+      "bytes": 2949
+    },
+    "straingauges_and_pressure_10hz_SN03.csv": {
+      "sha256": "77e47a505859c4b8113929d832fcdc6e9321c21b2bdaf5d219de7c9c9107f116",
+      "md5": "b63e756910ce1e88dd0a3fc3efcae0ac",
+      "bytes": 2361734
+    },
+    "straingauges_and_pressure_10hz_zeroized_SN03.csv": {
+      "sha256": "f804dcddcc241aa29944366087370f933c4adfdb948bfee113e684501838a659",
+      "md5": "9269a4e0055b1a7e26a451ab2c30b2bb",
+      "bytes": 2306235
+    },
+    "straingauges_raw_SN03.csv": {
+      "sha256": "fc5561cb6ef3d5ba0c840f7fca1fc8d43e9aa9d92d2dbdd5091c05fc455e7abb",
+      "md5": "7b31474c35294256518299b93614537c",
+      "bytes": 68013188
+    },
+    "sensor_position_strain_gauges.png": {
+      "sha256": "7e5b4e9cb05ff84adb54aa4b3f4415d084f16f1bdc2d5b38846895b5e58ab0f3",
+      "md5": "29e75e821dfe9aba9cc2d9d65bf37bd2",
+      "bytes": 1850506
+    }
+  },
+  "evidence_classification": {
+    "public_rights_cleared": true,
+    "actual_hydrogen_station_data": false,
+    "station_to_vehicle_full_loop": false,
+    "component_mechanical_boundary": true,
+    "independent_runtime_validation": false,
+    "prospective_validation": false,
+    "runtime_parameter_application": false,
+    "readiness_gate_effect": false,
+    "llm_grounding_eligible": true
+  },
+  "claim_boundary": "This archive supplies a rights-cleared Type-IV composite-vessel hydraulic burst and pressure/strain measurement boundary. It can support qualitative mechanical integrity context and future component-model protocol design, but it is not a hydrogen gas or HRS operating trace, does not validate tank thermal dynamics, release rates, HyRAM consequence distances, ESD effectiveness or station-to-vehicle operation, and does not authorize runtime setpoints."
+}
