@@ -26,6 +26,6 @@ frequency/risk, site separation distance, or operator/human-safety effectiveness
 
 ## Source hashes
 
-- `research/hiad_digital_twin_replay_coverage_2026_10_08.json` — SHA-256 `5af98c2a035b6e34670618be7178518ec97025b3bd4ddf760229d83e46aa4938`
-- `research/khk_digital_twin_replay_coverage_2026_10_08.json` — SHA-256 `ff2ecf648325f5c0ecd6339155598dfbaeb5b4c48465a590acaeebcf1915cd47`
+- `research/hiad_digital_twin_replay_coverage_2026_10_08.json` — SHA-256 `20543e557bf247a28534fb83ab0f839e6dddd2eae10595e0d7cbe8886c5bba8c`
+- `research/khk_digital_twin_replay_coverage_2026_10_08.json` — SHA-256 `ca5791aa319eebd1f451913787138d372b63aca5780663b45b900163a80a84e4`
 - `research/hiad_accident_response_coverage_evaluation_2026_10_05.json` — SHA-256 `e4d23032e350c5bbe7b962feb2e57dcda4ac7dab20538a114f4b6012b874a8f3`

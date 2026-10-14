@@ -1,15 +1,15 @@
 {
   "schema_version": 1,
   "artifact_type": "public_incident_evidence_traceability_summary",
-  "generated_at_utc": "2026-10-14T01:06:51.826405+00:00",
+  "generated_at_utc": "2026-10-14T01:13:17.318610+00:00",
   "sources": [
     {
       "path": "research/hiad_digital_twin_replay_coverage_2026_10_08.json",
-      "sha256": "5af98c2a035b6e34670618be7178518ec97025b3bd4ddf760229d83e46aa4938"
+      "sha256": "20543e557bf247a28534fb83ab0f839e6dddd2eae10595e0d7cbe8886c5bba8c"
     },
     {
       "path": "research/khk_digital_twin_replay_coverage_2026_10_08.json",
-      "sha256": "ff2ecf648325f5c0ecd6339155598dfbaeb5b4c48465a590acaeebcf1915cd47"
+      "sha256": "ca5791aa319eebd1f451913787138d372b63aca5780663b45b900163a80a84e4"
     },
     {
       "path": "research/hiad_accident_response_coverage_evaluation_2026_10_05.json",

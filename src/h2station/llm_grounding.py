@@ -4064,6 +4064,111 @@ def _public_preslhy_concentration_transport_diagnostic() -> dict[str, Any] | Non
     }
 
 
+def _public_schefer_2007_nonadiabatic_diagnostic() -> dict[str, Any] | None:
+    """Expose the Schefer 2007 thermal-boundary sensitivity with a hard fence.
+
+    The grid is a post-outcome replay of the already-consumed pressure trace.
+    It is useful for explaining why a pressure-decay result is sensitive to
+    wall heat capacity and external heat transfer, but it must not be read as
+    an independent validation result or as a runtime parameter recommendation.
+    """
+
+    artifact = "research/schefer_2007_nonadiabatic_diagnostic_2026_10_14.json"
+    path = Path(__file__).resolve().parents[2] / artifact
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, json.JSONDecodeError):
+        return None
+    metrics = [row for row in record.get("metrics") or [] if isinstance(row, dict)]
+    apparatus = record.get("apparatus_boundary") or {}
+    required = (
+        record.get("status") == "post_outcome_sensitivity_diagnostic_only",
+        record.get("model_changed") is False,
+        record.get("runtime_promotion") is False,
+        record.get("holdout_gate_promotion") is False,
+        len(metrics) == 16,
+        apparatus.get("total_vessel_volume_m3") == 1.234,
+        apparatus.get("published_restriction_diameter_mm") == 5.08,
+        apparatus.get("wall_geometry_and_line_inventory_resolved") is False,
+        all(
+            all(
+                isinstance(row.get(key), (int, float))
+                and not isinstance(row.get(key), bool)
+                for key in (
+                    "wall_heat_capacity_j_k",
+                    "external_heat_transfer_w_m2_k",
+                    "pressure_nrmse_percent_initial_measured",
+                    "median_absolute_percentage_error_percent",
+                    "half_pressure_time_relative_error_percent",
+                )
+            )
+            and all(isinstance(row.get(key), bool) for key in (
+                "nrmse_screen_pass",
+                "median_ape_screen_pass",
+                "half_pressure_time_screen_pass",
+                "joint_primary_screen_pass",
+            ))
+            for row in metrics
+        ),
+        isinstance(record.get("claim_boundary"), str),
+    )
+    if not all(required):
+        return None
+
+    def numeric_range(key: str) -> dict[str, float]:
+        values = [float(row[key]) for row in metrics]
+        return {"min": min(values), "max": max(values)}
+
+    return {
+        "artifact": artifact,
+        "evidence_role": "post-outcome nonadiabatic pressure-decay sensitivity diagnostic",
+        "status": record.get("status"),
+        "apparatus_boundary": {
+            "total_vessel_volume_m3": float(apparatus["total_vessel_volume_m3"]),
+            "published_restriction_diameter_mm": float(
+                apparatus["published_restriction_diameter_mm"]
+            ),
+            "wall_geometry_and_line_inventory_resolved": False,
+        },
+        "metric_count": len(metrics),
+        "grid": {
+            "wall_heat_capacity_j_k": sorted({
+                float(row["wall_heat_capacity_j_k"]) for row in metrics
+            }),
+            "external_heat_transfer_w_m2_k": sorted({
+                float(row["external_heat_transfer_w_m2_k"]) for row in metrics
+            }),
+        },
+        "screens": {
+            "nrmse_pass_count": sum(row["nrmse_screen_pass"] for row in metrics),
+            "median_ape_pass_count": sum(
+                row["median_ape_screen_pass"] for row in metrics
+            ),
+            "half_pressure_time_pass_count": sum(
+                row["half_pressure_time_screen_pass"] for row in metrics
+            ),
+            "joint_primary_pass_count": sum(
+                row["joint_primary_screen_pass"] for row in metrics
+            ),
+        },
+        "metric_ranges": {
+            "pressure_nrmse_percent_initial_measured": numeric_range(
+                "pressure_nrmse_percent_initial_measured"
+            ),
+            "median_absolute_percentage_error_percent": numeric_range(
+                "median_absolute_percentage_error_percent"
+            ),
+            "half_pressure_time_relative_error_percent": numeric_range(
+                "half_pressure_time_relative_error_percent"
+            ),
+        },
+        "runtime_promotion": False,
+        "holdout_gate_promotion": False,
+        "claim_supported": False,
+        "claim_limit": str(record["claim_boundary"]),
+    }
+
+
 def _public_preslhy_e35_file_access_evidence() -> dict[str, Any] | None:
     """Expose the bounded audit of the downloaded public E3.5 workbook.
 
@@ -10832,6 +10937,18 @@ def build_evidence_manifest(
         if isinstance(public_inventory, dict)
         else None
     )
+    schefer_nonadiabatic_inventory = (
+        public_inventory.get("public_schefer_2007_nonadiabatic_diagnostic")
+        if isinstance(public_inventory, dict)
+        else None
+    )
+    if (
+        isinstance(schefer_nonadiabatic_inventory, dict)
+        and schefer_nonadiabatic_inventory.get("status") == "post_outcome_sensitivity_diagnostic_only"
+    ):
+        envelope["response_evidence"][
+            "public_schefer_2007_nonadiabatic_diagnostic"
+        ] = schefer_nonadiabatic_inventory
     if (
         isinstance(geometry_diagnostic, dict)
         and geometry_diagnostic.get("status") == "diagnostic_only"
@@ -11105,6 +11222,11 @@ def build_evidence_manifest(
         envelope["response_evidence"][
             "public_preslhy_concentration_transport_diagnostic"
         ] = preslhy_transport
+    schefer_nonadiabatic = _public_schefer_2007_nonadiabatic_diagnostic()
+    if schefer_nonadiabatic is not None:
+        envelope["response_evidence"][
+            "public_schefer_2007_nonadiabatic_diagnostic"
+        ] = schefer_nonadiabatic
     public_preslhy_e35 = _public_preslhy_e35_file_access_evidence()
     if public_preslhy_e35 is not None:
         envelope["response_evidence"][
@@ -12134,6 +12256,20 @@ def prompt_evidence_summary(manifest: dict[str, Any]) -> dict[str, Any]:
                 "independent_validation_gate_impact", "claim_limit",
             )
             if preslhy_transport.get(key) is not None
+        }
+    schefer_nonadiabatic = evidence.get(
+        "public_schefer_2007_nonadiabatic_diagnostic"
+    )
+    if isinstance(schefer_nonadiabatic, dict):
+        summary["public_schefer_2007_nonadiabatic_diagnostic"] = {
+            key: schefer_nonadiabatic.get(key)
+            for key in (
+                "artifact", "evidence_role", "status", "apparatus_boundary",
+                "metric_count", "grid", "screens", "metric_ranges",
+                "runtime_promotion", "holdout_gate_promotion", "claim_supported",
+                "claim_limit",
+            )
+            if schefer_nonadiabatic.get(key) is not None
         }
     closed_loop = evidence.get("closed_loop_validation_boundary")
     if isinstance(closed_loop, dict):
@@ -13547,6 +13683,9 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
     preslhy_transport = response.get(
         "public_preslhy_concentration_transport_diagnostic"
     ) or {}
+    schefer_nonadiabatic = response.get(
+        "public_schefer_2007_nonadiabatic_diagnostic"
+    ) or {}
     preslhy_holdout = preslhy.get("independent_holdout") or {}
     operating_screen = response.get("public_operating_envelope_screen") or {}
     public_benchmarks = response.get("public_experimental_benchmarks") or {}
@@ -13764,6 +13903,12 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
             "detector", "detection", "alarm", "concentration", "leak",
         )
     )
+    schefer_nonadiabatic_relevant = any(token in lead_context for token in (
+        "압력", "온도", "압력강하", "감압", "열전달", "비단열", "모델",
+        "검증", "민감도", "pressure", "temperature", "pressure decay",
+        "blowdown", "heat transfer", "nonadiabatic", "model", "validation",
+        "sensitivity",
+    ))
     elvhys_evidence_relevant = public_catalog_relevant or any(
         token in lead_context
         for token in ("elvhys", "극저온", "cryogenic")
@@ -14619,6 +14764,18 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                 },
             } if preslhy_transport and preslhy_transport_relevant else {}),
             **({
+                "public_schefer_2007_nonadiabatic_diagnostic": {
+                    key: schefer_nonadiabatic.get(key)
+                    for key in (
+                        "artifact", "evidence_role", "status", "apparatus_boundary",
+                        "metric_count", "grid", "screens", "metric_ranges",
+                        "runtime_promotion", "holdout_gate_promotion",
+                        "claim_supported", "claim_limit",
+                    )
+                    if schefer_nonadiabatic.get(key) is not None
+                },
+            } if schefer_nonadiabatic and schefer_nonadiabatic_relevant else {}),
+            **({
                 "public_usn_orientation_transfer_diagnostic": {
                     key: orientation_transfer.get(key)
                     for key in (
@@ -15436,6 +15593,27 @@ def prompt_decision_evidence(manifest: dict[str, Any]) -> dict[str, Any]:
                 ),
                 "claim_limit": short(closed_loop.get("claim_limit"), 80),
             },
+            **({
+                "schefer_2007_nonadiabatic": {
+                    "status": schefer_nonadiabatic.get("status"),
+                    "metric_count": schefer_nonadiabatic.get("metric_count"),
+                    "joint_primary_pass_count": (
+                        schefer_nonadiabatic.get("screens") or {}
+                    ).get("joint_primary_pass_count"),
+                    "runtime_promotion": schefer_nonadiabatic.get(
+                        "runtime_promotion"
+                    ) is True,
+                    "holdout_gate_promotion": schefer_nonadiabatic.get(
+                        "holdout_gate_promotion"
+                    ) is True,
+                    "claim_supported": schefer_nonadiabatic.get(
+                        "claim_supported"
+                    ) is True,
+                    "claim_limit": short(
+                        schefer_nonadiabatic.get("claim_limit"), 220
+                    ),
+                },
+            } if schefer_nonadiabatic and schefer_nonadiabatic_relevant else {}),
             **({
                 "public_cip_dispenser_endpoint": {
                     "endpoint_tables_verified": cip_endpoint.get(

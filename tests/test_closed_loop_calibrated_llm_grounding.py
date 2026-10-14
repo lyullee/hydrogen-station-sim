@@ -28,6 +28,33 @@ def test_calibrated_confirmatory_diagnostic_is_grounded_as_non_validation():
     assert "not a new independent holdout" in compact["claim_limit"]
 
 
+def test_schefer_2007_nonadiabatic_sensitivity_is_grounded_without_promotion():
+    manifest = build_evidence_manifest(
+        {"time_s": 1.0}, {}, [], False, question="압력 감쇠 모델 검증"
+    )
+    evidence = manifest["response_evidence"][
+        "public_schefer_2007_nonadiabatic_diagnostic"
+    ]
+    assert evidence["metric_count"] == 16
+    assert evidence["screens"]["joint_primary_pass_count"] == 0
+    assert evidence["screens"]["half_pressure_time_pass_count"] == 16
+    assert evidence["runtime_promotion"] is False
+    assert evidence["holdout_gate_promotion"] is False
+    assert evidence["claim_supported"] is False
+
+    compact = prompt_evidence_summary(manifest)[
+        "public_schefer_2007_nonadiabatic_diagnostic"
+    ]
+    assert compact["apparatus_boundary"]["wall_geometry_and_line_inventory_resolved"] is False
+    assert compact["metric_ranges"][
+        "pressure_nrmse_percent_initial_measured"
+    ]["min"] > 10.9
+    decision = prompt_decision_evidence(manifest)["decision_support_evidence"]
+    assert decision["public_schefer_2007_nonadiabatic_diagnostic"][
+        "claim_supported"
+    ] is False
+
+
 def test_actual_hydrogen_spatial_benchmark_is_grounded_without_promotion():
     manifest = build_evidence_manifest(
         {"time_s": 1.0}, {}, [], False, question="공개 수소 공간분포 근거"

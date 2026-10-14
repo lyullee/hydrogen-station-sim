@@ -35,6 +35,13 @@ def test_local_evidence_summary_is_privacy_bounded() -> None:
     assert orientation["experiment_count"] == 22
     assert orientation["joint_screen_pass"] is True
     assert orientation["runtime_application"] is False
+    schefer = public_evidence_inventory_summary()[
+        "public_schefer_2007_nonadiabatic_diagnostic"
+    ]
+    assert schefer["metric_count"] == 16
+    assert schefer["screens"]["joint_primary_pass_count"] == 0
+    assert schefer["runtime_promotion"] is False
+    assert schefer["promotion_prohibited"] is True
     assert summary["adjacent_process"]["high_pressure_process"][
         "csv_event_row_count"
     ] == 2_411_774

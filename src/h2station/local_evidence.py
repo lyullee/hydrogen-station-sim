@@ -77,6 +77,9 @@ _LOCAL_DOCUDATA_CANDIDATE_SCAN = _ROOT / (
 _CLOSED_LOOP_CALIBRATED_DIAGNOSTIC = _ROOT / (
     "research/closed_loop_calibrated_confirmatory_diagnostic_2026_10_10.json"
 )
+_SCHEFER_2007_NONADIABATIC_DIAGNOSTIC = _ROOT / (
+    "research/schefer_2007_nonadiabatic_diagnostic_2026_10_14.json"
+)
 _MC_GEOMETRY_TRANSFER_DIAGNOSTIC = _ROOT / (
     "research/mc_geometry_transfer_diagnostic_2026_10_08.json"
 )
@@ -354,6 +357,98 @@ def _scientific_container_discovery_summary() -> dict[str, Any] | None:
             "동기화·경계·권리 확인 전에는 실측 full-loop 검증이나 런타임 보정으로 사용할 수 없습니다."
         ),
     }
+
+
+def _schefer_2007_nonadiabatic_diagnostic_summary() -> dict[str, Any] | None:
+    """Expose the Schefer pressure-decay thermal-boundary sensitivity only."""
+
+    try:
+        record = _read_json(_SCHEFER_2007_NONADIABATIC_DIAGNOSTIC)
+        metrics = [
+            row for row in record.get("metrics") or []
+            if isinstance(row, dict)
+        ]
+        apparatus = record.get("apparatus_boundary") or {}
+        required = (
+            record.get("status") == "post_outcome_sensitivity_diagnostic_only",
+            record.get("model_changed") is False,
+            record.get("runtime_promotion") is False,
+            record.get("holdout_gate_promotion") is False,
+            len(metrics) == 16,
+            apparatus.get("total_vessel_volume_m3") == 1.234,
+            apparatus.get("published_restriction_diameter_mm") == 5.08,
+            apparatus.get("wall_geometry_and_line_inventory_resolved") is False,
+            isinstance(record.get("claim_boundary"), str),
+        )
+        if not all(required):
+            return None
+        metric_keys = (
+            "pressure_nrmse_percent_initial_measured",
+            "median_absolute_percentage_error_percent",
+            "half_pressure_time_relative_error_percent",
+        )
+        if not all(
+            isinstance(row.get(key), (int, float))
+            and not isinstance(row.get(key), bool)
+            for row in metrics
+            for key in metric_keys
+        ):
+            return None
+
+        def numeric_range(key: str) -> dict[str, float]:
+            values = [float(row[key]) for row in metrics]
+            return {"min": min(values), "max": max(values)}
+
+        return {
+            "status": str(record["status"]),
+            "evidence_role": (
+                "post-outcome nonadiabatic pressure-decay sensitivity diagnostic"
+            ),
+            "artifact": "research/schefer_2007_nonadiabatic_diagnostic_2026_10_14.json",
+            "apparatus_boundary": {
+                "total_vessel_volume_m3": float(
+                    apparatus["total_vessel_volume_m3"]
+                ),
+                "published_restriction_diameter_mm": float(
+                    apparatus["published_restriction_diameter_mm"]
+                ),
+                "wall_geometry_and_line_inventory_resolved": False,
+            },
+            "metric_count": len(metrics),
+            "grid": {
+                "wall_heat_capacity_j_k": sorted({
+                    float(row["wall_heat_capacity_j_k"]) for row in metrics
+                }),
+                "external_heat_transfer_w_m2_k": sorted({
+                    float(row["external_heat_transfer_w_m2_k"]) for row in metrics
+                }),
+            },
+            "screens": {
+                "nrmse_pass_count": sum(
+                    row.get("nrmse_screen_pass") is True for row in metrics
+                ),
+                "median_ape_pass_count": sum(
+                    row.get("median_ape_screen_pass") is True for row in metrics
+                ),
+                "half_pressure_time_pass_count": sum(
+                    row.get("half_pressure_time_screen_pass") is True
+                    for row in metrics
+                ),
+                "joint_primary_pass_count": sum(
+                    row.get("joint_primary_screen_pass") is True for row in metrics
+                ),
+            },
+            "metric_ranges": {
+                key: numeric_range(key) for key in metric_keys
+            },
+            "runtime_promotion": False,
+            "holdout_gate_promotion": False,
+            "claim_supported": False,
+            "promotion_prohibited": True,
+            "claim_limit": str(record["claim_boundary"]),
+        }
+    except (OSError, KeyError, TypeError, ValueError, json.JSONDecodeError):
+        return None
 
 
 def _closed_loop_calibrated_diagnostic_summary() -> dict[str, Any] | None:
@@ -1893,6 +1988,20 @@ def public_evidence_inventory_summary() -> dict[str, Any]:
             "full_loop_external_validation_ready": False,
             "promotion_prohibited": True,
         },
+        "public_schefer_2007_nonadiabatic_diagnostic": {
+            "status": "unavailable",
+            "evidence_role": (
+                "post-outcome nonadiabatic pressure-decay sensitivity diagnostic"
+            ),
+            "metric_count": 0,
+            "grid": {},
+            "screens": {},
+            "metric_ranges": {},
+            "runtime_promotion": False,
+            "holdout_gate_promotion": False,
+            "claim_supported": False,
+            "promotion_prohibited": True,
+        },
         "public_mc_geometry_transfer_diagnostic": {
             "status": "unavailable",
             "runs": [],
@@ -2570,6 +2679,11 @@ def public_evidence_inventory_summary() -> dict[str, Any]:
     calibrated = _closed_loop_calibrated_diagnostic_summary()
     if calibrated is not None:
         result["public_closed_loop_calibrated_diagnostic"] = calibrated
+    schefer_nonadiabatic = _schefer_2007_nonadiabatic_diagnostic_summary()
+    if schefer_nonadiabatic is not None:
+        result[
+            "public_schefer_2007_nonadiabatic_diagnostic"
+        ] = schefer_nonadiabatic
     geometry = _mc_geometry_transfer_diagnostic_summary()
     if geometry is not None:
         result["public_mc_geometry_transfer_diagnostic"] = geometry
