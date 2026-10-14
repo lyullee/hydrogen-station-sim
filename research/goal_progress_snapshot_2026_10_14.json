@@ -85,14 +85,14 @@
       "ethics_and_expert_review": "optional_for_physics_validation; required only for a claim that SAGA improves human safety guidance"
     }
   },
-  "source_commit": "945d8bc",
-  "latest_completed_work": "Repaired priority validation and release-manifest consistency after full-regression triage; generated local-path evidence output was removed, and no scientific gate was promoted.",
+  "source_commit": "84085b5",
+  "latest_completed_work": "Completed the priority-manifest and privacy cleanup, then confirmed the full repository regression after the fix.",
   "latest_full_regression": {
-    "tests_passed": 1599,
+    "tests_passed": 1602,
     "tests_failed": 0,
     "tests_skipped": 0,
     "warnings": 222,
-    "elapsed_seconds": 302.56
+    "elapsed_seconds": 278.43
   },
   "remaining_workstreams": [
     {
