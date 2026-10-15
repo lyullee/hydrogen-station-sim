@@ -1,5 +1,13 @@
 # 수소충전소 Unreal 전환 작업
 
+## PyCharm 원클릭 실행
+
+PyCharm에서 이 저장소를 연 뒤 실행 구성 목록의 **HRS Unreal Platform**을
+선택하고 실행한다. Python API, Pixel Streaming, HRS Unreal 런타임을 순서대로
+시작한 뒤 `http://127.0.0.1:8000/`을 연다. PyCharm의 중지 버튼은 이 실행이
+시작한 하위 프로세스도 함께 종료한다. 필수 포트를 다른 프로세스가 점유한
+경우에는 기존 프로세스를 먼저 중지하고 다시 실행한다.
+
 기존 Python 계산 서버의 상태를 UE5에서 표시한다. 공정·HyRAM·HAZOP·LLM 계산은 기존 서버에 남는다. UE 5.8.3 Shipping 실행본에서 전체 참조 충전소 장면, 실시간 표시 API, 안전조치 입력 및 Pixel Streaming 영상 연결을 검증했다.
 
 ## 현재 설치 상태
@@ -17,7 +25,7 @@
 3. 엔진 경로를 지정하고 시제품 준비: `./scripts/start_unreal_pilot.ps1 -EngineRoot 'C:\Program Files\Epic Games\UE_5.8' -Build -Bootstrap`. 고해상도 참조 GLB까지 가져와 현장 좌표에 배치하려면 먼저 웹 자산 내보내기·Khronos 검증을 실행한 뒤 `-ImportAssets -PlaceAssets`를 추가한다. 가져오기와 배치는 설비 ID 태그가 있는 기존 편집 액터를 덮어쓰지 않는다.
 4. Pixel Streaming 서버: `./scripts/start_pixel_streaming.ps1`. 파일 `infrastructure-lock.json`의 버전과 커밋을 사용한다. 이 실행 스크립트는 로컬 PC에만 수신 포트를 연다.
 5. UE 실행: `./scripts/start_unreal_pilot.ps1 -EngineRoot 'C:\Program Files\Epic Games\UE_5.8' -Run -SignallingUrl 'ws://127.0.0.1:18888'`.
-6. 기존 웹에서 새 시뮬레이션을 시작하고 `Unreal 3D`를 누른다. 플레이어의 영상 시작 안내에 따라 연결한다. 표준 3D 전환은 계산을 중지하지 않는다.
+6. 기존 웹을 열면 Unreal 3D가 중앙 운영 화면에 자동 연결된다. 브라우저가 요구하면 영상 영역의 `CLICK TO START`를 한 번 누른다. `표준 3D로 전환`은 계산을 중지하지 않는다.
 
 Win64 배포본은 `./scripts/build_unreal_release.ps1 -EngineRoot 'C:\Program Files\Epic Games\UE_5.8' -Configuration Shipping`으로 만든다. 이 명령은 소스 계약 검사, C++ 빌드, 맵·재질 생성, 검증된 GLB 가져오기, Interchange 기반 장면 배치와 실물 치수 범위 검사, cook·pak·archive를 순차 수행하고 실행 파일 SHA-256이 포함된 `hrs-unreal-build.json`을 남긴다. 패키지 실행은 `./scripts/start_packaged_unreal.ps1 -PackageDirectory '<패키지 폴더>'`를 사용한다. 실행 전에 해시를 다시 검사하며 기본값은 숨김 창, 로컬 API·Pixel Streaming 주소, 1080p/30fps, 단일 NVENC 세션, 20 Mbps 고정 목표 비트레이트와 D3D12-CUDA NVENC 상호운용이다. 이 장비의 RTX A4000에서 D3D12-CUDA 경로는 영상을 유지하면서 UE 5.7~5.8 NVENC 재설정에 따른 private commit 누적을 멈췄다. 다른 GPU에서 문제가 있으면 `-UseNvEncD3D12Cuda $false`로 끄고 별도 안정성 검증을 수행한다. 동일 실행 파일의 중복 실행은 기본적으로 차단한다. 현장 확인이 필요하면 `-Visible`을 추가한다.
 
