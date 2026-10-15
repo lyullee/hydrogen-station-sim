@@ -94,6 +94,11 @@ export function buildFcevVehicle() {
     box(.78, .018, .035, -.62, .89, z, trim); box(.82, .018, .035, .52, .89, z, trim);
     box(.018, .50, .035, -.05, 1.14, z, trim);
     box(.24, .045, .038, -.68, .78, z, trim); box(.24, .045, .038, .57, .78, z, trim);
+    // Door shut lines, sill and handles remain readable after the vehicle is
+    // exported to Unreal and viewed from the station-wide camera.
+    for (const x of [-1.20, -.05, 1.08]) box(.018, .62, .026, x, .67, z + side * .008, black);
+    box(2.30, .028, .032, -.05, .42, z + side * .010, trim);
+    for (const x of [-.67, .58]) box(.22, .035, .045, x, .82, z + side * .026, trim);
     box(.22, .10, .17, 1.13, 1.02, side * 1.02, paintDark);
     box(.13, .065, .19, 1.12, 1.04, side * 1.12, glass);
     // Fuel receptacle remains aligned with the existing dispenser hose endpoint.
@@ -109,6 +114,10 @@ export function buildFcevVehicle() {
   const rearVertices = new Float32Array([-1.18,.96,-.68, -.55,1.42,-.67, -1.18,.96,.68, -.55,1.42,.67]);
   const rearGeometry = new THREE.BufferGeometry(); rearGeometry.setAttribute('position', new THREE.BufferAttribute(rearVertices,3)); rearGeometry.setIndex([0,1,2,1,3,2]); rearGeometry.computeVertexNormals(); add(rearGeometry, glass);
   box(.88, .025, 1.16, -.05, 1.475, 0, glass);
+  // Wipers, shark-fin antenna and roof edge trim add familiar road-car cues.
+  strut([.66,1.38,-.12],[.94,1.07,-.54],.012,black,exterior);
+  strut([.66,1.38,.12],[.94,1.07,.54],.012,black,exterior);
+  const antenna = box(.22,.09,.08,-.72,1.535,0,trim); antenna.rotation.z = -.18;
   const hoodPivot = new THREE.Group(); hoodPivot.position.set(1.10, .91, 0); exterior.add(hoodPivot);
   const hood = box(1.38, .045, 1.56, .68, .04, 0, paint, hoodPivot); hood.rotation.z = -.035;
   for (const z of [-.73, .73]) box(1.28, .018, .025, .68, .055, z, trim, hoodPivot);
@@ -117,6 +126,10 @@ export function buildFcevVehicle() {
   box(.035,.24,1.18,2.47,.43,0,black); for (let z=-.48; z<=.48; z+=.12) box(.045,.018,.055,2.493,.43,z,trim);
   box(.035,.055,1.46,-2.48,.75,0,tail); box(.05,.13,.26,-2.47,.48,0,black);
   box(1.35,.035,.06,-1.70,.96,0,trim);
+  // Generic plates and reflectors; no registration or manufacturer identity.
+  box(.025,.16,.54,2.505,.37,0,black); box(.028,.12,.46,2.522,.37,0,new THREE.MeshStandardMaterial({color:'#e5e8dd',roughness:.55}));
+  box(.025,.16,.54,-2.505,.49,0,black); box(.028,.12,.46,-2.522,.49,0,new THREE.MeshStandardMaterial({color:'#e5e8dd',roughness:.55}));
+  for (const z of [-.66,.66]) box(.038,.065,.19,-2.508,.38,z,tail);
 
   // 20-inch-style wheels, brake discs and calipers.
   for (const x of [-1.52,1.49]) for (const z of [-.84,.84]) {

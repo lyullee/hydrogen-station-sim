@@ -185,6 +185,42 @@ void AHRSStationActor::BuildReferenceStation()
     for (int32 Y = 250; Y <= 760; Y += 64)
         Shape(Cube, FVector(1450, Y, 8), FVector(180, 18, 3), FLinearColor(.16, .19, .2), false, FString(), .15f, .65f, .35f);
 
+    // Road furniture and wear break up the perfectly uniform test-pad look.
+    // These are generic visual cues, kept clear of the operational envelopes.
+    for (int32 X = -2360; X <= 1560; X += 560)
+    {
+        auto* Patch = Shape(Cube, FVector(X, 900 + ((X / 280) % 2) * 38, 6),
+            FVector(310, 190, 2), FLinearColor(.055, .061, .064), false,
+            FString(), .015f, .97f, .18f);
+        Patch->SetRelativeRotation(FRotator(0, (X / 80) % 5 - 2, 0));
+    }
+    for (float X : {-1560.f, 1540.f})
+        for (int32 Y = 690; Y <= 1110; Y += 70)
+            Shape(Cube, FVector(X, Y, 10), FVector(34, 48, 3),
+                FLinearColor(.88, .87, .74), false, FString(), .01f, .70f, .22f);
+    // Stop bars, directional arrow and recessed drainage/manhole details.
+    Shape(Cube, FVector(-1270, 900, 10), FVector(22, 430, 4),
+        FLinearColor(.88, .87, .76), false, FString(), .01f, .66f, .22f);
+    Shape(Cube, FVector(1240, 900, 10), FVector(22, 430, 4),
+        FLinearColor(.88, .87, .76), false, FString(), .01f, .66f, .22f);
+    Shape(Cube, FVector(-360, 900, 10), FVector(260, 24, 3),
+        FLinearColor(.84, .83, .70), false, FString(), .01f, .71f, .22f);
+    for (float Sign : {-1.f, 1.f})
+    {
+        auto* Arrow = Shape(Cube, FVector(-235 + Sign * 8, 900 + Sign * 55, 10),
+            FVector(120, 22, 3), FLinearColor(.84, .83, .70), false,
+            FString(), .01f, .71f, .22f);
+        Arrow->SetRelativeRotation(FRotator(0, Sign * 42, 0));
+    }
+    for (float X : {-2050.f, -840.f, 630.f, 1700.f})
+    {
+        auto* Cover = Shape(Cylinder, FVector(X, 1040, 9), FVector(42, 42, 4),
+            FLinearColor(.12, .135, .14), false, FString(), .55f, .82f, .32f);
+        for (float Offset : {-18.f, 0.f, 18.f})
+            Shape(Cube, FVector(X + Offset, 1040, 13), FVector(3, 62, 2),
+                FLinearColor(.23, .25, .25), false, FString(), .45f, .70f, .36f);
+    }
+
     auto AddEquipment = [this](const FString& Id, const FString& Label,
         const FVector& Origin, const FVector& Envelope, const FLinearColor& Color)
     {
@@ -350,13 +386,110 @@ void AHRSStationActor::BuildReferenceStation()
     // Operations/utility room with roof cap, door, glazing, louvres and outdoor unit.
     Shape(Cube, FVector(-1000, 500, 150), FVector(560, 520, 300), FLinearColor(.77, .80, .79), false, FString(), .18f, .68f, .34f);
     Shape(Cube, FVector(-1000, 500, 314), FVector(590, 550, 28), FLinearColor(.54, .58, .58), false, FString(), .56f, .39f, .48f);
+    // Panel joints, base flashing, parapet, gutter and downpipe make the room
+    // read as a fabricated industrial building instead of a single box.
+    for (float X = -1240; X <= -760; X += 80)
+        Shape(Cube, FVector(X, 235, 150), FVector(3, 5, 288),
+            FLinearColor(.50, .54, .54), false, FString(), .50f, .55f, .38f);
+    for (float Y = 300; Y <= 700; Y += 80)
+        Shape(Cube, FVector(-1283, Y, 150), FVector(5, 3, 288),
+            FLinearColor(.50, .54, .54), false, FString(), .50f, .55f, .38f);
+    Shape(Cube, FVector(-1000, 500, 18), FVector(580, 540, 30),
+        FLinearColor(.32, .35, .35), false, FString(), .28f, .82f, .31f);
+    for (float X : {-1287.f, -713.f})
+        Shape(Cube, FVector(X, 500, 333), FVector(10, 558, 38),
+            FLinearColor(.44, .48, .48), false, FString(), .57f, .38f, .48f);
+    for (float Y : {223.f, 777.f})
+        Shape(Cube, FVector(-1000, Y, 333), FVector(584, 10, 38),
+            FLinearColor(.44, .48, .48), false, FString(), .57f, .38f, .48f);
+    Segment(FVector(-1272, 230, 310), FVector(-728, 230, 310), 8, DarkSteel);
+    Segment(FVector(-1272, 230, 310), FVector(-1272, 230, 28), 7, DarkSteel);
     Shape(Cube, FVector(-1120, 230, 126), FVector(115, 12, 226), StationBlue, false, FString(), .18f, .38f, .48f);
+    Shape(Cube, FVector(-1120, 222, 126), FVector(132, 7, 242),
+        FLinearColor(.12, .16, .17), false, FString(), .50f, .38f, .48f);
+    Shape(Cylinder, FVector(-1082, 214, 125), FVector(7, 7, 8),
+        FLinearColor(.72, .74, .70), false, FString(), .78f, .24f, .54f)->SetRelativeRotation(FRotator(90, 0, 0));
+    Shape(Cube, FVector(-1120, 205, 260), FVector(170, 55, 14),
+        FLinearColor(.40, .44, .44), false, FString(), .58f, .38f, .46f);
     Shape(Cube, FVector(-870, 230, 180), FVector(210, 10, 92), FLinearColor(.08, .15, .18), false, FString(), .08f, .18f, .62f);
     Shape(Cube, FVector(-870, 223, 180), FVector(190, 3, 72), FLinearColor(.22, .39, .46), true);
+    for (float X : {-958.f, -870.f, -782.f})
+        Shape(Cube, FVector(X, 214, 180), FVector(4, 5, 94),
+            FLinearColor(.48, .53, .53), false, FString(), .62f, .33f, .48f);
     for (float Z = 82; Z <= 218; Z += 22)
         Shape(Cube, FVector(-1278, 500, Z), FVector(7, 280, 8), DarkSteel, false, FString(), .68f, .38f, .48f);
+    Shape(Cube, FVector(-1288, 735, 112), FVector(14, 100, 160),
+        FLinearColor(.68, .70, .67), false, FString(), .32f, .55f, .42f);
+    Shape(Cube, FVector(-1296, 735, 126), FVector(4, 72, 72),
+        FLinearColor(.06, .09, .10), false, FString(), .10f, .28f, .60f);
+    Shape(Cylinder, FVector(-1300, 700, 172), FVector(8, 8, 5),
+        FLinearColor(.86, .10, .035), false, FString(), .18f, .34f, .52f)->SetRelativeRotation(FRotator(90, 0, 0));
     Shape(Cube, FVector(-690, 500, 92), FVector(76, 130, 160), FLinearColor(.72, .75, .74), false, FString(), .28f, .52f, .42f);
     Shape(Cylinder, FVector(-651, 500, 92), FVector(48, 48, 12), DarkSteel, false, FString(), .45f, .42f, .44f)->SetRelativeRotation(FRotator(0, 90, 0));
+    for (float Angle = 0; Angle < 360; Angle += 45)
+    {
+        const float R = FMath::DegreesToRadians(Angle);
+        Segment(FVector(-650, 500, 92), FVector(-650, 500 + 34 * FMath::Cos(R), 92 + 34 * FMath::Sin(R)),
+            3, FLinearColor(.46, .49, .48));
+    }
+    Shape(Cube, FVector(-1000, 210, 24), FVector(260, 52, 16),
+        FLinearColor(.40, .42, .40), false, FString(), .04f, .90f, .25f);
+
+    // Landscaping and site furniture establish human scale around the plant.
+    auto AddTree = [this](const FVector& Base, float Scale, const FLinearColor& Crown)
+    {
+        const FLinearColor Bark(.25, .15, .075);
+        Shape(Cylinder, Base + FVector(0, 0, 72 * Scale),
+            FVector(18 * Scale, 18 * Scale, 144 * Scale), Bark, false,
+            FString(), .02f, .93f, .22f);
+        Shape(Sphere, Base + FVector(-25 * Scale, 0, 168 * Scale),
+            FVector(70 * Scale), Crown, false, FString(), .01f, .90f, .20f);
+        Shape(Sphere, Base + FVector(30 * Scale, 8 * Scale, 184 * Scale),
+            FVector(78 * Scale), Crown * FLinearColor(.86, .95, .82), false,
+            FString(), .01f, .88f, .20f);
+        Shape(Sphere, Base + FVector(0, -28 * Scale, 218 * Scale),
+            FVector(64 * Scale), Crown * FLinearColor(.76, .90, .74), false,
+            FString(), .01f, .89f, .20f);
+    };
+    Shape(Cube, FVector(-400, -1270, 10), FVector(4300, 180, 20),
+        FLinearColor(.22, .31, .14), false, FString(), .01f, .98f, .18f);
+    for (int32 Index = 0; Index < 11; ++Index)
+        AddTree(FVector(-2440 + Index * 410, -1270 + (Index % 2) * 22, 18),
+            .72f + .08f * (Index % 3),
+            FLinearColor(.18 + .02 * (Index % 2), .36 + .025 * (Index % 3), .11));
+    for (float X : {-1480.f, -1320.f})
+    {
+        Shape(Cube, FVector(X, 620, 24), FVector(120, 120, 48),
+            FLinearColor(.36, .38, .35), false, FString(), .10f, .86f, .28f);
+        Shape(Cube, FVector(X, 620, 51), FVector(108, 108, 12),
+            FLinearColor(.16, .20, .10), false, FString(), .01f, .98f, .16f);
+        for (float DX : {-30.f, 0.f, 30.f})
+            Shape(Sphere, FVector(X + DX, 620, 88 + FMath::Abs(DX) * .2f), FVector(38),
+                FLinearColor(.12, .38, .16), false, FString(), .01f, .90f, .20f);
+    }
+
+    // Entrance lighting and a simple hydrogen-molecule sculpture form a
+    // memorable landmark without copying any real facility identity.
+    for (float X : {-1550.f, 1720.f})
+    {
+        Segment(FVector(X, 1110, 20), FVector(X, 1110, 330), 12,
+            FLinearColor(.18, .21, .21));
+        Shape(Cube, FVector(X + 26, 1110, 330), FVector(70, 28, 18),
+            FLinearColor(.72, .75, .72), false, FString(), .50f, .30f, .48f);
+        Shape(Cube, FVector(X + 28, 1110, 318), FVector(54, 20, 5),
+            FLinearColor(.92, .84, .55), true);
+    }
+    const FVector SculptureBase(-1510, 790, 0);
+    Shape(Cube, SculptureBase + FVector(0, 0, 25), FVector(210, 140, 50),
+        FLinearColor(.44, .47, .46), false, FString(), .32f, .72f, .34f);
+    Shape(Cube, SculptureBase + FVector(0, 0, 58), FVector(180, 110, 16),
+        FLinearColor(.68, .71, .69), false, FString(), .42f, .40f, .44f);
+    const FVector H1 = SculptureBase + FVector(-46, 0, 142);
+    const FVector H2 = SculptureBase + FVector(48, 0, 204);
+    Segment(H1, H2, 18, FLinearColor(.72, .75, .74));
+    Shape(Sphere, H1, FVector(48), FLinearColor(.02, .36, .62), false, FString(), .30f, .24f, .56f);
+    Shape(Sphere, H2, FVector(48), FLinearColor(.02, .52, .48), false, FString(), .30f, .24f, .56f);
+    Text(SculptureBase + FVector(0, -75, 54), TEXT("H2"), 22);
 
     // Open steel perimeter fence with posts and rails instead of opaque walls.
     for (float Y : {-1120.f, 1120.f})
@@ -480,10 +613,50 @@ void AHRSStationActor::BuildReferenceStation()
         Camera->SetVisibility(false, true); CameraMeshes.Add(Entry.Key, Camera);
     }
 
+    auto AddPerson = [this](const FVector& TorsoPosition, const FLinearColor& VestColor,
+        const FString& ComponentId, bool bHardHat)
+    {
+        const FLinearColor Trousers(.075, .10, .12);
+        const FLinearColor Skin(.62, .42, .29);
+        auto* Torso = Shape(Cube, TorsoPosition, FVector(38, 25, 62), VestColor,
+            false, ComponentId, .01f, .82f, .24f);
+        auto Attach = [Torso](UStaticMeshComponent* Part)
+        { Part->AttachToComponent(Torso, FAttachmentTransformRules::KeepWorldTransform); };
+        Attach(Shape(Sphere, TorsoPosition + FVector(0, 0, 50), FVector(19),
+            Skin, false, ComponentId + TEXT(".head"), .01f, .83f, .24f));
+        Attach(Segment(TorsoPosition + FVector(-13, 0, -24), TorsoPosition + FVector(-15, 1, -82),
+            13, Trousers, false, ComponentId + TEXT(".leg")));
+        Attach(Segment(TorsoPosition + FVector(13, 0, -24), TorsoPosition + FVector(15, -1, -82),
+            13, Trousers, false, ComponentId + TEXT(".leg")));
+        Attach(Shape(Cube, TorsoPosition + FVector(-15, -2, -84), FVector(18, 38, 10),
+            FLinearColor(.035, .045, .05), false, ComponentId + TEXT(".boot"), .02f, .74f, .28f));
+        Attach(Shape(Cube, TorsoPosition + FVector(15, -2, -84), FVector(18, 38, 10),
+            FLinearColor(.035, .045, .05), false, ComponentId + TEXT(".boot"), .02f, .74f, .28f));
+        Attach(Segment(TorsoPosition + FVector(-21, 0, 19), TorsoPosition + FVector(-29, 3, -25),
+            10, VestColor, false, ComponentId + TEXT(".arm")));
+        Attach(Segment(TorsoPosition + FVector(21, 0, 19), TorsoPosition + FVector(29, -3, -25),
+            10, VestColor, false, ComponentId + TEXT(".arm")));
+        // Retro-reflective vest bands remain visible at the wide operator camera.
+        Attach(Shape(Cube, TorsoPosition + FVector(0, -14, 2), FVector(40, 4, 8),
+            FLinearColor(.84, .88, .62), false, ComponentId + TEXT(".reflective"), .16f, .36f, .46f));
+        if (bHardHat)
+        {
+            Attach(Shape(Cylinder, TorsoPosition + FVector(0, 0, 67), FVector(23, 23, 10),
+                FLinearColor(.95, .73, .06), false, ComponentId + TEXT(".helmet"), .08f, .48f, .42f));
+            Attach(Shape(Cube, TorsoPosition + FVector(0, -7, 62), FVector(52, 31, 4),
+                FLinearColor(.95, .73, .06), false, ComponentId + TEXT(".helmet-brim"), .08f, .48f, .42f));
+        }
+        return Torso;
+    };
     for (const auto& Entry : TArray<TPair<FString, FVector>>{
-        TPair<FString, FVector>(TEXT("unloading"), FVector(-1750, -150, 45)), TPair<FString, FVector>(TEXT("compressor"), FVector(-640, -120, 45)),
-        TPair<FString, FVector>(TEXT("storage"), FVector(300, -80, 45)), TPair<FString, FVector>(TEXT("dispenser"), FVector(420, 1020, 45))})
-        PersonnelMeshes.Add(Entry.Key, Shape(Sphere, Entry.Value, FVector(38), FLinearColor(.15, .35, .58)));
+        TPair<FString, FVector>(TEXT("unloading"), FVector(-1750, -150, 105)), TPair<FString, FVector>(TEXT("compressor"), FVector(-640, -120, 105)),
+        TPair<FString, FVector>(TEXT("storage"), FVector(300, -80, 105)), TPair<FString, FVector>(TEXT("dispenser"), FVector(420, 1020, 105))})
+        PersonnelMeshes.Add(Entry.Key, AddPerson(Entry.Value, FLinearColor(.08, .34, .58),
+            TEXT("personnel.") + Entry.Key, true));
+    // A visitor and operator near the administration entrance give the idle
+    // station a believable occupied scale while remaining outside process zones.
+    AddPerson(FVector(-1190, 120, 105), FLinearColor(.82, .42, .06), TEXT("ambient.operator"), true);
+    AddPerson(FVector(-1050, 110, 105), FLinearColor(.26, .33, .42), TEXT("ambient.visitor"), false);
     for (const auto& Entry : TArray<TPair<FString, FVector>>{
         TPair<FString, FVector>(TEXT("fan.unloading"), FVector(-1750, -360, 260)), TPair<FString, FVector>(TEXT("fan.compressor"), FVector(-640, -340, 300)),
         TPair<FString, FVector>(TEXT("fan.storage"), FVector(300, -360, 300)), TPair<FString, FVector>(TEXT("fan.dispenser"), FVector(420, 160, 440)),
@@ -841,18 +1014,18 @@ void AHRSStationActor::ApplyAuxiliaryState(const TSharedPtr<FJsonObject>& Safety
     {
         UStaticMeshComponent* Marker = PersonnelMeshes.FindRef(Zone).Get(); if (!Marker) continue;
         const double Present = Num(Personnel, *Zone), Safe = Num(Evacuated, *Zone);
-        Marker->SetVisibility(Present > 0 || Safe > 0);
+        Marker->SetVisibility(Present > 0 || Safe > 0, true);
         if (Present > 0)
         {
-            const FVector Position = Zone == TEXT("unloading") ? FVector(-1750, -150, 45) :
-                Zone == TEXT("compressor") ? FVector(-640, -120, 45) :
-                Zone == TEXT("storage") ? FVector(300, -80, 45) : FVector(420, 1020, 45);
+            const FVector Position = Zone == TEXT("unloading") ? FVector(-1750, -150, 105) :
+                Zone == TEXT("compressor") ? FVector(-640, -120, 105) :
+                Zone == TEXT("storage") ? FVector(300, -80, 105) : FVector(420, 1020, 105);
             Marker->SetRelativeLocation(Position); Tint(Marker, FLinearColor(.15, .35, .58));
             AppliedAuxiliaryStates.Add(TEXT("personnel.") + Zone, TEXT("present"));
         }
         else if (Safe > 0)
         {
-            Marker->SetRelativeLocation(FVector(-1850 + ZoneIndex * 85, 1060, 45));
+            Marker->SetRelativeLocation(FVector(-1850 + ZoneIndex * 85, 1060, 105));
             Tint(Marker, FLinearColor(.05, .55, .31));
             AppliedAuxiliaryStates.Add(TEXT("personnel.") + Zone, TEXT("evacuated"));
         }
