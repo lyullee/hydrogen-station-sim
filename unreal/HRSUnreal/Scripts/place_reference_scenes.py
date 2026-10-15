@@ -81,15 +81,48 @@ def combined_bounds(actors: list) -> tuple[unreal.Vector, unreal.Vector, list[fl
     return minimum, maximum, [maximum.x - minimum.x, maximum.y - minimum.y, maximum.z - minimum.z]
 
 
+def write_scale_diagnostic(asset_name: str, actors: list, actual_cm: list[float],
+                           expected_cm: list[float], ratios: list[float]) -> Path:
+    """Persist enough hierarchy data to diagnose an Interchange scale failure."""
+    rows = []
+    for actor in actors:
+        origin, extent = actor.get_actor_bounds(False)
+        parent = actor.get_attach_parent_actor()
+        rows.append({
+            "label": actor.get_actor_label(),
+            "class": actor.get_class().get_name(),
+            "path": actor.get_path_name(),
+            "parent": parent.get_actor_label() if parent else None,
+            "location_cm": [actor.get_actor_location().x, actor.get_actor_location().y,
+                            actor.get_actor_location().z],
+            "scale": [actor.get_actor_scale3d().x, actor.get_actor_scale3d().y,
+                      actor.get_actor_scale3d().z],
+            "bounds_origin_cm": [origin.x, origin.y, origin.z],
+            "bounds_extent_cm": [extent.x, extent.y, extent.z],
+        })
+    report_path = Path(unreal.Paths.project_saved_dir()) / "HRS" / "scale-diagnostic.json"
+    report_path.parent.mkdir(parents=True, exist_ok=True)
+    report_path.write_text(json.dumps({
+        "asset": asset_name,
+        "actual_cm": actual_cm,
+        "expected_cm": expected_cm,
+        "ratios": ratios,
+        "actors": rows,
+    }, ensure_ascii=False, indent=2), encoding="utf-8")
+    return report_path
+
+
 def validate_scale(asset_name: str, actors: list, dimensions_m: dict[str, list[float]]) -> list[float]:
     _, _, actual_cm = combined_bounds(actors)
     expected_cm = [value * 100.0 for value in dimensions_m[asset_name]]
     # glTF-to-Unreal axis conversion can permute dimensions, so compare sorted extents.
     ratios = [actual / expected for actual, expected in zip(sorted(actual_cm), sorted(expected_cm))]
     if any(ratio < 0.75 or ratio > 1.25 for ratio in ratios):
+        diagnostic_path = write_scale_diagnostic(
+            asset_name, actors, actual_cm, expected_cm, ratios)
         raise RuntimeError(
             f"{asset_name} physical scale mismatch: actual_cm={actual_cm}, "
-            f"expected_cm={expected_cm}, ratios={ratios}"
+            f"expected_cm={expected_cm}, ratios={ratios}, diagnostic={diagnostic_path}"
         )
     return actual_cm
 
@@ -99,7 +132,15 @@ def align_to_station_origin(actors: list, target: tuple[float, float, float]) ->
     center_x = (minimum.x + maximum.x) * 0.5
     center_y = (minimum.y + maximum.y) * 0.5
     delta = unreal.Vector(target[0] - center_x, target[1] - center_y, target[2] - minimum.z)
-    for actor in actors:
+    actor_paths = {actor.get_path_name() for actor in actors}
+    roots = [actor for actor in actors
+             if not actor.get_attach_parent_actor()
+             or actor.get_attach_parent_actor().get_path_name() not in actor_paths]
+    if not roots:
+        raise RuntimeError("Imported scene hierarchy has no movable root actor")
+    # Child transforms are relative to their attached parent. Moving every actor
+    # compounds the same delta once per hierarchy level and inflates the bounds.
+    for actor in roots:
         actor.set_actor_location(actor.get_actor_location() + delta, False, True)
 
 
@@ -112,12 +153,29 @@ def tag_scene(actors: list, component_id: str) -> None:
                 tags.append(tag)
         actor.set_editor_property("tags", tags)
         actor.set_actor_enable_collision(True)
+        root_component = actor.get_editor_property("root_component")
+        if root_component:
+            root_component.set_mobility(unreal.ComponentMobility.MOVABLE)
 
 
 def import_scene(manager, current_level, actor_subsystem, asset_name: str,
                  component_id: str, target: tuple[float, float, float]) -> tuple[list, str]:
     existing = tagged_actors(actor_subsystem, component_id)
+    scene_directory = f"{DESTINATION}/{asset_name}"
+    existing_is_renderable = True
     if existing:
+        try:
+            combined_bounds(existing)
+        except RuntimeError:
+            existing_is_renderable = False
+    if existing and (not unreal.EditorAssetLibrary.does_directory_exist(scene_directory)
+                     or not existing_is_renderable):
+        unreal.log_warning(
+            f"HRS placement repairing unsaved scene packages for {component_id}")
+        actor_subsystem.destroy_actors(existing)
+        existing = []
+    if existing:
+        tag_scene(existing, component_id)
         unreal.log(f"HRS placement preserved {component_id}: {len(existing)} actors")
         return existing, "preserved"
 
@@ -132,7 +190,7 @@ def import_scene(manager, current_level, actor_subsystem, asset_name: str,
         destination_name=component_id.replace(".", "_"),
         replace_existing=False,
     )
-    if not manager.import_scene(f"{DESTINATION}/{asset_name}", source_data, parameters):
+    if not manager.import_scene(scene_directory, source_data, parameters):
         raise RuntimeError(f"Interchange scene import failed: {source_path}")
     # Interchange can complete asynchronously even in commandlet mode. Bounds
     # and tagging must run only after every scene actor exists.
@@ -150,8 +208,9 @@ dimensions, _ = load_inputs()
 level_subsystem = unreal.get_editor_subsystem(unreal.LevelEditorSubsystem)
 if not level_subsystem.load_level(LEVEL_PATH):
     raise RuntimeError(f"Unable to load station level: {LEVEL_PATH}")
-world = unreal.get_editor_subsystem(unreal.UnrealEditorSubsystem).get_editor_world()
-current_level = world.get_current_level()
+current_level = level_subsystem.get_current_level()
+if not current_level:
+    raise RuntimeError("Station level loaded without an active current level")
 actor_subsystem = unreal.get_editor_subsystem(unreal.EditorActorSubsystem)
 manager = unreal.InterchangeManager.get_interchange_manager_scripted()
 
@@ -169,6 +228,12 @@ for asset_name, component_id, target in PLACEMENTS:
         "target_cm": list(target),
     })
 
+# Scene import creates mesh/material packages as well as level actors. Saving
+# only the map leaves references to transient packages that disappear on the
+# next editor launch, so persist the full scene directory before the map.
+if not unreal.EditorAssetLibrary.save_directory(
+        DESTINATION, only_if_is_dirty=False, recursive=True):
+    raise RuntimeError(f"Unable to save imported scene assets: {DESTINATION}")
 if not level_subsystem.save_current_level():
     raise RuntimeError("Unable to save station map after reference scene placement")
 report_path = Path(unreal.Paths.project_saved_dir()) / "HRS" / "reference-scenes.json"

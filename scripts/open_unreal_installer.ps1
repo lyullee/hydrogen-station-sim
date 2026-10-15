@@ -11,10 +11,19 @@ if (Test-Path -LiteralPath $editor) {
     exit 0
 }
 
-$launcher = 'C:\Program Files\Epic Games\Launcher\Portal\Binaries\Win64\EpicGamesLauncher.exe'
+$launcherCandidates = @(
+    'C:\Program Files\Epic Games\Launcher\Portal\Binaries\Win64\EpicGamesLauncher.exe',
+    'C:\Program Files (x86)\Epic Games\Launcher\Portal\Binaries\Win64\EpicGamesLauncher.exe',
+    'C:\Program Files (x86)\Epic Games\Launcher\Portal\Binaries\Win32\EpicGamesLauncher.exe'
+)
+$launcher = $launcherCandidates | Where-Object { Test-Path -LiteralPath $_ } |
+    Select-Object -First 1
 $catalog = 'C:\ProgramData\Epic\EpicGamesLauncher\Data\EMS\EpicGamesLauncher\ue.v9product'
-foreach ($required in @($launcher, $catalog)) {
-    if (-not (Test-Path -LiteralPath $required)) { throw "Required Epic path is missing: $required" }
+if (-not $launcher) {
+    throw "Epic Games Launcher is missing. Checked: $($launcherCandidates -join ', ')"
+}
+if (-not (Test-Path -LiteralPath $catalog)) {
+    throw "Required Epic catalog is missing: $catalog"
 }
 
 $product = Get-Content -LiteralPath $catalog -Raw | ConvertFrom-Json

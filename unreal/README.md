@@ -1,36 +1,34 @@
 # 수소충전소 Unreal 전환 작업
 
-기존 Python 계산 서버의 상태를 UE5에서 표시한다. 공정·HyRAM·HAZOP·LLM 계산은 기존 서버에 남는다. 현재 전체 참조 충전소 장면, 저장 뱅크 3개, 표시 API, 웹 전환, Pixel Streaming 서버의 소스가 준비되어 있다. UE 엔진 컴파일·화면·WebRTC 영상은 엔진 설치 후 검증해야 한다.
+기존 Python 계산 서버의 상태를 UE5에서 표시한다. 공정·HyRAM·HAZOP·LLM 계산은 기존 서버에 남는다. UE 5.8.3 편집기 게임 모드에서 전체 참조 충전소 장면, 실시간 표시 API, 안전조치 입력 및 Pixel Streaming 2 영상 연결을 검증했다.
 
 ## 현재 설치 상태
 
-2026-10-15: Epic Games Launcher 설치 완료. VS 2022 Build Tools 17.14, MSVC 14.38/14.44, MSBuild, Windows SDK 10.0.26100을 확인했고 독립 x64 C++ 컴파일·실행 시험을 통과했다. UE 엔진은 아직 설치되지 않았다. Launcher 20.3.5 로그의 `WaitingForBuildsAndItemFiles`, `Loaded 0 item files`, `found 0 entitled apps`로 보아 설치 버튼 무반응은 컴파일러나 저장 공간 문제가 아니라 Epic 계정/Launcher가 UE entitlement를 받지 못한 상태다. 같은 버전에서 동일 증상이 보고되어 있다. 잠긴 Windows 화면을 우회해 조작하지 않는다.
+2026-10-15: UE 5.8.3을 `C:\Program Files\Epic Games\UE_5.8`에 설치하고 `HRSUnrealEditor Win64 Development` 빌드를 완료했다. VS 2022 Build Tools 17.14, MSVC 14.38/14.44, MSBuild, Windows SDK 10.0.26100을 사용한다. 공식 Pixel Streaming Infrastructure의 `UE5.8` 브랜치와 PixelStreaming2 플러그인, Node.js 22.15.0을 사용한다.
 
-Launcher 자체 복구 뒤 종료·재시작을 시도했으며 Windows 잠금으로 UI 재확인은 보류됐다. Epic의 캐시 초기화 절차를 삭제 대신 날짜별 백업으로 수행하는 `scripts/repair_epic_cache.ps1`를 준비했다. 계정·설치 게임 폴더는 변경하지 않는다. Epic의 갱신된 로컬 UE 카탈로그에는 UE 5.6 항목이 있으므로 `scripts/open_unreal_installer.ps1`가 정확한 설치 URI를 열 수 있다. 그래도 entitlement가 갱신되지 않으면 Epic 지원의 계정 entitlement 갱신 또는 Epic이 서명한 레거시 Launcher 18.12.1을 통한 설치가 필요하다. 레거시 MSI는 공식 CDN에서 내려받아 Epic Games Inc. 유효 서명과 SHA-256을 확인했으며 저장소에는 포함하지 않았다. 참고: https://forums.unrealengine.com/t/launcher-20-3-5-install-engine-and-do-nothing-engine-versions-empty-log-shows-found-0-entitled-apps-new-account/2840123
-
-레거시 복구는 관리자 PowerShell에서 `./scripts/install_epic_legacy_for_unreal.ps1`을 실행한다. 이 스크립트는 MSI의 Epic 서명과 고정 SHA-256을 먼저 검사하고, Launcher의 `Saved` 상태를 날짜별 디렉터리에 복사한 다음 현재 Launcher만 제거하고 레거시 버전을 설치한다. 게임 설치 폴더와 프로젝트는 삭제하지 않으며 자동 재부팅도 하지 않는다. 관리자 권한이 없으면 변경 전에 중단한다.
+참조 GLB 7종을 Unreal에 가져와 8개 설비 인스턴스로 배치했으며, 각 인스턴스의 실제 바운드가 기준 치수의 75–125% 안에 드는지 검사했다. 1920×1080 WebRTC 영상, 서버-렌더러 계측값 일치, 브라우저 입력에서 서버 ESD 확인까지의 왕복 경로를 실제 실행으로 확인했다. 편집기 시제품 검증은 완료됐고 Shipping 패키징과 60분 연속 운전 검증은 남아 있다.
 
 환경 확인: 저장소 루트에서 `.venv\Scripts\python.exe scripts/check_unreal_environment.py` 실행. 별도 엔진 경로는 `HRS_UNREAL_ROOT`로 지정한다. 계정·비밀번호·API 키를 이 프로젝트에 넣지 않는다.
 
 ## 서버와 프로젝트 실행
 
-1. UE 5.6 계열 설치를 완료한다. 빌드 도구 재부팅은 다른 작업을 종료할 수 있는 시점에 사용자가 수행한다. 일반 `Install Engine` 버튼이 반응하지 않으면, 데스크톱 잠금을 푼 상태에서 `./scripts/open_unreal_installer.ps1 -Version 5.6`을 실행한다. 이 스크립트는 Epic이 갱신한 로컬 카탈로그에서 UE 5.6의 항목 ID를 읽고 공식 `action=installer` 프로토콜로 해당 설치 옵션 창을 바로 연다.
+1. UE 5.8.3 설치를 확인한다. 환경 검사는 `.venv\Scripts\python.exe scripts/check_unreal_environment.py`로 수행한다.
 2. 계산 서버: `.venv\Scripts\python.exe -m uvicorn h2station.api:app --app-dir src --host 127.0.0.1 --port 8000`.
-3. 엔진 경로를 지정하고 시제품 준비: `./scripts/start_unreal_pilot.ps1 -EngineRoot 'C:\Program Files\Epic Games\UE_5.6' -Build -Bootstrap`. 고해상도 참조 GLB까지 가져와 현장 좌표에 배치하려면 먼저 웹 자산 내보내기·Khronos 검증을 실행한 뒤 `-ImportAssets -PlaceAssets`를 추가한다. 가져오기와 배치는 설비 ID 태그가 있는 기존 편집 액터를 덮어쓰지 않는다.
+3. 엔진 경로를 지정하고 시제품 준비: `./scripts/start_unreal_pilot.ps1 -EngineRoot 'C:\Program Files\Epic Games\UE_5.8' -Build -Bootstrap`. 고해상도 참조 GLB까지 가져와 현장 좌표에 배치하려면 먼저 웹 자산 내보내기·Khronos 검증을 실행한 뒤 `-ImportAssets -PlaceAssets`를 추가한다. 가져오기와 배치는 설비 ID 태그가 있는 기존 편집 액터를 덮어쓰지 않는다.
 4. Pixel Streaming 서버: `./scripts/start_pixel_streaming.ps1`. 파일 `infrastructure-lock.json`의 버전과 커밋을 사용한다. 이 실행 스크립트는 로컬 PC에만 수신 포트를 연다.
-5. UE 실행: `./scripts/start_unreal_pilot.ps1 -EngineRoot 'C:\Program Files\Epic Games\UE_5.6' -Run -SignallingUrl 'ws://127.0.0.1:18888'`.
+5. UE 실행: `./scripts/start_unreal_pilot.ps1 -EngineRoot 'C:\Program Files\Epic Games\UE_5.8' -Run -SignallingUrl 'ws://127.0.0.1:18888'`.
 6. 계산 서버 시작 전에 환경변수 `H2STATION_UNREAL_PLAYER_URL=http://127.0.0.1:18080`를 설정한다. 키가 아닌 플레이어 주소다.
 7. 기존 웹에서 새 시뮬레이션을 시작하고 `Unreal 3D`를 누른다. 플레이어의 영상 시작 안내에 따라 연결한다. 표준 3D 전환은 계산을 중지하지 않는다.
 
-Win64 배포본은 엔진 설치 후 `./scripts/build_unreal_release.ps1 -EngineRoot 'C:\Program Files\Epic Games\UE_5.6' -Configuration Shipping`으로 만든다. 이 명령은 소스 계약 검사, C++ 빌드, 맵·재질 생성, 검증된 GLB 가져오기, Interchange 기반 장면 배치와 실물 치수 범위 검사, cook·pak·archive를 순차 수행하고 실행 파일 SHA-256이 포함된 `hrs-unreal-build.json`을 남긴다. 패키지 실행은 `./scripts/start_packaged_unreal.ps1 -PackageDirectory '<패키지 폴더>'`를 사용한다. 실행 전에 해시를 다시 검사하며 기본값은 숨김 창과 로컬 API·Pixel Streaming 주소다. 현장 확인이 필요하면 `-Visible`을 추가한다.
+Win64 배포본은 `./scripts/build_unreal_release.ps1 -EngineRoot 'C:\Program Files\Epic Games\UE_5.8' -Configuration Shipping`으로 만든다. 이 명령은 소스 계약 검사, C++ 빌드, 맵·재질 생성, 검증된 GLB 가져오기, Interchange 기반 장면 배치와 실물 치수 범위 검사, cook·pak·archive를 순차 수행하고 실행 파일 SHA-256이 포함된 `hrs-unreal-build.json`을 남긴다. 패키지 실행은 `./scripts/start_packaged_unreal.ps1 -PackageDirectory '<패키지 폴더>'`를 사용한다. 실행 전에 해시를 다시 검사하며 기본값은 숨김 창과 로컬 API·Pixel Streaming 주소다. 현장 확인이 필요하면 `-Visible`을 추가한다.
 
 UE 프로젝트 파일: `HRSUnreal/HRSUnreal.uproject`. 에셋 생성 스크립트는 이미 편집한 맵·재질을 덮어쓰지 않는다. 생성된 Content 및 바이너리는 Git에서 제외하고 소스·설정·생성 스크립트를 보관한다. 신규 UE 버전에 대한 검증은 별도로 수행한다.
 
 ## Pixel Streaming 서버 재현
 
-공식 저장소를 `unreal/PixelStreamingInfrastructure`에 복제하고 lock 파일의 커밋으로 체크아웃한다. Node 공식 배포의 22.14.0 Windows x64 ZIP과 SHASUMS256.txt로 해시를 확인하여 `unreal/.tooling`에 풀어 둔다. 런타임과 서드파티 체크아웃은 Git에 올리지 않는다.
+공식 저장소를 `unreal/PixelStreamingInfrastructure`에 복제하고 lock 파일의 커밋으로 체크아웃한다. Node 공식 배포의 22.15.0 Windows x64 ZIP과 SHASUMS256.txt로 해시를 확인하여 `unreal/.tooling`에 풀어 둔다. 런타임과 서드파티 체크아웃은 Git에 올리지 않는다.
 
-공식 저장소 루트에서 portable Node 폴더를 해당 셸 PATH에 추가하고 `npm ci --ignore-scripts --no-audit --no-fund`, `npm run build:all:cjs` 순서로 실행한다. Common, Signalling, 서버, 프런트엔드를 차례로 빌드한다. 설치 스크립트 실행 없이 필요한 TypeScript/webpack 빌드를 직접 실행한다. 업스트림 라이선스는 그대로 유지한다.
+공식 저장소 루트에서 검증된 portable Node 22.15.0을 해당 셸 PATH에 추가하고 `npm ci --ignore-scripts --no-audit --no-fund`, `npm run build:all:cjs` 순서로 실행한다. Common, Signalling, 서버, 프런트엔드를 차례로 빌드한다. 설치 스크립트 실행 없이 필요한 TypeScript/webpack 빌드를 직접 실행한다. 업스트림 라이선스는 그대로 유지한다.
 
 ## 시제품 조작
 
@@ -70,6 +68,6 @@ Python: `.venv\Scripts\python.exe -m pytest -q tests/test_unreal_visualization.p
 JS: `node --test tests/unreal_view_state.test.mjs tests/risk_range_state.test.mjs tests/assistant_api_separation.test.mjs`.
 UE 소스/매니페스트 일치: `.venv\Scripts\python.exe scripts/check_unreal_source_contract.py`.
 
-계약, 좌표/단위, 결측·0값, 두 차량 분리, 명령/피드백, 이전 실행 초기화, 순번 역전, API/LLM 분리와 기존 위험거리 상태를 검증한다. 정적 계약 검사는 설비 14개, 검지기 24개, CCTV 5개와 조작 입력이 서버 매니페스트에서 빠지지 않았는지 확인한다. UE C++ 빌드·실사 품질·실제 입력 지연·30 FPS·60분 실행·엔진과 브라우저의 값 일치는 아직 검증 전이다. 복구 절차의 단계별 애니메이션과 실제 UE 렌더링 품질 보정은 후속 단계다.
+계약, 좌표/단위, 결측·0값, 두 차량 분리, 명령/피드백, 이전 실행 초기화, 순번 역전, API/LLM 분리와 기존 위험거리 상태를 검증한다. 정적 계약 검사는 설비 14개, 검지기 24개, CCTV 5개와 조작 입력이 서버 매니페스트에서 빠지지 않았는지 확인한다. 실제 UE C++ 빌드, 1920×1080 영상, 30초 동안 28.5 FPS 이상, 계측값 일치 및 ESD 입력 전달은 통과했다. Shipping 패키지 실행, 60분 연속 운전과 UE 프로세스·GPU 메모리 평가는 아직 완료하지 않았다. 복구 절차의 단계별 애니메이션과 실제 UE 렌더링 품질 보정은 후속 단계다.
 
 API·Pixel Streaming 서버·3D 프로젝트는 단일 조작석 로컬 시제품 기준이다. 사내 다중 사용자 배포는 접근제어·세션 격리·HTTPS와 별도 GPU 용량 검증을 마친 뒤 수행한다.

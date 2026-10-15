@@ -1,36 +1,36 @@
 {
   "updated_on": "2026-10-15",
   "objective": "기존 공정·HyRAM·HAZOP·SAGA를 유지하는 Unreal 3D 모드 구축",
-  "progress_basis": "verified acceptance items / all acceptance items; source_ready is not completed; not an effort or time estimate",
+  "progress_basis": "verified acceptance items / all acceptance items; source_ready is implemented but remains unverified in a packaged run",
   "goal_complete": false,
-  "current_blocker": "Unreal Engine is not installed; the Epic Launcher account/library UI did not create an install transaction; Windows desktop is locked; Build Tools installer reports reboot required",
+  "current_blocker": "편집기 시제품 실행에는 차단 요소가 없다. Shipping 패키지 검증, 60분 연속 운전, GPU·프로세스 메모리 측정이 남아 있다.",
   "phases": [
     {
       "name": "환경 및 데이터 계약",
       "items": [
-        {"id":"launcher", "status":"verified", "evidence":"winget installation success; environment inspector"},
-        {"id":"cpp-tools", "status":"verified", "evidence":"VS 2022 Build Tools 17.14 installed; MSVC 14.38 and 14.44, MSBuild, Windows SDK 10.0.26100 detected; standalone x64 C++ compile and execution passed"},
-        {"id":"version-pin", "status":"verified", "evidence":"UE5.6 infrastructure commit pinned and built with Node 22.14.0"},
+        {"id":"launcher", "status":"verified", "evidence":"Epic Games Launcher and UE 5.8.3 installation confirmed"},
+        {"id":"cpp-tools", "status":"verified", "evidence":"VS 2022 Build Tools 17.14; MSVC 14.38/14.44; Windows SDK 10.0.26100"},
+        {"id":"version-pin", "status":"verified", "evidence":"official Pixel Streaming Infrastructure UE5.8 commit 9075a819565622a26134b119544879723efb79a5; Node 22.15.0"},
         {"id":"coordinates-units", "status":"verified", "evidence":"tests/test_unreal_visualization.py"},
         {"id":"equipment-id-and-missing-data", "status":"verified", "evidence":"manifest; zero/null and two-vehicle contract checks"},
-        {"id":"api-boundaries", "status":"verified", "evidence":"read-only renderer tests forbid risk evaluation; separate assistant regression"},
-        {"id":"engine-installed", "status":"pending"},
-        {"id":"ue-project-build", "status":"pending"}
+        {"id":"api-boundaries", "status":"verified", "evidence":"renderer tests forbid risk evaluation; assistant API regression"},
+        {"id":"engine-installed", "status":"verified", "evidence":"UE 5.8.3 at C:/Program Files/Epic Games/UE_5.8"},
+        {"id":"ue-project-build", "status":"verified", "evidence":"HRSUnrealEditor Win64 Development build passed"}
       ]
     },
     {
       "name": "저장 뱅크 시제품",
       "items": [
         {"id":"snapshot-and-stream", "status":"verified", "evidence":"API routing, WebSocket heartbeat and feedback checks"},
-        {"id":"live-bank-telemetry", "status":"verified", "evidence":"real simulator browser smoke verifies three pressures and inventories"},
+        {"id":"live-bank-telemetry", "status":"verified", "evidence":"real UE feedback matches the simulator frame"},
         {"id":"binding-and-reset", "status":"verified", "evidence":"browser smoke; stale intent rejection"},
-        {"id":"signalling-and-player", "status":"verified", "evidence":"official server/frontend build and loopback listener/player smoke; no UE video yet"},
-        {"id":"ue-bank-scene", "status":"source_ready", "evidence":"HRSStationActor.cpp"},
-        {"id":"ue-safety-commands", "status":"source_ready", "evidence":"server-owned command/feedback code; no automatic retry"},
+        {"id":"signalling-and-player", "status":"verified", "evidence":"PixelStreaming2 connected through official UE5.8 signalling and player"},
+        {"id":"ue-bank-scene", "status":"verified", "evidence":"actual UE 5.8.3 video and reference-scene placement"},
+        {"id":"ue-safety-commands", "status":"source_ready", "evidence":"server-owned command/feedback code; ESD path verified, remaining commands require packaged-run matrix"},
         {"id":"ue-valve-feedback", "status":"source_ready"},
         {"id":"ue-leak-and-range", "status":"source_ready"},
         {"id":"ue-disconnect-reconnect", "status":"source_ready"},
-        {"id":"actual-ue-video-and-operation", "status":"pending"}
+        {"id":"actual-ue-video-and-operation", "status":"verified", "evidence":"output/unreal/ue-video.json; advancing 1920x1080 stream"}
       ]
     },
     {
@@ -38,12 +38,12 @@
       "items": [
         {"id":"reusable-model-export-pipeline", "status":"verified", "evidence":"7 existing model builder exports"},
         {"id":"gltf-validation", "status":"verified", "evidence":"7 GLBs; Khronos validator: 0 errors, 0 warnings"},
-        {"id":"ue-import-axis-scale", "status":"source_ready", "evidence":"validated GLB importer applies 100x metre-to-centimetre conversion; placement rejects bounds outside 75-125% until engine verification"},
-        {"id":"full-station-assembly", "status":"source_ready", "evidence":"14 contract equipment IDs; 7 GLB types mapped to 8 station instances; imported actor tags replace only matching fallback geometry"},
+        {"id":"ue-import-axis-scale", "status":"verified", "evidence":"8 placed instances; all bounds within 75-125% reference dimensions"},
+        {"id":"full-station-assembly", "status":"verified", "evidence":"8 model instances persist in /Game/HRS/Scenes and render in Station map"},
         {"id":"two-dispensers", "status":"source_ready", "evidence":"two independent dispenser, vehicle and hose state paths"},
         {"id":"road-canopy-site", "status":"source_ready", "evidence":"reference road, canopy, operations room, boundary and pipe corridor"},
         {"id":"cctv-and-detector-markers", "status":"source_ready", "evidence":"24 detector and 5 camera coordinates in manifest"},
-        {"id":"equipment-selection-and-visual-qa", "status":"source_ready", "evidence":"component and actor tag picking; Interchange hierarchy placement; visual QA requires UE"}
+        {"id":"equipment-selection-and-visual-qa", "status":"source_ready", "evidence":"component and actor tag picking; visual polish remains"}
       ]
     },
     {
@@ -75,16 +75,16 @@
     {
       "name": "검증 및 배포",
       "items": [
-        {"id":"python-regression", "status":"verified", "evidence":"31 tests passed"},
+        {"id":"python-regression", "status":"verified", "evidence":"33 tests passed"},
         {"id":"js-regression", "status":"verified", "evidence":"10 tests passed"},
-        {"id":"real-web-integration", "status":"verified", "evidence":"5 real-browser checks passed; no page errors; no UE video claim"},
-        {"id":"ue-build-and-material-bootstrap", "status":"pending"},
-        {"id":"web-ue-process-value-parity", "status":"source_ready", "evidence":"generation/sequence-bound renderer feedback compares all 14 displayed equipment values"},
-        {"id":"1080p-30fps", "status":"source_ready", "evidence":"browser video-frame gate requires 1080p and >=28.5 decoded FPS"},
-        {"id":"input-latency", "status":"source_ready", "evidence":"dedicated-run E key to server ESD acknowledgement gate"},
+        {"id":"real-web-integration", "status":"verified", "evidence":"5 browser checks passed; no page errors"},
+        {"id":"ue-build-and-material-bootstrap", "status":"verified", "evidence":"UE 5.8.3 editor build, map load, imported scene persistence and material bootstrap passed"},
+        {"id":"web-ue-process-value-parity", "status":"verified", "evidence":"output/unreal/stream-quality.json reports matches=true and no mismatches"},
+        {"id":"1080p-30fps", "status":"verified", "evidence":"30 s gate: 1920x1080 and decoded FPS above 28.5"},
+        {"id":"input-latency", "status":"verified", "evidence":"30 s gate: Pixel Streaming ESD input acknowledged within 1000 ms"},
         {"id":"60min-memory-stability", "status":"source_ready", "evidence":"browser 3600 s gate plus UnrealEditor process memory sampler"},
         {"id":"reset-reconnect-stress", "status":"source_ready", "evidence":"three-or-more dedicated binding/ESD/stop/unbind cycles"},
-        {"id":"packaged-release-and-runbook-verified", "status":"source_ready", "evidence":"build pipeline compiles, bootstraps, imports, places, bounds-checks, cooks, archives and hashes; execution requires UE"}
+        {"id":"packaged-release-and-runbook-verified", "status":"source_ready", "evidence":"build pipeline exists; Shipping cook/archive execution remains"}
       ]
     }
   ]

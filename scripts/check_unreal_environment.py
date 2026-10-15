@@ -131,8 +131,14 @@ def inspect():
                 for k in ("MajorVersion", "MinorVersion", "PatchVersion"))})
     toolchains = _inspect_toolchains()
     usable_toolchain = any(item["usable"] for item in toolchains)
-    launcher = Path("C:/Program Files/Epic Games/Launcher/Portal/Binaries/Win64/EpicGamesLauncher.exe")
-    return {"launcher_installed": launcher.is_file(), "engines": engines,
+    launcher_candidates = [
+        Path("C:/Program Files/Epic Games/Launcher/Portal/Binaries/Win64/EpicGamesLauncher.exe"),
+        Path("C:/Program Files (x86)/Epic Games/Launcher/Portal/Binaries/Win64/EpicGamesLauncher.exe"),
+        Path("C:/Program Files (x86)/Epic Games/Launcher/Portal/Binaries/Win32/EpicGamesLauncher.exe"),
+    ]
+    launcher = next((path for path in launcher_candidates if path.is_file()), None)
+    return {"launcher_installed": launcher is not None,
+            "launcher_path": str(launcher) if launcher else None, "engines": engines,
             "epic_entitlement": _inspect_epic_entitlement(),
             "cpp_toolchains": toolchains, "free_disk_gib": round(shutil.disk_usage(Path.cwd().anchor).free / 1024**3, 1),
             "engine_build_status": "READY_TO_ATTEMPT" if engines and usable_toolchain else "PREREQUISITES_PENDING"}

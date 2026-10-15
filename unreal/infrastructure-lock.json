@@ -1,8 +1,8 @@
 {
   "repository": "https://github.com/EpicGamesExt/PixelStreamingInfrastructure.git",
-  "branch": "UE5.6",
-  "commit": "eaf43b04f9979a7755ef5baa6a07bc7400ac1351",
-  "node_version": "22.14.0",
+  "branch": "UE5.8",
+  "commit": "9075a819565622a26134b119544879723efb79a5",
+  "node_version": "22.15.0",
   "license": "MIT, retained in the upstream checkout",
   "local_player_port": 18080,
   "local_streamer_port": 18888,

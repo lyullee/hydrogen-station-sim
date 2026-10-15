@@ -25,10 +25,12 @@ const screenshot = process.argv[4] || 'output/unreal/ue-video.png';
       const candidate = page.getByRole('button', {name:pattern}).first();
       if (await candidate.isVisible().catch(() => false)) { await candidate.click(); break; }
     }
+    const startOverlay = page.getByText(/click to start/i, {exact:true}).first();
+    if (await startOverlay.isVisible().catch(() => false)) await startOverlay.click();
     await page.waitForFunction(() => {
       const video = document.querySelector('video');
       return video && video.readyState >= 2 && video.videoWidth > 0 && video.videoHeight > 0;
-    }, {timeout:120000});
+    }, null, {timeout:120000});
     const first = await page.locator('video').evaluate(video => ({
       currentTime:video.currentTime, width:video.videoWidth, height:video.videoHeight,
       paused:video.paused, ended:video.ended,

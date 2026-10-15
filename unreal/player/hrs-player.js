@@ -6,7 +6,13 @@ document.body.onload = function () {
   const config = new api.Config({useUrlParams:true});
   const stream = new api.PixelStreaming(config);
   const app = new api.Application({stream,
+    settingsPanelConfig:{isEnabled:false,
+      visibilityButtonConfig:{creationMode:api.UIElementCreationMode.Disable}},
+    statsPanelConfig:{isEnabled:false,
+      visibilityButtonConfig:{creationMode:api.UIElementCreationMode.Disable}},
+    fullScreenControlsConfig:{creationMode:api.UIElementCreationMode.Disable},
     xrControlsConfig:{creationMode:api.UIElementCreationMode.Disable},
+    videoQpIndicatorConfig:{disableIndicator:true},
     onColorModeChanged:light=>styles.setColorMode(light)});
   document.body.appendChild(app.rootElement);
   window.pixelStreaming=stream;

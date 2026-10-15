@@ -38,10 +38,16 @@ function metric(rows, name) { return rows.find(row => row.name === name)?.value 
     });
     assert.equal(bind.status(), 200, 'renderer binding failed');
     await page.goto(player, {waitUntil:'domcontentloaded', timeout:30000});
+    for (const pattern of [/click to start/i, /start/i, /play/i, /시작/i]) {
+      const candidate = page.getByRole('button', {name:pattern}).first();
+      if (await candidate.isVisible().catch(() => false)) { await candidate.click(); break; }
+    }
+    const startOverlay = page.getByText(/click to start/i, {exact:true}).first();
+    if (await startOverlay.isVisible().catch(() => false)) await startOverlay.click();
     await page.waitForFunction(() => {
       const video = document.querySelector('video');
       return video && video.readyState >= 2 && video.videoWidth > 0 && video.videoHeight > 0;
-    }, {timeout:120000});
+    }, null, {timeout:120000});
     const startVideo = await page.locator('video').evaluate(video => ({
       time:video.currentTime, frames:video.getVideoPlaybackQuality?.().totalVideoFrames ?? null,
       width:video.videoWidth, height:video.videoHeight,

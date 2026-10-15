@@ -251,18 +251,18 @@ void AHRSStationActor::BuildReferenceStation()
     for (auto Part : Hose2Connected) Part->SetVisibility(false);
 
     const TArray<TPair<FString, FVector>> Detectors = {
-        {TEXT("GD-0101"), {-2200, 500, 270}}, {TEXT("GD-0201"), {-2200, -800, 250}},
-        {TEXT("GD-0601"), {-600, -400, 280}}, {TEXT("GD-0701"), {-200, -500, 270}},
-        {TEXT("GD-0801"), {100, -500, 270}}, {TEXT("GD-0901"), {500, -500, 270}},
-        {TEXT("GD-1001"), {800, -300, 270}}, {TEXT("GD-1301"), {0, 425, 466}},
-        {TEXT("GD-1701"), {800, 425, 466}}, {TEXT("GD-1901"), {1100, -400, 270}},
-        {TEXT("GD-2001"), {1200, -300, 280}}, {TEXT("GD-2101"), {-600, -300, 380}},
-        {TEXT("GD-2201"), {300, -500, 370}}, {TEXT("GD-2301"), {400, 400, 470}},
-        {TEXT("GD-2302"), {1100, -400, 350}}, {TEXT("FD-0101"), {-2200, 300, 330}},
-        {TEXT("FD-0601"), {-600, -300, 370}}, {TEXT("FD-0701"), {-200, -400, 350}},
-        {TEXT("FD-0801"), {100, -400, 350}}, {TEXT("FD-0901"), {500, -400, 350}},
-        {TEXT("FD-1301"), {0, 360, 455}}, {TEXT("FD-1701"), {800, 360, 455}},
-        {TEXT("FD-1901"), {1100, -300, 360}}, {TEXT("FD-2001"), {1200, -200, 350}}
+        TPair<FString, FVector>(TEXT("GD-0101"), FVector(-2200, 500, 270)), TPair<FString, FVector>(TEXT("GD-0201"), FVector(-2200, -800, 250)),
+        TPair<FString, FVector>(TEXT("GD-0601"), FVector(-600, -400, 280)), TPair<FString, FVector>(TEXT("GD-0701"), FVector(-200, -500, 270)),
+        TPair<FString, FVector>(TEXT("GD-0801"), FVector(100, -500, 270)), TPair<FString, FVector>(TEXT("GD-0901"), FVector(500, -500, 270)),
+        TPair<FString, FVector>(TEXT("GD-1001"), FVector(800, -300, 270)), TPair<FString, FVector>(TEXT("GD-1301"), FVector(0, 425, 466)),
+        TPair<FString, FVector>(TEXT("GD-1701"), FVector(800, 425, 466)), TPair<FString, FVector>(TEXT("GD-1901"), FVector(1100, -400, 270)),
+        TPair<FString, FVector>(TEXT("GD-2001"), FVector(1200, -300, 280)), TPair<FString, FVector>(TEXT("GD-2101"), FVector(-600, -300, 380)),
+        TPair<FString, FVector>(TEXT("GD-2201"), FVector(300, -500, 370)), TPair<FString, FVector>(TEXT("GD-2301"), FVector(400, 400, 470)),
+        TPair<FString, FVector>(TEXT("GD-2302"), FVector(1100, -400, 350)), TPair<FString, FVector>(TEXT("FD-0101"), FVector(-2200, 300, 330)),
+        TPair<FString, FVector>(TEXT("FD-0601"), FVector(-600, -300, 370)), TPair<FString, FVector>(TEXT("FD-0701"), FVector(-200, -400, 350)),
+        TPair<FString, FVector>(TEXT("FD-0801"), FVector(100, -400, 350)), TPair<FString, FVector>(TEXT("FD-0901"), FVector(500, -400, 350)),
+        TPair<FString, FVector>(TEXT("FD-1301"), FVector(0, 360, 455)), TPair<FString, FVector>(TEXT("FD-1701"), FVector(800, 360, 455)),
+        TPair<FString, FVector>(TEXT("FD-1901"), FVector(1100, -300, 360)), TPair<FString, FVector>(TEXT("FD-2001"), FVector(1200, -200, 350))
     };
     for (const auto& Entry : Detectors)
     {
@@ -273,9 +273,9 @@ void AHRSStationActor::BuildReferenceStation()
         Marker->SetVisibility(false); DetectorMeshes.Add(Entry.Key, Marker);
     }
     const TArray<TPair<FString, FVector>> Cameras = {
-        {TEXT("CAM-01"), {300, -360, 340}}, {TEXT("CAM-02"), {-620, -380, 310}},
-        {TEXT("CAM-03"), {410, 325, 360}}, {TEXT("CAM-04"), {1350, -330, 300}},
-        {TEXT("CAM-05"), {-2200, 120, 380}}
+        TPair<FString, FVector>(TEXT("CAM-01"), FVector(300, -360, 340)), TPair<FString, FVector>(TEXT("CAM-02"), FVector(-620, -380, 310)),
+        TPair<FString, FVector>(TEXT("CAM-03"), FVector(410, 325, 360)), TPair<FString, FVector>(TEXT("CAM-04"), FVector(1350, -330, 300)),
+        TPair<FString, FVector>(TEXT("CAM-05"), FVector(-2200, 120, 380))
     };
     for (const auto& Entry : Cameras)
     {
@@ -284,19 +284,19 @@ void AHRSStationActor::BuildReferenceStation()
     }
 
     for (const auto& Entry : TArray<TPair<FString, FVector>>{
-        {TEXT("unloading"), {-1750, -150, 45}}, {TEXT("compressor"), {-640, -120, 45}},
-        {TEXT("storage"), {300, -80, 45}}, {TEXT("dispenser"), {420, 1020, 45}}})
+        TPair<FString, FVector>(TEXT("unloading"), FVector(-1750, -150, 45)), TPair<FString, FVector>(TEXT("compressor"), FVector(-640, -120, 45)),
+        TPair<FString, FVector>(TEXT("storage"), FVector(300, -80, 45)), TPair<FString, FVector>(TEXT("dispenser"), FVector(420, 1020, 45))})
         PersonnelMeshes.Add(Entry.Key, Shape(Sphere, Entry.Value, FVector(38), FLinearColor(.15, .35, .58)));
     for (const auto& Entry : TArray<TPair<FString, FVector>>{
-        {TEXT("fan.unloading"), {-1750, -360, 260}}, {TEXT("fan.compressor"), {-640, -340, 300}},
-        {TEXT("fan.storage"), {300, -360, 300}}, {TEXT("fan.dispenser"), {420, 160, 440}},
-        {TEXT("cooling.low"), {-100, -360, 260}}, {TEXT("cooling.medium"), {300, -360, 260}},
-        {TEXT("cooling.high"), {700, -360, 260}}})
+        TPair<FString, FVector>(TEXT("fan.unloading"), FVector(-1750, -360, 260)), TPair<FString, FVector>(TEXT("fan.compressor"), FVector(-640, -340, 300)),
+        TPair<FString, FVector>(TEXT("fan.storage"), FVector(300, -360, 300)), TPair<FString, FVector>(TEXT("fan.dispenser"), FVector(420, 160, 440)),
+        TPair<FString, FVector>(TEXT("cooling.low"), FVector(-100, -360, 260)), TPair<FString, FVector>(TEXT("cooling.medium"), FVector(300, -360, 260)),
+        TPair<FString, FVector>(TEXT("cooling.high"), FVector(700, -360, 260))})
         AuxiliaryMeshes.Add(Entry.Key, Shape(Cylinder, Entry.Value, FVector(38, 38, 20),
                                              FLinearColor(.35, .4, .42)));
     for (const auto& Entry : TArray<TPair<FString, FVector>>{
-        {TEXT("unloading"), {-1750, -150, 6}}, {TEXT("compressor"), {-640, -600, 6}},
-        {TEXT("storage"), {300, -600, 6}}, {TEXT("dispenser"), {420, 620, 6}}})
+        TPair<FString, FVector>(TEXT("unloading"), FVector(-1750, -150, 6)), TPair<FString, FVector>(TEXT("compressor"), FVector(-640, -600, 6)),
+        TPair<FString, FVector>(TEXT("storage"), FVector(300, -600, 6)), TPair<FString, FVector>(TEXT("dispenser"), FVector(420, 620, 6))})
     {
         auto* Boundary = Shape(Cube, Entry.Value, FVector(620, 620, 4),
                                FLinearColor(.82, .16, .05), true);
@@ -541,7 +541,7 @@ void AHRSStationActor::ApplyAuxiliaryState(const TSharedPtr<FJsonObject>& Safety
     for (const FString Zone : {TEXT("unloading"), TEXT("compressor"), TEXT("storage"), TEXT("dispenser")})
     {
         const auto State = Obj(Ventilation, *Zone);
-        auto* Mesh = AuxiliaryMeshes.FindRef(TEXT("fan.") + Zone);
+        UStaticMeshComponent* Mesh = AuxiliaryMeshes.FindRef(TEXT("fan.") + Zone).Get();
         if (Mesh && State)
             Tint(Mesh, Bool(State, TEXT("fault")) ? FLinearColor(.72, .04, .03) :
                  Bool(State, TEXT("running")) ? FLinearColor(.04, .55, .48) : FLinearColor(.35, .4, .42));
@@ -549,7 +549,7 @@ void AHRSStationActor::ApplyAuxiliaryState(const TSharedPtr<FJsonObject>& Safety
     for (const FString Bank : {TEXT("low"), TEXT("medium"), TEXT("high")})
     {
         const auto State = Obj(Cooling, *Bank);
-        auto* Mesh = AuxiliaryMeshes.FindRef(TEXT("cooling.") + Bank);
+        UStaticMeshComponent* Mesh = AuxiliaryMeshes.FindRef(TEXT("cooling.") + Bank).Get();
         if (Mesh && State)
             Tint(Mesh, Bool(State, TEXT("fault")) ? FLinearColor(.72, .04, .03) :
                  Bool(State, TEXT("running")) ? FLinearColor(.04, .38, .78) : FLinearColor(.35, .4, .42));
@@ -562,7 +562,7 @@ void AHRSStationActor::ApplyAuxiliaryState(const TSharedPtr<FJsonObject>& Safety
     int32 ZoneIndex = 0;
     for (const FString Zone : {TEXT("unloading"), TEXT("compressor"), TEXT("storage"), TEXT("dispenser")})
     {
-        auto* Marker = PersonnelMeshes.FindRef(Zone); if (!Marker) continue;
+        UStaticMeshComponent* Marker = PersonnelMeshes.FindRef(Zone).Get(); if (!Marker) continue;
         const double Present = Num(Personnel, *Zone), Safe = Num(Evacuated, *Zone);
         Marker->SetVisibility(Present > 0 || Safe > 0);
         if (Present > 0)
@@ -577,9 +577,9 @@ void AHRSStationActor::ApplyAuxiliaryState(const TSharedPtr<FJsonObject>& Safety
             Marker->SetRelativeLocation(FVector(-1850 + ZoneIndex * 85, 1060, 45));
             Tint(Marker, FLinearColor(.05, .55, .31));
         }
-        if (auto* Boundary = AuxiliaryMeshes.FindRef(TEXT("access.") + Zone))
+        if (UStaticMeshComponent* Boundary = AuxiliaryMeshes.FindRef(TEXT("access.") + Zone).Get())
             Boundary->SetVisibility(Bool(Restricted, *Zone));
-        if (auto* Power = AuxiliaryMeshes.FindRef(TEXT("power.") + Zone))
+        if (UStaticMeshComponent* Power = AuxiliaryMeshes.FindRef(TEXT("power.") + Zone).Get())
             Tint(Power, Bool(PowerIsolated, *Zone) ? FLinearColor(.12, .16, .18) : FLinearColor(.16, .55, .25));
         ++ZoneIndex;
     }
@@ -589,13 +589,13 @@ void AHRSStationActor::ApplyAuxiliaryState(const TSharedPtr<FJsonObject>& Safety
         const bool bVehicle1Visible = Num(Vehicles, TEXT("vehicle_1"), 1) > 0;
         const bool bVehicle2Visible = Num(Vehicles, TEXT("vehicle_2"), 1) > 0;
         const bool bTrailerVisible = Num(Vehicles, TEXT("trailer"), 1) > 0;
-        if (auto* Vehicle = EquipmentMeshes.FindRef(TEXT("vehicle.tank")))
+        if (UStaticMeshComponent* Vehicle = EquipmentMeshes.FindRef(TEXT("vehicle.tank")).Get())
             Vehicle->SetVisibility(!ImportedModelActors.Contains(TEXT("vehicle.tank")) && bVehicle1Visible);
         SetImportedModelVisibility(TEXT("vehicle.tank"), bVehicle1Visible);
-        if (auto* Vehicle = EquipmentMeshes.FindRef(TEXT("vehicle_2.tank")))
+        if (UStaticMeshComponent* Vehicle = EquipmentMeshes.FindRef(TEXT("vehicle_2.tank")).Get())
             Vehicle->SetVisibility(!ImportedModelActors.Contains(TEXT("vehicle_2.tank")) && bVehicle2Visible);
         SetImportedModelVisibility(TEXT("vehicle_2.tank"), bVehicle2Visible);
-        if (auto* Trailer = EquipmentMeshes.FindRef(TEXT("supply")))
+        if (UStaticMeshComponent* Trailer = EquipmentMeshes.FindRef(TEXT("supply")).Get())
             Trailer->SetVisibility(!ImportedModelActors.Contains(TEXT("supply")) && bTrailerVisible);
         SetImportedModelVisibility(TEXT("supply"), bTrailerVisible);
     }
@@ -608,7 +608,7 @@ void AHRSStationActor::ApplyAuxiliaryState(const TSharedPtr<FJsonObject>& Safety
             bool bPassed = false;
             if (Item.Value.IsValid() && Item.Value->TryGetBool(bPassed) && bPassed) ++Completed;
         }
-        StatusText->SetText(FText::FromString(StatusText->GetText().ToString() +
+        StatusText->SetText(FText::FromString(StatusText->Text.ToString() +
             FString::Printf(TEXT("\nRecovery checks %d/%d"), Completed, Recovery->Values.Num())));
     }
     const FString PurgeBank = Str(Safety, TEXT("purge_bank"));
@@ -617,7 +617,7 @@ void AHRSStationActor::ApplyAuxiliaryState(const TSharedPtr<FJsonObject>& Safety
     const FString DiagnosticBank = Str(Diagnostic, TEXT("target"));
     for (const FString Bank : {TEXT("low"), TEXT("medium"), TEXT("high")})
     {
-        if (auto* Purge = AuxiliaryMeshes.FindRef(TEXT("purge.") + Bank))
+        if (UStaticMeshComponent* Purge = AuxiliaryMeshes.FindRef(TEXT("purge.") + Bank).Get())
         {
             const bool bActive = PurgeBank == Bank;
             Purge->SetVisibility(bActive);
@@ -627,7 +627,7 @@ void AHRSStationActor::ApplyAuxiliaryState(const TSharedPtr<FJsonObject>& Safety
                 Purge->SetRelativeScale3D(FVector(.35, .35, FMath::Max(.25, Fraction) * 2.2));
             }
         }
-        if (auto* Test = AuxiliaryMeshes.FindRef(TEXT("diagnostic.") + Bank))
+        if (UStaticMeshComponent* Test = AuxiliaryMeshes.FindRef(TEXT("diagnostic.") + Bank).Get())
             Test->SetVisibility(Diagnostic && DiagnosticBank == Bank);
     }
 }
@@ -660,8 +660,8 @@ void AHRSStationActor::ApplyIncidentState(const TSharedPtr<FJsonObject>& Snapsho
     for (auto& Row : FireMeshes) Row.Value->SetVisibility(false);
     auto Mark = [this](const FString& Target, bool bFire)
     {
-        if (auto* Highlight = HighlightMeshes.FindRef(Target)) Highlight->SetVisibility(true);
-        if (bFire) if (auto* Flame = FireMeshes.FindRef(Target)) Flame->SetVisibility(true);
+        if (UStaticMeshComponent* Highlight = HighlightMeshes.FindRef(Target).Get()) Highlight->SetVisibility(true);
+        if (bFire) if (UStaticMeshComponent* Flame = FireMeshes.FindRef(Target).Get()) Flame->SetVisibility(true);
     };
     const TArray<TSharedPtr<FJsonValue>>* Rows = nullptr;
     if (Snapshot->TryGetArrayField(TEXT("active_faults"), Rows)) for (const auto& Item : *Rows)
@@ -683,7 +683,7 @@ void AHRSStationActor::ApplyIncidentState(const TSharedPtr<FJsonObject>& Snapsho
         const double Value = Num(Row, TEXT("value"));
         const bool bFlame = Tag.StartsWith(TEXT("FD-"));
         const bool bAlarm = bFlame ? Value > .5 : Value >= .4;
-        if (auto* Marker = DetectorMeshes.FindRef(Tag))
+        if (UStaticMeshComponent* Marker = DetectorMeshes.FindRef(Tag).Get())
             Tint(Marker, bAlarm ? FLinearColor(.8, .035, .02) :
                  bFlame ? FLinearColor(.94, .41, .08) : FLinearColor(.05, .55, .62));
         if (!bAlarm) continue;

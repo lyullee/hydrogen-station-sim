@@ -24,12 +24,15 @@ if ($actualHash -ne $ExpectedSha256) {
 $savedInput = Join-Path $env:LOCALAPPDATA 'EpicGamesLauncher\Saved'
 if (Test-Path -LiteralPath $savedInput) {
     $saved = (Resolve-Path -LiteralPath $savedInput).Path
-    $parent = (Resolve-Path -LiteralPath (Split-Path -Parent $saved)).Path
-    $backup = Join-Path $parent ('Saved-before-legacy-' + (Get-Date -Format 'yyyyMMdd-HHmmss'))
-    $prefix = $parent.TrimEnd('\') + '\'
-    if (-not $saved.StartsWith($prefix, [StringComparison]::OrdinalIgnoreCase) -or
-        -not [IO.Path]::GetFullPath($backup).StartsWith($prefix, [StringComparison]::OrdinalIgnoreCase)) {
-        throw 'Epic Launcher backup path escaped the intended directory.'
+    # Keep the backup outside EpicGamesLauncher's own directory. The MSI
+    # uninstaller may remove that complete directory, including unknown files.
+    $backupRoot = Join-Path $env:LOCALAPPDATA 'EpicLauncherStateBackups'
+    New-Item -ItemType Directory -Path $backupRoot -Force | Out-Null
+    $backupRoot = (Resolve-Path -LiteralPath $backupRoot).Path
+    $backup = Join-Path $backupRoot ('Saved-before-legacy-' + (Get-Date -Format 'yyyyMMdd-HHmmss'))
+    $prefix = $backupRoot.TrimEnd('\') + '\'
+    if (-not [IO.Path]::GetFullPath($backup).StartsWith($prefix, [StringComparison]::OrdinalIgnoreCase)) {
+        throw 'Epic Launcher backup path escaped the intended backup directory.'
     }
     Copy-Item -LiteralPath $saved -Destination $backup -Recurse -Force
     Write-Output "Preserved Epic Launcher state: $backup"
@@ -65,8 +68,14 @@ if ($install.ExitCode -notin @(0, 3010)) {
     throw "Legacy Launcher install failed with code $($install.ExitCode). Log: $installLog"
 }
 
-$launcher = 'C:\Program Files\Epic Games\Launcher\Portal\Binaries\Win64\EpicGamesLauncher.exe'
-if (-not (Test-Path -LiteralPath $launcher)) {
+$launcherCandidates = @(
+    'C:\Program Files\Epic Games\Launcher\Portal\Binaries\Win64\EpicGamesLauncher.exe',
+    'C:\Program Files (x86)\Epic Games\Launcher\Portal\Binaries\Win64\EpicGamesLauncher.exe',
+    'C:\Program Files (x86)\Epic Games\Launcher\Portal\Binaries\Win32\EpicGamesLauncher.exe'
+)
+$launcher = $launcherCandidates | Where-Object { Test-Path -LiteralPath $_ } |
+    Select-Object -First 1
+if (-not $launcher) {
     throw 'Legacy Launcher installer completed but the executable is missing.'
 }
 Write-Output "Epic legacy Launcher installed and verified: $launcher"
