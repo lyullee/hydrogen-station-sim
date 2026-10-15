@@ -162,6 +162,22 @@ def test_bind_and_reset_invalidate_old_run_without_stopping_process(state):
     assert state["job"]["status"] == "running"
 
 
+def test_renderer_view_options_survive_run_binding_and_validate(state):
+    client = client_for(state)
+    base = "/api/integrations/unreal/session/default"
+    view = base + "/view"
+    defaults = client.get(view).json()
+    assert defaults["show_incidents"] is True
+    assert defaults["roof_cutaway"] is False
+    requested = {**defaults, "roof_cutaway": True, "service_cutaway": True,
+                 "vehicle_cutaway": True, "show_distance": True}
+    assert client.post(view, json=requested).json() == requested
+    bound = client.post(base, json={"run_id": "test-run", "request_serial": 1}).json()
+    assert bound["view"] == requested
+    assert client.get(view).json() == requested
+    assert client.post(view, json={**requested, "show_incidents": "yes"}).status_code == 422
+
+
 def test_config_is_explicit_and_rejects_embedded_credentials(monkeypatch, state):
     client = client_for(state)
     monkeypatch.delenv("H2STATION_UNREAL_PLAYER_URL", raising=False)
@@ -202,6 +218,8 @@ def test_renderer_feedback_is_bound_ordered_and_finite(state):
     visual = {
         "show_risk": True, "show_distance": True, "show_cameras": False,
         "show_detectors": True, "risk_mode": "absolute", "selected_equipment": "cascade.high",
+        "roof_cutaway": True, "service_cutaway": True, "vehicle_cutaway": True,
+        "show_incidents": True,
         "hose_1_mode": "connected", "hose_2_mode": "parked",
         "visible_jets": ["test-leak"], "visible_distances": ["test-leak"],
         "visible_distance_labels": ["test-leak"],

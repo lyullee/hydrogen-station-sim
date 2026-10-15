@@ -25,6 +25,7 @@ namespace
 {
     const TCHAR* Cube = TEXT("/Engine/BasicShapes/Cube.Cube");
     const TCHAR* Cylinder = TEXT("/Engine/BasicShapes/Cylinder.Cylinder");
+    const TCHAR* Cone = TEXT("/Engine/BasicShapes/Cone.Cone");
     const TCHAR* Sphere = TEXT("/Engine/BasicShapes/Sphere.Sphere");
     FString Str(const TSharedPtr<FJsonObject>& Object, const TCHAR* Key)
     { FString Value; if (Object) Object->TryGetStringField(Key, Value); return Value; }
@@ -146,7 +147,7 @@ void AHRSStationActor::BuildBank(const FString& Bank, const FVector& Origin, con
     HighlightMeshes.Add(Id, Shape(Cube, Origin + FVector(0, 0, 155), FVector(290, 490, 310),
                                   FLinearColor(.8, .08, .04), true));
     HighlightMeshes[Id]->SetVisibility(false);
-    FireMeshes.Add(Id, Shape(Cylinder, Origin + FVector(0, 0, 345), FVector(65, 65, 220),
+    FireMeshes.Add(Id, Shape(Cone, Origin + FVector(0, 0, 345), FVector(65, 65, 220),
                              FLinearColor(.95, .18, .025), true));
     FireMeshes[Id]->SetVisibility(false);
     AuxiliaryMeshes.Add(TEXT("purge.") + Bank,
@@ -235,7 +236,7 @@ void AHRSStationActor::BuildReferenceStation()
         HighlightMeshes.Add(Id, Shape(Cube, Origin + FVector(0, 0, Envelope.Z * .5f),
                                       Envelope + FVector(35, 35, 35),
                                       FLinearColor(.78, .055, .025), true));
-        FireMeshes.Add(Id, Shape(Cylinder, Origin + FVector(0, 0, Envelope.Z + 100),
+        FireMeshes.Add(Id, Shape(Cone, Origin + FVector(0, 0, Envelope.Z + 100),
                                  FVector(55, 55, 200), FLinearColor(.95, .17, .02), true));
         RiskMeshes[Id]->SetVisibility(false); HighlightMeshes[Id]->SetVisibility(false);
         FireMeshes[Id]->SetVisibility(false);
@@ -263,6 +264,17 @@ void AHRSStationActor::BuildReferenceStation()
                  FVector(490, 190, 150), FLinearColor(.33, .38, .4));
     AddEquipment(TEXT("vehicle_2.tank"), TEXT("VEHICLE 2"), FVector(1080, 700, 0),
                  FVector(490, 190, 150), FLinearColor(.33, .38, .4));
+    for (const FVector VehicleOrigin : {FVector(280, 700, 0), FVector(1080, 700, 0)})
+    {
+        for (float Y : {-52.f, 0.f, 52.f})
+        {
+            auto* Tank = Shape(Cylinder, VehicleOrigin + FVector(-25, Y, 68), FVector(43, 43, 310),
+                               FLinearColor(.12, .18, .22), false,
+                               VehicleOrigin.X < 500 ? TEXT("vehicle.tank") : TEXT("vehicle_2.tank"), .38f, .28f, .5f);
+            Tank->SetRelativeRotation(FRotator(0, 90, 0)); Tank->SetVisibility(false);
+            VehicleTankCutawayMeshes.Add(Tank);
+        }
+    }
     AddEquipment(TEXT("vent"), TEXT("VENT STACK"), FVector(1400, -900, 0),
                  FVector(100, 100, 600), FLinearColor(.58, .64, .65));
     AddEquipment(TEXT("dispenser.hose"), TEXT("HOSE 1"), FVector(180, 520, 0),
@@ -353,17 +365,48 @@ void AHRSStationActor::BuildReferenceStation()
     AddValve(TEXT("vent.medium"), TEXT("vent"), FVector(1400, -900, 90));
     AddValve(TEXT("vent.high"), TEXT("vent"), FVector(1460, -900, 90));
 
+    // Cutaway-only internals. These are schematic equipment packages tied to
+    // the same process nodes; they add no duplicate physics calculations.
+    auto AddServiceInterior = [this](UStaticMeshComponent* Mesh)
+    {
+        if (Mesh) { Mesh->SetVisibility(false); ServiceInteriorMeshes.Add(Mesh); }
+        return Mesh;
+    };
+    auto* Motor = AddServiceInterior(Shape(Cylinder, FVector(-735, -600, 92), FVector(72, 72, 180),
+        InstrumentBlue, false, TEXT("compressor"), .62f, .30f, .52f));
+    Motor->SetRelativeRotation(FRotator(0, 90, 0));
+    for (int32 Stage = 0; Stage < 3; ++Stage)
+    {
+        const FVector StageOrigin(-575 + Stage * 72, -600, 90 + Stage * 42);
+        AddServiceInterior(Shape(Cylinder, StageOrigin, FVector(52 - Stage * 8, 52 - Stage * 8, 92),
+            Stainless, false, TEXT("compressor"), .72f, .24f, .55f));
+        AddServiceInterior(Segment(StageOrigin + FVector(0, 0, 45), StageOrigin + FVector(0, 0, 105),
+            9, Stainless, false, TEXT("compressor")));
+    }
+    AddServiceInterior(Segment(FVector(-820, -600, 70), FVector(-420, -600, 70),
+        12, Stainless, false, TEXT("compressor")));
+    auto* Hx = AddServiceInterior(Shape(Cylinder, FVector(1050, -600, 112), FVector(80, 80, 260),
+        Stainless, false, TEXT("cooler"), .76f, .22f, .55f));
+    Hx->SetRelativeRotation(FRotator(0, 90, 0));
+    for (float X : {940.f, 990.f, 1040.f, 1090.f, 1140.f})
+        AddServiceInterior(Shape(Cube, FVector(X, -600, 112), FVector(4, 175, 170),
+            InstrumentBlue, false, TEXT("cooler"), .45f, .34f, .5f));
+    AddServiceInterior(Shape(Cylinder, FVector(1190, -600, 72), FVector(74, 74, 105),
+        DarkSteel, false, TEXT("cooler"), .66f, .30f, .5f));
+    AddServiceInterior(Segment(FVector(920, -600, 55), FVector(1220, -600, 55),
+        10, Stainless, false, TEXT("cooler")));
+
     // Canopy: separate roof deck, fascia and trim.  Every parallel surface has
     // a physical gap, preventing the coplanar depth fighting seen at corners.
-    Shape(Cube, FVector(420, 565, 505), FVector(1900, 900, 24), FLinearColor(.79, .82, .82), false, FString(), .55f, .34f, .47f);
+    CanopyCutawayMeshes.Add(Shape(Cube, FVector(420, 565, 505), FVector(1900, 900, 24), FLinearColor(.79, .82, .82), false, FString(), .55f, .34f, .47f));
     for (float Y : {1030.f, 100.f})
     {
-        Shape(Cube, FVector(420, Y, 480), FVector(1848, 22, 74), FLinearColor(.88, .90, .89), false, FString(), .23f, .42f, .44f);
+        CanopyCutawayMeshes.Add(Shape(Cube, FVector(420, Y, 480), FVector(1848, 22, 74), FLinearColor(.88, .90, .89), false, FString(), .23f, .42f, .44f));
         Shape(Cube, FVector(420, Y + (Y > 500 ? 13 : -13), 479), FVector(1852, 7, 16), StationBlue, false, FString(), .20f, .35f, .50f);
     }
     for (float X : {-530.f, 1370.f})
     {
-        Shape(Cube, FVector(X, 565, 480), FVector(22, 878, 74), FLinearColor(.88, .90, .89), false, FString(), .23f, .42f, .44f);
+        CanopyCutawayMeshes.Add(Shape(Cube, FVector(X, 565, 480), FVector(22, 878, 74), FLinearColor(.88, .90, .89), false, FString(), .23f, .42f, .44f));
         Shape(Cube, FVector(X + (X > 0 ? 13 : -13), 565, 479), FVector(7, 882, 16), StationBlue, false, FString(), .20f, .35f, .50f);
     }
     for (float X : {-450.f, 420.f, 1290.f}) for (float Y : {180.f, 950.f})
@@ -731,6 +774,63 @@ void AHRSStationActor::SetImportedModelVisibility(const FString& ComponentId, bo
     }
 }
 
+void AHRSStationActor::ApplyCutaways()
+{
+    for (auto Mesh : CanopyCutawayMeshes) if (Mesh) Mesh->SetVisibility(!bRoofCutaway);
+    for (auto Mesh : ServiceInteriorMeshes) if (Mesh) Mesh->SetVisibility(bServiceCutaway);
+    SetImportedModelVisibility(TEXT("compressor"), !bServiceCutaway);
+    SetImportedModelVisibility(TEXT("cooler"), !bServiceCutaway);
+    for (auto Mesh : VehicleTankCutawayMeshes)
+    {
+        if (!Mesh || Mesh->ComponentTags.Num() == 0) continue;
+        const bool bFirst = Mesh->ComponentTags[0].ToString() == TEXT("vehicle.tank");
+        Mesh->SetVisibility(bVehicleCutaway && (bFirst ? bVehicle1Present : bVehicle2Present));
+    }
+    SetImportedModelVisibility(TEXT("vehicle.tank"), bVehicle1Present && !bVehicleCutaway);
+    SetImportedModelVisibility(TEXT("vehicle_2.tank"), bVehicle2Present && !bVehicleCutaway);
+}
+
+void AHRSStationActor::ApplyViewState(const TSharedPtr<FJsonObject>& View)
+{
+    const bool NewRoof = Bool(View, TEXT("roof_cutaway"));
+    const bool NewService = Bool(View, TEXT("service_cutaway"));
+    const bool NewVehicle = Bool(View, TEXT("vehicle_cutaway"));
+    const bool NewIncidents = Bool(View, TEXT("show_incidents"), true);
+    const bool NewRisk = Bool(View, TEXT("show_risk"));
+    const bool NewDistance = Bool(View, TEXT("show_distance"));
+    const bool NewCameras = Bool(View, TEXT("show_cameras"));
+    const bool NewDetectors = Bool(View, TEXT("show_detectors"));
+    const bool bChanged = NewRoof != bRoofCutaway || NewService != bServiceCutaway ||
+        NewVehicle != bVehicleCutaway || NewIncidents != bShowIncidents || NewRisk != bShowRisk ||
+        NewDistance != bShowDistance || NewCameras != bShowCameras || NewDetectors != bShowDetectors;
+    if (!bChanged) return;
+    const bool bRiskStarted = NewRisk && !bShowRisk;
+    bRoofCutaway = NewRoof; bServiceCutaway = NewService; bVehicleCutaway = NewVehicle;
+    bShowIncidents = NewIncidents; bShowRisk = NewRisk; bShowDistance = NewDistance;
+    bShowCameras = NewCameras; bShowDetectors = NewDetectors;
+    ApplyCutaways();
+    for (auto& Row : CameraMeshes) Row.Value->SetVisibility(bShowCameras, true);
+    for (auto& Row : DetectorMeshes) Row.Value->SetVisibility(bShowDetectors, true);
+    if (!bShowRisk) for (auto& Row : RiskMeshes) Row.Value->SetVisibility(false);
+    if (!bShowDistance)
+    {
+        for (auto& Row : DistanceMeshes) Row.Value->SetVisibility(false);
+        for (auto& Row : DistanceLabels) Row.Value->SetVisibility(false);
+    }
+    if (!bShowIncidents)
+    {
+        for (auto& Row : Jets) Row.Value->SetVisibility(false);
+        for (auto& Row : HighlightMeshes) Row.Value->SetVisibility(false);
+        for (auto& Row : FireMeshes) Row.Value->SetVisibility(false);
+    }
+    ++VisualRevision;
+    if (!CurrentRun.IsEmpty())
+    {
+        if (bRiskStarted) RequestRisk();
+        RequestSnapshot();
+    }
+}
+
 void AHRSStationActor::BeginPlay()
 {
     Super::BeginPlay();
@@ -761,6 +861,7 @@ void AHRSStationActor::ResetVisualState()
     VisualRevision = 0; RecoveryCompleted = 0; RecoveryTotal = 0;
     AppliedValveStates.Empty(); AppliedAuxiliaryStates.Empty();
     bShowRisk = false; bShowDistance = false; bShowCameras = false; bShowDetectors = false;
+    bRoofCutaway = false; bServiceCutaway = false; bVehicleCutaway = false; bShowIncidents = true;
     Selected = TEXT("cascade.high");
     for (auto& Row : Jets) { RemoveInstanceComponent(Row.Value); Row.Value->DestroyComponent(); }
     for (auto& Row : DistanceMeshes) { RemoveInstanceComponent(Row.Value); Row.Value->DestroyComponent(); }
@@ -791,6 +892,7 @@ void AHRSStationActor::ResetVisualState()
     for (auto Part : Hose2Connected) Part->SetVisibility(false);
     for (auto& Row : ValveMeshes) Tint(Row.Value, FLinearColor(.45, .45, .45));
     for (auto& Row : ImportedModelActors) SetImportedModelVisibility(Row.Key, true);
+    ApplyCutaways();
     for (auto& Row : Labels) Row.Value->SetText(FText::FromString(Names[Row.Key] + TEXT("\nP -- MPa  T -- C\nInventory -- kg")));
     StatusText->SetText(FText::FromString(TEXT("No active renderer session\nDefault view: photographs in web mode; cameras and detectors hidden")));
 }
@@ -818,6 +920,7 @@ void AHRSStationActor::PollBinding()
             Self->Socket.Reset(); Self->bConnecting = false; Self->NextRetry = 0; Self->RetryDelay = 1;
             Self->ResetVisualState();
         }
+        Self->ApplyViewState(Obj(Data, TEXT("view")));
         if (!Run.IsEmpty() && !Self->bTerminal && (!Self->Socket || !Self->Socket->IsConnected()))
         {
             if (!Self->bConnecting && FPlatformTime::Seconds() >= Self->NextRetry) Self->ConnectStream();
@@ -907,6 +1010,10 @@ void AHRSStationActor::SendFeedback(const TSharedPtr<FJsonObject>& Snapshot)
     Visual->SetBoolField(TEXT("show_distance"), bShowDistance);
     Visual->SetBoolField(TEXT("show_cameras"), bShowCameras);
     Visual->SetBoolField(TEXT("show_detectors"), bShowDetectors);
+    Visual->SetBoolField(TEXT("roof_cutaway"), bRoofCutaway);
+    Visual->SetBoolField(TEXT("service_cutaway"), bServiceCutaway);
+    Visual->SetBoolField(TEXT("vehicle_cutaway"), bVehicleCutaway);
+    Visual->SetBoolField(TEXT("show_incidents"), bShowIncidents);
     Visual->SetStringField(TEXT("risk_mode"), bRelativeRisk ? TEXT("relative") : TEXT("absolute"));
     Visual->SetStringField(TEXT("selected_equipment"), Selected);
     auto HoseMode = [](const TArray<TObjectPtr<UStaticMeshComponent>>& Parked,
@@ -1050,15 +1157,17 @@ void AHRSStationActor::ApplyAuxiliaryState(const TSharedPtr<FJsonObject>& Safety
         const bool bVehicle1Visible = Num(Vehicles, TEXT("vehicle_1"), 1) > 0;
         const bool bVehicle2Visible = Num(Vehicles, TEXT("vehicle_2"), 1) > 0;
         const bool bTrailerVisible = Num(Vehicles, TEXT("trailer"), 1) > 0;
+        bVehicle1Present = bVehicle1Visible; bVehicle2Present = bVehicle2Visible;
         if (UStaticMeshComponent* Vehicle = EquipmentMeshes.FindRef(TEXT("vehicle.tank")).Get())
-            Vehicle->SetVisibility(!ImportedModelActors.Contains(TEXT("vehicle.tank")) && bVehicle1Visible);
-        SetImportedModelVisibility(TEXT("vehicle.tank"), bVehicle1Visible);
+            Vehicle->SetVisibility(!ImportedModelActors.Contains(TEXT("vehicle.tank")) && bVehicle1Visible && !bVehicleCutaway);
+        SetImportedModelVisibility(TEXT("vehicle.tank"), bVehicle1Visible && !bVehicleCutaway);
         if (UStaticMeshComponent* Vehicle = EquipmentMeshes.FindRef(TEXT("vehicle_2.tank")).Get())
-            Vehicle->SetVisibility(!ImportedModelActors.Contains(TEXT("vehicle_2.tank")) && bVehicle2Visible);
-        SetImportedModelVisibility(TEXT("vehicle_2.tank"), bVehicle2Visible);
+            Vehicle->SetVisibility(!ImportedModelActors.Contains(TEXT("vehicle_2.tank")) && bVehicle2Visible && !bVehicleCutaway);
+        SetImportedModelVisibility(TEXT("vehicle_2.tank"), bVehicle2Visible && !bVehicleCutaway);
         if (UStaticMeshComponent* Trailer = EquipmentMeshes.FindRef(TEXT("supply")).Get())
             Trailer->SetVisibility(!ImportedModelActors.Contains(TEXT("supply")) && bTrailerVisible);
         SetImportedModelVisibility(TEXT("supply"), bTrailerVisible);
+        ApplyCutaways();
     }
     const auto Recovery = Obj(Safety, TEXT("recovery"));
     if (Recovery && StatusText)
@@ -1125,6 +1234,7 @@ void AHRSStationActor::ApplyIncidentState(const TSharedPtr<FJsonObject>& Snapsho
 {
     for (auto& Row : HighlightMeshes) Row.Value->SetVisibility(false);
     for (auto& Row : FireMeshes) Row.Value->SetVisibility(false);
+    if (!bShowIncidents) return;
     auto Mark = [this](const FString& Target, bool bFire)
     {
         if (UStaticMeshComponent* Highlight = HighlightMeshes.FindRef(Target).Get()) Highlight->SetVisibility(true);
@@ -1218,9 +1328,9 @@ void AHRSStationActor::ApplySnapshot(const TSharedPtr<FJsonObject>& Snapshot)
         if (!Origins.Contains(Id) || Flow <= 1.e-6 || Release.IsEmpty()) continue;
         const FVector Origin = Origins[Id] + FVector(0, 0, Num(Row, TEXT("outlet_height_m"), 1.5) * 100);
         const double Height = FMath::Clamp(60. + FMath::Sqrt(Flow) * 15., 60., 450.); // Schematic, not CFD.
-        if (!Jets.Contains(Release)) Jets.Add(Release, Shape(Cylinder, Origin, FVector(25, 25, Height), FLinearColor(.12, .5, .65), true));
+        if (!Jets.Contains(Release)) Jets.Add(Release, Shape(Cone, Origin, FVector(42, 42, Height), FLinearColor(.65, .84, .88), true));
         Jets[Release]->SetRelativeLocation(Origin + FVector(0, 0, Height / 2));
-        Jets[Release]->SetRelativeScale3D(FVector(.25, .25, Height / 100)); Jets[Release]->SetVisibility(true);
+        Jets[Release]->SetRelativeScale3D(FVector(.42, .42, Height / 100)); Jets[Release]->SetVisibility(bShowIncidents);
         const double Radius = FMath::Max(Num(Row, TEXT("sampled_effect_radius_m")), Num(Row, TEXT("flammable_plume_distance_m"))) * 100;
         if (Radius > 0)
         {

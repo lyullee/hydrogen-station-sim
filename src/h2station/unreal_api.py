@@ -22,6 +22,19 @@ class RendererBinding(BaseModel):
     request_serial: int | None = Field(default=None, ge=0, le=9007199254740991, strict=True)
 
 
+class RendererViewState(BaseModel):
+    """Operator-controlled renderer options, independent of process state."""
+
+    roof_cutaway: bool = Field(default=False, strict=True)
+    service_cutaway: bool = Field(default=False, strict=True)
+    vehicle_cutaway: bool = Field(default=False, strict=True)
+    show_incidents: bool = Field(default=True, strict=True)
+    show_risk: bool = Field(default=False, strict=True)
+    show_distance: bool = Field(default=False, strict=True)
+    show_cameras: bool = Field(default=False, strict=True)
+    show_detectors: bool = Field(default=False, strict=True)
+
+
 class EquipmentDisplay(BaseModel):
     component_id: str = Field(max_length=80, pattern=r"^[a-zA-Z0-9_.-]+$")
     pressure_mpa: float | None = None
@@ -37,6 +50,10 @@ class RendererVisualState(BaseModel):
     show_distance: bool = False
     show_cameras: bool = False
     show_detectors: bool = False
+    roof_cutaway: bool = False
+    service_cutaway: bool = False
+    vehicle_cutaway: bool = False
+    show_incidents: bool = True
     risk_mode: Literal["relative", "absolute"] = "relative"
     selected_equipment: str = Field(default="", max_length=80, pattern=r"^[a-zA-Z0-9_.-]*$")
     hose_1_mode: Literal["parked", "connected", "invalid"] = "invalid"
@@ -97,11 +114,29 @@ def make_unreal_router(read_state: Callable[[str], tuple[dict, dict | None, dict
             if serial is not None and serial == old.get("request_serial") and old["run_id"] != request.run_id:
                 raise HTTPException(409, "Conflicting renderer binding request")
             if old["run_id"] != request.run_id:
-                old = {"run_id": request.run_id, "generation": old["generation"] + 1}
+                old = {"run_id": request.run_id, "generation": old["generation"] + 1,
+                       **({"view": old["view"]} if "view" in old else {})}
             if serial is not None:
                 old = {**old, "request_serial": serial}
             sessions[renderer_id] = old
             return dict(old)
+
+    @router.get("/api/integrations/unreal/session/{renderer_id}/view")
+    def get_view(renderer_id: str) -> dict[str, Any]:
+        with session_lock:
+            session = sessions.get(renderer_id, {})
+            return dict(session.get("view", RendererViewState().model_dump()))
+
+    @router.post("/api/integrations/unreal/session/{renderer_id}/view")
+    def set_view(renderer_id: str, request: RendererViewState) -> dict[str, Any]:
+        if not renderer_id.isascii() or not renderer_id.replace("-", "").replace("_", "").isalnum() or len(renderer_id) > 64:
+            raise HTTPException(422, "Invalid renderer id")
+        with session_lock:
+            if renderer_id not in sessions and len(sessions) >= 64:
+                raise HTTPException(429, "Renderer session limit reached")
+            session = sessions.setdefault(renderer_id, {"run_id": None, "generation": 0})
+            session["view"] = request.model_dump()
+            return dict(session["view"])
 
     @router.get("/api/integrations/unreal/session/{renderer_id}/feedback")
     def get_feedback(renderer_id: str) -> dict[str, Any]:

@@ -53,6 +53,9 @@ private:
     UPROPERTY() TArray<TObjectPtr<UStaticMeshComponent>> Hose1Connected;
     UPROPERTY() TArray<TObjectPtr<UStaticMeshComponent>> Hose2Parked;
     UPROPERTY() TArray<TObjectPtr<UStaticMeshComponent>> Hose2Connected;
+    UPROPERTY() TArray<TObjectPtr<UStaticMeshComponent>> CanopyCutawayMeshes;
+    UPROPERTY() TArray<TObjectPtr<UStaticMeshComponent>> ServiceInteriorMeshes;
+    UPROPERTY() TArray<TObjectPtr<UStaticMeshComponent>> VehicleTankCutawayMeshes;
     TMap<FString, FVector> Origins;
     TMap<FString, FVector> Dimensions;
     TMap<FString, FString> Names;
@@ -81,6 +84,12 @@ private:
     bool bShowDistance = false;
     bool bShowCameras = false;
     bool bShowDetectors = false;
+    bool bRoofCutaway = false;
+    bool bServiceCutaway = false;
+    bool bVehicleCutaway = false;
+    bool bShowIncidents = true;
+    bool bVehicle1Present = true;
+    bool bVehicle2Present = true;
     bool bRelativeRisk = true;
     double LastReceive = 0;
     double NextRetry = 0;
@@ -102,6 +111,8 @@ private:
     void ApplyAuxiliaryState(const TSharedPtr<FJsonObject>& Safety);
     void ApplyProcessState(const TSharedPtr<FJsonObject>& Snapshot);
     void ApplyIncidentState(const TSharedPtr<FJsonObject>& Snapshot);
+    void ApplyViewState(const TSharedPtr<FJsonObject>& View);
+    void ApplyCutaways();
     void BuildReferenceStation();
     void DiscoverImportedModels();
     void SetImportedModelVisibility(const FString& ComponentId, bool bVisible);
