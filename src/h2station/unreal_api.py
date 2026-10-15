@@ -7,7 +7,7 @@ import json
 import math
 import os
 import time
-from typing import Callable, Any
+from typing import Callable, Any, Literal
 from urllib.parse import urlsplit
 from threading import Lock
 
@@ -30,11 +30,38 @@ class EquipmentDisplay(BaseModel):
     flow_g_s: float | None = None
 
 
+class RendererVisualState(BaseModel):
+    """Visual state read back from components after a snapshot was applied."""
+
+    show_risk: bool = False
+    show_distance: bool = False
+    show_cameras: bool = False
+    show_detectors: bool = False
+    hose_1_mode: Literal["parked", "connected", "invalid"] = "invalid"
+    hose_2_mode: Literal["parked", "connected", "invalid"] = "invalid"
+    visible_jets: list[str] = Field(default_factory=list, max_length=64)
+    visible_distances: list[str] = Field(default_factory=list, max_length=64)
+    visible_risk_components: list[str] = Field(default_factory=list, max_length=64)
+    visible_fire_components: list[str] = Field(default_factory=list, max_length=64)
+    visible_highlight_components: list[str] = Field(default_factory=list, max_length=64)
+    visible_cameras: list[str] = Field(default_factory=list, max_length=16)
+    visible_detectors: list[str] = Field(default_factory=list, max_length=64)
+    visible_auxiliary: list[str] = Field(default_factory=list, max_length=64)
+    personnel_at_muster: list[str] = Field(default_factory=list, max_length=16)
+    valve_states: dict[str, Literal["open", "closed", "moving", "failed", "unknown"]] = Field(
+        default_factory=dict, max_length=64
+    )
+    auxiliary_states: dict[str, str] = Field(default_factory=dict, max_length=128)
+    recovery_completed: int = Field(default=0, ge=0, le=64)
+    recovery_total: int = Field(default=0, ge=0, le=64)
+
+
 class RendererFeedback(BaseModel):
     run_id: str = Field(max_length=80, pattern=r"^[a-zA-Z0-9_-]+$")
     generation: int = Field(ge=0, le=2147483647, strict=True)
     sequence: int = Field(ge=-1, le=9007199254740991, strict=True)
     equipment: list[EquipmentDisplay] = Field(max_length=64)
+    visual_state: RendererVisualState | None = None
 
 
 def terminal(status: str) -> bool:

@@ -382,7 +382,10 @@ void AHRSStationActor::ResetVisualState()
 {
     if (PendingFeedback) PendingFeedback->CancelRequest();
     PendingFeedback.Reset(); bFeedbackPending = false;
-    LastSequence = -1; LastFeedbackSequence = -1; LastSnapshotTicks = 0; LastReceive = 0; bTerminal = false;
+    LastSequence = -1; LastFeedbackSequence = -1; LastFeedbackVisualRevision = -1;
+    LastSnapshotTicks = 0; LastReceive = 0; bTerminal = false;
+    VisualRevision = 0; RecoveryCompleted = 0; RecoveryTotal = 0;
+    AppliedValveStates.Empty(); AppliedAuxiliaryStates.Empty();
     bShowRisk = false; bShowDistance = false; bShowCameras = false; bShowDetectors = false;
     Selected = TEXT("cascade.high");
     for (auto& Row : Jets) { RemoveInstanceComponent(Row.Value); Row.Value->DestroyComponent(); }
@@ -494,7 +497,8 @@ void AHRSStationActor::RequestSnapshot()
 
 void AHRSStationActor::SendFeedback(const TSharedPtr<FJsonObject>& Snapshot)
 {
-    if (!Snapshot || bFeedbackPending || LastSequence == LastFeedbackSequence || CurrentRun.IsEmpty()) return;
+    if (!Snapshot || bFeedbackPending || CurrentRun.IsEmpty() ||
+        (LastSequence == LastFeedbackSequence && VisualRevision == LastFeedbackVisualRevision)) return;
     const TArray<TSharedPtr<FJsonValue>>* Rows = nullptr;
     if (!Snapshot->TryGetArrayField(TEXT("equipment"), Rows)) return;
     auto Payload = MakeShared<FJsonObject>();
@@ -517,18 +521,72 @@ void AHRSStationActor::SendFeedback(const TSharedPtr<FJsonObject>& Snapshot)
         Equipment.Add(MakeShared<FJsonValueObject>(Display));
     }
     Payload->SetArrayField(TEXT("equipment"), Equipment);
+    auto Visual = MakeShared<FJsonObject>();
+    Visual->SetBoolField(TEXT("show_risk"), bShowRisk);
+    Visual->SetBoolField(TEXT("show_distance"), bShowDistance);
+    Visual->SetBoolField(TEXT("show_cameras"), bShowCameras);
+    Visual->SetBoolField(TEXT("show_detectors"), bShowDetectors);
+    auto HoseMode = [](const TArray<TObjectPtr<UStaticMeshComponent>>& Parked,
+                       const TArray<TObjectPtr<UStaticMeshComponent>>& Connected)
+    {
+        bool bParked = Parked.Num() > 0, bConnected = Connected.Num() > 0;
+        for (const auto Part : Parked) bParked = bParked && Part && Part->IsVisible();
+        for (const auto Part : Connected) bConnected = bConnected && Part && Part->IsVisible();
+        return bParked && !bConnected ? TEXT("parked") :
+               bConnected && !bParked ? TEXT("connected") : TEXT("invalid");
+    };
+    Visual->SetStringField(TEXT("hose_1_mode"), HoseMode(Hose1Parked, Hose1Connected));
+    Visual->SetStringField(TEXT("hose_2_mode"), HoseMode(Hose2Parked, Hose2Connected));
+    auto AddVisible = [Visual](const TCHAR* Key, const auto& Components)
+    {
+        TArray<FString> Keys;
+        for (const auto& Row : Components) if (Row.Value && Row.Value->IsVisible()) Keys.Add(Row.Key);
+        Keys.Sort();
+        TArray<TSharedPtr<FJsonValue>> Values;
+        for (const FString& Value : Keys) Values.Add(MakeShared<FJsonValueString>(Value));
+        Visual->SetArrayField(Key, Values);
+    };
+    AddVisible(TEXT("visible_jets"), Jets);
+    AddVisible(TEXT("visible_distances"), DistanceMeshes);
+    AddVisible(TEXT("visible_risk_components"), RiskMeshes);
+    AddVisible(TEXT("visible_fire_components"), FireMeshes);
+    AddVisible(TEXT("visible_highlight_components"), HighlightMeshes);
+    AddVisible(TEXT("visible_cameras"), CameraMeshes);
+    AddVisible(TEXT("visible_detectors"), DetectorMeshes);
+    AddVisible(TEXT("visible_auxiliary"), AuxiliaryMeshes);
+    TArray<TSharedPtr<FJsonValue>> Muster;
+    TArray<FString> MusterZones;
+    for (const auto& Row : PersonnelMeshes)
+        if (Row.Value && Row.Value->IsVisible() && Row.Value->GetRelativeLocation().Y > 1000.f)
+            MusterZones.Add(Row.Key);
+    MusterZones.Sort();
+    for (const FString& Zone : MusterZones) Muster.Add(MakeShared<FJsonValueString>(Zone));
+    Visual->SetArrayField(TEXT("personnel_at_muster"), Muster);
+    auto ValveState = MakeShared<FJsonObject>();
+    for (const auto& Row : AppliedValveStates) ValveState->SetStringField(Row.Key, Row.Value);
+    Visual->SetObjectField(TEXT("valve_states"), ValveState);
+    auto AuxiliaryState = MakeShared<FJsonObject>();
+    for (const auto& Row : AppliedAuxiliaryStates) AuxiliaryState->SetStringField(Row.Key, Row.Value);
+    Visual->SetObjectField(TEXT("auxiliary_states"), AuxiliaryState);
+    Visual->SetNumberField(TEXT("recovery_completed"), RecoveryCompleted);
+    Visual->SetNumberField(TEXT("recovery_total"), RecoveryTotal);
+    Payload->SetObjectField(TEXT("visual_state"), Visual);
     FString Body; FJsonSerializer::Serialize(Payload, TJsonWriterFactory<>::Create(&Body));
-    const int64 AppliedSequence = LastSequence; const int32 Expected = Generation;
+    const int64 AppliedSequence = LastSequence; const int32 AppliedVisualRevision = VisualRevision;
+    const int32 Expected = Generation;
     bFeedbackPending = true; PendingFeedback = FHttpModule::Get().CreateRequest();
     PendingFeedback->SetURL(ApiBase + TEXT("/api/integrations/unreal/session/") + RendererId + TEXT("/feedback"));
     PendingFeedback->SetVerb(TEXT("POST")); PendingFeedback->SetHeader(TEXT("Content-Type"), TEXT("application/json"));
     PendingFeedback->SetTimeout(3.f); PendingFeedback->SetContentAsString(Body);
     TWeakObjectPtr<AHRSStationActor> Weak(this);
-    PendingFeedback->OnProcessRequestComplete().BindLambda([Weak, Expected, AppliedSequence](FHttpRequestPtr, FHttpResponsePtr Response, bool bSuccess) {
+    PendingFeedback->OnProcessRequestComplete().BindLambda([Weak, Expected, AppliedSequence, AppliedVisualRevision](FHttpRequestPtr, FHttpResponsePtr Response, bool bSuccess) {
         if (!Weak.IsValid()) return;
         Weak->bFeedbackPending = false;
         if (Weak->Generation == Expected && bSuccess && Response.IsValid() && Response->GetResponseCode() == 200)
+        {
             Weak->LastFeedbackSequence = AppliedSequence;
+            Weak->LastFeedbackVisualRevision = AppliedVisualRevision;
+        }
     });
     if (!PendingFeedback->ProcessRequest()) bFeedbackPending = false;
 }
@@ -543,16 +601,24 @@ void AHRSStationActor::ApplyAuxiliaryState(const TSharedPtr<FJsonObject>& Safety
         const auto State = Obj(Ventilation, *Zone);
         UStaticMeshComponent* Mesh = AuxiliaryMeshes.FindRef(TEXT("fan.") + Zone).Get();
         if (Mesh && State)
+        {
             Tint(Mesh, Bool(State, TEXT("fault")) ? FLinearColor(.72, .04, .03) :
                  Bool(State, TEXT("running")) ? FLinearColor(.04, .55, .48) : FLinearColor(.35, .4, .42));
+            AppliedAuxiliaryStates.Add(TEXT("fan.") + Zone,
+                Bool(State, TEXT("fault")) ? TEXT("failed") : Bool(State, TEXT("running")) ? TEXT("running") : TEXT("stopped"));
+        }
     }
     for (const FString Bank : {TEXT("low"), TEXT("medium"), TEXT("high")})
     {
         const auto State = Obj(Cooling, *Bank);
         UStaticMeshComponent* Mesh = AuxiliaryMeshes.FindRef(TEXT("cooling.") + Bank).Get();
         if (Mesh && State)
+        {
             Tint(Mesh, Bool(State, TEXT("fault")) ? FLinearColor(.72, .04, .03) :
                  Bool(State, TEXT("running")) ? FLinearColor(.04, .38, .78) : FLinearColor(.35, .4, .42));
+            AppliedAuxiliaryStates.Add(TEXT("cooling.") + Bank,
+                Bool(State, TEXT("fault")) ? TEXT("failed") : Bool(State, TEXT("running")) ? TEXT("running") : TEXT("stopped"));
+        }
     }
 
     const auto Personnel = Obj(Safety, TEXT("personnel"));
@@ -571,16 +637,27 @@ void AHRSStationActor::ApplyAuxiliaryState(const TSharedPtr<FJsonObject>& Safety
                 Zone == TEXT("compressor") ? FVector(-640, -120, 45) :
                 Zone == TEXT("storage") ? FVector(300, -80, 45) : FVector(420, 1020, 45);
             Marker->SetRelativeLocation(Position); Tint(Marker, FLinearColor(.15, .35, .58));
+            AppliedAuxiliaryStates.Add(TEXT("personnel.") + Zone, TEXT("present"));
         }
         else if (Safe > 0)
         {
             Marker->SetRelativeLocation(FVector(-1850 + ZoneIndex * 85, 1060, 45));
             Tint(Marker, FLinearColor(.05, .55, .31));
+            AppliedAuxiliaryStates.Add(TEXT("personnel.") + Zone, TEXT("evacuated"));
         }
+        else AppliedAuxiliaryStates.Add(TEXT("personnel.") + Zone, TEXT("empty"));
         if (UStaticMeshComponent* Boundary = AuxiliaryMeshes.FindRef(TEXT("access.") + Zone).Get())
+        {
             Boundary->SetVisibility(Bool(Restricted, *Zone));
+            AppliedAuxiliaryStates.Add(TEXT("access.") + Zone,
+                Bool(Restricted, *Zone) ? TEXT("restricted") : TEXT("released"));
+        }
         if (UStaticMeshComponent* Power = AuxiliaryMeshes.FindRef(TEXT("power.") + Zone).Get())
+        {
             Tint(Power, Bool(PowerIsolated, *Zone) ? FLinearColor(.12, .16, .18) : FLinearColor(.16, .55, .25));
+            AppliedAuxiliaryStates.Add(TEXT("power.") + Zone,
+                Bool(PowerIsolated, *Zone) ? TEXT("isolated") : TEXT("energized"));
+        }
         ++ZoneIndex;
     }
     const auto Vehicles = Obj(Safety, TEXT("vehicles"));
@@ -610,6 +687,7 @@ void AHRSStationActor::ApplyAuxiliaryState(const TSharedPtr<FJsonObject>& Safety
         }
         StatusText->SetText(FText::FromString(StatusText->Text.ToString() +
             FString::Printf(TEXT("\nRecovery checks %d/%d"), Completed, Recovery->Values.Num())));
+        RecoveryCompleted = Completed; RecoveryTotal = Recovery->Values.Num();
     }
     const FString PurgeBank = Str(Safety, TEXT("purge_bank"));
     const auto PurgeFractions = Obj(Safety, TEXT("purge_h2_fraction"));
@@ -621,6 +699,7 @@ void AHRSStationActor::ApplyAuxiliaryState(const TSharedPtr<FJsonObject>& Safety
         {
             const bool bActive = PurgeBank == Bank;
             Purge->SetVisibility(bActive);
+            AppliedAuxiliaryStates.Add(TEXT("purge.") + Bank, bActive ? TEXT("running") : TEXT("inactive"));
             if (bActive)
             {
                 const double Fraction = FMath::Clamp(Num(PurgeFractions, *Bank, 1.0), .005, 1.0);
@@ -628,7 +707,11 @@ void AHRSStationActor::ApplyAuxiliaryState(const TSharedPtr<FJsonObject>& Safety
             }
         }
         if (UStaticMeshComponent* Test = AuxiliaryMeshes.FindRef(TEXT("diagnostic.") + Bank).Get())
+        {
             Test->SetVisibility(Diagnostic && DiagnosticBank == Bank);
+            AppliedAuxiliaryStates.Add(TEXT("diagnostic.") + Bank,
+                Diagnostic && DiagnosticBank == Bank ? Str(Diagnostic, TEXT("kind")) : TEXT("inactive"));
+        }
     }
 }
 
@@ -735,6 +818,10 @@ void AHRSStationActor::ApplySnapshot(const TSharedPtr<FJsonObject>& Snapshot)
             Bool(Valve, TEXT("actual_open")) ? FLinearColor(.1, .55, .35) : FLinearColor(.16, .23, .32);
         Tint(Mesh.Value, Color);
         if (Valve) Mesh.Value->SetRelativeRotation(FRotator(0, Bool(Valve, TEXT("actual_open")) ? 0 : 90, 0));
+        AppliedValveStates.Add(Mesh.Key, !Valve ? TEXT("unknown") :
+            Str(Valve, TEXT("status")) == TEXT("failed") ? TEXT("failed") :
+            Str(Valve, TEXT("status")) == TEXT("moving") || Str(Valve, TEXT("status")) == TEXT("commanded") ? TEXT("moving") :
+            Bool(Valve, TEXT("actual_open")) ? TEXT("open") : TEXT("closed"));
     }
     for (auto& Row : Jets) Row.Value->SetVisibility(false);
     for (auto& Row : DistanceMeshes) Row.Value->SetVisibility(false);
@@ -789,7 +876,14 @@ void AHRSStationActor::RequestRisk()
     TWeakObjectPtr<AHRSStationActor> Weak(this);
     Request->OnProcessRequestComplete().BindLambda([Weak, Expected](FHttpRequestPtr, FHttpResponsePtr Response, bool bSuccess) {
         if (Weak.IsValid() && Weak->Generation == Expected && bSuccess && Response.IsValid() && Response->GetResponseCode() == 200)
+        {
             Weak->ApplyRisk(Parse(Response->GetContentAsString()));
+            // Risk calculation is intentionally outside the high-rate snapshot path.
+            // Ask for one cached snapshot after the result arrives so feedback records
+            // the meshes that were actually made visible instead of the pre-result state.
+            ++Weak->VisualRevision;
+            Weak->RequestSnapshot();
+        }
     });
     Request->ProcessRequest();
 }
@@ -819,17 +913,19 @@ void AHRSStationActor::IssueAction(const FString& Kind, const FString& Target)
 void AHRSStationActor::Select(const FString& Id) { if (Origins.Contains(Id)) Selected = Id; }
 void AHRSStationActor::CloseSelectedValve(bool bInlet)
 { FString Bank = Selected; Bank.RemoveFromStart(TEXT("cascade.")); IssueAction(TEXT("valve.close"), TEXT("bank.") + Bank + (bInlet ? TEXT(".inlet") : TEXT(".outlet"))); }
-void AHRSStationActor::ToggleRisk() { bShowRisk = !bShowRisk; if (!CurrentRun.IsEmpty()) RequestRisk(); }
-void AHRSStationActor::ToggleDistance() { bShowDistance = !bShowDistance; RequestSnapshot(); }
+void AHRSStationActor::ToggleRisk() { bShowRisk = !bShowRisk; ++VisualRevision; if (!CurrentRun.IsEmpty()) { RequestRisk(); RequestSnapshot(); } }
+void AHRSStationActor::ToggleDistance() { bShowDistance = !bShowDistance; ++VisualRevision; RequestSnapshot(); }
 void AHRSStationActor::ToggleCameras()
 {
-    bShowCameras = !bShowCameras;
+    bShowCameras = !bShowCameras; ++VisualRevision;
     for (auto& Row : CameraMeshes) Row.Value->SetVisibility(bShowCameras);
+    RequestSnapshot();
 }
 void AHRSStationActor::ToggleDetectors()
 {
-    bShowDetectors = !bShowDetectors;
+    bShowDetectors = !bShowDetectors; ++VisualRevision;
     for (auto& Row : DetectorMeshes) Row.Value->SetVisibility(bShowDetectors);
+    RequestSnapshot();
 }
 
 void AHRSStationActor::Tick(float DeltaSeconds)

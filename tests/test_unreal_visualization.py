@@ -199,6 +199,20 @@ def test_renderer_feedback_is_bound_ordered_and_finite(state):
     complete = build_snapshot("test-run", state["job"], state["frame"], state["safety"])["equipment"]
     matched = client.post(feedback_url, json={**payload, "equipment": complete}).json()
     assert matched["parity"] == {"status": "compared", "matches": True, "mismatches": []}
+    visual = {
+        "show_risk": True, "show_distance": True, "show_cameras": False,
+        "show_detectors": True, "hose_1_mode": "connected", "hose_2_mode": "parked",
+        "visible_jets": ["test-leak"], "visible_distances": ["test-leak"],
+        "visible_risk_components": ["cascade.high"], "visible_fire_components": [],
+        "visible_highlight_components": ["cascade.high"], "visible_cameras": [],
+        "visible_detectors": ["GD-0901"], "visible_auxiliary": ["access.storage"],
+        "personnel_at_muster": ["storage"], "valve_states": {"bank.high.inlet": "closed"},
+        "auxiliary_states": {"fan.storage": "running"},
+        "recovery_completed": 2, "recovery_total": 8,
+    }
+    visual_result = client.post(feedback_url, json={**payload, "equipment": complete,
+                                                    "visual_state": visual}).json()
+    assert visual_result["visual_state"] == visual
     assert client.post(feedback_url, json={**payload, "sequence": 8}).status_code == 409
     assert client.post(feedback_url, json={**payload, "sequence": 6}).status_code == 409
     assert client.post(feedback_url, content=json.dumps({**payload,

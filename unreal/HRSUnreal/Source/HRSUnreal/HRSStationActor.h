@@ -53,6 +53,8 @@ private:
     TMap<FString, FVector> Origins;
     TMap<FString, FVector> Dimensions;
     TMap<FString, FString> Names;
+    TMap<FString, FString> AppliedValveStates;
+    TMap<FString, FString> AppliedAuxiliaryStates;
     TMap<FString, TArray<TWeakObjectPtr<AActor>>> ImportedModelActors;
     FString ApiBase = TEXT("http://127.0.0.1:8000");
     FString RendererId = TEXT("default");
@@ -61,6 +63,10 @@ private:
     int32 Generation = -1;
     int64 LastSequence = -1;
     int64 LastFeedbackSequence = -1;
+    int32 VisualRevision = 0;
+    int32 LastFeedbackVisualRevision = -1;
+    int32 RecoveryCompleted = 0;
+    int32 RecoveryTotal = 0;
     int64 LastSnapshotTicks = 0;
     int32 ConnectionSerial = 0;
     bool bBindingPending = false;
