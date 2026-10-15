@@ -1,19 +1,31 @@
 param(
-    [Parameter(Mandatory=$true)][string]$EngineRoot,
+    [string]$EngineRoot = '',
+    [int]$TargetProcessId = 0,
     [ValidateRange(60,7200)][int]$DurationSeconds = 3600,
     [ValidateRange(2,60)][int]$IntervalSeconds = 10,
     [string]$OutputPath = 'output\unreal\ue-process-soak.json'
 )
 $ErrorActionPreference = 'Stop'
 $repoRoot = Split-Path -Parent $PSScriptRoot
-$engineDir = (Resolve-Path -LiteralPath $EngineRoot).Path
-$editorPath = (Join-Path $engineDir 'Engine\Binaries\Win64\UnrealEditor.exe')
-if (-not (Test-Path -LiteralPath $editorPath)) { throw 'EngineRoot does not contain UnrealEditor.exe' }
-$editorPath = (Resolve-Path -LiteralPath $editorPath).Path
-$target = Get-Process -Name UnrealEditor -ErrorAction SilentlyContinue |
-    Where-Object { $_.Path -and ((Resolve-Path -LiteralPath $_.Path).Path -eq $editorPath) } |
-    Select-Object -First 1
-if (-not $target) { throw 'The HRS Unreal Editor process is not running from the selected EngineRoot' }
+$targetPath = $null
+if ($TargetProcessId -gt 0) {
+    $target = Get-Process -Id $TargetProcessId -ErrorAction Stop
+    if (-not $target.Path) { throw "Process $TargetProcessId does not expose an executable path" }
+    $targetPath = (Resolve-Path -LiteralPath $target.Path).Path
+}
+elseif ($EngineRoot) {
+    $engineDir = (Resolve-Path -LiteralPath $EngineRoot).Path
+    $editorPath = (Join-Path $engineDir 'Engine\Binaries\Win64\UnrealEditor.exe')
+    if (-not (Test-Path -LiteralPath $editorPath)) { throw 'EngineRoot does not contain UnrealEditor.exe' }
+    $targetPath = (Resolve-Path -LiteralPath $editorPath).Path
+    $target = Get-Process -Name UnrealEditor -ErrorAction SilentlyContinue |
+        Where-Object { $_.Path -and ((Resolve-Path -LiteralPath $_.Path).Path -eq $targetPath) } |
+        Select-Object -First 1
+    if (-not $target) { throw 'The HRS Unreal Editor process is not running from the selected EngineRoot' }
+}
+else {
+    throw 'Specify either TargetProcessId for a packaged runtime or EngineRoot for UnrealEditor'
+}
 
 $started = Get-Date
 $deadline = $started.AddSeconds($DurationSeconds)
@@ -41,7 +53,7 @@ $passed = $samples.Count -ge 2 -and $observedSeconds -ge ($DurationSeconds - $In
 $report = [ordered]@{
     status = if ($passed) { 'PASS' } else { 'FAIL' }
     process_id = $target.Id
-    executable = $editorPath
+    executable = $targetPath
     requested_duration_s = $DurationSeconds
     observed_duration_s = [math]::Round($observedSeconds, 1)
     interval_s = $IntervalSeconds
@@ -51,7 +63,7 @@ $report = [ordered]@{
     maximum_working_set_mb = if ($samples.Count) { ($samples.working_set_mb | Measure-Object -Maximum).Maximum } else { $null }
     maximum_private_memory_mb = if ($samples.Count) { ($samples.private_memory_mb | Measure-Object -Maximum).Maximum } else { $null }
     process_exited = $target.HasExited
-    claim_boundary = 'UnrealEditor CPU process memory only; GPU memory and browser decoding are reported separately.'
+    claim_boundary = 'Selected Unreal process CPU memory only; GPU memory and browser decoding are reported separately.'
     samples = $samples
 }
 $destination = if ([IO.Path]::IsPathRooted($OutputPath)) { $OutputPath } else { Join-Path $repoRoot $OutputPath }

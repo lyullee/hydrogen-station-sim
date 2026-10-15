@@ -3,7 +3,7 @@
   "objective": "기존 공정·HyRAM·HAZOP·SAGA를 유지하는 Unreal 3D 모드 구축",
   "progress_basis": "verified acceptance items / all acceptance items; source_ready is implemented but remains unverified in a packaged run",
   "goal_complete": false,
-  "current_blocker": "편집기 시제품 실행에는 차단 요소가 없다. Shipping 패키지 검증, 60분 연속 운전, GPU·프로세스 메모리 측정이 남아 있다.",
+  "current_blocker": "Shipping 패키지와 대표 안전조치 실행에는 차단 요소가 없다. 60분 연속 운전, GPU 메모리 측정과 나머지 시각 애니메이션의 실제 화면 검증이 남아 있다.",
   "phases": [
     {
       "name": "환경 및 데이터 계약",
@@ -26,10 +26,10 @@
         {"id":"binding-and-reset", "status":"verified", "evidence":"browser smoke; stale intent rejection"},
         {"id":"signalling-and-player", "status":"verified", "evidence":"PixelStreaming2 connected through official UE5.8 signalling and player"},
         {"id":"ue-bank-scene", "status":"verified", "evidence":"actual UE 5.8.3 video and reference-scene placement"},
-        {"id":"ue-safety-commands", "status":"source_ready", "evidence":"server-owned command/feedback code; ESD path verified, remaining commands require packaged-run matrix"},
-        {"id":"ue-valve-feedback", "status":"source_ready"},
+        {"id":"ue-safety-commands", "status":"verified", "evidence":"Shipping matrix passed: valve, ventilation, cooling, access, evacuation, ESD and operation stop; output/unreal/safety-actions.json"},
+        {"id":"ue-valve-feedback", "status":"verified", "evidence":"bank.high.inlet command accepted separately from confirmed closed feedback"},
         {"id":"ue-leak-and-range", "status":"source_ready"},
-        {"id":"ue-disconnect-reconnect", "status":"source_ready"},
+        {"id":"ue-disconnect-reconnect", "status":"verified", "evidence":"three Shipping run/bind/ESD/stop/unbind cycles; every run began with esd=false; output/unreal/reset-reconnect-package.json"},
         {"id":"actual-ue-video-and-operation", "status":"verified", "evidence":"output/unreal/ue-video.json; advancing 1920x1080 stream"}
       ]
     },
@@ -83,8 +83,8 @@
         {"id":"1080p-30fps", "status":"verified", "evidence":"30 s gate: 1920x1080 and decoded FPS above 28.5"},
         {"id":"input-latency", "status":"verified", "evidence":"30 s gate: Pixel Streaming ESD input acknowledged within 1000 ms"},
         {"id":"60min-memory-stability", "status":"source_ready", "evidence":"browser 3600 s gate plus UnrealEditor process memory sampler"},
-        {"id":"reset-reconnect-stress", "status":"source_ready", "evidence":"three-or-more dedicated binding/ESD/stop/unbind cycles"},
-        {"id":"packaged-release-and-runbook-verified", "status":"source_ready", "evidence":"build pipeline exists; Shipping cook/archive execution remains"}
+        {"id":"reset-reconnect-stress", "status":"verified", "evidence":"three dedicated Shipping binding/ESD/stop/unbind cycles passed with fresh non-ESD initial snapshots"},
+        {"id":"packaged-release-and-runbook-verified", "status":"verified", "evidence":"UE 5.8.3 Shipping build/cook/pak/archive and hash-verified internal runtime launch passed; 1920x1080 live stream confirmed"}
       ]
     }
   ]

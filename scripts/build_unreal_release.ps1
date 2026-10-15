@@ -54,21 +54,32 @@ if ($LASTEXITCODE -ne 0) { throw "Unreal packaging failed: $LASTEXITCODE" }
 
 $executables = @(Get-ChildItem -LiteralPath $archive -Filter '*.exe' -File -Recurse |
     Where-Object { $_.Name -notmatch 'CrashReportClient|UnrealPrereq' })
-if ($executables.Count -ne 1) {
-    throw "Expected exactly one packaged application executable; found $($executables.Count)"
+$launchers = @($executables | Where-Object {
+    $_.Name -eq 'HRSUnreal.exe' -and $_.FullName -notmatch '[\\/]Binaries[\\/]'
+})
+$runtimeName = "HRSUnreal-Win64-$Configuration.exe"
+$runtimes = @($executables | Where-Object {
+    $_.Name -eq $runtimeName -and $_.FullName -match '[\\/]Binaries[\\/]Win64[\\/]'
+})
+if ($launchers.Count -ne 1 -or $runtimes.Count -ne 1) {
+    throw "Expected one bootstrap launcher and one $runtimeName; found launchers=$($launchers.Count), runtimes=$($runtimes.Count), executables=$($executables.Count)"
 }
-$exe = $executables[0]
+$launcher = $launchers[0]
+$exe = $runtimes[0]
 $manifest = [ordered]@{
-    schema_version = 1
+    schema_version = 2
     created_at = (Get-Date).ToUniversalTime().ToString('o')
     configuration = $Configuration
     executable = [IO.Path]::GetRelativePath($archive, $exe.FullName).Replace('\','/')
     executable_sha256 = (Get-FileHash -LiteralPath $exe.FullName -Algorithm SHA256).Hash.ToLowerInvariant()
+    bootstrap_executable = [IO.Path]::GetRelativePath($archive, $launcher.FullName).Replace('\','/')
+    bootstrap_sha256 = (Get-FileHash -LiteralPath $launcher.FullName -Algorithm SHA256).Hash.ToLowerInvariant()
     reference_assets = if ($SkipReferenceAssets) { 'skipped' } else { 'validated_imported_and_placed' }
     source_commit = (git -C $repoRoot rev-parse HEAD).Trim()
     verification = 'PACKAGE_CREATED_NOT_RUNTIME_VERIFIED'
 }
 $manifestPath = Join-Path $archive 'hrs-unreal-build.json'
 $manifest | ConvertTo-Json -Depth 5 | Set-Content -LiteralPath $manifestPath -Encoding utf8
-Write-Output "Unreal package created: $($exe.FullName)"
+Write-Output "Unreal package runtime created: $($exe.FullName)"
+Write-Output "Unreal package bootstrap created: $($launcher.FullName)"
 Write-Output "Build manifest: $manifestPath"

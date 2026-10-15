@@ -18,23 +18,39 @@ if (!Number.isInteger(cycles) || cycles < 3 || cycles > 20) throw new Error('cyc
   let serial = Date.now(), runId = null;
   try {
     await page.goto(player, {waitUntil:'domcontentloaded', timeout:30000});
+    for (const pattern of [/click to start/i, /start/i, /play/i, /시작/i]) {
+      const candidate = page.getByRole('button', {name:pattern}).first();
+      if (await candidate.isVisible().catch(() => false)) { await candidate.click(); break; }
+    }
+    const startOverlay = page.getByText(/click to start/i, {exact:true}).first();
+    if (await startOverlay.isVisible().catch(() => false)) await startOverlay.click();
     await page.waitForFunction(() => {
       const video=document.querySelector('video'); return video && video.readyState>=2 && video.videoWidth>0;
-    }, {timeout:120000});
+    }, null, {timeout:120000});
     for (let cycle=1; cycle<=cycles; cycle++) {
-      const created = await page.request.post(api + '/api/simulations', {data:{continuous:true,control_period_s:.2}});
+      const created = await page.request.post(api + '/api/simulations', {
+        data:{continuous:true,control_period_s:.2,process_settings:{}}
+      });
       assert.equal(created.status(), 202); runId=(await created.json()).id;
       serial += 1;
       const bind = await page.request.post(api + '/api/integrations/unreal/session/default', {
         data:{run_id:runId,request_serial:serial}
       });
       assert.equal(bind.status(),200);
-      await page.waitForFunction(async ({api,runId}) => {
-        const response=await fetch(`${api}/api/simulations/${runId}/visualization/snapshot`);
-        return response.ok && (await response.json()).data_available;
-      }, {api,runId}, {timeout:30000});
-      const initial = await (await page.request.get(`${api}/api/simulations/${runId}/visualization/snapshot`)).json();
-      assert.notEqual(initial.esd, true, `cycle ${cycle} inherited ESD`);
+      const initialDeadline = Date.now() + 30000;
+      let initial;
+      do {
+        const response = await page.request.get(`${api}/api/simulations/${runId}/visualization/snapshot`, {
+          headers:{'cache-control':'no-cache'}
+        });
+        if (response.ok()) {
+          const candidate = await response.json();
+          if (candidate.data_available && candidate.esd===false) { initial=candidate; break; }
+        }
+        await page.waitForTimeout(100);
+      } while (Date.now() < initialDeadline);
+      assert.ok(initial, `cycle ${cycle} did not produce a fresh reset snapshot`);
+      assert.equal(initial.esd, false, `cycle ${cycle} did not start with ESD reset`);
       const before = await page.locator('video').evaluate(video=>video.currentTime);
       await page.locator('video').click({position:{x:20,y:20}}).catch(()=>{});
       await page.keyboard.press('KeyE');

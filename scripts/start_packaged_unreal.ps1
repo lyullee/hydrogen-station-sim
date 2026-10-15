@@ -10,7 +10,7 @@ $package = (Resolve-Path -LiteralPath $PackageDirectory).Path
 $manifestPath = Join-Path $package 'hrs-unreal-build.json'
 if (-not (Test-Path -LiteralPath $manifestPath)) { throw "Build manifest is missing: $manifestPath" }
 $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json
-if ($manifest.schema_version -ne 1) { throw 'Unsupported Unreal build manifest schema' }
+if ($manifest.schema_version -notin @(1, 2)) { throw 'Unsupported Unreal build manifest schema' }
 $exe = Join-Path $package ([string]$manifest.executable).Replace('/', '\')
 if (-not (Test-Path -LiteralPath $exe)) { throw "Packaged executable is missing: $exe" }
 $actualHash = (Get-FileHash -LiteralPath $exe -Algorithm SHA256).Hash.ToLowerInvariant()
@@ -20,7 +20,7 @@ if ($SignallingUrl -notmatch '^wss?://') { throw 'SignallingUrl must use WS or W
 if ($RendererId -notmatch '^[A-Za-z0-9_-]{1,64}$') { throw 'RendererId contains unsupported characters' }
 
 $arguments = @(
-    '-windowed', '-ResX=1920', '-ResY=1080', '-AudioMixer',
+    '-windowed', '-ForceRes', '-ResX=1920', '-ResY=1080', '-RenderOffscreen', '-AudioMixer',
     '-PixelStreamingIP=127.0.0.1', '-PixelStreamingPort=18888',
     "-PixelStreamingURL=$SignallingUrl", "-HRSApi=$ApiUrl", "-HRSRenderer=$RendererId"
 )

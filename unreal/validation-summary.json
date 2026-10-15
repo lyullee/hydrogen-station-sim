@@ -1,6 +1,6 @@
 {
   "date": "2026-10-15",
-  "status": "UE_5_8_EDITOR_PILOT_VERIFIED",
+  "status": "UE_5_8_SHIPPING_PILOT_VERIFIED",
   "python_focused_tests": {"passed": 33, "failed": 0},
   "javascript_focused_tests": {"passed": 10, "failed": 0},
   "unreal_source_contract": {
@@ -39,13 +39,34 @@
   "stream_quality_30s": {
     "status": "PASS",
     "resolution": "1920x1080",
-    "decoded_fps": 98.89,
-    "input_latency_ms": 19,
+    "decoded_fps": 145.99,
+    "input_latency_ms": 201,
     "telemetry_parity": true,
     "page_errors": 0
   },
-  "fps_latency_soak": "30 second gate passed; 60 minute memory/GPU soak remains",
-  "shipping_package": "NOT_RUN",
+  "safety_action_matrix": {
+    "status": "PASS",
+    "actions_checked": 8,
+    "command_feedback_separated": true,
+    "renderer_feedback_advanced": true,
+    "video_continuity": true
+  },
+  "short_process_stability": {
+    "status": "PASS",
+    "duration_s": 60.2,
+    "working_set_growth_mb": 0.19,
+    "maximum_working_set_mb": 1047.82,
+    "maximum_private_memory_mb": 3191.61
+  },
+  "reset_reconnect_cycles": {"status": "PASS", "cycles": 3},
+  "fps_latency_soak": "30 second Shipping gate and 60 second process check passed; 60 minute memory/GPU soak remains",
+  "shipping_package": {
+    "status": "PASS",
+    "configuration": "Shipping",
+    "manifest_schema": 2,
+    "runtime": "Windows/HRSUnreal/Binaries/Win64/HRSUnreal-Win64-Shipping.exe",
+    "resolution": "1920x1080"
+  },
   "llm_routes_changed": false,
   "physics_and_hyram_solver_changed_by_this_integration": false,
   "evidence_files": [
@@ -53,6 +74,10 @@
     "output/unreal/web-smoke.json",
     "output/unreal/ue-video.json",
     "output/unreal/stream-quality.json",
+    "output/unreal/package-stream-quality.json",
+    "output/unreal/package-process-60s.json",
+    "output/unreal/reset-reconnect-package.json",
+    "output/unreal/safety-actions.json",
     "output/unreal/assets/manifest.json",
     "output/unreal/assets/validation.json",
     "unreal/HRSUnreal/Saved/HRS/reference-scenes.json",

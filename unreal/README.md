@@ -1,24 +1,23 @@
 # 수소충전소 Unreal 전환 작업
 
-기존 Python 계산 서버의 상태를 UE5에서 표시한다. 공정·HyRAM·HAZOP·LLM 계산은 기존 서버에 남는다. UE 5.8.3 편집기 게임 모드에서 전체 참조 충전소 장면, 실시간 표시 API, 안전조치 입력 및 Pixel Streaming 2 영상 연결을 검증했다.
+기존 Python 계산 서버의 상태를 UE5에서 표시한다. 공정·HyRAM·HAZOP·LLM 계산은 기존 서버에 남는다. UE 5.8.3 Shipping 실행본에서 전체 참조 충전소 장면, 실시간 표시 API, 안전조치 입력 및 Pixel Streaming 2 영상 연결을 검증했다.
 
 ## 현재 설치 상태
 
 2026-10-15: UE 5.8.3을 `C:\Program Files\Epic Games\UE_5.8`에 설치하고 `HRSUnrealEditor Win64 Development` 빌드를 완료했다. VS 2022 Build Tools 17.14, MSVC 14.38/14.44, MSBuild, Windows SDK 10.0.26100을 사용한다. 공식 Pixel Streaming Infrastructure의 `UE5.8` 브랜치와 PixelStreaming2 플러그인, Node.js 22.15.0을 사용한다.
 
-참조 GLB 7종을 Unreal에 가져와 8개 설비 인스턴스로 배치했으며, 각 인스턴스의 실제 바운드가 기준 치수의 75–125% 안에 드는지 검사했다. 1920×1080 WebRTC 영상, 서버-렌더러 계측값 일치, 브라우저 입력에서 서버 ESD 확인까지의 왕복 경로를 실제 실행으로 확인했다. 편집기 시제품 검증은 완료됐고 Shipping 패키징과 60분 연속 운전 검증은 남아 있다.
+참조 GLB 7종을 Unreal에 가져와 8개 설비 인스턴스로 배치했으며, 각 인스턴스의 실제 바운드가 기준 치수의 75–125% 안에 드는지 검사했다. Shipping 실행본에서 1920×1080 WebRTC 영상, 서버-렌더러 계측값 일치, 브라우저 입력에서 서버 ESD 확인까지의 왕복 경로를 실제 실행으로 확인했다. 밸브·환기·냉각·출입 통제·대피·ESD·전체 정지의 대표 조치 행렬과 3회 초기화·재접속도 통과했다. 60분 연속 운전과 GPU 메모리 검증은 남아 있다.
 
 환경 확인: 저장소 루트에서 `.venv\Scripts\python.exe scripts/check_unreal_environment.py` 실행. 별도 엔진 경로는 `HRS_UNREAL_ROOT`로 지정한다. 계정·비밀번호·API 키를 이 프로젝트에 넣지 않는다.
 
 ## 서버와 프로젝트 실행
 
 1. UE 5.8.3 설치를 확인한다. 환경 검사는 `.venv\Scripts\python.exe scripts/check_unreal_environment.py`로 수행한다.
-2. 계산 서버: `.venv\Scripts\python.exe -m uvicorn h2station.api:app --app-dir src --host 127.0.0.1 --port 8000`.
+2. 계산 서버: 먼저 `$env:H2STATION_UNREAL_PLAYER_URL='http://127.0.0.1:18080/hrs-player.html'`를 설정하고 `.venv\Scripts\python.exe -m uvicorn h2station.api:app --app-dir src --host 127.0.0.1 --port 8000`을 실행한다. 소스나 체크아웃을 바꾼 뒤에는 기존 API 프로세스를 재사용하지 말고 재시작한다.
 3. 엔진 경로를 지정하고 시제품 준비: `./scripts/start_unreal_pilot.ps1 -EngineRoot 'C:\Program Files\Epic Games\UE_5.8' -Build -Bootstrap`. 고해상도 참조 GLB까지 가져와 현장 좌표에 배치하려면 먼저 웹 자산 내보내기·Khronos 검증을 실행한 뒤 `-ImportAssets -PlaceAssets`를 추가한다. 가져오기와 배치는 설비 ID 태그가 있는 기존 편집 액터를 덮어쓰지 않는다.
 4. Pixel Streaming 서버: `./scripts/start_pixel_streaming.ps1`. 파일 `infrastructure-lock.json`의 버전과 커밋을 사용한다. 이 실행 스크립트는 로컬 PC에만 수신 포트를 연다.
 5. UE 실행: `./scripts/start_unreal_pilot.ps1 -EngineRoot 'C:\Program Files\Epic Games\UE_5.8' -Run -SignallingUrl 'ws://127.0.0.1:18888'`.
-6. 계산 서버 시작 전에 환경변수 `H2STATION_UNREAL_PLAYER_URL=http://127.0.0.1:18080`를 설정한다. 키가 아닌 플레이어 주소다.
-7. 기존 웹에서 새 시뮬레이션을 시작하고 `Unreal 3D`를 누른다. 플레이어의 영상 시작 안내에 따라 연결한다. 표준 3D 전환은 계산을 중지하지 않는다.
+6. 기존 웹에서 새 시뮬레이션을 시작하고 `Unreal 3D`를 누른다. 플레이어의 영상 시작 안내에 따라 연결한다. 표준 3D 전환은 계산을 중지하지 않는다.
 
 Win64 배포본은 `./scripts/build_unreal_release.ps1 -EngineRoot 'C:\Program Files\Epic Games\UE_5.8' -Configuration Shipping`으로 만든다. 이 명령은 소스 계약 검사, C++ 빌드, 맵·재질 생성, 검증된 GLB 가져오기, Interchange 기반 장면 배치와 실물 치수 범위 검사, cook·pak·archive를 순차 수행하고 실행 파일 SHA-256이 포함된 `hrs-unreal-build.json`을 남긴다. 패키지 실행은 `./scripts/start_packaged_unreal.ps1 -PackageDirectory '<패키지 폴더>'`를 사용한다. 실행 전에 해시를 다시 검사하며 기본값은 숨김 창과 로컬 API·Pixel Streaming 주소다. 현장 확인이 필요하면 `-Visible`을 추가한다.
 
@@ -62,12 +61,12 @@ UE 프로젝트 파일: `HRSUnreal/HRSUnreal.uproject`. 에셋 생성 스크립�
 
 성능 게이트는 전용 시뮬레이션을 스스로 생성·정지하는 `node scripts/verify_unreal_stream_quality.cjs <player-url> <api-url> <duration-s>`를 사용한다. 1080p, 평균 디코드 28.5 FPS 이상, 키 입력에서 서버 ESD 확인까지 1초 이하, 동일 sequence의 서버값과 Unreal 적용값 일치를 검사한다. 60분 게이트는 `duration-s`를 `3600`으로 지정한다. 결과의 브라우저 JS 힙은 보조 지표이며 UE 프로세스·GPU 메모리 측정을 대체하지 않는다.
 
-같은 60분 동안 `./scripts/measure_unreal_process.ps1 -EngineRoot '<UE 경로>'`를 별도 터미널에서 실행해 UnrealEditor 작업 집합·전용 메모리·핸들 수를 기록한다. 반복 초기화는 `node scripts/verify_unreal_reset_reconnect.cjs`로 최소 3회의 새 실행→바인딩→가상 ESD→정지→표시 초기화를 검증한다. 두 검사는 전용 테스트 실행만 생성하며 운영 실행 ID를 재사용하지 않는다.
+같은 60분 동안 편집기는 `./scripts/measure_unreal_process.ps1 -EngineRoot '<UE 경로>'`, 패키지는 `./scripts/measure_unreal_process.ps1 -TargetProcessId <PID>`를 별도 터미널에서 실행해 작업 집합·전용 메모리·핸들 수를 기록한다. 반복 초기화는 `node scripts/verify_unreal_reset_reconnect.cjs`로 최소 3회의 새 실행→바인딩→가상 ESD→정지→표시 초기화를 검증한다. 대표 안전조치 행렬은 `node scripts/verify_unreal_safety_actions.cjs`로 명령 수락과 실제 상태 피드백을 분리해 검사한다. 검증기는 전용 테스트 실행만 생성하며 운영 실행 ID를 재사용하지 않는다.
 
 Python: `.venv\Scripts\python.exe -m pytest -q tests/test_unreal_visualization.py tests/test_api_frame_cursor.py tests/test_virtual_safety.py`.
 JS: `node --test tests/unreal_view_state.test.mjs tests/risk_range_state.test.mjs tests/assistant_api_separation.test.mjs`.
 UE 소스/매니페스트 일치: `.venv\Scripts\python.exe scripts/check_unreal_source_contract.py`.
 
-계약, 좌표/단위, 결측·0값, 두 차량 분리, 명령/피드백, 이전 실행 초기화, 순번 역전, API/LLM 분리와 기존 위험거리 상태를 검증한다. 정적 계약 검사는 설비 14개, 검지기 24개, CCTV 5개와 조작 입력이 서버 매니페스트에서 빠지지 않았는지 확인한다. 실제 UE C++ 빌드, 1920×1080 영상, 30초 동안 28.5 FPS 이상, 계측값 일치 및 ESD 입력 전달은 통과했다. Shipping 패키지 실행, 60분 연속 운전과 UE 프로세스·GPU 메모리 평가는 아직 완료하지 않았다. 복구 절차의 단계별 애니메이션과 실제 UE 렌더링 품질 보정은 후속 단계다.
+계약, 좌표/단위, 결측·0값, 두 차량 분리, 명령/피드백, 이전 실행 초기화, 순번 역전, API/LLM 분리와 기존 위험거리 상태를 검증한다. 정적 계약 검사는 설비 14개, 검지기 24개, CCTV 5개와 조작 입력이 서버 매니페스트에서 빠지지 않았는지 확인한다. 실제 UE C++ Shipping 빌드·cook·pak·실행, 1920×1080 영상, 30초 동안 28.5 FPS 이상, 계측값 일치, ESD 입력과 대표 안전조치 8종은 통과했다. 60초 프로세스 확인에서는 작업 집합 증가가 0.19 MB였고 종료나 핸들 증가가 없었다. 60분 연속 운전과 GPU 메모리 평가는 아직 완료하지 않았다. 복구 절차의 단계별 애니메이션과 실제 UE 렌더링 품질 보정은 후속 단계다.
 
 API·Pixel Streaming 서버·3D 프로젝트는 단일 조작석 로컬 시제품 기준이다. 사내 다중 사용자 배포는 접근제어·세션 격리·HTTPS와 별도 GPU 용량 검증을 마친 뒤 수행한다.
