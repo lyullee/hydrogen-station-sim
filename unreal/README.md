@@ -59,6 +59,8 @@ UE 프로젝트 파일: `HRSUnreal/HRSUnreal.uproject`. 에셋 생성 스크립�
 
 엔진을 실행한 뒤 실제 스트림 증거는 `node scripts/verify_unreal_video.cjs`로 수집한다. 이 검사는 플레이어 UI가 열린 사실만으로 통과하지 않으며, 1280×720 이상의 비디오가 5초 동안 실제로 전진해야 한다. 성공하면 `output/unreal/ue-video.json`과 화면 캡처를 남긴다. 이 한 번의 확인은 FPS·입력 지연·60분 안정성 검사를 대신하지 않는다.
 
+얇은 캐노피 모서리나 고광택 배관의 국부 반짝임은 `node scripts/verify_unreal_static_edge_stability.cjs <player-url> 20`으로 확인한다. 정지 화면 상부를 0.25초 간격으로 비교해 큰 휘도 변화가 반복되는 픽셀 비율을 제한하며, 화면 전체 평균만 비교하는 장기 게이트가 놓칠 수 있는 작은 깊이 충돌·시간축 노이즈를 보완한다.
+
 성능 게이트는 전용 시뮬레이션을 스스로 생성·정지하는 `node scripts/verify_unreal_stream_quality.cjs <player-url> <api-url> <duration-s>`를 사용한다. 1080p, 평균 디코드 28.5 FPS 이상, 키 입력에서 서버 ESD 확인까지 1초 이하, 동일 sequence의 서버값과 Unreal 적용값 일치를 검사한다. 60분 게이트는 `duration-s`를 `3600`으로 지정한다. 결과의 브라우저 JS 힙은 보조 지표이며 UE 프로세스·GPU 메모리 측정을 대체하지 않는다.
 
 같은 60분 동안 편집기는 `./scripts/measure_unreal_process.ps1 -EngineRoot '<UE 경로>'`, 패키지는 `./scripts/measure_unreal_process.ps1 -TargetProcessId <PID>`를 별도 터미널에서 실행해 작업 집합·전용 메모리·핸들 수를 기록한다. 반복 초기화는 `node scripts/verify_unreal_reset_reconnect.cjs`로 최소 3회의 새 실행→바인딩→가상 ESD→정지→표시 초기화를 검증한다. 대표 안전조치 행렬은 `node scripts/verify_unreal_safety_actions.cjs`로 명령 수락과 실제 상태 피드백을 분리해 검사한다. 검증기는 전용 테스트 실행만 생성하며 운영 실행 ID를 재사용하지 않는다.

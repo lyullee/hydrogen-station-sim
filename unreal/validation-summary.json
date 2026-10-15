@@ -135,6 +135,23 @@
     "runtime": "Windows/HRSUnreal/Binaries/Win64/HRSUnreal-Win64-Shipping.exe",
     "resolution": "1920x1080"
   },
+  "visual_fidelity_regression_2026_10_15": {
+    "status": "PASS",
+    "source_commit": "d367b7ba0b4e64c3b602e27daa16a37c70e07ecc",
+    "package": "output/unreal/packages/ue-5.8.3-realistic-d367b7b",
+    "actual_unreal_stream": true,
+    "resolution": "1920x1080",
+    "decoded_fps": 30.18,
+    "details_added": ["PBR procedural materials", "instrument tubing and gauges", "manual valves and supports", "dispenser controls", "vent structure", "canopy structure", "CCTV housings", "gas and flame detector housings", "bollards and drainage"],
+    "static_edge_stability": {
+      "duration_s": 20,
+      "samples": 47,
+      "p95_changed_fraction": 0.0000281532,
+      "p95_extreme_fraction": 0,
+      "page_errors": 0
+    },
+    "evidence": ["output/unreal/ue-video-realistic.json", "output/unreal/ue-video-realistic.png", "output/unreal/ue-realistic-detail.png", "output/unreal/static-edge-stability-realistic.json"]
+  },
   "llm_routes_changed": false,
   "physics_and_hyram_solver_changed_by_this_integration": false,
   "evidence_files": [
