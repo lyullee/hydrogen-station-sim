@@ -1,6 +1,6 @@
 {
   "date": "2026-10-15",
-  "status": "UE_5_8_SHIPPING_VISUAL_STATE_VERIFIED",
+  "status": "UE_5_8_SHIPPING_ACCEPTANCE_VERIFIED",
   "python_focused_tests": {"passed": 33, "failed": 0},
   "javascript_focused_tests": {"passed": 10, "failed": 0},
   "unreal_source_contract": {
@@ -54,10 +54,20 @@
     "renderer_feedback_advanced": true,
     "video_continuity": true
   },
+  "valve_vent_recovery_matrix": {
+    "status": "PASS",
+    "isolation_valves": 12,
+    "vent_valves": 3,
+    "fault_modes": ["stuck_open", "stuck_closed", "partial_closed", "seat_leak", "feedback_fault"],
+    "vent_mass_and_pressure_decrease_confirmed": true,
+    "recovery_checks_completed": 8,
+    "restart_approval_confirmed": true,
+    "evidence": "output/unreal/valves-recovery-shipping.json"
+  },
   "visual_state_matrix": {
     "status": "PASS",
     "actual_shipping_renderer": true,
-    "source_commit": "088a02714980677cb7a4bde9a1f75711544c090d",
+    "source_commit": "fcfa4673fb5da63b303ec9891014a5e2d4e984da",
     "resolution": "1920x1080",
     "incident": ["bounded hydrogen leak", "external fire"],
     "applied_components": {
@@ -87,13 +97,41 @@
     "video_duration_s": 690,
     "video_decoded_fps": 29.91
   },
+  "stream_quality_60min": {
+    "status": "PASS",
+    "duration_s": 3600,
+    "resolution": "1920x1080",
+    "decoded_fps": 29.93,
+    "input_latency_ms": 11,
+    "temporal_samples": 1772,
+    "near_black_frames": 0,
+    "resolution_failures": 0,
+    "abrupt_luminance_transitions": 0,
+    "browser_js_heap_growth_mb": 0.59,
+    "telemetry_parity": true,
+    "page_errors": 0
+  },
+  "process_stability_60min": {
+    "status": "PASS",
+    "observed_duration_s": 3610.6,
+    "warmup_s": 90,
+    "sample_count": 277,
+    "working_set_growth_mb": -50.93,
+    "private_memory_growth_mb": -610.59,
+    "handle_growth": -37,
+    "gpu_dedicated_growth_mb": -589.05,
+    "peak_working_set_growth_mb": 6.83,
+    "peak_private_memory_growth_mb": 19.97,
+    "peak_gpu_dedicated_growth_mb": 242.49,
+    "process_exited": false
+  },
   "reset_reconnect_cycles": {"status": "PASS", "cycles": 3},
-  "fps_latency_soak": "30 second Shipping quality gate and 10 minute process/GPU/video stability gate passed; 60 minute acceptance soak remains",
+  "fps_latency_soak": "30 second responsiveness gate and independent 60 minute Shipping stream/process/GPU stability gates passed",
   "shipping_package": {
     "status": "PASS",
     "configuration": "Shipping",
     "manifest_schema": 2,
-    "source_commit": "088a02714980677cb7a4bde9a1f75711544c090d",
+    "source_commit": "fcfa4673fb5da63b303ec9891014a5e2d4e984da",
     "runtime": "Windows/HRSUnreal/Binaries/Win64/HRSUnreal-Win64-Shipping.exe",
     "resolution": "1920x1080"
   },
@@ -110,6 +148,10 @@
     "output/unreal/safety-actions-final.json",
     "output/unreal/visual-state-scenario-final.json",
     "output/unreal/visual-state-scenario-final.png",
+    "output/unreal/visual-state-selection-shipping.json",
+    "output/unreal/valves-recovery-shipping.json",
+    "output/unreal/stream-quality-60min.json",
+    "output/unreal/ue-process-soak-60min.json",
     "output/unreal/assets/manifest.json",
     "output/unreal/assets/validation.json",
     "unreal/HRSUnreal/Saved/HRS/reference-scenes.json",

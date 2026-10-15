@@ -2,8 +2,8 @@
   "updated_on": "2026-10-15",
   "objective": "기존 공정·HyRAM·HAZOP·SAGA를 유지하는 Unreal 3D 모드 구축",
   "progress_basis": "verified acceptance items / all acceptance items; source_ready is implemented but remains unverified in a packaged run",
-  "goal_complete": false,
-  "current_blocker": "Shipping 패키지에서 12개 차단밸브, 3개 벤트, 5개 밸브 고장 모드와 8단계 복구·재가동 승인까지 검증했다. 장시간 깜빡임과 60분 메모리 안정성 검증이 남아 있다.",
+  "goal_complete": true,
+  "current_blocker": null,
   "phases": [
     {
       "name": "환경 및 데이터 계약",
@@ -69,7 +69,7 @@
         {"id":"relative-and-absolute-index", "status":"verified", "evidence":"Shipping run changed process risk_display_mode from relative to absolute and reported ten applied risk components in absolute mode"},
         {"id":"equipment-floor-zones", "status":"verified", "evidence":"Shipping renderer reported ten equipment-sized risk floor components visible"},
         {"id":"display-toggles-settings", "status":"verified", "evidence":"Pixel Streaming inputs enabled risk, distance, all 5 CCTV and all 24 detector components with post-application feedback"},
-        {"id":"no-flicker-and-low-intensity", "status":"source_ready", "evidence":"reuses components and disables bloom; no per-frame geometry rebuild"}
+        {"id":"no-flicker-and-low-intensity", "status":"verified", "evidence":"60 min Shipping stream: 1,772 temporal samples, zero near-black frames, zero resolution failures and zero abrupt luminance transitions; output/unreal/stream-quality-60min.json"}
       ]
     },
     {
@@ -82,7 +82,7 @@
         {"id":"web-ue-process-value-parity", "status":"verified", "evidence":"output/unreal/stream-quality.json reports matches=true and no mismatches"},
         {"id":"1080p-30fps", "status":"verified", "evidence":"30 s Shipping gate: 1920x1080 at 30.14 decoded FPS; 690 s video gate: 29.91 decoded FPS"},
         {"id":"input-latency", "status":"verified", "evidence":"30 s gate: Pixel Streaming ESD input acknowledged in 25 ms"},
-        {"id":"60min-memory-stability", "status":"source_ready", "evidence":"10 min precursor PASS after 90 s warmup: private +0.60 MB, working set +5.54 MB, adapter dedicated GPU +289.63 MB; browser 3600 s gate remains"},
+        {"id":"60min-memory-stability", "status":"verified", "evidence":"60 min Shipping PASS after 90 s warmup: working set -50.93 MB, private -610.59 MB, handles -37 and adapter dedicated GPU -589.05 MB; output/unreal/ue-process-soak-60min.json"},
         {"id":"reset-reconnect-stress", "status":"verified", "evidence":"three dedicated Shipping binding/ESD/stop/unbind cycles passed with fresh non-ESD initial snapshots"},
         {"id":"packaged-release-and-runbook-verified", "status":"verified", "evidence":"UE 5.8.3 Shipping build/cook/pak/archive and hash-verified internal runtime launch passed; 1920x1080 live stream confirmed"}
       ]
