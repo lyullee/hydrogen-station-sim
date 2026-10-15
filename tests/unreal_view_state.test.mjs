@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { nextBinding, validPlayerUrl } from '../web/unreal-view-state.mjs';
+import { nextBinding, validPlayerUrl, playerUrlForPage } from '../web/unreal-view-state.mjs';
 
 test('new run and reset invalidate old visual state; repeated run does not', () => {
   const initial = {run_id:null, generation:0};
@@ -17,4 +17,15 @@ test('only credential-free compatible player URLs are allowed', () => {
   for (const url of ['javascript:alert(1)', 'data:text/html,x', 'http://user:password@localhost'])
     assert.throws(() => validPlayerUrl(url, 'http://localhost:8000'));
   assert.throws(() => validPlayerUrl('http://localhost:8080', 'https://example.test'));
+});
+
+test('external dashboard host replaces loopback in the player URL', () => {
+  assert.equal(
+    playerUrlForPage('http://127.0.0.1:18080/hrs-player.html', 'http://61.96.174.29:8000/'),
+    'http://61.96.174.29:18080/hrs-player.html'
+  );
+  assert.equal(
+    playerUrlForPage('http://127.0.0.1:18080/hrs-player.html', 'http://127.0.0.1:8000/'),
+    'http://127.0.0.1:18080/hrs-player.html'
+  );
 });

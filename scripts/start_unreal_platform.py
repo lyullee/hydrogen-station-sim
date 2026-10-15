@@ -122,6 +122,8 @@ def main() -> int:
     parser.add_argument("--no-browser", action="store_true", help="do not open the dashboard in a browser")
     parser.add_argument("--startup-timeout", type=float, default=90.0)
     args = parser.parse_args()
+    external = os.environ.get("HRS_EXTERNAL_ACCESS", "1").strip().lower() not in {"0", "false", "off", "no"}
+    api_bind = "0.0.0.0" if external else "127.0.0.1"
 
     editor = find_unreal_editor()
     require_files(editor)
@@ -147,6 +149,9 @@ def main() -> int:
     env = os.environ.copy()
     env["H2STATION_UNREAL_PLAYER_URL"] = PLAYER_URL
     env["PYTHONUNBUFFERED"] = "1"
+    env["HRS_PIXEL_STREAMING_PUBLIC_PORTS"] = "18080" if external else ""
+    source_path = str(ROOT / "src")
+    env["PYTHONPATH"] = source_path + (os.pathsep + env["PYTHONPATH"] if env.get("PYTHONPATH") else "")
 
     try:
         health = http_json(f"{API_URL}/api/health")
@@ -154,7 +159,7 @@ def main() -> int:
             if port_open(8000):
                 raise RuntimeError("Port 8000 is occupied by a non-HRS process")
             process = subprocess.Popen(
-                [sys.executable, "-m", "h2station", "--host", "127.0.0.1", "--port", "8000"],
+                [sys.executable, "-m", "h2station", "--host", api_bind, "--port", "8000"],
                 cwd=ROOT,
                 env=env,
                 creationflags=creationflags,
@@ -183,6 +188,7 @@ def main() -> int:
                     "--http_root", str(SIGNALLING_WWW), "--homepage", "hrs-player.html",
                 ],
                 cwd=ROOT,
+                env=env,
                 creationflags=creationflags,
             )
             children.append(("Pixel Streaming", process))
@@ -209,6 +215,8 @@ def main() -> int:
             print("[REUSE] HRS Unreal process already running", flush=True)
 
         print(f"[READY] HRS platform: {API_URL}/", flush=True)
+        if external:
+            print("[READY] External listeners: TCP 8000 (dashboard), TCP 18080 (Unreal player)", flush=True)
         if not args.no_browser:
             webbrowser.open(f"{API_URL}/")
         print("Press PyCharm Stop to close processes started by this run.", flush=True)

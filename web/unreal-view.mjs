@@ -1,4 +1,4 @@
-import { validPlayerUrl } from './unreal-view-state.mjs';
+import { playerUrlForPage } from './unreal-view-state.mjs';
 
 const stage = document.getElementById('s3Stage');
 const tools = document.querySelector('.s3-head-tools');
@@ -58,7 +58,7 @@ if (stage && tools) {
         if (!response.ok) throw new Error('Unreal 연결 설정을 확인해 주세요.');
         return response.json();
       });
-      const player = validPlayerUrl(config.player_url, location.href);
+      const player = playerUrlForPage(config.player_url, location.href);
       if (!player) throw new Error('Unreal 엔진·Pixel Streaming 실행 후 플레이어 주소를 설정해 주세요.');
       active = true; bindingVersion++; layer.hidden = false;
       stage.classList.add('unreal-active'); frame.src = player;

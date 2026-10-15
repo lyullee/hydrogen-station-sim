@@ -13,3 +13,13 @@ export function validPlayerUrl(value, base) {
     throw new Error('HTTPS 화면에는 HTTPS Unreal 플레이어가 필요합니다.');
   return url.href;
 }
+
+export function playerUrlForPage(value, base) {
+  const valid = validPlayerUrl(value, base);
+  if (!valid) return null;
+  const player = new URL(valid);
+  const page = new URL(base);
+  const loopback = new Set(['127.0.0.1', 'localhost', '[::1]']);
+  if (loopback.has(player.hostname) && !loopback.has(page.hostname)) player.hostname = page.hostname;
+  return player.href;
+}
