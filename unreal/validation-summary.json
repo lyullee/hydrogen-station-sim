@@ -150,7 +150,17 @@
       "p95_extreme_fraction": 0,
       "page_errors": 0
     },
-    "evidence": ["output/unreal/ue-video-realistic.json", "output/unreal/ue-video-realistic.png", "output/unreal/ue-realistic-detail.png", "output/unreal/static-edge-stability-realistic.json"]
+    "visual_state_regression": {
+      "status": "PASS",
+      "cctv_housings": 5,
+      "detector_housings": 24,
+      "selection_states": 3,
+      "risk_floor_zones": 10,
+      "consequence_boundaries": 1,
+      "incident_highlights": 1,
+      "page_errors": 0
+    },
+    "evidence": ["output/unreal/ue-video-realistic.json", "output/unreal/ue-video-realistic.png", "output/unreal/ue-realistic-detail.png", "output/unreal/static-edge-stability-realistic.json", "output/unreal/visual-state-realistic.json", "output/unreal/visual-state-realistic.png"]
   },
   "llm_routes_changed": false,
   "physics_and_hyram_solver_changed_by_this_integration": false,
