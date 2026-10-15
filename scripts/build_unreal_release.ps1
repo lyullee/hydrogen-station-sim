@@ -23,6 +23,15 @@ if ([string]::IsNullOrWhiteSpace($ArchiveDirectory)) {
 $archive = [IO.Path]::GetFullPath($ArchiveDirectory)
 New-Item -ItemType Directory -Path $archive -Force | Out-Null
 
+function Get-ArchiveRelativePath([string]$Root, [string]$Path) {
+    $rootWithSeparator = $Root.TrimEnd([IO.Path]::DirectorySeparatorChar, [IO.Path]::AltDirectorySeparatorChar) + [IO.Path]::DirectorySeparatorChar
+    $fullPath = [IO.Path]::GetFullPath($Path)
+    if (-not $fullPath.StartsWith($rootWithSeparator, [StringComparison]::OrdinalIgnoreCase)) {
+        throw "Packaged file is outside archive directory: $fullPath"
+    }
+    return $fullPath.Substring($rootWithSeparator.Length).Replace('\','/')
+}
+
 & $python (Join-Path $PSScriptRoot 'check_unreal_source_contract.py')
 if ($LASTEXITCODE -ne 0) { throw 'Unreal source contract validation failed' }
 
@@ -70,9 +79,9 @@ $manifest = [ordered]@{
     schema_version = 2
     created_at = (Get-Date).ToUniversalTime().ToString('o')
     configuration = $Configuration
-    executable = [IO.Path]::GetRelativePath($archive, $exe.FullName).Replace('\','/')
+    executable = Get-ArchiveRelativePath $archive $exe.FullName
     executable_sha256 = (Get-FileHash -LiteralPath $exe.FullName -Algorithm SHA256).Hash.ToLowerInvariant()
-    bootstrap_executable = [IO.Path]::GetRelativePath($archive, $launcher.FullName).Replace('\','/')
+    bootstrap_executable = Get-ArchiveRelativePath $archive $launcher.FullName
     bootstrap_sha256 = (Get-FileHash -LiteralPath $launcher.FullName -Algorithm SHA256).Hash.ToLowerInvariant()
     reference_assets = if ($SkipReferenceAssets) { 'skipped' } else { 'validated_imported_and_placed' }
     source_commit = (git -C $repoRoot rev-parse HEAD).Trim()

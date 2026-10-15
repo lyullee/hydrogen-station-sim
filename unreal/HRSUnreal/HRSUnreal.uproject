@@ -5,7 +5,7 @@
   "Description": "Renderer for the existing hydrogen station simulator; no duplicate physics solver.",
   "Modules": [{"Name": "HRSUnreal", "Type": "Runtime", "LoadingPhase": "Default"}],
   "Plugins": [
-    {"Name": "PixelStreaming2", "Enabled": true},
+    {"Name": "PixelStreaming", "Enabled": true},
     {"Name": "PythonScriptPlugin", "Enabled": true, "TargetAllowList": ["Editor"]},
     {"Name": "EditorScriptingUtilities", "Enabled": true, "TargetAllowList": ["Editor"]}
   ]

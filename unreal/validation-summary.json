@@ -14,7 +14,7 @@
     "reference_scenes_placed_by_pipeline": true,
     "packaging_pipeline": true,
     "ue58_include_order_pinned": true,
-    "pixel_streaming_plugin": "PixelStreaming2"
+    "pixel_streaming_plugin": "PixelStreaming"
   },
   "real_browser_checks": {"passed": 5, "page_errors": 0, "engine_video_verified": true},
   "pixel_streaming_infrastructure": {
@@ -24,7 +24,10 @@
     "node": "22.15.0",
     "listeners": "127.0.0.1 only",
     "actual_unreal_stream": "PASS",
-    "resolution": "1920x1080"
+    "resolution": "1920x1080",
+    "encoder_path": "NVENC D3D12 CUDA interop",
+    "target_bitrate_bps": 20000000,
+    "maximum_sessions": 1
   },
   "gltf_assets": {
     "count": 7,
@@ -39,8 +42,8 @@
   "stream_quality_30s": {
     "status": "PASS",
     "resolution": "1920x1080",
-    "decoded_fps": 145.99,
-    "input_latency_ms": 201,
+    "decoded_fps": 30.14,
+    "input_latency_ms": 25,
     "telemetry_parity": true,
     "page_errors": 0
   },
@@ -51,15 +54,21 @@
     "renderer_feedback_advanced": true,
     "video_continuity": true
   },
-  "short_process_stability": {
+  "process_stability_10min": {
     "status": "PASS",
-    "duration_s": 60.2,
-    "working_set_growth_mb": 0.19,
-    "maximum_working_set_mb": 1047.82,
-    "maximum_private_memory_mb": 3191.61
+    "duration_s": 614.1,
+    "warmup_s": 90,
+    "working_set_growth_mb": 5.54,
+    "private_memory_growth_mb": 0.6,
+    "gpu_dedicated_growth_mb": 289.63,
+    "maximum_working_set_mb": 1135.66,
+    "maximum_private_memory_mb": 2948.8,
+    "maximum_gpu_dedicated_mb": 2779.82,
+    "video_duration_s": 690,
+    "video_decoded_fps": 29.91
   },
   "reset_reconnect_cycles": {"status": "PASS", "cycles": 3},
-  "fps_latency_soak": "30 second Shipping gate and 60 second process check passed; 60 minute memory/GPU soak remains",
+  "fps_latency_soak": "30 second Shipping quality gate and 10 minute process/GPU/video stability gate passed; 60 minute acceptance soak remains",
   "shipping_package": {
     "status": "PASS",
     "configuration": "Shipping",
@@ -74,10 +83,10 @@
     "output/unreal/web-smoke.json",
     "output/unreal/ue-video.json",
     "output/unreal/stream-quality.json",
-    "output/unreal/package-stream-quality.json",
-    "output/unreal/package-process-60s.json",
-    "output/unreal/reset-reconnect-package.json",
-    "output/unreal/safety-actions.json",
+    "output/unreal/stream-quality-final.json",
+    "output/unreal/video-stabilized-clean-process-600s.json",
+    "output/unreal/reset-reconnect-final.json",
+    "output/unreal/safety-actions-final.json",
     "output/unreal/assets/manifest.json",
     "output/unreal/assets/validation.json",
     "unreal/HRSUnreal/Saved/HRS/reference-scenes.json",

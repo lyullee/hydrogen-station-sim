@@ -7,6 +7,10 @@ const { chromium } = require(process.env.HRS_PLAYWRIGHT_MODULE || 'playwright');
 const player = process.argv[2] || 'http://127.0.0.1:18080/hrs-player.html';
 const out = process.argv[3] || 'output/unreal/ue-video.json';
 const screenshot = process.argv[4] || 'output/unreal/ue-video.png';
+const durationS = Number(process.argv[5] || 5);
+if (!Number.isFinite(durationS) || durationS < 5 || durationS > 7200) {
+  throw new Error('duration_s must be between 5 and 7200 seconds');
+}
 
 (async () => {
   const channel = process.env.HRS_BROWSER_CHANNEL || (process.platform === 'win32' ? 'msedge' : undefined);
@@ -34,11 +38,13 @@ const screenshot = process.argv[4] || 'output/unreal/ue-video.png';
     const first = await page.locator('video').evaluate(video => ({
       currentTime:video.currentTime, width:video.videoWidth, height:video.videoHeight,
       paused:video.paused, ended:video.ended,
+      decodedFrames:video.getVideoPlaybackQuality?.().totalVideoFrames ?? video.webkitDecodedFrameCount ?? null,
     }));
-    await page.waitForTimeout(5000);
+    await page.waitForTimeout(durationS * 1000);
     const second = await page.locator('video').evaluate(video => ({
       currentTime:video.currentTime, width:video.videoWidth, height:video.videoHeight,
       paused:video.paused, ended:video.ended,
+      decodedFrames:video.getVideoPlaybackQuality?.().totalVideoFrames ?? video.webkitDecodedFrameCount ?? null,
     }));
     assert.ok(second.currentTime > first.currentTime + 1,
       `Pixel stream did not advance: ${first.currentTime} -> ${second.currentTime}`);
@@ -46,9 +52,13 @@ const screenshot = process.argv[4] || 'output/unreal/ue-video.png';
       `Pixel stream resolution is below the pilot gate: ${second.width}x${second.height}`);
     fs.mkdirSync(path.dirname(screenshot), {recursive:true});
     await page.screenshot({path:screenshot, fullPage:true});
+    const decodedFps = Number.isFinite(first.decodedFrames) && Number.isFinite(second.decodedFrames)
+      ? (second.decodedFrames - first.decodedFrames) / (second.currentTime - first.currentTime)
+      : null;
     const report = {
-      status:'PASS', actual_unreal_stream:true, player,
+      status:'PASS', actual_unreal_stream:true, player, duration_s:durationS,
       first, second, measured_resolution:`${second.width}x${second.height}`,
+      decoded_fps:decodedFps,
       page_errors:pageErrors, console_errors:consoleErrors,
       claim_boundary:'Confirms one advancing browser video sample. FPS, latency and 60-minute stability require separate gates.'
     };

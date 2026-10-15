@@ -61,8 +61,8 @@ for key in ("EKeys::C", "EKeys::G", "EKeys::MiddleMouseButton", "EKeys::MouseScr
 
 if "ws://127.0.0.1:18888" not in START or "ws://127.0.0.1:8888" in START:
     problems.append("pilot signalling port does not match infrastructure lock")
-if '"Name": "PixelStreaming2"' not in UPROJECT:
-    problems.append("UE 5.8 project must enable PixelStreaming2")
+if '"Name": "PixelStreaming"' not in UPROJECT:
+    problems.append("UE 5.8 project must enable the validated PixelStreaming plugin")
 
 if 'set_editor_property("import_scale", 100.0)' not in IMPORTER:
     problems.append("glTF importer must convert metres to Unreal centimetres exactly once")

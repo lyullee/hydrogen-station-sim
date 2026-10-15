@@ -1,12 +1,12 @@
 # 수소충전소 Unreal 전환 작업
 
-기존 Python 계산 서버의 상태를 UE5에서 표시한다. 공정·HyRAM·HAZOP·LLM 계산은 기존 서버에 남는다. UE 5.8.3 Shipping 실행본에서 전체 참조 충전소 장면, 실시간 표시 API, 안전조치 입력 및 Pixel Streaming 2 영상 연결을 검증했다.
+기존 Python 계산 서버의 상태를 UE5에서 표시한다. 공정·HyRAM·HAZOP·LLM 계산은 기존 서버에 남는다. UE 5.8.3 Shipping 실행본에서 전체 참조 충전소 장면, 실시간 표시 API, 안전조치 입력 및 Pixel Streaming 영상 연결을 검증했다.
 
 ## 현재 설치 상태
 
-2026-10-15: UE 5.8.3을 `C:\Program Files\Epic Games\UE_5.8`에 설치하고 `HRSUnrealEditor Win64 Development` 빌드를 완료했다. VS 2022 Build Tools 17.14, MSVC 14.38/14.44, MSBuild, Windows SDK 10.0.26100을 사용한다. 공식 Pixel Streaming Infrastructure의 `UE5.8` 브랜치와 PixelStreaming2 플러그인, Node.js 22.15.0을 사용한다.
+2026-10-15: UE 5.8.3을 `C:\Program Files\Epic Games\UE_5.8`에 설치하고 `HRSUnrealEditor Win64 Development` 빌드를 완료했다. VS 2022 Build Tools 17.14, MSVC 14.38/14.44, MSBuild, Windows SDK 10.0.26100을 사용한다. 공식 Pixel Streaming Infrastructure의 `UE5.8` 브랜치와 UE 5.8에 함께 배포된 PixelStreaming 플러그인, Node.js 22.15.0을 사용한다. PixelStreaming2는 이 PC의 D3D12/NVENC 조합에서 시청자가 연결된 동안 private commit이 계속 증가하는 현상을 재현해 사용하지 않는다.
 
-참조 GLB 7종을 Unreal에 가져와 8개 설비 인스턴스로 배치했으며, 각 인스턴스의 실제 바운드가 기준 치수의 75–125% 안에 드는지 검사했다. Shipping 실행본에서 1920×1080 WebRTC 영상, 서버-렌더러 계측값 일치, 브라우저 입력에서 서버 ESD 확인까지의 왕복 경로를 실제 실행으로 확인했다. 밸브·환기·냉각·출입 통제·대피·ESD·전체 정지의 대표 조치 행렬과 3회 초기화·재접속도 통과했다. 60분 연속 운전과 GPU 메모리 검증은 남아 있다.
+참조 GLB 7종을 Unreal에 가져와 8개 설비 인스턴스로 배치했으며, 각 인스턴스의 실제 바운드가 기준 치수의 75–125% 안에 드는지 검사했다. Shipping 실행본에서 1920×1080 WebRTC 영상, 서버-렌더러 계측값 일치, 브라우저 입력에서 서버 ESD 확인까지의 왕복 경로를 실제 실행으로 확인했다. 밸브·환기·냉각·출입 통제·대피·ESD·전체 정지의 대표 조치 행렬과 3회 초기화·재접속도 통과했다. 690초 영상은 평균 29.91 FPS였고, 90초 준비 구간 이후 614초 동안 전용 메모리 증가는 0.60 MB, 작업 집합 증가는 5.54 MB였다. 정식 수락 기준인 60분 연속 운전은 남아 있다.
 
 환경 확인: 저장소 루트에서 `.venv\Scripts\python.exe scripts/check_unreal_environment.py` 실행. 별도 엔진 경로는 `HRS_UNREAL_ROOT`로 지정한다. 계정·비밀번호·API 키를 이 프로젝트에 넣지 않는다.
 
@@ -19,7 +19,7 @@
 5. UE 실행: `./scripts/start_unreal_pilot.ps1 -EngineRoot 'C:\Program Files\Epic Games\UE_5.8' -Run -SignallingUrl 'ws://127.0.0.1:18888'`.
 6. 기존 웹에서 새 시뮬레이션을 시작하고 `Unreal 3D`를 누른다. 플레이어의 영상 시작 안내에 따라 연결한다. 표준 3D 전환은 계산을 중지하지 않는다.
 
-Win64 배포본은 `./scripts/build_unreal_release.ps1 -EngineRoot 'C:\Program Files\Epic Games\UE_5.8' -Configuration Shipping`으로 만든다. 이 명령은 소스 계약 검사, C++ 빌드, 맵·재질 생성, 검증된 GLB 가져오기, Interchange 기반 장면 배치와 실물 치수 범위 검사, cook·pak·archive를 순차 수행하고 실행 파일 SHA-256이 포함된 `hrs-unreal-build.json`을 남긴다. 패키지 실행은 `./scripts/start_packaged_unreal.ps1 -PackageDirectory '<패키지 폴더>'`를 사용한다. 실행 전에 해시를 다시 검사하며 기본값은 숨김 창과 로컬 API·Pixel Streaming 주소다. 현장 확인이 필요하면 `-Visible`을 추가한다.
+Win64 배포본은 `./scripts/build_unreal_release.ps1 -EngineRoot 'C:\Program Files\Epic Games\UE_5.8' -Configuration Shipping`으로 만든다. 이 명령은 소스 계약 검사, C++ 빌드, 맵·재질 생성, 검증된 GLB 가져오기, Interchange 기반 장면 배치와 실물 치수 범위 검사, cook·pak·archive를 순차 수행하고 실행 파일 SHA-256이 포함된 `hrs-unreal-build.json`을 남긴다. 패키지 실행은 `./scripts/start_packaged_unreal.ps1 -PackageDirectory '<패키지 폴더>'`를 사용한다. 실행 전에 해시를 다시 검사하며 기본값은 숨김 창, 로컬 API·Pixel Streaming 주소, 1080p/30fps, 단일 NVENC 세션, 20 Mbps 고정 목표 비트레이트와 D3D12-CUDA NVENC 상호운용이다. 이 장비의 RTX A4000에서 D3D12-CUDA 경로는 영상을 유지하면서 UE 5.7~5.8 NVENC 재설정에 따른 private commit 누적을 멈췄다. 다른 GPU에서 문제가 있으면 `-UseNvEncD3D12Cuda $false`로 끄고 별도 안정성 검증을 수행한다. 동일 실행 파일의 중복 실행은 기본적으로 차단한다. 현장 확인이 필요하면 `-Visible`을 추가한다.
 
 UE 프로젝트 파일: `HRSUnreal/HRSUnreal.uproject`. 에셋 생성 스크립트는 이미 편집한 맵·재질을 덮어쓰지 않는다. 생성된 Content 및 바이너리는 Git에서 제외하고 소스·설정·생성 스크립트를 보관한다. 신규 UE 버전에 대한 검증은 별도로 수행한다.
 
@@ -67,6 +67,6 @@ Python: `.venv\Scripts\python.exe -m pytest -q tests/test_unreal_visualization.p
 JS: `node --test tests/unreal_view_state.test.mjs tests/risk_range_state.test.mjs tests/assistant_api_separation.test.mjs`.
 UE 소스/매니페스트 일치: `.venv\Scripts\python.exe scripts/check_unreal_source_contract.py`.
 
-계약, 좌표/단위, 결측·0값, 두 차량 분리, 명령/피드백, 이전 실행 초기화, 순번 역전, API/LLM 분리와 기존 위험거리 상태를 검증한다. 정적 계약 검사는 설비 14개, 검지기 24개, CCTV 5개와 조작 입력이 서버 매니페스트에서 빠지지 않았는지 확인한다. 실제 UE C++ Shipping 빌드·cook·pak·실행, 1920×1080 영상, 30초 동안 28.5 FPS 이상, 계측값 일치, ESD 입력과 대표 안전조치 8종은 통과했다. 60초 프로세스 확인에서는 작업 집합 증가가 0.19 MB였고 종료나 핸들 증가가 없었다. 60분 연속 운전과 GPU 메모리 평가는 아직 완료하지 않았다. 복구 절차의 단계별 애니메이션과 실제 UE 렌더링 품질 보정은 후속 단계다.
+계약, 좌표/단위, 결측·0값, 두 차량 분리, 명령/피드백, 이전 실행 초기화, 순번 역전, API/LLM 분리와 기존 위험거리 상태를 검증한다. 정적 계약 검사는 설비 14개, 검지기 24개, CCTV 5개와 조작 입력이 서버 매니페스트에서 빠지지 않았는지 확인한다. 실제 UE C++ Shipping 빌드·cook·pak·실행, 1920×1080 영상, 30초 동안 28.5 FPS 이상, 계측값 일치, ESD 입력과 대표 안전조치 8종은 통과했다. 최종 30초 품질 게이트는 30.14 FPS와 25 ms ESD 입력 응답을 기록했다. 10분 선행 안정성 게이트는 전용 메모리 +0.60 MB, 작업 집합 +5.54 MB, GPU 전용 메모리 +289.63 MB로 통과했으며 프로세스 종료가 없었다. 60분 연속 운전 평가는 아직 완료하지 않았다. 복구 절차의 단계별 애니메이션과 실제 UE 렌더링 품질 보정은 후속 단계다.
 
 API·Pixel Streaming 서버·3D 프로젝트는 단일 조작석 로컬 시제품 기준이다. 사내 다중 사용자 배포는 접근제어·세션 격리·HTTPS와 별도 GPU 용량 검증을 마친 뒤 수행한다.
