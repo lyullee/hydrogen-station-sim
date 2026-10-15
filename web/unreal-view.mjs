@@ -50,8 +50,8 @@ if (stage && tools) {
     button.setAttribute('aria-pressed', 'false'); button.textContent = 'Unreal 3D';
     try { await bind(null); } catch (error) { notify(error.message); }
   }
-  button.addEventListener('click', async () => {
-    if (active) return disable();
+  async function enable({silent = false} = {}) {
+    if (active) return;
     button.disabled = true;
     try {
       config = await fetch('/api/integrations/unreal/config').then(async response => {
@@ -67,12 +67,20 @@ if (stage && tools) {
       await sync(); timer = setInterval(sync, 500);
     } catch (error) {
       if (active) await disable();
-      notify(error.message); button.title = error.message;
+      if (!silent) notify(error.message);
+      button.title = error.message;
     } finally { button.disabled = false; }
+  }
+  button.addEventListener('click', async () => {
+    if (active) return disable();
+    await enable();
   });
   window.addEventListener('station-frame', sync);
   window.addEventListener('station-reset', () => {
     active = false; bindingVersion++; clearInterval(timer);
     bind(null, true).catch(() => {});
   });
+  // Unreal is the primary renderer when its local player is available.  The
+  // Three.js view remains an automatic fallback for ordinary web-only runs.
+  enable({silent: true});
 }

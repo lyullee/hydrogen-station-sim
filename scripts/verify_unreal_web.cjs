@@ -16,11 +16,10 @@ const out = process.argv[4] || 'output/unreal/web-smoke.json';
   page.on('pageerror', error => errors.push(error.message));
   let job;
   try {
-    await page.goto(base, {waitUntil:'networkidle', timeout:30000});
-    await page.locator('#s3UnrealToggle').waitFor();
     // Config is overridden only in the test page; no production setting is changed.
     await page.route('**/api/integrations/unreal/config', route => route.fulfill({json:{player_url:player, configured:true}}));
-    await page.locator('#s3UnrealToggle').click();
+    await page.goto(base, {waitUntil:'networkidle', timeout:30000});
+    await page.locator('#s3UnrealToggle').waitFor();
     await page.waitForFunction(() => document.querySelector('#s3Stage').classList.contains('unreal-active'));
     assert.equal(await page.locator('.s3-unreal-layer iframe').getAttribute('src'), new URL(player).href);
     const created = await page.request.post(base + '/api/simulations', {data:{continuous:true, control_period_s:.2}});
