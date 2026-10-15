@@ -3,7 +3,7 @@
   "objective": "기존 공정·HyRAM·HAZOP·SAGA를 유지하는 Unreal 3D 모드 구축",
   "progress_basis": "verified acceptance items / all acceptance items; source_ready is implemented but remains unverified in a packaged run",
   "goal_complete": false,
-  "current_blocker": "Shipping 패키지에서 누출·화재·설비 강조·위험거리·위험도 바닥·CCTV·검지기·독립 호스·대표 안전조치까지 실제 적용 상태를 검증했다. 60분 연속 운전, 전체 밸브/고장 매트릭스, 벤트 잔압, 복구 절차, 위험거리 라벨, 상대/절대 위험도 전환, 설비 선택 및 장시간 깜빡임 검증이 남아 있다.",
+  "current_blocker": "Shipping 패키지에서 설비 선택, 라벨이 붙은 위험거리 경계와 상대/절대 위험도 전환까지 실제 적용 상태를 검증했다. 60분 연속 운전, 전체 밸브/고장 매트릭스, 벤트 잔압, 복구 절차 및 장시간 깜빡임 검증이 남아 있다.",
   "phases": [
     {
       "name": "환경 및 데이터 계약",
@@ -43,7 +43,7 @@
         {"id":"two-dispensers", "status":"verified", "evidence":"Shipping run switched independently from dispenser 1 to dispenser 2 with mutually consistent hose states"},
         {"id":"road-canopy-site", "status":"verified", "evidence":"Shipping 1080p capture contains the placed canopy, station site, roads, equipment area and vent stack"},
         {"id":"cctv-and-detector-markers", "status":"verified", "evidence":"Shipping renderer reported 5 visible CCTV markers and all 24 visible detector markers"},
-        {"id":"equipment-selection-and-visual-qa", "status":"source_ready", "evidence":"component and actor tag picking; visual polish remains"}
+        {"id":"equipment-selection-and-visual-qa", "status":"verified", "evidence":"UE 5.8.3 Shipping feedback confirmed Digit1/2/3 selection changes and the equipment-sized selection mesh; output/unreal/visual-state-selection-shipping.json"}
       ]
     },
     {
@@ -65,8 +65,8 @@
         {"id":"leak-plume", "status":"verified", "evidence":"Shipping renderer reported the visual-leak jet visible during a bounded physical leak"},
         {"id":"fire", "status":"verified", "evidence":"Shipping renderer reported cascade.high fire component visible for external-fire input"},
         {"id":"issue-highlight", "status":"verified", "evidence":"Shipping renderer reported cascade.high highlight visible for the combined incident"},
-        {"id":"labelled-consequence-boundary", "status":"source_ready"},
-        {"id":"relative-and-absolute-index", "status":"source_ready", "evidence":"risk_display_mode selects cached server relative/absolute score"},
+        {"id":"labelled-consequence-boundary", "status":"verified", "evidence":"Shipping feedback confirmed the visual-leak distance surface and its corresponding distance label were both visible"},
+        {"id":"relative-and-absolute-index", "status":"verified", "evidence":"Shipping run changed process risk_display_mode from relative to absolute and reported ten applied risk components in absolute mode"},
         {"id":"equipment-floor-zones", "status":"verified", "evidence":"Shipping renderer reported ten equipment-sized risk floor components visible"},
         {"id":"display-toggles-settings", "status":"verified", "evidence":"Pixel Streaming inputs enabled risk, distance, all 5 CCTV and all 24 detector components with post-application feedback"},
         {"id":"no-flicker-and-low-intensity", "status":"source_ready", "evidence":"reuses components and disables bloom; no per-frame geometry rebuild"}
