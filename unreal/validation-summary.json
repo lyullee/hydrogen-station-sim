@@ -1,6 +1,6 @@
 {
   "date": "2026-10-15",
-  "status": "UE_5_8_SHIPPING_PILOT_VERIFIED",
+  "status": "UE_5_8_SHIPPING_VISUAL_STATE_VERIFIED",
   "python_focused_tests": {"passed": 33, "failed": 0},
   "javascript_focused_tests": {"passed": 10, "failed": 0},
   "unreal_source_contract": {
@@ -54,6 +54,26 @@
     "renderer_feedback_advanced": true,
     "video_continuity": true
   },
+  "visual_state_matrix": {
+    "status": "PASS",
+    "actual_shipping_renderer": true,
+    "source_commit": "088a02714980677cb7a4bde9a1f75711544c090d",
+    "resolution": "1920x1080",
+    "incident": ["bounded hydrogen leak", "external fire"],
+    "applied_components": {
+      "leak_jets": 1,
+      "consequence_distances": 1,
+      "fire_components": 1,
+      "highlight_components": 1,
+      "risk_floor_zones": 10,
+      "cctv_markers": 5,
+      "detector_markers": 24
+    },
+    "process_animation": "dispenser 1 connected/dispenser 2 parked, then dispenser 1 parked/dispenser 2 connected",
+    "safety_visual_feedback": ["bank.high.inlet closed", "fan.storage running", "cooling.high running", "access.storage restricted", "personnel.storage evacuated to muster"],
+    "page_errors": 0,
+    "evidence": "output/unreal/visual-state-scenario-final.json"
+  },
   "process_stability_10min": {
     "status": "PASS",
     "duration_s": 614.1,
@@ -73,6 +93,7 @@
     "status": "PASS",
     "configuration": "Shipping",
     "manifest_schema": 2,
+    "source_commit": "088a02714980677cb7a4bde9a1f75711544c090d",
     "runtime": "Windows/HRSUnreal/Binaries/Win64/HRSUnreal-Win64-Shipping.exe",
     "resolution": "1920x1080"
   },
@@ -87,6 +108,8 @@
     "output/unreal/video-stabilized-clean-process-600s.json",
     "output/unreal/reset-reconnect-final.json",
     "output/unreal/safety-actions-final.json",
+    "output/unreal/visual-state-scenario-final.json",
+    "output/unreal/visual-state-scenario-final.png",
     "output/unreal/assets/manifest.json",
     "output/unreal/assets/validation.json",
     "unreal/HRSUnreal/Saved/HRS/reference-scenes.json",

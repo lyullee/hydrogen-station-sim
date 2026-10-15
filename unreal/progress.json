@@ -3,7 +3,7 @@
   "objective": "기존 공정·HyRAM·HAZOP·SAGA를 유지하는 Unreal 3D 모드 구축",
   "progress_basis": "verified acceptance items / all acceptance items; source_ready is implemented but remains unverified in a packaged run",
   "goal_complete": false,
-  "current_blocker": "Shipping 패키지, 1080p 30fps, 대표 안전조치, 초기화·재연결 및 10분 프로세스/GPU 안정성에는 차단 요소가 없다. 60분 연속 운전과 나머지 시각 애니메이션의 실제 화면 검증이 남아 있다.",
+  "current_blocker": "Shipping 패키지에서 누출·화재·설비 강조·위험거리·위험도 바닥·CCTV·검지기·독립 호스·대표 안전조치까지 실제 적용 상태를 검증했다. 60분 연속 운전, 전체 밸브/고장 매트릭스, 벤트 잔압, 복구 절차, 위험거리 라벨, 상대/절대 위험도 전환, 설비 선택 및 장시간 깜빡임 검증이 남아 있다.",
   "phases": [
     {
       "name": "환경 및 데이터 계약",
@@ -28,7 +28,7 @@
         {"id":"ue-bank-scene", "status":"verified", "evidence":"actual UE 5.8.3 video and reference-scene placement"},
         {"id":"ue-safety-commands", "status":"verified", "evidence":"Shipping matrix passed: valve, ventilation, cooling, access, evacuation, ESD and operation stop; output/unreal/safety-actions-final.json"},
         {"id":"ue-valve-feedback", "status":"verified", "evidence":"bank.high.inlet command accepted separately from confirmed closed feedback"},
-        {"id":"ue-leak-and-range", "status":"source_ready"},
+        {"id":"ue-leak-and-range", "status":"verified", "evidence":"Shipping renderer applied visual-leak jet and consequence-distance component; output/unreal/visual-state-scenario-final.json"},
         {"id":"ue-disconnect-reconnect", "status":"verified", "evidence":"three Shipping run/bind/ESD/stop/unbind cycles; every run began with esd=false; output/unreal/reset-reconnect-final.json"},
         {"id":"actual-ue-video-and-operation", "status":"verified", "evidence":"output/unreal/ue-video.json; advancing 1920x1080 stream"}
       ]
@@ -40,35 +40,35 @@
         {"id":"gltf-validation", "status":"verified", "evidence":"7 GLBs; Khronos validator: 0 errors, 0 warnings"},
         {"id":"ue-import-axis-scale", "status":"verified", "evidence":"8 placed instances; all bounds within 75-125% reference dimensions"},
         {"id":"full-station-assembly", "status":"verified", "evidence":"8 model instances persist in /Game/HRS/Scenes and render in Station map"},
-        {"id":"two-dispensers", "status":"source_ready", "evidence":"two independent dispenser, vehicle and hose state paths"},
-        {"id":"road-canopy-site", "status":"source_ready", "evidence":"reference road, canopy, operations room, boundary and pipe corridor"},
-        {"id":"cctv-and-detector-markers", "status":"source_ready", "evidence":"24 detector and 5 camera coordinates in manifest"},
+        {"id":"two-dispensers", "status":"verified", "evidence":"Shipping run switched independently from dispenser 1 to dispenser 2 with mutually consistent hose states"},
+        {"id":"road-canopy-site", "status":"verified", "evidence":"Shipping 1080p capture contains the placed canopy, station site, roads, equipment area and vent stack"},
+        {"id":"cctv-and-detector-markers", "status":"verified", "evidence":"Shipping renderer reported 5 visible CCTV markers and all 24 visible detector markers"},
         {"id":"equipment-selection-and-visual-qa", "status":"source_ready", "evidence":"component and actor tag picking; visual polish remains"}
       ]
     },
     {
       "name": "운전 및 안전 애니메이션",
       "items": [
-        {"id":"two-hose-connection", "status":"source_ready", "evidence":"each hose switches parked/vehicle geometry from independent process state"},
+        {"id":"two-hose-connection", "status":"verified", "evidence":"Shipping post-application feedback confirmed connected/parked then parked/connected geometry"},
         {"id":"all-valves-and-failures", "status":"source_ready", "evidence":"15 server valve IDs receive commanded/moving/actual/failure feedback"},
         {"id":"vent-path-and-residual", "status":"source_ready", "evidence":"three vent valves, stack and server-owned release jet state"},
-        {"id":"ventilation", "status":"source_ready", "evidence":"four zone fan states and failure color"},
-        {"id":"cooling", "status":"source_ready", "evidence":"three bank cooling states and failure color"},
-        {"id":"evacuation", "status":"source_ready", "evidence":"zone personnel move to muster area; evacuated vehicle state displayed"},
+        {"id":"ventilation", "status":"verified", "evidence":"Shipping feedback confirmed storage fan running after accepted command"},
+        {"id":"cooling", "status":"verified", "evidence":"Shipping feedback confirmed high-bank cooling running after accepted command"},
+        {"id":"evacuation", "status":"verified", "evidence":"Shipping feedback confirmed storage personnel evacuated and visible at muster"},
         {"id":"recovery-procedure", "status":"source_ready", "evidence":"purge and diagnostic state markers plus 8-step recovery completion counter"},
-        {"id":"esd-state-consistency", "status":"source_ready"}
+        {"id":"esd-state-consistency", "status":"verified", "evidence":"Shipping safety-action matrix and three reset/reconnect cycles confirmed ESD transition and fresh reset"}
       ]
     },
     {
       "name": "사고 및 위험 시각화",
       "items": [
-        {"id":"leak-plume", "status":"source_ready"},
-        {"id":"fire", "status":"source_ready", "evidence":"external-fire and confirmed FD signals control low-intensity fire markers"},
-        {"id":"issue-highlight", "status":"source_ready", "evidence":"active faults, releases and alarmed detectors highlight target equipment"},
+        {"id":"leak-plume", "status":"verified", "evidence":"Shipping renderer reported the visual-leak jet visible during a bounded physical leak"},
+        {"id":"fire", "status":"verified", "evidence":"Shipping renderer reported cascade.high fire component visible for external-fire input"},
+        {"id":"issue-highlight", "status":"verified", "evidence":"Shipping renderer reported cascade.high highlight visible for the combined incident"},
         {"id":"labelled-consequence-boundary", "status":"source_ready"},
         {"id":"relative-and-absolute-index", "status":"source_ready", "evidence":"risk_display_mode selects cached server relative/absolute score"},
-        {"id":"equipment-floor-zones", "status":"source_ready"},
-        {"id":"display-toggles-settings", "status":"source_ready", "evidence":"risk, distance, CCTV and detector toggles; CCTV/detectors default off"},
+        {"id":"equipment-floor-zones", "status":"verified", "evidence":"Shipping renderer reported ten equipment-sized risk floor components visible"},
+        {"id":"display-toggles-settings", "status":"verified", "evidence":"Pixel Streaming inputs enabled risk, distance, all 5 CCTV and all 24 detector components with post-application feedback"},
         {"id":"no-flicker-and-low-intensity", "status":"source_ready", "evidence":"reuses components and disables bloom; no per-frame geometry rebuild"}
       ]
     },
