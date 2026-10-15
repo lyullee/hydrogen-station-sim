@@ -3,7 +3,7 @@
   "objective": "기존 공정·HyRAM·HAZOP·SAGA를 유지하는 Unreal 3D 모드 구축",
   "progress_basis": "verified acceptance items / all acceptance items; source_ready is implemented but remains unverified in a packaged run",
   "goal_complete": false,
-  "current_blocker": "Shipping 패키지에서 설비 선택, 라벨이 붙은 위험거리 경계와 상대/절대 위험도 전환까지 실제 적용 상태를 검증했다. 60분 연속 운전, 전체 밸브/고장 매트릭스, 벤트 잔압, 복구 절차 및 장시간 깜빡임 검증이 남아 있다.",
+  "current_blocker": "Shipping 패키지에서 12개 차단밸브, 3개 벤트, 5개 밸브 고장 모드와 8단계 복구·재가동 승인까지 검증했다. 장시간 깜빡임과 60분 메모리 안정성 검증이 남아 있다.",
   "phases": [
     {
       "name": "환경 및 데이터 계약",
@@ -50,12 +50,12 @@
       "name": "운전 및 안전 애니메이션",
       "items": [
         {"id":"two-hose-connection", "status":"verified", "evidence":"Shipping post-application feedback confirmed connected/parked then parked/connected geometry"},
-        {"id":"all-valves-and-failures", "status":"source_ready", "evidence":"15 server valve IDs receive commanded/moving/actual/failure feedback"},
-        {"id":"vent-path-and-residual", "status":"source_ready", "evidence":"three vent valves, stack and server-owned release jet state"},
+        {"id":"all-valves-and-failures", "status":"verified", "evidence":"Shipping run confirmed close/open feedback for 12 isolation valves and open/close for 3 vent valves; stuck-open, stuck-closed, partial-close, seat-leak and feedback-fault all produced server and Unreal failure feedback; output/unreal/valves-recovery-shipping.json"},
+        {"id":"vent-path-and-residual", "status":"verified", "evidence":"Shipping run showed all three vent release jets, decreasing bank mass/pressure while open, confirmed closure and jet removal; output/unreal/valves-recovery-shipping.json"},
         {"id":"ventilation", "status":"verified", "evidence":"Shipping feedback confirmed storage fan running after accepted command"},
         {"id":"cooling", "status":"verified", "evidence":"Shipping feedback confirmed high-bank cooling running after accepted command"},
         {"id":"evacuation", "status":"verified", "evidence":"Shipping feedback confirmed storage personnel evacuated and visible at muster"},
-        {"id":"recovery-procedure", "status":"source_ready", "evidence":"purge and diagnostic state markers plus 8-step recovery completion counter"},
+        {"id":"recovery-procedure", "status":"verified", "evidence":"Shipping run removed a simulated leak then completed source removal, leak repair, tightness, detector, valve, purge, pressure and supervisor gates; Unreal reported 8/8 before confirmed restart approval"},
         {"id":"esd-state-consistency", "status":"verified", "evidence":"Shipping safety-action matrix and three reset/reconnect cycles confirmed ESD transition and fresh reset"}
       ]
     },
