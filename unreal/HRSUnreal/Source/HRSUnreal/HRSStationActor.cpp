@@ -48,7 +48,8 @@ AHRSStationActor::AHRSStationActor()
 }
 
 UStaticMeshComponent* AHRSStationActor::Shape(const TCHAR* MeshPath, const FVector& Position,
-    const FVector& Size, const FLinearColor& Color, bool bTransparent, const FString& ComponentId)
+    const FVector& Size, const FLinearColor& Color, bool bTransparent, const FString& ComponentId,
+    float Metallic, float Roughness, float Specular)
 {
     auto* Mesh = NewObject<UStaticMeshComponent>(this);
     Mesh->SetupAttachment(SceneRoot);
@@ -60,11 +61,18 @@ UStaticMeshComponent* AHRSStationActor::Shape(const TCHAR* MeshPath, const FVect
     Mesh->SetCollisionResponseToAllChannels(ECR_Ignore);
     if (!bTransparent) Mesh->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
     if (!ComponentId.IsEmpty()) Mesh->ComponentTags.Add(FName(*ComponentId));
-    UMaterialInterface* Base = bTransparent ? TransparentMaterial.Get() : OpaqueMaterial.Get();
+    UMaterialInterface* Base = bTransparent ? TransparentMaterial.Get() : PhysicalMaterial.Get();
+    if (!Base) Base = OpaqueMaterial.Get();
     if (Base)
     {
         auto* Dynamic = UMaterialInstanceDynamic::Create(Base, this);
         Dynamic->SetVectorParameterValue(TEXT("Color"), Color);
+        if (!bTransparent)
+        {
+            Dynamic->SetScalarParameterValue(TEXT("Metallic"), Metallic);
+            Dynamic->SetScalarParameterValue(TEXT("Roughness"), Roughness);
+            Dynamic->SetScalarParameterValue(TEXT("Specular"), Specular);
+        }
         Mesh->SetMaterial(0, Dynamic);
     }
     AddInstanceComponent(Mesh); Mesh->RegisterComponent();
@@ -155,12 +163,27 @@ void AHRSStationActor::BuildReferenceStation()
 {
     // Public-reference layout. Geometry is intentionally generic and does not
     // disclose the footprint, manufacturer, or capacity of a real station.
+    // Equipment decomposition follows public H2Tools/NREL reference-station
+    // practice and the owner's de-identified industrial photographs.  It is a
+    // visual reference only and does not represent vendor CAD.
     Shape(Cube, FVector(-400, -100, -20), FVector(4800, 2800, 40),
-          FLinearColor(.67, .72, .74));
+          FLinearColor(.49, .54, .55), false, FString(), .02f, .96f, .25f);
     Shape(Cube, FVector(-350, 900, 2), FVector(4700, 520, 8),
-          FLinearColor(.13, .16, .18));
+          FLinearColor(.075, .085, .09), false, FString(), .01f, .91f, .2f);
     for (int32 X = -2500; X <= 1700; X += 500)
-        Shape(Cube, FVector(X, 900, 8), FVector(220, 9, 3), FLinearColor(.9, .9, .82));
+        Shape(Cube, FVector(X, 900, 8), FVector(220, 9, 3), FLinearColor(.83, .82, .68), false, FString(), .01f, .72f, .25f);
+    // Concrete construction joints, kerbs, drains and vehicle approach markings.
+    for (int32 X = -2600; X <= 1800; X += 400)
+        Shape(Cube, FVector(X, -220, 2), FVector(2, 1760, 2), FLinearColor(.20, .23, .23), false, FString(), .02f, .9f, .2f);
+    for (int32 Y = -1000; Y <= 600; Y += 400)
+        Shape(Cube, FVector(-400, Y, 2), FVector(4400, 2, 2), FLinearColor(.20, .23, .23), false, FString(), .02f, .9f, .2f);
+    for (float X : {-2650.f, 1900.f})
+        Shape(Cube, FVector(X, 0, 14), FVector(24, 2100, 28), FLinearColor(.66, .68, .66), false, FString(), .04f, .87f, .28f);
+    for (float X : {-100.f, 700.f})
+        for (int32 Y = 180; Y <= 780; Y += 80)
+            Shape(Cube, FVector(X, Y, 8), FVector(9, 42, 3), FLinearColor(.82, .82, .76), false, FString(), .01f, .74f, .2f);
+    for (int32 Y = 250; Y <= 760; Y += 64)
+        Shape(Cube, FVector(1450, Y, 8), FVector(180, 18, 3), FLinearColor(.16, .19, .2), false, FString(), .15f, .65f, .35f);
 
     auto AddEquipment = [this](const FString& Id, const FString& Label,
         const FVector& Origin, const FVector& Envelope, const FLinearColor& Color)
@@ -213,6 +236,72 @@ void AHRSStationActor::BuildReferenceStation()
     EquipmentMeshes[TEXT("dispenser.hose")]->SetVisibility(false);
     EquipmentMeshes[TEXT("dispenser_2.hose")]->SetVisibility(false);
 
+    // Hide primitive envelopes where detailed procedural equipment replaces
+    // them.  Dimensions, selection and risk overlays remain unchanged.
+    EquipmentMeshes[TEXT("header")]->SetVisibility(false);
+    EquipmentMeshes[TEXT("vent")]->SetVisibility(false);
+
+    const FLinearColor Stainless(.61, .66, .67);
+    const FLinearColor DarkSteel(.15, .19, .20);
+    const FLinearColor StationBlue(.025, .25, .48);
+    const FLinearColor SafetyYellow(.92, .66, .04);
+    const FLinearColor InstrumentBlue(.08, .30, .48);
+    const FLinearColor ScreenBlack(.012, .018, .022);
+
+    auto AddGauge = [this, &Stainless, &ScreenBlack](const FVector& Position, const FString& ComponentId)
+    {
+        auto* Case = Shape(Cylinder, Position, FVector(23, 23, 11), Stainless, false, ComponentId, .82f, .24f, .55f);
+        Case->SetRelativeRotation(FRotator(90, 0, 0));
+        auto* Face = Shape(Cylinder, Position + FVector(0, -6, 0), FVector(19, 19, 3), FLinearColor(.91, .91, .84), false, ComponentId, .02f, .34f, .45f);
+        Face->SetRelativeRotation(FRotator(90, 0, 0));
+        Segment(Position + FVector(0, -9, 0), Position + FVector(8, -10, 7), 1.5f, ScreenBlack, false, ComponentId);
+    };
+
+    // Stainless common-header skid with instruments, supports and manual valves.
+    for (float X : {160.f, 300.f, 440.f})
+    {
+        Segment(FVector(X, -345, 55), FVector(X, -255, 55), 11, Stainless, false, TEXT("header"));
+        Segment(FVector(X, -300, 55), FVector(X, -300, 126), 8, Stainless, false, TEXT("header"));
+        AddGauge(FVector(X, -300, 145), TEXT("header"));
+        auto* Wheel = Shape(Cylinder, FVector(X, -300, 95), FVector(19, 19, 5), FLinearColor(.68, .10, .045), false, TEXT("header"), .26f, .48f, .42f);
+        Wheel->SetRelativeRotation(FRotator(90, 0, 0));
+    }
+    Segment(FVector(120, -300, 55), FVector(480, -300, 55), 13, Stainless, false, TEXT("header"));
+    for (float X : {120.f, 480.f})
+        Shape(Cube, FVector(X, -300, 35), FVector(14, 90, 70), DarkSteel, false, TEXT("header"), .7f, .39f, .5f);
+    Shape(Cube, FVector(300, -350, 94), FVector(330, 12, 54), FLinearColor(.82, .85, .83), false, TEXT("header"), .25f, .42f, .45f);
+
+    // H70 dispensers: plinth, cabinet, display, E-stop, nozzle dock and top cap.
+    for (const auto& Pair : TArray<TPair<FString, FVector>>{
+        TPair<FString, FVector>(TEXT("dispenser.pcv"), FVector(0, 420, 0)),
+        TPair<FString, FVector>(TEXT("dispenser_2.pcv"), FVector(800, 420, 0))})
+    {
+        const FString& Id = Pair.Key; const FVector O = Pair.Value;
+        Shape(Cube, O + FVector(0, 0, 8), FVector(150, 130, 16), DarkSteel, false, Id, .65f, .38f, .5f);
+        Shape(Cube, O + FVector(0, 0, 225), FVector(132, 112, 18), FLinearColor(.88, .90, .89), false, Id, .24f, .36f, .45f);
+        Shape(Cube, O + FVector(0, -57, 158), FVector(82, 4, 46), ScreenBlack, false, Id, .04f, .23f, .6f);
+        Shape(Cube, O + FVector(0, -60, 119), FVector(92, 3, 16), StationBlue, false, Id, .18f, .32f, .5f);
+        Shape(Cylinder, O + FVector(39, -61, 91), FVector(13, 13, 8), FLinearColor(.76, .035, .02), false, Id, .18f, .45f, .45f)->SetRelativeRotation(FRotator(90, 0, 0));
+        Shape(Cube, O + FVector(-53, -59, 106), FVector(19, 8, 42), DarkSteel, false, Id, .65f, .35f, .52f);
+        Shape(Cylinder, O + FVector(-53, -68, 106), FVector(8, 8, 34), Stainless, false, Id, .84f, .22f, .55f)->SetRelativeRotation(FRotator(90, 0, 0));
+        for (float X : {-45.f, 45.f})
+            Shape(Cube, O + FVector(X, -60, 33), FVector(5, 4, 40), FLinearColor(.55, .58, .57), false, Id, .32f, .5f, .4f);
+    }
+
+    // Tripod-supported vent header and elevated discharge stack.
+    Segment(FVector(1400, -900, 25), FVector(1400, -900, 650), 14, Stainless, false, TEXT("vent"));
+    Segment(FVector(1380, -900, 620), FVector(1420, -900, 620), 9, Stainless, false, TEXT("vent"));
+    Segment(FVector(1400, -900, 650), FVector(1400, -900, 690), 22, DarkSteel, false, TEXT("vent"));
+    for (float Angle : {0.f, 120.f, 240.f})
+    {
+        const float R = FMath::DegreesToRadians(Angle);
+        const FVector Foot(1400 + 82 * FMath::Cos(R), -900 + 82 * FMath::Sin(R), 15);
+        Segment(Foot, FVector(1400, -900, 360), 7, DarkSteel, false, TEXT("vent"));
+        Shape(Cube, Foot, FVector(34, 34, 10), Stainless, false, TEXT("vent"), .68f, .35f, .5f);
+    }
+    for (float Z : {180.f, 360.f, 540.f})
+        Shape(Cylinder, FVector(1400, -900, Z), FVector(38, 38, 5), DarkSteel, false, TEXT("vent"), .68f, .34f, .5f);
+
     auto AddValve = [this](const FString& ValveId, const FString& ComponentId, const FVector& Position)
     {
         ValveMeshes.Add(ValveId, Shape(Cylinder, Position, FVector(28, 28, 22),
@@ -228,16 +317,81 @@ void AHRSStationActor::BuildReferenceStation()
     AddValve(TEXT("vent.medium"), TEXT("vent"), FVector(1400, -900, 90));
     AddValve(TEXT("vent.high"), TEXT("vent"), FVector(1460, -900, 90));
 
-    // Canopy, operations room, perimeter and pipe corridor establish scale.
-    Shape(Cube, FVector(420, 565, 500), FVector(1900, 900, 35), FLinearColor(.9, .92, .93));
+    // Canopy: separate roof deck, fascia and trim.  Every parallel surface has
+    // a physical gap, preventing the coplanar depth fighting seen at corners.
+    Shape(Cube, FVector(420, 565, 505), FVector(1900, 900, 24), FLinearColor(.79, .82, .82), false, FString(), .55f, .34f, .47f);
+    for (float Y : {1030.f, 100.f})
+    {
+        Shape(Cube, FVector(420, Y, 480), FVector(1848, 22, 74), FLinearColor(.88, .90, .89), false, FString(), .23f, .42f, .44f);
+        Shape(Cube, FVector(420, Y + (Y > 500 ? 13 : -13), 479), FVector(1852, 7, 16), StationBlue, false, FString(), .20f, .35f, .50f);
+    }
+    for (float X : {-530.f, 1370.f})
+    {
+        Shape(Cube, FVector(X, 565, 480), FVector(22, 878, 74), FLinearColor(.88, .90, .89), false, FString(), .23f, .42f, .44f);
+        Shape(Cube, FVector(X + (X > 0 ? 13 : -13), 565, 479), FVector(7, 882, 16), StationBlue, false, FString(), .20f, .35f, .50f);
+    }
     for (float X : {-450.f, 420.f, 1290.f}) for (float Y : {180.f, 950.f})
-        Shape(Cube, FVector(X, Y, 245), FVector(28, 28, 490), FLinearColor(.72, .76, .78));
-    Shape(Cube, FVector(-1000, 500, 150), FVector(560, 520, 300), FLinearColor(.87, .89, .89));
+    {
+        Shape(Cube, FVector(X, Y, 245), FVector(25, 25, 490), FLinearColor(.64, .68, .68), false, FString(), .72f, .28f, .52f);
+        Shape(Cube, FVector(X, Y, 10), FVector(72, 72, 18), FLinearColor(.53, .55, .54), false, FString(), .62f, .42f, .46f);
+        for (float DX : {-24.f, 24.f}) for (float DY : {-24.f, 24.f})
+            Shape(Cylinder, FVector(X + DX, Y + DY, 24), FVector(5, 5, 11), DarkSteel, false, FString(), .78f, .27f, .52f);
+    }
+    for (float Y : {230.f, 565.f, 900.f})
+        Shape(Cube, FVector(420, Y, 476), FVector(1810, 14, 24), DarkSteel, false, FString(), .72f, .34f, .50f);
+    for (float X = -350; X <= 1190; X += 385)
+        for (float Y : {330.f, 800.f})
+            Shape(Cube, FVector(X, Y, 464), FVector(190, 54, 7), FLinearColor(.89, .91, .88), false, FString(), .12f, .48f, .42f);
+    // Gutter and downpipes are separated from the fascia by 18 mm-equivalent.
+    Segment(FVector(-500, 100, 452), FVector(1340, 100, 452), 9, DarkSteel);
+    Segment(FVector(-500, 100, 452), FVector(-500, 100, 42), 8, DarkSteel);
+    Segment(FVector(1340, 100, 452), FVector(1340, 100, 42), 8, DarkSteel);
+
+    // Operations/utility room with roof cap, door, glazing, louvres and outdoor unit.
+    Shape(Cube, FVector(-1000, 500, 150), FVector(560, 520, 300), FLinearColor(.77, .80, .79), false, FString(), .18f, .68f, .34f);
+    Shape(Cube, FVector(-1000, 500, 314), FVector(590, 550, 28), FLinearColor(.54, .58, .58), false, FString(), .56f, .39f, .48f);
+    Shape(Cube, FVector(-1120, 230, 126), FVector(115, 12, 226), StationBlue, false, FString(), .18f, .38f, .48f);
+    Shape(Cube, FVector(-870, 230, 180), FVector(210, 10, 92), FLinearColor(.08, .15, .18), false, FString(), .08f, .18f, .62f);
+    Shape(Cube, FVector(-870, 223, 180), FVector(190, 3, 72), FLinearColor(.22, .39, .46), true);
+    for (float Z = 82; Z <= 218; Z += 22)
+        Shape(Cube, FVector(-1278, 500, Z), FVector(7, 280, 8), DarkSteel, false, FString(), .68f, .38f, .48f);
+    Shape(Cube, FVector(-690, 500, 92), FVector(76, 130, 160), FLinearColor(.72, .75, .74), false, FString(), .28f, .52f, .42f);
+    Shape(Cylinder, FVector(-651, 500, 92), FVector(48, 48, 12), DarkSteel, false, FString(), .45f, .42f, .44f)->SetRelativeRotation(FRotator(0, 90, 0));
+
+    // Open steel perimeter fence with posts and rails instead of opaque walls.
     for (float Y : {-1120.f, 1120.f})
-        Shape(Cube, FVector(-400, Y, 105), FVector(4800, 15, 210), FLinearColor(.22, .31, .33));
-    Segment(FVector(-2200, -550, 70), FVector(-900, -550, 70), 15, FLinearColor(.79, .62, .12));
-    Segment(FVector(-900, -550, 70), FVector(-900, -300, 70), 15, FLinearColor(.79, .62, .12));
-    Segment(FVector(-900, -300, 70), FVector(1350, -300, 70), 15, FLinearColor(.08, .55, .46));
+    {
+        for (float X = -2720; X <= 1920; X += 240)
+            Shape(Cube, FVector(X, Y, 108), FVector(12, 12, 216), DarkSteel, false, FString(), .72f, .42f, .48f);
+        for (float Z : {38.f, 108.f, 178.f})
+            Shape(Cube, FVector(-400, Y, Z), FVector(4640, 7, 7), DarkSteel, false, FString(), .72f, .42f, .48f);
+    }
+    for (float X : {-2720.f, 1920.f})
+    {
+        for (float Y = -1120; Y <= 1120; Y += 240)
+            Shape(Cube, FVector(X, Y, 108), FVector(12, 12, 216), DarkSteel, false, FString(), .72f, .42f, .48f);
+        for (float Z : {38.f, 108.f, 178.f})
+            Shape(Cube, FVector(X, 0, Z), FVector(7, 2240, 7), DarkSteel, false, FString(), .72f, .42f, .48f);
+    }
+
+    // Pipe corridor uses stainless process tube on galvanized supports; yellow
+    // marks trailer supply and green marks the station high-pressure header.
+    Segment(FVector(-2200, -550, 78), FVector(-900, -550, 78), 15, FLinearColor(.72, .54, .055), false, FString());
+    Segment(FVector(-900, -550, 78), FVector(-900, -300, 78), 15, FLinearColor(.72, .54, .055), false, FString());
+    Segment(FVector(-900, -300, 78), FVector(1350, -300, 78), 15, FLinearColor(.035, .43, .35), false, FString());
+    Segment(FVector(-900, -275, 104), FVector(1350, -275, 104), 8, Stainless, false, FString());
+    for (float X = -850; X <= 1300; X += 215)
+    {
+        Shape(Cube, FVector(X, -288, 43), FVector(13, 95, 86), DarkSteel, false, FString(), .7f, .42f, .48f);
+        Shape(Cube, FVector(X, -288, 89), FVector(13, 112, 8), DarkSteel, false, FString(), .7f, .42f, .48f);
+    }
+
+    // Vehicle-impact protection and zone edge markings.
+    for (float X : {-120.f, 120.f, 680.f, 920.f})
+        for (float Y : {300.f, 545.f})
+            Shape(Cylinder, FVector(X, Y, 46), FVector(16, 16, 92), SafetyYellow, false, FString(), .16f, .51f, .45f);
+    for (float X : {-920.f, -760.f, 980.f, 1180.f})
+        Shape(Cylinder, FVector(X, -360, 48), FVector(16, 16, 96), SafetyYellow, false, FString(), .16f, .51f, .45f);
 
     BuildHose(Hose1Parked, {FVector(50, 430, 175), FVector(95, 455, 130),
         FVector(90, 510, 45), FVector(35, 520, 80), FVector(45, 470, 165)}, TEXT("dispenser.hose"));
@@ -267,10 +421,29 @@ void AHRSStationActor::BuildReferenceStation()
     for (const auto& Entry : Detectors)
     {
         const bool bFlame = Entry.Key.StartsWith(TEXT("FD-"));
-        auto* Marker = Shape(Sphere, Entry.Value, FVector(24),
+        const FLinearColor LensColor = bFlame ? FLinearColor(.94, .41, .08) : FLinearColor(.05, .55, .62);
+        // A compact weatherproof detector head: swivel bracket, cylindrical
+        // housing, sun shield and coloured optical/sampling face.  The front
+        // lens remains the state-bearing component so alarm tinting stays
+        // unambiguous while the surrounding hardware reads as real equipment.
+        auto* Marker = Shape(Cylinder, Entry.Value, FVector(22, 22, 12),
                              bFlame ? FLinearColor(.94, .41, .08) : FLinearColor(.05, .55, .62),
-                             false, Entry.Key);
-        Marker->SetVisibility(false); DetectorMeshes.Add(Entry.Key, Marker);
+                             false, Entry.Key, .28f, .27f, .58f);
+        Marker->SetRelativeRotation(FRotator(90, 0, 0));
+        auto AttachDetectorPart = [Marker](UStaticMeshComponent* Part)
+        {
+            Part->AttachToComponent(Marker, FAttachmentTransformRules::KeepWorldTransform);
+            Part->SetVisibility(false);
+        };
+        AttachDetectorPart(Shape(Cylinder, Entry.Value + FVector(0, -8, 0), FVector(16, 16, 4),
+            LensColor, false, Entry.Key + TEXT(".lens"), .06f, .16f, .68f));
+        AttachDetectorPart(Shape(Cube, Entry.Value + FVector(0, 0, 17), FVector(38, 34, 5),
+            FLinearColor(.80, .83, .82), false, Entry.Key + TEXT(".shield"), .63f, .30f, .48f));
+        AttachDetectorPart(Shape(Cube, Entry.Value + FVector(0, 12, -14), FVector(9, 25, 27),
+            DarkSteel, false, Entry.Key + TEXT(".bracket"), .72f, .34f, .50f));
+        AttachDetectorPart(Shape(Cylinder, Entry.Value + FVector(0, 25, -25), FVector(7, 7, 16),
+            Stainless, false, Entry.Key + TEXT(".mount"), .78f, .28f, .52f));
+        Marker->SetVisibility(false, true); DetectorMeshes.Add(Entry.Key, Marker);
     }
     const TArray<TPair<FString, FVector>> Cameras = {
         TPair<FString, FVector>(TEXT("CAM-01"), FVector(300, -360, 340)), TPair<FString, FVector>(TEXT("CAM-02"), FVector(-620, -380, 310)),
@@ -279,8 +452,32 @@ void AHRSStationActor::BuildReferenceStation()
     };
     for (const auto& Entry : Cameras)
     {
-        auto* Camera = Shape(Cube, Entry.Value, FVector(34, 52, 28), FLinearColor(.12, .32, .44));
-        Camera->SetVisibility(false); CameraMeshes.Add(Entry.Key, Camera);
+        // Bullet CCTV assembly with visor, dark lens, cable gland and a
+        // two-link galvanized wall bracket.  A slight downward pitch makes
+        // the coverage direction legible from the operator camera.
+        auto* Camera = Shape(Cylinder, Entry.Value, FVector(30, 30, 72),
+            FLinearColor(.76, .80, .80), false, Entry.Key, .62f, .31f, .52f);
+        Camera->SetRelativeRotation(FRotator(0, 90, 0));
+        auto AttachCameraPart = [Camera](UStaticMeshComponent* Part)
+        {
+            Part->AttachToComponent(Camera, FAttachmentTransformRules::KeepWorldTransform);
+            Part->SetVisibility(false);
+        };
+        auto* Lens = Shape(Cylinder, Entry.Value + FVector(38, 0, 0), FVector(23, 23, 7),
+            ScreenBlack, false, Entry.Key + TEXT(".lens"), .08f, .12f, .70f);
+        Lens->SetRelativeRotation(FRotator(0, 90, 0)); AttachCameraPart(Lens);
+        AttachCameraPart(Shape(Cube, Entry.Value + FVector(11, 0, 21), FVector(82, 46, 7),
+            FLinearColor(.70, .74, .74), false, Entry.Key + TEXT(".visor"), .55f, .34f, .50f));
+        AttachCameraPart(Shape(Cylinder, Entry.Value + FVector(-40, 0, -6), FVector(10, 10, 20),
+            DarkSteel, false, Entry.Key + TEXT(".gland"), .55f, .36f, .50f));
+        AttachCameraPart(Segment(Entry.Value + FVector(-36, 0, -12), Entry.Value + FVector(-36, 0, -55),
+            8, Stainless, false, Entry.Key + TEXT(".arm")));
+        AttachCameraPart(Segment(Entry.Value + FVector(-36, 0, -55), Entry.Value + FVector(-70, 0, -55),
+            8, Stainless, false, Entry.Key + TEXT(".arm")));
+        AttachCameraPart(Shape(Cube, Entry.Value + FVector(-76, 0, -55), FVector(8, 45, 45),
+            DarkSteel, false, Entry.Key + TEXT(".plate"), .68f, .36f, .50f));
+        Camera->SetRelativeRotation(FRotator(-10, 0, 0));
+        Camera->SetVisibility(false, true); CameraMeshes.Add(Entry.Key, Camera);
     }
 
     for (const auto& Entry : TArray<TPair<FString, FVector>>{
@@ -368,6 +565,7 @@ void AHRSStationActor::BeginPlay()
     FParse::Value(FCommandLine::Get(), TEXT("HRSRenderer="), RendererId);
     ApiBase.RemoveFromEnd(TEXT("/"));
     OpaqueMaterial = LoadObject<UMaterialInterface>(nullptr, TEXT("/Game/HRS/Materials/M_HRSOpaque.M_HRSOpaque"));
+    PhysicalMaterial = LoadObject<UMaterialInterface>(nullptr, TEXT("/Game/HRS/Materials/M_HRSPhysical.M_HRSPhysical"));
     TransparentMaterial = LoadObject<UMaterialInterface>(nullptr, TEXT("/Game/HRS/Materials/M_HRSTranslucent.M_HRSTranslucent"));
     BuildReferenceStation();
     BuildBank(TEXT("low"), FVector(-100, -600, 0), FLinearColor(.1, .48, .53));
@@ -404,8 +602,8 @@ void AHRSStationActor::ResetVisualState()
     for (auto& Row : RiskMeshes) Row.Value->SetVisibility(false);
     for (auto& Row : HighlightMeshes) Row.Value->SetVisibility(false);
     for (auto& Row : FireMeshes) Row.Value->SetVisibility(false);
-    for (auto& Row : CameraMeshes) Row.Value->SetVisibility(false);
-    for (auto& Row : DetectorMeshes) { Row.Value->SetVisibility(false); Tint(Row.Value,
+    for (auto& Row : CameraMeshes) Row.Value->SetVisibility(false, true);
+    for (auto& Row : DetectorMeshes) { Row.Value->SetVisibility(false, true); Tint(Row.Value,
         Row.Key.StartsWith(TEXT("FD-")) ? FLinearColor(.94, .41, .08) : FLinearColor(.05, .55, .62)); }
     for (auto& Row : AuxiliaryMeshes)
     {
@@ -957,13 +1155,13 @@ void AHRSStationActor::ToggleDistance() { bShowDistance = !bShowDistance; ++Visu
 void AHRSStationActor::ToggleCameras()
 {
     bShowCameras = !bShowCameras; ++VisualRevision;
-    for (auto& Row : CameraMeshes) Row.Value->SetVisibility(bShowCameras);
+    for (auto& Row : CameraMeshes) Row.Value->SetVisibility(bShowCameras, true);
     RequestSnapshot();
 }
 void AHRSStationActor::ToggleDetectors()
 {
     bShowDetectors = !bShowDetectors; ++VisualRevision;
-    for (auto& Row : DetectorMeshes) Row.Value->SetVisibility(bShowDetectors);
+    for (auto& Row : DetectorMeshes) Row.Value->SetVisibility(bShowDetectors, true);
     RequestSnapshot();
 }
 

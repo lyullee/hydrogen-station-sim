@@ -32,6 +32,7 @@ public:
 private:
     UPROPERTY() TObjectPtr<USceneComponent> SceneRoot;
     UPROPERTY() TObjectPtr<UMaterialInterface> OpaqueMaterial;
+    UPROPERTY() TObjectPtr<UMaterialInterface> PhysicalMaterial;
     UPROPERTY() TObjectPtr<UMaterialInterface> TransparentMaterial;
     UPROPERTY() TObjectPtr<UTextRenderComponent> StatusText;
     UPROPERTY() TMap<FString, TObjectPtr<UTextRenderComponent>> Labels;
@@ -109,7 +110,8 @@ private:
         const TArray<FVector>& Points, const FString& ComponentId);
     UStaticMeshComponent* Shape(const TCHAR* MeshPath, const FVector& Position,
         const FVector& Size, const FLinearColor& Color, bool bTransparent = false,
-        const FString& ComponentId = FString());
+        const FString& ComponentId = FString(), float Metallic = .08f,
+        float Roughness = .56f, float Specular = .45f);
     UStaticMeshComponent* Segment(const FVector& Start, const FVector& End,
         float Diameter, const FLinearColor& Color, bool bTransparent = false,
         const FString& ComponentId = FString());
