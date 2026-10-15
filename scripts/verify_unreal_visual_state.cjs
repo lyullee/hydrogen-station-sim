@@ -105,15 +105,43 @@ async function safetyAction(page, runId, kind, target, visualPredicate, label) {
        evidence:s=>({show:s.show_cameras, count:s.visible_cameras.length, ids:s.visible_cameras})},
       {key:'KeyG', name:'detectors', predicate:s=>s.show_detectors && s.visible_detectors.length === 24,
        evidence:s=>({show:s.show_detectors, count:s.visible_detectors.length})},
-      {key:'KeyD', name:'consequence-distance', predicate:s=>s.show_distance && s.visible_distances.includes('visual-leak'),
-       evidence:s=>({show:s.show_distance, ids:s.visible_distances})},
+      {key:'KeyD', name:'consequence-distance', predicate:s=>s.show_distance &&
+       s.visible_distances.includes('visual-leak') && s.visible_distance_labels.includes('visual-leak'),
+       evidence:s=>({show:s.show_distance, ids:s.visible_distances, labelled:s.visible_distance_labels})},
       {key:'KeyR', name:'risk-floor', predicate:s=>s.show_risk && s.visible_risk_components.length > 0,
        evidence:s=>({show:s.show_risk, count:s.visible_risk_components.length, ids:s.visible_risk_components})},
     ]) {
       await page.keyboard.press(toggle.key);
-      feedback = await visualFeedback(page, runId, toggle.predicate, `${toggle.name} toggle was not applied`, 20000);
+      feedback = await visualFeedback(page, runId, toggle.predicate, `${toggle.name} toggle was not applied`,
+        toggle.name === 'risk-floor' ? 45000 : 20000);
       checks.push({name:toggle.name, status:'PASS', evidence:toggle.evidence(feedback.visual_state)});
     }
+
+    for (const selection of [
+      {key:'Digit1', expected:'cascade.low'},
+      {key:'Digit2', expected:'cascade.medium'},
+      {key:'Digit3', expected:'cascade.high'},
+    ]) {
+      await page.keyboard.press(selection.key);
+      feedback = await visualFeedback(page, runId,
+        state=>state.selected_equipment === selection.expected,
+        `Selection marker did not move to ${selection.expected}`, 10000);
+      checks.push({name:`selection-${selection.expected}`, status:'PASS',
+                   evidence:{selected_equipment:feedback.visual_state.selected_equipment}});
+    }
+
+    let currentOperations = await checked(await page.request.get(
+      `${api}/api/simulations/${runId}/operations`), 'read process operations for risk mode');
+    await checked(await page.request.put(`${api}/api/simulations/${runId}/operations`, {
+      data:{...currentOperations.settings, risk_display_mode:'absolute'}
+    }), 'switch to absolute risk mode');
+    feedback = await visualFeedback(page, runId,
+      state=>state.show_risk && state.risk_mode === 'absolute' && state.visible_risk_components.length > 0,
+      'Absolute risk mode was not applied', 20000);
+    checks.push({name:'relative-and-absolute-risk', status:'PASS', evidence:{
+      initial_mode:'relative', final_mode:feedback.visual_state.risk_mode,
+      visible_components:feedback.visual_state.visible_risk_components.length,
+    }});
 
     const actions = [];
     actions.push(await safetyAction(page, runId, 'valve.close', 'bank.high.inlet',
@@ -139,7 +167,7 @@ async function safetyAction(page, runId, kind, target, visualPredicate, label) {
       applied_auxiliary:row.visual_state.auxiliary_states,
     }))});
 
-    const currentOperations = await checked(await page.request.get(
+    currentOperations = await checked(await page.request.get(
       `${api}/api/simulations/${runId}/operations`), 'read process operations');
     const nextSettings = {...currentOperations.settings, vehicle_1:false, vehicle_2:true};
     await checked(await page.request.put(`${api}/api/simulations/${runId}/operations`, {

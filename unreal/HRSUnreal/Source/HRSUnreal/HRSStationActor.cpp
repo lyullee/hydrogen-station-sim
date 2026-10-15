@@ -373,6 +373,9 @@ void AHRSStationActor::BeginPlay()
     BuildBank(TEXT("low"), FVector(-100, -600, 0), FLinearColor(.1, .48, .53));
     BuildBank(TEXT("medium"), FVector(300, -600, 0), FLinearColor(.52, .34, .13));
     BuildBank(TEXT("high"), FVector(700, -600, 0), FLinearColor(.32, .23, .56));
+    SelectionMesh = Shape(Cube, Origins[Selected] + FVector(0, 0, Dimensions[Selected].Z * .5),
+                          Dimensions[Selected] + FVector(55, 55, 55),
+                          FLinearColor(.04, .42, .72), true);
     DiscoverImportedModels();
     StatusText = Text(FVector(300, 1180, 520), TEXT("Waiting for station session\n1/2/3 select | X inlet | Z outlet | E ESD | F stop\nR risk | D distance | C cameras | G detectors"), 22);
     GetWorldTimerManager().SetTimer(SessionTimer, this, &AHRSStationActor::PollBinding, 1.f, true, 0.f);
@@ -390,7 +393,14 @@ void AHRSStationActor::ResetVisualState()
     Selected = TEXT("cascade.high");
     for (auto& Row : Jets) { RemoveInstanceComponent(Row.Value); Row.Value->DestroyComponent(); }
     for (auto& Row : DistanceMeshes) { RemoveInstanceComponent(Row.Value); Row.Value->DestroyComponent(); }
-    Jets.Empty(); DistanceMeshes.Empty();
+    for (auto& Row : DistanceLabels) { RemoveInstanceComponent(Row.Value); Row.Value->DestroyComponent(); }
+    Jets.Empty(); DistanceMeshes.Empty(); DistanceLabels.Empty();
+    if (SelectionMesh)
+    {
+        SelectionMesh->SetRelativeLocation(Origins[Selected] + FVector(0, 0, Dimensions[Selected].Z * .5));
+        SelectionMesh->SetRelativeScale3D((Dimensions[Selected] + FVector(55, 55, 55)) / 100.f);
+        SelectionMesh->SetVisibility(true);
+    }
     for (auto& Row : RiskMeshes) Row.Value->SetVisibility(false);
     for (auto& Row : HighlightMeshes) Row.Value->SetVisibility(false);
     for (auto& Row : FireMeshes) Row.Value->SetVisibility(false);
@@ -526,6 +536,8 @@ void AHRSStationActor::SendFeedback(const TSharedPtr<FJsonObject>& Snapshot)
     Visual->SetBoolField(TEXT("show_distance"), bShowDistance);
     Visual->SetBoolField(TEXT("show_cameras"), bShowCameras);
     Visual->SetBoolField(TEXT("show_detectors"), bShowDetectors);
+    Visual->SetStringField(TEXT("risk_mode"), bRelativeRisk ? TEXT("relative") : TEXT("absolute"));
+    Visual->SetStringField(TEXT("selected_equipment"), Selected);
     auto HoseMode = [](const TArray<TObjectPtr<UStaticMeshComponent>>& Parked,
                        const TArray<TObjectPtr<UStaticMeshComponent>>& Connected)
     {
@@ -548,6 +560,7 @@ void AHRSStationActor::SendFeedback(const TSharedPtr<FJsonObject>& Snapshot)
     };
     AddVisible(TEXT("visible_jets"), Jets);
     AddVisible(TEXT("visible_distances"), DistanceMeshes);
+    AddVisible(TEXT("visible_distance_labels"), DistanceLabels);
     AddVisible(TEXT("visible_risk_components"), RiskMeshes);
     AddVisible(TEXT("visible_fire_components"), FireMeshes);
     AddVisible(TEXT("visible_highlight_components"), HighlightMeshes);
@@ -825,6 +838,7 @@ void AHRSStationActor::ApplySnapshot(const TSharedPtr<FJsonObject>& Snapshot)
     }
     for (auto& Row : Jets) Row.Value->SetVisibility(false);
     for (auto& Row : DistanceMeshes) Row.Value->SetVisibility(false);
+    for (auto& Row : DistanceLabels) Row.Value->SetVisibility(false);
     if (Snapshot->TryGetArrayField(TEXT("releases"), Rows)) for (const auto& Item : *Rows)
     {
         const auto Row = Item->AsObject(); if (!Row) continue;
@@ -843,6 +857,16 @@ void AHRSStationActor::ApplySnapshot(const TSharedPtr<FJsonObject>& Snapshot)
                 Shape(Cylinder, Origins[Id] + FVector(0, 0, 28), FVector(Radius * 2, Radius * 2, 3), FLinearColor(.85, .22, .08), true));
             DistanceMeshes[Release]->SetRelativeScale3D(FVector(Radius / 50, Radius / 50, .03));
             DistanceMeshes[Release]->SetVisibility(bShowDistance);
+            if (!DistanceLabels.Contains(Release))
+            {
+                auto* Label = Text(Origins[Id] + FVector(Radius, 0, 95), TEXT(""), 24);
+                Label->SetTextRenderColor(FColor(185, 48, 22));
+                DistanceLabels.Add(Release, Label);
+            }
+            DistanceLabels[Release]->SetRelativeLocation(Origins[Id] + FVector(Radius, 0, 95));
+            DistanceLabels[Release]->SetText(FText::FromString(
+                FString::Printf(TEXT("Consequence distance %.1f m\nSchematic advisory"), Radius / 100.)));
+            DistanceLabels[Release]->SetVisibility(bShowDistance);
         }
     }
     ApplyAuxiliaryState(Obj(Snapshot, TEXT("safety")));
@@ -872,7 +896,11 @@ void AHRSStationActor::RequestRisk()
     LastRiskRequest = FPlatformTime::Seconds(); const int32 Expected = Generation;
     auto Request = FHttpModule::Get().CreateRequest();
     Request->SetURL(ApiBase + TEXT("/api/simulations/") + CurrentRun + TEXT("/risk-zones"));
-    Request->SetVerb(TEXT("GET")); Request->SetTimeout(15.f);
+    // A cold HyRAM-backed screening pass can take longer than 15 seconds on a
+    // busy workstation.  This request runs asynchronously, so allow the
+    // calculation to finish instead of silently leaving the floor overlay
+    // empty after a transient timeout.
+    Request->SetVerb(TEXT("GET")); Request->SetTimeout(30.f);
     TWeakObjectPtr<AHRSStationActor> Weak(this);
     Request->OnProcessRequestComplete().BindLambda([Weak, Expected](FHttpRequestPtr, FHttpResponsePtr Response, bool bSuccess) {
         if (Weak.IsValid() && Weak->Generation == Expected && bSuccess && Response.IsValid() && Response->GetResponseCode() == 200)
@@ -910,7 +938,18 @@ void AHRSStationActor::IssueAction(const FString& Kind, const FString& Target)
     Request->ProcessRequest();
 }
 
-void AHRSStationActor::Select(const FString& Id) { if (Origins.Contains(Id)) Selected = Id; }
+void AHRSStationActor::Select(const FString& Id)
+{
+    if (!Origins.Contains(Id) || !Dimensions.Contains(Id)) return;
+    Selected = Id; ++VisualRevision;
+    if (SelectionMesh)
+    {
+        SelectionMesh->SetRelativeLocation(Origins[Id] + FVector(0, 0, Dimensions[Id].Z * .5));
+        SelectionMesh->SetRelativeScale3D((Dimensions[Id] + FVector(55, 55, 55)) / 100.f);
+        SelectionMesh->SetVisibility(true);
+    }
+    RequestSnapshot();
+}
 void AHRSStationActor::CloseSelectedValve(bool bInlet)
 { FString Bank = Selected; Bank.RemoveFromStart(TEXT("cascade.")); IssueAction(TEXT("valve.close"), TEXT("bank.") + Bank + (bInlet ? TEXT(".inlet") : TEXT(".outlet"))); }
 void AHRSStationActor::ToggleRisk() { bShowRisk = !bShowRisk; ++VisualRevision; if (!CurrentRun.IsEmpty()) { RequestRisk(); RequestSnapshot(); } }
@@ -937,6 +976,7 @@ void AHRSStationActor::Tick(float DeltaSeconds)
         const FVector Camera = Controller->PlayerCameraManager->GetCameraLocation();
         StatusText->SetWorldRotation((Camera - StatusText->GetComponentLocation()).Rotation());
         for (auto& Row : Labels) Row.Value->SetWorldRotation((Camera - Row.Value->GetComponentLocation()).Rotation());
+        for (auto& Row : DistanceLabels) Row.Value->SetWorldRotation((Camera - Row.Value->GetComponentLocation()).Rotation());
     }
     if (!bTerminal && !CurrentRun.IsEmpty() && LastReceive > 0 && FPlatformTime::Seconds() - LastReceive > 3)
         StatusText->SetText(FText::FromString(TEXT("DATA STALE - waiting for connection; last values retained")));

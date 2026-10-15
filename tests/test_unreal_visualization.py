@@ -201,8 +201,10 @@ def test_renderer_feedback_is_bound_ordered_and_finite(state):
     assert matched["parity"] == {"status": "compared", "matches": True, "mismatches": []}
     visual = {
         "show_risk": True, "show_distance": True, "show_cameras": False,
-        "show_detectors": True, "hose_1_mode": "connected", "hose_2_mode": "parked",
+        "show_detectors": True, "risk_mode": "absolute", "selected_equipment": "cascade.high",
+        "hose_1_mode": "connected", "hose_2_mode": "parked",
         "visible_jets": ["test-leak"], "visible_distances": ["test-leak"],
+        "visible_distance_labels": ["test-leak"],
         "visible_risk_components": ["cascade.high"], "visible_fire_components": [],
         "visible_highlight_components": ["cascade.high"], "visible_cameras": [],
         "visible_detectors": ["GD-0901"], "visible_auxiliary": ["access.storage"],

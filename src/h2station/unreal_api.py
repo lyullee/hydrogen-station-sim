@@ -37,10 +37,13 @@ class RendererVisualState(BaseModel):
     show_distance: bool = False
     show_cameras: bool = False
     show_detectors: bool = False
+    risk_mode: Literal["relative", "absolute"] = "relative"
+    selected_equipment: str = Field(default="", max_length=80, pattern=r"^[a-zA-Z0-9_.-]*$")
     hose_1_mode: Literal["parked", "connected", "invalid"] = "invalid"
     hose_2_mode: Literal["parked", "connected", "invalid"] = "invalid"
     visible_jets: list[str] = Field(default_factory=list, max_length=64)
     visible_distances: list[str] = Field(default_factory=list, max_length=64)
+    visible_distance_labels: list[str] = Field(default_factory=list, max_length=64)
     visible_risk_components: list[str] = Field(default_factory=list, max_length=64)
     visible_fire_components: list[str] = Field(default_factory=list, max_length=64)
     visible_highlight_components: list[str] = Field(default_factory=list, max_length=64)

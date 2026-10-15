@@ -38,6 +38,7 @@ private:
     UPROPERTY() TMap<FString, TObjectPtr<UStaticMeshComponent>> ValveMeshes;
     UPROPERTY() TMap<FString, TObjectPtr<UStaticMeshComponent>> Jets;
     UPROPERTY() TMap<FString, TObjectPtr<UStaticMeshComponent>> DistanceMeshes;
+    UPROPERTY() TMap<FString, TObjectPtr<UTextRenderComponent>> DistanceLabels;
     UPROPERTY() TMap<FString, TObjectPtr<UStaticMeshComponent>> RiskMeshes;
     UPROPERTY() TMap<FString, TObjectPtr<UStaticMeshComponent>> EquipmentMeshes;
     UPROPERTY() TMap<FString, TObjectPtr<UStaticMeshComponent>> HighlightMeshes;
@@ -46,6 +47,7 @@ private:
     UPROPERTY() TMap<FString, TObjectPtr<UStaticMeshComponent>> CameraMeshes;
     UPROPERTY() TMap<FString, TObjectPtr<UStaticMeshComponent>> AuxiliaryMeshes;
     UPROPERTY() TMap<FString, TObjectPtr<UStaticMeshComponent>> PersonnelMeshes;
+    UPROPERTY() TObjectPtr<UStaticMeshComponent> SelectionMesh;
     UPROPERTY() TArray<TObjectPtr<UStaticMeshComponent>> Hose1Parked;
     UPROPERTY() TArray<TObjectPtr<UStaticMeshComponent>> Hose1Connected;
     UPROPERTY() TArray<TObjectPtr<UStaticMeshComponent>> Hose2Parked;
