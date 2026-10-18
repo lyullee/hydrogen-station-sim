@@ -815,7 +815,7 @@ class SensorAssistantInput(BaseModel):
 
 app = FastAPI(
     title="Hydrogen Station Dynamic Simulator",
-    version="0.1.0",
+    version="0.1.2",
     description="First-principles hydrogen station, protection, and HyRAM runtime",
 )
 app.add_middleware(

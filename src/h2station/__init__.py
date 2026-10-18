@@ -1,5 +1,7 @@
 """First-principles dynamic models for gaseous hydrogen stations."""
 
+__version__ = "0.1.2"
+
 from .components import (
     CheckValve,
     CheckValveParameters,
@@ -125,6 +127,7 @@ from .safety_runtime import (
 )
 
 __all__ = [
+    "__version__",
     "CheckValve",
     "CheckValveParameters",
     "CompressorConnection",

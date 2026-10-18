@@ -10,10 +10,10 @@ MANUSCRIPT = ROOT / "manuscript/ijhe_manuscript_draft.tex"
 def test_manuscript_keeps_station_to_vehicle_and_human_claim_limits_explicit() -> None:
     text = " ".join(MANUSCRIPT.read_text(encoding="utf-8").split())
     required_fragments = (
-        "synchronized station-to-vehicle full-loop holdout was not found",
+        "no synchronized station-to-vehicle full-loop holdout was available",
         "No openly reusable synchronized station-to-vehicle",
         "raw cohort was identified, so vehicle-side full-loop accuracy is outside the primary claim",
-        "expert ratings remain pending",
+        "neither an independent holdout nor a substitute for expert review",
         "Holdout responses and ratings have not yet been collected",
         "does not test action correctness, operator usability or safety",
     )

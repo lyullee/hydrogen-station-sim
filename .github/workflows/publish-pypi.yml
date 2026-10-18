@@ -1,0 +1,59 @@
+name: Publish to PyPI
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+
+jobs:
+  pypi:
+    if: startsWith(github.event.release.tag_name, 'v')
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/p/hydrogen-station-sim
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Check out release
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Install build and validation dependencies
+        run: >-
+          python -m pip install --upgrade pip &&
+          python -m pip install build twine -e ".[api,test]"
+
+      - name: Verify release version
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+        run: >-
+          python -c "import os, tomllib, h2station;
+          version = tomllib.load(open('pyproject.toml', 'rb'))['project']['version'];
+          assert os.environ['RELEASE_TAG'] == 'v' + version;
+          assert h2station.__version__ == version"
+
+      - name: Run package release checks
+        run: >-
+          python -m pytest -q
+          tests/test_integration.py
+          tests/test_unreal_visualization.py
+          tests/test_manuscript_claim_boundaries.py
+
+      - name: Build distributions
+        run: python -m build
+
+      - name: Validate distributions
+        run: python -m twine check dist/*
+
+      - name: Publish distributions with trusted identity
+        uses: pypa/gh-action-pypi-publish@release/v1

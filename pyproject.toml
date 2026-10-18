@@ -4,10 +4,25 @@ build-backend = "hatchling.build"
 
 [project]
 name = "hydrogen-station-sim"
-version = "0.1.1"
+version = "0.1.2"
 description = "First-principles dynamic models for gaseous hydrogen refueling stations"
 readme = "README.md"
 requires-python = ">=3.10"
+license = "MIT"
+authors = [
+    {name = "Ugwiyeon Lee"},
+]
+keywords = ["hydrogen", "refueling station", "digital twin", "process safety", "HAZOP"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering",
+]
 dependencies = [
     "fluids>=1.0,<2",
     "ht>=1.0,<2",
@@ -41,8 +56,24 @@ all = [
 [project.scripts]
 h2station = "h2station.cli:main"
 
+[project.urls]
+Homepage = "https://github.com/lyullee/hydrogen-station-sim"
+Documentation = "https://github.com/lyullee/hydrogen-station-sim/blob/main/docs/USER_MANUAL.md"
+Repository = "https://github.com/lyullee/hydrogen-station-sim"
+Issues = "https://github.com/lyullee/hydrogen-station-sim/issues"
+Archive = "https://doi.org/10.5281/zenodo.23084421"
+
 [tool.hatch.build.targets.wheel]
 packages = ["src/h2station"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "src/h2station",
+    "README.md",
+    "LICENSE",
+    "CITATION.cff",
+    "pyproject.toml",
+]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
