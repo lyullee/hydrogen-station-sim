@@ -119,7 +119,7 @@ these proxies before operational use.
 
 ## Operator process control
 
-The remote's **안전 대응** tab adds simulation-only equipment isolation, delayed
+The remote's **Safety response** tab (`안전 대응` in the current UI) adds simulation-only equipment isolation, delayed
 valve position/flow confirmation, venting, ventilation, cooling, evacuation,
 recovery tests, and training replay. Active sensor scenarios and SAGA response
 cards provide the same executable virtual actions. See
@@ -146,7 +146,7 @@ overfill exercise; relief valves and independent ESD protections remain separate
 Trailer pressure falls as compressor transfer removes mass. Its fixed volume and
 isothermal temperature are explicit reference-model assumptions.
 
-The **실측 경계 보정** option is an explicit opt-in. It loads only the
+The **Measured-boundary calibration** option (`실측 경계 보정` in the current UI) is an explicit opt-in. It loads only the
 de-identified station-boundary aggregate in
 `research/confidential_operational_envelope_calibration_summary_2026_10_06.json`.
 The observed pressure margin is applied to both cascade-bank dispatch and
@@ -210,7 +210,7 @@ this verifies filter behavior only, not response correctness or operator benefit
 Consequence evaluation remains in the direct path. An active warning/critical
 state automatically evaluates relevant nodes before building the answer. Normal
 operation only evaluates consequences when the operator explicitly requests an
-impact or uses **센서 기준 가상 평가**. The calculations use current GOOD-quality
+impact or uses **Sensor-based hypothetical assessment** (`센서 기준 가상 평가` in the current UI). The calculations use current GOOD-quality
 pressure and temperature readings. An active leak uses its current orifice size
 and flow; a hypothetical case uses a 1 mm horizontal release at 1 m height and
 101325 Pa ambient pressure. The calculated result, sensor tags, and assumptions
