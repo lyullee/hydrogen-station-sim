@@ -115,8 +115,7 @@
   }
   async function refresh(){const id=jobId();if(!id){latest=null;render();return;}if(busy)return;try{const data=await json(endpoint(''));if(jobId()!==id)return;latest=data;lastJob=id;if(!host.contains(document.activeElement)||!['INPUT','SELECT'].includes(document.activeElement.tagName))render();}catch(error){lastError=friendlyError(error.message);render();}}
   async function waitForAction(action,id){
-    const deadline=Date.now()+60000;
-    while(action.status==='commanded'&&Date.now()<deadline){
+    while(action.status==='commanded'){
       await new Promise(resolve=>setTimeout(resolve,400));
       if(jobId()!==id)throw new Error('실행이 변경되어 조치 상태 확인을 종료했습니다.');
       latest=await json(endpoint(''));lastJob=id;render();
