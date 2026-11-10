@@ -1,5 +1,6 @@
 /* The draft stays editable while the currently connected simulation is running. */
 const $=id=>document.getElementById(id);
+const displayNumber=(value,digits=3)=>value!==null&&value!==undefined&&value!==''&&Number.isFinite(Number(value))?Number(value).toFixed(digits):'—';
 const controls={duration_s:'duration',control_period_s:'period',ambient_temperature_c:'ambient',initial_vehicle_pressure_mpa:'initial1',initial_vehicle_2_pressure_mpa:'initial2',initial_vehicle_temperature_c:'initialTemp1',initial_vehicle_2_temperature_c:'initialTemp2',bank_low_internal_volume_m3:'bankVolumeLow',bank_medium_internal_volume_m3:'bankVolumeMedium',bank_high_internal_volume_m3:'bankVolumeHigh',initial_bank_low_fill_percent:'bankFillLow',initial_bank_medium_fill_percent:'bankFillMedium',initial_bank_high_fill_percent:'bankFillHigh',pressure_ramp_rate_mpa_min:'ramp',delivery_temperature_c:'delivery',maximum_mass_flow_g_s:'maxFlow'};
 let activeJobId=new URLSearchParams(location.search).get('job'),job=null,pollTimer,mutating=false,catalog=null,faultSerial=0,esdRequested=false;
 window.getRemoteJobId=()=>activeJobId;
@@ -174,8 +175,8 @@ function renderProcess(){
   $('simulationSpeed').disabled=speedSaving||running&&!job.continuous||!running&&!$('continuous').checked;
   $('applyProcess').disabled=!running||mutating;
   for(const id of ['trailerPressure','trailerCapacity','trailerTemperature'])$(id).disabled=running||mutating;
-  if(snapshot){$('trailerReading').textContent=`재고 ${Number(snapshot.trailer_inventory_kg).toFixed(3)} kg · 압력 ${Number(snapshot.trailer_pressure_mpa).toFixed(3)} MPa · 이송 ${Number(snapshot.trailer_transferred_kg).toFixed(3)} kg`;
-    $('rechargeReading').textContent=`누적 보충 ${Number(snapshot.recharge_transferred_kg).toFixed(3)} kg${frame?.recharge_bank?' · '+frame.recharge_bank.toUpperCase()+' 뱅크':''}`;
+  if(snapshot){$('trailerReading').textContent=`재고 ${displayNumber(snapshot.trailer_inventory_kg)} kg · 압력 ${displayNumber(snapshot.trailer_pressure_mpa)} MPa · 이송 ${displayNumber(snapshot.trailer_transferred_kg)} kg`;
+    $('rechargeReading').textContent=`누적 보충 ${displayNumber(snapshot.recharge_transferred_kg)} kg${frame?.recharge_bank?' · '+frame.recharge_bank.toUpperCase()+' 뱅크':''}`;
     for(const row of $('reliefRows').children)row.querySelector('.relief-state').textContent=snapshot.relief_open?.[row.dataset.relief]?'열림':'닫힘';}else{$('trailerReading').textContent='재고 — kg · 압력 — MPa';$('rechargeReading').textContent='누적 보충 — kg';for(const row of $('reliefRows').children)row.querySelector('.relief-state').textContent='—';}
   if(frame){$('vehicle1Reading').textContent=`탱크 ${Number(frame.vehicle_mass_kg||0).toFixed(3)} kg · ${Number(frame.vehicle_pressure_mpa||0).toFixed(3)} MPa`;$('vehicle2Reading').textContent=`탱크 ${Number(frame.vehicle_2_mass_kg||0).toFixed(3)} kg · ${Number(frame.vehicle_2_pressure_mpa||0).toFixed(3)} MPa`;}else{$('vehicle1Reading').textContent='탱크 — kg';$('vehicle2Reading').textContent='탱크 — kg';}
 }

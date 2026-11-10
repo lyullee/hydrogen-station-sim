@@ -2638,8 +2638,11 @@ def issue_virtual_safety_action(job_id: str, request: VirtualSafetyActionInput) 
                 raise HTTPException(status_code=409, detail="Active hazard blocks this recovery check")
             if request.target == "source_removed" and runtime.any_requested():
                 raise HTTPException(status_code=409, detail="Stop all process operations before source-removal confirmation")
+            recovery_time = max(float(job.get("last_sample_time_s") or 0), runtime.safety.latest_time_s)
             if request.target == "leak_repaired" and any(
-                fault.kind is FaultKind.HYDROGEN_LEAK for fault in job["fault_registry"].values()):
+                fault.kind is FaultKind.HYDROGEN_LEAK and (
+                    fault.end_time_s is None or fault.end_time_s > recovery_time
+                ) for fault in job["fault_registry"].values()):
                 raise HTTPException(status_code=409, detail="Repair and remove the simulated leak before recording this check")
             if request.target == "detector_test" and any(
                 item.get("quality") != "GOOD" for item in (frame.get("gas_detectors") or {}).values()):

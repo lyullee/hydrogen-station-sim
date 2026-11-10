@@ -382,3 +382,26 @@ def test_live_safety_api_separates_command_feedback_and_replays():
             assert replay.json()["evaluation"]["training_score"] <= 100
         finally:
             client.post(f"/api/simulations/{job_id}/stop")
+
+
+@pytest.mark.parametrize("start,end,allowed", [(5, 40, True), (5, 600, False), (100, 600, False), (5, None, False)])
+def test_leak_recovery_distinguishes_ended_history_from_active_or_scheduled_leaks(monkeypatch, start, end, allowed):
+    import h2station.api as api
+    from fastapi import HTTPException
+    job_id = "repaired-history-regression"
+    runtime = ProcessRuntime(ProcessSettings().model_dump())
+    fault = FaultEvent("leak", FaultKind.HYDROGEN_LEAK, "cascade.low", start, end_time_s=end, leak_diameter_m=0.0002)
+    job = {"status": "running", "frames": [{"active_faults": [], "total_leak_flow_g_s": 0}],
+           "last_sample_time_s": 50, "fault_registry": {"leak": fault}}
+    monkeypatch.setitem(api._jobs, job_id, job)
+    monkeypatch.setitem(api._process_runtimes, job_id, runtime)
+    request = api.VirtualSafetyActionInput(kind="recovery.record", target="leak_repaired")
+    if allowed:
+        response = api.issue_virtual_safety_action(job_id, request)
+        assert response["action"]["status"] == "confirmed"
+        assert runtime.safety.recovery["leak_repaired"]
+    else:
+        with pytest.raises(HTTPException) as error:
+            api.issue_virtual_safety_action(job_id, request)
+        assert error.value.status_code == 409
+        assert not runtime.safety.recovery["leak_repaired"]

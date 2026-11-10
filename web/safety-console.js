@@ -3,7 +3,7 @@
   const host=document.getElementById('safetyConsole');if(!host)return;
   let openSection='0',batchRunning=false,batchCancelled=false,batchMessage='';
   let latest=null,lastJob='',busy=false,lastError='',lastNotice='',comparison=null,replay=null;
-  let pendingButtonKey=null;
+  let pendingButtonKey=null,incidentZones=new Set(),stabilizationAt=null,cycleActionStart=0;
   const buttonKey=button=>JSON.stringify(Object.entries(button.dataset).sort());
   function renderPending(){
     host.querySelectorAll('button').forEach(button=>{
@@ -30,6 +30,20 @@
     :(errorLabels[String(message)]||String(message));
   const button=(label,kind,target)=>`<button type="button" data-action="${esc(kind)}" data-target="${esc(target)}">${esc(label)}</button>`;
   const jobId=()=>window.getRemoteJobId?.();
+  function syncJob(){
+    const id=jobId();
+    if(id===lastJob)return;
+    latest=null;comparison=null;replay=null;lastError='';lastNotice='';batchMessage='';
+    openSection='0';batchCancelled=true;incidentZones.clear();stabilizationAt=null;cycleActionStart=0;lastJob=id;
+  }
+  function acceptSnapshot(data){
+    if(latest?.recovery_approved&&!data.recovery_approved){batchMessage='';lastNotice='';incidentZones.clear();stabilizationAt=null;}
+    if(!data.recovery_approved){
+      const previousApproval=(data.actions||[]).findLastIndex(a=>a.kind==='restart.approve'&&a.status==='confirmed');
+      cycleActionStart=Math.max(cycleActionStart,previousApproval+1);
+    }
+    latest=data;
+  }
   const endpoint=path=>`/api/simulations/${encodeURIComponent(jobId())}/safety${path}`;
   async function json(url,options={}){
     let response;
@@ -75,24 +89,35 @@
     const pendingChecks=Object.entries(recoveryName).filter(([key])=>!s.recovery?.[key]).map(([,label])=>label);
     const restartControl=s.recovery_approved?'<button type="button" disabled>재가동 승인 완료</button>':pendingChecks.length?'<button type="button" data-recovery-guide>복구 점검 진행</button>':button('재가동 승인','restart.approve','station');
     const threat=Number(m.total_leak_flow_g_s||0)>0.01||Number(m.gas_max_volpct_h2||0)>=.2||activeFaults.length>0;
-    const firstAction=actions.find(a=>['operation.stop','valve.close','esd.trip'].includes(a.kind)&&a.status==='confirmed');
-    const evacuation=actions.findLast?.(a=>a.kind==='personnel.evacuate'&&a.target==='storage'&&a.status==='confirmed')
-      ||[...actions].reverse().find(a=>a.kind==='personnel.evacuate'&&a.target==='storage'&&a.status==='confirmed');
-    const approval=actions.find(a=>a.kind==='restart.approve'&&a.status==='confirmed');
-    const storageRemaining=Number(s.personnel?.storage||0),storageEvacuated=Number(s.evacuated?.storage||0);
-    const storageClear=storageRemaining===0;
-    const stabilizeCondition=!storageClear
-      ?`저장구역 잔류 ${storageRemaining}명 대피 필요`
+    const responseActions=actions.slice(cycleActionStart);
+    const firstAction=responseActions.find(a=>['operation.stop','valve.close','esd.trip'].includes(a.kind)&&a.status==='confirmed');
+    for(const row of s.active_incidents||[]){
+      const target=String(row.target||'');
+      const zone=target.startsWith('cascade.')?'storage':/^(dispenser|vehicle)/.test(target)?'dispenser':target.startsWith('compressor')?'compressor':/^(header|trailer)/.test(target)?'unloading':null;
+      if(zone)incidentZones.add(zone);
+    }
+    const evacuationActions=responseActions.filter(a=>a.kind==='personnel.evacuate'&&a.status==='confirmed');
+    for(const action of evacuationActions)incidentZones.add(action.target);
+    const affectedZones=[...incidentZones],evacuation=evacuationActions.at(-1);
+    const approval=responseActions.find(a=>a.kind==='restart.approve'&&a.status==='confirmed');
+    const remaining=affectedZones.reduce((sum,zone)=>sum+Number(s.personnel?.[zone]||0),0);
+    const evacuated=affectedZones.reduce((sum,zone)=>sum+Number(s.evacuated?.[zone]||0),0);
+    const zoneLabel=affectedZones.map(zone=>`${zoneName[zone]}구역`).join('·')||'영향 구역';
+    const clear=remaining===0;
+    const stabilizeCondition=!clear
+      ?`${zoneLabel} 잔류 ${remaining}명 대피 필요`
       :threat
-        ?`저장구역 ${storageEvacuated}명 대피 완료 · ${Number(m.total_leak_flow_g_s||0)>.01?'누출 유량 감소 대기':Number(m.gas_max_volpct_h2||0)>=.2?'잔류 가스 감소 대기':'활성 사고 종료 대기: '+activeFaults.map(x=>x.startsWith('external-fire:')?'외부 화재':x.startsWith('hydrogen-leak:')?'수소 누출':x).join(', ')}`
-        :`저장구역 ${storageEvacuated}명 대피 및 누출·가스 안정화 확인`;
-    const evacuationButton=storageClear
-      ?'<button type="button" disabled>저장구역 대피 완료</button>'
-      :button(`저장구역 ${storageRemaining}명 대피`,'personnel.evacuate','storage');
+        ?`${zoneLabel} ${evacuated}명 대피 완료 · ${Number(m.total_leak_flow_g_s||0)>.01?'누출 유량 감소 대기':Number(m.gas_max_volpct_h2||0)>=.2?'잔류 가스 감소 대기':'활성 사고 종료 대기: '+activeFaults.map(x=>x.startsWith('external-fire:')?'외부 화재':x.startsWith('hydrogen-leak:')?'수소 누출':x).join(', ')}`
+        :`${zoneLabel} ${evacuated}명 대피 및 누출·가스 안정화 확인`;
+    const evacuationButton=clear
+      ?'<button type="button" disabled>영향 구역 대피 완료</button>'
+      :affectedZones.filter(zone=>Number(s.personnel?.[zone]||0)>0).map(zone=>button(`${zoneName[zone]}구역 ${Number(s.personnel[zone])}명 대피`,'personnel.evacuate',zone)).join('');
+    const stabilized=!threat&&clear&&(affectedZones.length===0||Boolean(evacuation));
+    if(!stabilized)stabilizationAt=null;else if(stabilizationAt===null)stabilizationAt=m.time_s;
     const stages=[
       {name:'recognition',owner:'운전원',done:Boolean(m.time_s!=null),time:m.time_s,condition:'센서·영상·시나리오 확인',action:''},
       {name:'immediate',owner:'현장 책임자',done:Boolean(firstAction),time:firstAction?.completed_s,condition:'공급 정지, 적합한 차단 피드백 및 유량 확인',action:button('모든 공정 정지','operation.stop','all')},
-      {name:'stabilize',owner:'안전 담당',done:!threat&&storageClear&&Boolean(evacuation),time:evacuation?.completed_s,condition:stabilizeCondition,action:evacuationButton},
+      {name:'stabilize',owner:'안전 담당',done:stabilized,time:stabilizationAt,condition:stabilizeCondition,action:evacuationButton},
       {name:'restart',owner:'관리 책임자',done:Boolean(s.recovery_approved),time:approval?.completed_s,condition:s.recovery_approved?'복구 점검 및 재가동 승인 완료':pendingChecks.length?'남은 점검: '+pendingChecks.join(' → '):'점검 완료 · 재가동 승인 가능',action:restartControl},
     ];
     const stageHtml=stages.map((row,index)=>`<article class="safety-stage ${row.done?'done':''}"><span>${String(index+1).padStart(2,'0')}</span><div><b>${stageName[row.name]}</b><small>담당 ${row.owner} · ${row.condition}</small><em>${row.done?`완료 · 모의 ${fmt(row.time)} s`:'미완료 · 성공조건 대기'}</em></div>${row.action}</article>`).join('');
@@ -126,12 +151,12 @@
     host.querySelector('#compareJob').value=draftCompare;
     const slider=host.querySelector('#replaySlider');if(slider){slider.value=draftReplayIndex;const show=()=>{const f=replay.frames[Number(slider.value)];host.querySelector('#replayOutput').textContent=f?`모의 ${fmt(f.time_s)} s · ${Object.entries(f.metrics.bank_pressure_mpa||{}).map(([k,v])=>`${bankName[k]} ${fmt(v)} MPa`).join(' · ')} · 누출 ${fmt(f.metrics.total_leak_flow_g_s,3)} g/s · 가스 ${fmt(f.metrics.gas_max_volpct_h2,3)} vol%`:'';};slider.addEventListener('input',show);show();}
   }
-  async function refresh(){const id=jobId();if(!id){latest=null;render();return;}if(busy)return;try{const data=await json(endpoint(''));if(jobId()!==id)return;latest=data;lastJob=id;if(!host.contains(document.activeElement)||!['INPUT','SELECT'].includes(document.activeElement.tagName))render();}catch(error){lastError=friendlyError(error.message);render();}}
+  async function refresh(){syncJob();const id=jobId();if(!id){latest=null;render();return;}if(busy)return;try{const data=await json(endpoint(''));if(jobId()!==id)return;acceptSnapshot(data);lastJob=id;if(!host.contains(document.activeElement)||!['INPUT','SELECT'].includes(document.activeElement.tagName))render();}catch(error){if(jobId()!==id)return;lastError=friendlyError(error.message);render();}}
   async function waitForAction(action,id){
     while(action.status==='commanded'){
       await new Promise(resolve=>setTimeout(resolve,400));
       if(jobId()!==id)throw new Error('실행이 변경되어 조치 상태 확인을 종료했습니다.');
-      latest=await json(endpoint(''));lastJob=id;render();
+      acceptSnapshot(await json(endpoint('')));lastJob=id;render();
       const updated=latest.actions?.find(row=>row.id===action.id);
       if(!updated)break;
       action=updated;
@@ -148,8 +173,8 @@
       const batchJob=jobId();batchRunning=true;batchCancelled=false;openSection='4';lastError='';render();
       try{
         const {runRecoveryBatch}=await import('/recovery-batch.mjs?v=20261111-batch1');
-        await runRecoveryBatch({read:async()=>{const state=await json(`/api/simulations/${encodeURIComponent(batchJob)}/safety`);latest=state;return state;},issue:(kind,target,label)=>window.executeVirtualSafetyAction({kind,target,label}),cancelled:()=>batchCancelled||jobId()!==batchJob,progress:label=>{batchMessage=label;render();}});
-      }catch(error){lastError=friendlyError(error.message);batchMessage='일괄 점검 중단 · 원인을 해결한 뒤 다시 실행하세요.';}
+        await runRecoveryBatch({read:async()=>{const state=await json(`/api/simulations/${encodeURIComponent(batchJob)}/safety`);if(jobId()!==batchJob)throw new Error('실행이 변경되었습니다.');acceptSnapshot(state);return state;},issue:(kind,target,label)=>{if(jobId()!==batchJob)throw new Error('실행이 변경되었습니다.');return window.executeVirtualSafetyAction({kind,target,label});},cancelled:()=>batchCancelled||jobId()!==batchJob,progress:label=>{if(jobId()!==batchJob)return;batchMessage=label;lastNotice=label;render();}});
+      }catch(error){if(jobId()===batchJob){lastError=friendlyError(error.message);batchMessage='일괄 점검 중단 · 원인을 해결한 뒤 다시 실행하세요.';}}
       finally{batchRunning=false;render();}return;
     }
     if(target.hasAttribute('data-recovery-guide')){openSection='4';render();host.querySelector('#recoveryChecklist')?.scrollIntoView({behavior:'smooth',block:'start'});host.querySelector('#recoveryChecklist')?.focus({preventScroll:true});return;}
@@ -166,11 +191,11 @@
           `${actionLabel} · ${action.status==='confirmed'?'완료':'명령 접수 · 실제 동작 확인 대기'}`;
       }
       else if(target.hasAttribute('data-environment'))await json(endpoint('/environment'),{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({wind_direction_deg:Number(host.querySelector('#virtualWindDirection').value),wind_speed_m_s:Number(host.querySelector('#virtualWindSpeed').value)})});
-      else if(target.hasAttribute('data-repair')){const faultId=host.querySelector('#repairFaultId').value.trim();if(!faultId)throw new Error('진행 중인 누출을 선택하세요.');await window.executeVirtualSafetyAction({kind:'repair.leak',target:faultId,label:'누출 수리'});}
+      else if(target.hasAttribute('data-repair')){const faultId=host.querySelector('#repairFaultId').value.trim();if(!faultId)throw new Error('진행 중인 누출을 선택하세요.');await window.executeVirtualSafetyAction({kind:'repair.leak',target:faultId,label:'누출 수리'});lastNotice='누출 수리 요청 · 다음 계산 프레임의 누출량과 사고 종료를 확인하세요.';}
       else if(target.hasAttribute('data-replay')){replay=await json(endpoint('/replay'));comparison=null;}
       else if(target.hasAttribute('data-compare')){const other=host.querySelector('#compareJob').value.trim();if(!other)throw new Error('비교할 실행 ID를 입력하세요.');comparison=await json(endpoint('/compare'),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({other_job_id:other})});replay=null;}
       await refreshNow();
-    }catch(error){lastNotice='';lastError=friendlyError(error.message);}finally{busy=false;pendingButtonKey=null;render();}
+    }catch(error){if(jobId()===id){lastNotice='';lastError=friendlyError(error.message);}}finally{busy=false;pendingButtonKey=null;syncJob();render();}
   });
   host.addEventListener('change',async event=>{
     if(batchRunning)return;
@@ -179,7 +204,7 @@
     try{await json(`/api/simulations/${encodeURIComponent(id)}/safety/faults/${encodeURIComponent(select.dataset.fault)}`,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({fault:select.value})});await refreshNow();}
     catch(error){lastError=friendlyError(error.message);render();}
   });
-  async function refreshNow(){const id=jobId();if(!id)return;latest=await json(endpoint(''));lastJob=id;render();}
+  async function refreshNow(){const id=jobId();if(!id)return;const data=await json(endpoint(''));if(jobId()!==id)return;acceptSnapshot(data);lastJob=id;render();}
   window.addEventListener('station-safety-action',()=>setTimeout(refresh,300));
-  setInterval(()=>{if(jobId()!==lastJob){latest=null;comparison=null;replay=null;lastJob=jobId();}if(document.querySelector('[data-remote-tab="safety"]')?.getAttribute('aria-selected')==='true')refresh();},1300);
+  setInterval(()=>{syncJob();if(document.querySelector('[data-remote-tab="safety"]')?.getAttribute('aria-selected')==='true')refresh();},1300);
 })();
