@@ -23,13 +23,26 @@
   const stageName={recognition:'상황 확인',immediate:'즉시 조치',stabilize:'안정화',restart:'복구 전 점검'};
   const recoveryName={source_removed:'원인 제거',leak_repaired:'누출 수리',tightness_test:'기밀시험',detector_test:'검지기 시험',valve_test:'밸브 기능시험',purge_complete:'퍼지',pressure_test:'단계적 재가압',supervisor_approval:'감독자 확인'};
   const errorLabels={"Active hazard blocks this recovery check": "아직 사고가 진행 중입니다. 사고 종료와 누출·가스 감소를 확인한 뒤 진행하세요.", "Stop all process operations before source-removal confirmation": "먼저 모든 공정을 정지한 뒤 원인 제거를 확인하세요.", "Repair and remove the simulated leak before recording this check": "활성 누출을 수리·제거한 뒤 누출 없음 확인을 진행하세요.", "Active hazard or gas signal blocks restart": "활성 사고 또는 잔류 가스가 있어 재가동할 수 없습니다. 사고·검지 상태를 확인하세요.", "Isolate the tested bank line before starting": "시험할 뱅크의 입구·출구 밸브를 닫은 뒤 시험하세요.", "Isolate the bank inlet and outlet before purging its line": "뱅크 입구·출구 밸브를 닫고 닫힘 피드백을 확인한 뒤 퍼지하세요.", "Remove the source and resolve the leak before tightness testing": "원인 제거와 누출 없음 확인을 완료한 뒤 기밀시험을 실행하세요.", "Tightness, valve, and purge checks must precede pressure testing": "기밀시험 → 밸브 기능시험 → 퍼지를 완료한 뒤 단계 재가압을 실행하세요.", "Complete technical recovery checks before supervisor approval": "기밀·검지기·밸브 시험, 퍼지, 단계 재가압을 완료한 뒤 감독자 확인을 기록하세요.", "Another virtual diagnostic test is in progress": "다른 시험이 진행 중입니다. 완료 후 다음 시험을 실행하세요.", "A virtual purge is already in progress": "퍼지가 진행 중입니다. 완료될 때까지 기다려 주세요.", "Stop the connected transfer before moving the vehicle": "차량에 연결된 이송·충전을 먼저 정지하세요.", "Confirm vehicle-side isolation and zero residual flow first": "차량 측 밸브 차단과 잔류 유량 0을 확인한 뒤 대피시키세요.", "Simulation not found": "이 실행은 종료되었거나 서버 재시작으로 초기화되었습니다. 새 실행을 시작하세요.", "Running operator simulation required": "실행 중인 공정이 필요합니다. 리모콘에서 새 실행을 시작하세요."};
-  const friendlyError=message=>String(message).startsWith('Recovery checks incomplete:')
+  const friendlyError=message=>/Failed to fetch|fetch failed|NetworkError|Load failed/i.test(String(message))
+    ?'서버 연결이 끊겨 조치 결과를 확인하지 못했습니다. 서버 연결을 확인한 뒤 사건 기록에서 반영 여부를 먼저 확인하세요.'
+    :String(message).startsWith('Recovery checks incomplete:')
     ?'재가동 전 점검이 필요합니다: '+String(message).split(':').slice(1).join(':').split(',').map(key=>recoveryName[key.trim()]||key.trim()).join(' → ')+'. 아래 복구 점검에서 순서대로 진행하세요.'
     :(errorLabels[String(message)]||String(message));
   const button=(label,kind,target)=>`<button type="button" data-action="${esc(kind)}" data-target="${esc(target)}">${esc(label)}</button>`;
   const jobId=()=>window.getRemoteJobId?.();
   const endpoint=path=>`/api/simulations/${encodeURIComponent(jobId())}/safety${path}`;
-  async function json(url,options={}){const response=await fetch(url,options);const data=await response.json();if(!response.ok)throw new Error(data.detail||`서버 오류 ${response.status}`);return data;}
+  async function json(url,options={}){
+    let response;
+    try{response=await fetch(url,options);}
+    catch(error){
+      if(options.method&&options.method!=='GET')throw error;
+      await new Promise(resolve=>setTimeout(resolve,400));
+      response=await fetch(url,options);
+    }
+    const data=await response.json();
+    if(!response.ok)throw new Error(data.detail||`서버 오류 ${response.status}`);
+    return data;
+  }
   const stateText=v=>v==='confirmed'?'확인 완료':v==='failed'?'조치 실패':v==='moving'?'밸브 이동 중':v==='awaiting-flow'?'유량 확인 중':v==='commanded'?'명령 대기':v==='fault-injected'?'고장 주입':'대기';
   const evaluation=report=>!report?'':`<div class="safety-evaluation"><b>훈련 참고 점수 ${fmt(report.training_score,0)} / 100</b><span>초동 조치 지연 ${report.response_delay_s==null?'사고/조치 없음':`${fmt(report.response_delay_s)} s`}</span><span>조치 실패 ${report.failed_action_ids?.length||0}건 · 이른 복구 ${report.premature_restore_ids?.length||0}건 · 차단 재검토 ${report.possible_wrong_isolation_ids?.length||0}건 · 2차 위험 중첩 ${report.secondary_hazards?.length||0}건</span><small>${esc(report.score_note||'')}</small></div>`;
   const trainingOutput=()=>{

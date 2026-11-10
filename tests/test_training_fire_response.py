@@ -2,6 +2,37 @@ import pytest
 from h2station.virtual_safety import VirtualSafetyRuntime
 from h2station.safety_runtime import FaultEvent, FaultKind
 
+
+@pytest.mark.parametrize("bank", ["low", "medium", "high"])
+def test_delayed_spray_does_not_leave_a_hot_wall_reheating_the_bank_for_minutes(bank):
+    from h2station.scenario import ReferenceScenario, build_reference_scenario
+    from h2station.operations import ProcessRuntime
+    from h2station.api import ProcessSettings
+    from h2station.risk.runtime_backend import UnavailableHyRAMBackend
+
+    fire = FaultEvent("long-fire", FaultKind.EXTERNAL_FIRE, f"cascade.{bank}", 46,
+                      external_temperature_k=1073.15, heat_transfer_ua_w_k=1000)
+    built = build_reference_scenario(
+        ReferenceScenario(fault_events=(fire,)), UnavailableHyRAMBackend()
+    )
+    process = ProcessRuntime(ProcessSettings().model_dump())
+    built.simulator.process_runtime = process
+    def operate(time_s):
+        device = process.safety.cooling[bank]
+        if time_s >= 69 and not device["commanded"] and not device.get("auto_stopped"):
+            process.safety.issue("cooling.on", bank, time_s)
+    frames = []
+    result = built.simulator.simulate(
+        built.initial_state, 450, 1, sample_callback=frames.append,
+        runtime_command_callback=operate, pace_idle=False
+    )
+    after_cooling = next(frame for frame in frames if frame.time_s >= 110)
+    assert frames[-1].bank_temperature_k[bank] < after_cooling.bank_temperature_k[bank]
+    assert frames[-1].bank_pressure_pa[bank] < after_cooling.bank_pressure_pa[bank]
+    index = ("low", "medium", "high").index(bank)
+    assert result.final_state.banks[index].wall_temperature_k < 298.35
+    assert process.safety.cooling[bank]["auto_stopped"]
+
 def test_fire_heat_and_response_decay_together_and_fault_interrupts():
     runtime=VirtualSafetyRuntime()
     fire=FaultEvent('fire',FaultKind.EXTERNAL_FIRE,'cascade.low',0,

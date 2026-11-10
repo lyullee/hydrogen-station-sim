@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "artifact_type": "hiad_virtual_response_action_execution_consistency_audit",
-  "generated_at_utc": "2026-11-10T22:34:10.675380+00:00",
+  "generated_at_utc": "2026-11-10T22:43:47.449793+00:00",
   "status": "completed_virtual_action_execution_audit",
   "evidence_role": "public_action_category_to_simulation_command_consistency_only",
   "source": {
@@ -12,7 +12,7 @@
     "playbook_catalog": "src/h2station/data/emergency_playbooks.json",
     "playbook_catalog_sha256": "997da81d9f273031dc5d160d1fdee826cc1defaa3cbf5651f9bd0c7c7988e052",
     "virtual_safety_runtime": "src/h2station/virtual_safety.py",
-    "virtual_safety_runtime_sha256": "c4fb47f30c7056d9b0a07a93e3cc874ccd5602795874f62ea04fdec0985e55f9"
+    "virtual_safety_runtime_sha256": "2ed5bdc87da520004b5e94487fa8e61cd6286d8a458ee8dd5712da091bef127f"
   },
   "runtime": {
     "family_count": 10,

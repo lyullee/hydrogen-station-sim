@@ -16,6 +16,13 @@ CATALOG=json.loads((Path(__file__).resolve().parents[1]/'web/scenarios.json').re
 ROOT = Path(__file__).resolve().parents[1]
 
 
+def test_remote_default_incident_end_is_600_seconds():
+    html = (ROOT / 'web/remote.html').read_text(encoding='utf-8')
+    assert 'data-field="end_time_s" type="number" value="600"' in html
+    assert all(fault["end_time_s"] == 600 for scenario in CATALOG["scenarios"]
+               for fault in scenario["faults"])
+
+
 def test_remote_exposes_optional_hgv43_training_controls():
     html = (ROOT / 'web/remote.html').read_text(encoding='utf-8')
     script = (ROOT / 'web/remote.js').read_text(encoding='utf-8')

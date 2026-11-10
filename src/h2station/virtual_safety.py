@@ -588,9 +588,12 @@ class VirtualSafetyRuntime:
 
     def cooling_events(self, time_s: float, ambient_k: float) -> tuple[FaultEvent, ...]:
         with self._lock:
+            # Training spray acts on the vessel wall, whose stored energy must
+            # be removed before the ten-second post-fire spray ends. This is a
+            # simulation response coefficient, not a measured nozzle rating.
             return tuple(FaultEvent(event_id=f"cooling-{bank}", kind=FaultKind.TEMPERATURE_DISTURBANCE,
                                     target=f"cascade.{bank}", start_time_s=time_s,
-                                    external_temperature_k=ambient_k, heat_transfer_ua_w_k=1800.0)
+                                    external_temperature_k=ambient_k, heat_transfer_ua_w_k=60000.0)
                          for bank in BANKS if self.cooling[bank]["running"])
 
     def detector_multiplier(
