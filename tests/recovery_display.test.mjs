@@ -40,10 +40,10 @@ for(const transition of ['new-job','new-hazard'])test(`${transition} clears the 
 
 
 test('hose incident requires dispenser evacuation and keeps the same zone after repair',async()=>{
- let tick;
+ let tick;const saved=new Map();
  const host={innerHTML:'',querySelector:selector=>selector==='#replaySlider'?null:({value:'',addEventListener:()=>{}}),contains:()=>false,addEventListener:()=>{}};
  const s={current_metrics:{time_s:20},active_incidents:[{kind:'hydrogen-leak',target:'dispenser.hose'}],actions:[{kind:'personnel.evacuate',target:'storage',status:'confirmed',completed_s:1},{kind:'restart.approve',status:'confirmed',completed_s:2}],personnel:{storage:2,dispenser:2},evacuated:{storage:0,dispenser:0},access_restricted:{},power_isolated:{},recovery:{},valves:{}};
- const context={document:{getElementById:()=>host,querySelector:()=>({getAttribute:()=> 'true'})},window:{getRemoteJobId:()=> 'hose',addEventListener:()=>{}},setInterval:fn=>tick=fn,setTimeout:()=>{},fetch:async()=>({ok:true,json:async()=>({...s})})};
+ const context={document:{getElementById:()=>host,querySelector:()=>({getAttribute:()=> 'true'})},window:{getRemoteJobId:()=> 'hose',sessionStorage:{getItem:key=>saved.get(key)??null,setItem:(key,value)=>saved.set(key,value),removeItem:key=>saved.delete(key)},addEventListener:()=>{}},setInterval:fn=>tick=fn,setTimeout:()=>{},fetch:async()=>({ok:true,json:async()=>({...s})})};
  vm.runInNewContext(readFileSync(new URL('../web/safety-console.js',import.meta.url),'utf8'),context);
  tick();await new Promise(resolve=>setImmediate(resolve));
  assert.ok(host.innerHTML.includes('충전구역 잔류 2명 대피 필요'));
@@ -55,5 +55,11 @@ test('hose incident requires dispenser evacuation and keeps the same zone after 
  const stage=host.innerHTML.match(/<article[^>]*><span>03<\/span>[\s\S]*?<\/article>/)?.[0];
  assert.ok(stage?.includes('30.0 s'));
  assert.ok(!stage?.includes('25.0 s'));
+ s.actions.push({kind:'restart.approve',status:'confirmed',completed_s:40});s.recovery_approved=true;s.current_metrics.time_s=100;
+ vm.runInNewContext(readFileSync(new URL('../web/safety-console.js',import.meta.url),'utf8'),context);
+ tick();await new Promise(resolve=>setImmediate(resolve));
+ const reloaded=host.innerHTML.match(/<article[^>]*><span>03<\/span>[\s\S]*?<\/article>/)?.[0];
+ assert.ok(reloaded?.includes('30.0 s'));
+ assert.ok(!reloaded?.includes('100.0 s'));
  assert.ok(!host.innerHTML.includes('저장구역 잔류 2명 대피 필요'));
 });

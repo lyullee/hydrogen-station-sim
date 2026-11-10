@@ -35,13 +35,13 @@
     if(id===lastJob)return;
     latest=null;comparison=null;replay=null;lastError='';lastNotice='';batchMessage='';
     openSection='0';batchCancelled=true;incidentZones.clear();stabilizationAt=null;cycleActionStart=0;lastJob=id;
+    try{const saved=window.sessionStorage?.getItem('h2-stabilization:'+id);if(saved!=null&&Number.isFinite(Number(saved)))stabilizationAt=Number(saved);}catch{}
   }
   function acceptSnapshot(data){
-    if(latest?.recovery_approved&&!data.recovery_approved){batchMessage='';lastNotice='';incidentZones.clear();stabilizationAt=null;}
-    if(!data.recovery_approved){
-      const previousApproval=(data.actions||[]).findLastIndex(a=>a.kind==='restart.approve'&&a.status==='confirmed');
-      cycleActionStart=Math.max(cycleActionStart,previousApproval+1);
-    }
+    if(latest?.recovery_approved&&!data.recovery_approved){batchMessage='';lastNotice='';incidentZones.clear();stabilizationAt=null;try{window.sessionStorage?.removeItem('h2-stabilization:'+jobId());}catch{}}
+    const approvals=(data.actions||[]).flatMap((action,index)=>action.kind==='restart.approve'&&action.status==='confirmed'?[index]:[]);
+    const previousApproval=approvals.at(data.recovery_approved?-2:-1)??-1;
+    cycleActionStart=Math.max(cycleActionStart,previousApproval+1);
     latest=data;
   }
   const endpoint=path=>`/api/simulations/${encodeURIComponent(jobId())}/safety${path}`;
@@ -113,14 +113,15 @@
       ?'<button type="button" disabled>영향 구역 대피 완료</button>'
       :affectedZones.filter(zone=>Number(s.personnel?.[zone]||0)>0).map(zone=>button(`${zoneName[zone]}구역 ${Number(s.personnel[zone])}명 대피`,'personnel.evacuate',zone)).join('');
     const stabilized=!threat&&clear&&(affectedZones.length===0||Boolean(evacuation));
-    if(!stabilized)stabilizationAt=null;else if(stabilizationAt===null)stabilizationAt=m.time_s;
+    if(!stabilized){stabilizationAt=null;try{window.sessionStorage?.removeItem('h2-stabilization:'+id);}catch{}}
+    else if(stabilizationAt===null&&!s.recovery_approved){stabilizationAt=m.time_s;try{window.sessionStorage?.setItem('h2-stabilization:'+id,String(stabilizationAt));}catch{}}
     const stages=[
       {name:'recognition',owner:'운전원',done:Boolean(m.time_s!=null),time:m.time_s,condition:'센서·영상·시나리오 확인',action:''},
       {name:'immediate',owner:'현장 책임자',done:Boolean(firstAction),time:firstAction?.completed_s,condition:'공급 정지, 적합한 차단 피드백 및 유량 확인',action:button('모든 공정 정지','operation.stop','all')},
       {name:'stabilize',owner:'안전 담당',done:stabilized,time:stabilizationAt,condition:stabilizeCondition,action:evacuationButton},
       {name:'restart',owner:'관리 책임자',done:Boolean(s.recovery_approved),time:approval?.completed_s,condition:s.recovery_approved?'복구 점검 및 재가동 승인 완료':pendingChecks.length?'남은 점검: '+pendingChecks.join(' → '):'점검 완료 · 재가동 승인 가능',action:restartControl},
     ];
-    const stageHtml=stages.map((row,index)=>`<article class="safety-stage ${row.done?'done':''}"><span>${String(index+1).padStart(2,'0')}</span><div><b>${stageName[row.name]}</b><small>담당 ${row.owner} · ${row.condition}</small><em>${row.done?`완료 · 모의 ${fmt(row.time)} s`:'미완료 · 성공조건 대기'}</em></div>${row.action}</article>`).join('');
+    const stageHtml=stages.map((row,index)=>`<article class="safety-stage ${row.done?'done':''}"><span>${String(index+1).padStart(2,'0')}</span><div><b>${stageName[row.name]}</b><small>담당 ${row.owner} · ${row.condition}</small><em>${row.done?(row.time==null?'완료':`완료 · 모의 ${fmt(row.time)} s`):'미완료 · 성공조건 대기'}</em></div>${row.action}</article>`).join('');
     const suggestions=(s.suggested_actions||[]).map(item=>`<div><small>${esc(item.scenario)}</small>${button(item.label,item.kind,item.target)}</div>`).join('');
     const valveHtml=Object.entries(valves).map(([name,v])=>`<article class="safety-device ${v.status==='failed'?'failed':''}"><div><b>${esc(v.label)}</b><small>${esc(name)} · 명령 ${v.commanded_open?'열림':'닫힘'} → 실제 ${v.actual_open?'열림':'닫힘'} → 피드백 ${v.feedback_open?'열림':'닫힘'} · 유로 ${fmt(v.flow_fraction*100,0)}%</small><em>${stateText(v.status)}${name.startsWith('vent.')?'':` · 격리구간 ${fmt(s.line_pressure_mpa?.[name],2)} MPa`}</em></div><div class="safety-device-actions">${button('열기',name.startsWith('vent.')?'vent.open':'valve.open',name)}${button('닫기',name.startsWith('vent.')?'vent.close':'valve.close',name)}<select data-fault="${esc(name)}" aria-label="${esc(v.label)} 고장"><option value="none">정상</option><option value="stuck_open" ${v.fault==='stuck_open'?'selected':''}>열림 고착</option><option value="stuck_closed" ${v.fault==='stuck_closed'?'selected':''}>닫힘 고착</option><option value="seat_leak" ${v.fault==='seat_leak'?'selected':''}>내부 누설</option><option value="feedback_fault" ${v.fault==='feedback_fault'?'selected':''}>피드백 오류</option></select></div></article>`).join('');
     const auxHtml=[['ventilation',s.ventilation,zoneName,'환기'],['cooling',s.cooling,bankName,'냉각·살수']].map(([kind,values,labels,title])=>`<section><h4>${title}</h4><div class="safety-aux-grid">${Object.entries(values||{}).map(([name,v])=>`<div><b>${labels[name]||name}</b><span class="${v.running?'good':'bad'}">${v.running?'가동':'정지'}${v.fault?' · 고장':''}</span>${button('ON',`${kind}.on`,name)}${button('OFF',`${kind}.off`,name)}<select data-fault="${kind}.${name}"><option value="none">정상</option><option value="failure" ${v.fault?'selected':''}>고장</option></select></div>`).join('')}</div></section>`).join('');
