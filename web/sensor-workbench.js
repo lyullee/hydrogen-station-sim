@@ -22,9 +22,18 @@
     return issues;
   };
   const issueKey=issue=>issue?`${issue.label}:${issue.ruleIds.slice().sort().join(',')}`:'';
+  const signalBasis=(tag,issues)=>JSON.stringify([currentSignal(tag)?.quality,currentSignal(tag)?.origin,issueKey(issues.get(tag))]);
   const issueSignature=issues=>[...issues].map(([tag,issue])=>`${tag}:${issueKey(issue)}`).sort().join('|');
-  const reading=signal=>typeof signal?.value==='number'&&Number.isFinite(signal.value)?
-    (signal.unit==='bool'?(signal.value>=0.5?'화염 감지':'정상 · 화염 없음'):`${signal.value.toFixed(signal.unit==='g/s'?2:3)} ${signal.unit||''}`):'—';
+  function reading(signal){
+    if(!signal)return '—';
+    if(signal.origin==='NO_GAS_FLOW')return '유량 없음';
+    if(signal.quality==='STALE')return '갱신 지연';
+    if(signal.quality!=='GOOD')return '유효 신호 없음';
+    if(!Number.isFinite(signal.value))return '—';
+    if(signal.unit==='bool')return signal.value>=0.5?'화염 감지':'정상 · 화염 없음';
+    const fault=signal.origin==='SIMULATED_SENSOR_BIAS'?' · 편향 주입':signal.origin==='SIMULATED_SENSOR_FREEZE'?' · 값 고정':'';
+    return `${signal.value.toFixed(signal.unit==='g/s'?2:3)} ${signal.unit||''}${fault}`;
+  }
   const stateLabel=rule=>rule.active?(['LATCHED','ALARM_HOLD'].includes(rule.state)?'경보 이력 유지':'현재 경보'):rule.state==='UNKNOWN'?'판정 불가':rule.state==='PENDING'?'지속시간 확인':rule.state==='INACTIVE'?'운전조건 대기':'정상 범위';
   function renderMarkdown(target,text){
     if(window.marked?.parse&&window.DOMPurify?.sanitize){target.innerHTML=window.DOMPurify.sanitize(window.marked.parse(text,{gfm:true,breaks:true}),{USE_PROFILES:{html:true}});}
@@ -42,7 +51,7 @@
   }
   window.mountSensorWorkbench=body=>{
     const dialog=document.getElementById('workspaceDialog');dialog.classList.add('sensor-workspace');body.classList.add('sensor-workbench');
-    let catalog=null,selected='',lastQuestion='',closed=false,epoch=0,analysisSequence=0,detailController=null,analysisController=null,analysisTimer=null,observedJob=runtime()?.activeJobId||null,lastIssueSignature='',listRefreshTimer=null,lastValuePaint=0;
+    let catalog=null,selected='',lastQuestion='',closed=false,epoch=0,analysisSequence=0,detailController=null,analysisController=null,analysisTimer=null,observedJob=runtime()?.activeJobId||null,lastIssueSignature='',listRefreshTimer=null,lastValuePaint=0,analysisBasis=null;
     const left=node('aside','sensor-browser'),middle=node('section','sensor-detail'),right=node('section','sensor-assistant');body.append(left,middle,right);
     const listHead=node('div','sensor-browser-head');listHead.append(node('b','','센서 목록'),node('small','sensor-count','불러오는 중'));left.append(listHead);
     const search=node('input','sensor-search');search.type='search';search.placeholder='태그·설비·위치 검색';search.setAttribute('aria-label','센서 검색');left.append(search);
@@ -54,15 +63,11 @@
     const list=node('div','sensor-browser-list');left.append(list);
     const detailIntro=node('div','sensor-detail-placeholder','센서를 선택하면 현재 신호와 위험분석결과를 표시합니다.');middle.append(detailIntro);
     const assistantHeader=node('div','sensor-assistant-head');assistantHeader.append(node('div','','SAGA · 선택 센서 분석'));
-    const sensorProviderKey='h2station.sensor-assistant.provider';
-    const selectedSensorProvider=()=>{
-      const saved=localStorage.getItem(sensorProviderKey)??localStorage.getItem('h2station.saga.provider');
-      return saved==='groq'?'groq':'service_hub';
-    };
-    const provider=node('select','saga-provider-select sensor-assistant-provider');provider.setAttribute('aria-label','센서 분석 LLM 제공자 선택');provider.title='선택 센서 분석 모델만 바꿉니다. 메인 대화와 8090 SAGA 설정은 유지됩니다.';provider.innerHTML='<option value="service_hub">Service Hub</option><option value="groq">Groq</option>';provider.value=selectedSensorProvider();provider.addEventListener('change',()=>{localStorage.setItem(sensorProviderKey,provider.value);document.querySelectorAll('.sensor-assistant-provider').forEach(select=>{select.value=provider.value;});});assistantHeader.append(provider);
+  const selectedSensorProvider=()=>window.digitalTwinProvider.get();
+    const provider=node('select','saga-provider-select sensor-assistant-provider digital-twin-provider');provider.setAttribute('aria-label','센서 분석 LLM 제공자 선택');provider.title='디지털트윈 메인·센서 분석에 함께 적용합니다.';provider.innerHTML='<option value="service_hub">Service Hub</option><option value="groq">Groq</option>';provider.value=selectedSensorProvider();provider.addEventListener('change',()=>window.digitalTwinProvider.set(provider.value));assistantHeader.append(provider);
     const deepDive=node('button','sensor-rerun sensor-deep-dive','상세 분석');deepDive.type='button';deepDive.disabled=true;assistantHeader.append(deepDive);
     const rerun=node('button','sensor-rerun','다시 분석');rerun.type='button';rerun.disabled=true;assistantHeader.append(rerun);right.append(assistantHeader);
-    const assistantMeta=node('p','sensor-assistant-meta','센서를 선택하면 자동으로 분석합니다.');right.append(assistantMeta);
+    const assistantMeta=node('p','sensor-assistant-meta','센서를 선택하면 자동으로 분석합니다.');right.append(assistantMeta);const snapshotNotice=node('p','sensor-risk-caption','AI 답변은 요청 시점의 분석입니다. 현재 신호·판정은 가운데에서 갱신됩니다.');right.append(snapshotNotice);
     const transcript=node('div','sensor-assistant-transcript');transcript.setAttribute('role','log');transcript.setAttribute('aria-live','polite');right.append(transcript);
     const form=node('form','sensor-assistant-form');const question=node('input');question.type='text';question.maxLength=1200;question.placeholder='선택 센서에 관해 추가 질문…';question.setAttribute('aria-label','선택 센서 추가 질문');
     const send=node('button','','전송');send.type='submit';form.append(question,send);right.append(form);
@@ -94,6 +99,7 @@
         button.addEventListener('click',()=>selectSensor(item.sensor_id));list.append(button);
       });
     }
+    let lastDetailRefresh=0,detailRefreshPending=false;
     function refreshValues(){
       if(closed)return;
       const now=performance.now();
@@ -111,6 +117,7 @@
         return;
       }
       const issues=issueMap(currentFrame());
+      snapshotNotice.textContent=analysisBasis!==null&&analysisBasis!==signalBasis(selected,issues)?'분석 이후 신호 품질이나 경보 상태가 바뀌었습니다. 현재 판정을 확인하고 다시 분석을 누르세요.':'AI 답변은 요청 시점의 분석입니다. 현재 신호·판정은 가운데에서 갱신됩니다.';
       const signature=issueSignature(issues);
       if(signature!==lastIssueSignature){
         lastIssueSignature=signature;
@@ -120,6 +127,17 @@
         listRefreshTimer=setTimeout(()=>{listRefreshTimer=null;if(!closed)renderList();},650);
       }
       list.querySelectorAll('[data-sensor-id]').forEach(button=>{const signal=currentSignal(button.dataset.sensorId);button.querySelector('.sensor-list-reading').textContent=reading(signal);button.dataset.quality=signal?.quality||'UNKNOWN';});
+      // Refresh rule interpretation with the live reading, without rerunning
+      // the LLM or disturbing the user's conversation and selected sensor.
+      if(job&&selected&&!detailRefreshPending&&now-lastDetailRefresh>=2000){
+        lastDetailRefresh=now;detailRefreshPending=true;
+        const selection=epoch,tag=selected,snapshotTime=displayTime();
+        const query=Number.isFinite(snapshotTime)?`?time_s=${encodeURIComponent(snapshotTime)}`:'';
+        fetch(`/api/simulations/${encodeURIComponent(job)}/sensors/${encodeURIComponent(tag)}${query}`,{signal:detailController?.signal})
+          .then(async response=>{if(!response.ok)throw new Error(`센서 조회 ${response.status}`);return response.json();})
+          .then(data=>{if(!closed&&selection===epoch&&job===runtime()?.activeJobId)renderDetail(data);})
+          .catch(()=>{}).finally(()=>{detailRefreshPending=false;});
+      }
       const live=middle.querySelector('.sensor-live-value');if(live&&selected){const signal=currentSignal(selected);live.textContent=reading(signal);const quality=middle.querySelector('.sensor-quality');if(quality){quality.dataset.quality=signal?.quality||'UNKNOWN';quality.textContent=signal?.quality==='GOOD'?'정상 수신':signal?.quality||'신호 대기';}}
     }
     for(const [kind,label] of [['ALL','전체'],['PT-','압력'],['TT-','온도'],['FT-','유량'],['GD-','가스'],['FD-','화염']]){
@@ -202,14 +220,18 @@
     }
     function renderDetail(payload){
       if(closed||payload.sensor.sensor_id!==selected)return;
+      const savedScroll=middle.scrollTop;
+      const detailStates=new Map([...middle.querySelectorAll('details')].map((item,index)=>[`${index}:${item.querySelector('summary')?.textContent}`,item.open]));
       middle.replaceChildren();
       const hero=node('div','sensor-detail-hero');const eyebrow=node('small','',`${payload.sensor.node_id} · ${payload.node['설비_라인']||'설비'}`);
       const title=node('div','sensor-detail-title');title.append(node('h3','',payload.sensor.sensor_id),node('span','sensor-quality',payload.signal?.quality==='GOOD'?'정상 수신':payload.signal?.quality||'신호 대기'));title.querySelector('.sensor-quality').dataset.quality=payload.signal?.quality||'UNKNOWN';
       const value=node('strong','sensor-live-value',reading(payload.signal));hero.append(eyebrow,title,value,node('p','',payload.sensor['설치_측정위치']||''));middle.append(hero);
-      const meta=node('div','sensor-detail-meta');for(const [key,value] of [['센서 유형',payload.sensor['종류']||'—'],['신호 출처',payload.mapping?.origin||'모의 신호'],['데이터 품질',payload.signal?.quality||'대기'],['모의 시각',`${Number(payload.time_s||0).toFixed(1)} s`]]){const cell=node('div');cell.append(node('small','',key),node('b','',value));meta.append(cell);}middle.append(meta);
+      const meta=node('div','sensor-detail-meta');for(const [key,value] of [['센서 유형',payload.sensor['종류']||'—'],['신호 출처',payload.mapping?.origin||'모의 신호'],['데이터 품질',payload.signal?.quality||'대기'],['판정 기준 시각',`${Number(payload.time_s||0).toFixed(1)} s`]]){const cell=node('div');cell.append(node('small','',key),node('b','',value));meta.append(cell);}middle.append(meta);
       middle.append(node('h3','sensor-risk-heading','위험분석결과 및 대응방안'));
       const rules=payload.rules||[],active=rules.filter(rule=>rule.active),related=payload.related_active_rules||[],signalIssue=payload.sensor_status==='SIGNAL_ISSUE';
       const currentAlerts=active.filter(rule=>rule.state==='TRIGGER');
+      const thermalProxy=payload.signal?.origin==='DERIVED_THERMAL_PROXY';
+      if(thermalProxy)middle.append(node('p','sensor-risk-caption','이 값은 냉각 열부하를 가정 온도차 5°C로 환산한 유량입니다. 실제 HTF 펌프 유량이 아니므로 순환 부족·과유량 판정에 사용하지 않습니다.'));
       const gas=payload.gas_signal_evidence,release=payload.simulated_release_evidence;
       const observed=gas?.hydrogen_observed?`수소 농도 ${Number(gas.value_volpct_h2).toFixed(3)} vol% 관측${gas.alarm_threshold_exceeded?' · 경보 기준 초과':' · 경보 기준 미만'}`:'';
       const releasing=[Number(release?.physical_leak_g_s)>0.001?`모의 공정 누출 ${Number(release.physical_leak_g_s).toFixed(3)} g/s 진행 중`:'',Number(release?.relief_discharge_g_s)>0.001?`안전밸브 방출 ${Number(release.relief_discharge_g_s).toFixed(3)} g/s 진행 중`:''].filter(Boolean).join(' · ');
@@ -219,7 +241,7 @@
         quick.textContent=[observed,releasing,`${currentAlerts.length?`현재 경보 ${currentAlerts.length}건`:retained?`경보 이력 ${retained}건`:'현재 경보 기준 미도달'}`,related.length?`관련 구역 경보·이력 ${related.length}건`:null].filter(Boolean).join(' · ')+'. 상세 판정과 대응은 가운데에서 바로 확인할 수 있습니다.';
       }
       const summary=node('div','sensor-scenario-summary');summary.dataset.status=active.length||related.length?'alert':signalIssue||observed||releasing?'signal':'normal';
-      summary.append(node('b','',currentAlerts.length?`현재 경보 ${currentAlerts.length}건${active.length>currentAlerts.length?` · 유지 이력 ${active.length-currentAlerts.length}건`:''}`:active.length?`경보 이력 유지 ${active.length}건`:related.length?`선택 센서 정상 · 관련 구역 경보·이력 ${related.length}건`:signalIssue?'센서 신호 품질 확인 필요':releasing?'모의 공정 방출 진행 중':observed?'수소 농도 관측 · 경보 기준 미만':'현재 정상 범위'),
+      summary.append(node('b','',currentAlerts.length?`현재 경보 ${currentAlerts.length}건${active.length>currentAlerts.length?` · 유지 이력 ${active.length-currentAlerts.length}건`:''}`:active.length?`경보 이력 유지 ${active.length}건`:related.length?`선택 센서 정상 · 관련 구역 경보·이력 ${related.length}건`:thermalProxy?'열부하 환산값 · 펌프 유량 판정 보류':signalIssue?'센서 신호 품질 확인 필요':releasing?'모의 공정 방출 진행 중':observed?'수소 농도 관측 · 경보 기준 미만':'현재 정상 범위'),
         node('span','',[observed,releasing,active.length?`현재값과 유지 중인 경보 이력을 구분해 확인합니다. 이 센서의 ${rules.length}개 조건 중 ${active.length}개가 유지 중입니다.`:
           related.length?'선택 센서의 현재값과 다른 센서의 경보 상태를 구분해 확인합니다.':signalIssue?'공정 사고는 확정되지 않았습니다. 계측 상태를 먼저 확인합니다.':`${rules.length}개 시나리오를 감시 중입니다. 현재 비상대응 대상은 없습니다.`].filter(Boolean).join(' · ')));middle.append(summary);
       if(active.length){
@@ -247,9 +269,12 @@
         if(!plans.length)middle.append(node('p','sensor-risk-caption','연결된 예방 절차가 없습니다. 센서 품질과 운전 추세를 확인하세요.'));
       }
       appendSources(payload,plans);
+      middle.querySelectorAll('details').forEach((item,index)=>{const key=`${index}:${item.querySelector('summary')?.textContent}`;if(detailStates.has(key))item.open=detailStates.get(key);});
+      middle.scrollTop=savedScroll;
     }
     async function askSensor(extraQuestion='',snapshotTime=displayTime()){
       const job=runtime()?.activeJobId,tag=selected;if(!tag)return;
+      const requestBasis=signalBasis(tag,issueMap(currentFrame()));
       if(extraQuestion)lastQuestion=extraQuestion;
       clearTimeout(analysisTimer);analysisTimer=null;
       analysisController?.abort();analysisController=new AbortController();const signal=analysisController.signal,selection=epoch,sequence=++analysisSequence;
@@ -268,7 +293,7 @@
         if(!draft){answer.classList.remove('loading');answer.classList.add('typing');await window.revealStationText(result.answer||'분석 결과가 없습니다.',text=>{answer.textContent=text;transcript.scrollTop=transcript.scrollHeight;},()=>!closed&&selection===epoch&&sequence===analysisSequence&&!signal.aborted);}
         streamFinished=true;
         if(closed||selection!==epoch||sequence!==analysisSequence)return;
-        answer.classList.remove('loading','typing');assistantMeta.textContent=`${tag} · 모의 ${Number(result.time_s||0).toFixed(1)} s · ${result.model||'SAGA'}`;rerun.disabled=false;deepDive.disabled=false;renderMarkdown(answer,result.answer||'분석 결과가 없습니다.');appendDataUsed(answer,result.data_used);
+        answer.classList.remove('loading','typing');analysisBasis=requestBasis;assistantMeta.textContent=`${tag} · 분석 기준 ${Number(result.time_s||0).toFixed(1)} s · ${result.model||'SAGA'}`;rerun.disabled=false;deepDive.disabled=false;renderMarkdown(answer,result.answer||'분석 결과가 없습니다.');appendDataUsed(answer,result.data_used);
         if(result.virtual_action_proposals?.length){
           const commandHost=node('section','sensor-command-proposals');
           commandHost.append(node('b','',window.stationLocale?.language?.()==='en'?'Requested virtual actions · confirm before execution':'요청한 가상 조치 · 실행 전 확인'));
@@ -280,7 +305,7 @@
     }
     async function selectSensor(tag){
       if(closed||!catalog?.sensors?.some(item=>item.sensor_id===tag))return;
-      epoch++;analysisSequence++;clearTimeout(analysisTimer);analysisTimer=null;detailController?.abort();analysisController?.abort();detailController=new AbortController();selected=tag;lastQuestion='';
+      epoch++;analysisSequence++;clearTimeout(analysisTimer);analysisTimer=null;detailController?.abort();analysisController?.abort();detailController=new AbortController();selected=tag;lastQuestion='';analysisBasis=null;
       list.querySelectorAll('.sensor-list-item').forEach(button=>button.classList.toggle('selected',button.dataset.sensorId===tag));
       middle.replaceChildren(node('p','sensor-detail-placeholder',`${tag} 현재 신호와 판단 기준을 불러오는 중…`));transcript.replaceChildren(node('div','sensor-chat-quick','현재 신호와 경보 상태를 확인하는 중…'));assistantMeta.textContent=`${tag} · 자동 분석 준비`;rerun.disabled=true;deepDive.disabled=true;
       const job=runtime()?.activeJobId,selection=epoch,snapshotTime=displayTime();

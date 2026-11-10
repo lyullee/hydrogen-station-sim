@@ -19,6 +19,7 @@ function updateBankPressurePreview(){
 const operationNames={trailer_supply:'공급',pressure_recharge:'보완',vehicle_1:'차량 1 충전',vehicle_2:'차량 2 충전'};
 const activityReasons={'recharge-off':'압력 보완 명령 대기','supply-off':'트레일러 공급 명령 대기','bank-target':'설정한 저장뱅크 목표압력 도달','vehicle-target':'설정한 차량 목표압력·충전량 도달','compressor-starting':'압축기 기동 대기','bank-unavailable':'공급 가능한 저장뱅크 없음','valve-starting':'밸브 개방·압력 형성 중',esd:'ESD 차단','source-depleted':'트레일러 공급압·재고 소진','safety-temperature':'차량 가스 온도 보호 차단','communication-abort':'차량 통신 Abort 차단','communication-halt':'차량 통신 Halt 차단','communication-data-loss':'차량 통신 손실 차단','communication-invalid-crc':'차량 통신 CRC 오류 차단','communication-invalid-value':'차량 통신 값 오류 차단','communication-data-loss-hold':'차량 통신 복구 대기','startup-flow-before-minimum-time':'최소 기동시간 전 유량 감지','maximum-startup-mass':'기동 질량 한도 초과','lower-pressure-corridor':'압력 하한 허용구간 이탈','upper-pressure-corridor':'압력 상한 허용구간 이탈','fuel-delivery-temperature-category':'선택 냉각온도 등급 이탈',operator:'운전자 정지'};
 let channel=null;try{channel=new BroadcastChannel('hrs-monitor');}catch{}
+activityReasons['compressor-trip']='압축기 정지 사고로 공급·보완 차단';
 const faultCards=()=>[...$('faults').querySelectorAll('.fault-card')];
 function errorMessage(message=''){$('errorStatus').textContent=message;$('errorStatus').hidden=!message;}
 function setRemoteTab(tab){
@@ -122,6 +123,9 @@ function renderProcess(){
   for(const [key,name] of Object.entries(operationNames)){
     const card=document.querySelector(`[data-process="${key}"]`),on=Boolean(running&&settings[key]),button=card.querySelector('.process-toggle');
     const activity=confirmed?frame.process_activity?.[key]:null;
+    const stopReason=snapshot?.stop_reason?.[key];
+    const communicationTrip=running&&!on&&stopReason?.startsWith('communication-');
+    const reverseFlow=activity?.flow_g_s<-.01;
     let status=job?.status==='complete'?'실행 종료':'정지',detail=job?.status==='complete'?'새 공정을 시작할 수 있습니다.':'요청 없음';
     if(on){requestedCount++;status='명령 접수';detail='다음 계산 반영 대기';}
     if(activity){
@@ -129,8 +133,10 @@ function renderProcess(){
       else if(activity.state==='waiting'){status='흐름 대기';detail=activityReasons[activity.reason]||'설비 조건 확인 중';}
       else if(activity.state==='blocked'){status=activity.reason==='source-depleted'?'공급 한계':'안전 차단';detail=activityReasons[activity.reason]||'안전 계층 차단';}
       else if(activity.state==='auto-stopped'){status='자동 종료';detail=activityReasons[activity.reason]||'설정 조건 도달';}
-      else if(!on&&snapshot?.stop_reason?.[key]==='operator'){detail='운전자 정지';}
+      else if(!on&&stopReason==='operator'){detail='운전자 정지';}
     }
+    if(communicationTrip){status='통신 차단';detail=activityReasons[stopReason]||'차량 통신 오류로 충전 종료';}
+    if(reverseFlow){status='역류';detail=`차량 → 호스 ${Math.abs(activity.flow_g_s).toFixed(2)} g/s`;}
     card.dataset.active=String(on);card.dataset.flowing=String(activity?.state==='flowing');card.querySelector('.process-state').textContent=status;card.querySelector('.process-activity').textContent=detail;
     let targetLine=card.querySelector('.process-target-state');
     if(!targetLine){targetLine=document.createElement('div');targetLine.className='process-target-state';button.before(targetLine);}
@@ -154,7 +160,7 @@ function renderProcess(){
           :`목표 초과 충전 ON · ${Number.isFinite(pressure)?pressure.toFixed(2)+' / ':''}${target.toFixed(1)} MPa · 목표에서 멈추지 않음`;
     }
     const indicator=document.querySelector(`[data-status-process="${key}"]`);
-    indicator.dataset.state=activity?.state||(!running?'off':on?'pending':'off');
+    indicator.dataset.state=communicationTrip||reverseFlow?'blocked':activity?.state||(!running?'off':on?'pending':'off');
     indicator.querySelector('b').textContent=status;
     indicator.title=`${name}: ${detail}`;
     button.textContent=on?`${name} 정지`:`${name} 시작`;button.disabled=mutating||Boolean(activeJobId&&!job);
@@ -170,8 +176,8 @@ function renderProcess(){
   for(const id of ['trailerPressure','trailerCapacity','trailerTemperature'])$(id).disabled=running||mutating;
   if(snapshot){$('trailerReading').textContent=`재고 ${Number(snapshot.trailer_inventory_kg).toFixed(3)} kg · 압력 ${Number(snapshot.trailer_pressure_mpa).toFixed(3)} MPa · 이송 ${Number(snapshot.trailer_transferred_kg).toFixed(3)} kg`;
     $('rechargeReading').textContent=`누적 보충 ${Number(snapshot.recharge_transferred_kg).toFixed(3)} kg${frame?.recharge_bank?' · '+frame.recharge_bank.toUpperCase()+' 뱅크':''}`;
-    for(const row of $('reliefRows').children)row.querySelector('.relief-state').textContent=snapshot.relief_open?.[row.dataset.relief]?'열림':'닫힘';}
-  if(frame){$('vehicle1Reading').textContent=`탱크 ${Number(frame.vehicle_mass_kg||0).toFixed(3)} kg · ${Number(frame.vehicle_pressure_mpa||0).toFixed(3)} MPa`;$('vehicle2Reading').textContent=`탱크 ${Number(frame.vehicle_2_mass_kg||0).toFixed(3)} kg · ${Number(frame.vehicle_2_pressure_mpa||0).toFixed(3)} MPa`;}
+    for(const row of $('reliefRows').children)row.querySelector('.relief-state').textContent=snapshot.relief_open?.[row.dataset.relief]?'열림':'닫힘';}else{$('trailerReading').textContent='재고 — kg · 압력 — MPa';$('rechargeReading').textContent='누적 보충 — kg';for(const row of $('reliefRows').children)row.querySelector('.relief-state').textContent='—';}
+  if(frame){$('vehicle1Reading').textContent=`탱크 ${Number(frame.vehicle_mass_kg||0).toFixed(3)} kg · ${Number(frame.vehicle_pressure_mpa||0).toFixed(3)} MPa`;$('vehicle2Reading').textContent=`탱크 ${Number(frame.vehicle_2_mass_kg||0).toFixed(3)} kg · ${Number(frame.vehicle_2_pressure_mpa||0).toFixed(3)} MPa`;}else{$('vehicle1Reading').textContent='탱크 — kg';$('vehicle2Reading').textContent='탱크 — kg';}
 }
 async function applyProcessSettings(operation=null){
   if(operation&&!['queued','running'].includes(job?.status)){await startProcessFromIdle(operation);return;}
@@ -228,13 +234,12 @@ function publishReset(){
 }
 async function stopAndWait(id){
   let current;
-  try{current=await api('/api/simulations/'+id);}catch(e){if(e.status===404)return;throw e;}
-  if(!['queued','running'].includes(current.status))return;
+  try{current=await api('/api/simulations/'+id+'/stop',{method:'POST'});}catch(e){if(e.status===404)return;throw e;}
+  if(['complete','failed'].includes(current.status))return;
   $('status').textContent='현재 공정 정지 중…';
-  await api('/api/simulations/'+id+'/stop',{method:'POST'});
   const deadline=Date.now()+45000;
   do{
-    await new Promise(resolve=>setTimeout(resolve,600));
+    await new Promise(resolve=>setTimeout(resolve,100));
     current=await api('/api/simulations/'+id);
     updateJob(current);
     if(['complete','failed'].includes(current.status))return;
@@ -342,7 +347,7 @@ async function refreshLiveFaults(){
   try{
     const data=await api('/api/simulations/'+activeJobId+'/faults');body.replaceChildren();
     if(!data.faults.length){body.textContent='운전 중 사고가 없습니다.';return;}
-    for(const fault of data.faults){const row=document.createElement('div');row.className='live-fault';const label=document.createElement('span');label.textContent=`${fault.active?'진행 중':'대기'} · ${fault.kind} · ${fault.target} · ${Number(fault.start_time_s).toFixed(1)} s`;const button=document.createElement('button');button.type='button';button.textContent='이 사고 종료';button.addEventListener('click',async()=>{button.disabled=true;try{await api('/api/simulations/'+activeJobId+'/faults/'+encodeURIComponent(fault.event_id),{method:'DELETE'});$('status').textContent='사고 종료 명령을 현재 공정에 반영 중입니다.';await refreshLiveFaults();}catch(error){errorMessage(error.message);button.disabled=false;}});row.append(label,button);body.append(row);}
+    for(const fault of data.faults){const row=document.createElement('div');row.className='live-fault';const label=document.createElement('span');const kind=catalog?.kinds.find(item=>item.id===fault.kind);const target=kind?.targets.find(item=>item.value===fault.target);label.textContent=`${fault.active?'진행 중':'대기'} · ${kind?.label||fault.kind} · ${target?.label||fault.target} · ${Number(fault.start_time_s).toFixed(1)} s`;const button=document.createElement('button');button.type='button';button.textContent='이 사고 종료';button.addEventListener('click',async()=>{button.disabled=true;try{await api('/api/simulations/'+activeJobId+'/faults/'+encodeURIComponent(fault.event_id),{method:'DELETE'});$('status').textContent='사고 종료 명령을 현재 공정에 반영 중입니다.';await refreshLiveFaults();}catch(error){errorMessage(error.message);button.disabled=false;}});row.append(label,button);body.append(row);}
   }catch(error){body.textContent='현재 사고 목록을 읽지 못했습니다: '+error.message;}
 }
 async function startNewRun(){if(mutating)return;try{if(activeJobId)await stopAndWait(activeJobId);job=null;await run(new Event('submit',{cancelable:true}));}catch(error){errorMessage(error.message);}}
@@ -425,7 +430,7 @@ function renderLibrary(){
   if(!filtered.length){const empty=document.createElement('p');empty.className='hint';empty.textContent='검색 결과가 없습니다. 분류나 검색어를 바꿔보세요.';$('scenarioLibrary').append(empty);}
 }
 async function initCatalog(){
-  try{catalog=await api('/scenarios.json?v=20261008-carb-hgv43-communication1');for(const c of catalog.categories)$('categoryFilter').add(new Option(c.label,c.id));renderLibrary();$('addFault').disabled=false;}
+  try{catalog=await api('/scenarios.json?v=20261111-reverse');for(const c of catalog.categories)$('categoryFilter').add(new Option(c.label,c.id));renderLibrary();$('addFault').disabled=false;}
   catch(error){errorMessage('사고 목록을 불러오지 못했습니다: '+error.message);$('catalogCount').textContent='불러오기 실패';$('scenarioLibrary').textContent='새로고침 후 다시 시도하세요. 정상 운전은 실행할 수 있습니다.';}
 }
 async function health(){try{await api('/api/health');$('serverStatus').textContent='서버 연결됨';$('serverStatus').dataset.state='ready';}catch{$('serverStatus').textContent='서버 연결 실패';$('serverStatus').dataset.state='error';}}
@@ -455,5 +460,6 @@ $('scenarioSearch').addEventListener('input',()=>{if(catalog)renderLibrary();});
 initReliefRows();
 for(const [inputId] of bankFillSettings)$(inputId).addEventListener('input',updateBankPressurePreview);
 updateBankPressurePreview();
-if(activeJobId){$('monitorLink').href='/?job='+encodeURIComponent(activeJobId);track();}
+if(activeJobId){publishJob(activeJobId);track();}
+window.addEventListener('station-safety-action',()=>{if(activeJobId)publishJob(activeJobId);});
 renderControls();initCatalog();health();setInterval(health,30000);

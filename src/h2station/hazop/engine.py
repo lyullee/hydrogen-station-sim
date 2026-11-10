@@ -63,6 +63,13 @@ class RuleEngine:
             if (gate is True and rid in SCENARIO_QUALIFIED_COMPRESSOR_TEMPERATURE_RULES
                     and frame["modes"].get("compressor.thermal_event") is False):
                 gate = False
+            if (gate is True and r["sensor_id"] == "FT-1901"
+                    and frame["signals"].get("FT-1901", {}).get("origin") == "DERIVED_THERMAL_PROXY"):
+                # Heat-duty / assumed delta-T is an equivalent cooling demand,
+                # not independent pump telemetry. Do not diagnose pump faults
+                # by applying measured-flow limits to that calculated proxy.
+                gate = None
+                reason = "HTF_THERMAL_PROXY_NOT_MEASURED_PUMP_FLOW"
             if gate is True and rid in PCV_DROP_FLOW_TAGS:
                 flow_tag = PCV_DROP_FLOW_TAGS[rid]
                 flow = frame["signals"].get(flow_tag)

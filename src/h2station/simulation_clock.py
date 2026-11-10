@@ -2,9 +2,13 @@
 
 from __future__ import annotations
 
-from threading import Lock
+from threading import Event, Lock
 from time import monotonic, sleep
 from typing import Callable
+
+
+class SimulationStopped(Exception):
+    """Cooperative operator cancellation, not a solver failure."""
 
 
 class SimulationClock:
@@ -17,13 +21,21 @@ class SimulationClock:
     ) -> None:
         self._lock = Lock()
         self._now = now
-        self._wait = wait
+        self._cancelled = Event()
+        self._wait = self._cancelled.wait if wait is sleep else wait
         self.speed_multiplier = speed_multiplier
         self._anchor_sim_s: float | None = None
         self._anchor_wall_s: float | None = None
         self._meter_sim_s: float | None = None
         self._meter_wall_s: float | None = None
         self._actual_rate_x: float | None = None
+
+    def cancel(self) -> None:
+        self._cancelled.set()
+
+    def check_cancelled(self) -> None:
+        if self._cancelled.is_set():
+            raise SimulationStopped()
 
     def set_speed(self, multiplier: float, latest_sim_s: float) -> None:
         """Rebase the clock so changing speed never jumps the simulation time."""
@@ -39,6 +51,7 @@ class SimulationClock:
 
     def pace(self, simulated_time_s: float) -> tuple[float, float | None]:
         """Return wall-clock lag and measured speed after pacing this sample."""
+        self.check_cancelled()
         with self._lock:
             if self._anchor_wall_s is None:
                 wall = self._now()
@@ -53,6 +66,7 @@ class SimulationClock:
         ahead_s = target_wall - self._now()
         if ahead_s > 0:
             self._wait(ahead_s)
+        self.check_cancelled()
         wall = self._now()
         with self._lock:
             # A speed change during the wait is applied from the next sample.

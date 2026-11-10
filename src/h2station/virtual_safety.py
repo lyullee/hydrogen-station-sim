@@ -7,7 +7,7 @@ never addresses a plant PLC; it only changes the station's virtual flow paths.
 from __future__ import annotations
 
 from copy import deepcopy
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from math import cos, exp, radians, sqrt
 from threading import RLock
 from typing import Any, Mapping
@@ -18,17 +18,18 @@ from .ventilation_calibration import measured_ventilation_factor
 
 
 BANKS = ("low", "medium", "high")
+BANK_LABELS = {"low": "저압", "medium": "중압", "high": "고압"}
 ZONES = ("unloading", "compressor", "storage", "dispenser")
 VALVE_LABELS = {
     "trailer.source": "트레일러 측 공급 차단",
     "trailer.station": "충전소 측 하역 차단",
     "compressor.suction": "압축기 흡입 차단",
     "compressor.discharge": "압축기 토출 차단",
-    **{f"bank.{bank}.inlet": f"{bank} 저장뱅크 유입 차단" for bank in BANKS},
-    **{f"bank.{bank}.outlet": f"{bank} 저장뱅크 유출 차단" for bank in BANKS},
+    **{f"bank.{bank}.inlet": f"{BANK_LABELS[bank]} 저장뱅크 유입 차단" for bank in BANKS},
+    **{f"bank.{bank}.outlet": f"{BANK_LABELS[bank]} 저장뱅크 유출 차단" for bank in BANKS},
     "dispenser.1": "차량 1 충전라인 차단",
     "dispenser.2": "차량 2 충전라인 차단",
-    **{f"vent.{bank}": f"{bank} 뱅크 설계 벤트" for bank in BANKS},
+    **{f"vent.{bank}": f"{BANK_LABELS[bank]} 뱅크 설계 벤트" for bank in BANKS},
 }
 FAULTS = ("none", "stuck_open", "stuck_closed", "partial_closed", "seat_leak", "feedback_fault")
 RECOVERY_CHECKS = (
@@ -180,6 +181,8 @@ class VirtualSafetyRuntime:
                 if target not in group:
                     raise ValueError("Unknown auxiliary equipment")
                 action["before"] = dict(group[target])
+                group[target].pop("post_cooling_remaining_s", None)
+                group[target].pop("auto_stopped", None)
                 group[target]["commanded"] = kind.endswith(".on")
                 group[target]["running"] = group[target]["commanded"] and not group[target]["fault"]
                 self._finish(action, time_s,
@@ -323,13 +326,31 @@ class VirtualSafetyRuntime:
                     action["after_metrics"] = deepcopy(dict(metrics))
                     del self._pending_metric_actions[action_id]
 
+    def queue_restart_reset(self, action_id: str) -> None:
+        with self._lock:
+            self.recovery_approved = False
+            for action in self.actions:
+                if action['id'] == action_id:
+                    action['status'] = 'commanded'
+                    action['completed_s'] = None
+
+    def finish_restart_reset(self, time_s: float, accepted: bool) -> None:
+        with self._lock:
+            self.recovery_approved = accepted
+            self.esd_requested = not accepted
+            for action in reversed(self.actions):
+                if action['kind'] == 'restart.approve' and action['status'] == 'commanded':
+                    self._finish(action, time_s, 'confirmed' if accepted else 'failed',
+                                 {'plc_reset_accepted': accepted})
+                    break
+
     def record_incident_resolution(self, fault_ids: list[str], time_s: float) -> dict[str, Any]:
         """Record the training-only removal of incident inputs after confirmed response."""
         with self._lock:
             action = {"id": uuid4().hex[:12], "kind": "incident.auto-resolve",
                       "target": "station", "issued_s": time_s, "completed_s": time_s,
                       "status": "confirmed",
-                      "note": "ESD와 즉시 조치 확인 후 사고 입력 자동 종료",
+                      "note": "훈련 화재 열 입력 소멸 후 사고 종료 · 잔류 위험과 복구 점검 필요",
                       "before": {"active_fault_ids": list(fault_ids)},
                       "after": {"ended_fault_ids": list(fault_ids)},
                       "baseline_metrics": {}, "after_metrics": None}
@@ -506,6 +527,65 @@ class VirtualSafetyRuntime:
                                     leak_diameter_m=0.0005 * valve.flow_fraction(), rate_s=0.02)
                          for bank in BANKS if (valve := self.valves[f"vent.{bank}"]).flow_fraction() > 0)
 
+    def response_events(self, events: tuple[FaultEvent, ...], time_s: float) -> tuple[FaultEvent, ...]:
+        """Finite, suppressible training fires; not a validated extinguishing model.
+
+        Thirty seconds of healthy spray extinguishes the configured training
+        source. Interrupting spray restores intensity at half the suppression
+        rate. Heat input and visual intensity use the very same fraction.
+        Leaks remain governed by source inventory and the mass/energy equations.
+        """
+        with self._lock:
+            if not hasattr(self, 'fire_response'):
+                self.fire_response = {}
+            current_fire_ids = {event.event_id for event in events if event.kind is FaultKind.EXTERNAL_FIRE}
+            for event_id, row in self.fire_response.items():
+                if event_id not in current_fire_ids and row['status'] in ('active', 'suppressing'):
+                    row['status'] = 'ended'
+                    row['intensity'] = 0.0
+                    row['ended_reason'] = 'scheduled-or-manual-end'
+                    row['last_time_s'] = time_s
+            effective = []
+            for event in events:
+                if event.kind is not FaultKind.EXTERNAL_FIRE:
+                    effective.append(event)
+                    continue
+                bank = event.target.removeprefix('cascade.')
+                if bank not in self.cooling:
+                    effective.append(event)
+                    continue
+                row = self.fire_response.setdefault(event.event_id, {
+                    'target': event.target, 'intensity': 1.0, 'last_time_s': time_s,
+                    'status': 'active', 'model': 'training-finite-fire-30s',
+                })
+                dt = max(0.0, time_s - row['last_time_s'])
+                row['last_time_s'] = time_s
+                spray = self.cooling[bank]['running'] and not self.cooling[bank]['fault']
+                if row['status'] != 'extinguished':
+                    row['intensity'] = max(0.0, min(1.0, row['intensity'] + dt * (-1/30 if spray else 1/60)))
+                    row['status'] = 'extinguished' if row['intensity'] <= 1e-8 else 'suppressing' if spray else 'active'
+                if row['status'] != 'extinguished':
+                    effective.append(replace(event, heat_transfer_ua_w_k=event.heat_transfer_ua_w_k * row['intensity']))
+            # Post-fire spray is a training sequence, not a real cooling criterion.
+            # Keep the clock after the incident event is removed from the schedule.
+            for bank, device in self.cooling.items():
+                rows = [r for r in self.fire_response.values() if r['target'] == f'cascade.{bank}']
+                active = any(r['status'] in ('active', 'suppressing') for r in rows)
+                previous = device.get('response_time_s', time_s)
+                device['response_time_s'] = time_s
+                if active:
+                    device.pop('post_cooling_remaining_s', None)
+                    device.pop('auto_stopped', None)
+                elif rows and device['commanded']:
+                    if 'post_cooling_remaining_s' not in device:
+                        device['post_cooling_remaining_s'] = 15.0
+                    elif device['running'] and not device['fault']:
+                        device['post_cooling_remaining_s'] = max(0.0, device['post_cooling_remaining_s'] - max(0.0, time_s - previous))
+                    if device['post_cooling_remaining_s'] <= 0:
+                        self.issue('cooling.off', bank, time_s)
+                        device['auto_stopped'] = True
+            return tuple(effective)
+
     def cooling_events(self, time_s: float, ambient_k: float) -> tuple[FaultEvent, ...]:
         with self._lock:
             return tuple(FaultEvent(event_id=f"cooling-{bank}", kind=FaultKind.TEMPERATURE_DISTURBANCE,
@@ -572,6 +652,7 @@ class VirtualSafetyRuntime:
     def snapshot(self, *, include_actions: bool = True) -> dict[str, Any]:
         with self._lock:
             return {"time_s": self.latest_time_s,
+                    "fire_response": deepcopy(getattr(self, 'fire_response', {})),
                     "valves": {name: valve.snapshot() for name, valve in self.valves.items()},
                     "line_pressure_mpa": dict(self.line_pressure_mpa),
                     "ventilation": deepcopy(self.ventilation), "cooling": deepcopy(self.cooling),

@@ -666,3 +666,21 @@ def test_analysis_includes_hazop_candidates_without_claiming_plc_trip():
     assert _analyze_frame(frame)['status']=='CRITICAL'
     assert not any('ESD 래치' in s for s in _analyze_frame(frame)['findings'])
     assert _analyze_frame({})['status']=='NORMAL'
+
+
+def test_thermal_equivalent_flow_is_not_a_measured_pump_fault():
+    catalog = copy.deepcopy(load_catalog())
+    catalog['rules'] = [r for r in catalog['rules'] if r['sensor_id'] == 'FT-1901']
+    for rule in catalog['rules']:
+        rule['gate_id'] = 'G_ANY'
+    def sample(t, origin):
+        return {'time_s': t, 'signals': {'FT-1901': {'value': 60.0, 'quality': 'GOOD', 'unit': 'L/min', 'time_s': t, 'origin': origin}}, 'modes': {'station.monitoring': True}}
+    engine = RuleEngine(catalog)
+    for t in range(5):
+        result = engine.evaluate(sample(float(t), 'DERIVED_THERMAL_PROXY'))
+    assert all(not item['active'] for item in result['rules'])
+    assert all(item['reason'] == 'HTF_THERMAL_PROXY_NOT_MEASURED_PUMP_FLOW' for item in result['rules'])
+    engine = RuleEngine(catalog)
+    for t in range(5):
+        result = engine.evaluate(sample(float(t), 'SIMULATED_SENSOR_BIAS'))
+    assert any(item['active'] and item['sensor_id'] == 'FT-1901' for item in result['rules'])

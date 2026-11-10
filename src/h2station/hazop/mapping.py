@@ -238,7 +238,17 @@ class ModelMapper:
             hose, vehicle = partial.hose_gas_state(partial_state), partial.vehicle_tank.gas_state(partial_state.vehicle)
             put(f"PT-{p}01", inst["supply_pressure"]/1e6); put(f"TT-{p}01", inst["supply_temperature"]-273.15)
             put(f"PT-{p}02", inst["pcv_outlet_pressure"]/1e6); put(f"FT-{p}01", inst["pcv_mass_flow"]*1000)
-            put(f"TT-{p+1}01", inst["precooler_outlet_temperature"]-273.15); put(f"FT-{p+1}01", inst["pcv_mass_flow"]*1000)
+            outlet_tag = f"TT-{p+1}01"
+            if inst["pcv_mass_flow"] > 1.0e-12:
+                put(outlet_tag, inst["precooler_outlet_temperature"] - 273.15)
+            else:
+                # With no hydrogen flow the solver returns coolant temperature
+                # as a placeholder, not a gas outlet observation.
+                signals[outlet_tag] = {
+                    "value": None, "unit": self.specs[outlet_tag]["단위"],
+                    "quality": "UNKNOWN", "time_s": t, "origin": "NO_GAS_FLOW",
+                }
+            put(f"FT-{p+1}01", inst["pcv_mass_flow"] * 1000)
             put(f"PT-{h}01", hose.pressure_pa/1e6); put(f"TT-{h}01", hose.temperature_k-273.15)
             put(f"FT-{h}01", inst["nozzle_mass_flow"]*1000)
             put(f"PT-{v}01", vehicle.pressure_pa/1e6); put(f"TT-{v}01", vehicle.temperature_k-273.15)
@@ -403,6 +413,8 @@ class ModelMapper:
         # be attributed to one physical sensor, so remain separate and are reported in the frame.
         for event in fault_events:
             if event.target not in signals: continue
+            if signals[event.target]["value"] is None and event.kind.value in ("sensor-bias", "sensor-freeze"):
+                continue
             if event.kind.value == "sensor-bias":
                 signals[event.target]["value"] += event.magnitude
                 signals[event.target]["origin"] = "SIMULATED_SENSOR_BIAS"

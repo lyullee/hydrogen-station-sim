@@ -299,7 +299,7 @@ def test_replay_comparison_matches_same_leak_despite_new_event_id():
            _virtual_fault_signature([frame("remote-3", .0005)])
 
 
-def test_esd_and_confirmed_immediate_stop_queue_active_incident_end():
+def test_esd_and_stop_do_not_magically_repair_vessel_leak():
     process = ProcessRuntime(ProcessSettings(vehicle_1=True).model_dump())
     leak = FaultEvent("training-leak", FaultKind.HYDROGEN_LEAK,
                       "cascade.high", 0, leak_diameter_m=.001)
@@ -308,12 +308,11 @@ def test_esd_and_confirmed_immediate_stop_queue_active_incident_end():
     process.safety.issue("esd.trip", "station", 2, process=process)
     assert _queue_incident_resolution(job, process, 2) == []
     process.safety.issue("operation.stop", "all", 2, process=process)
-    assert _queue_incident_resolution(job, process, 2) == ["training-leak"]
-    assert job["pending_fault_commands"] == [("remove", "training-leak")]
-    assert process.safety.snapshot()["actions"][-1]["kind"] == "incident.auto-resolve"
+    assert _queue_incident_resolution(job, process, 2) == []
+    assert job["pending_fault_commands"] == []
     # Repeated samples cannot queue duplicate removals or duplicate response records.
     assert _queue_incident_resolution(job, process, 2.2) == []
-    assert job["pending_fault_commands"] == [("remove", "training-leak")]
+    assert job["pending_fault_commands"] == []
 
 
 def test_combined_fault_regression_preserves_residual_hazard_until_ventilation_and_signals_are_safe():

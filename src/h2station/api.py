@@ -41,7 +41,7 @@ from .llm_grounding import (
 )
 from .safe_operation import SafeOperationSample
 from .protocol import CommunicationLossPolicy, FuelingTemperatureCategory
-from .simulation_clock import SimulationClock
+from .simulation_clock import SimulationClock, SimulationStopped
 from .virtual_safety import VALVE_LABELS, ZONES, RECOVERY_CHECKS, suggested_actions
 from .scenario import (
     REFERENCE_MINIMUM_RECHARGE_OFF_TIME_S,
@@ -920,9 +920,14 @@ def _analyze_frame(frame: dict[str, Any]) -> dict[str, Any]:
         locations = ", ".join(relief_names.get(key, key) for key in open_valves)
         findings.append(f"안전밸브 개방: {locations} · 방출 {relief_flow:.2f} g/s · 설비 압력과 피해영향예측 결과 확인")
         score = 3 if any(fault.startswith("external-fire:") for fault in active_faults) else 2
-    if hazop_active:
-        findings.append(f"센서 이상 징후 {len(hazop_active)}건: 설비 상태와 운전 조건 확인")
-        score = max(score, 3 if any(a.get("severity") == "TRIP" for a in hazop_active) else 2)
+    hazop_current = [row for row in hazop_active if row.get("state") not in ("LATCHED", "ALARM_HOLD")]
+    hazop_retained = [row for row in hazop_active if row.get("state") in ("LATCHED", "ALARM_HOLD")]
+    if hazop_current:
+        findings.append(f"현재 센서 이상 징후 {len(hazop_current)}건: 설비 상태와 운전 조건 확인")
+        score = max(score, 3 if any(a.get("severity") == "TRIP" for a in hazop_current) else 2)
+    if hazop_retained:
+        findings.append(f"경보 이력 {len(hazop_retained)}건 유지: 현재 검출과 구분하여 복구 점검")
+        score = max(score, 1)
     if pressure >= 87.5:
         findings.append(f"차량 압력 {pressure:.1f} MPa: 설계 상한 근접")
         score = max(score, 3)
@@ -961,11 +966,16 @@ def _analyze_frame(frame: dict[str, Any]) -> dict[str, Any]:
     if active_faults and score == 0:
         findings.append("설비 이상 입력이 공정 상태와 연동됨")
         score = 1
+    current_hazard_score = score
     if esd:
         findings.insert(0, "ESD 래치: 공정 격리 상태")
         score = 3
     status = ("CRITICAL" if score >= 3 else "WARNING" if score >= 2 else "ADVISORY" if score else "NORMAL")
     headline = {"CRITICAL":"즉시 현장 확인 및 피해영향예측 확인", "WARNING":"운전 조건과 검지기 추세 감시", "ADVISORY":"사고 입력 영향 추적 중", "NORMAL":"모든 연결 신호가 정상 범위"}[status]
+    if esd and current_hazard_score <= 1:
+        headline = "공정 차단 유지 · 복구 점검 필요"
+    elif hazop_retained and score == 1 and not active_faults:
+        headline = "경보 이력 유지 · 복구 상태 확인"
     return {"status": status, "score": score, "headline": headline, "findings": findings,
             "max_detector_volpct": max_detector, "fire_detection": fire_detection}
 
@@ -992,7 +1002,10 @@ def _position_live_fault(event: FaultEvent, time_s: float, relative: bool) -> Fa
 
 
 def _execute_simulation(job_id: str, request: SimulationInput) -> None:
+    backend = None
+    simulation_clock = _jobs[job_id]["_simulation_clock"]
     try:
+        simulation_clock.check_cancelled()
         _set_job(
             job_id,
             status="running",
@@ -1142,6 +1155,7 @@ def _execute_simulation(job_id: str, request: SimulationInput) -> None:
             fault_events=tuple(fault.to_event() for fault in request.faults),
         )
         built = build_reference_scenario(config, backend)
+        simulation_clock.check_cancelled()
         component_internal_volume_m3 = {
             f"cascade.{bank.parameters.name}": float(bank.volume_m3)
             for bank in built.station.banks
@@ -1180,12 +1194,13 @@ def _execute_simulation(job_id: str, request: SimulationInput) -> None:
             built.station.compressor_suction = lambda _time: process_runtime.trailer_state()
             built.simulator.process_runtime = process_runtime
         def apply_runtime_commands(time_s: float) -> None:
+            simulation_clock.check_cancelled()
             with _jobs_lock:
                 job = _jobs[job_id]
                 commands = job["pending_fault_commands"]
                 reset_safety = bool(job.pop("pending_safety_reset", False))
                 if reset_safety:
-                    built.simulator.safety_plc.reset()
+                    built.simulator.pending_safety_reset = True
                 registry = job["fault_registry"]
                 for command, payload in commands:
                     if command in {"add", "add_relative"}:
@@ -1211,6 +1226,7 @@ def _execute_simulation(job_id: str, request: SimulationInput) -> None:
                     process_runtime.safety.issue(
                         planned["kind"], planned["target"], time_s,
                         process=process_runtime, note=planned.get("note", ""),
+                        baseline_metrics=_virtual_safety_metrics(job["frames"][-1] if job["frames"] else None),
                     )
         hazop_monitor = HazopMonitor(run_id=job_id, store=EventStore(), virtual_detectors=True)
         built.simulator.hazop_monitor = hazop_monitor
@@ -1313,12 +1329,14 @@ def _execute_simulation(job_id: str, request: SimulationInput) -> None:
         )
 
         def report_sample(sample: SafeOperationSample) -> None:
+            simulation_clock.check_cancelled()
             realtime_lag_s = None
             simulation_rate_x = None
             if request.continuous:
                 # Speed changes affect pacing only; every physical solver step runs.
                 realtime_lag_s, simulation_rate_x = simulation_clock.pace(sample.time_s)
             with _jobs_lock:
+                simulation_clock.check_cancelled()
                 frames = _jobs[job_id]["frames"]
                 sequence = _jobs[job_id].get("next_sequence", 0)
                 frame = {
@@ -1527,7 +1545,7 @@ def _execute_simulation(job_id: str, request: SimulationInput) -> None:
                         frame["incident_resolution"] = {
                             "status": "ending",
                             "fault_ids": resolved_fault_ids,
-                            "reason": "ESD와 즉시 조치 확인",
+                            "reason": "훈련 화재 열원 소멸",
                         }
                     frame["virtual_safety"] = process_runtime.safety.snapshot(include_actions=False)
                 frames.append(frame)
@@ -1543,6 +1561,7 @@ def _execute_simulation(job_id: str, request: SimulationInput) -> None:
                     _jobs[job_id]["simulation_rate_x"] = simulation_rate_x
 
         def should_stop() -> bool:
+            simulation_clock.check_cancelled()
             with _jobs_lock:
                 return bool(_jobs[job_id].get("stop_requested"))
 
@@ -1650,6 +1669,22 @@ def _execute_simulation(job_id: str, request: SimulationInput) -> None:
             updated_at=_utc_now(),
             result=result,
         )
+    except SimulationStopped:
+        # The solver has unwound before advertising completion. Preserve only
+        # committed frames; never serialize an interrupted solver state.
+        with _jobs_lock:
+            frames = list(_jobs[job_id]["frames"])
+            faults = list(_jobs[job_id]["fault_registry"].values())
+        result = _serialize_frame_result(frames, backend, faults)
+        result["stopped"] = True
+        if frames:
+            result["hazop"] = {"frames": [f.get("hazop", {}) for f in frames]}
+            result["analysis"] = frames[-1].get("analysis")
+            result["gas_detectors"] = frames[-1].get("gas_detectors", {})
+            result["flame_detectors"] = frames[-1].get("flame_detectors", {})
+        _set_job(job_id, status="complete", phase="complete", progress=100,
+                 activity="정지 완료 · 마지막 관측값 보존", stopped=True,
+                 completed_at=_utc_now(), updated_at=_utc_now(), result=result)
     except Exception as exc:
         _set_job(
             job_id,
@@ -1916,7 +1951,7 @@ def _serialize_frame_result(
     is redundant and particularly costly for long-running demonstrations.
     """
 
-    first, last = frames[0], frames[-1]
+    first, last = (frames[0], frames[-1]) if frames else ({}, {})
     def values(key: str, default: Any = None) -> list[Any]:
         return [frame.get(key, default) for frame in frames]
 
@@ -1998,7 +2033,7 @@ def _serialize_frame_result(
             "released_mass_kg": released_mass,
             "esd_time_s": esd_time,
             "hyram_available": bool(getattr(backend, "available", False)),
-            "hyram_backend": backend.name,
+            "hyram_backend": getattr(backend, "name", "not-initialized"),
             "active_faults": fault_payload,
             "public_benchmark_diagnostics": compare_public_operating_context(
                 duration_s=duration,
@@ -2512,37 +2547,25 @@ def _virtual_safety_metrics(frame: dict[str, Any] | None) -> dict[str, Any]:
 
 def _queue_incident_resolution(job: dict[str, Any], runtime: ProcessRuntime,
                                time_s: float) -> list[str]:
-    """End active injected incidents after ESD and the confirmed immediate stop.
-
-    This is a virtual-training transition, not a claim that a physical leak or fire
-    disappears instantly.  Ending the injected source lets the process, detectors,
-    consequence model, 3D scene, and flow diagram all follow the same state change.
-    """
+    """Retire sources extinguished by the finite training-fire model."""
     state = runtime.safety.snapshot()
-    actions = state.get("actions") or []
     registry: dict[str, FaultEvent] = job.get("fault_registry") or {}
     already_queued = set(job.setdefault("auto_resolved_fault_ids", []))
     active = [event for event in registry.values()
               if event.kind is not FaultKind.EMERGENCY_STOP
               and event.active_at(time_s) and event.event_id not in already_queued]
-    if not active or not state.get("esd_requested"):
+    if not active:
         return []
-    incident_start = min(event.start_time_s for event in active)
-    esd_confirmed = any(action.get("kind") == "esd.trip"
-                        and action.get("status") == "confirmed"
-                        and float(action.get("completed_s") or -1) + 1e-6 >= incident_start
-                        for action in actions)
-    immediate_stop_confirmed = any(action.get("kind") == "operation.stop"
-                                   and action.get("target") == "all"
-                                   and action.get("status") == "confirmed"
-                                   and float(action.get("completed_s") or -1) + 1e-6 >= incident_start
-                                   for action in actions)
-    if not (esd_confirmed and immediate_stop_confirmed):
+    # ESD closes flow paths, but does not repair a vessel or extinguish a source.
+    # Resolve only a fire whose integrated training response reached zero.
+    resolved = [event.event_id for event in active
+                if event.kind is FaultKind.EXTERNAL_FIRE
+                and state.get('fire_response', {}).get(event.event_id, {}).get('status') == 'extinguished']
+    if not resolved:
         return []
-    resolved = [event.event_id for event in active]
     job["pending_fault_commands"].extend(("remove", event_id) for event_id in resolved)
     job["auto_resolved_fault_ids"] = sorted(already_queued | set(resolved))
-    job["activity"] = "ESD·즉시 조치 확인 · 사고 입력 자동 종료 반영 중"
+    job["activity"] = "훈련 화재 열원 소멸 · 잔류 위험 확인 중"
     runtime.safety.record_incident_resolution(resolved, time_s)
     return resolved
 
@@ -2559,6 +2582,12 @@ def get_virtual_safety(job_id: str) -> dict[str, Any]:
         frame = job["frames"][-1] if job["frames"] else None
         state = runtime.safety.snapshot()
         state["current_metrics"] = _virtual_safety_metrics(frame)
+        now = float((frame or {}).get("time_s") or 0)
+        state["active_incidents"] = [
+            {"event_id": event.event_id, "kind": event.kind.value, "target": event.target}
+            for event in job["fault_registry"].values()
+            if event.kind is not FaultKind.EMERGENCY_STOP and event.active_at(now)
+        ]
         releases = ((frame or {}).get("hazop") or {}).get("releases") or []
         state["vent_releases"] = {bank: {"outlet_height_m": 6.0,
             "release_flow_g_s": next((float(item.get("mass_flow_g_s") or 0.0)
@@ -2638,6 +2667,9 @@ def issue_virtual_safety_action(job_id: str, request: VirtualSafetyActionInput) 
         if request.kind == "repair.leak":
             job["pending_fault_commands"].append(("remove", request.target))
         if request.kind == "restart.approve":
+            runtime.safety.queue_restart_reset(action['id'])
+            action['status'] = 'commanded'
+            action['completed_s'] = None
             job["pending_safety_reset"] = True
         job["updated_at"] = _utc_now()
         return {"action": action, "state": runtime.safety.snapshot()}
@@ -2899,7 +2931,8 @@ def _invoke_isolated_twin_assistant(channel: Literal["main", "sensor"], payload:
         endpoint += "/stream"
     body = json.dumps(payload, ensure_ascii=False, default=str).encode("utf-8")
     request = Request(base + endpoint, data=body, headers={"Content-Type": "application/json"})
-    endpoint_key = base + f"/api/integrations/digital-twin/{channel}"
+    # A missing Service Hub key must not block an explicit switch to Groq.
+    endpoint_key = base + f"/api/integrations/digital-twin/{channel}|provider:{payload.get('provider', 'service_hub')}"
     if on_token is None:
         with _open_saga_assistant(request, endpoint_key=endpoint_key) as response:
             return json.load(response)
@@ -3437,6 +3470,10 @@ def _direct_impact_summary(results: list[dict[str, Any]]) -> str:
 
 def _safe_saga_text(answer: str) -> str:
     """Remove generic calculation requests and claims of a certified radius."""
+    for field, label in {"station_status": "충전소 상태", "current_signals": "현재 센서 신호",
+                         "cooling_feedback": "냉각 가동 피드백", "active_faults": "활성 사고",
+                         "simulation_time_s": "모의 시각", "impact_results": "피해영향 계산 결과"}.items():
+        answer = re.sub(r"(?<![A-Za-z0-9_])" + field + r"(?![A-Za-z0-9_])", label, answer)
     answer = re.sub(r"(?<![A-Za-z0-9_])(?:SENSOR_BASED_(?:PROXY_)?|LLM_PROPOSED_(?:PROXY_)?)HYPOTHESIS(?![A-Za-z0-9_])",
                     "센서 기준 가정 누출", answer)
     answer = re.sub(r"(?<![A-Za-z0-9_])ACTIVE_RELEASE_CURRENT_SENSORS(?![A-Za-z0-9_])", "현재 누출", answer)
@@ -3459,6 +3496,64 @@ def _safe_saga_text(answer: str) -> str:
     return "\n".join(line for line in answer.splitlines() if allowed(line)).strip()
 
 
+def _bank_pressure_evidence(frame: dict[str, Any], question: str, language: str = "ko") -> str:
+    """Keep all requested bank identities and pressures visible, including missing data."""
+    if not re.search(r"저장|뱅크|bank|storage", question, re.I) or not re.search(r"압력|pressure", question, re.I):
+        return ""
+    labels = {"low": "저압", "medium": "중압", "high": "고압"}
+    selected = [bank for bank, label in labels.items() if label in question or re.search(r"\b" + bank + r"\b", question, re.I)]
+    rows = []
+    signals = (frame.get("hazop") or {}).get("signals") or {}
+    for bank in selected or labels:
+        tag = {"low": "PT-0701", "medium": "PT-0801", "high": "PT-0901"}[bank]
+        reading = signals.get(tag) or {}
+        value = reading.get("value")
+        label = bank if language == "en" else labels[bank]
+        if reading.get("quality") == "GOOD" and isinstance(value, (int, float)):
+            rows.append(f"{label} {value:.3f} {reading.get('unit') or 'MPa_abs'} ({tag})")
+        else:
+            rows.append(f"{label} ({tag}): " + ("valid reading unavailable" if language == "en" else "유효 센서값 미확인"))
+    return ("Storage bank pressures: " if language == "en" else "저장뱅크 압력: ") + " · ".join(rows)
+
+
+def _cooling_evidence(frame: dict[str, Any], question: str, language: str = "ko") -> str:
+    """Report actuator feedback and observed temperatures even when LLM text is rejected."""
+    if not re.search(r"냉각|살수|화재|화염|cooling|spray|fire|flame", question, re.I):
+        return ""
+    safety = frame.get("virtual_safety") or {}
+    lines = []
+    labels = {"low": "저압", "medium": "중압", "high": "고압"}
+    requested = [bank for bank, label in labels.items() if label in question or bank in question.lower()]
+    for bank in requested or list(labels):
+        cooling = (safety.get("cooling") or {}).get(bank)
+        if not isinstance(cooling, dict):
+            continue
+        commanded = "ON" if cooling.get("commanded") else "OFF"
+        running = "ON" if cooling.get("running") else "OFF"
+        fault = bool(cooling.get("fault"))
+        if language == "en":
+            lines.append(f"{bank} bank cooling: command {commanded}, feedback {running}, fault {fault}.")
+        else:
+            lines.append(f"{labels[bank]} 저장뱅크 냉각·살수: 명령 {commanded}, 가동 피드백 {running}, 고장 {'있음' if fault else '없음'}.")
+        actions = [action for action in safety.get("actions", [])
+                   if action.get("target") == bank and action.get("kind") in ("cooling.on", "cooling.off")]
+        if not actions:
+            continue
+        action = actions[-1]
+        before = ((action.get("baseline_metrics") or {}).get("bank_temperature_c") or {}).get(bank)
+        current = (frame.get("bank_temperature_c") or {}).get(bank)
+        issued = (action.get("baseline_metrics") or {}).get("time_s", action.get("issued_s"))
+        now = frame.get("time_s")
+        if not all(isinstance(value, (int, float)) for value in (before, current, issued, now)) or now <= issued:
+            lines.append("No comparable baseline: cooling effectiveness and fire extinction are undetermined." if language == "en" else "비교 가능한 조치 전 관측값이 없어 냉각 효과와 화재 종료 여부를 판단할 수 없습니다.")
+            continue
+        if language == "en":
+            lines.append(f"Temperature at action {issued:.1f} s: {before:.3f} °C; current {now:.1f} s: {current:.3f} °C. Cooling feedback alone does not establish fire extinction or cooling effectiveness.")
+        else:
+            lines.append(f"조치 직전 관측 {issued:.1f} s의 온도 {before:.3f} °C → 현재 {now:.1f} s의 온도 {current:.3f} °C. 가동 피드백만으로 화재 종료나 냉각 효과를 확정할 수 없습니다.")
+    return "\n".join(lines)
+
+
 def _direct_answer_conflicts_with_signals(
     answer: str, *, alert: bool = False, gas_observed: bool = False,
     physical_leak: bool = False, impact_calculated: bool = False,
@@ -3470,9 +3565,18 @@ def _direct_answer_conflicts_with_signals(
     denied. The deterministic answer remains available as a safe fallback.
     """
     compact = re.sub(r"[\s*`_·]", "", answer).lower()
-    if alert and re.search(r"(?:현재|전체|공정|시스템)?(?:는|이)?(?:정상상태|정상운전|정상범위|이상없음|경보없음)", compact):
-        if not re.search(r"(?:정상상태|정상운전|정상범위|이상없음|경보없음)(?:가|이)?(?:아니|아닙|아님|않)", compact):
-            return True
+    if alert:
+        for clause in re.split(r"[.!?\n;]|하지만|그러나|반면", answer):
+            statement = re.sub(r"[\s*`_·]", "", clause).lower()
+            normal = r"(?:정상상태|정상운전|정상범위|이상없음|경보없음)"
+            if not re.search(normal, statement):
+                continue
+            if re.search(normal + r"(?:가|이)?(?:아니|아닙|아님|않)", statement):
+                continue
+            specific_signal = re.search(r"(?:PT|TT|FT|GD|FD)-\d{4}|압력|온도|유량|농도", clause, re.I)
+            overall = re.search(r"전체|공정|시스템|모든|정상운전|경보없음", statement)
+            if not specific_signal or overall:
+                return True
     if gas_observed and (
         re.search(r"(?:수소|가스).{0,24}(?:감지|검출|관측).{0,18}(?:되지않|안되|없|미확인)", compact)
         or re.search(r"(?:수소|가스)농도(?:는|가)?0(?:\.0+)?(?:vol%|%)", compact)
@@ -3944,6 +4048,8 @@ async def saga_analysis(job_id: str, request: SagaAnalysisInput) -> dict[str, An
                 selected_values = dict(list(sensor_values.items())[:36])
             prompt_data = {
                 "output_language": request.language,
+                "bank_pressure_summary": _bank_pressure_evidence(frame, request.question, request.language),
+                "cooling_feedback": _cooling_evidence(frame, request.question, request.language),
                 "impact_calculation_attempted": show_impact_results,
                 # The evidence projection is the single bounded source for
                 # impact fields. Keeping the raw rows out avoids duplicating
@@ -4022,6 +4128,12 @@ async def saga_analysis(job_id: str, request: SagaAnalysisInput) -> dict[str, An
         evidence = _direct_question_evidence(frame, catalog, request.question, mentioned_nodes)
         if evidence and request.language == "ko":
             answer = answer + "\n\n" + evidence if request.one_pass else evidence + "\n\n" + answer
+        cooling_evidence = _cooling_evidence(frame, request.question, request.language)
+        if cooling_evidence:
+            answer += "\n\n" + cooling_evidence
+        bank_summary = _bank_pressure_evidence(frame, request.question, request.language)
+        if bank_summary:
+            answer = bank_summary + "\n\n" + answer
         question_answer = answer
         if actual_alert and alert_status == "NORMAL":
             alert_status = "WARNING"
@@ -4304,6 +4416,10 @@ def remove_simulation_fault(job_id: str, event_id: str) -> dict[str, Any]:
 
 @app.post("/api/simulations/{job_id}/stop")
 def stop_simulation(job_id: str) -> dict[str, Any]:
+    # Wake pacing and RHS cancellation without waiting for the frame lock.
+    current = _jobs.get(job_id)
+    if current is not None and current.get("status") in {"queued", "running"}:
+        current["_simulation_clock"].cancel()
     with _jobs_lock:
         job = _jobs.get(job_id)
         if job is None:
@@ -5042,6 +5158,7 @@ async def analyze_simulation_sensor(job_id: str, sensor_id: str,
             evidence_basis = _provider_evidence_basis(evidence_manifest)
             prompt_data = {
                 "output_language": request.language,
+                "cooling_feedback": _cooling_evidence({**frame, "virtual_safety": payload.get("virtual_safety")}, request.question, request.language),
                 "time_s": payload["time_s"], "selected_sensor": sensor_id,
                 "selected_signal": signal, "sensor_status": payload["sensor_status"],
                 "equipment": label, "related_signals": payload["related_signals"],
@@ -5100,6 +5217,9 @@ async def analyze_simulation_sensor(job_id: str, sensor_id: str,
                                 for item in virtual_action_proposals)
             answer = (f"요청한 가상 조치를 인식했습니다: **{labels}**. "
                       "아래 버튼을 눌러 모의 공정에 반영하고 완료 피드백을 확인하세요.")
+        cooling_evidence = _cooling_evidence({**frame, "virtual_safety": payload.get("virtual_safety")}, request.question, request.language)
+        if cooling_evidence:
+            answer += "\n\n" + cooling_evidence
         if response_markdown and request.language == "ko":
             answer = answer.rstrip() + "\n\n---\n\n" + response_markdown
         return {"sensor_id": sensor_id, "time_s": payload["time_s"],

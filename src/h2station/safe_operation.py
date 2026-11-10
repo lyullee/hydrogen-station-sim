@@ -18,6 +18,7 @@ from .full_station import (
 )
 from .integration_lock import nonreentrant_integrator_lock
 from .operations import ProcessRuntime
+from .tabulated import hydrogen_table
 from .protocol import (
     FuelingCommand,
     FuelingCommunicationState,
@@ -255,6 +256,8 @@ class SafeFullStationSimulator:
             progress_callback(time_s, end_time_s)
 
         while time_s <= end_time_s:
+            if stop_callback is not None and stop_callback() and times:
+                break
             if runtime_command_callback is not None:
                 runtime_command_callback(time_s)
             bank_gases = tuple(
@@ -318,6 +321,11 @@ class SafeFullStationSimulator:
             )
             measured = self.fault_injector.measurements(raw_measurements)
             override = self.fault_injector.operational_override(time_s)
+            if getattr(self, 'pending_safety_reset', False):
+                self.pending_safety_reset = False
+                accepted = self.safety_plc.manual_reset(measured, reset_requested=not override.emergency_stop_requested)
+                if virtual_safety is not None:
+                    virtual_safety.finish_restart_reset(time_s, accepted)
             safety_command = self.safety_plc.update(
                 measured,
                 control_period_s,
@@ -626,15 +634,19 @@ class SafeFullStationSimulator:
                 "vehicle_2": vehicle_2_gas.pressure_pa,
             }, time_s) if process is not None else ()
             vent_events = virtual_safety.vent_events(time_s) if virtual_safety is not None else ()
-            cooling_events = (virtual_safety.cooling_events(time_s, self.station.ambient_temperature_k)
-                              if virtual_safety is not None else ())
             if relief_events or vent_events:
                 override = replace(override, active_leaks=override.active_leaks + relief_events + vent_events)
             active_events = self.fault_injector.schedule.active_events(time_s) + relief_events + vent_events
+            if virtual_safety is not None:
+                active_events = virtual_safety.response_events(active_events, time_s)
+            cooling_events = (virtual_safety.cooling_events(time_s, self.station.ambient_temperature_k)
+                              if virtual_safety is not None else ())
             active_leaks = self._active_leak_inputs(
                 override.active_leaks,
                 current,
             )
+            if stop_callback is not None:
+                stop_callback()
             risk_snapshots = self.risk_monitor.update(
                 time_s,
                 control_period_s,
@@ -738,6 +750,8 @@ class SafeFullStationSimulator:
                                  else "blocked" if reason in ("source-depleted", "safety-temperature") else "idle")
                     elif safety_command.esd_latched:
                         state, reason = "blocked", "esd"
+                    elif key in ("trailer_supply", "pressure_recharge") and not override.compressor_enabled:
+                        state, reason = "blocked", "compressor-trip"
                     elif flow_g_s > 1e-5:
                         state, reason = "flowing", None
                     else:
@@ -745,9 +759,9 @@ class SafeFullStationSimulator:
                     return {"state": state, "reason": reason, "flow_g_s": flow_g_s}
 
                 supply_wait = ("recharge-off" if not settings["pressure_recharge"]
-                               else "bank-target" if recharge_index is None else "compressor-starting")
+                               else "bank-unavailable" if recharge_index is None else "compressor-starting")
                 recharge_wait = ("supply-off" if not settings["trailer_supply"]
-                                 else "bank-target" if recharge_index is None else "compressor-starting")
+                                 else "bank-unavailable" if recharge_index is None else "compressor-starting")
                 process_activity = {
                     "trailer_supply": operation_state("trailer_supply", compressor_flow_g_s, supply_wait),
                     "pressure_recharge": operation_state("pressure_recharge", compressor_flow_g_s, recharge_wait),
@@ -875,7 +889,7 @@ class SafeFullStationSimulator:
                         hose_2_temperature_k=hose_2_gas.temperature_k,
                         hazop=hazop_frame,
                         active_faults=tuple(
-                            f"{'relief-open' if event.event_id.startswith('relief-') else event.kind.value}:{event.target}"
+                            f"{'relief-open' if event.event_id.startswith('relief-') else 'vent-open' if event.event_id.startswith('vent-') else event.kind.value}:{event.target}"
                             for event in active_events
                         ),
                         process_operations=process_snapshot,
@@ -939,15 +953,13 @@ class SafeFullStationSimulator:
                 else time_s + control_period_s
             )
             if process is not None and not process.any_requested() and not active_events and not cooling_events:
-                # Idle monitoring keeps all process inventories exactly unchanged.
-                # The controller scans at wall-clock pace until an operator request.
+                # Stopped flow does not stop heat exchange. Continue integrating
+                # residual heat after incidents so gauges and visuals can settle.
                 if pace_idle:
                     sleep(min(control_period_s, 0.25))
-                time_s = end_s
-                if progress_callback is not None:
-                    progress_callback(time_s, end_time_s)
-                continue
             def rhs(local_time_s: float, vector: np.ndarray) -> np.ndarray:
+                if stop_callback is not None:
+                    stop_callback()
                 local_state = self.station.state_from_vector(
                     vector[:-1] if process is not None else vector
                 )
@@ -1133,14 +1145,8 @@ class SafeFullStationSimulator:
                     state.compressor_package
                 )
                 if event.kind is FaultKind.PRESSURE_DISTURBANCE:
-                    desired = gas.pressure_pa + event.magnitude * 1.0e6
-                    mass_rate = np.clip(
-                        state.compressor_package.hydrogen_mass_kg
-                        * (desired - gas.pressure_pa)
-                        / max(abs(gas.pressure_pa), 1.0e5)
-                        / event.rate_s,
-                        -state.compressor_package.hydrogen_mass_kg / event.rate_s,
-                        10.0,
+                    mass_rate = self._pressure_disturbance_mass_rate(
+                        event, gas.pressure_pa, state.compressor_package.hydrogen_mass_kg
                     )
                     package_rate = replace(
                         package_rate,
@@ -1182,14 +1188,8 @@ class SafeFullStationSimulator:
             ):
                 gas = self.station.common_header.gas_state(state.common_header)
                 if event.kind is FaultKind.PRESSURE_DISTURBANCE:
-                    desired = gas.pressure_pa + event.magnitude * 1.0e6
-                    mass_rate = np.clip(
-                        state.common_header.hydrogen_mass_kg
-                        * (desired - gas.pressure_pa)
-                        / max(abs(gas.pressure_pa), 1.0e5)
-                        / event.rate_s,
-                        -state.common_header.hydrogen_mass_kg / event.rate_s,
-                        10.0,
+                    mass_rate = self._pressure_disturbance_mass_rate(
+                        event, gas.pressure_pa, state.common_header.hydrogen_mass_kg
                     )
                     header_rate = replace(
                         header_rate,
@@ -1236,16 +1236,26 @@ class SafeFullStationSimulator:
         gas = self._gas_for_target(target, state)
         if gas is None:
             return bank_rates, partial_rate, secondary_rate
-        # A pressure disturbance is a controlled mass source/sink. The EOS then
-        # determines pressure and temperature, so the process responds naturally.
-        desired = gas.pressure_pa + event.magnitude * 1.0e6
         mass = self._mass_for_target(target, state)
-        mass_rate = np.clip(
-            mass * (desired - gas.pressure_pa) / max(abs(gas.pressure_pa), 1.0e5) / event.rate_s,
+        mass_rate = self._pressure_disturbance_mass_rate(event, gas.pressure_pa, mass)
+        return self._add_mass_energy(target, mass_rate, gas.specific_enthalpy_j_kg, bank_rates, partial_rate, secondary_rate)
+
+    @staticmethod
+    def _pressure_disturbance_mass_rate(event, pressure_pa, mass):
+        desired = pressure_pa + event.magnitude * 1.0e6
+        if event.magnitude < 0:
+            # The synthetic sink vents toward atmosphere.
+            desired = max(min(101325.0, pressure_pa), desired)
+        elif event.magnitude > 0:
+            # Leave headroom for the EOS and relief-flow solver. Limit the
+            # artificial source only; never clamp the calculated pressure.
+            source_limit = 0.95 * float(hydrogen_table().pressure_grid[-1])
+            desired = min(max(source_limit, pressure_pa), desired)
+        return np.clip(
+            mass * (desired - pressure_pa) / max(pressure_pa, 1.0e5) / event.rate_s,
             -mass / event.rate_s,
             10.0,
         )
-        return self._add_mass_energy(target, mass_rate, gas.specific_enthalpy_j_kg, bank_rates, partial_rate, secondary_rate)
 
     @staticmethod
     def _add_mass_energy(target, mass_rate, enthalpy, bank_rates, partial_rate, secondary_rate):

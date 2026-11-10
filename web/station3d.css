@@ -11,8 +11,14 @@
 .s3-stage>canvas{width:100%;height:100%;display:block;touch-action:none}
 .s3-response-overlay,.flow-response-overlay{display:flex;flex-wrap:wrap;gap:4px;pointer-events:none;z-index:6}
 .s3-response-overlay[hidden],.flow-response-overlay[hidden]{display:none!important}
-.s3-response-overlay{position:absolute;top:45px;right:12px;max-width:44%;justify-content:flex-end}
-.flow-response-overlay{position:absolute;bottom:10px;left:10px;max-width:80%}
+.s3-response-overlay{position:absolute;bottom:68px;left:12px;max-width:72%;justify-content:flex-start}
+.flow-response-overlay{position:absolute;bottom:10px;left:10px;max-width:90%}
+.flow-map .bank.cooling-active{box-shadow:inset 0 0 0 3px #2cafff,0 0 14px #2cafff80!important}
+.flow-cooling-badge{display:block!important;color:#04639b;background:#e0f5ff;border:1px solid #49b8f3;border-radius:4px;padding:2px 4px;font-size:10px;white-space:nowrap}
+.flow-cooling-badge[hidden]{display:none!important}
+.flow-action-badge{display:block;color:#163d54;background:#edf4f8;border:1px solid #9fb8c6;border-radius:4px;font-size:9px;padding:2px;max-width:180px;white-space:normal}
+.flow-action-badge[hidden]{display:none!important}
+.cooling-failed .flow-cooling-badge{color:#a12b16;background:#ffe8df;border-color:#e6785e}
 #processPanel{position:relative}
 .s3-response-overlay span,.flow-response-overlay span{padding:4px 6px;border:1px solid #9ccbd0;border-radius:5px;background:#eaf8f6ed;color:#174d55;font-size:9px;font-weight:700;box-shadow:0 2px 7px #1234}
 .s3-response-overlay span.alert,.flow-response-overlay span.alert{border-color:#efb086;background:#fff0e9ed;color:#a54225}

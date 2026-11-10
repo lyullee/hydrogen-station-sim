@@ -9,6 +9,7 @@ import { buildVentPackage } from '/vent-package.js';
 import { buildFcevVehicle } from '/fcev-vehicle.js?v=20260919-vehicle2';
 import { stationRouteActive } from '/station-flow.mjs';
 import { reconcileRiskRanges } from '/risk-range-state.mjs';
+import { safetyVisualState, currentFireResponse } from '/safety-visual-state.mjs?v=20261111-recovery4';
 
 // Geometry is a conceptual visual layout, not an approved engineering drawing.
 const panel = document.createElement('section');
@@ -342,13 +343,13 @@ function buildStation() {
   controls.mouseButtons.MIDDLE=THREE.MOUSE.PAN;
   controls.mouseButtons.RIGHT=THREE.MOUSE.PAN;
   renderer.domElement.title='왼쪽 드래그: 회전 · 휠 버튼 드래그: 이동 · 휠: 확대/축소';
-  const photoButton=document.createElement('button');photoButton.type='button';photoButton.id='s3PhotoMode';photoButton.textContent='3D로 돌아가기';photoButton.setAttribute('aria-pressed','true');photoButton.title='현재 조감도와 같은 시점의 가상 실사 사진';
+  const photoButton=document.createElement('button');photoButton.type='button';photoButton.id='s3PhotoMode';photoButton.textContent='실사 사진';photoButton.setAttribute('aria-pressed','false');photoButton.title='현재 조감도와 같은 시점의 가상 실사 사진';
   panel.querySelector('.s3-toolbar').append(photoButton);
-  const photoView=document.createElement('div');photoView.className='s3-photo-view';photoView.hidden=false;
+  const photoView=document.createElement('div');photoView.className='s3-photo-view';photoView.hidden=true;
   photoView.innerHTML='<img src="/assets/station-realistic-overview.png" alt="수정된 설비 규모와 트레일러 진출입로를 반영한 수소충전소 가상 실사 조감도"><span>가상 실사 조감도 · 현재 센서 상태와 별개인 참고 이미지</span>';
   stage.append(photoView);
-  stage.classList.add('photo-active');
-  controls.enabled=false;
+  // Start with the interactive 3D scene; the reference photo is optional.
+  controls.enabled=true;
   photoButton.addEventListener('click',()=>{const active=photoButton.getAttribute('aria-pressed')!=='true';photoButton.setAttribute('aria-pressed',String(active));photoButton.textContent=active?'3D로 돌아가기':'실사 사진';photoView.hidden=!active;stage.classList.toggle('photo-active',active);controls.enabled=!active;});
   controls.target.set(-3,0,0);
   controls.enableDamping = true;
@@ -511,6 +512,7 @@ function buildStation() {
   const issueTargetAssets={
     'cascade.low':['low'],'cascade.medium':['medium'],'cascade.high':['high'],
     'cascade':['low','medium','high'],'header':['low','medium','high'],
+    'dispenser':['dispenser'],'dispenser_2':['standby'],
     'dispenser.hose':['dispenser'],'dispenser_2.hose':['standby'],
     'dispenser.pcv':['dispenser'],'dispenser_2.pcv':['standby'],'pcv':['dispenser','standby'],
     'vehicle.tank':['vehicle'],'vehicle_2.tank':['vehicle2'],
@@ -637,11 +639,12 @@ function buildStation() {
   function accidentVisual(kind,target){
     const key=`${kind}:${target}`;let found=accidentLayer.getObjectByName(key);if(found)return found;
     const anchor=accidentAnchors[target]||[0,1,0],group=new THREE.Group();group.name=key;group.position.set(...anchor);
-    const fire=kind==='external-fire',relief=kind==='relief-open';
+    const fire=kind==='external-fire',relief=kind==='relief-open'||kind==='vent-open';
     if(target.startsWith('cascade.')){
       group.position.z+=fire?1.25:2.0;
       group.position.y=fire?.45:anchor[1]+(relief?1.5:.55);
     }else if(relief)group.position.y+=.6;
+    if(kind==='vent-open')group.position.set(14,6,-9);
     const particles=[];let light;
     if(fire){
       for(let i=0;i<5;i++){
@@ -675,14 +678,14 @@ function buildStation() {
       light=new THREE.PointLight(0xd8e6df,.35,4,2);light.position.y=.35;group.add(light);
     }
     const pin=document.createElement('div');pin.className=`s3-incident-pin ${fire?'fire':relief?'relief':'leak'}`;
-    const pinKind=document.createElement('b');pinKind.textContent=fire?'화재':relief?'밸브 개방':'수소 누출';
+    const pinKind=document.createElement('b');pinKind.textContent=fire?'화재':kind==='vent-open'?'설계 벤트 방출':relief?'안전밸브 개방':'수소 누출';
     const pinTarget=document.createElement('span');pinTarget.textContent=accidentNames[target]||target;
     pin.append(pinKind,pinTarget);pin.hidden=true;incidentMarkers.append(pin);
     group.userData={kind,target,particles,light,pin};group.visible=false;accidentLayer.add(group);return group;
   }
   let accidentVisualSignature='';
   function updateAccidentVisuals(activeFaults,fireDetection){
-    const active=new Set((Array.isArray(activeFaults)?activeFaults:[]).filter(key=>/^(external-fire|hydrogen-leak|relief-open):/.test(key)));
+    const active=new Set((Array.isArray(activeFaults)?activeFaults:[]).filter(key=>/^(external-fire|hydrogen-leak|relief-open|vent-open):/.test(key)));
     const detected=fireDetection?.detector_tags||[];
     const signature=`${[...active].sort().join('|')}::${[...detected].sort().join('|')}`;
     if(signature===accidentVisualSignature)return;
@@ -692,7 +695,7 @@ function buildStation() {
     if(!active.size){incidentBanner.hidden=true;return;}
     const entries=[...active].map(key=>{const [kind,...rest]=key.split(':');return {kind,target:rest.join(':')}});
     incidentBanner.hidden=false;incidentBanner.dataset.kind=entries.some(entry=>entry.kind==='external-fire')?'fire':entries.some(entry=>entry.kind==='relief-open')?'relief':'leak';
-    const summary=entries.slice(0,2).map(entry=>`${entry.kind==='external-fire'?'화재':entry.kind==='relief-open'?'안전밸브 방출':'누출'} · ${accidentNames[entry.target]||entry.target}`).join(' / ');
+    const summary=entries.slice(0,2).map(entry=>`${entry.kind==='external-fire'?'화재':entry.kind==='vent-open'?'설계 벤트 방출':entry.kind==='relief-open'?'안전밸브 방출':'누출'} · ${accidentNames[entry.target]||entry.target}`).join(' / ');
     const headline=document.createElement('strong');headline.append(document.createElement('i'),
       detected.length?`화염검지 ${detected.join(', ')}`:`${entries.length}건 사고 시나리오 입력`);
     const detail=document.createElement('span');detail.textContent=summary+(entries.length>2?` 외 ${entries.length-2}건`:'');
@@ -706,7 +709,19 @@ function buildStation() {
     const canvasRect=renderer.domElement.getBoundingClientRect(),stageRect=stage.getBoundingClientRect();
     const scale=stageRect.width/stage.clientWidth||1,width=canvasRect.width/scale||stage.clientWidth,height=canvasRect.height/scale||stage.clientHeight;
     for(const group of accidentLayer.children){if(!group.visible)continue;const {kind,particles,light,pin}=group.userData;
-      const fire=kind==='external-fire',relief=kind==='relief-open';
+      const fire=kind==='external-fire',relief=kind==='relief-open'||kind==='vent-open';
+      const response=currentFireResponse(live.virtualSafety,group.userData.target);
+      const release=(live.releases||[]).filter(row=>row.component_id===group.userData.target);
+      const flow=release.reduce((sum,row)=>sum+Number(row.mass_flow_g_s||0),0);
+      if(!fire&&!relief&&release.length){
+        group.userData.peakFlow=Math.max(group.userData.peakFlow||0,flow);
+        const fraction=flow/Math.max(group.userData.peakFlow,.001);
+        group.scale.setScalar(flow<.001?.001:Math.max(.08,Math.sqrt(fraction)));
+        pin.querySelector('b').textContent=flow<.001?'누출 유량 소멸 · 수리 확인':`수소 누출 ${flow.toFixed(3)} g/s`;
+      }else if(fire&&response){
+        group.scale.setScalar(Math.max(.02,Math.sqrt(response.intensity)));
+        pin.querySelector('b').textContent=`훈련 화재 ${Math.round(response.intensity*100)}%`;
+      }
       light.intensity=fire?2.55+.16*Math.sin(time*2.7):.22+.025*Math.sin(time*2.1);
       for(const part of particles){const {mesh,type,phase=0,offset=0}=part;
         if(type==='sheet'){
@@ -1836,8 +1851,74 @@ function buildStation() {
     let object=hit.object;while(object&&!object.userData.equipmentId)object=object.parent;if(!object)return;
     selectEquipment(object.userData.equipmentId);
   });
+  // Display the confirmed auxiliary feedback, never just the requested command.
+  const responseEffects=new THREE.Group();scene.add(responseEffects);
+  const spraySystems=new Map();
+  for(const bank of ['low','medium','high']){
+    const anchor=accidentAnchors[`cascade.${bank}`],group=new THREE.Group();
+    group.position.set(anchor[0],0,anchor[2]);group.visible=false;responseEffects.add(group);
+    const positions=new Float32Array(360*6),geometry=new THREE.BufferGeometry();
+    geometry.setAttribute('position',new THREE.BufferAttribute(positions,3));
+    const water=new THREE.LineSegments(geometry,new THREE.LineBasicMaterial({color:0x007fc9,transparent:true,opacity:.95,depthWrite:false}));
+    group.add(water);
+    const droplets=new THREE.Points(geometry,new THREE.PointsMaterial({color:0x008fdf,size:.09,transparent:true,opacity:.85,depthWrite:false}));
+    group.add(droplets);
+    const ring=new THREE.Mesh(new THREE.RingGeometry(.65,.74,40),new THREE.MeshBasicMaterial({color:0x28baff,transparent:true,opacity:.65,side:THREE.DoubleSide,depthWrite:false}));
+    ring.rotation.x=-Math.PI/2;ring.position.y=.12;ring.scale.set(2.7,3.5,1);group.add(ring);
+    spraySystems.set(bank,{group,geometry,positions});
+  }
+  const responseZones=new Map();
+  const responseValves=new Map();
+  const responseValvePositions={
+    'trailer.source':[-20,1.2,-1.5],'trailer.station':[-18,1.2,-1.5],
+    'compressor.suction':[-7.4,1.2,-3.5],'compressor.discharge':[-5.4,1.2,-3.5],
+    'dispenser.1':[-3.5,1.5,5.6],'dispenser.2':[12.5,1.5,5.6],
+  };
+  for(const bank of ['low','medium','high']){
+    const anchor=accidentAnchors[`cascade.${bank}`];
+    responseValvePositions[`bank.${bank}.inlet`]=[anchor[0]-.8,1.3,anchor[2]+3];
+    responseValvePositions[`bank.${bank}.outlet`]=[anchor[0]+.8,1.3,anchor[2]+3];
+  }
+  for(const [name,position] of Object.entries(responseValvePositions)){
+    const handle=new THREE.Mesh(new THREE.BoxGeometry(.75,.13,.16),new THREE.MeshStandardMaterial({color:0x31ad80,emissive:0x145c42,emissiveIntensity:.3}));
+    handle.position.set(...position);responseEffects.add(handle);responseValves.set(name,handle);
+  }
+  for(const [zone,anchor] of Object.entries({unloading:accidentAnchors.supply,compressor:accidentAnchors.compressor,storage:accidentAnchors['cascade.medium'],dispenser:[4,1,5]})){
+    const group=new THREE.Group();group.position.set(anchor[0],3.3,anchor[2]);responseEffects.add(group);
+    const arrows=[];
+    for(let i=0;i<3;i++){const arrow=new THREE.ArrowHelper(new THREE.Vector3(1,0,0),new THREE.Vector3(-1,i*.4,0),2.2,0x22b8b0,.35,.2);group.add(arrow);arrows.push(arrow);}
+    const boundary=new THREE.Mesh(new THREE.RingGeometry(2.7,2.85,48),new THREE.MeshBasicMaterial({color:0xffb322,transparent:true,opacity:.8,side:THREE.DoubleSide}));
+    boundary.rotation.x=-Math.PI/2;boundary.position.set(anchor[0],.15,anchor[2]);responseEffects.add(boundary);
+    if(zone==='storage')boundary.scale.set(2.6,1.55,1);
+    responseZones.set(zone,{group,arrows,boundary});
+  }
+  function animateResponses(timestamp){
+    for(const {group,arrows} of responseZones.values())if(group.visible)arrows.forEach((arrow,i)=>arrow.position.x=-1+((timestamp*.0008+i*.25)%1));
+    for(const {group,geometry,positions} of spraySystems.values()){
+      if(!group.visible)continue;
+      for(let i=0;i<360;i++){
+        const phase=(timestamp*.00065+i*.37117)%1,angle=i*2.39996;
+        const radius=.15+phase*2.4,base=i*6;
+        positions[base]=Math.cos(angle)*radius;positions[base+1]=5.2-phase*4.9;positions[base+2]=Math.sin(angle)*radius*1.3;
+        positions[base+3]=positions[base]+Math.cos(angle)*.08;positions[base+4]=positions[base+1]-.24;positions[base+5]=positions[base+2]+Math.sin(angle)*.08;
+      }
+      geometry.attributes.position.needsUpdate=true;
+      geometry.computeBoundingSphere();
+    }
+  }
   function updateResponseOverlay(){
     const safety=live.virtualSafety,overlay=$('s3ResponseOverlay'),flow=document.getElementById('flowResponseOverlay');
+    const visual=safetyVisualState(safety,live.activeFaults);
+    for(const [name,handle] of responseValves){
+      const valve=safety?.valves?.[name];handle.visible=Boolean(valve);
+      if(valve){handle.rotation.y=valve.actual_open?0:Math.PI/2;handle.material.color.set(valve.status==='failed'?0xffaf22:valve.actual_open?0x31ad80:0xdf483b);}
+    }
+    for(const [bank,effect] of spraySystems)effect.group.visible=visual.spraying.includes(bank);
+    for(const [zone,effect] of responseZones){
+      effect.group.visible=visual.ventilating.includes(zone);
+      effect.boundary.visible=Boolean(safety?.access_restricted?.[zone]||safety?.power_isolated?.[zone]);
+      effect.boundary.material.color.set(safety?.power_isolated?.[zone]?0xff7744:0xffc433);
+    }
     if(!safety){
       overlay.hidden=true;if(flow)flow.hidden=true;
       updateResponseOverlay.lastSignature='';
@@ -1847,7 +1928,7 @@ function buildStation() {
     // it event-driven instead of rebuilding it for every telemetry repaint.
     // Three.js animation and the physical frame stream remain frame-accurate.
     const responseSignature=JSON.stringify([
-      safety.wind_direction_deg, safety.wind_speed_m_s,
+      visual.signature, safety.wind_direction_deg, safety.wind_speed_m_s,
       safety.evacuated, safety.vehicles_evacuated, safety.personnel,
       Object.entries(safety.valves||{}).map(([name,valve])=>[
         name,Boolean(valve?.actual_open),String(valve?.status||'')
@@ -1861,7 +1942,7 @@ function buildStation() {
     const evacuated=Object.values(safety.evacuated||{}).reduce((sum,value)=>sum+value,0);
     const remaining=Object.values(safety.personnel||{}).reduce((sum,value)=>sum+value,0);
     const vehiclesEvacuated=Object.values(safety.vehicles_evacuated||{}).reduce((sum,value)=>sum+value,0);
-    const badges=[`${closed}개 차단밸브 닫힘`,failed?`${failed}개 조치 실패`:'밸브 피드백 정상',vented.length?`벤트 ${vented.join('·')} 방출`:'벤트 닫힘',`대피 ${evacuated}명·${vehiclesEvacuated}대 / 현장 ${remaining}명`,`풍향 ${Math.round(safety.wind_direction_deg||0)}° · ${Number(safety.wind_speed_m_s||0).toFixed(1)} m/s`];
+    const badges=[...visual.badges,`${closed}개 차단밸브 닫힘`,failed?`${failed}개 조치 실패`:'밸브 피드백 정상',vented.length?`벤트 ${vented.join('·')} 열림`:'벤트 닫힘',`대피 ${evacuated}명·${vehiclesEvacuated}대 / 현장 ${remaining}명`,`풍향 ${Math.round(safety.wind_direction_deg||0)}° · ${Number(safety.wind_speed_m_s||0).toFixed(1)} m/s`];
     for(const target of [overlay,flow])if(target){target.hidden=false;target.replaceChildren(...badges.map((label,index)=>{
       const chip=document.createElement('span');chip.textContent=label;
       chip.className=(index===1&&failed||index===2&&vented.length)?'alert':'';return chip;
@@ -1892,10 +1973,11 @@ function buildStation() {
     const at=(name,fallback)=>s[name]?.[index]??fallback;
     live={time:at('time_s',0),pressure:at('vehicle_pressure_mpa',0),temperature:at('vehicle_temperature_c',25),soc:at('soc_percent',0),flow:at('nozzle_flow_g_s',0),flow1:at('nozzle_1_flow_g_s',0),flow2:at('nozzle_2_flow_g_s',0),pressure2:at('vehicle_2_pressure_mpa',0),temperature2:at('vehicle_2_temperature_c',25),soc2:at('vehicle_2_soc_percent',0),dispatch:at('dispatch_bank',null),dispatch2:at('dispatch_bank_2',null),recharge:at('recharge_bank',null),esd:at('esd',false),leak:at('total_leak_flow_g_s',0),activeFaults:at('active_faults',[]),processActivity:at('process_activity',{}),reliefOpen:Object.keys(at('process_operations',null)?.relief_open||{}).filter(key=>at('process_operations',null).relief_open[key]),banks:Object.fromEntries(['low','medium','high'].map(name=>[name,s.bank_pressure_mpa?.[name]?.[index]??0]))};
     live.virtualSafety=at('virtual_safety',null);
+    live.releases=result.hazop?.frames?.[index]?.releases||[];
     const deviceFaults=Object.entries(live.virtualSafety?.valves||{}).filter(([,valve])=>valve.status==='failed').map(([name])=>`virtual-device:${name}`);
     const openVents=Object.entries(live.virtualSafety?.valves||{}).filter(([name,valve])=>name.startsWith('vent.')&&valve.actual_open).map(([name])=>`virtual-device:${name}`);
     updateAccidentVisuals(live.activeFaults,at('analysis',null)?.fire_detection);
-    updateIssueHighlights([...live.activeFaults,...deviceFaults,...openVents]);
+    updateIssueHighlights([...live.activeFaults.filter(key=>!key.startsWith('vent-open:')),...deviceFaults]);
     updateResponseOverlay();
     const flameSignals=at('flame_detectors',{});
     for(const lamp of flameLights){const active=flameSignals[lamp.tag]?.quality==='GOOD'&&flameSignals[lamp.tag].value>=.5;
@@ -1934,7 +2016,9 @@ function buildStation() {
     text('s3BankHigh',live.banks.high.toFixed(1));text('s3BankMedium',live.banks.medium.toFixed(1));text('s3BankLow',live.banks.low.toFixed(1));
     text('s3BankState',live.esd?'ESD 차단':live.activeFaults.length?'사고 영향 확인':live.dispatch?`${String(live.dispatch).toUpperCase()} 토출`:'압력 신호 정상');
     const compressorActive=Boolean(live.recharge);text('s3CompressorState',compressorActive?'재충전 중':'대기');text('s3CompressorDetail',compressorActive?`${String(live.recharge).toUpperCase()} 뱅크 충전`:'재충전 뱅크 없음');text('s3CompressorFoot',compressorActive?'압축기 운전 신호 연결':'3단 압축 · 중간 냉각');const meter=$('s3CompressorMeter');if(meter)meter.style.width=compressorActive?'100%':'0%';
-    text('s3Dispenser1',live.flow1.toFixed(1));text('s3Dispenser2',live.flow2.toFixed(1));text('s3DispenserFoot',live.esd?'ESD 차단':live.flow>0.01?'충전 중 · 프리쿨러 −40 °C':'대기 · 프리쿨러 −40 °C');
+    const reverseLanes=[live.flow1,live.flow2].flatMap((rate,index)=>rate<-.01?[index+1]:[]);
+    text('s3Dispenser1',live.flow1.toFixed(1));text('s3Dispenser2',live.flow2.toFixed(1));
+    text('s3DispenserFoot',live.esd?'ESD 차단':reverseLanes.length?`${reverseLanes.join('·')}번 차량 → 호스 역류`:live.flow1>.01||live.flow2>.01?'충전 중':'대기');
     const safety=live.esd?'ESD 차단':live.reliefOpen?.length?'안전밸브 개방':live.leak>0.001?'누출 경보':live.activeFaults.length?'사고 감시':'정상';text('s3SafetyState',safety);text('s3LeakState',`방출·누출 ${live.leak.toFixed(2)} g/s`);text('s3DetectorState',concentration==null?'미수신':`${concentration.toFixed(2)} vol%`);text('s3SafetyFoot',live.esd?'ESD 래치 · 공정 격리':live.reliefOpen?.length?'방출 위치와 피해영향 확인':live.leak>0.001?'가스검지기 신호 확인':'ESD 대기 · 검지기 연결');
     if(!hasData){['s3BankHigh','s3BankMedium','s3BankLow','s3Dispenser1','s3Dispenser2'].forEach(id=>text(id,'—'));text('s3BankState','모델 데이터 대기');text('s3SafetyState','대기');text('s3SafetyFoot','가스검지기 데이터 미수신');text('s3LeakState','누출 — g/s');}
     const dot=$('s3SafetyDot');if(dot)dot.classList.toggle('alarm',hasData&&safety!=='정상');
@@ -2028,6 +2112,7 @@ function buildStation() {
       if(group.userData.pulseMaterial)group.userData.pulseMaterial.opacity=.052+.006*Math.sin(timestamp*.0007+id.length);
     }
     animateIssueHighlights(timestamp);
+    animateResponses(timestamp);
     for(const person of zonePeople)person.position.lerp(person.userData.target,.055);
     attendant.position.lerp(attendantTarget,.055);
     for(const vehicle of departureVehicles)vehicle.group.position.lerp(vehicle.target||vehicle.origin,.035);

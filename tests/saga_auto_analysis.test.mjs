@@ -46,6 +46,7 @@ function runFrame(autoSetting) {
     Event: class Event { constructor(type) { this.type = type; } },
     console,
   };
+  vm.runInNewContext(fs.readFileSync(new URL('../web/assistant-provider.js', import.meta.url), 'utf8'), context);
   vm.runInNewContext(source, context, {filename: 'saga-bridge.js'});
   listeners.get('station-frame')();
   return analysisCalls;

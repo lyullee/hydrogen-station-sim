@@ -100,7 +100,9 @@ class HazopMonitor:
             mass_flow = float(getattr(snap, "mass_flow_kg_s", 0.0) if snap else 0.0)
             if mass_flow <= 0.0:
                 continue
-            target = str(event.target).lower()
+            # Deliberate venting is released at the vent outlet, not at the
+            # storage vessel from which inventory is removed.
+            target = 'vent' if event.event_id.startswith('vent-') else str(event.target).lower()
             key = max((k for k in zone_detectors if target == k or target.startswith(k + ".")), key=len, default="header")
             near_tag, far_tag = zone_detectors[key]
             # Proxy plume: mass release converted to vol% with near/far heads. This

@@ -7,11 +7,7 @@
   let lastAt=0,lastAlarm='',lastAlarmAt=0,alarmJob=null,highestSeverity=0,clearSince=0,busy=false,pendingAlarm=false,lastError='',lastAutomaticError='',nextId=0;
   const seenAlarmSignals=new Set();
   const autoKey='h2station.saga.autoAnalysis';
-  const providerKey='h2station.main-assistant.provider';
-  const selectedProvider=()=>{
-    const saved=localStorage.getItem(providerKey)??localStorage.getItem('h2station.saga.provider');
-    return saved==='groq'?'groq':'service_hub';
-  };
+  const selectedProvider=()=>window.digitalTwinProvider.get();
   // Keep the interactive path responsive by requiring an explicit opt-in for
   // periodic/alarm-triggered LLM calls. Manual questions and virtual
   // evaluations remain available while the toggle is OFF.
@@ -349,7 +345,7 @@
     const top=document.createElement('div');top.className='saga-chat-top';
     const identity=document.createElement('div');identity.className='saga-chat-identity';identity.innerHTML='<span class="saga-avatar">S</span><div><b>SAGA 분석</b><small>센서 · 설비 실시간 대화</small></div>';
     const controls=document.createElement('div');controls.className='saga-top-controls';
-    const provider=document.createElement('select');provider.className='saga-provider-select main-assistant-provider';provider.setAttribute('aria-label','메인 LLM 제공자 선택');provider.title='메인 화면 직답 모델만 선택합니다. 센서 분석과 8090 SAGA 설정은 바뀌지 않습니다.';provider.innerHTML='<option value="service_hub">Service Hub</option><option value="groq">Groq</option>';provider.value=selectedProvider();provider.addEventListener('change',()=>{localStorage.setItem(providerKey,provider.value);document.querySelectorAll('.main-assistant-provider').forEach(select=>{select.value=provider.value;});});controls.append(provider);
+    const provider=document.createElement('select');provider.className='saga-provider-select main-assistant-provider digital-twin-provider';provider.setAttribute('aria-label','메인 LLM 제공자 선택');provider.title='디지털트윈 메인·센서 분석에 함께 적용합니다.';provider.innerHTML='<option value="service_hub">Service Hub</option><option value="groq">Groq</option>';provider.value=selectedProvider();provider.addEventListener('change',()=>window.digitalTwinProvider.set(provider.value));controls.append(provider);
     const toggle=document.createElement('button');toggle.id='sagaAutoToggle';toggle.type='button';toggle.className='saga-auto-toggle';toggle.addEventListener('click',()=>{autoEnabled=!autoEnabled;localStorage.setItem(autoKey,autoEnabled?'on':'off');if(!autoEnabled){pendingAlarm=false;if(activeTrigger&&activeTrigger!=='manual')activeAutoController?.abort();}if(autoEnabled)lastAt=0;frame();status();});
     const expand=document.createElement('button');expand.id='sagaExpand';expand.type='button';expand.className='saga-expand';expand.setAttribute('aria-expanded','false');expand.setAttribute('aria-controls','wallSagaChat');expand.textContent='대화 확대';expand.addEventListener('click',()=>{const expanded=document.querySelector('.wall-board')?.classList.toggle('saga-expanded');expand.setAttribute('aria-expanded',String(Boolean(expanded)));expand.textContent=expanded?'대화 축소':'대화 확대';window.dispatchEvent(new Event('wall-resize'));});
     const statusNode=document.createElement('span');statusNode.id='sagaStatus';statusNode.className='saga-chat-status';controls.append(toggle,expand,statusNode);top.append(identity,controls);

@@ -277,7 +277,7 @@ class IsentropicRealGasRestriction:
         downstream_temperature_k: float | None = None,
     ) -> float:
         opening = min(1.0, max(0.0, opening))
-        if opening == 0.0:
+        if opening == 0.0 or area_multiplier <= 0.0:
             return 0.0
         if upstream_pressure_pa <= downstream_pressure_pa:
             if not allow_reverse_flow or downstream_pressure_pa <= upstream_pressure_pa:
@@ -569,7 +569,7 @@ class PartialStationModel:
             vehicle_gas.pressure_pa,
             self.pcv_parameters.minimum_pressure_pa,
         )
-        if nozzle_mass_flow >= 0.0:
+        if nozzle_mass_flow > 1e-12:
             receptacle_temperature = float(
                 PropsSI(
                     "T", "P", receptacle_pressure, "Hmass",
@@ -583,6 +583,7 @@ class PartialStationModel:
                 )
             )
         else:
+            # At zero flow there is no throttling enthalpy to evaluate.
             # During reverse flow the vehicle is the restriction upstream.
             # Report its actual state instead of evaluating hose enthalpy at
             # vehicle pressure, which describes the opposite flow direction.

@@ -61,9 +61,18 @@
     const runtime=window.getStation3DState?.(),s=runtime?.result?.series,i=runtime?.index??0,has=Boolean(s?.time_s?.length),at=k=>has?s[k]?.[i]:undefined;
     const put=(id,v)=>$(id).textContent=v,esd=at('esd'),faults=at('active_faults')||[];
     put('wallEsd',has?(esd?'차단 / ESD':'대기 / READY'):'대기');put('wallFaults',has?`${faults.length}건`:'—');
-    const activities=at('process_activity')||runtime?.lastFrame?.process_activity||{},settings=at('process_operations')?.settings||runtime?.lastFrame?.process_operations?.settings||{};
+    const activities=at('process_activity')||runtime?.lastFrame?.process_activity||{};
+    const operations=at('process_operations')||runtime?.lastFrame?.process_operations||{};
+    const settings=operations.settings||{};
     for(const key of ['trailer_supply','pressure_recharge','vehicle_1','vehicle_2']){
       const chip=document.querySelector(`[data-wall-process="${key}"]`),activity=activities[key],requested=Boolean(settings[key]);
+      const laneFlow=key==='vehicle_1'?at('nozzle_1_flow_g_s'):key==='vehicle_2'?at('nozzle_2_flow_g_s'):0;
+      if(laneFlow<-.01){
+        chip.dataset.state='blocked';
+        chip.querySelector('b').textContent=`역류 ${Math.abs(laneFlow).toFixed(1)} g/s`;
+        chip.title='차량에서 호스로 역류';
+        continue;
+      }
       const bankOver=['low','medium','high'].some(bank=>{
         const pressure=s?.bank_pressure_mpa?.[bank]?.[i],target=settings[`recharge_target_${bank}_mpa`];
         return Number.isFinite(pressure)&&Number.isFinite(target)&&pressure>target+.05;
@@ -73,25 +82,27 @@
       const overTarget=(key==='vehicle_1'||key==='vehicle_2')
         ?settings[`${key}_auto_stop`]===false&&vehicleOver
         :settings.recharge_auto_stop===false&&bankOver;
-      const baseState=activity?.state||(!has?'off':requested?'pending':'off');
+      const communicationTrip=!requested&&operations.stop_reason?.[key]?.startsWith('communication-');
+      const baseState=communicationTrip?'blocked':activity?.state||(!has?'off':requested?'pending':'off');
       const state=requested&&!esd&&baseState!=='blocked'&&overTarget?'overfill':baseState;
       chip.dataset.state=state;
-      chip.querySelector('b').textContent=state==='overfill'?'설정 목표 초과':state==='flowing'?`${number(Number(activity.flow_g_s),1)} g/s`:state==='waiting'?'흐름 대기':state==='blocked'?'안전 차단':state==='auto-stopped'?'자동 종료':state==='pending'?'요청 반영 중':'정지';
-      chip.title=state==='overfill'?`${key} · 목표 초과 운전 · ${number(Number(activity?.flow_g_s),2)} g/s`:activity?.reason?`${key} · ${activity.reason}`:'';
+      chip.querySelector('b').textContent=communicationTrip?'통신 차단':state==='overfill'?'설정 목표 초과':state==='flowing'?`${number(Number(activity.flow_g_s),1)} g/s`:state==='waiting'?'흐름 대기':state==='blocked'?'안전 차단':state==='auto-stopped'?'자동 종료':state==='pending'?'요청 반영 중':'정지';
+      chip.title=communicationTrip?'차량 통신 오류로 충전 종료':state==='overfill'?`${key} · 목표 초과 운전 · ${number(Number(activity?.flow_g_s),2)} g/s`:activity?.reason?`${key} · ${activity.reason}`:'';
     }
     const detectorValues=at('gas_detectors')||{},ds=Object.values(detectorValues).filter(d=>d?.quality==='GOOD'&&Number.isFinite(d.value));put('wallGas',number(ds.length?Math.max(...ds.map(d=>d.value)):undefined,2));put('wallDetectorCount',`${ds.length} / ${Math.max(15,Object.keys(detectorValues).length)}`);
     const flameValues=at('flame_detectors')||{},fs=Object.values(flameValues).filter(d=>d?.quality==='GOOD'&&Number.isFinite(d.value));
     put('wallFlameCount',`${fs.filter(d=>d.value>=.5).length} / ${fs.length}`);
     for(const key of ['high','medium','low']){const v=has?s.bank_pressure_mpa?.[key]?.[i]:undefined;put(`wallBank-${key}`,number(v));put(`wallBankState-${key}`,!has?'미수신':at('recharge_bank')===key?'재충전':at('dispatch_bank')===key||at('dispatch_bank_2')===key?'토출 중':'대기');$(`wallBankBar-${key}`).style.width=`${Math.min(100,Math.max(0,(v||0)/100*100))}%`;}
-    put('wallCompressor',has?(at('recharge_bank')?'재충전 중':'대기'):'미수신');put('wallRecharge',at('recharge_bank')?.toUpperCase()||'—');
+    put('wallCompressor',has?(activities.pressure_recharge?.reason==='compressor-trip'?'사고 정지':at('recharge_bank')?'재충전 중':'대기'):'미수신');put('wallRecharge',at('recharge_bank')?.toUpperCase()||'—');
     const signals=runtime?.result?.hazop?.frames?.[i]?.signals||{};
     const signal=id=>signals[id]?.quality==='GOOD'?signals[id].value:undefined;
-    put('wallCooler',`${number(signal('TT-1201'))} / ${number(signal('TT-1601'))}`);
+    const outletReading=tag=>runtime?.result?.hazop?.frames?.[i]?.signals?.[tag]?.origin==='NO_GAS_FLOW'?'유량 없음':number(signal(tag));
+    put('wallCooler',`${outletReading('TT-1201')} / ${outletReading('TT-1601')}`);
     for(const n of [1,2]){const suffix=n===1?'':'_2',flow=at(`nozzle_${n}_flow_g_s`),soc=at(n===1?'soc_percent':'vehicle_2_soc_percent');put(`wallPressure${n}`,number(at(`vehicle${suffix}_pressure_mpa`)));put(`wallTemp${n}`,number(at(`vehicle${suffix}_temperature_c`)));put(`wallDispFlow${n}`,number(flow));put(`wallSoc${n}`,number(soc));$(`wallSocBar${n}`).style.width=`${Math.max(0,Math.min(100,soc||0))}%`;put(`wallDispStatus${n}`,!has?'미수신':esd?'ESD 차단':flow>.01?'충전 중':'대기');}
     drawTrends();
   }
   function drawTrends(){
-    if(!$('wallTrend0'))return;
+    if(!$('wallTrend0')||$('wallNodeSelect'))return;
     const runtime=window.getStation3DState?.(),s=runtime?.result?.series,index=runtime?.index??0,times=s?.time_s||[],end=times[index];
     const definitions=[['vehicle_pressure_mpa','vehicle_2_pressure_mpa'],['vehicle_temperature_c','vehicle_2_temperature_c'],['nozzle_1_flow_g_s','nozzle_2_flow_g_s']];
     definitions.forEach((keys,n)=>{

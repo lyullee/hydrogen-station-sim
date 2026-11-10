@@ -234,7 +234,16 @@ class DynamicRiskMonitor:
                     release_boundary=scenario.release_boundary,
                     process_flow_limit_kg_s=scenario.maximum_mass_flow_kg_s,
                 )
-                consequence = dict(self.backend.evaluate_release(request))
+                try:
+                    consequence = dict(self.backend.evaluate_release(request))
+                except (ValueError, ArithmeticError, RuntimeError) as exc:
+                    # A consequence solver can reject a sampled release even
+                    # when the process and release-flow calculations are valid.
+                    consequence = {
+                        "status": "unavailable",
+                        "reason": "CONSEQUENCE_NUMERICAL_FAILURE",
+                        "detail": f"{type(exc).__name__}: {exc}",
+                    }
                 self._last_consequence[scenario.release_id] = consequence
                 self._last_update_s[scenario.release_id] = time_s
             else:

@@ -4,7 +4,29 @@ import pytest
 from pydantic import ValidationError
 
 from h2station.api import FaultInput
-from h2station.risk.live import DynamicLeakModel, LeakScenario, LeakSourceState
+from h2station.risk.live import DynamicLeakModel, DynamicRiskMonitor, LeakScenario, LeakSourceState
+
+
+def test_consequence_numerical_failure_keeps_release_flow_and_retries():
+    class Backend:
+        calls = 0
+
+        def evaluate_release(self, request):
+            self.calls += 1
+            if self.calls == 1:
+                raise ValueError("f(a) and f(b) must have different signs")
+            return {"status": "calculated"}
+
+    monitor = DynamicRiskMonitor(Backend())
+    releases = {LeakScenario("test", "dispenser.hose", "N13", 0.0, 0.001):
+                LeakSourceState(35.0e6, 288.15)}
+    failed, = monitor.update(0.0, 0.5, releases)
+    recovered, = monitor.update(1.0, 0.5, releases)
+    assert failed.mass_flow_kg_s > 0
+    assert failed.consequence["status"] == "unavailable"
+    assert failed.consequence["reason"] == "CONSEQUENCE_NUMERICAL_FAILURE"
+    assert recovered.consequence["status"] == "calculated"
+    assert recovered.cumulative_released_mass_kg > failed.cumulative_released_mass_kg
 
 
 def test_flow_limited_line_caps_free_orifice_release() -> None:

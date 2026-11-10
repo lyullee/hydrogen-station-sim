@@ -4,6 +4,11 @@ const state = { result: null, index: 0, playing: false, timer: null, activeJobId
 let lastLivePaintAt=0;
 const incidentSources = { hazop:false, impact:false, analysis:false };
 const reliefNames={low:'저압 저장뱅크',medium:'중압 저장뱅크',high:'고압 저장뱅크',hose_1:'1번 충전호스',hose_2:'2번 충전호스',vehicle_1:'차량 1 탱크',vehicle_2:'차량 2 탱크'};
+const flowFaultLabels={'external-fire':'외부 화재 입력','hydrogen-leak':'수소 누출','vent-open':'설계 벤트 방출'};
+fetch('/scenarios.json?v=20261111-reverse')
+  .then(response=>response.ok?response.json():null)
+  .then(catalog=>{for(const kind of catalog?.kinds||[])flowFaultLabels[kind.id]??=kind.label;})
+  .catch(()=>{ /* The flow view retains its generic fault label. */ });
 function updateIncidentPanels(source, active) {
   incidentSources[source] = Boolean(active);
   const incident = Object.values(incidentSources).some(Boolean);
@@ -21,7 +26,7 @@ async function checkHealth() {
     const health = await fetch('/api/health').then(r => r.json());
     state.health=health;
     $('systemBadge').className = `system-badge ${health.hyram_available ? 'ready' : 'warn'}`;
-    $('systemBadge').querySelector('span').textContent = health.hyram_available ? '전체 시스템 준비' : '시뮬레이터 준비 / 피해영향예측 미연결';
+    $('systemBadge').querySelector('span').textContent = health.hyram_available ? '계산 엔진 연결' : '시뮬레이터 준비 / 피해영향예측 미연결';
     $('footerHyram').textContent = health.hyram_available ? '피해영향예측 엔진 연결 · 누출 시 계산' : '피해영향예측 엔진 미연결';
     $('riskKpi').textContent = health.hyram_available ? '피해영향예측 대기' : '피해영향예측 미연결';
     $('hazopCatalogStatus').textContent = health.hazop?.status === 'ready' ? `${health.hazop.sensor_count}개 센서 연결` : '센서 분석 연결 실패';
@@ -70,6 +75,7 @@ async function runSimulation() {
 async function streamJob(id) {
   state.socket?.close(); state.generation++; const generation=state.generation;
   state.activeJobId=id;state.followLive=true;state.lastSequence=-1;state.connection='connecting';
+  try{localStorage.setItem('hrs-active-job',id);}catch{}
   lastLivePaintAt=0;
   state.lastReceived=0;stopPlayback();initializeLiveResult();beginCalculationMonitor();
   const url=new URL(location.href);url.searchParams.set('job',id);history.replaceState(null,'',url);
@@ -118,8 +124,9 @@ window.updateConnectionDisplay=()=>{
   $('connectionDot').style.background=state.connection==='connected'&&elapsed<10?'var(--cyan)':state.connection==='failed'?'var(--red)':'var(--muted)';
   const activity=state.lastFrame?.process_activity||{},names={trailer_supply:'트레일러',pressure_recharge:'압력 보완',vehicle_1:'차량 1',vehicle_2:'차량 2'};
   const flowing=Object.entries(activity).filter(([,value])=>value?.state==='flowing');
+  const blocked=Object.values(activity).some(value=>value?.state==='blocked');
   const requested=Object.keys(names).filter(key=>state.lastFrame?.process_operations?.settings?.[key]).length;
-  const processText=flowing.length?flowing.map(([key,value])=>`${names[key]} ${Number(value.flow_g_s||0).toFixed(1)} g/s`).join(' · '):requested?'공정 명령 반영 대기':'공정 대기';
+  const processText=flowing.length?flowing.map(([key,value])=>`${names[key]} ${Number(value.flow_g_s||0).toFixed(1)} g/s`).join(' · '):blocked?'공정 차단':requested?'공정 명령 반영 대기':'공정 대기';
   const lag=Number(state.lastFrame?.realtime_lag_s||0);
   const speed=Number(state.job?.speed_multiplier||1);
   $('connectionStatus').textContent=(labels[state.connection]||'대기')+(state.connection==='connected'?` · ${processText}`:state.job?` · 모의 ${Number(state.job.simulated_time_s||0).toFixed(1)} s`:'')+(state.connection==='connected'&&speed>1?` · 목표 ${speed}×`:'')+(lag>.5?` · 계산 ${lag.toFixed(1)}초 지연`:'')+(state.connection==='connected'&&elapsed>10?' · 데이터 갱신 지연':'');
@@ -235,11 +242,15 @@ function updateFrame(index) {
   const temp = s.vehicle_temperature_c[state.index];
   const soc = s.soc_percent[state.index];
   const flow = s.nozzle_flow_g_s[state.index];
+  const pcvFlow = s.pcv_flow_g_s?.[state.index];
+  const pcvMoving = Number.isFinite(pcvFlow) && Math.abs(pcvFlow) > .01;
   const pressure2 = s.vehicle_2_pressure_mpa[state.index];
   const temp2 = s.vehicle_2_temperature_c[state.index];
   const soc2 = s.vehicle_2_soc_percent[state.index];
   const flow1 = s.nozzle_1_flow_g_s[state.index];
   const flow2 = s.nozzle_2_flow_g_s[state.index];
+  const reverseLanes=[flow1,flow2].flatMap((rate,index)=>rate<-.01?[index+1]:[]);
+  const forwardNozzle=flow1>.01||flow2>.01;
   const leak = s.total_leak_flow_g_s[state.index];
   const esd = s.esd[state.index];
   $('pressureKpi').textContent = pressure.toFixed(1);
@@ -248,7 +259,15 @@ function updateFrame(index) {
   const assessment=s.analysis?.[state.index]?.status;
   $('safetyKpi').textContent = esd?'ESD':assessment==='CRITICAL'?'위험':assessment==='WARNING'?'경고':assessment==='ADVISORY'?'주의':(flow>.01?'충전 중':'정상');
   $('timeOutput').textContent = `${s.time_s[state.index].toFixed(1)} s`;
-  $('flowLabel').textContent = `${flow.toFixed(1)} g/s`;
+  $('flowLabel').textContent = Number.isFinite(pcvFlow) ? `${pcvFlow.toFixed(1)} g/s` : '— g/s';
+  const signals=state.result.hazop?.frames?.[state.index]?.signals;
+  const coolerOutlets=['TT-1201','TT-1601'].map(tag=>{
+    const signal=signals?.[tag];
+    if(signal?.origin==='NO_GAS_FLOW')return '유량 없음';
+    return signal?.quality==='GOOD'&&Number.isFinite(signal.value)?`${signal.value.toFixed(1)} °C`:'—';
+  });
+  $('coolerOutletLabel').textContent=coolerOutlets.every(value=>value==='유량 없음')
+    ?'양쪽 출구 유량 없음':`출구 1 / 2 · ${coolerOutlets.join(' / ')}`;
   $('vehicle2Pressure').textContent = `2번 ${pressure2.toFixed(1)} MPa`;
   $('vehicle2Temperature').textContent = `2번 ${temp2.toFixed(1)} °C`;
   $('vehicle2Soc').textContent = `2번 ${soc2.toFixed(1)}% SOC`;
@@ -258,29 +277,41 @@ function updateFrame(index) {
   $('socBar').style.width = `${Math.min(100, soc)}%`;
   $('safetyBar').style.width = esd ? '100%' : '12%';
   const operations=s.process_operations?.[state.index]?.settings||{},activity=s.process_activity?.[state.index]||{};
+  const compressorTrip=activity.pressure_recharge?.reason==='compressor-trip';
   const supplyFlow=Number(activity.trailer_supply?.flow_g_s||0),supplyRequested=Boolean(operations.trailer_supply&&operations.pressure_recharge);
-  $('supplyFlowLabel').textContent=supplyFlow>.01?`${supplyFlow.toFixed(1)} g/s`:supplyRequested?'공급 요청 중':'공급 대기';
+  $('supplyFlowLabel').textContent=compressorTrip?'공급 차단':supplyFlow>.01?`${supplyFlow.toFixed(1)} g/s`:supplyRequested?'공급 요청 중':'공급 대기';
   $('supplyUnit').classList.toggle('active',supplyFlow>.01&&!esd);
-  $('supplyUnit').classList.toggle('requested',supplyRequested&&supplyFlow<=.01);
+  $('supplyUnit').classList.toggle('requested',supplyRequested&&!compressorTrip&&supplyFlow<=.01);
   $('compressorUnit').classList.toggle('active',supplyFlow>.01&&!esd);
-  $('compressorUnit').classList.toggle('requested',supplyRequested&&supplyFlow<=.01);
-  $('pcvUnit').classList.toggle('active', flow > .01 && !esd);
-  $('coolerUnit').classList.toggle('active', flow > .01 && !esd);
-  $('vehicleUnit').classList.toggle('active', flow > .01);
+  $('compressorUnit').classList.toggle('requested',supplyRequested&&!compressorTrip&&supplyFlow<=.01);
+  $('pcvUnit').classList.toggle('active', pcvMoving && !esd);
+  $('coolerUnit').classList.toggle('active', pcvMoving && !esd);
+  $('vehicleUnit').classList.toggle('active', forwardNozzle);
   $('pcvUnit').classList.toggle('trip', esd);
   document.querySelector('.flow-map')?.classList.toggle('esd-active',Boolean(esd));
   let esdStatus=$('flowEsdStatus');if(!esdStatus){esdStatus=document.createElement('span');esdStatus.id='flowEsdStatus';document.querySelector('.flow-status').prepend(esdStatus);}
   esdStatus.textContent='ESD 차단 · 압축기 정지 · 차단밸브 폐쇄';esdStatus.hidden=!esd;
-  document.querySelectorAll('.flow-map .pipe').forEach(pipe => {const recharge=pipe.classList.contains('supply-line')||pipe.classList.contains('recharge-line');pipe.classList.toggle('flowing',!esd&&(recharge?supplyFlow>.01:flow1+flow2>.01));pipe.classList.toggle('requested',recharge&&supplyRequested&&supplyFlow<=.01);});
+  document.querySelectorAll('.flow-map .pipe').forEach(pipe => {
+    const recharge=pipe.matches('.supply-line,.recharge-line');
+    const nozzlePipe=pipe.classList.contains('p4');
+    const reversing=!esd&&nozzlePipe&&reverseLanes.length>0;
+    const moving=recharge?supplyFlow>.01:nozzlePipe?forwardNozzle||reversing:pcvFlow>.01;
+    pipe.classList.toggle('flowing',!esd&&moving);
+    pipe.classList.toggle('reverse-flow',reversing&&!forwardNozzle);
+    pipe.classList.toggle('mixed-flow',reversing&&forwardNozzle);
+    pipe.classList.toggle('requested',recharge&&supplyRequested&&!compressorTrip&&supplyFlow<=.01);
+  });
   document.querySelectorAll('.bank').forEach(bank => {const name=bank.dataset.bank,recharging=name===s.recharge_bank[state.index];bank.classList.toggle('active',name===s.dispatch_bank[state.index]||name===s.dispatch_bank_2?.[state.index]||recharging);bank.classList.toggle('recharging',recharging&&supplyFlow>.01);bank.classList.toggle('requested',supplyRequested&&recharging&&supplyFlow<=.01);});
   for (const name of ['low','medium','high']) {
     const value = s.bank_pressure_mpa[name][state.index];
     $(`bank${name[0].toUpperCase()+name.slice(1)}`).textContent = value.toFixed(1);
   }
   $('dispatchStatus').textContent = s.dispatch_bank[state.index] ? `${s.dispatch_bank[state.index].toUpperCase()} 뱅크 토출` : '토출 뱅크 없음';
-  $('rechargeStatus').textContent = s.recharge_bank[state.index] ? `${s.recharge_bank[state.index].toUpperCase()} 뱅크 재충전` : '압축기 대기';
+  $('rechargeStatus').textContent = compressorTrip?'압축기 사고 정지':s.recharge_bank[state.index] ? `${s.recharge_bank[state.index].toUpperCase()} 뱅크 재충전` : '압축기 대기';
   $('leakStatus').textContent = leak > .001 ? `누출 ${leak.toFixed(2)} g/s` : '누출 없음';
   $('leakStatus').classList.toggle('danger', leak > .001);
+  $('flowReverseStatus').hidden=!reverseLanes.length;
+  $('flowReverseStatus').textContent=reverseLanes.map(lane=>`${lane}번 차량 → 호스 역류`).join(' · ');
   const faults=s.active_faults?.[state.index]||[];
   const flameSignals=s.flame_detectors?.[state.index]||{};
   const flameTags={supplyUnit:['FD-0101'],compressorUnit:['FD-0601'],low:['FD-0701'],medium:['FD-0801'],high:['FD-0901'],pcvUnit:['FD-1301','FD-1701'],coolerUnit:['FD-1901'],vehicleUnit:['FD-1301','FD-1701']};
@@ -288,9 +319,43 @@ function updateFrame(index) {
   const reliefOpen=Object.keys(s.process_operations?.[state.index]?.relief_open||{}).filter(key=>s.process_operations[state.index].relief_open[key]);
   document.querySelectorAll('.flow-map .unit,.flow-map .bank').forEach(node=>{
     const id=node.dataset.bank||node.id,target=faults.find(f=>{
-      const [,component]=f.split(':');return id==='compressorUnit'?component?.startsWith('compressor'):id==='pcvUnit'?component?.includes('pcv'):id==='coolerUnit'?component?.includes('cooler'):id==='vehicleUnit'?component?.includes('vehicle')||component?.includes('hose'):component===`cascade.${id}`;
+      const [,component]=f.split(':');
+      if(id==='supplyUnit')return component==='supply';
+      if(id==='compressorUnit')return component?.startsWith('compressor');
+      if(id==='pcvUnit')return component?.includes('pcv');
+      if(id==='coolerUnit')return component?.includes('cooler');
+      if(id==='vehicleUnit')return /^vehicle|^dispenser(?:_2)?(?:\.hose)?$/.test(component);
+      return node.dataset.bank&&(component===`cascade.${id}`||component==='cascade'||component==='header');
     });
-    node.classList.toggle('fault-active',Boolean(target)&&!target.startsWith('relief-open:'));node.dataset.fault=target?.startsWith('relief-open:')?'':target?.split(':')[0]||'';
+    const kind=target?.split(':')[0];
+    node.classList.toggle('fault-active',Boolean(kind)&&kind!=='relief-open'&&kind!=='vent-open');
+    node.dataset.fault=kind==='relief-open'?'':kind?(flowFaultLabels[kind]||'설비 이상 입력'):'';
+    const cooling=s.virtual_safety?.[state.index]?.cooling?.[node.dataset.bank];
+    node.classList.toggle('cooling-active',Boolean(cooling?.running&&!cooling?.fault));
+    node.classList.toggle('cooling-failed',Boolean(cooling?.fault));
+    let coolingBadge=node.querySelector('.flow-cooling-badge');
+    if(!coolingBadge){coolingBadge=document.createElement('span');coolingBadge.className='flow-cooling-badge';node.append(coolingBadge);}
+    coolingBadge.textContent=cooling?.fault?'살수 고장':cooling?.running?'냉각·살수 가동':'';
+    coolingBadge.hidden=!coolingBadge.textContent;
+    const safety=s.virtual_safety?.[state.index]||{};
+    const zone=node.dataset.bank?'storage':({supplyUnit:'unloading',compressorUnit:'compressor',vehicleUnit:'dispenser',pcvUnit:'dispenser'})[node.id];
+    const valveKeys=node.dataset.bank?[`bank.${node.dataset.bank}.inlet`,`bank.${node.dataset.bank}.outlet`]:({supplyUnit:['trailer.source','trailer.station'],compressorUnit:['compressor.suction','compressor.discharge'],pcvUnit:['dispenser.1','dispenser.2'],vehicleUnit:['dispenser.1','dispenser.2']})[node.id]||[];
+    const labels=valveKeys.filter(key=>safety.valves?.[key]&&!safety.valves[key].actual_open).map(key=>`${key.endsWith('inlet')?'유입':key.endsWith('outlet')?'유출':safety.valves[key].label} 차단`);
+    if(zone&&safety.ventilation?.[zone]?.running)labels.push('환기 가동');
+    if(zone&&safety.power_isolated?.[zone])labels.push('전원 격리');
+    if(zone&&safety.access_restricted?.[zone])labels.push('출입 통제');
+    if(zone&&safety.evacuated?.[zone])labels.push(`대피 ${safety.evacuated[zone]}명 · 잔류 ${safety.personnel?.[zone]||0}명`);
+    const fireRows=Object.values(safety.fire_response||{}).filter(row=>row.target===`cascade.${node.dataset.bank}`);
+    const fireRow=fireRows.filter(row=>['active','suppressing'].includes(row.status)).at(-1)||fireRows.at(-1);
+    if(fireRow)labels.push(fireRow.status==='extinguished'?'훈련 화재 소멸':fireRow.status==='ended'?'화재 입력 종료':`훈련 화재 ${Math.round(fireRow.intensity*100)}%`);
+    let responseBadge=node.querySelector('.flow-action-badge');if(!responseBadge){responseBadge=document.createElement('span');responseBadge.className='flow-action-badge';node.append(responseBadge);}
+    responseBadge.textContent=labels.join(' · ');responseBadge.hidden=!labels.length;
+    if(target?.startsWith('hydrogen-leak:')){
+      const component=target.slice('hydrogen-leak:'.length);
+      const releases=state.result.hazop?.frames?.[state.index]?.releases?.filter(row=>row.component_id===component)||[];
+      const rate=releases.reduce((sum,row)=>sum+Number(row.mass_flow_g_s||0),0);
+      if(releases.length)node.dataset.fault=rate<.001?'누출 유량 소멸 · 수리 확인':`누출 ${rate.toFixed(3)} g/s · 잔압 확인`;
+    }
     node.classList.toggle('flame-detected',(flameTags[id]||[]).some(tag=>detectedFlames.includes(tag)));
     const bank=node.dataset.bank,relief=bank?reliefOpen.includes(bank):node.id==='vehicleUnit'?reliefOpen.some(key=>key.startsWith('vehicle_')):node.id==='pcvUnit'?reliefOpen.some(key=>key.startsWith('hose_')):false;
     node.classList.toggle('relief-open',relief);
@@ -302,10 +367,12 @@ function updateFrame(index) {
   flameStatus.textContent=detectedFlames.length?`화염검지 ${detectedFlames.join(', ')} 감지`:'화재 입력 · 화염검지 신호 대기';
   flameStatus.hidden=!detectedFlames.length&&!faults.some(fault=>fault.startsWith('external-fire:'));
   const releases=state.result.hazop?.frames?.[state.index]?.releases||[],ranges=releases.filter(r=>r.consequence?.status==='calculated');
+  const consequenceFailed=releases.some(r=>r.consequence?.reason==='CONSEQUENCE_NUMERICAL_FAILURE');
   if(!$('flowRisk')){const note=document.createElement('span');note.id='flowRisk';document.querySelector('.flow-status').append(note);}
   const flowConsequence=ranges[0]?.consequence,flowExtent=Number(flowConsequence?.sampled_effect_radius_m),flowNext=Number(flowConsequence?.sampled_next_distance_m),flowPlume=Number(flowConsequence?.flammable_plume_streamline_distance_m);
   $('flowRisk').textContent=flowConsequence?[(flowExtent>0?`열·과압 ${flowExtent.toFixed(1)} m 표본점 초과${flowNext>flowExtent?` · ${flowNext.toFixed(1)} m 미달`:flowConsequence.effect_range_status==='BEYOND_SAMPLED_POINTS'?' · 더 먼 거리 미평가':''}`:`열·과압 ${Number(flowConsequence.sampled_max_distance_m).toFixed(1)} m 관측점까지 기준 미달`),(flowPlume>0?`4 vol% 플룸 중심선 ${flowPlume.toFixed(1)} m`:''),'안전거리 아님'].filter(Boolean).join(' · '):'';
-  $('riskKpi').textContent = ranges.length ? '피해영향예측 계산 완료' : releases.length ? '피해영향예측 계산 대기' : (state.result.summary.hyram_available ? '피해영향예측 대기' : '피해영향예측 미연결');
+  $('riskKpi').textContent = consequenceFailed ? '일부 피해영향 계산 불가' : ranges.length ? '피해영향예측 계산 완료' : releases.length ? '피해영향예측 계산 대기' : (state.result.summary.hyram_available ? '피해영향예측 대기' : '피해영향예측 미연결');
+  if(consequenceFailed&&!ranges.length)$('flowRisk').textContent='피해영향 계산 불가 · 방출 유량은 계속 계산';
   window.dispatchEvent(new Event('station-frame'));
   drawCursor();
 }
@@ -508,6 +575,14 @@ setInterval(()=>{if($('calculationMonitor').open)renderCalculationMonitor();},50
 checkHealth();
 const monitorJobId = new URLSearchParams(location.search).get('job');
 if (monitorJobId) window.connectStationJob(monitorJobId);
+else {
+  // A monitor opened after the remote's broadcast must still rejoin that run.
+  let savedJob;try{savedJob=localStorage.getItem('hrs-active-job');}catch{}
+  if(savedJob&&/^[a-f0-9]{32}$/.test(savedJob))fetch(`/api/simulations/${savedJob}`).then(async response=>{
+    if(response.ok&&!state.activeJobId)window.connectStationJob(savedJob);
+    else if(response.status===404){try{localStorage.removeItem('hrs-active-job');}catch{}}
+  }).catch(()=>{});
+}
 window.addEventListener('station-ready',drawChart);
 ['pressureKpi','temperatureKpi','socKpi'].forEach(id=>$(id).textContent='—');
 ['vehicle2Pressure','vehicle2Temperature','vehicle2Soc'].forEach(id=>$(id).textContent='2번 —');

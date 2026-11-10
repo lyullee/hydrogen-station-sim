@@ -1,0 +1,4 @@
+import test from 'node:test';import assert from 'node:assert/strict';import vm from 'node:vm';import {readFileSync} from 'node:fs';
+test('old implicit Service Hub preference migrates once to authorized Groq and stays shared',()=>{
+ const values=new Map([['h2station.digital-twin.provider','service_hub']]);const selects=[{},{}];const ctx={localStorage:{getItem:k=>values.get(k)??null,setItem:(k,v)=>values.set(k,v)},document:{querySelectorAll:()=>selects},window:{addEventListener:()=>{}}};const script=readFileSync(new URL('../web/assistant-provider.js',import.meta.url),'utf8');vm.runInNewContext(script,ctx);assert.equal(ctx.window.digitalTwinProvider.get(),'groq');ctx.window.digitalTwinProvider.set('groq');assert.ok(selects.every(x=>x.value==='groq'));ctx.window.digitalTwinProvider.set('service_hub');vm.runInNewContext(script,ctx);assert.equal(ctx.window.digitalTwinProvider.get(),'service_hub');
+});

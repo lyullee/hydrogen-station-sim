@@ -26,6 +26,37 @@ def _station(settings: dict):
     return built, process
 
 
+def test_idle_precooler_outlet_does_not_report_coolant_as_gas_temperature():
+    built, _ = _station(ProcessSettings().model_dump())
+    monitor = HazopMonitor()
+    built.simulator.hazop_monitor = monitor
+    built.simulator.simulate(built.initial_state, 0.4, 0.2)
+
+    for temperature, flow in (("TT-1201", "FT-1201"), ("TT-1601", "FT-1601")):
+        signals = monitor.latest["signals"]
+        assert signals[flow]["value"] == 0
+        assert signals[temperature]["value"] is None
+        assert signals[temperature]["quality"] != "GOOD"
+        assert signals[temperature]["origin"] == "NO_GAS_FLOW"
+
+
+def test_compressor_trip_reports_blocked_supply_and_recharge():
+    fault = FaultEvent("compressor-trip", FaultKind.COMPRESSOR_TRIP, "compressor", 0.4)
+    built = build_reference_scenario(
+        ReferenceScenario(fault_events=(fault,)), UnavailableHyRAMBackend()
+    )
+    settings = ProcessSettings(trailer_supply=True, pressure_recharge=True)
+    built.simulator.process_runtime = ProcessRuntime(settings.model_dump())
+    frames = []
+    built.simulator.simulate(built.initial_state, 1.0, 0.2, sample_callback=frames.append)
+
+    for operation in ("trailer_supply", "pressure_recharge"):
+        assert frames[0].process_activity[operation]["flow_g_s"] > 0
+        assert frames[-1].process_activity[operation] == {
+            "state": "blocked", "reason": "compressor-trip", "flow_g_s": 0.0
+        }
+
+
 def test_process_settings_use_observed_high_bank_restart_band():
     settings = ProcessSettings()
 
@@ -33,6 +64,24 @@ def test_process_settings_use_observed_high_bank_restart_band():
     assert settings.recharge_restart_margin_medium_mpa == 3.0
     assert settings.recharge_restart_margin_high_mpa == 4.5
     assert settings.recharge_minimum_off_time_s == 120.0
+
+
+@pytest.mark.parametrize("requested", [False, True])
+def test_pressure_boost_with_failed_check_valve_respects_isolation_and_domain(requested):
+    faults = (
+        FaultEvent("boost", FaultKind.PRESSURE_DISTURBANCE, "vehicle_2.tank", 5.0,
+                   end_time_s=16.0 if requested else None, magnitude=10.0, rate_s=2.0),
+        FaultEvent("check", FaultKind.CHECK_VALVE_FAILURE, "dispenser_2.hose", 5.0),
+    )
+    built = build_reference_scenario(ReferenceScenario(fault_events=faults), UnavailableHyRAMBackend())
+    built.simulator.process_runtime = ProcessRuntime(ProcessSettings(vehicle_2=requested).model_dump())
+    result = built.simulator.simulate(built.initial_state, 25.0, 0.5)
+    assert result.time_s[-1] == 25.0
+    assert np.max(result.vehicle_2_pressure_pa) < 120e6
+    if requested:
+        assert np.min(result.nozzle_2_mass_flow_kg_s) < -1e-4
+    else:
+        assert np.all(result.nozzle_2_mass_flow_kg_s == 0.0)
 
 
 def test_reference_scenario_uses_anti_chatter_guard_by_default():
@@ -72,7 +121,7 @@ def test_standalone_station_replay_carries_per_bank_restart_bands():
     )
 
 
-def test_idle_is_physically_frozen_and_vehicle_paths_are_independent():
+def test_idle_stops_mass_transfer_but_allows_heat_exchange_and_independent_paths():
     settings = ProcessSettings().model_dump()
     built, process = _station(settings)
     idle = built.simulator.simulate(built.initial_state, .4, .2)
@@ -96,7 +145,16 @@ def test_idle_is_physically_frozen_and_vehicle_paths_are_independent():
     built.simulator.hazop_monitor = None
     stopped = built.simulator.simulate(filling.final_state, .4, .2,
                                        start_time_s=.8, reset_runtime=False)
-    np.testing.assert_array_equal(stopped.states[0], stopped.states[-1])
+    # Stopping flow must preserve inventory, not freeze residual heat.
+    before = built.station.state_from_vector(stopped.states[0])
+    after = stopped.final_state
+    for old, new in zip(before.banks, after.banks):
+        assert new.hydrogen_mass_kg == pytest.approx(old.hydrogen_mass_kg, abs=1e-7)
+    for old, new in [(before.partial_station, after.partial_station),
+                     (before.secondary_partial_station, after.secondary_partial_station)]:
+        assert new.hose_hydrogen_mass_kg == pytest.approx(old.hose_hydrogen_mass_kg, abs=1e-7)
+        assert new.vehicle.hydrogen_mass_kg == pytest.approx(old.vehicle.hydrogen_mass_kg, abs=1e-7)
+    assert after.partial_station.hose_hydrogen_internal_energy_j != before.partial_station.hose_hydrogen_internal_energy_j
     assert np.all(stopped.nozzle_1_mass_flow_kg_s == 0)
 
 

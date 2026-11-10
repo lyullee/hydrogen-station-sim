@@ -10,13 +10,15 @@
     const definition=metrics[metric]||metrics[0],frames=window.getStation3DState?.()?.result?.hazop?.frames||[];
     const candidates=sensors(node,definition[0]);
     const tag=candidates.find(s=>frames.some(f=>f?.signals?.[s.sensor_id]?.quality==='GOOD'))?.sensor_id||candidates[0]?.sensor_id;
-    return {tag:tag||null,label:definition[1],unit:definition[2],values:frames.map(f=>{const signal=f?.signals?.[tag];return signal?.quality==='GOOD'&&Number.isFinite(signal.value)?signal.value:null;})};
+    const signals=frames.map(frame=>frame?.signals?.[tag]);
+    return {tag:tag||null,label:definition[1],unit:((candidates.find(s=>s.sensor_id===tag)?.['단위'])||definition[2]).replace('MPa_abs','MPa').replace('degC','°C'),signals,values:signals.map(signal=>signal?.quality==='GOOD'&&Number.isFinite(signal.value)?signal.value:null)};
   }
   function draw(canvas,values,times,index){
     const w=canvas.clientWidth,h=canvas.clientHeight;if(w<2||h<2)return;
     const scale=Math.min(devicePixelRatio||1,2),pixelWidth=Math.max(1,Math.round(w*scale)),pixelHeight=Math.max(1,Math.round(h*scale));
     if(canvas.width!==pixelWidth||canvas.height!==pixelHeight){canvas.width=pixelWidth;canvas.height=pixelHeight;}
     const ctx=canvas.getContext('2d');ctx.setTransform(canvas.width/w,0,0,canvas.height/h,0,0);
+    ctx.clearRect(0,0,w,h);
     const end=times[index]||0;let start=0;while(start<index&&times[start]<end-120)start++;
     const valid=values.slice(start,index+1).filter(Number.isFinite);if(!valid.length)return;
     const low=Math.min(...valid),high=Math.max(...valid),pad=Math.max(.1,(high-low)*.2),lo=low-pad,hi=high+pad;
@@ -29,8 +31,11 @@
     const runtime=window.getStation3DState?.(),times=runtime?.result?.series?.time_s||[],index=runtime?.index??0;
     for(let n=0;n<3;n++){
       const data=series(n),latest=data.values[index],value=$(`wallTrendValue${n}`),header=$(`wallTag${n}`);
-      value.textContent=Number.isFinite(latest)?`${latest.toFixed(n===2?2:1)} ${data.unit}`:'미연결';
-      header.textContent=data.tag||'센서 없음';
+      const signal=data.signals[index];
+      value.textContent=Number.isFinite(latest)?`${latest.toFixed(n===2?2:1)} ${data.unit}`:signal?.origin==='NO_GAS_FLOW'?'유량 없음':signal?.quality==='STALE'?'갱신 지연':signal?'유효 신호 없음':'미연결';
+      const fault=signal?.origin==='SIMULATED_SENSOR_BIAS'?' · 편향':signal?.origin==='SIMULATED_SENSOR_FREEZE'?' · 고정':'';
+      header.textContent=data.tag?data.tag+fault:'센서 없음';
+      if(header.parentElement.firstChild?.nodeType===3)header.parentElement.firstChild.textContent=`${data.label} · ${data.unit}`;
       draw($(`wallTrend${n}`),data.values,times,index);
     }
   }

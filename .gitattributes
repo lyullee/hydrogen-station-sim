@@ -40,3 +40,7 @@ research/public_type_iv_tank_runtime_calibration_2026_10_07.json text eol=lf
 tests/test_grune_2014_holdout_protocol.py text eol=lf
 research/figshare_h2_dispersion_intake_2026_10_10.json text eol=lf
 research/FIGSHARE_H2_DISPERSION_INTAKE_2026_10_10.md text eol=lf
+
+# Preserve the exact bytes required by runtime evidence checks on Windows.
+research/confidential_station_recharge_pressure_forecast_protocol_2026_10_08.json text eol=lf
+src/h2station/virtual_safety.py text eol=lf

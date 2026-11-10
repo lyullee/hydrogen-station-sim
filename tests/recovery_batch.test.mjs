@@ -1,0 +1,7 @@
+import test from 'node:test';import assert from 'node:assert/strict';
+import {runRecoveryBatch} from '../web/recovery-batch.mjs';
+function harness(fail){let state={actions:[],active_incidents:[],cooling:{},current_metrics:{}};let calls=[];return {calls,read:async()=>state,issue:async(kind,target)=>{calls.push([kind,target]);const a={id:String(calls.length),kind,target,status:fail===kind?'failed':'confirmed'};state.actions.push(a);if(kind==='restart.approve')state.recovery_approved=true;return a;},pause:async()=>{}};}
+test('batch performs all banks in order and confirms restart last',async()=>{const h=harness();await runRecoveryBatch(h);assert.equal(h.calls.filter(x=>x[0]==='tightness.test').length,3);assert.equal(h.calls.filter(x=>x[0]==='purge.run').length,3);assert.equal(h.calls.at(-1)[0],'restart.approve');assert.ok(!h.calls.some(x=>x[0]==='valve.open'));});
+test('failure prevents purge and restart',async()=>{const h=harness('detector.test');await assert.rejects(runRecoveryBatch(h),/실패/);assert.ok(!h.calls.some(x=>x[0]==='purge.run'||x[0]==='restart.approve'));});
+test('active fire and cooling block before any mutation',async()=>{for(const s of [{active_incidents:[{}]},{cooling:{low:{running:true}}}]){let called=false;await assert.rejects(runRecoveryBatch({read:async()=>s,issue:async()=>called=true}));assert.equal(called,false);}});
+test('cancellation prevents further commands',async()=>{const h=harness();await assert.rejects(runRecoveryBatch({...h,cancelled:()=>h.calls.length>=2}),/중지/);assert.equal(h.calls.length,2);});
