@@ -154,6 +154,8 @@ class OperationalOverride:
     pipe_restrictions: Mapping[str, float] = ()
     check_valve_failures: tuple[str, ...] = ()
     communication_state_by_dispenser: Mapping[str, FuelingCommunicationState] = ()
+    pcv_seat_leak_opening: float = 0.0
+    pcv_seat_leak_by_dispenser: Mapping[str, float] = ()
 
 
 class FaultInjector:
@@ -194,6 +196,8 @@ class FaultInjector:
     def operational_override(self, time_s: float) -> OperationalOverride:
         pcv_opening: float | None = None
         pcv_opening_by_dispenser: dict[str, float] = {}
+        seat_leak_opening = 0.0
+        seat_leak_by_dispenser: dict[str, float] = {}
         cascade_opening: float | None = None
         precooler_multiplier = 1.0
         compressor_enabled = True
@@ -219,7 +223,12 @@ class FaultInjector:
                     "dispenser.1": "dispenser",
                     "dispenser.2": "dispenser_2",
                 }.get(event.target)
-                if target is None:
+                if event.kind is FaultKind.PCV_SEAT_LEAK:
+                    if target is None:
+                        seat_leak_opening = max(seat_leak_opening, opening)
+                    else:
+                        seat_leak_by_dispenser[target] = max(seat_leak_by_dispenser.get(target, 0.0), opening)
+                elif target is None:
                     # Backwards-compatible common PCV target.
                     pcv_opening = opening
                 else:
@@ -257,6 +266,8 @@ class FaultInjector:
         return OperationalOverride(
             forced_pcv_opening=pcv_opening,
             forced_pcv_opening_by_dispenser=pcv_opening_by_dispenser,
+            pcv_seat_leak_opening=seat_leak_opening,
+            pcv_seat_leak_by_dispenser=seat_leak_by_dispenser,
             forced_cascade_valve_opening=cascade_opening,
             precooler_capacity_multiplier=precooler_multiplier,
             compressor_enabled=compressor_enabled,

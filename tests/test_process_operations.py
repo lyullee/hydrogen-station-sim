@@ -14,7 +14,7 @@ from h2station.hazop.runtime import HazopMonitor
 from h2station.operations import ProcessRuntime
 from h2station.risk.runtime_backend import UnavailableHyRAMBackend
 from h2station.scenario import ReferenceScenario, build_reference_scenario
-from h2station.safety_runtime import FaultEvent, FaultKind
+from h2station.safety_runtime import FaultEvent, FaultInjector, FaultKind, FaultSchedule
 
 
 def _station(settings: dict):
@@ -55,6 +55,53 @@ def test_compressor_trip_reports_blocked_supply_and_recharge():
         assert frames[-1].process_activity[operation] == {
             "state": "blocked", "reason": "compressor-trip", "flow_g_s": 0.0
         }
+
+
+def test_pcv_seat_leak_leaves_residual_opening_without_throttling_open_command():
+    event = FaultEvent("seat-leak", FaultKind.PCV_SEAT_LEAK, "dispenser.pcv", 0.0, magnitude=0.03)
+    override = FaultInjector(FaultSchedule((event,))).operational_override(0.0)
+    built, _ = _station(ProcessSettings().model_dump())
+    effective = built.simulator._forced_pcv_opening
+    assert effective(override, "dispenser", 0.0) == 0.03
+    assert effective(override, "dispenser", 0.6) == 0.6
+    assert effective(override, "dispenser_2", 0.0) is None
+
+
+def test_cascade_stuck_closed_removes_actual_dispatch_path():
+    event = FaultEvent("cascade-closed", FaultKind.CASCADE_VALVE_STUCK_CLOSED, "cascade", 4.0)
+    built = build_reference_scenario(
+        ReferenceScenario(fault_events=(event,)), UnavailableHyRAMBackend()
+    )
+    built.simulator.process_runtime = ProcessRuntime(
+        ProcessSettings(vehicle_1=True, vehicle_2=True).model_dump()
+    )
+    frames = []
+    built.simulator.simulate(built.initial_state, 6.0, 0.5, sample_callback=frames.append)
+    assert any(frame.pcv_mass_flow_kg_s > 0 and frame.time_s < 4.0 for frame in frames)
+    for frame in frames:
+        if frame.time_s >= 4.0:
+            assert frame.dispatch_bank is None
+            assert frame.dispatch_bank_2 is None
+            assert frame.pcv_mass_flow_kg_s == 0
+
+
+def test_cascade_stuck_open_preserves_low_bank_across_continuous_windows():
+    event = FaultEvent("cascade-open", FaultKind.CASCADE_VALVE_STUCK_OPEN, "cascade", 3.0)
+    built = build_reference_scenario(
+        ReferenceScenario(fault_events=(event,)), UnavailableHyRAMBackend()
+    )
+    process = ProcessRuntime(ProcessSettings(vehicle_1=True).model_dump())
+    built.simulator.process_runtime = process
+    initial = built.simulator.simulate(built.initial_state, 4.0, 0.5, pace_idle=False)
+    assert initial.dispatch_bank[-1] == "low"
+
+    process.stop("vehicle_1")
+    stopped = built.simulator.simulate(
+        initial.final_state, 3.0, 0.5, start_time_s=4.0, reset_runtime=False, pace_idle=False
+    )
+    assert stopped.dispatch_bank[-1] == "low"
+    assert stopped.pcv_1_mass_flow_kg_s[-1] == 0
+    assert stopped.nozzle_1_mass_flow_kg_s[-1] == 0
 
 
 def test_process_settings_use_observed_high_bank_restart_band():

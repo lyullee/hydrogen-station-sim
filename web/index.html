@@ -84,7 +84,7 @@
         <div class="pipe p4 dispense-line"><i></i></div>
         <div class="unit vehicle" id="vehicleUnit"><svg class="flow-icon" viewBox="0 0 64 48" aria-hidden="true"><rect x="6" y="7" width="15" height="31" rx="2"/><path d="M10 14h7m-7 5h7m11 7h23l6 8v5H24v-5l4-8ZM21 17c9 0 8 9 8 9"/><circle cx="32" cy="39" r="4"/><circle cx="50" cy="39" r="4"/></svg><span>DISPENSING</span><b>차량 1 · 2</b><small id="flowSplitLabel">1번 0.0 / 2번 0.0 g/s</small></div>
       </div>
-      <div class="flow-status"><span id="dispatchStatus">토출 뱅크 없음</span><span id="rechargeStatus">압축기 대기</span><span id="leakStatus">누출 없음</span><span id="flowReverseStatus" hidden></span></div>
+      <div class="flow-status"><span id="dispatchStatus">토출 뱅크 없음</span><span id="rechargeStatus">압축기 대기</span><span id="leakStatus">외부 방출 없음</span><span id="flowReverseStatus" hidden></span></div>
     </section>
 
     <section class="panel hazop-panel" id="hazopPanel" hidden aria-label="센서 기반 안전 분석">
@@ -141,7 +141,7 @@
   <dialog id="workspaceDialog" class="workspace-dialog"><header><h2 id="workspaceDialogTitle"></h2><button id="workspaceDialogClose" type="button" aria-label="상세 화면 닫기">닫기 ×</button></header><div id="workspaceDialogBody"></div></dialog>
   <div id="toast" class="toast" role="status" hidden></div>
   <script src="/locale.js?v=20261001-language3"></script>
-  <script src="/app.js?v=20261111-risk-failure"></script>
+  <script src="/app.js?v=20261111-valve-proof"></script>
   <script src="/dashboard.js?v=20260930-unittrends1"></script>
   <script src="/vendor/markdown/marked.umd.js"></script>
   <script src="/vendor/markdown/purify.min.js"></script>
@@ -153,11 +153,11 @@
   <script>window.getStation3DState = () => state;</script>
   <link rel="stylesheet" href="/monitor-wall.css?v=20260930-separated-lanes">
   <link rel="stylesheet" href="/safety-console.css?v=20261111-batch1">
-  <script src="/monitor-wall.js?v=20261111-reverse"></script>
+  <script src="/monitor-wall.js?v=20261111-valve-final"></script>
   <script src="/node-monitor.js?v=20261111-no-flow"></script>
   <script type="module" src="/equipment-trends.mjs?v=20261111-pressure1"></script>
   <script src="/sensor-workbench.js?v=20261111-no-flow"></script>
-  <script type="module" src="/station3d.js?v=20261111-reverse"></script>
+  <script type="module" src="/station3d.js?v=20261111-valve-proof"></script>
   <link rel="stylesheet" href="/unreal-view.css?v=2">
   <script type="module" src="/unreal-view.mjs?v=4"></script>
   <link rel="stylesheet" href="/civic-theme.css?v=20261001-language1">

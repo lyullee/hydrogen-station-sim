@@ -306,9 +306,12 @@ function updateFrame(index) {
     const value = s.bank_pressure_mpa[name][state.index];
     $(`bank${name[0].toUpperCase()+name.slice(1)}`).textContent = value.toFixed(1);
   }
-  $('dispatchStatus').textContent = s.dispatch_bank[state.index] ? `${s.dispatch_bank[state.index].toUpperCase()} 뱅크 토출` : '토출 뱅크 없음';
+  const dispatchBanks = [...new Set([s.dispatch_bank[state.index],s.dispatch_bank_2?.[state.index]].filter(Boolean))];
+  $('dispatchStatus').textContent = dispatchBanks.length
+    ? `충전 연결 · ${dispatchBanks.map(bank=>reliefNames[bank]||bank).join(' · ')}`
+    : '토출 뱅크 없음';
   $('rechargeStatus').textContent = compressorTrip?'압축기 사고 정지':s.recharge_bank[state.index] ? `${s.recharge_bank[state.index].toUpperCase()} 뱅크 재충전` : '압축기 대기';
-  $('leakStatus').textContent = leak > .001 ? `누출 ${leak.toFixed(2)} g/s` : '누출 없음';
+  $('leakStatus').textContent = leak > .001 ? `외부 방출 ${leak.toFixed(2)} g/s` : '외부 방출 없음';
   $('leakStatus').classList.toggle('danger', leak > .001);
   $('flowReverseStatus').hidden=!reverseLanes.length;
   $('flowReverseStatus').textContent=reverseLanes.map(lane=>`${lane}번 차량 → 호스 역류`).join(' · ');
@@ -319,13 +322,15 @@ function updateFrame(index) {
   const reliefOpen=Object.keys(s.process_operations?.[state.index]?.relief_open||{}).filter(key=>s.process_operations[state.index].relief_open[key]);
   document.querySelectorAll('.flow-map .unit,.flow-map .bank').forEach(node=>{
     const id=node.dataset.bank||node.id,target=faults.find(f=>{
-      const [,component]=f.split(':');
+      const [kind,component]=f.split(':');
       if(id==='supplyUnit')return component==='supply';
       if(id==='compressorUnit')return component?.startsWith('compressor');
       if(id==='pcvUnit')return component?.includes('pcv');
       if(id==='coolerUnit')return component?.includes('cooler');
       if(id==='vehicleUnit')return /^vehicle|^dispenser(?:_2)?(?:\.hose)?$/.test(component);
-      return node.dataset.bank&&(component===`cascade.${id}`||component==='cascade'||component==='header');
+      if(!node.dataset.bank)return false;
+      if(component==='cascade'&&kind==='cascade-valve-stuck-open')return dispatchBanks.includes(id);
+      return component===`cascade.${id}`||component==='cascade'||component==='header';
     });
     const kind=target?.split(':')[0];
     node.classList.toggle('fault-active',Boolean(kind)&&kind!=='relief-open'&&kind!=='vent-open');

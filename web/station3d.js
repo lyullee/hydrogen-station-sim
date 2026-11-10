@@ -1977,7 +1977,14 @@ function buildStation() {
     const deviceFaults=Object.entries(live.virtualSafety?.valves||{}).filter(([,valve])=>valve.status==='failed').map(([name])=>`virtual-device:${name}`);
     const openVents=Object.entries(live.virtualSafety?.valves||{}).filter(([name,valve])=>name.startsWith('vent.')&&valve.actual_open).map(([name])=>`virtual-device:${name}`);
     updateAccidentVisuals(live.activeFaults,at('analysis',null)?.fire_detection);
-    updateIssueHighlights([...live.activeFaults.filter(key=>!key.startsWith('vent-open:')),...deviceFaults]);
+    const highlightedFaults=live.activeFaults.flatMap(key=>{
+      if(key.startsWith('vent-open:'))return [];
+      if(key==='cascade-valve-stuck-open:cascade'){
+        return [live.dispatch,live.dispatch2].filter(Boolean).map(bank=>`cascade-valve-stuck-open:cascade.${bank}`);
+      }
+      return [key];
+    });
+    updateIssueHighlights([...highlightedFaults,...deviceFaults]);
     updateResponseOverlay();
     const flameSignals=at('flame_detectors',{});
     for(const lamp of flameLights){const active=flameSignals[lamp.tag]?.quality==='GOOD'&&flameSignals[lamp.tag].value>=.5;

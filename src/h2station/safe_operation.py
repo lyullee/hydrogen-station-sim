@@ -248,8 +248,10 @@ class SafeFullStationSimulator:
         esd_time_s: float | None = (
             getattr(self, "_continuous_esd_time_s", None) if not reset_runtime else None
         )
-        previous_dispatch_index: int | None = None
-        previous_dispatch_2_index: int | None = None
+        previous_dispatch_index, previous_dispatch_2_index = (
+            (None, None) if reset_runtime
+            else getattr(self, "_continuous_dispatch_indices", (None, None))
+        )
         current_fueling_phase = FuelingPhase.IDLE
 
         if progress_callback is not None:
@@ -406,8 +408,8 @@ class SafeFullStationSimulator:
             if safety_command.close_pcv:
                 fueling_command = replace(fueling_command, valve_opening=0.0)
                 fueling_command_2 = replace(fueling_command_2, valve_opening=0.0)
-            forced_pcv_1 = self._forced_pcv_opening(override, "dispenser")
-            forced_pcv_2 = self._forced_pcv_opening(override, "dispenser_2")
+            forced_pcv_1 = self._forced_pcv_opening(override, "dispenser", fueling_command.valve_opening)
+            forced_pcv_2 = self._forced_pcv_opening(override, "dispenser_2", fueling_command_2.valve_opening)
             if forced_pcv_1 is not None:
                 fueling_command = replace(
                     fueling_command,
@@ -469,14 +471,18 @@ class SafeFullStationSimulator:
                 )
             )
             if override.forced_cascade_valve_opening is not None:
-                dispatch_opening = override.forced_cascade_valve_opening
-                if dispatch_opening > 0.0 and dispatch_index is None:
-                    dispatch_index = previous_dispatch_index or requested_dispatch_index
-                dispatch_2_opening = override.forced_cascade_valve_opening
-                if dispatch_2_opening > 0.0 and dispatch_2_index is None:
-                    dispatch_2_index = (
-                        previous_dispatch_2_index or requested_dispatch_2_index
-                    )
+                dispatch_opening = dispatch_2_opening = override.forced_cascade_valve_opening
+                if dispatch_opening == 0.0:
+                    dispatch_index = dispatch_2_index = None
+                else:
+                    if previous_dispatch_index is not None:
+                        dispatch_index = previous_dispatch_index
+                    elif dispatch_index is None:
+                        dispatch_index = requested_dispatch_index
+                    if previous_dispatch_2_index is not None:
+                        dispatch_2_index = previous_dispatch_2_index
+                    elif dispatch_2_index is None:
+                        dispatch_2_index = requested_dispatch_2_index
             if virtual_safety is not None:
                 if dispatch_index is not None:
                     dispatch_opening *= (virtual_safety.opening(f"bank.{self.station.banks[dispatch_index].parameters.name}.outlet")
@@ -484,10 +490,8 @@ class SafeFullStationSimulator:
                 if dispatch_2_index is not None:
                     dispatch_2_opening *= (virtual_safety.opening(f"bank.{self.station.banks[dispatch_2_index].parameters.name}.outlet")
                                            * virtual_safety.opening("dispenser.2"))
-            if dispatch_index is not None:
-                previous_dispatch_index = dispatch_index
-            if dispatch_2_index is not None:
-                previous_dispatch_2_index = dispatch_2_index
+            previous_dispatch_index = dispatch_index
+            previous_dispatch_2_index = dispatch_2_index
 
             recharge_index = (
                 None
@@ -1030,6 +1034,7 @@ class SafeFullStationSimulator:
                 progress_callback(time_s, end_time_s)
 
         self._continuous_esd_time_s = esd_time_s
+        self._continuous_dispatch_indices = (previous_dispatch_index, previous_dispatch_2_index)
 
         return SafeOperationTrajectory(
             time_s=np.asarray(times),
@@ -1094,12 +1099,15 @@ class SafeFullStationSimulator:
 
     @staticmethod
     def _forced_pcv_opening(
-        override: OperationalOverride, prefix: str,
+        override: OperationalOverride, prefix: str, command_opening: float,
     ) -> float | None:
         per_dispenser = override.forced_pcv_opening_by_dispenser
-        if per_dispenser:
-            return per_dispenser.get(prefix, override.forced_pcv_opening)
-        return override.forced_pcv_opening
+        forced = per_dispenser.get(prefix, override.forced_pcv_opening) if per_dispenser else override.forced_pcv_opening
+        seat_leak = override.pcv_seat_leak_by_dispenser
+        minimum_opening = max(override.pcv_seat_leak_opening, seat_leak.get(prefix, 0.0) if seat_leak else 0.0)
+        if minimum_opening > 0.0:
+            return max(minimum_opening, command_opening if forced is None else forced)
+        return forced
 
     @staticmethod
     def _flow_multipliers(override: OperationalOverride, prefix: str) -> tuple[float, float]:

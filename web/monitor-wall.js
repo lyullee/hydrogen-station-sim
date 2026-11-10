@@ -92,10 +92,16 @@
     const detectorValues=at('gas_detectors')||{},ds=Object.values(detectorValues).filter(d=>d?.quality==='GOOD'&&Number.isFinite(d.value));put('wallGas',number(ds.length?Math.max(...ds.map(d=>d.value)):undefined,2));put('wallDetectorCount',`${ds.length} / ${Math.max(15,Object.keys(detectorValues).length)}`);
     const flameValues=at('flame_detectors')||{},fs=Object.values(flameValues).filter(d=>d?.quality==='GOOD'&&Number.isFinite(d.value));
     put('wallFlameCount',`${fs.filter(d=>d.value>=.5).length} / ${fs.length}`);
-    for(const key of ['high','medium','low']){const v=has?s.bank_pressure_mpa?.[key]?.[i]:undefined;put(`wallBank-${key}`,number(v));put(`wallBankState-${key}`,!has?'미수신':at('recharge_bank')===key?'재충전':at('dispatch_bank')===key||at('dispatch_bank_2')===key?'토출 중':'대기');$(`wallBankBar-${key}`).style.width=`${Math.min(100,Math.max(0,(v||0)/100*100))}%`;}
-    put('wallCompressor',has?(activities.pressure_recharge?.reason==='compressor-trip'?'사고 정지':at('recharge_bank')?'재충전 중':'대기'):'미수신');put('wallRecharge',at('recharge_bank')?.toUpperCase()||'—');
     const signals=runtime?.result?.hazop?.frames?.[i]?.signals||{};
     const signal=id=>signals[id]?.quality==='GOOD'?signals[id].value:undefined;
+    for(const [key,flowTag] of [['high','FT-0901'],['medium','FT-0801'],['low','FT-0701']]){
+      const pressure=has?s.bank_pressure_mpa?.[key]?.[i]:undefined;
+      const selected=at('dispatch_bank')===key||at('dispatch_bank_2')===key;
+      const status=!has?'미수신':at('recharge_bank')===key?'재충전':selected?(signal(flowTag)>.01?'토출 중':'충전 경로 연결'):'대기';
+      put(`wallBank-${key}`,number(pressure));put(`wallBankState-${key}`,status);
+      $(`wallBankBar-${key}`).style.width=`${Math.min(100,Math.max(0,(pressure||0)/100*100))}%`;
+    }
+    put('wallCompressor',has?(activities.pressure_recharge?.reason==='compressor-trip'?'사고 정지':at('recharge_bank')?'재충전 중':'대기'):'미수신');put('wallRecharge',at('recharge_bank')?.toUpperCase()||'—');
     const outletReading=tag=>runtime?.result?.hazop?.frames?.[i]?.signals?.[tag]?.origin==='NO_GAS_FLOW'?'유량 없음':number(signal(tag));
     put('wallCooler',`${outletReading('TT-1201')} / ${outletReading('TT-1601')}`);
     for(const n of [1,2]){const suffix=n===1?'':'_2',flow=at(`nozzle_${n}_flow_g_s`),soc=at(n===1?'soc_percent':'vehicle_2_soc_percent');put(`wallPressure${n}`,number(at(`vehicle${suffix}_pressure_mpa`)));put(`wallTemp${n}`,number(at(`vehicle${suffix}_temperature_c`)));put(`wallDispFlow${n}`,number(flow));put(`wallSoc${n}`,number(soc));$(`wallSocBar${n}`).style.width=`${Math.max(0,Math.min(100,soc||0))}%`;put(`wallDispStatus${n}`,!has?'미수신':esd?'ESD 차단':flow>.01?'충전 중':'대기');}
