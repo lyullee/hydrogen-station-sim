@@ -96,14 +96,14 @@ def test_post_fire_cooling_stops_after_delay_even_when_fire_event_removed():
     runtime.issue('cooling.on', 'low', 0)
     runtime.response_events((fire,), 0)
     runtime.response_events((fire,), 30)
-    assert runtime.cooling['low']['post_cooling_remaining_s'] == 15
-    runtime.response_events((), 40)
+    assert runtime.cooling['low']['post_cooling_remaining_s'] == 10
+    runtime.response_events((), 35)
     assert runtime.cooling['low']['running']
     assert runtime.cooling['low']['post_cooling_remaining_s'] == 5
-    runtime.response_events((), 45)
+    runtime.response_events((), 40)
     assert not runtime.cooling['low']['running']
     assert runtime.cooling['low']['auto_stopped']
-    assert runtime.cooling_events(45, 298.15) == ()
+    assert runtime.cooling_events(40, 298.15) == ()
     assert all(row['running'] for row in runtime.ventilation.values())
 
 
@@ -116,7 +116,7 @@ def test_post_cooling_fault_pauses_and_new_fire_cancels_countdown():
     runtime.response_events((fire,), 30)
     runtime.set_fault('cooling.low', 'failure', 30)
     runtime.response_events((), 90)
-    assert runtime.cooling['low']['post_cooling_remaining_s'] == 15
+    assert runtime.cooling['low']['post_cooling_remaining_s'] == 10
     runtime.set_fault('cooling.low', 'none', 90)
     runtime.issue('cooling.on', 'low', 90)
     new_fire = FaultEvent('second', FaultKind.EXTERNAL_FIRE, 'cascade.low', 90,

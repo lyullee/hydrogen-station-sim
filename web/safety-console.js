@@ -3,6 +3,19 @@
   const host=document.getElementById('safetyConsole');if(!host)return;
   let openSection='0',batchRunning=false,batchCancelled=false,batchMessage='';
   let latest=null,lastJob='',busy=false,lastError='',lastNotice='',comparison=null,replay=null;
+  let pendingButtonKey=null;
+  const buttonKey=button=>JSON.stringify(Object.entries(button.dataset).sort());
+  function renderPending(){
+    host.querySelectorAll('button').forEach(button=>{
+      if(busy)button.disabled=true;
+      const pending=(busy&&buttonKey(button)===pendingButtonKey)||(batchRunning&&button.hasAttribute('data-batch-recovery'));
+      if(!pending)return;
+      button.disabled=true;
+      button.classList.add('safety-button-pending');
+      button.setAttribute('aria-busy','true');
+      button.insertAdjacentHTML('beforeend','<span class="safety-button-progress" role="status">처리 중…</span>');
+    });
+  }
   const esc=value=>String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
   const fmt=(value,d=1)=>value!==null&&value!==undefined&&Number.isFinite(Number(value))?Number(value).toFixed(d):'—';
   const bankName={low:'저압',medium:'중압',high:'고압'};
@@ -80,7 +93,7 @@
     const incidents=(s.active_incidents||[]).map(item=>`<div><b>${esc(item.kind==='external-fire'?'외부 화재':item.kind==='hydrogen-leak'?'수소 누출':item.kind)} · ${esc(item.target)}</b><button type="button" data-end-incident="${esc(item.event_id)}">훈련 사고 입력 종료</button></div>`).join('');
     const actionName={"incident.auto-resolve":'사고 입력 자동 종료'};
     const log=actions.slice(-20).reverse().map(a=>`<article class="safety-log-row ${a.status==='failed'?'failed':''}"><b>${fmt(a.issued_s,1)} s · ${esc(actionName[a.kind]||a.kind)} / ${esc(a.target)}</b><span>${stateText(a.status)}${a.completed_s==null?'':` · ${fmt(a.completed_s-a.issued_s,1)} s`}${a.note?` · ${esc(a.note)}`:''}</span><small>${metrics(a.baseline_metrics,a.after_metrics)}</small></article>`).join('')||'<p>아직 실행한 조치가 없습니다.</p>';
-    host.innerHTML=`<div class="safety-overview"><div><small>현재 공정</small><b>모의 ${fmt(m.time_s)} s · 누출 ${fmt(m.total_leak_flow_g_s,3)} g/s · 가스 최고 ${fmt(m.gas_max_volpct_h2,3)} vol%</b></div><div><small>조치 상태</small><b>${actions.length}건 실행 · ${failed.length}건 실패 · ${s.esd_requested||m.esd?'ESD 차단':'운전 감시'}</b></div>${button('가상 ESD 차단','esd.trip','station')}</div>${lastNotice?`<p class="safety-notice" role="status">${esc(lastNotice)}</p>`:''}${lastError?`<p class="safety-error" role="alert">${esc(lastError)}</p>`:''}
+    host.innerHTML=`<div class="safety-status-dock"><div class="safety-overview"><div><small>현재 공정</small><b>모의 ${fmt(m.time_s)} s · 누출 ${fmt(m.total_leak_flow_g_s,3)} g/s · 가스 최고 ${fmt(m.gas_max_volpct_h2,3)} vol%</b></div><div><small>조치 상태</small><b>${actions.length}건 실행 · ${failed.length}건 실패 · ${s.esd_requested||m.esd?'ESD 차단':'운전 감시'}</b></div>${button('가상 ESD 차단','esd.trip','station')}</div>${lastNotice?`<p class="safety-notice" role="status">${esc(lastNotice)}</p>`:''}${lastError?`<p class="safety-error" role="alert">${esc(lastError)}</p>`:''}</div>
       <div class="safety-section"><h3>단계별 대응 진행판</h3><p>현장 책임자가 조치 명령, 실제 위치 피드백, 유량·가스 추세를 각각 확인하는 가상 훈련입니다. 고장 시 다음 단계에서 잔여 위험을 다시 판단하세요.</p><div class="safety-stages">${stageHtml}</div>${failed.length?`<p class="safety-error">악화 분기 · 조치 실패 ${failed.length}건: 상·하류의 다른 차단점 선택, ESD, 대피 범위 확대와 잔여 유량 재확인을 진행하세요.</p>`:''}${suggestions?`<h4>현재 신호에 맞춘 실행 조치</h4><div class="safety-suggestions">${suggestions}</div>`:''}</div>
       <div class="safety-section"><h3>훈련 사고 입력</h3><p>저장뱅크 외부 화재는 유한한 훈련 열원입니다. 정상 살수 약 30초(모의 시간) 동안 열원과 불꽃이 함께 감소합니다. 중단·고장은 감소를 막습니다. 30초는 훈련 가정이며 실제 진압 시간 예측이 아닙니다. 용기 자체 누출은 밸브 차단 후에도 잔압이 남으면 계속됩니다. 아래 버튼은 수동 사고 종료입니다.</p>${incidents||'<p>현재 활성 사고 입력 없음</p>'}</div><div class="safety-section"><h3>설비별 차단 · 벤트</h3><p>가상 벤트는 저장뱅크에서 지상 6 m 상향 방출구로 이어집니다. 방출 유량과 잔압, 새 위험을 확인하세요. 이 치수는 모의 가정이며 승인 설계치가 아닙니다.</p><div class="safety-vent-readings">${Object.entries(s.vent_releases||{}).map(([name,row])=>`<span>${bankName[name]} · 방출 ${fmt(row.release_flow_g_s,3)} g/s · 잔압 ${fmt(row.residual_pressure_mpa,2)} MPa · 방출구 ${fmt(row.outlet_height_m,0)} m</span>`).join('')}</div><div class="safety-valves">${valveHtml}</div></div>
       <div class="safety-section">${auxHtml}<h4>구역별 출입·대피·전원</h4><div class="safety-zones">${zones}${vehicles}</div><div class="safety-wind"><label>풍향 °<input id="virtualWindDirection" type="number" min="0" max="360" value="${fmt(s.wind_direction_deg,0)}"></label><label>풍속 m/s<input id="virtualWindSpeed" type="number" min="0" max="30" step=".1" value="${fmt(s.wind_speed_m_s,1)}"></label><button type="button" data-environment>환경 반영</button>${button('가상 대응조직 통보','responders.notify','station')}</div></div>
@@ -95,11 +108,24 @@
       section.replaceWith(details);details.append(summary,section);
     }
     if(batchRunning)host.querySelectorAll('button,select,input').forEach(control=>control.disabled=!control.hasAttribute('data-batch-cancel'));
+    if(busy||batchRunning)renderPending();
     if(repairable.some(row=>row.event_id===draftRepair))host.querySelector('#repairFaultId').value=draftRepair;
     host.querySelector('#compareJob').value=draftCompare;
     const slider=host.querySelector('#replaySlider');if(slider){slider.value=draftReplayIndex;const show=()=>{const f=replay.frames[Number(slider.value)];host.querySelector('#replayOutput').textContent=f?`모의 ${fmt(f.time_s)} s · ${Object.entries(f.metrics.bank_pressure_mpa||{}).map(([k,v])=>`${bankName[k]} ${fmt(v)} MPa`).join(' · ')} · 누출 ${fmt(f.metrics.total_leak_flow_g_s,3)} g/s · 가스 ${fmt(f.metrics.gas_max_volpct_h2,3)} vol%`:'';};slider.addEventListener('input',show);show();}
   }
   async function refresh(){const id=jobId();if(!id){latest=null;render();return;}if(busy)return;try{const data=await json(endpoint(''));if(jobId()!==id)return;latest=data;lastJob=id;if(!host.contains(document.activeElement)||!['INPUT','SELECT'].includes(document.activeElement.tagName))render();}catch(error){lastError=friendlyError(error.message);render();}}
+  async function waitForAction(action,id){
+    const deadline=Date.now()+60000;
+    while(action.status==='commanded'&&Date.now()<deadline){
+      await new Promise(resolve=>setTimeout(resolve,400));
+      if(jobId()!==id)throw new Error('실행이 변경되어 조치 상태 확인을 종료했습니다.');
+      latest=await json(endpoint(''));lastJob=id;render();
+      const updated=latest.actions?.find(row=>row.id===action.id);
+      if(!updated)break;
+      action=updated;
+    }
+    return action;
+  }
   host.addEventListener('click',async event=>{
     const summary=event.target.closest('summary');
     if(summary?.parentElement?.dataset.section!=null){event.preventDefault();const key=summary.parentElement.dataset.section;openSection=openSection===key?null:key;render();return;}
@@ -116,21 +142,23 @@
     }
     if(target.hasAttribute('data-recovery-guide')){openSection='4';render();host.querySelector('#recoveryChecklist')?.scrollIntoView({behavior:'smooth',block:'start'});host.querySelector('#recoveryChecklist')?.focus({preventScroll:true});return;}
     const id=jobId();if(!id){lastError='공정을 먼저 시작하세요.';render();return;}
-    busy=true;host.querySelectorAll('button').forEach(button=>button.disabled=true);lastError='';
+    const actionLabel=target.textContent;
+    busy=true;pendingButtonKey=buttonKey(target);renderPending();lastError='';
     try{
       if(target.dataset.endIncident){await json(`/api/simulations/${encodeURIComponent(id)}/faults/${encodeURIComponent(target.dataset.endIncident)}`,{method:'DELETE'});lastNotice='훈련 사고 종료 요청 · 다음 계산 프레임부터 3D·공정도에 반영됩니다. 실제 진압 판정은 아닙니다.';}
       else if(target.dataset.action){
-        const action=await window.executeVirtualSafetyAction({kind:target.dataset.action,target:target.dataset.target,label:target.textContent});
-        lastNotice=action.status==='failed'?`${target.textContent} · 조치 실패 · 사건 기록의 원인을 확인하세요.`:
+        const issued=await window.executeVirtualSafetyAction({kind:target.dataset.action,target:target.dataset.target,label:actionLabel});
+        const action=await waitForAction(issued,id);
+        lastNotice=action.status==='failed'?`${actionLabel} · 조치 실패 · 사건 기록의 원인을 확인하세요.`:
           action.kind==='personnel.evacuate'&&action.status==='confirmed'?`${zoneName[action.target]||action.target}구역 인원 대피 완료 · 잔류 인원과 안정화 조건을 갱신했습니다.`:
-          `${target.textContent} · ${action.status==='confirmed'?'완료':'명령 접수 · 실제 동작 확인 대기'}`;
+          `${actionLabel} · ${action.status==='confirmed'?'완료':'명령 접수 · 실제 동작 확인 대기'}`;
       }
       else if(target.hasAttribute('data-environment'))await json(endpoint('/environment'),{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({wind_direction_deg:Number(host.querySelector('#virtualWindDirection').value),wind_speed_m_s:Number(host.querySelector('#virtualWindSpeed').value)})});
       else if(target.hasAttribute('data-repair')){const faultId=host.querySelector('#repairFaultId').value.trim();if(!faultId)throw new Error('진행 중인 누출을 선택하세요.');await window.executeVirtualSafetyAction({kind:'repair.leak',target:faultId,label:'누출 수리'});}
       else if(target.hasAttribute('data-replay')){replay=await json(endpoint('/replay'));comparison=null;}
       else if(target.hasAttribute('data-compare')){const other=host.querySelector('#compareJob').value.trim();if(!other)throw new Error('비교할 실행 ID를 입력하세요.');comparison=await json(endpoint('/compare'),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({other_job_id:other})});replay=null;}
       await refreshNow();
-    }catch(error){lastNotice='';lastError=friendlyError(error.message);render();}finally{busy=false;}
+    }catch(error){lastNotice='';lastError=friendlyError(error.message);}finally{busy=false;pendingButtonKey=null;render();}
   });
   host.addEventListener('change',async event=>{
     if(batchRunning)return;

@@ -578,7 +578,7 @@ class VirtualSafetyRuntime:
                     device.pop('auto_stopped', None)
                 elif rows and device['commanded']:
                     if 'post_cooling_remaining_s' not in device:
-                        device['post_cooling_remaining_s'] = 15.0
+                        device['post_cooling_remaining_s'] = 10.0
                     elif device['running'] and not device['fault']:
                         device['post_cooling_remaining_s'] = max(0.0, device['post_cooling_remaining_s'] - max(0.0, time_s - previous))
                     if device['post_cooling_remaining_s'] <= 0:

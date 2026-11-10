@@ -4,6 +4,15 @@
 #safetyConsole button{padding:6px 10px;border:1px solid #9ebbd2;border-radius:7px;background:#f4f9fd;color:#155278;cursor:pointer;font-weight:650}
 #safetyConsole button:hover{background:#deeffb}
 #safetyConsole button:disabled{opacity:.5;cursor:wait}
+.safety-status-dock{position:sticky;top:0;z-index:30;background:#fff;padding:6px 0;box-shadow:0 5px 12px #18334d18}
+.safety-status-dock .safety-notice,.safety-status-dock .safety-error{margin:8px 0 0}
+#safetyConsole button.safety-button-pending{position:relative;overflow:hidden;opacity:1;background:#dceefa;border-color:#368bc0;cursor:wait}
+.safety-button-progress{display:inline-flex;align-items:center;gap:6px;margin-left:8px;font-size:.8em}
+.safety-button-progress::before{content:"";width:10px;height:10px;border:2px solid #8abddc;border-top-color:#165d89;border-radius:50%;animation:safety-spin .8s linear infinite}
+.safety-button-pending::after{content:"";position:absolute;bottom:0;left:0;height:3px;width:35%;background:#218bc5;animation:safety-sweep 1.2s ease-in-out infinite}
+@keyframes safety-spin{to{transform:rotate(360deg)}}
+@keyframes safety-sweep{from{transform:translateX(-110%)}to{transform:translateX(310%)}}
+@media(prefers-reduced-motion:reduce){.safety-button-progress::before,.safety-button-pending::after{animation:none}}
 #safetyConsole select,#safetyConsole input{max-width:220px;min-height:32px;border:1px solid #bed0dd;border-radius:6px;padding:5px 8px;background:#fff}
 .safety-overview,.safety-section{border:1px solid #bcd0df;border-radius:12px;background:#fff;padding:14px 16px}
 .safety-overview{display:flex;align-items:center;gap:24px;background:#edf5fa}
