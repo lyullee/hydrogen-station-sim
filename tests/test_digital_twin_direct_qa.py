@@ -591,3 +591,29 @@ def test_sensor_assistant_contract_distinguishes_alarm_history_from_current_dete
     assert context["sensor_status"] == expected
     assert context["alarm_status_evidence"]["history_only"] == (not current)
     assert source["sensor_status"] == "ALERT"
+
+
+
+def test_lane_cooling_evidence_selects_requested_lane_and_preserves_active_fire():
+    from h2station.api import _cooling_evidence
+    frame={"virtual_safety":{"cooling":{"low":{"running":False},
+        "dispenser_1":{"running":False},"dispenser_2":{"commanded":True,"running":True}},
+        "fire_response":{"old":{"target":"vehicle_2.tank","status":"extinguished","intensity":0},
+                         "new":{"target":"vehicle_2.tank","status":"suppressing","intensity":.5}}}}
+    text=_cooling_evidence(frame,"2번 차량 화재와 살수 상태는?")
+    assert "2번 충전호스·차량 냉각·살수: 명령 ON, 가동 피드백 ON" in text
+    assert "살수로 훈련 화재 감소 중 · 강도 50%" in text
+    assert "소멸" not in text and "저압" not in text and "1번" not in text
+
+
+def test_lane_evidence_distinguishes_extinction_auto_stop_and_manual_end():
+    from h2station.api import _cooling_evidence
+    frame={"virtual_safety":{"cooling":{"dispenser_1":{"running":False,"auto_stopped":True}},
+        "fire_response":{"fire":{"target":"dispenser.hose","status":"extinguished","intensity":0}}}}
+    text=_cooling_evidence(frame,"1번 호스 화재가 꺼지고 살수도 꺼졌어?")
+    assert "가동 피드백 OFF" in text and "자동 종료" in text and "훈련 화재 소멸" in text
+    frame["virtual_safety"]["fire_response"]["fire"]["status"]="ended"
+    text=_cooling_evidence(frame,"1번 호스 화재 종료 상태는?")
+    assert "화재 입력 종료 · 진압 확인과 구분" in text and "화재 소멸" not in text
+    english=_cooling_evidence(frame,"vehicle 1 fire spray status", "en")
+    assert "dispenser 1 hose / vehicle cooling" in english and "status ended" in english

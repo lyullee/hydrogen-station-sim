@@ -3540,13 +3540,47 @@ def _cooling_evidence(frame: dict[str, Any], question: str, language: str = "ko"
     lines = []
     labels = {"low": "저압", "medium": "중압", "high": "고압"}
     requested = [bank for bank, label in labels.items() if label in question or bank in question.lower()]
-    for bank in requested or list(labels):
+    lane_labels = {"dispenser_1": "1번 충전호스·차량", "dispenser_2": "2번 충전호스·차량"}
+    lane_targets = {"dispenser_1": ("dispenser.hose", "vehicle.tank"),
+                    "dispenser_2": ("dispenser_2.hose", "vehicle_2.tank")}
+    if not requested:
+        for lane in (1, 2):
+            if re.search(rf"{lane}\s*번|(?:차량|충전기|vehicle|dispenser|lane)\s*{lane}|dispenser_{lane}", question, re.I):
+                requested.append(f"dispenser_{lane}")
+        if not requested and re.search(r"차량|호스|충전|vehicle|hose|dispenser", question, re.I):
+            requested = list(lane_labels)
+    for bank in requested or [*labels, *lane_labels]:
         cooling = (safety.get("cooling") or {}).get(bank)
         if not isinstance(cooling, dict):
             continue
         commanded = "ON" if cooling.get("commanded") else "OFF"
         running = "ON" if cooling.get("running") else "OFF"
         fault = bool(cooling.get("fault"))
+        if bank in lane_labels:
+            label = lane_labels[bank] if language != "en" else bank.replace("_", " ") + " hose / vehicle"
+            lines.append(f"{label} cooling: command {commanded}, feedback {running}, fault {fault}." if language == "en" else
+                         f"{label} 냉각·살수: 명령 {commanded}, 가동 피드백 {running}, 고장 {'있음' if fault else '없음'}.")
+            if cooling.get("auto_stopped"):
+                lines.append("Residual cooling completed; spray automatically stopped." if language == "en" else
+                             "잔열 냉각 완료로 살수가 자동 종료됐습니다.")
+            elif cooling.get("post_cooling_remaining_s") is not None:
+                remaining = float(cooling["post_cooling_remaining_s"])
+                lines.append(f"Residual cooling: {remaining:.1f} simulated seconds remaining." if language == "en" else
+                             f"잔열 냉각 중 · 자동 종료까지 모의 {remaining:.1f}초 남았습니다.")
+            for target in lane_targets[bank]:
+                rows = [row for row in (safety.get("fire_response") or {}).values() if row.get("target") == target]
+                if not rows:
+                    continue
+                row = next((r for r in reversed(rows) if r.get("status") in ("active", "suppressing")), rows[-1])
+                status = row.get("status")
+                description = ({"extinguished": "훈련 화재 소멸", "ended": "화재 입력 종료 · 진압 확인과 구분",
+                                "active": "훈련 화재 진행 중", "suppressing": "살수로 훈련 화재 감소 중"}.get(status, "화재 상태 미확인"))
+                if language == "en":
+                    lines.append(f"{target}: simulated fire status {status}, intensity {float(row.get('intensity', 0))*100:.0f}%.")
+                else:
+                    component = ("1번" if bank == "dispenser_1" else "2번") + (" 충전호스" if target.endswith('.hose') else " 차량탱크")
+                    lines.append(f"{component}: {description} · 강도 {float(row.get('intensity', 0))*100:.0f}%.")
+            continue
         if language == "en":
             lines.append(f"{bank} bank cooling: command {commanded}, feedback {running}, fault {fault}.")
         else:

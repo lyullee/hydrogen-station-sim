@@ -63,6 +63,16 @@ class RuleEngine:
             if (gate is True and rid in SCENARIO_QUALIFIED_COMPRESSOR_TEMPERATURE_RULES
                     and frame["modes"].get("compressor.thermal_event") is False):
                 gate = False
+            if (gate is True and rid == "HZ-138"
+                    and frame["signals"].get("FT-2001", {}).get("origin") == "VENT_BOUNDARY_FLOW"
+                    and frame["modes"].get("vent.commanded") is False
+                    and frame["modes"].get("relief.active") is True):
+                # The modeled bank PSV discharges locally. FT-2001 meters the
+                # separate manual vent boundary, so local PSV flow cannot be
+                # diagnosed as a commanded vent with missing flow. Keep the
+                # workbook gate for real instruments and explicit vent commands.
+                gate = False
+                reason = "LOCAL_PSV_OUTSIDE_VENT_METER"
             if (gate is True and r["sensor_id"] == "FT-1901"
                     and frame["signals"].get("FT-1901", {}).get("origin") == "DERIVED_THERMAL_PROXY"):
                 # Heat-duty / assumed delta-T is an equivalent cooling demand,

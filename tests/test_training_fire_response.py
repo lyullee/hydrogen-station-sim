@@ -232,3 +232,27 @@ def test_dispenser_suppression_integrates_heat_and_pressure(target, lane):
     assert process.safety.fire_response[fire.event_id]["status"] == "extinguished"
     assert process.safety.cooling[lane]["auto_stopped"]
     assert all(f"external-fire:{target}" not in f.active_faults for f in frames if f.time_s >= 62)
+
+
+@pytest.mark.parametrize("banks", [("low",), ("low", "medium")])
+def test_manual_vent_meter_sums_actual_outlet_release_and_clears_after_closing(banks):
+    from h2station.scenario import ReferenceScenario, build_reference_scenario
+    from h2station.operations import ProcessRuntime
+    from h2station.api import ProcessSettings
+    from h2station.risk.runtime_backend import UnavailableHyRAMBackend
+    from h2station.hazop.runtime import HazopMonitor
+    built=build_reference_scenario(ReferenceScenario(),UnavailableHyRAMBackend())
+    process=ProcessRuntime(ProcessSettings().model_dump());built.simulator.process_runtime=process
+    built.simulator.hazop_monitor=HazopMonitor(virtual_detectors=True)
+    for bank in banks:process.safety.issue("vent.open",f"vent.{bank}",0)
+    frames=[]
+    first=built.simulator.simulate(built.initial_state,5,.2,sample_callback=frames.append,pace_idle=False)
+    expected=sum(r["mass_flow_g_s"] for r in frames[-1].hazop["releases"] if r["release_id"].startswith("vent-"))
+    assert expected > 0
+    assert frames[-1].hazop["signals"]["FT-2001"]["value"] == pytest.approx(expected)
+    assert not any(r["rule_id"]=="HZ-138" for r in frames[-1].hazop["active"])
+    for bank in banks:process.safety.issue("vent.close",f"vent.{bank}",5)
+    frames=[]
+    built.simulator.simulate(first.final_state,3,.2,start_time_s=5.000001,reset_runtime=False,
+                             sample_callback=frames.append,pace_idle=False)
+    assert frames[-1].hazop["signals"]["FT-2001"]["value"] == pytest.approx(0)

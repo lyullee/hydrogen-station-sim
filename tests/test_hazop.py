@@ -684,3 +684,20 @@ def test_thermal_equivalent_flow_is_not_a_measured_pump_fault():
     for t in range(5):
         result = engine.evaluate(sample(float(t), 'SIMULATED_SENSOR_BIAS'))
     assert any(item['active'] and item['sensor_id'] == 'FT-1901' for item in result['rules'])
+
+
+@pytest.mark.parametrize("vent_commanded,origin,expected", [
+    (False, "VENT_BOUNDARY_FLOW", False),
+    (True, "VENT_BOUNDARY_FLOW", True),
+    (False, "LIVE_SITE_METER", True),
+])
+def test_local_psv_does_not_create_false_no_flow_alarm_on_separate_vent_meter(vent_commanded, origin, expected):
+    catalog=copy.deepcopy(load_catalog())
+    rule=next(r for r in catalog["rules"] if r["rule_id"]=="HZ-138")
+    catalog["rules"]=[rule]
+    engine=RuleEngine(catalog)
+    for step in range(int((rule["지속_s"]+1)*10)+1):
+        t=step/10
+        result=engine.evaluate({"time_s":t,"modes":{"vent.commanded":vent_commanded,"relief.active":True},
+            "signals":{"FT-2001":{"value":0.0,"quality":"GOOD","unit":"g/s","time_s":t,"origin":origin}}})
+    assert any(r["rule_id"]=="HZ-138" for r in result["active"]) is expected

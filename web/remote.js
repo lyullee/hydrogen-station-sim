@@ -4,6 +4,7 @@ const displayNumber=(value,digits=3)=>value!==null&&value!==undefined&&value!=='
 const controls={duration_s:'duration',control_period_s:'period',ambient_temperature_c:'ambient',initial_vehicle_pressure_mpa:'initial1',initial_vehicle_2_pressure_mpa:'initial2',initial_vehicle_temperature_c:'initialTemp1',initial_vehicle_2_temperature_c:'initialTemp2',bank_low_internal_volume_m3:'bankVolumeLow',bank_medium_internal_volume_m3:'bankVolumeMedium',bank_high_internal_volume_m3:'bankVolumeHigh',initial_bank_low_fill_percent:'bankFillLow',initial_bank_medium_fill_percent:'bankFillMedium',initial_bank_high_fill_percent:'bankFillHigh',pressure_ramp_rate_mpa_min:'ramp',delivery_temperature_c:'delivery',maximum_mass_flow_g_s:'maxFlow'};
 let activeJobId=new URLSearchParams(location.search).get('job'),job=null,pollTimer,mutating=false,catalog=null,faultSerial=0,esdRequested=false;
 window.getRemoteJobId=()=>activeJobId;
+window.getRemoteIncidentLabel=(kind,target)=>{const item=catalog?.kinds.find(row=>row.id===kind);return {kind:item?.label||kind,target:item?.targets.find(row=>row.value===target)?.label||target};};
 let lastProcessFrame=-1,lastHydratedJobId=null;
 let activeRemoteTab='operations';
 let speedSaving=false;

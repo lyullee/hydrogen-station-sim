@@ -398,9 +398,14 @@ class ModelMapper:
                      for snap in risk_snapshots if event.target.startswith("vent") and snap.release_id==leak.release_id), None)
         put("PT-2001", vent[0].pressure_pa/1e6 if vent else 0.101325)
         put("TT-2001", vent[0].temperature_k-273.15 if vent else station.ambient_temperature_k-273.15)
-        vent_flow_kg_s = (
-            (vent[1].mass_flow_kg_s if vent else 0.0) - vent_reverse_flow_kg_s
-        )
+        # Runtime manual vents retain the source bank as their mass-balance
+        # target. Their event IDs identify the vent route; they must still be
+        # counted by the outlet meter. Sum all simultaneous vent paths, while
+        # keeping local bank PSV releases outside this separate boundary.
+        vent_release_ids = {leak.release_id for event, leak, _source, _ in active_leaks
+                            if event.target.startswith("vent") or event.event_id.startswith("vent-")}
+        vent_flow_kg_s = (sum(snap.mass_flow_kg_s for snap in risk_snapshots
+                            if snap.release_id in vent_release_ids) - vent_reverse_flow_kg_s)
         put(
             "FT-2001",
             vent_flow_kg_s * 1000,
