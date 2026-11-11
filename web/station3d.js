@@ -11,12 +11,14 @@ import { stationRouteActive } from '/station-flow.mjs';
 import { reconcileRiskRanges } from '/risk-range-state.mjs';
 import { safetyVisualState, currentFireResponse } from '/safety-visual-state.mjs?v=20261111-dispenser-fire4';
 
+import { createResponseNotices } from '/response-notices.mjs?v=20261111-reset1';
+
 // Geometry is a conceptual visual layout, not an approved engineering drawing.
 const panel = document.createElement('section');
 panel.className = 'station3d';
 panel.id = 'station3d';
 panel.innerHTML = `
-  <header class="s3-head"><div><div class="s3-eyebrow">SPATIAL OPERATIONS / H70 REFERENCE STATION</div><h2>수소충전소 · 3D 운영 뷰</h2></div><div class="s3-head-tools"><div class="view-switcher" aria-label="모니터 뷰 전환"><button type="button" data-panel-view="3d" class="selected">3D</button><button type="button" data-panel-view="flow">공정 흐름</button></div><button id="s3RiskToggle" class="s3-risk-toggle" type="button" aria-pressed="false">위험거리 표시</button><button id="s3RiskLevelToggle" class="s3-risk-toggle" type="button" aria-pressed="false">위험도 표시</button><button id="s3Fullscreen" class="s3-fullscreen" type="button" aria-label="3D 화면 전체화면" title="3D 화면 전체화면"><span aria-hidden="true">⛶</span><b>전체화면</b></button><div class="s3-live" id="s3Live"><i></i><span>모델 대기</span></div></div></header>
+  <header class="s3-head"><div><div class="s3-eyebrow">SPATIAL OPERATIONS / H70 REFERENCE STATION</div><h2>수소충전소 · 3D 운영 뷰</h2></div><div class="s3-head-tools"><div class="view-switcher" aria-label="모니터 뷰 전환"><button type="button" data-panel-view="3d" class="selected">3D</button><button type="button" data-panel-view="flow">공정 흐름</button></div><button id="s3RiskToggle" class="s3-risk-toggle" type="button" aria-pressed="false">위험거리 표시</button><button id="s3RiskLevelToggle" class="s3-risk-toggle" type="button" aria-pressed="false">위험도 표시</button><button id="s3MessagesReset" class="s3-risk-toggle" type="button" aria-label="3D 상태 메시지 초기화" title="화면의 상태 메시지만 지웁니다. 실제 공정과 경보 기록은 유지됩니다." disabled>메시지 초기화</button><button id="s3Fullscreen" class="s3-fullscreen" type="button" aria-label="3D 화면 전체화면" title="3D 화면 전체화면"><span aria-hidden="true">⛶</span><b>전체화면</b></button><div class="s3-live" id="s3Live"><i></i><span>모델 대기</span></div></div></header>
   <div class="s3-monitor-layout">
     <aside class="s3-info-column s3-info-left" aria-label="주요 설비 상태">
       <article class="s3-info-card"><header><span class="s3-info-kicker">STORAGE BANKS</span><b>저장 뱅크</b><i class="s3-status-dot"></i></header><div class="s3-bank-list"><div><span>HIGH</span><strong id="s3BankHigh">0.0</strong><em>MPa</em></div><div><span>MID</span><strong id="s3BankMedium">0.0</strong><em>MPa</em></div><div><span>LOW</span><strong id="s3BankLow">0.0</strong><em>MPa</em></div></div><small class="s3-info-foot" id="s3BankState">압력 신호 대기</small></article>
@@ -1906,6 +1908,14 @@ function buildStation() {
       geometry.computeBoundingSphere();
     }
   }
+  const responseNotices=createResponseNotices();
+  $('s3MessagesReset').addEventListener('click',()=>{
+    responseNotices.dismiss();updateResponseOverlay.lastSignature='';updateResponseOverlay();
+  });
+  window.addEventListener('station-reset',()=>{
+    responseNotices.reset();live.virtualSafety=null;live.activeFaults=[];
+    updateAccidentVisuals([],null);updateIssueHighlights([]);updateResponseOverlay();
+  });
   function updateResponseOverlay(){
     const safety=live.virtualSafety,overlay=$('s3ResponseOverlay'),flow=document.getElementById('flowResponseOverlay');
     const visual=safetyVisualState(safety,live.activeFaults);
@@ -1920,7 +1930,8 @@ function buildStation() {
       effect.boundary.material.color.set(safety?.power_isolated?.[zone]?0xff7744:0xffc433);
     }
     if(!safety){
-      overlay.hidden=true;if(flow)flow.hidden=true;
+      overlay.hidden=true;overlay.replaceChildren();if(flow){flow.hidden=true;flow.replaceChildren();}
+      $('s3MessagesReset').disabled=true;responseNotices.reset();
       updateResponseOverlay.lastSignature='';
       return;
     }
@@ -1928,7 +1939,7 @@ function buildStation() {
     // it event-driven instead of rebuilding it for every telemetry repaint.
     // Three.js animation and the physical frame stream remain frame-accurate.
     const responseSignature=JSON.stringify([
-      visual.signature, safety.wind_direction_deg, safety.wind_speed_m_s,
+      window.getStation3DState?.()?.activeJobId, visual.signature, safety.wind_direction_deg, safety.wind_speed_m_s,
       safety.evacuated, safety.vehicles_evacuated, safety.personnel,
       Object.entries(safety.valves||{}).map(([name,valve])=>[
         name,Boolean(valve?.actual_open),String(valve?.status||'')
@@ -1943,7 +1954,10 @@ function buildStation() {
     const remaining=Object.values(safety.personnel||{}).reduce((sum,value)=>sum+value,0);
     const vehiclesEvacuated=Object.values(safety.vehicles_evacuated||{}).reduce((sum,value)=>sum+value,0);
     const badges=[...visual.badges,`${closed}개 차단밸브 닫힘`,failed?`${failed}개 조치 실패`:'밸브 피드백 정상',vented.length?`벤트 ${vented.join('·')} 열림`:'벤트 닫힘',`대피 ${evacuated}명·${vehiclesEvacuated}대 / 현장 ${remaining}명`,`풍향 ${Math.round(safety.wind_direction_deg||0)}° · ${Number(safety.wind_speed_m_s||0).toFixed(1)} m/s`];
-    for(const target of [overlay,flow])if(target){target.hidden=false;target.replaceChildren(...badges.map((label,index)=>{
+    const visibleBadges=responseNotices.read(window.getStation3DState?.()?.activeJobId,badges);
+    $('s3MessagesReset').disabled=visibleBadges.length===0;
+    for(const target of [overlay,flow])if(target){target.hidden=visibleBadges.length===0;target.replaceChildren(...visibleBadges.map(label=>{
+      const index=badges.indexOf(label);
       const chip=document.createElement('span');chip.textContent=label;
       chip.className=(index===1&&failed||index===2&&vented.length)?'alert':'';return chip;
     }));}
