@@ -1,6 +1,7 @@
 """The monitor's direct Q&A routes retain sensor-based consequence results."""
 
 import json
+import pytest
 
 from fastapi.testclient import TestClient
 
@@ -433,7 +434,8 @@ def test_english_main_assistant_keeps_impact_inputs_and_english_output(monkeypat
         assert response.status_code == 200
         data = response.json()
         assert data["impact_results"] == [impact]
-        assert data["answer"] == "The modeled consequence distance is 4 m."
+        assert data["answer"].endswith("The modeled consequence distance is 4 m.")
+        assert data["answer"].startswith("Storage bank pressures: high 88.000 MPa (PT-0901)")
         assert captured[0]["output_language"] == "en"
         assert captured[0]["impact_results"] == [impact]
     finally:
@@ -572,3 +574,20 @@ def test_public_main_and_sensor_assistant_routes_are_isolated(monkeypatch):
     finally:
         with api._jobs_lock:
             api._jobs.pop(job_id, None)
+
+
+@pytest.mark.parametrize("current,expected", [([], "ALARM_HISTORY"), ([{"state":"TRIGGER"}], "ALERT")])
+def test_sensor_assistant_contract_distinguishes_alarm_history_from_current_detection(monkeypatch, current, expected):
+    import asyncio
+    captured = []
+    def invoke(channel, payload, sink):
+        captured.append(payload)
+        return {"answer": "경보 이력을 확인했습니다.", "model": "test"}
+    monkeypatch.setattr(api, "_invoke_isolated_twin_assistant", invoke)
+    source = {"sensor_status": "ALERT", "selected_signal": {"quality": "GOOD", "value": 0},
+              "current_conditions": current, "retained_conditions": [{"state": "LATCHED"}]}
+    asyncio.run(api._invoke_sensor_assistant_selected("GD-1701", "현재 상태는?", source, "groq", "automatic_analysis"))
+    context = captured[0]["context"]
+    assert context["sensor_status"] == expected
+    assert context["alarm_status_evidence"]["history_only"] == (not current)
+    assert source["sensor_status"] == "ALERT"

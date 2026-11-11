@@ -14,6 +14,7 @@ export function safetyVisualState(safety, faults=[]){
   for(const [zone,value] of Object.entries(safety.ventilation||{})){
     if(value.fault)badges.push(`${zones[zone]||zone} 환기 고장`);
     else if(value.running){ventilating.push(zone);badges.push(`${zones[zone]||zone} 환기 가동`);}
+    else badges.push(`${zones[zone]||zone} 환기 정지`);
   }
   for(const [name,value] of Object.entries(safety.valves||{})){
     if(value.status==='failed')badges.push(`${value.label||name} 조치 실패`);

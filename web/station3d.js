@@ -9,7 +9,7 @@ import { buildVentPackage } from '/vent-package.js';
 import { buildFcevVehicle } from '/fcev-vehicle.js?v=20260919-vehicle2';
 import { stationRouteActive } from '/station-flow.mjs';
 import { reconcileRiskRanges } from '/risk-range-state.mjs';
-import { safetyVisualState, currentFireResponse } from '/safety-visual-state.mjs?v=20261111-recovery4';
+import { safetyVisualState, currentFireResponse } from '/safety-visual-state.mjs?v=20261111-aux-label1';
 
 // Geometry is a conceptual visual layout, not an approved engineering drawing.
 const panel = document.createElement('section');
@@ -418,7 +418,7 @@ function buildStation() {
   const esdBanner=document.createElement('div');esdBanner.id='s3EsdBanner';esdBanner.hidden=true;esdBanner.textContent='ESD 차단 · 압축기 정지 · 차단밸브 폐쇄';stage.append(esdBanner);
   const incidentBanner=document.createElement('div');incidentBanner.id='s3IncidentBanner';incidentBanner.hidden=true;incidentBanner.setAttribute('role','status');stage.append(incidentBanner);
   const incidentMarkers=document.createElement('div');incidentMarkers.id='s3IncidentMarkers';stage.append(incidentMarkers);
-  const accidentNames={'cascade.low':'저압 저장뱅크','cascade.medium':'중압 저장뱅크','cascade.high':'고압 저장뱅크','vehicle.tank':'1번 차량 탱크','vehicle_2.tank':'2번 차량 탱크','dispenser.hose':'1번 디스펜서 호스','dispenser_2.hose':'2번 디스펜서 호스','compressor':'압축기','cooler':'프리쿨러','dispenser.pcv':'1번 PCV','dispenser_2.pcv':'2번 PCV'};
+  const accidentNames={'cascade.low':'저압 저장뱅크','cascade.medium':'중압 저장뱅크','cascade.high':'고압 저장뱅크','vehicle.tank':'1번 차량 탱크','vehicle_2.tank':'2번 차량 탱크','dispenser.hose':'1번 디스펜서 호스','dispenser_2.hose':'2번 디스펜서 호스','compressor':'압축기','header':'공통 고압 헤더','supply':'트레일러 공급부','vent':'벤트 스택','cooler':'프리쿨러','dispenser.pcv':'1번 PCV','dispenser_2.pcv':'2번 PCV'};
   const accidentAnchors={
     'cascade.low':[-1,1.8,-6],'cascade.medium':[3,1.8,-6],'cascade.high':[7,1.8,-6],
     'vehicle.tank':[2.8,1.2,7],'vehicle_2.tank':[10.8,1.2,7],

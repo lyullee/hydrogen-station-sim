@@ -25,3 +25,14 @@ test('auxiliary, power, access and recovery changes invalidate the visual state'
  assert.ok(result.badges.some(x=>x.includes('통보 완료')));
  assert.ok(result.badges.some(x=>x.includes('재가동 승인')));
 });
+
+
+test('ventilation stop stays visible rather than silently dropping the running badge',()=>{
+ const state={ventilation:{compressor:{running:true,fault:false}}};
+ const on=safetyVisualState(state);
+ state.ventilation.compressor.running=false;
+ const off=safetyVisualState(state);
+ assert.deepEqual(off.ventilating,[]);
+ assert.ok(off.badges.includes('압축기 환기 정지'));
+ assert.notEqual(on.signature,off.signature);
+});

@@ -36,6 +36,13 @@
   }
   const stateLabel=rule=>rule.active?(['LATCHED','ALARM_HOLD'].includes(rule.state)?'경보 이력 유지':'현재 경보'):rule.state==='UNKNOWN'?'판정 불가':rule.state==='PENDING'?'지속시간 확인':rule.state==='INACTIVE'?'운전조건 대기':'정상 범위';
   function renderMarkdown(target,text){
+    const english=window.stationLocale?.language?.()==='en';
+    text=String(text).replace(/\brecovery_approved\s*:\s*(true|false)\b/gi,(_,value)=>english?(value.toLowerCase()==='true'?'recovery approved':'recovery pending'):(value.toLowerCase()==='true'?'복구 승인 완료':'복구 점검 중'))
+      .replace(/\besd_requested\s*:\s*(true|false)\b/gi,(_,value)=>english?(value.toLowerCase()==='true'?'ESD requested':'no ESD request'):(value.toLowerCase()==='true'?'ESD 요청 있음':'ESD 요청 없음'))
+      .replace(/\bALARM_HISTORY\b/g,english?'retained alarm history':'과거 경보 이력 유지')
+      .replace(/\brecovery_approved\b/g,english?'recovery approval':'복구 승인 여부')
+      .replace(/\besd_requested\b/g,english?'ESD request':'ESD 요청 여부')
+      .replace(/\*\*(\d+)\.\s*\n\s*\n\s*([^*\n]+)\*\*/g,'**$1. $2**');
     if(window.marked?.parse&&window.DOMPurify?.sanitize){target.innerHTML=window.DOMPurify.sanitize(window.marked.parse(text,{gfm:true,breaks:true}),{USE_PROFILES:{html:true}});}
     else target.textContent=text;
     target.querySelectorAll('a[href]').forEach(link=>{link.target='_blank';link.rel='noopener noreferrer';});
@@ -246,7 +253,7 @@
           related.length?'선택 센서의 현재값과 다른 센서의 경보 상태를 구분해 확인합니다.':signalIssue?'공정 사고는 확정되지 않았습니다. 계측 상태를 먼저 확인합니다.':`${rules.length}개 시나리오를 감시 중입니다. 현재 비상대응 대상은 없습니다.`].filter(Boolean).join(' · ')));middle.append(summary);
       if(active.length){
         const cards=node('div','sensor-scenario-list');active.forEach(rule=>cards.append(scenarioCard(rule)));middle.append(cards);
-        if(active.length===1)middle.append(node('p','sensor-risk-caption','현재 활성 판정은 1건입니다. 원인 후보는 복수일 수 있으므로 같은 설비의 압력·온도·유량·가스 신호를 교차 확인합니다.'));
+        if(active.length===1)middle.append(node('p','sensor-risk-caption',currentAlerts.length?'현재 경보 판정은 1건입니다. 원인 후보는 복수일 수 있으므로 같은 설비의 압력·온도·유량·가스 신호를 교차 확인합니다.':'현재 임계값 재초과 없이 과거 경보 이력 1건이 유지 중입니다. 현재값과 원인·복구 기록을 구분해 확인합니다.'));
       }else if(rules.length){
         const watch=node('details','sensor-watch-conditions');watch.append(node('summary','','감시 중인 시나리오와 기준 보기'));
         rules.forEach(rule=>{

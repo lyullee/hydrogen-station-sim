@@ -2984,6 +2984,19 @@ async def _invoke_sensor_assistant_selected(sensor_id: str, question: str,
                                              context: dict[str, Any], provider: str,
                                              request_kind: str,
                                              stream_output: bool = False) -> dict[str, Any]:
+    context = dict(context)
+    current = context.get("current_conditions") or []
+    retained = context.get("retained_conditions") or []
+    history_only = bool(retained) and not current
+    context["alarm_status_evidence"] = {
+        "current_trigger_count": len(current), "retained_condition_count": len(retained),
+        "signal_quality": (context.get("selected_signal") or {}).get("quality", "UNKNOWN"),
+        "history_only": history_only,
+        "interpretation": "현재 임계값 재초과 없음 · 과거 경보 이력 유지" if history_only else
+                          "현재 임계값 초과 있음" if current else "현재 임계값 초과 및 경보 이력 없음",
+    }
+    if history_only and context.get("sensor_status") == "ALERT":
+        context["sensor_status"] = "ALARM_HISTORY"
     payload = {
         "sensor_id": sensor_id,
         "question": question,
@@ -4089,6 +4102,9 @@ async def saga_analysis(job_id: str, request: SagaAnalysisInput) -> dict[str, An
                     # for a generative status narrative before showing the
                     # confirmation buttons.
                     raise _SkipDirectAssistant
+                # Empty optional summaries add no evidence to the bounded prompt.
+                prompt_data = {key: value for key, value in prompt_data.items()
+                               if value is not None and value != ""}
                 reply = await _invoke_main_assistant_selected(
                     request.question, prompt_data, request.history, request.provider,
                     "user_query" if request.trigger == "manual" else "automatic_analysis",
@@ -4675,7 +4691,7 @@ def simulation_sensor_detail(job_id: str, sensor_id: str, time_s: float | None =
 def _station_requires_emergency_response(frame: dict[str, Any]) -> bool:
     """Detect station-level danger before a row-level HAZOP join is ready."""
     analysis = frame.get("analysis") or {}
-    if str(analysis.get("status") or "NORMAL").upper() in {"ADVISORY", "WARNING", "CRITICAL"}:
+    if str(analysis.get("status") or "NORMAL").upper() in {"WARNING", "CRITICAL"}:
         return True
     if frame.get("active_faults") or (frame.get("hazop") or {}).get("releases"):
         return True
@@ -4712,7 +4728,8 @@ def _sensor_response_guidance(
     # Keep the selected-sensor view actionable during that interval instead of
     # presenting only routine prevention guidance.
     station_evidence = _station_requires_emergency_response(frame)
-    actual_alert = bool(relevant_rules)
+    actual_alert = any(rule.get("state") not in ("LATCHED", "ALARM_HOLD")
+                       for rule in relevant_rules)
     if actual_alert:
         selected = response_selection(frame, catalog, question, "alarm", limit=None)
         rule_ids = {str(rule.get("rule_id")) for rule in relevant_rules}
@@ -4920,7 +4937,9 @@ def _sensor_response_guidance(
     playbooks = load_playbooks()
     source_index = playbooks["sources"]
     parts = ["### 예방·안전관리",
-             "현재 선택 센서는 정상 범위입니다. 아래 항목을 평상시 점검과 사고 예방에 활용하세요."]
+             ("과거 경보 이력이 유지 중이며 현재 임계값 재초과는 없습니다. 원인·복구 기록을 확인하고 아래 항목을 사고 예방에 활용하세요."
+              if relevant_rules else
+              "현재 선택 센서는 정상 범위입니다. 아래 항목을 평상시 점검과 사고 예방에 활용하세요.")]
     structured_plans = []
     for plan_id in list(applicable_plan_ids)[:4]:
         plan = known_plans.get(plan_id)
@@ -5084,7 +5103,7 @@ async def analyze_simulation_sensor(job_id: str, sensor_id: str,
         item for item in question_response_plans
         if any("질의" in str(value) for value in (item.get("evidence") or []))
     ]
-    if not alert and not related_rules and explicit_question_plans:
+    if not current_triggers and not station_emergency and explicit_question_plans:
         response_markdown = render_guidance(explicit_question_plans, actual_alert=False)
         response_guidance = structured_guidance(explicit_question_plans, actual_alert=False)
     if request.direct:
@@ -5164,6 +5183,8 @@ async def analyze_simulation_sensor(job_id: str, sensor_id: str,
                 "cooling_feedback": _cooling_evidence({**frame, "virtual_safety": payload.get("virtual_safety")}, request.question, request.language),
                 "time_s": payload["time_s"], "selected_sensor": sensor_id,
                 "selected_signal": signal, "sensor_status": payload["sensor_status"],
+                "response_status": {key: (payload.get("virtual_safety") or {}).get(key)
+                                    for key in ("esd_requested", "recovery_approved")},
                 "equipment": label, "related_signals": payload["related_signals"],
                 "impact_results": (evidence_basis.get("impact") or {}).get(
                     "results", []

@@ -28,7 +28,7 @@
     :String(message).startsWith('Recovery checks incomplete:')
     ?'재가동 전 점검이 필요합니다: '+String(message).split(':').slice(1).join(':').split(',').map(key=>recoveryName[key.trim()]||key.trim()).join(' → ')+'. 아래 복구 점검에서 순서대로 진행하세요.'
     :(errorLabels[String(message)]||String(message));
-  const button=(label,kind,target)=>`<button type="button" data-action="${esc(kind)}" data-target="${esc(target)}">${esc(label)}</button>`;
+  const button=(label,kind,target)=>`<button type="button" data-action="${esc(kind)}" data-target="${esc(target)}">${esc(String(label).replace(/^(low|medium|high) 뱅크/,(_,bank)=>`${bankName[bank]} 저장뱅크`))}</button>`;
   const jobId=()=>window.getRemoteJobId?.();
   function syncJob(){
     const id=jobId();
@@ -93,7 +93,7 @@
     const firstAction=responseActions.find(a=>['operation.stop','valve.close','esd.trip'].includes(a.kind)&&a.status==='confirmed');
     for(const row of s.active_incidents||[]){
       const target=String(row.target||'');
-      const zone=target.startsWith('cascade.')?'storage':/^(dispenser|vehicle)/.test(target)?'dispenser':target.startsWith('compressor')?'compressor':/^(header|trailer)/.test(target)?'unloading':null;
+      const zone=(target.startsWith('cascade.')||target==='header')?'storage':/^(dispenser|vehicle)/.test(target)?'dispenser':target.startsWith('compressor')?'compressor':/^(supply|trailer)/.test(target)?'unloading':null;
       if(zone)incidentZones.add(zone);
     }
     const evacuationActions=responseActions.filter(a=>a.kind==='personnel.evacuate'&&a.status==='confirmed');
@@ -180,7 +180,11 @@
     }
     if(target.hasAttribute('data-recovery-guide')){openSection='4';render();host.querySelector('#recoveryChecklist')?.scrollIntoView({behavior:'smooth',block:'start'});host.querySelector('#recoveryChecklist')?.focus({preventScroll:true});return;}
     const id=jobId();if(!id){lastError='공정을 먼저 시작하세요.';render();return;}
-    const actionLabel=target.textContent;
+    const actionLabel=target.dataset.action?.startsWith('ventilation.')
+      ?`${zoneName[target.dataset.target]||target.dataset.target}구역 환기 ${target.dataset.action.endsWith('.on')?'가동':'정지'}`
+      :target.dataset.action?.startsWith('cooling.')
+        ?`${bankName[target.dataset.target]||target.dataset.target} 저장뱅크 냉각·살수 ${target.dataset.action.endsWith('.on')?'가동':'정지'}`
+        :target.textContent;
     busy=true;pendingButtonKey=buttonKey(target);renderPending();lastError='';
     try{
       if(target.dataset.endIncident){await json(`/api/simulations/${encodeURIComponent(id)}/faults/${encodeURIComponent(target.dataset.endIncident)}`,{method:'DELETE'});lastNotice='훈련 사고 종료 요청 · 다음 계산 프레임부터 3D·공정도에 반영됩니다. 실제 진압 판정은 아닙니다.';}

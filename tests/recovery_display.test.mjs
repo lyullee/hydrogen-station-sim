@@ -63,3 +63,15 @@ test('hose incident requires dispenser evacuation and keeps the same zone after 
  assert.ok(!reloaded?.includes('100.0 s'));
  assert.ok(!host.innerHTML.includes('저장구역 잔류 2명 대피 필요'));
 });
+
+
+for(const [target,zone] of [['header','저장'],['compressor','압축기'],['supply','하역']])test(`${target} uses its actual evacuation zone`,async()=>{
+ let tick;
+ const host={innerHTML:'',querySelector:selector=>selector==='#replaySlider'?null:({value:'',addEventListener:()=>{}}),contains:()=>false,addEventListener:()=>{}};
+ const s={current_metrics:{time_s:20},active_incidents:[{kind:'hydrogen-leak',target}],actions:[],personnel:{storage:2,compressor:2,dispenser:2,unloading:2},evacuated:{},access_restricted:{},power_isolated:{},recovery:{},valves:{}};
+ const context={document:{getElementById:()=>host,querySelector:()=>({getAttribute:()=> 'true'})},window:{getRemoteJobId:()=>target,addEventListener:()=>{}},setInterval:fn=>tick=fn,setTimeout:()=>{},fetch:async()=>({ok:true,json:async()=>s})};
+ vm.runInNewContext(readFileSync(new URL('../web/safety-console.js',import.meta.url),'utf8'),context);
+ tick();await new Promise(resolve=>setImmediate(resolve));
+ const stage=host.innerHTML.match(/<article[^>]*><span>03<\/span>[\s\S]*?<\/article>/)?.[0];
+ assert.ok(stage?.includes(`${zone}구역 잔류 2명 대피 필요`));
+});

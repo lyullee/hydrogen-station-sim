@@ -283,6 +283,8 @@ def test_retained_alarm_does_not_recalculate_impact_and_uses_short_answer(monkey
             response = client.post(f"/api/simulations/{job_id}/sensors/GD-0801/analyze", json={})
         assert response.status_code == 200
         assert response.json()["impact_results"] == []
+        assert response.json()["response_guidance"]["actual_alert"] is False
+        assert "즉시 실행할 단계별 대응" not in response.json()["answer"]
         assert captured["answer_length"] == "concise"
         assert "비영점 가스 농도나 모의 누출을 부정하지 마세요" in captured["prompt"]
     finally:
@@ -508,3 +510,9 @@ def test_normal_flame_sensor_reports_related_gas_detection_and_latched_history(m
     finally:
         with api._jobs_lock:
             api._jobs.pop(job_id, None)
+
+
+def test_retained_only_advisory_is_not_an_emergency_but_new_faults_still_are():
+    assert not api._station_requires_emergency_response({"analysis":{"status":"ADVISORY"}})
+    assert api._station_requires_emergency_response({"analysis":{"status":"ADVISORY"},"active_faults":["hydrogen-leak:header"]})
+    assert api._station_requires_emergency_response({"analysis":{"status":"WARNING"}})
