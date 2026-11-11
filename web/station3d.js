@@ -32,8 +32,8 @@ panel.innerHTML = `
     <div class="s3-assets" id="s3Assets" hidden role="group" aria-label="설비 선택"><div class="s3-assets-header"><strong>설비 목록</strong><button id="s3AssetsClose" type="button" aria-label="설비 목록 닫기">닫기 ×</button></div><div class="s3-assets-list" id="s3AssetsList"></div></div>
     <div class="s3-compass"><b>↑</b>N / PROCESS</div>
     <div class="s3-options"><button id="s3Pipes" aria-pressed="true">공정 배관</button><button id="s3Roof" aria-pressed="false">캐노피 투시</button><button id="s3Service" aria-pressed="false">설비 내부</button><button id="s3VehicleCutaway" aria-pressed="false">차량 탱크 투시</button><button id="s3Night" aria-pressed="false">야간 조명</button></div>
-    <aside class="s3-card"><small id="s3Tag">H70 / DIGITAL OPERATIONS</small><h3 id="s3Title">전체 충전소</h3><p id="s3Description">설비를 클릭하면 역할과 운전값을 확인합니다. 왼쪽 드래그로 회전, 휠 버튼 드래그로 이동, 휠로 확대합니다.</p><div class="s3-reading"><span id="s3ReadingLabel">모의 시간</span><strong id="s3Reading">0.0 s</strong></div><button id="s3Focus" class="s3-focus" disabled>선택 설비 확대</button><button id="s3CctvButton" class="s3-cctv-button" type="button">가상 CCTV · 전체 구역</button><img id="s3Cctv" class="s3-cctv" src="/assets/cctv/cctv-storage-banks.png" alt="전체 구역 가상 CCTV"></aside>
-    <dialog id="s3CctvDialog" class="s3-cctv-dialog" aria-labelledby="s3CctvDialogTitle"><form method="dialog" class="s3-cctv-dialog-shell"><header><div><span class="s3-info-kicker">VIRTUAL CCTV / LIVE FRAME</span><h3 id="s3CctvDialogTitle">CAM-00 · 전체 구역</h3></div><button class="s3-dialog-close" value="cancel" aria-label="CCTV 닫기">×</button></header><div class="s3-cctv-dialog-body"><img id="s3CctvDialogImage" src="/assets/cctv/cctv-storage-banks.png" alt="가상 CCTV"><div class="s3-cctv-dialog-meta"><b id="s3CctvDialogZone">전체 구역</b><span id="s3CctvDialogState">NORMAL · 모델 연동</span><small id="s3CctvDialogTime">모델 시간 0.0 s</small></div></div></form></dialog>
+    <aside class="s3-card"><small id="s3Tag">H70 / DIGITAL OPERATIONS</small><h3 id="s3Title">전체 충전소</h3><p id="s3Description">설비를 클릭하면 역할과 운전값을 확인합니다. 왼쪽 드래그로 회전, 휠 버튼 드래그로 이동, 휠로 확대합니다.</p><div class="s3-reading"><span id="s3ReadingLabel">모의 시간</span><strong id="s3Reading">0.0 s</strong></div><button id="s3Focus" class="s3-focus" disabled>선택 설비 확대</button><button id="s3CctvButton" class="s3-cctv-button" type="button">가상 CCTV · 전체 구역</button><img id="s3Cctv" class="s3-cctv" src="/assets/cctv/cctv-storage-banks.webp" alt="전체 구역 가상 CCTV"></aside>
+    <dialog id="s3CctvDialog" class="s3-cctv-dialog" aria-labelledby="s3CctvDialogTitle"><form method="dialog" class="s3-cctv-dialog-shell"><header><div><span class="s3-info-kicker">VIRTUAL CCTV / LIVE FRAME</span><h3 id="s3CctvDialogTitle">CAM-00 · 전체 구역</h3></div><button class="s3-dialog-close" value="cancel" aria-label="CCTV 닫기">×</button></header><div class="s3-cctv-dialog-body"><img id="s3CctvDialogImage" src="/assets/cctv/cctv-storage-banks.webp" alt="가상 CCTV"><div class="s3-cctv-dialog-meta"><b id="s3CctvDialogZone">전체 구역</b><span id="s3CctvDialogState">NORMAL · 모델 연동</span><small id="s3CctvDialogTime">모델 시간 0.0 s</small></div></div></form></dialog>
     </div>
     <aside class="s3-info-column s3-info-right" aria-label="충전 및 안전 상태">
       <article class="s3-info-card"><header><span class="s3-info-kicker">DISPENSER</span><b>디스펜서</b><i class="s3-status-dot"></i></header><div class="s3-dual-values"><div><span>차량 1</span><strong id="s3Dispenser1">0.0</strong><em>g/s</em></div><div><span>차량 2</span><strong id="s3Dispenser2">0.0</strong><em>g/s</em></div></div><small class="s3-info-foot" id="s3DispenserFoot">대기 · 프리쿨러 −40 °C</small></article>
@@ -81,22 +81,22 @@ window.closeStationDomain=()=>window.setMonitorView(lastBaseView);
 document.querySelectorAll('[data-panel-view]').forEach(b=>b.addEventListener('click',()=>window.setMonitorView(b.dataset.panelView)));
 window.setMonitorView('3d');
 const cctvScenes = {
-  site:{label:'전체 구역',zone:'전체 충전소',image:'/assets/cctv/normal.png'},
-  storage:{label:'CAM-01 · 저장 뱅크',zone:'후면 저장 뱅크 야드',image:'/assets/cctv/cctv-storage-banks.png'},
-  high:{label:'CAM-06 · 고압 저장뱅크',zone:'고압 저장 용기군',image:'/assets/cctv/equipment/storage-high.png'},
-  medium:{label:'CAM-07 · 중압 저장뱅크',zone:'중압 저장 용기군',image:'/assets/cctv/equipment/storage-medium.png'},
-  low:{label:'CAM-08 · 저압 저장뱅크',zone:'저압 저장 용기군',image:'/assets/cctv/equipment/storage-low.png'},
-  compressor:{label:'CAM-02 · 압축기',zone:'압축 패키지',image:'/assets/cctv/equipment/compressor.png'},
-  cooler:{label:'CAM-10 · 프리쿨러',zone:'프리쿨러·냉동기',image:'/assets/cctv/equipment/precooler.png'},
-  pcv:{label:'CAM-09 · 압력제어밸브',zone:'PCV 매니폴드',image:'/assets/cctv/equipment/pcv.png'},
-  dispenser:{label:'CAM-03 · 디스펜서',zone:'H70 디스펜서',image:'/assets/cctv/equipment/dispenser.png'},
-  vehicle:{label:'CAM-11 · 충전 차량',zone:'차량·노즐',image:'/assets/cctv/equipment/vehicle.png'},
-  safety:{label:'CAM-04 · 가스 안전',zone:'가스검지기·안전 PLC',image:'/assets/cctv/cctv-safety.png'},
-  supply:{label:'CAM-05 · 공급·하역',zone:'튜브트레일러 하역 구역',image:'/assets/cctv/equipment/supply.png'},
+  site:{label:'전체 구역',zone:'전체 충전소',image:'/assets/cctv/normal.webp'},
+  storage:{label:'CAM-01 · 저장 뱅크',zone:'후면 저장 뱅크 야드',image:'/assets/cctv/cctv-storage-banks.webp'},
+  high:{label:'CAM-06 · 고압 저장뱅크',zone:'고압 저장 용기군',image:'/assets/cctv/equipment/storage-high.webp'},
+  medium:{label:'CAM-07 · 중압 저장뱅크',zone:'중압 저장 용기군',image:'/assets/cctv/equipment/storage-medium.webp'},
+  low:{label:'CAM-08 · 저압 저장뱅크',zone:'저압 저장 용기군',image:'/assets/cctv/equipment/storage-low.webp'},
+  compressor:{label:'CAM-02 · 압축기',zone:'압축 패키지',image:'/assets/cctv/equipment/compressor.webp'},
+  cooler:{label:'CAM-10 · 프리쿨러',zone:'프리쿨러·냉동기',image:'/assets/cctv/equipment/precooler.webp'},
+  pcv:{label:'CAM-09 · 압력제어밸브',zone:'PCV 매니폴드',image:'/assets/cctv/equipment/pcv.webp'},
+  dispenser:{label:'CAM-03 · 디스펜서',zone:'H70 디스펜서',image:'/assets/cctv/equipment/dispenser.webp'},
+  vehicle:{label:'CAM-11 · 충전 차량',zone:'차량·노즐',image:'/assets/cctv/equipment/vehicle.webp'},
+  safety:{label:'CAM-04 · 가스 안전',zone:'가스검지기·안전 PLC',image:'/assets/cctv/cctv-safety.webp'},
+  supply:{label:'CAM-05 · 공급·하역',zone:'튜브트레일러 하역 구역',image:'/assets/cctv/equipment/supply.webp'},
 };
 for(const [id,asset] of Object.entries({site:'site',storage:'storage',high:'storage-high',medium:'storage-medium',low:'storage-low',compressor:'compressor',cooler:'precooler',pcv:'pcv',dispenser:'dispenser',vehicle:'vehicle',safety:'safety',supply:'supply'})){
-  cctvScenes[id].fireImage=`/assets/cctv/incidents/${asset}-fire.png`;
-  cctvScenes[id].leakImage=`/assets/cctv/incidents/${asset}-leak.png`;
+  cctvScenes[id].fireImage=`/assets/cctv/incidents/${asset}-fire.webp`;
+  cctvScenes[id].leakImage=`/assets/cctv/incidents/${asset}-leak.webp`;
 }
 const cameraFor=id=>{
   if(['high','medium','low'].includes(id))return id;
@@ -348,7 +348,7 @@ function buildStation() {
   const photoButton=document.createElement('button');photoButton.type='button';photoButton.id='s3PhotoMode';photoButton.textContent='실사 사진';photoButton.setAttribute('aria-pressed','false');photoButton.title='현재 조감도와 같은 시점의 가상 실사 사진';
   panel.querySelector('.s3-toolbar').append(photoButton);
   const photoView=document.createElement('div');photoView.className='s3-photo-view';photoView.hidden=true;
-  photoView.innerHTML='<img src="/assets/station-realistic-overview.png" alt="수정된 설비 규모와 트레일러 진출입로를 반영한 수소충전소 가상 실사 조감도"><span>가상 실사 조감도 · 현재 센서 상태와 별개인 참고 이미지</span>';
+  photoView.innerHTML='<img src="/assets/station-realistic-overview.webp" alt="수정된 설비 규모와 트레일러 진출입로를 반영한 수소충전소 가상 실사 조감도"><span>가상 실사 조감도 · 현재 센서 상태와 별개인 참고 이미지</span>';
   stage.append(photoView);
   // Start with the interactive 3D scene; the reference photo is optional.
   controls.enabled=true;

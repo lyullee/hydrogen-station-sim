@@ -9,7 +9,7 @@ import re
 import sqlite3
 import tempfile
 import zipfile
-import xml.etree.ElementTree as ET
+from defusedxml import ElementTree as ET
 from contextlib import closing
 from datetime import datetime, timezone
 from functools import lru_cache

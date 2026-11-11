@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "hydrogen-station-sim"
-version = "0.1.2"
+version = "0.1.3"
 description = "First-principles dynamic models for gaseous hydrogen refueling stations"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -24,6 +24,7 @@ classifiers = [
     "Topic :: Scientific/Engineering",
 ]
 dependencies = [
+    "defusedxml>=0.7.1,<1",
     "fluids>=1.0,<2",
     "ht>=1.0,<2",
     "numpy>=1.26,<3",
@@ -45,12 +46,13 @@ research = [
     "pypdf>=6,<7",
     "xlrd>=2.0,<3",
 ]
-api = ["fastapi>=0.115,<0.116", "uvicorn[standard]>=0.30,<0.36"]
+api = ["fastapi>=0.162.3,<1", "starlette>=1.10,<2", "uvicorn[standard]>=0.54,<1"]
 test = ["pytest>=8,<10", "httpx>=0.27,<0.29", "openpyxl>=3.1,<4", "pypdf>=6,<7"]
 all = [
     "hyram==6.1",
-    "fastapi>=0.115,<0.116",
-    "uvicorn[standard]>=0.30,<0.36",
+    "fastapi>=0.162.3,<1",
+    "starlette>=1.10,<2",
+    "uvicorn[standard]>=0.54,<1",
 ]
 
 [project.scripts]
@@ -66,9 +68,13 @@ Archive = "https://doi.org/10.5281/zenodo.23084421"
 [tool.hatch.build.targets.wheel]
 packages = ["src/h2station"]
 
+[tool.hatch.build.targets.wheel.force-include]
+"web" = "h2station/web"
+
 [tool.hatch.build.targets.sdist]
 include = [
     "src/h2station",
+    "web",
     "README.md",
     "LICENSE",
     "CITATION.cff",

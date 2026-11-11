@@ -10,7 +10,9 @@ import json
 import os
 import re
 import time
-from urllib.request import Request, urlopen
+from urllib.request import Request
+
+from .web_transport import open_web_request as urlopen
 from urllib.error import URLError, HTTPError
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
@@ -5519,5 +5521,7 @@ _unreal_router = make_unreal_router(_read_unreal_state)
 # route contract.
 app.router.routes.extend(_unreal_router.routes)
 
-_web_directory = Path(__file__).resolve().parents[2] / "web"
+_web_directory = Path(__file__).resolve().parent / "web"
+if not _web_directory.is_dir():
+    _web_directory = Path(__file__).resolve().parents[2] / "web"
 app.mount("/", StaticFiles(directory=_web_directory, html=True), name="monitor")

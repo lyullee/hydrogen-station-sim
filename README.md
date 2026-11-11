@@ -6,6 +6,19 @@ The badge DOI resolves to the latest archived release. Earlier versions retain t
 
 Original project software and associated documentation are available under the [MIT license](LICENSE). Bundled third-party libraries and assets retain their respective notices and terms.
 
+## Release 0.1.3
+
+Install the simulator with the web monitor and HyRAM support:
+
+```sh
+python -m pip install "hydrogen-station-sim[all]==0.1.3"
+h2station
+```
+
+Open http://127.0.0.1:8000 for the monitor and http://127.0.0.1:8000/remote.html for the controls. Run [SAGA-PY 2.0.2](https://github.com/lyullee/saga-py/releases/tag/v2.0.2) separately for provider-backed analysis.
+
+This release updates simulated fire suppression, spray visualization, vent metering, repair recovery, and the 3D message reset. It also restricts outbound web requests to HTTP(S), uses hardened XML parsers, and bundles the browser assets in the Python distributions.
+
 ## Current documentation
 
 - [Technical report](docs/TECHNICAL_REPORT.md): architecture, physical model, safety logic, APIs, LLM boundaries, validation and limits.

@@ -157,7 +157,7 @@ $env:PYTHONPATH = Join-Path (Get-Location) 'src'
 
 ## 가상 모니터링 화면과 CCTV
 
-메인 모니터는 데스크톱 한 화면을 기준으로 KPI·축약 HAZOP·사고 영향·실시간 분석을 배치하고 3D 화면 높이를 줄였다. 3D 헤더의 `3D / 공정 흐름` 전환 버튼은 같은 상태 스트림을 유지한 채 공간 화면과 공정 흐름도를 교체한다. 공정 블록과 3D 설비를 클릭하면 선택 구역의 가상 CCTV 카드가 열리며 `web/assets/cctv/normal.png`, `leak.png`, `fire.png`는 정상·누출·화재 상태별 ImageGen 자산이다.
+메인 모니터는 데스크톱 한 화면을 기준으로 KPI·축약 HAZOP·사고 영향·실시간 분석을 배치하고 3D 화면 높이를 줄였다. 3D 헤더의 `3D / 공정 흐름` 전환 버튼은 같은 상태 스트림을 유지한 채 공간 화면과 공정 흐름도를 교체한다. 공정 블록과 3D 설비를 클릭하면 선택 구역의 가상 CCTV 카드가 열리며 `web/assets/cctv/normal.webp`, `leak.png`, `fire.png`는 정상·누출·화재 상태별 ImageGen 자산이다.
 
 리모콘의 `무제한 가상 모니터링`을 켜면 `continuous=true`로 유한 solver 창을 이어 붙인다. 각 창은 이전 `FullStationState`를 다음 창의 초기 상태로 넘기고 HAZOP 시각은 단조 증가한다. `/api/simulations/{job_id}/stop`으로 정지할 때까지 프레임을 계속 WebSocket으로 전송하며, 메모리는 최근 12,000프레임 링 버퍼로 제한한다. 메인 화면의 `모니터 중지`는 해당 API를 호출한다.
 

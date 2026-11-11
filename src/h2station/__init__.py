@@ -1,6 +1,6 @@
 """First-principles dynamic models for gaseous hydrogen stations."""
 
-__version__ = "0.1.2"
+__version__ = "0.1.3"
 
 from .components import (
     CheckValve,

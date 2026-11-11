@@ -6,9 +6,9 @@ authors:
   - family-names: Lee
     given-names: Ugwiyeon
     affiliation: "Korea Gas Safety Corporation"
-version: 0.1.2
+version: 0.1.3
 license: MIT
-date-released: 2026-10-18
+date-released: 2026-11-11
 repository-code: "https://github.com/lyullee/hydrogen-station-sim"
 url: "https://github.com/lyullee/hydrogen-station-sim"
 doi: "10.5281/zenodo.23084421"
