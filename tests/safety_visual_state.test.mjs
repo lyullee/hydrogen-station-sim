@@ -36,3 +36,18 @@ test('ventilation stop stays visible rather than silently dropping the running b
  assert.ok(off.badges.includes('압축기 환기 정지'));
  assert.notEqual(on.signature,off.signature);
 });
+
+
+test('dispenser spray feedback and extinguished flame have matching readable badges',()=>{
+ const state={cooling:{dispenser_2:{running:true,commanded:true}},
+  fire_response:{f:{target:'dispenser_2.hose',status:'suppressing',intensity:.5}}};
+ const active=safetyVisualState(state,['external-fire:dispenser_2.hose']);
+ assert.deepEqual(active.spraying,['dispenser_2']);
+ assert.ok(active.badges.includes('2번 충전호스 훈련 화재 50% · 살수로 감소 중'));
+ state.cooling.dispenser_2={running:false,commanded:false,auto_stopped:true};
+ state.fire_response.f={...state.fire_response.f,status:'extinguished',intensity:0};
+ const ended=safetyVisualState(state);
+ assert.deepEqual(ended.spraying,[]);
+ assert.ok(ended.badges.includes('2번 충전호스·차량 잔열 냉각 완료 · 자동 종료'));
+ assert.ok(ended.badges.includes('2번 충전호스 훈련 화재 소멸 · 복구 점검 대기'));
+});

@@ -29,6 +29,7 @@ function setRemoteTab(tab){
   document.querySelectorAll('[data-remote-tab]').forEach(button=>button.setAttribute('aria-selected',String(button.dataset.remoteTab===tab)));
   document.querySelectorAll('[data-remote-pane]').forEach(pane=>pane.hidden=pane.dataset.remotePane!==tab);
   renderControls();
+  window.dispatchEvent(new Event('station-remote-tab'));
 }
 async function api(path,options={}){
   const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),15000);

@@ -19,6 +19,9 @@ from .ventilation_calibration import measured_ventilation_factor
 
 BANKS = ("low", "medium", "high")
 BANK_LABELS = {"low": "저압", "medium": "중압", "high": "고압"}
+COOLING_TARGETS = {**{bank: (f"cascade.{bank}",) for bank in BANKS},
+                   "dispenser_1": ("dispenser.hose", "vehicle.tank"),
+                   "dispenser_2": ("dispenser_2.hose", "vehicle_2.tank")}
 ZONES = ("unloading", "compressor", "storage", "dispenser")
 VALVE_LABELS = {
     "trailer.source": "트레일러 측 공급 차단",
@@ -79,7 +82,7 @@ class VirtualSafetyRuntime:
         self.ventilation = {zone: {"commanded": True, "running": True, "fault": False}
                             for zone in ZONES}
         self.cooling = {bank: {"commanded": False, "running": False, "fault": False}
-                        for bank in BANKS}
+                        for bank in COOLING_TARGETS}
         self.power_isolated = {zone: False for zone in ZONES}
         self.access_restricted = {zone: False for zone in ZONES}
         self.personnel = {"unloading": 1, "compressor": 1, "storage": 2, "dispenser": 2}
@@ -550,8 +553,8 @@ class VirtualSafetyRuntime:
                 if event.kind is not FaultKind.EXTERNAL_FIRE:
                     effective.append(event)
                     continue
-                bank = event.target.removeprefix('cascade.')
-                if bank not in self.cooling:
+                bank = next((key for key, targets in COOLING_TARGETS.items() if event.target in targets), None)
+                if bank is None:
                     effective.append(event)
                     continue
                 row = self.fire_response.setdefault(event.event_id, {
@@ -569,7 +572,7 @@ class VirtualSafetyRuntime:
             # Post-fire spray is a training sequence, not a real cooling criterion.
             # Keep the clock after the incident event is removed from the schedule.
             for bank, device in self.cooling.items():
-                rows = [r for r in self.fire_response.values() if r['target'] == f'cascade.{bank}']
+                rows = [r for r in self.fire_response.values() if r['target'] in COOLING_TARGETS[bank]]
                 active = any(r['status'] in ('active', 'suppressing') for r in rows)
                 previous = device.get('response_time_s', time_s)
                 device['response_time_s'] = time_s
@@ -591,10 +594,12 @@ class VirtualSafetyRuntime:
             # Training spray acts on the vessel wall, whose stored energy must
             # be removed before the ten-second post-fire spray ends. This is a
             # simulation response coefficient, not a measured nozzle rating.
-            return tuple(FaultEvent(event_id=f"cooling-{bank}", kind=FaultKind.TEMPERATURE_DISTURBANCE,
-                                    target=f"cascade.{bank}", start_time_s=time_s,
-                                    external_temperature_k=ambient_k, heat_transfer_ua_w_k=60000.0)
-                         for bank in BANKS if self.cooling[bank]["running"])
+            return tuple(FaultEvent(event_id=f"cooling-{bank}-{target}", kind=FaultKind.TEMPERATURE_DISTURBANCE,
+                                    target=target, start_time_s=time_s,
+                                    external_temperature_k=ambient_k,
+                                    heat_transfer_ua_w_k=3000.0 if target.endswith('.hose') else 60000.0)
+                         for bank, targets in COOLING_TARGETS.items() if self.cooling[bank]["running"]
+                         for target in targets)
 
     def detector_multiplier(
         self,
@@ -748,6 +753,8 @@ def suggested_actions(plan_id: str, node_id: str | None = None) -> list[dict[str
         actions.append(("vehicle.evacuate", "trailer", "트레일러 양단 차단 확인 후 대피"))
     if plan_id in ("hydrogen_fire", "external_fire") and bank:
         actions.append(("cooling.on", bank, "인접 용기 가상 냉각 가동"))
+    if plan_id in ("hydrogen_fire", "external_fire") and zone == "dispenser":
+        actions.append(("cooling.on", f"dispenser_{dispenser}", f"충전구역 {dispenser} 가상 소화·냉각 가동"))
     if plan_id in ("gas_release", "compressor_thermal", "fueling_fault"):
         actions.append((
             "ventilation.on", zone,

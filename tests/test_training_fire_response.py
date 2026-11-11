@@ -174,3 +174,61 @@ def test_ended_first_fire_does_not_block_second_fire_cooling_shutdown():
     runtime.response_events((), 75)
     assert runtime.cooling['low']['auto_stopped']
     assert not runtime.cooling['low']['running']
+
+
+@pytest.mark.parametrize("target,lane", [("dispenser.hose", "dispenser_1"),
+    ("dispenser_2.hose", "dispenser_2"), ("vehicle.tank", "dispenser_1"),
+    ("vehicle_2.tank", "dispenser_2")])
+def test_dispenser_fire_has_targeted_heat_decay_and_auto_shutdown(target, lane):
+    runtime = VirtualSafetyRuntime()
+    fire = FaultEvent("lane-fire", FaultKind.EXTERNAL_FIRE, target, 0,
+                      external_temperature_k=1073.15, heat_transfer_ua_w_k=1000)
+    runtime.response_events((fire,), 0)
+    other = "dispenser_2" if lane == "dispenser_1" else "dispenser_1"
+    runtime.issue("cooling.on", other, 0)
+    assert runtime.response_events((fire,), 10)[0].heat_transfer_ua_w_k == 1000
+    runtime.issue("cooling.off", other, 10)
+    runtime.issue("cooling.on", lane, 10)
+    assert runtime.response_events((fire,), 25)[0].heat_transfer_ua_w_k == pytest.approx(500)
+    assert target in {event.target for event in runtime.cooling_events(25, 298.15)}
+    assert runtime.response_events((fire,), 40) == ()
+    runtime.response_events((), 50)
+    assert runtime.cooling[lane]["auto_stopped"]
+    assert not runtime.cooling[lane]["running"]
+    assert not runtime.cooling_events(50, 298.15)
+
+
+def test_dispenser_fire_suggests_its_own_lane_suppression():
+    from h2station.virtual_safety import suggested_actions
+    for node, lane in [("N13", "dispenser_1"), ("N14", "dispenser_1"),
+                       ("N17", "dispenser_2"), ("N18", "dispenser_2")]:
+        assert any(a["kind"] == "cooling.on" and a["target"] == lane
+                   for a in suggested_actions("external_fire", node))
+
+
+@pytest.mark.parametrize("target,lane", [("dispenser.hose", "dispenser_1"),
+    ("dispenser_2.hose", "dispenser_2"), ("vehicle.tank", "dispenser_1"),
+    ("vehicle_2.tank", "dispenser_2")])
+def test_dispenser_suppression_integrates_heat_and_pressure(target, lane):
+    from h2station.scenario import ReferenceScenario, build_reference_scenario
+    from h2station.operations import ProcessRuntime
+    from h2station.api import ProcessSettings
+    from h2station.risk.runtime_backend import UnavailableHyRAMBackend
+    import numpy as np
+    fire = FaultEvent("heated-lane", FaultKind.EXTERNAL_FIRE, target, 5,
+                      end_time_s=600, external_temperature_k=1073.15,
+                      heat_transfer_ua_w_k=1000)
+    built = build_reference_scenario(ReferenceScenario(fault_events=(fire,)), UnavailableHyRAMBackend())
+    process = ProcessRuntime(ProcessSettings().model_dump())
+    built.simulator.process_runtime = process
+    def operate(time_s):
+        device = process.safety.cooling[lane]
+        if time_s >= 30 and not device["commanded"] and not device.get("auto_stopped"):
+            process.safety.issue("cooling.on", lane, time_s)
+    frames=[]
+    result = built.simulator.simulate(built.initial_state, 120, 1,
+        sample_callback=frames.append, runtime_command_callback=operate, pace_idle=False)
+    assert np.isfinite(result.states).all()
+    assert process.safety.fire_response[fire.event_id]["status"] == "extinguished"
+    assert process.safety.cooling[lane]["auto_stopped"]
+    assert all(f"external-fire:{target}" not in f.active_faults for f in frames if f.time_s >= 62)

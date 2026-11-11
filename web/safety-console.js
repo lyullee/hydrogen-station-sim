@@ -19,6 +19,7 @@
   const esc=value=>String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
   const fmt=(value,d=1)=>value!==null&&value!==undefined&&Number.isFinite(Number(value))?Number(value).toFixed(d):'—';
   const bankName={low:'저압',medium:'중압',high:'고압'};
+  const coolingName={low:'저압 저장뱅크',medium:'중압 저장뱅크',high:'고압 저장뱅크',dispenser_1:'1번 충전호스·차량',dispenser_2:'2번 충전호스·차량'};
   const zoneName={unloading:'하역',compressor:'압축기',storage:'저장',dispenser:'충전'};
   const stageName={recognition:'상황 확인',immediate:'즉시 조치',stabilize:'안정화',restart:'복구 전 점검'};
   const recoveryName={source_removed:'원인 제거',leak_repaired:'누출 수리',tightness_test:'기밀시험',detector_test:'검지기 시험',valve_test:'밸브 기능시험',purge_complete:'퍼지',pressure_test:'단계적 재가압',supervisor_approval:'감독자 확인'};
@@ -124,7 +125,7 @@
     const stageHtml=stages.map((row,index)=>`<article class="safety-stage ${row.done?'done':''}"><span>${String(index+1).padStart(2,'0')}</span><div><b>${stageName[row.name]}</b><small>담당 ${row.owner} · ${row.condition}</small><em>${row.done?(row.time==null?'완료':`완료 · 모의 ${fmt(row.time)} s`):'미완료 · 성공조건 대기'}</em></div>${row.action}</article>`).join('');
     const suggestions=(s.suggested_actions||[]).map(item=>`<div><small>${esc(item.scenario)}</small>${button(item.label,item.kind,item.target)}</div>`).join('');
     const valveHtml=Object.entries(valves).map(([name,v])=>`<article class="safety-device ${v.status==='failed'?'failed':''}"><div><b>${esc(v.label)}</b><small>${esc(name)} · 명령 ${v.commanded_open?'열림':'닫힘'} → 실제 ${v.actual_open?'열림':'닫힘'} → 피드백 ${v.feedback_open?'열림':'닫힘'} · 유로 ${fmt(v.flow_fraction*100,0)}%</small><em>${stateText(v.status)}${name.startsWith('vent.')?'':` · 격리구간 ${fmt(s.line_pressure_mpa?.[name],2)} MPa`}</em></div><div class="safety-device-actions">${button('열기',name.startsWith('vent.')?'vent.open':'valve.open',name)}${button('닫기',name.startsWith('vent.')?'vent.close':'valve.close',name)}<select data-fault="${esc(name)}" aria-label="${esc(v.label)} 고장"><option value="none">정상</option><option value="stuck_open" ${v.fault==='stuck_open'?'selected':''}>열림 고착</option><option value="stuck_closed" ${v.fault==='stuck_closed'?'selected':''}>닫힘 고착</option><option value="seat_leak" ${v.fault==='seat_leak'?'selected':''}>내부 누설</option><option value="feedback_fault" ${v.fault==='feedback_fault'?'selected':''}>피드백 오류</option></select></div></article>`).join('');
-    const auxHtml=[['ventilation',s.ventilation,zoneName,'환기'],['cooling',s.cooling,bankName,'냉각·살수']].map(([kind,values,labels,title])=>`<section><h4>${title}</h4><div class="safety-aux-grid">${Object.entries(values||{}).map(([name,v])=>`<div><b>${labels[name]||name}</b><span class="${v.running?'good':'bad'}">${v.running?'가동':'정지'}${v.fault?' · 고장':''}</span>${button('ON',`${kind}.on`,name)}${button('OFF',`${kind}.off`,name)}<select data-fault="${kind}.${name}"><option value="none">정상</option><option value="failure" ${v.fault?'selected':''}>고장</option></select></div>`).join('')}</div></section>`).join('');
+    const auxHtml=[['ventilation',s.ventilation,zoneName,'환기'],['cooling',s.cooling,coolingName,'냉각·살수']].map(([kind,values,labels,title])=>`<section><h4>${title}</h4><div class="safety-aux-grid">${Object.entries(values||{}).map(([name,v])=>`<div><b>${labels[name]||name}</b><span class="${v.running?'good':'bad'}">${v.running?'가동':'정지'}${v.fault?' · 고장':''}</span>${button('ON',`${kind}.on`,name)}${button('OFF',`${kind}.off`,name)}<select data-fault="${kind}.${name}"><option value="none">정상</option><option value="failure" ${v.fault?'selected':''}>고장</option></select></div>`).join('')}</div></section>`).join('');
     const zones=Object.keys(zoneName).map(zone=>`<div class="safety-zone"><b>${zoneName[zone]}</b><small>잔류 ${s.personnel[zone]}명 · 대피 ${s.evacuated[zone]}명 · ${s.access_restricted[zone]?'출입 통제':'출입 허용'} · 전원 ${s.power_isolated[zone]?'차단':'공급'}</small><div>${button('출입 통제','access.restrict',zone)}${button('대피','personnel.evacuate',zone)}${button('점화원·전원 차단','power.isolate',zone)}${button('전원 복구','power.restore',zone)}</div></div>`).join('');
     const vehicles=Object.entries(s.vehicles||{}).map(([name,count])=>`<div class="safety-zone"><b>${name==='trailer'?'튜브트레일러':name==='vehicle_1'?'차량 1':'차량 2'}</b><small>현장 ${count}대 · 대피 ${s.vehicles_evacuated?.[name]||0}대 · 연결 공정 정지와 밸브 폐쇄·유량 확인 후 이동</small>${button('차량 대피','vehicle.evacuate',name)}</div>`).join('');
     const tested=new Set(['tightness_test','detector_test','valve_test','purge_complete','pressure_test']);
@@ -183,7 +184,7 @@
     const actionLabel=target.dataset.action?.startsWith('ventilation.')
       ?`${zoneName[target.dataset.target]||target.dataset.target}구역 환기 ${target.dataset.action.endsWith('.on')?'가동':'정지'}`
       :target.dataset.action?.startsWith('cooling.')
-        ?`${bankName[target.dataset.target]||target.dataset.target} 저장뱅크 냉각·살수 ${target.dataset.action.endsWith('.on')?'가동':'정지'}`
+        ?`${coolingName[target.dataset.target]||target.dataset.target} 냉각·살수 ${target.dataset.action.endsWith('.on')?'가동':'정지'}`
         :target.textContent;
     busy=true;pendingButtonKey=buttonKey(target);renderPending();lastError='';
     try{
@@ -210,6 +211,7 @@
     catch(error){lastError=friendlyError(error.message);render();}
   });
   async function refreshNow(){const id=jobId();if(!id)return;const data=await json(endpoint(''));if(jobId()!==id)return;acceptSnapshot(data);lastJob=id;render();}
+  window.addEventListener('station-remote-tab',()=>{syncJob();render();if(document.querySelector('[data-remote-tab="safety"]')?.getAttribute('aria-selected')==='true')refresh();});
   window.addEventListener('station-safety-action',()=>setTimeout(refresh,300));
   setInterval(()=>{syncJob();if(document.querySelector('[data-remote-tab="safety"]')?.getAttribute('aria-selected')==='true')refresh();},1300);
 })();

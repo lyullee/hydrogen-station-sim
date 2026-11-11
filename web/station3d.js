@@ -9,7 +9,7 @@ import { buildVentPackage } from '/vent-package.js';
 import { buildFcevVehicle } from '/fcev-vehicle.js?v=20260919-vehicle2';
 import { stationRouteActive } from '/station-flow.mjs';
 import { reconcileRiskRanges } from '/risk-range-state.mjs';
-import { safetyVisualState, currentFireResponse } from '/safety-visual-state.mjs?v=20261111-aux-label1';
+import { safetyVisualState, currentFireResponse } from '/safety-visual-state.mjs?v=20261111-dispenser-fire4';
 
 // Geometry is a conceptual visual layout, not an approved engineering drawing.
 const panel = document.createElement('section');
@@ -1854,8 +1854,8 @@ function buildStation() {
   // Display the confirmed auxiliary feedback, never just the requested command.
   const responseEffects=new THREE.Group();scene.add(responseEffects);
   const spraySystems=new Map();
-  for(const bank of ['low','medium','high']){
-    const anchor=accidentAnchors[`cascade.${bank}`],group=new THREE.Group();
+  for(const [bank,target] of Object.entries({low:'cascade.low',medium:'cascade.medium',high:'cascade.high',dispenser_1:'dispenser.hose',dispenser_2:'dispenser_2.hose'})){
+    const anchor=accidentAnchors[target],group=new THREE.Group();
     group.position.set(anchor[0],0,anchor[2]);group.visible=false;responseEffects.add(group);
     const positions=new Float32Array(360*6),geometry=new THREE.BufferGeometry();
     geometry.setAttribute('position',new THREE.BufferAttribute(positions,3));

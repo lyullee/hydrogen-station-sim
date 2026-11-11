@@ -335,7 +335,9 @@ function updateFrame(index) {
     const kind=target?.split(':')[0];
     node.classList.toggle('fault-active',Boolean(kind)&&kind!=='relief-open'&&kind!=='vent-open');
     node.dataset.fault=kind==='relief-open'?'':kind?(flowFaultLabels[kind]||'설비 이상 입력'):'';
-    const cooling=s.virtual_safety?.[state.index]?.cooling?.[node.dataset.bank];
+    const coolingDevices=s.virtual_safety?.[state.index]?.cooling||{};
+    const laneCooling=['dispenser_1','dispenser_2'].map(key=>coolingDevices[key]).filter(Boolean);
+    const cooling=node.id==='vehicleUnit'?{running:laneCooling.some(v=>v.running),fault:laneCooling.some(v=>v.fault)}:coolingDevices[node.dataset.bank];
     node.classList.toggle('cooling-active',Boolean(cooling?.running&&!cooling?.fault));
     node.classList.toggle('cooling-failed',Boolean(cooling?.fault));
     let coolingBadge=node.querySelector('.flow-cooling-badge');
@@ -345,12 +347,12 @@ function updateFrame(index) {
     const safety=s.virtual_safety?.[state.index]||{};
     const zone=node.dataset.bank?'storage':({supplyUnit:'unloading',compressorUnit:'compressor',vehicleUnit:'dispenser',pcvUnit:'dispenser'})[node.id];
     const valveKeys=node.dataset.bank?[`bank.${node.dataset.bank}.inlet`,`bank.${node.dataset.bank}.outlet`]:({supplyUnit:['trailer.source','trailer.station'],compressorUnit:['compressor.suction','compressor.discharge'],pcvUnit:['dispenser.1','dispenser.2'],vehicleUnit:['dispenser.1','dispenser.2']})[node.id]||[];
-    const labels=valveKeys.filter(key=>safety.valves?.[key]&&!safety.valves[key].actual_open).map(key=>`${key.endsWith('inlet')?'유입':key.endsWith('outlet')?'유출':safety.valves[key].label} 차단`);
+    const labels=valveKeys.filter(key=>safety.valves?.[key]&&!safety.valves[key].actual_open).map(key=>`${key.endsWith('inlet')?'유입 차단':key.endsWith('outlet')?'유출 차단':safety.valves[key].label}`);
     if(zone&&safety.ventilation?.[zone]?.running)labels.push('환기 가동');
     if(zone&&safety.power_isolated?.[zone])labels.push('전원 격리');
     if(zone&&safety.access_restricted?.[zone])labels.push('출입 통제');
     if(zone&&safety.evacuated?.[zone])labels.push(`대피 ${safety.evacuated[zone]}명 · 잔류 ${safety.personnel?.[zone]||0}명`);
-    const fireRows=Object.values(safety.fire_response||{}).filter(row=>row.target===`cascade.${node.dataset.bank}`);
+    const fireRows=Object.values(safety.fire_response||{}).filter(row=>node.id==='vehicleUnit'?/^(vehicle(?:_2)?\.tank|dispenser(?:_2)?\.hose)$/.test(row.target):row.target===`cascade.${node.dataset.bank}`);
     const fireRow=fireRows.filter(row=>['active','suppressing'].includes(row.status)).at(-1)||fireRows.at(-1);
     if(fireRow)labels.push(fireRow.status==='extinguished'?'훈련 화재 소멸':fireRow.status==='ended'?'화재 입력 종료':`훈련 화재 ${Math.round(fireRow.intensity*100)}%`);
     let responseBadge=node.querySelector('.flow-action-badge');if(!responseBadge){responseBadge=document.createElement('span');responseBadge.className='flow-action-badge';node.append(responseBadge);}
